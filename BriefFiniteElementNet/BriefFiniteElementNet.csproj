@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7CDA20D4-9BC8-4BC3-9F22-CB86CD4DC3E1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>BriefFiniteElementNet</RootNamespace>
+    <AssemblyName>BriefFiniteElementNet</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CheckingUtil.cs" />
+    <Compile Include="CSparse\Tuple.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="IElement1DLoad.cs" />
+    <Compile Include="PointYz.cs" />
+    <Compile Include="PolygonYz.cs" />
+    <Compile Include="FrameElement2Node.cs" />
+    <Compile Include="SolverConfiguration.cs" />
+    <Compile Include="StaticLinearAnalysisResult.cs" />
+    <Compile Include="BriefFiniteElementNetException.cs" />
+    <Compile Include="ConcentratedLoad1D.cs" />
+    <Compile Include="Constraint.cs" />
+    <Compile Include="CoordinationSystem.cs" />
+    <Compile Include="CSparse\ColumnOrdering.cs" />
+    <Compile Include="CSparse\Common.cs" />
+    <Compile Include="CSparse\Constants.cs" />
+    <Compile Include="CSparse\Double\CompressedColumnStorage.cs" />
+    <Compile Include="CSparse\Double\Factorization\SparseCholesky.cs" />
+    <Compile Include="CSparse\Double\Factorization\SparseLU.cs" />
+    <Compile Include="CSparse\Double\Factorization\SparseQR.cs" />
+    <Compile Include="CSparse\Double\Vector.cs" />
+    <Compile Include="CSparse\GraphHelper.cs" />
+    <Compile Include="CSparse\Helper.cs" />
+    <Compile Include="CSparse\ISparseFactorization.cs" />
+    <Compile Include="CSparse\MatrixNorm.cs" />
+    <Compile Include="CSparse\Ordering\AMD.cs" />
+    <Compile Include="CSparse\Ordering\DulmageMendelsohn.cs" />
+    <Compile Include="CSparse\Ordering\MaximumMatching.cs" />
+    <Compile Include="CSparse\Permutation.cs" />
+    <Compile Include="CSparse\Storage\CompressedColumnStorage.cs" />
+    <Compile Include="CSparse\Storage\Converter.cs" />
+    <Compile Include="CSparse\Storage\CoordinateStorage.cs" />
+    <Compile Include="CSparse\Storage\ISparseMatrixStorage.cs" />
+    <Compile Include="CSparse\Storage\SparseMatrixStorage.cs" />
+    <Compile Include="CSparse\Storage\SymbolicColumnStorage.cs" />
+    <Compile Include="CSparse\SymbolicFactorization.cs" />
+    <Compile Include="CustomLinearLoad1D.cs" />
+    <Compile Include="Direction.cs" />
+    <Compile Include="Displacement.cs" />
+    <Compile Include="DofConstraint.cs" />
+    <Compile Include="Element.cs" />
+    <Compile Include="Element1D.cs" />
+    <Compile Include="Element2D.cs" />
+    <Compile Include="Element3D.cs" />
+    <Compile Include="ElementCollection.cs" />
+    <Compile Include="ElementType.cs" />
+    <Compile Include="ExceptionHelper.cs" />
+    <Compile Include="FemNetStringCompairer.cs" />
+    <Compile Include="Force.cs" />
+    <Compile Include="IElementLoad.cs" />
+    <Compile Include="IFuzzyEquatable.cs" />
+    <Compile Include="Load.cs" />
+    <Compile Include="Load1D.cs" />
+    <Compile Include="Load2D.cs" />
+    <Compile Include="Load3D.cs" />
+    <Compile Include="LoadCase.cs" />
+    <Compile Include="LoadCombination.cs" />
+    <Compile Include="LoadType.cs" />
+    <Compile Include="MathUtil.cs" />
+    <Compile Include="InvalidLabelException.cs" />
+    <Compile Include="Matrix.cs" />
+    <Compile Include="NodalLoad.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="NodeCollection.cs" />
+    <Compile Include="Point.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Model.cs" />
+    <Compile Include="StructureGenerator.cs" />
+    <Compile Include="StructurePart.cs" />
+    <Compile Include="StructurePartCollection.cs" />
+    <Compile Include="TraceUtil.cs" />
+    <Compile Include="TrussElement.cs" />
+    <Compile Include="UniformLoad1D.cs" />
+    <Compile Include="Vector.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CSparse\IO\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="checksum" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
