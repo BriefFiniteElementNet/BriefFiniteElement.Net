@@ -5,10 +5,6 @@ VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet", "BriefFiniteElementNet\BriefFiniteElementNet.csproj", "{7CDA20D4-9BC8-4BC3-9F22-CB86CD4DC3E1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemporaryConsoleApplication", "TemporaryConsoleApplication\TemporaryConsoleApplication.csproj", "{38672918-F463-4867-9B1F-E2F429D247D5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.CodeGeneration", "BriefFiniteElementNet.CodeGeneration\BriefFiniteElementNet.CodeGeneration.csproj", "{1D9F3694-ABBC-457A-9D7B-81356467A58B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.DebuggerVisualizers", "BriefFiniteElementNet.DebuggerVisualizers\BriefFiniteElementNet.DebuggerVisualizers.csproj", "{72D71E4B-625F-4A55-8255-6FD2E7ADF4E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.BenchmarkApplication", "BriefFiniteElementNet.BenchmarkApplication\BriefFiniteElementNet.BenchmarkApplication.csproj", "{2387F8E3-9743-42F0-8BEF-F3863838F114}"
@@ -23,14 +19,6 @@ Global
 		{7CDA20D4-9BC8-4BC3-9F22-CB86CD4DC3E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CDA20D4-9BC8-4BC3-9F22-CB86CD4DC3E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CDA20D4-9BC8-4BC3-9F22-CB86CD4DC3E1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{38672918-F463-4867-9B1F-E2F429D247D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38672918-F463-4867-9B1F-E2F429D247D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38672918-F463-4867-9B1F-E2F429D247D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38672918-F463-4867-9B1F-E2F429D247D5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D9F3694-ABBC-457A-9D7B-81356467A58B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D9F3694-ABBC-457A-9D7B-81356467A58B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D9F3694-ABBC-457A-9D7B-81356467A58B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D9F3694-ABBC-457A-9D7B-81356467A58B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{72D71E4B-625F-4A55-8255-6FD2E7ADF4E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{72D71E4B-625F-4A55-8255-6FD2E7ADF4E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72D71E4B-625F-4A55-8255-6FD2E7ADF4E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
