@@ -18,7 +18,7 @@ namespace TemporaryConsoleApplication
             var model = StructureGenerator.GenerateSimpleBeam(10);
 
             model.Elements[0].Loads.Add(new UniformLoad1D(2, Direction.Z, CoordinationSystem.Global));
-
+            //Note: we've used -1 as magnitude for the load as it is opposit to Z direction
 
             model.Elements[3].As<FrameElement2Node>().HingedAtStart = true;
             model.Elements[3].As<FrameElement2Node>().HingedAtEnd = true;

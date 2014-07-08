@@ -92,7 +92,7 @@ namespace BriefFiniteElementNet
         /// If system is not analysed against a specific load case, then this method will analyse structure agains <see cref="loadCase"/>.
         /// While this method is using pre computed Cholesky Decomposition (the <see cref="StiffnessMatrixCholeskyDecomposition"/> is meant) , its have a high performance in solving the system.
         /// </remarks>
-        internal void AddAnalysisResult(LoadCase cse)
+        public void AddAnalysisResult(LoadCase cse)
         {
             var sp = System.Diagnostics.Stopwatch.StartNew();
 

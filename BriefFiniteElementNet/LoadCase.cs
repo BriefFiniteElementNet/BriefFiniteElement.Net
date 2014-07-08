@@ -14,6 +14,20 @@ namespace BriefFiniteElementNet
     [DebuggerDisplay("{CaseName} ({LoadType})")]
     public struct LoadCase : IEquatable<LoadCase>, ISerializable
     {
+
+        /// <summary>
+        /// Gets the default load case.
+        /// </summary>
+        /// <value>
+        /// The default load case.
+        /// </value>
+        /// <remarks>
+        /// Gets a LoadCase with <see cref="LoadType"/> of <see cref="BriefFiniteElementNet.LoadType.Default"/> and empty <see cref="CaseName"/></remarks>
+        public static LoadCase DefaultLoadCase
+        {
+            get { return new LoadCase(); }
+        }
+
         private string caseName;
         private LoadType loadType;
 

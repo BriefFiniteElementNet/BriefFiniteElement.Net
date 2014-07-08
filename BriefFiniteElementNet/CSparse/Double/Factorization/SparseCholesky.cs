@@ -48,12 +48,12 @@ namespace CSparse.Double.Factorization
             // Ordering and symbolic analysis
             SymbolicAnalysis(order, A);
             sp.Stop();
-            Console.WriteLine("symbolic factorization tooks: {0}", sp.Elapsed);
+            TraceUtil.WritePerformanceTrace("symbolic factorization tooks: {0}", sp.Elapsed);
             // Numeric Cholesky factorization
             sp.Restart();
             Factorize(A);
 
-            Console.WriteLine("factorization tooks: {0}", sp.Elapsed);
+            TraceUtil.WritePerformanceTrace("factorization tooks: {0}", sp.Elapsed);
         }
 
         /// <summary>

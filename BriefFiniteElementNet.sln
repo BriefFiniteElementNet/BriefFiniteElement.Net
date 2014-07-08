@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.CodeG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.DebuggerVisualizers", "BriefFiniteElementNet.DebuggerVisualizers\BriefFiniteElementNet.DebuggerVisualizers.csproj", "{72D71E4B-625F-4A55-8255-6FD2E7ADF4E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.BenchmarkApplication", "BriefFiniteElementNet.BenchmarkApplication\BriefFiniteElementNet.BenchmarkApplication.csproj", "{2387F8E3-9743-42F0-8BEF-F3863838F114}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{72D71E4B-625F-4A55-8255-6FD2E7ADF4E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72D71E4B-625F-4A55-8255-6FD2E7ADF4E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72D71E4B-625F-4A55-8255-6FD2E7ADF4E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2387F8E3-9743-42F0-8BEF-F3863838F114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2387F8E3-9743-42F0-8BEF-F3863838F114}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2387F8E3-9743-42F0-8BEF-F3863838F114}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2387F8E3-9743-42F0-8BEF-F3863838F114}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

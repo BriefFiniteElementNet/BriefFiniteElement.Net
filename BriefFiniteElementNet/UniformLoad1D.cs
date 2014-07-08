@@ -37,25 +37,39 @@ namespace BriefFiniteElementNet
             {
                 var frElm = element as FrameElement2Node;
 
-                if (frElm.HingedAtEnd || frElm.HingedAtStart)
-                    throw new Exception();
-
                 var l = (frElm.EndNode.Location - frElm.StartNode.Location).Length;
 
                 var w = GetLocalDistributedLoad(element as Element1D);
 
+                var localEndForces = new Force[2];
 
-                var buf = new Force[2];
-                buf[0] = new Force(w.X*l/2, w.Y*l/2, w.Z*l/2, 0, -w.Z*l*l/12.0, w.Y*l*l/12.0);
-                buf[1] = new Force(w.X*l/2, w.Y*l/2, w.Z*l/2, 0, w.Z*l*l/12.0, -w.Y*l*l/12.0);
+                if (frElm.HingedAtEnd & frElm.HingedAtStart)
+                {
+                    localEndForces[0] = new Force(w.X*l/2, w.Y*l/2, w.Z*l/2, 0, 0, 0);
+                    localEndForces[1] = new Force(w.X*l/2, w.Y*l/2, w.Z*l/2, 0, 0, 0);
+                }
+                else if (!frElm.HingedAtEnd & frElm.HingedAtStart)
+                {
+
+                }
+                else if (frElm.HingedAtEnd & !frElm.HingedAtStart)
+                {
+
+                }
+                else if (!frElm.HingedAtEnd & !frElm.HingedAtStart)
+                {
+                    localEndForces[0] = new Force(w.X * l / 2, w.Y * l / 2, w.Z * l / 2, 0, -w.Z * l * l / 12.0, w.Y * l * l / 12.0);
+                    localEndForces[1] = new Force(w.X * l / 2, w.Y * l / 2, w.Z * l / 2, 0, w.Z * l * l / 12.0, -w.Y * l * l / 12.0);
+                }
+
 
                 for (var i = 0; i < element.Nodes.Length; i++)
                 {
-                    var frc = buf[i];
-                    buf[i] = new Force(frElm.TransformLocalToGlobal(frc.Forces), frElm.TransformLocalToGlobal(frc.Moments));
+                    var frc = localEndForces[i];
+                    localEndForces[i] = new Force(frElm.TransformLocalToGlobal(frc.Forces), frElm.TransformLocalToGlobal(frc.Moments));
                 }
 
-                return buf;
+                return localEndForces;
             }
 
             throw new NotImplementedException();
