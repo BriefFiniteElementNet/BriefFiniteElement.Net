@@ -251,7 +251,7 @@ namespace BriefFiniteElementNet
             MathUtil.FillLowerTriangleFromUpperTriangle(k);
 
             #region Tests
-            /*
+            /**/
             var rMatrix = new Matrix(3, 3);
             var tMatrix = new Matrix(12, 12);
 
@@ -267,7 +267,9 @@ namespace BriefFiniteElementNet
             var kg = tMatrix.Transpose() * k2 * tMatrix;
 
             var dif = kg - k;
-            */
+
+            var max = dif.Select(i => Math.Abs(i)).Max();
+            /**/
             #endregion
 
             return k;

@@ -89,11 +89,11 @@ namespace BriefFiniteElementNet
         #region LinearSolve method and overrides
 
         /// <summary>
-        /// Solves this instance assuming linear behaviour (both geometric and material).
+        /// Solves the instanse assuming linear behaviour (both geometric and material) for default load case.
         /// </summary>
         public void Solve()
         {
-            Solve(new SolverConfiguration());
+            Solve(new SolverConfiguration(LoadCase.DefaultLoadCase));
         }
 
         /// <summary>

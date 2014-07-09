@@ -24,8 +24,7 @@ namespace BriefFiniteElementNet
         {
             get
             {
-                return new Constraint(DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Fixed,
-                    DofConstraint.Fixed, DofConstraint.Fixed);
+                return new Constraint(DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Fixed);
             }
         }
 
@@ -40,8 +39,7 @@ namespace BriefFiniteElementNet
         {
             get
             {
-                return new Constraint(DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released,
-                    DofConstraint.Released, DofConstraint.Released);
+                return new Constraint(DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released);
             }
         }
 
@@ -56,8 +54,7 @@ namespace BriefFiniteElementNet
         {
             get
             {
-                return new Constraint(DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Fixed,
-                    DofConstraint.Released, DofConstraint.Released, DofConstraint.Released);
+                return new Constraint(DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released);
             }
         }
 
@@ -72,8 +69,7 @@ namespace BriefFiniteElementNet
         {
             get
             {
-                return new Constraint(DofConstraint.Released, DofConstraint.Released, DofConstraint.Released,
-                    DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Fixed);
+                return new Constraint(DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Fixed);
             }
         }
 
@@ -89,8 +85,7 @@ namespace BriefFiniteElementNet
             get
             {
                 return new Constraint(
-                    DofConstraint.Fixed, DofConstraint.Released, DofConstraint.Released,
-                    DofConstraint.Released, DofConstraint.Released, DofConstraint.Released);
+                    DofConstraint.Fixed, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released);
             }
         }
 
@@ -106,8 +101,7 @@ namespace BriefFiniteElementNet
             get
             {
                 return new Constraint(
-                    DofConstraint.Released, DofConstraint.Fixed, DofConstraint.Released,
-                    DofConstraint.Released, DofConstraint.Released, DofConstraint.Released);
+                    DofConstraint.Released, DofConstraint.Fixed, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released);
             }
         }
 
@@ -123,8 +117,7 @@ namespace BriefFiniteElementNet
             get
             {
                 return new Constraint(
-                    DofConstraint.Released, DofConstraint.Released, DofConstraint.Fixed,
-                    DofConstraint.Released, DofConstraint.Released, DofConstraint.Released);
+                    DofConstraint.Released, DofConstraint.Released, DofConstraint.Fixed, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released);
             }
         }
 
@@ -140,8 +133,7 @@ namespace BriefFiniteElementNet
             get
             {
                 return new Constraint(
-                    DofConstraint.Released, DofConstraint.Released, DofConstraint.Released,
-                    DofConstraint.Fixed, DofConstraint.Released, DofConstraint.Released);
+                    DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Fixed, DofConstraint.Released, DofConstraint.Released);
             }
         }
 
@@ -157,8 +149,7 @@ namespace BriefFiniteElementNet
             get
             {
                 return new Constraint(
-                    DofConstraint.Released, DofConstraint.Released, DofConstraint.Released,
-                    DofConstraint.Released, DofConstraint.Fixed, DofConstraint.Released);
+                    DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Fixed, DofConstraint.Released);
             }
         }
 
@@ -174,8 +165,7 @@ namespace BriefFiniteElementNet
             get
             {
                 return new Constraint(
-                    DofConstraint.Released, DofConstraint.Released, DofConstraint.Released,
-                    DofConstraint.Released, DofConstraint.Released, DofConstraint.Fixed);
+                    DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Fixed);
             }
         }
 
@@ -184,17 +174,16 @@ namespace BriefFiniteElementNet
 
         #endregion
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Constraint"/> struct.
         /// </summary>
         /// <param name="dx">The dx.</param>
         /// <param name="dy">The dy.</param>
         /// <param name="dz">The dz.</param>
+        /// <param name="rx">The rx.</param>
         /// <param name="ry">The ry.</param>
         /// <param name="rz">The rz.</param>
-        /// <param name="rx">The rx.</param>
-        public Constraint(DofConstraint dx, DofConstraint dy, DofConstraint dz, DofConstraint ry, DofConstraint rz, DofConstraint rx)
+        public Constraint(DofConstraint dx, DofConstraint dy, DofConstraint dz, DofConstraint rx, DofConstraint ry, DofConstraint rz)
         {
             this.dx = dx;
             this.dy = dy;
