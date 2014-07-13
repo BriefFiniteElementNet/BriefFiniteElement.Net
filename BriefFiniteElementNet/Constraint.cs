@@ -35,7 +35,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// A totally Released Constraint.
         /// </value>
-        public static Constraint Free
+        public static Constraint Released
         {
             get
             {
@@ -43,6 +43,14 @@ namespace BriefFiniteElementNet
             }
         }
 
+        [Obsolete("Use Constraint.Released instead")]
+        public static Constraint Free
+        {
+            get
+            {
+                return new Constraint(DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released);
+            }
+        }
 
         /// <summary>
         /// Gets a movement fixed (but rotation free) Contraint.
@@ -349,6 +357,37 @@ namespace BriefFiniteElementNet
             this.rz = (DofConstraint)info.GetInt32("rz");
         }
 
+        /// <summary>
+        /// Returns a <see cref="System.String" /> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String" /> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            if (this.Equals(Released))
+                return "Release";
+
+            if (this.Equals(Fixed))
+                return "Fixed";
+
+            if (this.Equals(MovementFixed))
+                return "Movement Fixed";
+
+            if (this.Equals(RotationFixed))
+                return "Rotation Fixed";
+
+            var arr = new DofConstraint[] {dx, dy, dz, rx, ry, rz};
+
+            var buf = new char[6];
+
+            for (int i = 0; i < 6; i++)
+            {
+                buf[i] = arr[i] == DofConstraint.Fixed ? '1' : '0';
+            }
+
+            return new string(buf);
+        }
 
         public bool Equals(Constraint other)
         {

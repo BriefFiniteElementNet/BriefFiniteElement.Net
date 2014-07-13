@@ -12,34 +12,46 @@ namespace TemporaryConsoleApplication
     {
         static void Main(string[] args)
         {
-            TestTruss();
-            var t = "".GetHashCode();
+            TestConcentratedLoad();
             
-            var model = StructureGenerator.GenerateSimpleBeam(10);
-
-            model.Elements[0].Loads.Add(new UniformLoad1D(2, Direction.Z, CoordinationSystem.Global));
-            //Note: we've used -1 as magnitude for the load as it is opposit to Z direction
-
-            model.Elements[3].As<FrameElement2Node>().HingedAtStart = true;
-            model.Elements[3].As<FrameElement2Node>().HingedAtEnd = true;
-            
-
-            model.Nodes.First().Constraints = Constraint.Fixed;
-
-            model.Nodes.Last().Constraints = Constraint.Fixed;
-
-            //model.Nodes.Last().Settlements = new Displacement(0, 1, 0, 0, 0, 0);
-            
-            model.Solve(new LoadCase());
-
-            var d1 = model.Nodes[0].GetSupportReaction();
-            var d2 = model.Nodes.Last().GetSupportReaction();
-
-            //CheckingUtil.IsInStaticEquilibrium(model.LastResult, new LoadCase());
-
-            CheckingUtil.IsInStaticEquilibrium(model.LastResult, new LoadCase());
 
             Console.ReadKey();
+        }
+
+        private static void TestConcentratedLoad()
+        {
+            var model = StructureGenerator.Generate3DGrid(10,10,10);
+
+
+
+            foreach (var elm in model.Elements)
+            {
+                var pos = 0.5;
+
+                var force = new Force(new Vector(1, 2, 3), new Vector(4, 5, 6));
+
+                var load = new ConcentratedLoad1D(
+                    force,
+                    pos,
+                    CoordinationSystem.Global);
+
+                elm.Loads.Add(load);
+            }
+
+            
+
+            
+
+
+            model.Solve(LoadCase.DefaultLoadCase);
+
+            var reac = model.Nodes[0].GetSupportReaction(LoadCombination.DefaultLoadCombination);
+
+
+            //var frc = model.Elements[0].As<FrameElement2Node>().GetInternalForceAt(0.49);
+
+
+            CheckingUtil.IsInStaticEquilibrium(model.LastResult, new LoadCase());
         }
 
         private static void TestTruss()
@@ -126,5 +138,6 @@ namespace TemporaryConsoleApplication
 
             return buf;
         }
+
     }
 }

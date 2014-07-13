@@ -10,6 +10,9 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents a load case.
     /// </summary>
+    /// <remarks>
+    /// In comparing two different load case, white space characters and 
+    /// </remarks>
     [Serializable]
     [DebuggerDisplay("{CaseName} ({LoadType})")]
     public struct LoadCase : IEquatable<LoadCase>, ISerializable
@@ -113,5 +116,18 @@ namespace BriefFiniteElementNet
             caseName = info.GetString("caseName");
             loadType = (LoadType) info.GetInt32("loadType");
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LoadCase"/> struct.
+        /// </summary>
+        /// <param name="caseName">Name of the <see cref="LoadCase"/>.</param>
+        /// <param name="loadType">Type of the <see cref="LoadCase"/>.</param>
+        public LoadCase(string caseName, LoadType loadType)
+        {
+            this.caseName = caseName;
+            this.loadType = loadType;
+        }
+
+
     }
 }

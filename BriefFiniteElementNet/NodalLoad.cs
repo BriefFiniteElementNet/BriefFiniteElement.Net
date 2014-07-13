@@ -12,6 +12,21 @@ namespace BriefFiniteElementNet
     [Serializable]
     public struct NodalLoad : ISerializable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NodalLoad"/> struct with <see cref="LoadCase.DefaultLoadCase"/> as <see cref="NodalLoad.Case"/>.
+        /// </summary>
+        /// <param name="force">The force.</param>
+        public NodalLoad(Force force) 
+        {
+            this.force = force;
+            this._case = LoadCase.DefaultLoadCase;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NodalLoad"/> struct.
+        /// </summary>
+        /// <param name="force">The force.</param>
+        /// <param name="case">The Load case.</param>
         public NodalLoad(Force force, LoadCase @case)
         {
             this.force = force;
@@ -60,7 +75,7 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NodalLoad"/> class. satisfies the constrictor for <see cref="ISerializable"/> interface.
+        /// Initializes a new instance of the <see cref="NodalLoad" /> class. satisfies the constrictor for <see cref="ISerializable" /> interface.
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>

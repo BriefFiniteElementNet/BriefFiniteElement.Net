@@ -20,16 +20,27 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static Force Move(this Force frc,Point location, Point destination)
+        public static Force Move(this Force frc, Point location, Point destination)
         {
-            var r = location - destination;
-
+            var r = destination - location;
+            
             var addMoment = Vector.Cross(r, frc.Forces);
 
-            frc.Moments += addMoment;
+            frc.Moments -= addMoment;
 
             return frc;
         }
+
+
+        public static Force Move(this Force frc, Vector r)
+        {
+            var addMoment = Vector.Cross(r, frc.Forces);
+
+            frc.Moments -= addMoment;
+
+            return frc;
+        }
+
 
         public static int IndexOfReference<T>(this IEnumerable<T> arr, T obj)
         {

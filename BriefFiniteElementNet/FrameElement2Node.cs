@@ -262,13 +262,13 @@ namespace BriefFiniteElementNet
                     for (var j = 0; j < 3; j++)
                         tMatrix[i + ct*3, j + ct*3] = rMatrix[i, j];
 
-            var k2 = GetLocalStiffnessMatrix();
+           // var k2 = GetLocalStiffnessMatrix();
 
-            var kg = tMatrix.Transpose() * k2 * tMatrix;
+            //var kg = tMatrix.Transpose() * k2 * tMatrix;
 
-            var dif = kg - k;
+            //var dif = kg - k;
 
-            var max = dif.Select(i => Math.Abs(i)).Max();
+            //var max = dif.Select(i => Math.Abs(i)).Max();
             /**/
             #endregion
 
@@ -712,9 +712,9 @@ namespace BriefFiniteElementNet
 
             var lStartForces = Matrix.Multiply(GetLocalStiffnessMatrix(), displVector);
 
-            var startForce = -Force.FromVector(lStartForces, 0);
+            var startForce = Force.FromVector(lStartForces, 0);
 
-            var forceAtX = startForce.Move(new Point(0,0,0), new Point(x, 0, 0));
+            var forceAtX = -startForce.Move(new Vector(x,0,0));
 
             foreach (var ld in loads)
             {
@@ -753,17 +753,43 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="v">The v.</param>
         /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
         internal Vector TransformGlobalToLocal(Vector v)
         {
             var pars = GetTransformationParameters();
             var buf = new Vector(
-                pars[0]*v.X + pars[3]*v.Y + pars[6]*v.Z,
-                pars[1]*v.X + pars[4]*v.Y + pars[7]*v.Z,
-                pars[2]*v.X + pars[5]*v.Y + pars[8]*v.Z);
+                pars[0] * v.X + pars[3] * v.Y + pars[6] * v.Z,
+                pars[1] * v.X + pars[4] * v.Y + pars[7] * v.Z,
+                pars[2] * v.X + pars[5] * v.Y + pars[8] * v.Z);
 
             return buf;
         }
+
+        /// <summary>
+        /// Converts the vectors from local to global coordinations system.
+        /// </summary>
+        /// <param name="vs">The v.</param>
+        /// <returns></returns>
+        internal Vector[] TransformGlobalToLocal(params Vector[] vs)
+        {
+            var pars = GetTransformationParameters();
+
+            var bf = new Vector[vs.Length];
+
+
+            for (var i = 0; i < vs.Length; i++)
+            {
+                var v = vs[i];
+                var buf = new Vector(
+                    pars[0]*v.X + pars[3]*v.Y + pars[6]*v.Z,
+                    pars[1]*v.X + pars[4]*v.Y + pars[7]*v.Z,
+                    pars[2]*v.X + pars[5]*v.Y + pars[8]*v.Z);
+
+                bf[i] = buf;
+            }
+
+            return bf;
+        }
+
 
         /// <summary>
         /// Converts the vector from global to localcoordinations system.
@@ -781,6 +807,32 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+        /// <summary>
+        /// Converts the an array of vectors from global to localcoordinations system.
+        /// </summary>
+        /// <param name="vs">The vectors.</param>
+        /// <returns></returns>
+        internal Vector[] TransformLocalToGlobal(params Vector[] vs)
+        {
+            var pars = GetTransformationParameters();
+
+            var bf = new Vector[vs.Length];
+
+
+            for (var i = 0; i < vs.Length; i++)
+            {
+                var v = vs[i];
+
+                var tv = new Vector(
+                    pars[0]*v.X + pars[1]*v.Y + pars[2]*v.Z,
+                    pars[3]*v.X + pars[4]*v.Y + pars[5]*v.Z,
+                    pars[6]*v.X + pars[7]*v.Y + pars[8]*v.Z);
+                bf[i] = tv;
+
+            }
+            
+            return bf;
+        }
 
         
         /// <summary>

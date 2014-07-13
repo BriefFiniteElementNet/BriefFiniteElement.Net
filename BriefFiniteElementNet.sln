@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.CodeG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TemporaryConsoleApplication", "TemporaryConsoleApplication\TemporaryConsoleApplication.csproj", "{38672918-F463-4867-9B1F-E2F429D247D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.CodeProjectExamples", "BriefFiniteElementNet.CodeProjectExamples\BriefFiniteElementNet.CodeProjectExamples.csproj", "{24EBA191-F9E3-47CF-B0FE-865B6243A354}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{38672918-F463-4867-9B1F-E2F429D247D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38672918-F463-4867-9B1F-E2F429D247D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38672918-F463-4867-9B1F-E2F429D247D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24EBA191-F9E3-47CF-B0FE-865B6243A354}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24EBA191-F9E3-47CF-B0FE-865B6243A354}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24EBA191-F9E3-47CF-B0FE-865B6243A354}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24EBA191-F9E3-47CF-B0FE-865B6243A354}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

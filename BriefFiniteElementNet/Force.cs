@@ -216,6 +216,20 @@ namespace BriefFiniteElementNet
             return new Force(f1.fx + f2.fx, f1.fy + f2.fy, f1.fz + f2.fz, f1.mx + f2.mx, f1.my + f2.my, f1.mz + f2.mz);
         }
 
+
+        /// <summary>
+        /// Implements the operator -.
+        /// </summary>
+        /// <param name="f1">The f1.</param>
+        /// <param name="f2">The f2.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
+        public static Force operator -(Force f1, Force f2)
+        {
+            return new Force(f1.fx - f2.fx, f1.fy - f2.fy, f1.fz - f2.fz, f1.mx - f2.mx, f1.my - f2.my, f1.mz - f2.mz);
+        }
+
         /// <summary>
         /// Implements the operator *.
         /// </summary>

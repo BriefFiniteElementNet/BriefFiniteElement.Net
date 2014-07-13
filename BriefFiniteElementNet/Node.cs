@@ -143,6 +143,13 @@ namespace BriefFiniteElementNet
             var f1 = new Force();
             var f = new Force();
 
+            foreach (var cse in cmb.Keys)
+            {
+                if (!parent.LastResult.Displacements.ContainsKey(cse))
+                    parent.LastResult.AddAnalysisResult(cse);
+            }
+
+
             foreach (var elm in ConnectedElements)
             {
                 var ind = elm.Nodes.IndexOfReference(this);
@@ -183,10 +190,7 @@ namespace BriefFiniteElementNet
 
         public Force GetSupportReaction()
         {
-            var cmb = new LoadCombination();
-            cmb[new LoadCase()] = 1.0;
-
-            return GetSupportReaction(cmb);
+            return GetSupportReaction(LoadCombination.DefaultLoadCombination);
         }
     }
 }

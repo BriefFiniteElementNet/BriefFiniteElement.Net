@@ -88,6 +88,14 @@ namespace BriefFiniteElementNet
             nde.Parent = this.parent;
         }
 
+        public void AddRange(params Node[] nodes)
+        {
+            foreach (var nde in nodes)
+            {
+                Add(nde);
+            }
+        }
+
         public void Clear()
         {
             foreach (var node in _list)

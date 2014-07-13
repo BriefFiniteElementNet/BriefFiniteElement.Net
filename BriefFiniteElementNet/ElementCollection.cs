@@ -91,6 +91,14 @@ namespace BriefFiniteElementNet
             item.Parent = this.parent;
         }
 
+        public void AddRange(params Element[] elements)
+        {
+            foreach (var elm in elements)
+            {
+                Add(elm);
+            }
+        }
+
         public void Clear()
         {
             foreach (var node in _list)

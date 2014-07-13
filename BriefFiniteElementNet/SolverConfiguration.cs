@@ -19,7 +19,7 @@ namespace BriefFiniteElementNet
             this.loadCases = new List<LoadCase>(loadCases);
         }
 
-        public SolverConfiguration(LoadCase settlementsLoadCase)
+        public SolverConfiguration(LoadCase settlementsLoadCase):this()
         {
             this.settlementsLoadCase = settlementsLoadCase;
         }
