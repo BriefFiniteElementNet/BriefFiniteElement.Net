@@ -13,7 +13,8 @@ namespace TemporaryConsoleApplication
         static void Main(string[] args)
         {
             TestConcentratedLoad();
-            
+
+            new double[] {1, 2, 3}.Select().Max();
 
             Console.ReadKey();
         }
