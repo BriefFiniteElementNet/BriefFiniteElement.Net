@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using CSparse.Double;
 
@@ -8,6 +9,19 @@ namespace BriefFiniteElementNet
 {
     public static class Extensions
     {
+
+        /// <summary>
+        /// Simplify the accessing to <see cref="SerializationInfo.GetValue"/> and then casting the returned type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="info">The information.</param>
+        /// <param name="name">The name of field.</param>
+        /// <returns></returns>
+        public static T GetValue<T>(this SerializationInfo info, string name)
+        {
+            return (T) info.GetValue(name, typeof (T));
+        }
+
         public static Force Sum(this IEnumerable<Force> forces)
         {
             var buf = new Force();

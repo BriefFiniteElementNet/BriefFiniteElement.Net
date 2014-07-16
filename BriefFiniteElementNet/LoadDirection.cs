@@ -8,7 +8,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents an axis direction in cartesian coordination system
     /// </summary>
-    public enum Direction
+    public enum LoadDirection
     {
         /// <summary>
         /// The x

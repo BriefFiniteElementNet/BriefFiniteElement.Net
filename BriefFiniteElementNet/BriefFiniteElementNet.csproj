@@ -50,6 +50,7 @@
     <Compile Include="PointYz.cs" />
     <Compile Include="PolygonYz.cs" />
     <Compile Include="FrameElement2Node.cs" />
+    <Compile Include="RandomStuff.cs" />
     <Compile Include="SolverConfiguration.cs" />
     <Compile Include="StaticLinearAnalysisResult.cs" />
     <Compile Include="BriefFiniteElementNetException.cs" />
@@ -80,7 +81,7 @@
     <Compile Include="CSparse\Storage\SymbolicColumnStorage.cs" />
     <Compile Include="CSparse\SymbolicFactorization.cs" />
     <Compile Include="CustomLinearLoad1D.cs" />
-    <Compile Include="Direction.cs" />
+    <Compile Include="LoadDirection.cs" />
     <Compile Include="Displacement.cs" />
     <Compile Include="DofConstraint.cs" />
     <Compile Include="Element.cs" />
@@ -114,7 +115,7 @@
     <Compile Include="StructurePart.cs" />
     <Compile Include="StructurePartCollection.cs" />
     <Compile Include="TraceUtil.cs" />
-    <Compile Include="TrussElement.cs" />
+    <Compile Include="TrussElement2Node.cs" />
     <Compile Include="UniformLoad1D.cs" />
     <Compile Include="Vector.cs" />
   </ItemGroup>

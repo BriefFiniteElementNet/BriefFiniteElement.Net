@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace BriefFiniteElementNet
 {
-    public class TrussElement : Element1D
+    /// <summary>
+    /// Represents a 2 noded truss element (start and end)
+    /// </summary>
+    public class TrussElement2Node : Element1D
     {
         #region Members
 
@@ -30,7 +34,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <value>
         /// <c>true</c> if overrided properties (<see cref="A"/>,<see cref="A"/>) should be taken into account for calculations such as stiffness matrix calculation ];
-        /// <c>false</c> if geomtric properties of section should be calculated from <see cref="Geometry"/> Property of <see cref="TrussElement"/>.
+        /// <c>false</c> if geomtric properties of section should be calculated from <see cref="Geometry"/> Property of <see cref="TrussElement2Node"/>.
         /// </value>
         public bool UseOverridedProperties
         {
@@ -58,22 +62,58 @@ namespace BriefFiniteElementNet
         #endregion
 
 
-        public TrussElement(Node start,Node end) : base(2)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TrussElement2Node"/> class.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
+        public TrussElement2Node(Node start,Node end) : base(2)
         {
             this.nodes[0] = start;
             this.nodes[1] = end;
+            this.elementType = ElementType.TrussElement2Noded;
         }
 
+        /// <summary>
+        /// Gets the internal force at <see cref="x" /> position.
+        /// </summary>
+        /// <param name="x">The position (from start point).</param>
+        /// <param name="cmb">The <see cref="LoadCombination" />.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        /// <remarks>
+        /// Will calculate the internal forces of member regarding the <see cref="cmb" /> <see cref="LoadCombination" />
+        /// </remarks>
         public override Force GetInternalForceAt(double x, LoadCombination cmb)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets the internal force at.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        /// <remarks>
+        /// Will calculate the internal forces of member regarding Default load case (default load case means a load case where <see cref="LoadCase.LoadType" /> is equal to <see cref="LoadType.Default" /> and <see cref="LoadCase.CaseName" /> is equal to null)
+        /// </remarks>
         public override Force GetInternalForceAt(double x)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets the stifness matrix of member in global coordination system.
+        /// </summary>
+        /// <returns>
+        /// The stiffnes matrix
+        /// </returns>
+        /// <exception cref="System.NotImplementedException">
+        /// </exception>
+        /// <remarks>
+        /// The number of DoFs is in element local regrading order in <see cref="Nodes" />!
+        /// </remarks>
         public override Matrix GetGlobalStifnessMatrix()
         {
             var v = this.EndNode.Location - this.StartNode.Location;
@@ -125,7 +165,7 @@ namespace BriefFiniteElementNet
         /// Gets or sets the start node.
         /// </summary>
         /// <value>
-        /// The start node of <see cref="TrussElement"/>.
+        /// The start node of <see cref="TrussElement2Node"/>.
         /// </value>
         public Node StartNode
         {
@@ -137,12 +177,36 @@ namespace BriefFiniteElementNet
         /// Gets or sets the end node.
         /// </summary>
         /// <value>
-        /// The end node of <see cref="TrussElement"/>.
+        /// The end node of <see cref="TrussElement2Node"/>.
         /// </value>
         public Node EndNode
         {
             get { return nodes[1]; }
             set { nodes[1] = value; }
+        }
+
+
+        /// <summary>
+        /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
+        /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TrussElement2Node"/> class.
+        /// </summary>
+        /// <param name="info">The information.</param>
+        /// <param name="context">The context.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        internal TrussElement2Node(SerializationInfo info, StreamingContext context):base(info,context)
+        {
+            throw new NotImplementedException();
         }
 
     }

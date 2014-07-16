@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace BriefFiniteElementNet
@@ -8,7 +10,8 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents an abstract class for being used by Node and Element classes
     /// </summary>
-    public abstract class StructurePart
+    [DebuggerDisplay("Label: {Label}")]
+    public abstract class StructurePart:ISerializable
     {
         /// <summary>
         /// Represents the hash code of ID, used for better performance (probably!)
@@ -77,6 +80,41 @@ namespace BriefFiniteElementNet
         {
             get { return parent; }
             set { parent = value; }
+        }
+
+        /// <summary>
+        /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
+        /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("idHashCode", idHashCode);
+            info.AddValue("id", id);
+            info.AddValue("label", label);
+            info.AddValue("tag", tag);
+        }
+
+        /// <summary>
+        /// This is constructor for deserialization. Satisfies the rule CA2229.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
+        /// <param name="context">The source (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
+        protected StructurePart(SerializationInfo info, StreamingContext context)
+        {
+            idHashCode = info.GetValue<int>("idHashCode");
+            id = info.GetValue<Guid>("id");
+            label = info.GetValue<string>("label");
+            tag = info.GetValue<string>("tag");
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StructurePart"/> class.
+        /// </summary>
+        protected StructurePart()
+        {
         }
     }
 }

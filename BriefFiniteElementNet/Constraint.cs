@@ -9,6 +9,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents the constraints on a single node with 6 independent degrees of freedom (3 movement and 3 rotational).
     /// </summary>
+    [Serializable]
     public struct Constraint :ISerializable, IEquatable<Constraint>
     {
 

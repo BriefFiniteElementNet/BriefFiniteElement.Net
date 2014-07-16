@@ -2,7 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using CSparse;
 using CSparse.Double.Factorization;
@@ -11,15 +14,25 @@ using CSparse.Storage;
 namespace BriefFiniteElementNet
 {
     /// <summary>
-    /// Represents a structure which consists of nodes, elements and loads applied on its parts (parts means Nodes and Elements)
+    /// Represents a structure which consists of nodes, elements and loads applied on its parts (parts means either nodes or elements)
     /// </summary>
-    public class Model
+    [Serializable]
+    public class Model:ISerializable
     {
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Model"/> class.
+        /// </summary>
         public Model()
         {
             this.nodes = new NodeCollection(this);
             this.elements = new ElementCollection(this);
         }
+
+        #endregion
+
+        #region Members
 
         private NodeCollection nodes;
         private ElementCollection elements;
@@ -59,6 +72,9 @@ namespace BriefFiniteElementNet
             private set { lastResult = value; }
         }
 
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Determines whether the specified <see cref="label"/> is valid for new <see cref="StructurePart"/> or not.
@@ -84,7 +100,63 @@ namespace BriefFiniteElementNet
             return true;
         }
 
+        /// <summary>
+        /// Saves the model to file.
+        /// </summary>
+        /// <param name="fileAddress">The file address.</param>
+        /// <param name="model">The model.</param>
+        public static void SaveModel(string fileAddress, Model model)
+        {
+            var formatter = new BinaryFormatter();
+            var str = File.OpenWrite(fileAddress);
 
+            formatter.Serialize(str, model);
+        }
+
+        /// <summary>
+        /// Saves the model to stream.
+        /// </summary>
+        /// <param name="st">The st.</param>
+        /// <param name="model">The model.</param>
+        public static void SaveModel(Stream st, Model model)
+        {
+            var formatter = new BinaryFormatter();
+
+            formatter.Serialize(st, model);
+        }
+
+
+        /// <summary>
+        /// Loads the Model from specified file address.
+        /// </summary>
+        /// <param name="fileAddress">The file address.</param>
+        /// <returns></returns>
+        public static Model Load(string fileAddress)
+        {
+            var str = File.OpenRead(fileAddress);
+            var formatter = new BinaryFormatter();
+            var buf = formatter.Deserialize(str) as Model;
+
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Loads the <see cref="Model"/> from specified stream.
+        /// </summary>
+        /// <param name="str">The stream.</param>
+        /// <returns></returns>
+        public static Model Load(Stream str)
+        {
+            var formatter = new BinaryFormatter();
+            var buf = formatter.Deserialize(str) as Model;
+
+
+            return buf;
+        }
+
+
+        #endregion
 
         #region LinearSolve method and overrides
 
@@ -343,5 +415,48 @@ namespace BriefFiniteElementNet
 
         #endregion
 
+        #region Serialization stuff
+
+        /// <summary>
+        /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
+        /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            for (int i = 0; i < nodes.Count; i++)
+                nodes[i].Index = i;
+
+            info.AddValue("elements", elements);
+            info.AddValue("nodes", nodes);
+        }
+
+        public Model(SerializationInfo info, StreamingContext context)
+        {
+            elements = info.GetValue<ElementCollection>("elements");
+            nodes = info.GetValue<NodeCollection>("nodes");
+
+        }
+
+        [OnDeserialized]
+        private void ReassignNodeReferences(StreamingContext context)
+        {
+            foreach (var elm in elements)
+            {
+                for (int i = 0; i < elm.nodeNumbers.Length; i++)
+                {
+                    elm.Nodes[i] = this.nodes[elm.nodeNumbers[i]];
+                }
+
+                elm.Parent = this;
+                elm.nodeNumbers = null;
+            }
+
+            foreach (var nde in nodes)
+                nde.Parent = this;
+        }
+
+        #endregion
     }
 }

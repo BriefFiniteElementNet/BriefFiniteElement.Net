@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace BriefFiniteElementNet
@@ -9,12 +10,13 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents a Node which is interconnection between Finite Elements.
     /// </summary>
-    [DebuggerDisplay("{Label}")]
+    [Serializable]
     public class Node : StructurePart
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Node"/> class.
         /// </summary>
+        
         public Node()
         {
             loads = new List<NodalLoad>();
@@ -31,9 +33,12 @@ namespace BriefFiniteElementNet
 
         internal int Index;
 
+        /// <summary>
+        /// The connected elements, used for calculating 
+        /// </summary>
         internal List<Element> ConnectedElements = new List<Element>(); 
         private List<NodalLoad> loads;
-        private List<NodalLoad> memberLoads;
+        private List<NodalLoad> memberLoads=new List<NodalLoad>();
         private Point location;
         private Displacement settlements;
         private Constraint constraints;
@@ -116,8 +121,7 @@ namespace BriefFiniteElementNet
             {
                 var cf = pair.Value;
 
-                if (!parent.LastResult.Displacements.ContainsKey(pair.Key))
-                    parent.LastResult.AddAnalysisResult(pair.Key);
+                parent.LastResult.AddAnalysisResultIfNotExists(pair.Key);
 
                 var disps = parent.LastResult.Displacements[pair.Key];
 
@@ -138,16 +142,19 @@ namespace BriefFiniteElementNet
             return GetNodalDisplacement(cmb);
         }
 
+        /// <summary>
+        /// Gets the supports reaction that are from load combination of <see cref="cmb"/>, which are applying to this <see cref="Node"/> from supports.
+        /// </summary>
+        /// <param name="cmb">The CMB.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
         public Force GetSupportReaction(LoadCombination cmb)
         {
             var f1 = new Force();
             var f = new Force();
 
             foreach (var cse in cmb.Keys)
-            {
-                if (!parent.LastResult.Displacements.ContainsKey(cse))
-                    parent.LastResult.AddAnalysisResult(cse);
-            }
+                parent.LastResult.AddAnalysisResultIfNotExists(cse);
 
 
             foreach (var elm in ConnectedElements)
@@ -188,9 +195,49 @@ namespace BriefFiniteElementNet
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets the supports reaction that are from loads with <see cref="LoadCase.DefaultLoadCase"/> (can be said default loads), which are applying to this <see cref="Node"/> from supports.
+        /// </summary>
+        /// <returns></returns>
         public Force GetSupportReaction()
         {
             return GetSupportReaction(LoadCombination.DefaultLoadCombination);
         }
+
+        #region Serialization stuff
+
+        /// <summary>
+        /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
+        /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+
+            info.AddValue("location", location);
+            info.AddValue("index", Index);
+            info.AddValue("loads", loads);
+            info.AddValue("settlements", settlements);
+            info.AddValue("constraints", constraints);
+        }
+
+        /// <summary>
+        /// Constructor of <see cref="Node"/> for satisfying the <class.
+        /// </summary>
+        /// <param name="info">The information.</param>
+        /// <param name="context">The context.</param>
+        internal Node(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            location = (Point) info.GetValue("location", typeof (Point));
+            Index = (int) info.GetValue("index", typeof (int));
+            loads = (List<NodalLoad>) info.GetValue("loads", typeof (List<NodalLoad>));
+            settlements = (Displacement) info.GetValue("settlements", typeof (Displacement));
+            constraints = (Constraint) info.GetValue("constraints", typeof (Constraint));
+        }
+
+        #endregion
+
     }
 }

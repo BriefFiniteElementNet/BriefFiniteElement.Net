@@ -1,13 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace BriefFiniteElementNet
 {
     public abstract class Element1D : Element
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Element1D"/> class.
+        /// </summary>
+        /// <param name="nodes">The number of nodes that the <see cref="Element" /> connect together.</param>
         protected Element1D(int nodes) : base(nodes)
+        {
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Element1D"/> class.
+        /// </summary>
+        protected Element1D():base()
         {
         }
 
@@ -55,5 +68,30 @@ namespace BriefFiniteElementNet
         /// <remarks>Will calculate the internal forces of member regarding Default load case (default load case means a load case where <see cref="LoadCase.LoadType"/> is equal to <see cref="LoadType.Default"/> and <see cref="LoadCase.CaseName"/> is equal to null)</remarks>
         /// <returns></returns>
         public abstract Force GetInternalForceAt(double x);
+
+
+        /// <summary>
+        /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
+        /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("g", g);
+            info.AddValue("e", e);
+            base.GetObjectData(info, context);
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Element1D"/> class.
+        /// </summary>
+        /// <param name="info">The information.</param>
+        /// <param name="context">The context.</param>
+        protected Element1D (SerializationInfo info, StreamingContext context):base(info,context)
+        {
+            g = info.GetDouble("g");
+            e = info.GetDouble("e");
+        }
     }
 }

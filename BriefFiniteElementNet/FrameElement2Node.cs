@@ -1,10 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Management.Instrumentation;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
 
 namespace BriefFiniteElementNet
 {
+    /// <summary>
+    /// Represents a Frame Element with 2 nodes (start and end)
+    /// </summary>
+    [Serializable]
     public sealed class FrameElement2Node : Element1D
     {
         /// <summary>
@@ -12,6 +19,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         public FrameElement2Node() : base(2)
         {
+            elementType = ElementType.FrameElement2Node;
         }
 
         public FrameElement2Node(Node start,Node end)
@@ -222,6 +230,9 @@ namespace BriefFiniteElementNet
 
         #endregion
 
+        #region Methods
+
+
         /// <summary>
         /// Gets the stifness matrix of member in global coordination system.
         /// </summary>
@@ -293,15 +304,15 @@ namespace BriefFiniteElementNet
             tmp[5] = r[06]*k[st + 12] + r[07]*k[st + 13] + r[08]*k[st + 14];
             tmp[8] = r[06]*k[st + 24] + r[07]*k[st + 25] + r[08]*k[st + 26];
 
-            tmp2[0] = tmp[00] * r[00] + tmp[03] * r[01] + tmp[06] * r[02];
-            tmp2[3] = tmp[00] * r[03] + tmp[03] * r[04] + tmp[06] * r[05];
-            tmp2[6] = tmp[00] * r[06] + tmp[03] * r[07] + tmp[06] * r[08];
-            tmp2[1] = tmp[01] * r[00] + tmp[04] * r[01] + tmp[07] * r[02];
-            tmp2[4] = tmp[01] * r[03] + tmp[04] * r[04] + tmp[07] * r[05];
-            tmp2[7] = tmp[01] * r[06] + tmp[04] * r[07] + tmp[07] * r[08];
-            tmp2[2] = tmp[02] * r[00] + tmp[05] * r[01] + tmp[08] * r[02];
-            tmp2[5] = tmp[02] * r[03] + tmp[05] * r[04] + tmp[08] * r[05];
-            tmp2[8] = tmp[02] * r[06] + tmp[05] * r[07] + tmp[08] * r[08];
+            tmp2[0] = tmp[00]*r[00] + tmp[03]*r[01] + tmp[06]*r[02];
+            tmp2[3] = tmp[00]*r[03] + tmp[03]*r[04] + tmp[06]*r[05];
+            tmp2[6] = tmp[00]*r[06] + tmp[03]*r[07] + tmp[06]*r[08];
+            tmp2[1] = tmp[01]*r[00] + tmp[04]*r[01] + tmp[07]*r[02];
+            tmp2[4] = tmp[01]*r[03] + tmp[04]*r[04] + tmp[07]*r[05];
+            tmp2[7] = tmp[01]*r[06] + tmp[04]*r[07] + tmp[07]*r[08];
+            tmp2[2] = tmp[02]*r[00] + tmp[05]*r[01] + tmp[08]*r[02];
+            tmp2[5] = tmp[02]*r[03] + tmp[05]*r[04] + tmp[08]*r[05];
+            tmp2[8] = tmp[02]*r[06] + tmp[05]*r[07] + tmp[08]*r[08];
 
 
             //var tmp3 = Matrix.FromRowColCoreArray(3, 3, tmp2);
@@ -378,7 +389,8 @@ namespace BriefFiniteElementNet
 
 
                 if (ay == 0 || az == 0 || g == 0)
-                    throw new InvalidOperationException("When considering shar ddefoemation none of the parameters Ay, Az and G should be zero");
+                    throw new InvalidOperationException(
+                        "When considering shar ddefoemation none of the parameters Ay, Az and G should be zero");
 
                 var ez = e*iz/(ay*g);
                 var ey = e*iy/(az*g);
@@ -445,27 +457,27 @@ namespace BriefFiniteElementNet
                     k[00, 09] = buf[00, 09];
                     k[00, 10] = buf[00, 10];
                     k[00, 11] = buf[00, 11];
-                    k[01, 01] = buf[01, 01] + -(1.5 / l) * buf[05, 01];
-                    k[01, 02] = buf[01, 02] + -(1.5 / l) * buf[05, 02];
-                    k[01, 03] = buf[01, 03] + -(1.5 / l) * buf[05, 03];
-                    k[01, 04] = buf[01, 04] + -(1.5 / l) * buf[05, 04];
-                    k[01, 05] = buf[01, 05] + -(1.5 / l) * buf[05, 05];
-                    k[01, 06] = buf[01, 06] + -(1.5 / l) * buf[05, 06];
-                    k[01, 07] = buf[01, 07] + -(1.5 / l) * buf[05, 07];
-                    k[01, 08] = buf[01, 08] + -(1.5 / l) * buf[05, 08];
-                    k[01, 09] = buf[01, 09] + -(1.5 / l) * buf[05, 09];
-                    k[01, 10] = buf[01, 10] + -(1.5 / l) * buf[05, 10];
-                    k[01, 11] = buf[01, 11] + -(1.5 / l) * buf[05, 11];
-                    k[02, 02] = buf[02, 02] + -(-1.5 / l) * buf[04, 02];
-                    k[02, 03] = buf[02, 03] + -(-1.5 / l) * buf[04, 03];
-                    k[02, 04] = buf[02, 04] + -(-1.5 / l) * buf[04, 04];
-                    k[02, 05] = buf[02, 05] + -(-1.5 / l) * buf[04, 05];
-                    k[02, 06] = buf[02, 06] + -(-1.5 / l) * buf[04, 06];
-                    k[02, 07] = buf[02, 07] + -(-1.5 / l) * buf[04, 07];
-                    k[02, 08] = buf[02, 08] + -(-1.5 / l) * buf[04, 08];
-                    k[02, 09] = buf[02, 09] + -(-1.5 / l) * buf[04, 09];
-                    k[02, 10] = buf[02, 10] + -(-1.5 / l) * buf[04, 10];
-                    k[02, 11] = buf[02, 11] + -(-1.5 / l) * buf[04, 11];
+                    k[01, 01] = buf[01, 01] + -(1.5/l)*buf[05, 01];
+                    k[01, 02] = buf[01, 02] + -(1.5/l)*buf[05, 02];
+                    k[01, 03] = buf[01, 03] + -(1.5/l)*buf[05, 03];
+                    k[01, 04] = buf[01, 04] + -(1.5/l)*buf[05, 04];
+                    k[01, 05] = buf[01, 05] + -(1.5/l)*buf[05, 05];
+                    k[01, 06] = buf[01, 06] + -(1.5/l)*buf[05, 06];
+                    k[01, 07] = buf[01, 07] + -(1.5/l)*buf[05, 07];
+                    k[01, 08] = buf[01, 08] + -(1.5/l)*buf[05, 08];
+                    k[01, 09] = buf[01, 09] + -(1.5/l)*buf[05, 09];
+                    k[01, 10] = buf[01, 10] + -(1.5/l)*buf[05, 10];
+                    k[01, 11] = buf[01, 11] + -(1.5/l)*buf[05, 11];
+                    k[02, 02] = buf[02, 02] + -(-1.5/l)*buf[04, 02];
+                    k[02, 03] = buf[02, 03] + -(-1.5/l)*buf[04, 03];
+                    k[02, 04] = buf[02, 04] + -(-1.5/l)*buf[04, 04];
+                    k[02, 05] = buf[02, 05] + -(-1.5/l)*buf[04, 05];
+                    k[02, 06] = buf[02, 06] + -(-1.5/l)*buf[04, 06];
+                    k[02, 07] = buf[02, 07] + -(-1.5/l)*buf[04, 07];
+                    k[02, 08] = buf[02, 08] + -(-1.5/l)*buf[04, 08];
+                    k[02, 09] = buf[02, 09] + -(-1.5/l)*buf[04, 09];
+                    k[02, 10] = buf[02, 10] + -(-1.5/l)*buf[04, 10];
+                    k[02, 11] = buf[02, 11] + -(-1.5/l)*buf[04, 11];
                     k[03, 03] = buf[03, 03];
                     k[03, 04] = buf[03, 04];
                     k[03, 05] = buf[03, 05];
@@ -481,21 +493,21 @@ namespace BriefFiniteElementNet
                     k[06, 09] = buf[06, 09];
                     k[06, 10] = buf[06, 10];
                     k[06, 11] = buf[06, 11];
-                    k[07, 07] = 1.5 / l * buf[05, 07] + buf[07, 07];
-                    k[07, 08] = 1.5 / l * buf[05, 08] + buf[07, 08];
-                    k[07, 09] = 1.5 / l * buf[05, 09] + buf[07, 09];
-                    k[07, 10] = 1.5 / l * buf[05, 10] + buf[07, 10];
-                    k[07, 11] = 1.5 / l * buf[05, 11] + buf[07, 11];
-                    k[08, 08] = -1.5 / l * buf[04, 08] + buf[08, 08];
-                    k[08, 09] = -1.5 / l * buf[04, 09] + buf[08, 09];
-                    k[08, 10] = -1.5 / l * buf[04, 10] + buf[08, 10];
-                    k[08, 11] = -1.5 / l * buf[04, 11] + buf[08, 11];
+                    k[07, 07] = 1.5/l*buf[05, 07] + buf[07, 07];
+                    k[07, 08] = 1.5/l*buf[05, 08] + buf[07, 08];
+                    k[07, 09] = 1.5/l*buf[05, 09] + buf[07, 09];
+                    k[07, 10] = 1.5/l*buf[05, 10] + buf[07, 10];
+                    k[07, 11] = 1.5/l*buf[05, 11] + buf[07, 11];
+                    k[08, 08] = -1.5/l*buf[04, 08] + buf[08, 08];
+                    k[08, 09] = -1.5/l*buf[04, 09] + buf[08, 09];
+                    k[08, 10] = -1.5/l*buf[04, 10] + buf[08, 10];
+                    k[08, 11] = -1.5/l*buf[04, 11] + buf[08, 11];
                     k[09, 09] = buf[09, 09];
                     k[09, 10] = buf[09, 10];
                     k[09, 11] = buf[09, 11];
-                    k[10, 10] = -0.5 * buf[04, 10] + buf[10, 10];
-                    k[10, 11] = -0.5 * buf[04, 11] + buf[10, 11];
-                    k[11, 11] = -0.5 * buf[05, 11] + buf[11, 11];
+                    k[10, 10] = -0.5*buf[04, 10] + buf[10, 10];
+                    k[10, 11] = -0.5*buf[04, 11] + buf[10, 11];
+                    k[11, 11] = -0.5*buf[05, 11] + buf[11, 11];
 
 
                     #endregion
@@ -517,27 +529,27 @@ namespace BriefFiniteElementNet
                     k[00, 09] = buf[00, 09];
                     k[00, 10] = buf[00, 10];
                     k[00, 11] = buf[00, 11];
-                    k[01, 01] = buf[01, 01] + -(1.5 / l) * buf[11, 01];
-                    k[01, 02] = buf[01, 02] + -(1.5 / l) * buf[11, 02];
-                    k[01, 03] = buf[01, 03] + -(1.5 / l) * buf[11, 03];
-                    k[01, 04] = buf[01, 04] + -(1.5 / l) * buf[11, 04];
-                    k[01, 05] = buf[01, 05] + -(1.5 / l) * buf[11, 05];
-                    k[01, 06] = buf[01, 06] + -(1.5 / l) * buf[11, 06];
-                    k[01, 07] = buf[01, 07] + -(1.5 / l) * buf[11, 07];
-                    k[01, 08] = buf[01, 08] + -(1.5 / l) * buf[11, 08];
-                    k[01, 09] = buf[01, 09] + -(1.5 / l) * buf[11, 09];
-                    k[01, 10] = buf[01, 10] + -(1.5 / l) * buf[11, 10];
-                    k[01, 11] = buf[01, 11] + -(1.5 / l) * buf[11, 11];
-                    k[02, 02] = buf[02, 02] + -(-1.5 / l) * buf[10, 02];
-                    k[02, 03] = buf[02, 03] + -(-1.5 / l) * buf[10, 03];
-                    k[02, 04] = buf[02, 04] + -(-1.5 / l) * buf[10, 04];
-                    k[02, 05] = buf[02, 05] + -(-1.5 / l) * buf[10, 05];
-                    k[02, 06] = buf[02, 06] + -(-1.5 / l) * buf[10, 06];
-                    k[02, 07] = buf[02, 07] + -(-1.5 / l) * buf[10, 07];
-                    k[02, 08] = buf[02, 08] + -(-1.5 / l) * buf[10, 08];
-                    k[02, 09] = buf[02, 09] + -(-1.5 / l) * buf[10, 09];
-                    k[02, 10] = buf[02, 10] + -(-1.5 / l) * buf[10, 10];
-                    k[02, 11] = buf[02, 11] + -(-1.5 / l) * buf[10, 11];
+                    k[01, 01] = buf[01, 01] + -(1.5/l)*buf[11, 01];
+                    k[01, 02] = buf[01, 02] + -(1.5/l)*buf[11, 02];
+                    k[01, 03] = buf[01, 03] + -(1.5/l)*buf[11, 03];
+                    k[01, 04] = buf[01, 04] + -(1.5/l)*buf[11, 04];
+                    k[01, 05] = buf[01, 05] + -(1.5/l)*buf[11, 05];
+                    k[01, 06] = buf[01, 06] + -(1.5/l)*buf[11, 06];
+                    k[01, 07] = buf[01, 07] + -(1.5/l)*buf[11, 07];
+                    k[01, 08] = buf[01, 08] + -(1.5/l)*buf[11, 08];
+                    k[01, 09] = buf[01, 09] + -(1.5/l)*buf[11, 09];
+                    k[01, 10] = buf[01, 10] + -(1.5/l)*buf[11, 10];
+                    k[01, 11] = buf[01, 11] + -(1.5/l)*buf[11, 11];
+                    k[02, 02] = buf[02, 02] + -(-1.5/l)*buf[10, 02];
+                    k[02, 03] = buf[02, 03] + -(-1.5/l)*buf[10, 03];
+                    k[02, 04] = buf[02, 04] + -(-1.5/l)*buf[10, 04];
+                    k[02, 05] = buf[02, 05] + -(-1.5/l)*buf[10, 05];
+                    k[02, 06] = buf[02, 06] + -(-1.5/l)*buf[10, 06];
+                    k[02, 07] = buf[02, 07] + -(-1.5/l)*buf[10, 07];
+                    k[02, 08] = buf[02, 08] + -(-1.5/l)*buf[10, 08];
+                    k[02, 09] = buf[02, 09] + -(-1.5/l)*buf[10, 09];
+                    k[02, 10] = buf[02, 10] + -(-1.5/l)*buf[10, 10];
+                    k[02, 11] = buf[02, 11] + -(-1.5/l)*buf[10, 11];
                     k[03, 03] = buf[03, 03];
                     k[03, 04] = buf[03, 04];
                     k[03, 05] = buf[03, 05];
@@ -547,36 +559,36 @@ namespace BriefFiniteElementNet
                     k[03, 09] = buf[03, 09];
                     k[03, 10] = buf[03, 10];
                     k[03, 11] = buf[03, 11];
-                    k[04, 04] = buf[04, 04] + -0.5 * buf[10, 04];
-                    k[04, 05] = buf[04, 05] + -0.5 * buf[10, 05];
-                    k[04, 06] = buf[04, 06] + -0.5 * buf[10, 06];
-                    k[04, 07] = buf[04, 07] + -0.5 * buf[10, 07];
-                    k[04, 08] = buf[04, 08] + -0.5 * buf[10, 08];
-                    k[04, 09] = buf[04, 09] + -0.5 * buf[10, 09];
-                    k[04, 10] = buf[04, 10] + -0.5 * buf[10, 10];
-                    k[04, 11] = buf[04, 11] + -0.5 * buf[10, 11];
-                    k[05, 05] = buf[05, 05] + -0.5 * buf[11, 05];
-                    k[05, 06] = buf[05, 06] + -0.5 * buf[11, 06];
-                    k[05, 07] = buf[05, 07] + -0.5 * buf[11, 07];
-                    k[05, 08] = buf[05, 08] + -0.5 * buf[11, 08];
-                    k[05, 09] = buf[05, 09] + -0.5 * buf[11, 09];
-                    k[05, 10] = buf[05, 10] + -0.5 * buf[11, 10];
-                    k[05, 11] = buf[05, 11] + -0.5 * buf[11, 11];
+                    k[04, 04] = buf[04, 04] + -0.5*buf[10, 04];
+                    k[04, 05] = buf[04, 05] + -0.5*buf[10, 05];
+                    k[04, 06] = buf[04, 06] + -0.5*buf[10, 06];
+                    k[04, 07] = buf[04, 07] + -0.5*buf[10, 07];
+                    k[04, 08] = buf[04, 08] + -0.5*buf[10, 08];
+                    k[04, 09] = buf[04, 09] + -0.5*buf[10, 09];
+                    k[04, 10] = buf[04, 10] + -0.5*buf[10, 10];
+                    k[04, 11] = buf[04, 11] + -0.5*buf[10, 11];
+                    k[05, 05] = buf[05, 05] + -0.5*buf[11, 05];
+                    k[05, 06] = buf[05, 06] + -0.5*buf[11, 06];
+                    k[05, 07] = buf[05, 07] + -0.5*buf[11, 07];
+                    k[05, 08] = buf[05, 08] + -0.5*buf[11, 08];
+                    k[05, 09] = buf[05, 09] + -0.5*buf[11, 09];
+                    k[05, 10] = buf[05, 10] + -0.5*buf[11, 10];
+                    k[05, 11] = buf[05, 11] + -0.5*buf[11, 11];
                     k[06, 06] = buf[06, 06];
                     k[06, 07] = buf[06, 07];
                     k[06, 08] = buf[06, 08];
                     k[06, 09] = buf[06, 09];
                     k[06, 10] = buf[06, 10];
                     k[06, 11] = buf[06, 11];
-                    k[07, 07] = buf[07, 07] + 1.5 / l * buf[11, 07];
-                    k[07, 08] = buf[07, 08] + 1.5 / l * buf[11, 08];
-                    k[07, 09] = buf[07, 09] + 1.5 / l * buf[11, 09];
-                    k[07, 10] = buf[07, 10] + 1.5 / l * buf[11, 10];
-                    k[07, 11] = buf[07, 11] + 1.5 / l * buf[11, 11];
-                    k[08, 08] = buf[08, 08] + -1.5 / l * buf[10, 08];
-                    k[08, 09] = buf[08, 09] + -1.5 / l * buf[10, 09];
-                    k[08, 10] = buf[08, 10] + -1.5 / l * buf[10, 10];
-                    k[08, 11] = buf[08, 11] + -1.5 / l * buf[10, 11];
+                    k[07, 07] = buf[07, 07] + 1.5/l*buf[11, 07];
+                    k[07, 08] = buf[07, 08] + 1.5/l*buf[11, 08];
+                    k[07, 09] = buf[07, 09] + 1.5/l*buf[11, 09];
+                    k[07, 10] = buf[07, 10] + 1.5/l*buf[11, 10];
+                    k[07, 11] = buf[07, 11] + 1.5/l*buf[11, 11];
+                    k[08, 08] = buf[08, 08] + -1.5/l*buf[10, 08];
+                    k[08, 09] = buf[08, 09] + -1.5/l*buf[10, 09];
+                    k[08, 10] = buf[08, 10] + -1.5/l*buf[10, 10];
+                    k[08, 11] = buf[08, 11] + -1.5/l*buf[10, 11];
                     k[09, 09] = buf[09, 09];
                     k[09, 10] = buf[09, 10];
                     k[09, 11] = buf[09, 11];
@@ -611,27 +623,27 @@ namespace BriefFiniteElementNet
                         k[00, 09] = buf[00, 09];
                         k[00, 10] = buf[00, 10];
                         k[00, 11] = buf[00, 11];
-                        k[01, 01] = buf[01, 01] + -(1 / l) * buf[05, 01] + -(1 / l) * buf[11, 01];
-                        k[01, 02] = buf[01, 02] + -(1 / l) * buf[05, 02] + -(1 / l) * buf[11, 02];
-                        k[01, 03] = buf[01, 03] + -(1 / l) * buf[05, 03] + -(1 / l) * buf[11, 03];
-                        k[01, 04] = buf[01, 04] + -(1 / l) * buf[05, 04] + -(1 / l) * buf[11, 04];
-                        k[01, 05] = buf[01, 05] + -(1 / l) * buf[05, 05] + -(1 / l) * buf[11, 05];
-                        k[01, 06] = buf[01, 06] + -(1 / l) * buf[05, 06] + -(1 / l) * buf[11, 06];
-                        k[01, 07] = buf[01, 07] + -(1 / l) * buf[05, 07] + -(1 / l) * buf[11, 07];
-                        k[01, 08] = buf[01, 08] + -(1 / l) * buf[05, 08] + -(1 / l) * buf[11, 08];
-                        k[01, 09] = buf[01, 09] + -(1 / l) * buf[05, 09] + -(1 / l) * buf[11, 09];
-                        k[01, 10] = buf[01, 10] + -(1 / l) * buf[05, 10] + -(1 / l) * buf[11, 10];
-                        k[01, 11] = buf[01, 11] + -(1 / l) * buf[05, 11] + -(1 / l) * buf[11, 11];
-                        k[02, 02] = buf[02, 02] + -(-1 / l) * buf[04, 02] + -(-1 / l) * buf[10, 02];
-                        k[02, 03] = buf[02, 03] + -(-1 / l) * buf[04, 03] + -(-1 / l) * buf[10, 03];
-                        k[02, 04] = buf[02, 04] + -(-1 / l) * buf[04, 04] + -(-1 / l) * buf[10, 04];
-                        k[02, 05] = buf[02, 05] + -(-1 / l) * buf[04, 05] + -(-1 / l) * buf[10, 05];
-                        k[02, 06] = buf[02, 06] + -(-1 / l) * buf[04, 06] + -(-1 / l) * buf[10, 06];
-                        k[02, 07] = buf[02, 07] + -(-1 / l) * buf[04, 07] + -(-1 / l) * buf[10, 07];
-                        k[02, 08] = buf[02, 08] + -(-1 / l) * buf[04, 08] + -(-1 / l) * buf[10, 08];
-                        k[02, 09] = buf[02, 09] + -(-1 / l) * buf[04, 09] + -(-1 / l) * buf[10, 09];
-                        k[02, 10] = buf[02, 10] + -(-1 / l) * buf[04, 10] + -(-1 / l) * buf[10, 10];
-                        k[02, 11] = buf[02, 11] + -(-1 / l) * buf[04, 11] + -(-1 / l) * buf[10, 11];
+                        k[01, 01] = buf[01, 01] + -(1/l)*buf[05, 01] + -(1/l)*buf[11, 01];
+                        k[01, 02] = buf[01, 02] + -(1/l)*buf[05, 02] + -(1/l)*buf[11, 02];
+                        k[01, 03] = buf[01, 03] + -(1/l)*buf[05, 03] + -(1/l)*buf[11, 03];
+                        k[01, 04] = buf[01, 04] + -(1/l)*buf[05, 04] + -(1/l)*buf[11, 04];
+                        k[01, 05] = buf[01, 05] + -(1/l)*buf[05, 05] + -(1/l)*buf[11, 05];
+                        k[01, 06] = buf[01, 06] + -(1/l)*buf[05, 06] + -(1/l)*buf[11, 06];
+                        k[01, 07] = buf[01, 07] + -(1/l)*buf[05, 07] + -(1/l)*buf[11, 07];
+                        k[01, 08] = buf[01, 08] + -(1/l)*buf[05, 08] + -(1/l)*buf[11, 08];
+                        k[01, 09] = buf[01, 09] + -(1/l)*buf[05, 09] + -(1/l)*buf[11, 09];
+                        k[01, 10] = buf[01, 10] + -(1/l)*buf[05, 10] + -(1/l)*buf[11, 10];
+                        k[01, 11] = buf[01, 11] + -(1/l)*buf[05, 11] + -(1/l)*buf[11, 11];
+                        k[02, 02] = buf[02, 02] + -(-1/l)*buf[04, 02] + -(-1/l)*buf[10, 02];
+                        k[02, 03] = buf[02, 03] + -(-1/l)*buf[04, 03] + -(-1/l)*buf[10, 03];
+                        k[02, 04] = buf[02, 04] + -(-1/l)*buf[04, 04] + -(-1/l)*buf[10, 04];
+                        k[02, 05] = buf[02, 05] + -(-1/l)*buf[04, 05] + -(-1/l)*buf[10, 05];
+                        k[02, 06] = buf[02, 06] + -(-1/l)*buf[04, 06] + -(-1/l)*buf[10, 06];
+                        k[02, 07] = buf[02, 07] + -(-1/l)*buf[04, 07] + -(-1/l)*buf[10, 07];
+                        k[02, 08] = buf[02, 08] + -(-1/l)*buf[04, 08] + -(-1/l)*buf[10, 08];
+                        k[02, 09] = buf[02, 09] + -(-1/l)*buf[04, 09] + -(-1/l)*buf[10, 09];
+                        k[02, 10] = buf[02, 10] + -(-1/l)*buf[04, 10] + -(-1/l)*buf[10, 10];
+                        k[02, 11] = buf[02, 11] + -(-1/l)*buf[04, 11] + -(-1/l)*buf[10, 11];
                         k[03, 03] = buf[03, 03];
                         k[03, 04] = buf[03, 04];
                         k[03, 05] = buf[03, 05];
@@ -647,15 +659,15 @@ namespace BriefFiniteElementNet
                         k[06, 09] = buf[06, 09];
                         k[06, 10] = buf[06, 10];
                         k[06, 11] = buf[06, 11];
-                        k[07, 07] = 1 / l * buf[05, 07] + buf[07, 07] + 1 / l * buf[11, 07];
-                        k[07, 08] = 1 / l * buf[05, 08] + buf[07, 08] + 1 / l * buf[11, 08];
-                        k[07, 09] = 1 / l * buf[05, 09] + buf[07, 09] + 1 / l * buf[11, 09];
-                        k[07, 10] = 1 / l * buf[05, 10] + buf[07, 10] + 1 / l * buf[11, 10];
-                        k[07, 11] = 1 / l * buf[05, 11] + buf[07, 11] + 1 / l * buf[11, 11];
-                        k[08, 08] = -1 / l * buf[04, 08] + buf[08, 08] + -1 / l * buf[10, 08];
-                        k[08, 09] = -1 / l * buf[04, 09] + buf[08, 09] + -1 / l * buf[10, 09];
-                        k[08, 10] = -1 / l * buf[04, 10] + buf[08, 10] + -1 / l * buf[10, 10];
-                        k[08, 11] = -1 / l * buf[04, 11] + buf[08, 11] + -1 / l * buf[10, 11];
+                        k[07, 07] = 1/l*buf[05, 07] + buf[07, 07] + 1/l*buf[11, 07];
+                        k[07, 08] = 1/l*buf[05, 08] + buf[07, 08] + 1/l*buf[11, 08];
+                        k[07, 09] = 1/l*buf[05, 09] + buf[07, 09] + 1/l*buf[11, 09];
+                        k[07, 10] = 1/l*buf[05, 10] + buf[07, 10] + 1/l*buf[11, 10];
+                        k[07, 11] = 1/l*buf[05, 11] + buf[07, 11] + 1/l*buf[11, 11];
+                        k[08, 08] = -1/l*buf[04, 08] + buf[08, 08] + -1/l*buf[10, 08];
+                        k[08, 09] = -1/l*buf[04, 09] + buf[08, 09] + -1/l*buf[10, 09];
+                        k[08, 10] = -1/l*buf[04, 10] + buf[08, 10] + -1/l*buf[10, 10];
+                        k[08, 11] = -1/l*buf[04, 11] + buf[08, 11] + -1/l*buf[10, 11];
                         k[09, 09] = buf[09, 09];
                         k[09, 10] = buf[09, 10];
                         k[09, 11] = buf[09, 11];
@@ -668,7 +680,7 @@ namespace BriefFiniteElementNet
                     }
                 }
 
-                MathUtil.FillLowerTriangleFromUpperTriangle(k);//again
+                MathUtil.FillLowerTriangleFromUpperTriangle(k); //again
 
                 Array.Copy(k.CoreArray, buf.CoreArray, 144);
             }
@@ -703,18 +715,18 @@ namespace BriefFiniteElementNet
 
             var displVector = new double[]
             {
-                lStartDisp.Dx,lStartDisp.Dy,lStartDisp.Dz,
-                lStartDisp.Rx,lStartDisp.Ry,lStartDisp.Rz,
+                lStartDisp.Dx, lStartDisp.Dy, lStartDisp.Dz,
+                lStartDisp.Rx, lStartDisp.Ry, lStartDisp.Rz,
 
-                lEndDisp.Dx,lEndDisp.Dy,lEndDisp.Dz,
-                lEndDisp.Rx,lEndDisp.Ry,lEndDisp.Rz
+                lEndDisp.Dx, lEndDisp.Dy, lEndDisp.Dz,
+                lEndDisp.Rx, lEndDisp.Ry, lEndDisp.Rz
             };
 
             var lStartForces = Matrix.Multiply(GetLocalStiffnessMatrix(), displVector);
 
             var startForce = Force.FromVector(lStartForces, 0);
 
-            var forceAtX = -startForce.Move(new Vector(x,0,0));
+            var forceAtX = -startForce.Move(new Vector(x, 0, 0));
 
             foreach (var ld in loads)
             {
@@ -757,9 +769,9 @@ namespace BriefFiniteElementNet
         {
             var pars = GetTransformationParameters();
             var buf = new Vector(
-                pars[0] * v.X + pars[3] * v.Y + pars[6] * v.Z,
-                pars[1] * v.X + pars[4] * v.Y + pars[7] * v.Z,
-                pars[2] * v.X + pars[5] * v.Y + pars[8] * v.Z);
+                pars[0]*v.X + pars[3]*v.Y + pars[6]*v.Z,
+                pars[1]*v.X + pars[4]*v.Y + pars[7]*v.Z,
+                pars[2]*v.X + pars[5]*v.Y + pars[8]*v.Z);
 
             return buf;
         }
@@ -800,9 +812,9 @@ namespace BriefFiniteElementNet
         {
             var pars = GetTransformationParameters();
             var buf = new Vector(
-                pars[0] * v.X + pars[1] * v.Y + pars[2] * v.Z,
-                pars[3] * v.X + pars[4] * v.Y + pars[5] * v.Z,
-                pars[6] * v.X + pars[7] * v.Y + pars[8] * v.Z);
+                pars[0]*v.X + pars[1]*v.Y + pars[2]*v.Z,
+                pars[3]*v.X + pars[4]*v.Y + pars[5]*v.Z,
+                pars[6]*v.X + pars[7]*v.Y + pars[8]*v.Z);
 
             return buf;
         }
@@ -830,17 +842,17 @@ namespace BriefFiniteElementNet
                 bf[i] = tv;
 
             }
-            
+
             return bf;
         }
 
-        
+
         /// <summary>
         /// The last transformation parameters
         /// </summary>
         /// <remarks>Storing transformation parameters corresponding to <see cref="LastElementVector"/> for better performance.</remarks>
-        private double[] LastTransformationParameters=new double[9];
-        
+        private double[] LastTransformationParameters = new double[9];
+
         /// <summary>
         /// The last element vector
         /// </summary>
@@ -848,7 +860,7 @@ namespace BriefFiniteElementNet
         private Vector LastElementVector;
 
 
-        
+
 
         private double[] GetTransformationParameters()
         {
@@ -867,8 +879,8 @@ namespace BriefFiniteElementNet
         {
             var cxx = 0.0;
             var cxy = 0.0;
-            var cxz = 0.0; 
-            
+            var cxz = 0.0;
+
             var cyx = 0.0;
             var cyy = 0.0;
             var cyz = 0.0;
@@ -876,7 +888,7 @@ namespace BriefFiniteElementNet
             var czx = 0.0;
             var czy = 0.0;
             var czz = 0.0;
-            
+
             var v = this.EndNode.Location - this.StartNode.Location;
 
 
@@ -898,19 +910,19 @@ namespace BriefFiniteElementNet
             else
             {
                 var l = v.Length;
-                cxx = v.X / l;
-                cyx = v.Y / l;
-                czx = v.Z / l;
-                var d = Math.Sqrt(cxx * cxx + cyx * cyx);
-                cxy = -cyx / d;
-                cyy = cxx / d;
-                cxz = -cxx * czx / d;
-                cyz = -cyx * czx / d;
+                cxx = v.X/l;
+                cyx = v.Y/l;
+                czx = v.Z/l;
+                var d = Math.Sqrt(cxx*cxx + cyx*cyx);
+                cxy = -cyx/d;
+                cyy = cxx/d;
+                cxz = -cxx*czx/d;
+                cyz = -cyx*czx/d;
                 czz = d;
             }
 
 
-           
+
             this.LastElementVector = v;
 
             var pars = this.LastTransformationParameters;
@@ -927,5 +939,55 @@ namespace BriefFiniteElementNet
             pars[7] = czy;
             pars[8] = czz;
         }
+
+        #endregion
+
+        #region Serialization stuff
+
+        /// <summary>
+        /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
+        /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("_a", _a);
+            info.AddValue("_ay", _ay);
+            info.AddValue("_az", _az);
+            info.AddValue("_iy", _iy);
+            info.AddValue("_iz", _iz);
+            info.AddValue("_j", _j);
+            info.AddValue("geometry", geometry);
+            info.AddValue("useOverridedProperties", useOverridedProperties);
+            info.AddValue("considerShearDeformation", considerShearDeformation);
+            info.AddValue("hingedAtStart", hingedAtStart);
+            info.AddValue("hingedAtEnd", hingedAtEnd);
+            base.GetObjectData(info, context);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FrameElement2Node"/> class.
+        /// </summary>
+        /// <param name="info">The information.</param>
+        /// <param name="context">The context.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        internal FrameElement2Node(SerializationInfo info, StreamingContext context):base(info,context)
+        {
+            _a = info.GetDouble("_a");
+            _ay = info.GetDouble("_ay");
+            _az = info.GetDouble("_az");
+            _iy = info.GetDouble("_iy");
+            _iz = info.GetDouble("_iz");
+            _j = info.GetDouble("_j");
+            geometry = info.GetValue<PolygonYz>("geometry");
+            useOverridedProperties = info.GetBoolean("useOverridedProperties");
+            considerShearDeformation = info.GetBoolean("considerShearDeformation");
+            hingedAtStart = info.GetBoolean("hingedAtStart");
+            hingedAtEnd = info.GetBoolean("hingedAtEnd");
+        }
+
+        #endregion
+
     }
 }

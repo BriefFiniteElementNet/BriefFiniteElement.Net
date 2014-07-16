@@ -27,10 +27,10 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             var n4 = new Node(-1, -1, 0) {Label = "n4"};
             var n5 = new Node(0, 0, 1) {Label = "n5"};
 
-            var e1 = new TrussElement(n1, n5) {Label = "e1"};
-            var e2 = new TrussElement(n2, n5) {Label = "e2"};
-            var e3 = new TrussElement(n3, n5) {Label = "e3"};
-            var e4 = new TrussElement(n4, n5) {Label = "e4"};
+            var e1 = new TrussElement2Node(n1, n5) {Label = "e1"};
+            var e2 = new TrussElement2Node(n2, n5) {Label = "e2"};
+            var e3 = new TrussElement2Node(n3, n5) {Label = "e3"};
+            var e4 = new TrussElement2Node(n4, n5) {Label = "e4"};
             //Note: labels for all members should be unique, else you will receive InvalidLabelException when adding it to model
 
             e1.A = e2.A = e3.A = e4.A = 9e-4;

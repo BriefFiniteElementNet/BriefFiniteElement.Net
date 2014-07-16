@@ -9,6 +9,7 @@ namespace BriefFiniteElementNet
     /// Represents a point in Y-Z plane with only two properties (Y and Z). 
     /// This struct is used for representing cross secion of members as as polygon.
     /// </summary>
+    [Serializable]
     public struct PointYz : IEquatable<PointYz>
     {
         private double y;

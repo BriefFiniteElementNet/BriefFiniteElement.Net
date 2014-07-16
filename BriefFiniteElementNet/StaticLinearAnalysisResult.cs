@@ -21,6 +21,18 @@ namespace BriefFiniteElementNet
         internal int[] ReversedFixedMap;    //ReversedFixedMap[DoF index in fixed DoFs] = GlobalDofIndex
 
 
+        /// <summary>
+        /// Adds the analysis result if not exists.
+        /// </summary>
+        /// <param name="cse">The cse.</param>
+        /// <remarks>If current instanse do not contains the results reloated to <see cref="cse"/>, then this method will add result related to <see cref="cse"/> using <see cref="StaticLinearAnalysisResult.AddAnalysisResult"/> method</remarks>
+        public void AddAnalysisResultIfNotExists(LoadCase cse)
+        {
+            if (displacements.ContainsKey(cse))
+                return;
+
+            AddAnalysisResult(cse);
+        }
 
         /// <summary>
         /// Gets the displacements.

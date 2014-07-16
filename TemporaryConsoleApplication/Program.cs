@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Xml;
 using BriefFiniteElementNet;
@@ -12,16 +15,73 @@ namespace TemporaryConsoleApplication
     {
         static void Main(string[] args)
         {
-            TestConcentratedLoad();
+            TestSerialization();
 
-            new double[] {1, 2, 3}.Select().Max();
 
             Console.ReadKey();
+        }
+
+        private static void Test3()
+        {
+            var cases = new LoadCase[] { new LoadCase(), new LoadCase("dead1", LoadType.Dead) };
+            var cmb = new LoadCombination();
+
+
+            var model = StructureGenerator.Generate3DGrid(5, 5, 5);
+            StructureGenerator.AddRandomiseLoading(model, cases);
+            StructureGenerator.SetRandomiseConstraints(model);
+
+           
+            cmb[cases[0]] = 1.0;
+            cmb[cases[1]] = 2.0;
+
+            model.Solve();
+            var r= model.Nodes[0].GetSupportReaction(cmb);
+        }
+
+        private static void TestSerialization()
+        {
+            var model = StructureGenerator.Generate3DGrid(5, 5, 5);
+
+            var cases = new LoadCase[] {new LoadCase(), new LoadCase("dead1", LoadType.Dead)};
+            var cmb = new LoadCombination();
+            cmb[cases[0]] = 1.0;
+            cmb[cases[1]] = 2.0;
+
+            StructureGenerator.AddRandomiseLoading(model,cases );
+            StructureGenerator.SetRandomiseConstraints(model);
+
+
+            IFormatter formatter = new BinaryFormatter();
+            var str = new MemoryStream();
+            
+            formatter.Serialize(str, model);
+
+            str.Position = 0;
+            //otImplementedException
+
+            var recreated = formatter.Deserialize(str) as Model;
+
+            recreated.Solve(cases);
+            model.Solve(cases);
+
+
+            var d1 = recreated.LastResult.Displacements[cases[1]];
+            var d2 = model.LastResult.Displacements[cases[1]];
+
+
+            var buf = new double[d1.Length];
+
+            for (int i = 0; i < buf.Length; i++)
+            {
+                buf[i] = d1[i] - d2[i];
+            }
         }
 
         private static void TestConcentratedLoad()
         {
             var model = StructureGenerator.Generate3DGrid(10,10,10);
+
 
 
 
@@ -60,7 +120,7 @@ namespace TemporaryConsoleApplication
             var n1 = new Node() { Location = new Point(0, 0, 0) };
             var n2 = new Node() {Location = new Point(1, 0, 0)};
 
-            var trussElm = new TrussElement(n1, n2);
+            var trussElm = new TrussElement2Node(n1, n2);
             var framElm = new FrameElement2Node(n1, n2){HingedAtStart = true, HingedAtEnd = true};
 
             framElm.A = framElm.Az = framElm.Ay = trussElm.A = 1;

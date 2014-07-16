@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace BriefFiniteElementNet
@@ -10,7 +11,7 @@ namespace BriefFiniteElementNet
     /// Represents a polygon in Y-Z plane.
     /// Points are not editable.
     /// </summary>
-    public class PolygonYz : IEnumerable<PointYz>
+    public sealed class PolygonYz : IEnumerable<PointYz>,ISerializable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PolygonYz"/> class.
@@ -93,5 +94,26 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+
+        /// <summary>
+        /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
+        /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("points", points);
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PolygonYz"/> class.
+        /// </summary>
+        /// <param name="info">The information.</param>
+        /// <param name="context">The context.</param>
+        private PolygonYz(SerializationInfo info, StreamingContext context)
+        {
+            points = info.GetValue<List<PointYz>>("points");
+        }
     }
 }

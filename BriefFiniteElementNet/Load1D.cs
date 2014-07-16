@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace BriefFiniteElementNet
@@ -10,7 +11,14 @@ namespace BriefFiniteElementNet
     /// </summary>
     public abstract class Load1D : Load
     {
-        protected Direction direction;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Load1D"/> class.
+        /// </summary>
+        protected Load1D()
+        {
+        }
+
+        protected LoadDirection direction;
         protected CoordinationSystem coordinationSystem;
 
         /// <summary>
@@ -19,7 +27,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// The direction of load.
         /// </value>
-        public Direction Direction
+        public LoadDirection Direction
         {
             get { return direction; }
             set { direction = value; }
@@ -39,5 +47,36 @@ namespace BriefFiniteElementNet
 
 
         public abstract Force GetInternalForceAt(Element1D elm, double x);
+
+
+         #region Serialization stuff
+
+        /// <summary>
+        /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
+        /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("direction", (int)direction);
+            info.AddValue("coordinationSystem", (int)coordinationSystem);
+
+            base.GetObjectData(info, context);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Load1D"/> class.
+        /// </summary>
+        /// <param name="info">The information.</param>
+        /// <param name="context">The context.</param>
+        /// <exception cref="System.NotImplementedException"></exception>
+        internal Load1D(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            this.direction = (LoadDirection) info.GetInt32("direction");
+            this.coordinationSystem = (CoordinationSystem) info.GetInt32("coordinationSystem");
+        }
+
+        #endregion
     }
 }
