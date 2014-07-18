@@ -12,6 +12,17 @@ namespace BriefFiniteElementNet
     [Serializable]
     public struct PointYz : IEquatable<PointYz>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PointYz"/> struct.
+        /// </summary>
+        /// <param name="y">The y.</param>
+        /// <param name="z">The z.</param>
+        public PointYz(double y, double z)
+        {
+            this.y = y;
+            this.z = z;
+        }
+
         private double y;
         private double z;
 

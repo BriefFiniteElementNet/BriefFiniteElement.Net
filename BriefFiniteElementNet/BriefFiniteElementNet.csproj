@@ -36,6 +36,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,6 +52,8 @@
     <Compile Include="PolygonYz.cs" />
     <Compile Include="FrameElement2Node.cs" />
     <Compile Include="RandomStuff.cs" />
+    <Compile Include="SectionGenerator.cs" />
+    <Compile Include="SerializationBinder.cs" />
     <Compile Include="SolverConfiguration.cs" />
     <Compile Include="StaticLinearAnalysisResult.cs" />
     <Compile Include="BriefFiniteElementNetException.cs" />

@@ -84,20 +84,68 @@ namespace BriefFiniteElementNet
             var dy = 1.0;
             var dz = 1.0;
 
+            var nodes = new Node[m, n, l];
+
             for (int k = 0; k < l; k++)
             {
                 for (int i = 0; i < n; i++)
                 {
                     for (int j = 0; j < m; j++)
                     {
+
                         var pos = new Point(i*dx, j*dy, k*dz);
                         var nde = new Node() {Location = pos};
                         buf.Nodes.Add(nde);
+                        nodes[j, i, k] = nde;
+                    }
+                }
+            }
+
+            for (int k = 0; k < l - 1; k++)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < m; j++)
+                    {
+                        var elm = new FrameElement2Node();
+                        elm.StartNode = nodes[j, i, k];
+                        elm.EndNode = nodes[j, i, k + 1];
+                        buf.Elements.Add(elm);
                     }
                 }
             }
 
 
+            for (int i = 0; i < n - 1; i++)
+            {
+                for (int k = 0; k < l; k++)
+                {
+                    for (int j = 0; j < m; j++)
+                    {
+                        var elm = new FrameElement2Node();
+                        elm.StartNode = nodes[j, i, k];
+                        elm.EndNode = nodes[j, i + 1, k];
+                        buf.Elements.Add(elm);
+                    }
+                }
+            }
+
+            for (int j = 0; j < m-1; j++)
+            {
+                for (int k = 0; k < l; k++)
+                {
+                    for (int i = 0; i < n; i++) 
+                        
+                    {
+                        var elm = new FrameElement2Node();
+                        elm.StartNode = nodes[j, i, k];
+                        elm.EndNode = nodes[j+1, i , k];
+                        buf.Elements.Add(elm);
+                    }
+                }
+            }
+
+            /*
             for (int k = 0; k < l-1; k++)
             {
                 for (int num = 0; num < n*m; num++)
@@ -108,6 +156,7 @@ namespace BriefFiniteElementNet
                     buf.Elements.Add(elm);
                 }
             }
+            */
 
 
             foreach (var elm in buf.Elements)

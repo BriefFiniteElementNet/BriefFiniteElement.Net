@@ -7,10 +7,12 @@
     <ProjectGuid>{8DABDE62-8A8E-4153-B753-3A62015A9C16}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BriefFiniteElement.Controls</RootNamespace>
-    <AssemblyName>BriefFiniteElement.Controls</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>BriefFiniteElementNet.Controls</RootNamespace>
+    <AssemblyName>BriefFiniteElementNet.Controls</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -47,13 +49,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
-    <Compile Include="ModelVisualizer.xaml.cs">
-      <DependentUpon>ModelVisualizer.xaml</DependentUpon>
+    <Compile Include="HelixHelp.xaml.cs">
+      <DependentUpon>HelixHelp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ModelVisualizerControl.xaml.cs">
+      <DependentUpon>ModelVisualizerControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="ModelVisualizer.xaml">
+    <Page Include="HelixHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ModelVisualizerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

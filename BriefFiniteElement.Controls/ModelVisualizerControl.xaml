@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="BriefFiniteElementNet.Controls.ModelVisualizerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:helixToolkit="clr-namespace:HelixToolkit;assembly=HelixToolkit"
+             mc:Ignorable="d" 
+             d:DesignHeight="507" d:DesignWidth="693">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <helixToolkit:HelixViewport3D Name="MainViewport" RotateGesture="RightClick" PanGesture="LeftClick" Grid.RowSpan="2"/>
+        <Grid Margin="0" Background="#5900FFC5">
+        	<TextBlock Grid.Row="0" x:Name="txtHelp" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Mouse Gestures HELP!" ToolTipService.InitialShowDelay="0"  VerticalAlignment="Center" Margin="10,0,0,0"/>
+        	<TextBlock Text="3D Visulization in this window is powered by Helix toolkit" HorizontalAlignment="Right" VerticalAlignment="Center" MouseDown="TextBlock_MouseDown" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" Margin="0,0,10,0"/>
+        </Grid>
+    </Grid>
+</UserControl>

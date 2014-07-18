@@ -49,7 +49,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
 
-            var nums = new int[] { 10, 30, 70, 100 };
+            var nums = new int[] {10, 20, 30, 40};
 
             var cnt = 0;
 

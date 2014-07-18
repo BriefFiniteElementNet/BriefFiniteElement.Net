@@ -116,10 +116,10 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Adds the range.
+        /// Adds the specified elements to this collection.
         /// </summary>
         /// <param name="elements">The elements.</param>
-        public void AddRange(params Element[] elements)
+        public void Add(params Element[] elements)
         {
             foreach (var elm in elements)
             {

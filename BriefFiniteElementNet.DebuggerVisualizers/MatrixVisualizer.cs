@@ -22,16 +22,11 @@ namespace BriefFiniteElementNet.DebuggerVisualizers
             // TODO: Get the object to display a visualizer for.
             //       Cast the result of objectProvider.GetObject() 
             //       to the type of the object being visualized.
-            object data = (object)objectProvider.GetObject();
+            object data = (object) objectProvider.GetObject();
 
             // TODO: Display your view of the object.
             //       Replace displayForm with your own custom Form or Control.
-            using (Form displayForm = new Form())
-            {
-                TestShowVisualizer(data);
-            }
-
-
+            TestShowVisualizer(data);
         }
 
         // TODO: Add the following to your testing code to test the visualizer:

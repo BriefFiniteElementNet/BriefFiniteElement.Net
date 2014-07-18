@@ -9,7 +9,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
     {
         static void Main(string[] args)
         {
-            Example1();
+            Example2();
         }
 
         private static void Example1()
@@ -36,8 +36,8 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             e1.A = e2.A = e3.A = e4.A = 9e-4;
             e1.E = e2.E = e3.E = e4.E = 210e9;
 
-            model.Nodes.AddRange(n1, n2, n3, n4, n5);
-            model.Elements.AddRange(e1, e2, e3, e4);
+            model.Nodes.Add(n1, n2, n3, n4, n5);
+            model.Elements.Add(e1, e2, e3, e4);
 
             //Aplying restrains
 
@@ -62,6 +62,38 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             var rt = r1 + r2 + r3 + r4;//shows the Fz=1000 and Fx=Fy=Mx=My=Mz=0.0
 
             
+        }
+
+        private static void Example2()
+        {
+            var model = new Model();
+            
+            var n1 = new Node(-10, 0, 0);
+            var n2 = new Node(-10, 0, 6);
+            var n3 = new Node(0, 0, 8);
+            var n4 = new Node(10, 0, 6);
+            var n5 = new Node(10, 0, 0);
+
+            model.Nodes.Add(n1, n2, n3, n4, n5);
+
+            var secAA = SectionGenerator.GetISetion(0.24, 0.67, 0.01, 0.006);
+            var secBB = SectionGenerator.GetISetion(0.24, 0.52, 0.01, 0.006);
+
+            var e1 = new FrameElement2Node(n1, n2);
+            var e2 = new FrameElement2Node(n2, n3);
+            var e3 = new FrameElement2Node(n3, n4);
+            var e4 = new FrameElement2Node(n4, n5);
+
+            e1.Geometry = e4.Geometry = secAA;
+            e2.Geometry = e3.Geometry = secBB;
+
+            e1.UseOverridedProperties =
+                e2.UseOverridedProperties = e3.UseOverridedProperties = e4.UseOverridedProperties = false;
+
+            model.Elements.Add(e1, e2, e3, e4);
+            
+
+            throw new NotImplementedException();
         }
     }
 }

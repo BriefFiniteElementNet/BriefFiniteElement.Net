@@ -81,6 +81,10 @@ namespace BriefFiniteElementNet
 
         #region Implementation of ICollection<node>
 
+        /// <summary>
+        /// Adds the specified node to this collection.
+        /// </summary>
+        /// <param name="nde">The nde.</param>
         public void Add(Node nde)
         {
             EnsureNewNodeLabelValidity(nde);
@@ -88,12 +92,14 @@ namespace BriefFiniteElementNet
             nde.Parent = this.parent;
         }
 
-        public void AddRange(params Node[] nodes)
+        /// <summary>
+        /// Adds the specified nodes to this collection.
+        /// </summary>
+        /// <param name="nodes">The nodes.</param>
+        public void Add(params Node[] nodes)
         {
             foreach (var nde in nodes)
-            {
                 Add(nde);
-            }
         }
 
         public void Clear()

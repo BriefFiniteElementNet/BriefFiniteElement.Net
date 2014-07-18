@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Formatters.Soap;
 using System.Text;
 using CSparse;
 using CSparse.Double.Factorization;
@@ -105,12 +107,10 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="fileAddress">The file address.</param>
         /// <param name="model">The model.</param>
-        public static void SaveModel(string fileAddress, Model model)
+        public static void Save(string fileAddress, Model model)
         {
-            var formatter = new BinaryFormatter();
             var str = File.OpenWrite(fileAddress);
-
-            formatter.Serialize(str, model);
+            Save(str, model);
         }
 
         /// <summary>
@@ -118,13 +118,11 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="st">The st.</param>
         /// <param name="model">The model.</param>
-        public static void SaveModel(Stream st, Model model)
+        public static void Save(Stream st, Model model)
         {
-            var formatter = new BinaryFormatter();
-
+            var formatter = new BinaryFormatter() ;
             formatter.Serialize(st, model);
         }
-
 
         /// <summary>
         /// Loads the Model from specified file address.
@@ -134,11 +132,7 @@ namespace BriefFiniteElementNet
         public static Model Load(string fileAddress)
         {
             var str = File.OpenRead(fileAddress);
-            var formatter = new BinaryFormatter();
-            var buf = formatter.Deserialize(str) as Model;
-
-
-            return buf;
+            return Load(str);
         }
 
         /// <summary>
@@ -149,12 +143,28 @@ namespace BriefFiniteElementNet
         public static Model Load(Stream str)
         {
             var formatter = new BinaryFormatter();
-            var buf = formatter.Deserialize(str) as Model;
+
+            var buf = (Model)formatter.Deserialize(str) ;
 
 
             return buf;
         }
 
+        /// <summary>
+        /// Loads the with binder.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <returns></returns>
+        [Obsolete("only Usage for VS Debugger display issue on 18 of July 2014")]
+        public static Model LoadWithBinder(Stream str)
+        {
+            var formatter = new BinaryFormatter() { Binder = new FemNetSerializationBinder() };
+
+            var buf = (Model)formatter.Deserialize(str);
+
+
+            return buf;
+        }
 
         #endregion
 

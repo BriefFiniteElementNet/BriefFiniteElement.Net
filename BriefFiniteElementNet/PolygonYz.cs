@@ -11,6 +11,7 @@ namespace BriefFiniteElementNet
     /// Represents a polygon in Y-Z plane.
     /// Points are not editable.
     /// </summary>
+    [Serializable]
     public sealed class PolygonYz : IEnumerable<PointYz>,ISerializable
     {
         /// <summary>
@@ -20,6 +21,30 @@ namespace BriefFiniteElementNet
         public PolygonYz(params PointYz[] points)
         {
             this.points = new List<PointYz>(points);
+        }
+
+        /// <summary>
+        /// Gets the <see cref="PointYz"/> with the specified index.
+        /// </summary>
+        /// <value>
+        /// The <see cref="PointYz"/>.
+        /// </value>
+        /// <param name="i">The index.</param>
+        /// <returns></returns>
+        public PointYz this[int i]
+        {
+            get { return points[i]; }
+        }
+
+        /// <summary>
+        /// Gets the count of points in this polygon.
+        /// </summary>
+        /// <value>
+        /// The count.
+        /// </value>
+        public int Count
+        {
+            get { return points.Count; }
         }
 
         private List<PointYz> points;

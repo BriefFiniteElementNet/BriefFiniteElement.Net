@@ -22,15 +22,23 @@ namespace BriefFiniteElementNet
             elementType = ElementType.FrameElement2Node;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FrameElement2Node"/> class.
+        /// </summary>
+        /// <param name="start">The start.</param>
+        /// <param name="end">The end.</param>
         public FrameElement2Node(Node start,Node end)
             : base(2)
         {
             this.nodes[0] = start;
             this.nodes[1] = end;
+
+            elementType = ElementType.FrameElement2Node;
         }
 
         #region Members
 
+        private double webRotation;
         private double _a;
         private double _ay;
         private double _az;
@@ -228,6 +236,18 @@ namespace BriefFiniteElementNet
             set { hingedAtEnd = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the web rotation of this member in Degree
+        /// </summary>
+        /// <value>
+        /// The web rotation in degree.
+        /// </value>
+        public double WebRotation
+        {
+            get { return webRotation; }
+            set { webRotation = value; }
+        }
+
         #endregion
 
         #region Methods
@@ -329,6 +349,12 @@ namespace BriefFiniteElementNet
             k[st + 26] = tmp2[8];
         }
 
+        /// <summary>
+        /// Gets the stiffness matrix in Local Coordination system of element.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
+        /// <exception cref="System.InvalidOperationException">When considering shear defoemation none of the parameters Ay, Az and G should be zero</exception>
         public Matrix GetLocalStiffnessMatrix()
         {
             double a = _a, iz = _iz, iy = _iy, j = _j, ay = _ay, az = _az;
@@ -390,7 +416,7 @@ namespace BriefFiniteElementNet
 
                 if (ay == 0 || az == 0 || g == 0)
                     throw new InvalidOperationException(
-                        "When considering shar ddefoemation none of the parameters Ay, Az and G should be zero");
+                        "When considering shear defoemation none of the parameters Ay, Az and G should be zero");
 
                 var ez = e*iz/(ay*g);
                 var ey = e*iy/(az*g);
@@ -889,6 +915,12 @@ namespace BriefFiniteElementNet
             var czy = 0.0;
             var czz = 0.0;
 
+
+            var teta = webRotation;
+
+            var s = Math.Sin(teta * Math.PI / 180.0);
+            var c = Math.Cos(teta * Math.PI / 180.0);
+
             var v = this.EndNode.Location - this.StartNode.Location;
 
 
@@ -928,6 +960,20 @@ namespace BriefFiniteElementNet
             var pars = this.LastTransformationParameters;
 
             pars[0] = cxx;
+            pars[1] = cxy * c + cxz * s;
+            pars[2] = -cxy * s + cxz * c;
+
+            pars[3] = cyx;
+            pars[4] = cyy*c + cyz*s;
+            pars[5] = -cyy * s + cyz * c;
+
+            pars[6] = czx;
+            pars[7] = czy*c + czz*s;
+            pars[8] = -czy * s + czz * c;
+
+
+            /* backup
+            pars[0] = cxx;
             pars[1] = cxy;
             pars[2] = cxz;
 
@@ -938,6 +984,19 @@ namespace BriefFiniteElementNet
             pars[6] = czx;
             pars[7] = czy;
             pars[8] = czz;
+             * 
+            r1 = cxx;
+            r2 = cxy;
+            r3 = cxz;
+
+            r4 = cyx;
+            r5 = cyy;
+            r6 = cyz;
+
+            r7 = czx;
+            r8 = czy;
+            r9 = czz;
+             */
         }
 
         #endregion
@@ -963,6 +1022,7 @@ namespace BriefFiniteElementNet
             info.AddValue("considerShearDeformation", considerShearDeformation);
             info.AddValue("hingedAtStart", hingedAtStart);
             info.AddValue("hingedAtEnd", hingedAtEnd);
+            info.AddValue("webRotation", webRotation);
             base.GetObjectData(info, context);
         }
 
@@ -985,6 +1045,7 @@ namespace BriefFiniteElementNet
             considerShearDeformation = info.GetBoolean("considerShearDeformation");
             hingedAtStart = info.GetBoolean("hingedAtStart");
             hingedAtEnd = info.GetBoolean("hingedAtEnd");
+            webRotation = info.GetDouble("webRotation");
         }
 
         #endregion
