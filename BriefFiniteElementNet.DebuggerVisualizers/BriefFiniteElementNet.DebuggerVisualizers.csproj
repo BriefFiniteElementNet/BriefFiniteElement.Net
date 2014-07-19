@@ -77,10 +77,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "BriefFiniteElementNet.DebuggerVisualizers.dll" "C:\Users\{UserName}\Documents\Visual Studio 2013\Visualizers\" /y
-xcopy "BriefFiniteElementNet.dll" "C:\Users\{UserName}\Documents\Visual Studio 2013\Visualizers\" /y
-xcopy "BriefFiniteElementNet.Controls.dll" "C:\Users\{UserName}\Documents\Visual Studio 2013\Visualizers\" /y
-xcopy "HelixToolkit.dll" "C:\Users\Ehsan.ma\Documents\Visual Studio 2013\Visualizers\" /y</PostBuildEvent>
+    <PostBuildEvent>xcopy "BriefFiniteElementNet.DebuggerVisualizers.dll" "%25UserProfile%25\Documents\Visual Studio 2013\Visualizers\" /y
+xcopy "BriefFiniteElementNet.dll" "%25UserProfile%25\Documents\Visual Studio 2013\Visualizers\" /y
+xcopy "BriefFiniteElementNet.Controls.dll" "%25UserProfile%25\Documents\Visual Studio 2013\Visualizers\" /y
+xcopy "HelixToolkit.dll" "%25UserProfile%25\Documents\Visual Studio 2013\Visualizers\" /y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
