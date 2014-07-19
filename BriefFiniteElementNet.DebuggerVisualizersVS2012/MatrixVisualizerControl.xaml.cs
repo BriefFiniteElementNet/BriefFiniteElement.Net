@@ -5,8 +5,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 
-
-namespace BriefFiniteElementNet.DebuggerVisualizers
+namespace BriefFiniteElementNet.DebuggerVisualizersVS2012
 {
     /// <summary>
     /// Interaction logic for MatrixVisualizerControl.xaml

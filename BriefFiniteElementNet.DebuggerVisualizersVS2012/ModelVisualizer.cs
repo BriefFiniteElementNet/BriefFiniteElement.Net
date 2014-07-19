@@ -1,18 +1,14 @@
-﻿using System.Diagnostics;
+﻿using System;
 using System.IO;
-using System.Security.Policy;
+using System.Linq;
 using System.Windows;
 using BriefFiniteElementNet;
 using BriefFiniteElementNet.Controls;
-using BriefFiniteElementNet.DebuggerVisualizers;
+using BriefFiniteElementNet.DebuggerVisualizersVS2012;
 using Microsoft.VisualStudio.DebuggerVisualizers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 [assembly: System.Diagnostics.DebuggerVisualizer(typeof(ModelVisualizer), typeof(VisualizerObjectSource), Target = typeof(Model), Description = "Epsi1on Model Visualizer!")]
-namespace BriefFiniteElementNet.DebuggerVisualizers
+namespace BriefFiniteElementNet.DebuggerVisualizersVS2012
 {
     
     public class ModelVisualizer : DialogDebuggerVisualizer

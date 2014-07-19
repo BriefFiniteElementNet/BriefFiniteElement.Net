@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BriefFiniteElementNet.DebuggerVisualizers")]
+[assembly: AssemblyTitle("BriefFiniteElementNet.DebuggerVisualizersVS2010")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("BriefFiniteElementNet.DebuggerVisualizers")]
+[assembly: AssemblyProduct("BriefFiniteElementNet.DebuggerVisualizersVS2010")]
 [assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f9c34010-c088-4a52-a144-b3eab8f1aa26")]
+[assembly: Guid("e58e397c-6b3c-49fd-9e33-d162d803aeed")]
 
 // Version information for an assembly consists of the following four values:
 //

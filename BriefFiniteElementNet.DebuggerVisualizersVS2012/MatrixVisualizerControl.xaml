@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BriefFiniteElementNet.DebuggerVisualizers.MatrixVisualizerControl"
+﻿<UserControl x:Class="BriefFiniteElementNet.DebuggerVisualizersVS2012.MatrixVisualizerControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 

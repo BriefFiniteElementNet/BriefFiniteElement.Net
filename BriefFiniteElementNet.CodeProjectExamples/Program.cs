@@ -91,9 +91,14 @@ namespace BriefFiniteElementNet.CodeProjectExamples
                 e2.UseOverridedProperties = e3.UseOverridedProperties = e4.UseOverridedProperties = false;
 
             model.Elements.Add(e1, e2, e3, e4);
-            
 
             throw new NotImplementedException();
+        }
+
+
+        private static void Example3()
+        {
+            
         }
     }
 }
