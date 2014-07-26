@@ -168,7 +168,7 @@ namespace BriefFiniteElementNet
                         if (lde.Case != cse)
                             continue;
 
-                        var loads = lde.GetEquivalentNodalLoads(elm);
+                        var loads = lde.GetGlobalEquivalentNodalLoads(elm);
 
                         f1 += cmb[cse]*loads[ind];
                     }

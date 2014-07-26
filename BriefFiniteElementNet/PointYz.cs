@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -10,6 +11,7 @@ namespace BriefFiniteElementNet
     /// This struct is used for representing cross secion of members as as polygon.
     /// </summary>
     [Serializable]
+    [DebuggerDisplay("Y:{Y}, Z:{Z}")]
     public struct PointYz : IEquatable<PointYz>
     {
         /// <summary>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Windows;
 using System.Windows.Media.Media3D;
 using HelixToolkit;
@@ -45,10 +46,63 @@ namespace BriefFiniteElementNet.Controls
             var wnd = new Window();
             var ctrl = new ModelVisualizerControl();
             ctrl.ModelToVisualize = model;
-
+            
             wnd.Content = ctrl;
+
             wnd.ShowDialog();
 
+        }
+
+
+
+        public static void ShowInternalForce(this Model model)
+        {
+            var wnd = new Window();
+            var ctrl = new ModelInternalForceVisualizer();
+            ctrl.ModelToVisualize = model;
+            ctrl.TargetCombination = LoadCombination.DefaultLoadCombination;
+            ctrl.CurrentInternalForceType = InternalForceType.My;
+
+            wnd.Content = ctrl;
+            ctrl.UpdateUi();
+            wnd.ShowDialog();
+
+        }
+
+
+        /// <summary>
+        /// Visualizes the specified <see cref="function"/> in speifid interval and <see cref="samplingCount"/>.
+        /// </summary>
+        /// <param name="function">The function to be visualized.</param>
+        /// <param name="min">The minimum of interval that function should be visualized.</param>
+        /// <param name="max">The maximum of interval that function should be visualized.</param>
+        /// <param name="samplingCount">The sampling count in defined inerval.</param>
+        /// <param name="verticalValueLabel">The vertical value label.</param>
+        public static void Show(this Func<double, double> function, double min, double max, int samplingCount = 10,
+            string verticalValueLabel = null)
+        {
+
+            var ctrl = new FunctionVisualizer();
+
+            ctrl.TargetFunction = function;
+            ctrl.Min = min;
+            ctrl.Max = max;
+            ctrl.SamplingCount = samplingCount;
+            ctrl.VerticalAxisLabel = verticalValueLabel;
+
+            var wnd = new Window();
+            wnd.Title = string.Format("Visualizing {0}", verticalValueLabel);
+            wnd.Content = ctrl;
+            wnd.ShowDialog();
+        }
+
+
+        public static double GetElementLength(this Element elm)
+        {
+            if (elm.Nodes.Length == 2)
+                return (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
+
+            return 0.0;
         }
     }
 }

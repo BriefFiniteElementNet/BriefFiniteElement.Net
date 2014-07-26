@@ -157,7 +157,7 @@ namespace BriefFiniteElementNet
         }
 
 
-        public override Force[] GetEquivalentNodalLoads(Element element)
+        public override Force[] GetGlobalEquivalentNodalLoads(Element element)
         {
             if (element is FrameElement2Node)
             {

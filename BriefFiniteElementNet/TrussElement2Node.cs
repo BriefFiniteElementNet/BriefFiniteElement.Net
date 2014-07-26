@@ -9,6 +9,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents a 2 noded truss element (start and end)
     /// </summary>
+    [Serializable]
     public class TrussElement2Node : Element1D
     {
         #region Members
@@ -194,8 +195,10 @@ namespace BriefFiniteElementNet
         /// <exception cref="System.NotImplementedException"></exception>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            info.AddValue("_a",_a);
+            info.AddValue("geometry", geometry);
+            info.AddValue("useOverridedProperties", useOverridedProperties);
             base.GetObjectData(info, context);
-            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -206,7 +209,126 @@ namespace BriefFiniteElementNet
         /// <exception cref="System.NotImplementedException"></exception>
         internal TrussElement2Node(SerializationInfo info, StreamingContext context):base(info,context)
         {
-            throw new NotImplementedException();
+            _a = info.GetDouble("_a");
+            geometry = info.GetValue<PolygonYz>("geometry");
+            useOverridedProperties = info.GetBoolean("useOverridedProperties");
+        }
+
+
+        /// <summary>
+        /// Converts the vector from global to localcoordinations system.
+        /// </summary>
+        /// <param name="v">The v.</param>
+        /// <returns></returns>
+        internal Vector TransformLocalToGlobal(Vector v)
+        {
+            var pars = GetTransformationParameters();
+            var buf = new Vector(
+                pars[0] * v.X + pars[1] * v.Y + pars[2] * v.Z,
+                pars[3] * v.X + pars[4] * v.Y + pars[5] * v.Z,
+                pars[6] * v.X + pars[7] * v.Y + pars[8] * v.Z);
+
+            return buf;
+        }
+
+
+        private double[] GetTransformationParameters()
+        {
+            var v = this.EndNode.Location - this.StartNode.Location;
+
+            if (!v.Equals(LastElementVector))
+                ReCalculateTransformationParameters();
+
+            return LastTransformationParameters;
+        }
+
+
+        /// <summary>
+        /// The last transformation parameters
+        /// </summary>
+        /// <remarks>Storing transformation parameters corresponding to <see cref="LastElementVector"/> for better performance.</remarks>
+        private double[] LastTransformationParameters = new double[9];
+
+        /// <summary>
+        /// The last element vector
+        /// </summary>
+        /// <remarks>Last vector corresponding to current <see cref="LastTransformationParameters"/> </remarks>
+        private Vector LastElementVector;
+
+
+        /// <summary>
+        /// Calculates the transformation parameters for this <see cref="FrameElement2Node"/>
+        /// </summary>
+        private void ReCalculateTransformationParameters()
+        {
+            var cxx = 0.0;
+            var cxy = 0.0;
+            var cxz = 0.0;
+
+            var cyx = 0.0;
+            var cyy = 0.0;
+            var cyz = 0.0;
+
+            var czx = 0.0;
+            var czy = 0.0;
+            var czz = 0.0;
+
+
+            var teta = 0.0;
+
+            var s = Math.Sin(teta * Math.PI / 180.0);
+            var c = Math.Cos(teta * Math.PI / 180.0);
+
+            var v = this.EndNode.Location - this.StartNode.Location;
+
+
+            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
+            {
+                if (v.Z > 0)
+                {
+                    czx = 1;
+                    cyy = 1;
+                    cxz = -1;
+                }
+                else
+                {
+                    czx = -1;
+                    cyy = 1;
+                    cxz = 1;
+                }
+            }
+            else
+            {
+                var l = v.Length;
+                cxx = v.X / l;
+                cyx = v.Y / l;
+                czx = v.Z / l;
+                var d = Math.Sqrt(cxx * cxx + cyx * cyx);
+                cxy = -cyx / d;
+                cyy = cxx / d;
+                cxz = -cxx * czx / d;
+                cyz = -cyx * czx / d;
+                czz = d;
+            }
+
+
+
+            this.LastElementVector = v;
+
+            var pars = this.LastTransformationParameters;
+
+            pars[0] = cxx;
+            pars[1] = cxy * c + cxz * s;
+            pars[2] = -cxy * s + cxz * c;
+
+            pars[3] = cyx;
+            pars[4] = cyy * c + cyz * s;
+            pars[5] = -cyy * s + cyz * c;
+
+            pars[6] = czx;
+            pars[7] = czy * c + czz * s;
+            pars[8] = -czy * s + czz * c;
+         
         }
 
     }

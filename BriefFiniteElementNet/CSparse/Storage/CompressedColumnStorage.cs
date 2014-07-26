@@ -5,6 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Runtime.Serialization;
+
 namespace CSparse.Storage
 {
     using System;
@@ -477,5 +479,7 @@ namespace CSparse.Storage
         }
 
         #endregion
+
+        
     }
 }

@@ -440,13 +440,16 @@ namespace BriefFiniteElementNet
 
             info.AddValue("elements", elements);
             info.AddValue("nodes", nodes);
+            info.AddValue("lastResult", lastResult);
         }
 
         public Model(SerializationInfo info, StreamingContext context)
         {
             elements = info.GetValue<ElementCollection>("elements");
             nodes = info.GetValue<NodeCollection>("nodes");
-
+            lastResult = info.GetValue<StaticLinearAnalysisResult>("lastResult");
+            if (lastResult != null)
+                lastResult.Parent = this;
         }
 
         [OnDeserialized]
@@ -465,6 +468,8 @@ namespace BriefFiniteElementNet
 
             foreach (var nde in nodes)
                 nde.Parent = this;
+
+            
         }
 
         #endregion

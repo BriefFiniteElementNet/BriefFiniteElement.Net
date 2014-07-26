@@ -33,7 +33,7 @@ namespace BriefFiniteElementNet
         /// <param name="element">The element.</param>
         /// <remarks>Because of every <see cref="Load"/> on an <see cref="Element"/> body have to be converted to concentrated nodal loads, this method will be used to consider <see cref="Load"/> on <see cref="Element"/> body</remarks>
         /// <returns>Concentrated loads appropriated with this <see cref="Load"/>.</returns>
-        public abstract Force[] GetEquivalentNodalLoads(Element element);
+        public abstract Force[] GetGlobalEquivalentNodalLoads(Element element);
 
         #region Serialization stuff
 

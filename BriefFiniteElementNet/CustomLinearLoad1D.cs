@@ -19,7 +19,7 @@ namespace BriefFiniteElementNet
         /// <remarks>
         /// Because of every <see cref="Load" /> on an <see cref="Element" /> body have to be converted to concentrated nodal loads, this method will be used to consider <see cref="Load" /> on <see cref="Element" /> body
         /// </remarks>
-        public override Force[] GetEquivalentNodalLoads(Element element)
+        public override Force[] GetGlobalEquivalentNodalLoads(Element element)
         {
             throw new NotImplementedException();
         }

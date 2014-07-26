@@ -52,6 +52,7 @@
     <Compile Include="PolygonYz.cs" />
     <Compile Include="FrameElement2Node.cs" />
     <Compile Include="RandomStuff.cs" />
+    <Compile Include="RangeUtil.cs" />
     <Compile Include="SectionGenerator.cs" />
     <Compile Include="SerializationBinder.cs" />
     <Compile Include="SolverConfiguration.cs" />

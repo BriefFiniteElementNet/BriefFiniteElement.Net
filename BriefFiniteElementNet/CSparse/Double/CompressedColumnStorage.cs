@@ -6,6 +6,7 @@
 // -----------------------------------------------------------------------
 
 using System.Linq;
+using System.Runtime.Serialization;
 
 namespace CSparse.Double
 {
@@ -587,5 +588,6 @@ namespace CSparse.Double
 
             return newM1;
         }
+
     }
 }

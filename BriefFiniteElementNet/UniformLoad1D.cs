@@ -36,7 +36,7 @@ namespace BriefFiniteElementNet
 
         #region Methods
 
-        public override Force[] GetEquivalentNodalLoads(Element element)
+        public override Force[] GetGlobalEquivalentNodalLoads(Element element)
         {
 
 
@@ -57,11 +57,11 @@ namespace BriefFiniteElementNet
                 }
                 else if (!frElm.HingedAtEnd & frElm.HingedAtStart)
                 {
-
+                    throw new NotImplementedException();
                 }
                 else if (frElm.HingedAtEnd & !frElm.HingedAtStart)
                 {
-
+                    throw new NotImplementedException();
                 }
                 else if (!frElm.HingedAtEnd & !frElm.HingedAtStart)
                 {
@@ -130,7 +130,13 @@ namespace BriefFiniteElementNet
                 var l = (frElm.EndNode.Location - frElm.StartNode.Location).Length;
                 var w = GetLocalDistributedLoad(elm);
 
-                var f1 = -GetEquivalentNodalLoads(elm)[0];
+                var gf1 = -GetGlobalEquivalentNodalLoads(elm)[0];
+                var f1 = new Force();
+
+                f1.Forces = frElm.TransformGlobalToLocal(gf1.Forces);
+                f1.Moments = frElm.TransformGlobalToLocal(gf1.Moments);
+
+
                 var f2 = new Force(new Vector(w.X*x, w.Y*x, w.Z*x), new Vector());
 
                 var buf = f1.Move(new Point(0, 0, 0), new Point(x, 0, 0)) +

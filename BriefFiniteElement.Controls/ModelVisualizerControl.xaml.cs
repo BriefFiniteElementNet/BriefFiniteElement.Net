@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -195,6 +196,9 @@ namespace BriefFiniteElementNet.Controls
 
         }
 
+
+
+
         private double GetSmartElementThichness()
         {
             var mdl = ModelToVisualize;
@@ -212,9 +216,14 @@ namespace BriefFiniteElementNet.Controls
 
             var dim = new double[] {maxX - minX, maxY - minY, maxZ - minZ}.Where(i => i != 0).Min();
 
-            var ratio = 0.01;
+            var d1 = 0.01*dim;
 
-            return dim*ratio;
+            var d2 = 0.05*
+                     ModelToVisualize.Elements.Select(i => (i.Nodes[0].Location - i.Nodes.Last().Location).Length).Min();
+
+            var res = new double[] {d1, d2}.Max();
+
+            return res;
         }
 
 
@@ -262,7 +271,44 @@ namespace BriefFiniteElementNet.Controls
 
         private void AddTrussElement(MeshBuilder bldr, TrussElement2Node elm)
         {
-            throw new NotImplementedException();
+            PolygonYz section = null;
+
+            var r = ElementVisualThickness / 2;
+
+
+            if (elm.UseOverridedProperties)
+            {
+                section = new PolygonYz(
+                    new PointYz(-r, -r),
+                    new PointYz(-r, r),
+                    new PointYz(r, r),
+                    new PointYz(r, -r),
+                    new PointYz(-r, -r));
+            }
+            else
+                section = elm.Geometry;
+
+
+            for (var i = 0; i < section.Count - 1; i++)
+            {
+                var v1 = new Vector(0, section[i].Y, section[i].Z);
+                var v2 = new Vector(0, section[i + 1].Y, section[i + 1].Z);
+
+                var p1 = elm.StartNode.Location + elm.TransformLocalToGlobal(v1);
+                var p2 = elm.StartNode.Location + elm.TransformLocalToGlobal(v2);
+
+                var v = elm.EndNode.Location - elm.StartNode.Location;
+
+                if (Math.Abs(v.Z) < 0.01)
+                    Guid.NewGuid();
+
+                var p3 = p1 + v;
+                var p4 = p2 + v;
+
+                bldr.AddTriangle(p1, p3, p2);
+                bldr.AddTriangle(p4, p2, p3);
+            }
+
         }
 
         private void AddNode(MeshBuilder bldr, Node nde)

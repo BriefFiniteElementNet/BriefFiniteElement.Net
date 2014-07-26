@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using Microsoft.Win32;
 
 namespace BriefFiniteElementNet
 {
@@ -81,41 +84,55 @@ namespace BriefFiniteElementNet
         /// </remarks>
         public double[] GetSectionGeometricalProperties()
         {
-            var lastPoint = this.points[this.points.Count];
+            var lastPoint = this.points[this.points.Count-1];
 
             if (lastPoint != points[0])
                 throw new InvalidOperationException("First point and last point ot PolygonYz should put on each other");
 
-            var l = points.Count - 1;
+            
 
             double a = 0.0, iy = 0.0, ix = 0.0, ixy = 0.0;
 
-            var x = new double[l + 1];
-            var y = new double[l + 1];
 
-            for (int i = l; i >= 0; i--)
+            var x = new double[this.points.Count];
+            var y = new double[this.points.Count];
+
+            for (int i = 0; i < points.Count; i++)
             {
-                x[i] = points[i].Y;
-                y[i] = points[i].Z;
+                x[i] = points[i].Y+3;
+                y[i] = points[i].Z+2;
             }
+
+            var l = points.Count - 1;
+
+            var ai = 0.0;
 
             for (var i = 0; i < l; i++)
             {
-                a += x[i]*y[i + 1] - x[i + 1]*y[i];
-                ix += (x[i + 1] - x[i]) * (y[i + 1] + y[i]) * (y[i + 1] * y[i + 1] + y[i] * y[i]);
-                iy += (y[i + 1] - y[i]) * (x[i + 1] + x[i]) * (x[i + 1] * x[i + 1] + x[i] * x[i]);
-                ixy += (x[i] = x[i + 1])*
-                       (3*x[i + 1]*y[i + 1]*y[i + 1] + x[i]*y[i + 1]*y[i + 1] + 2*x[i + 1]*y[i]*y[i + 1] +
-                        2*x[i]*y[i]*y[i + 1] + x[i + 1]*y[i]*y[i] + 3*x[i]*y[i]*y[i]);
+                ai = x[i] * y[i + 1] - x[i + 1] * y[i];
+                a += ai;
+                ix += (y[i]*y[i] + y[i]*y[i + 1] + y[i + 1]*y[i + 1])*ai;
+                iy += (x[i]*x[i] + x[i]*x[i + 1] + x[i + 1]*x[i + 1])*ai;
+
+                ixy += (x[i]*y[i + 1] + 2*x[i]*y[i] + 2*x[i + 1]*y[i + 1] + x[i + 1]*y[i])*ai;
+
             }
 
-            var buf = new double[] {1/12.0*ix, 1/12.0*iy, 1/24.0*ixy, 0.5*a, 0.5*a, 0.5*a};
+            a = a*0.5;
+            iy = iy*1/12.0;
+            ix = ix*1/12.0;
+            ixy = ixy*1/24.0;
+            //var j = ix + iy;
+            //not sure which one is correct j = ix + iy or j = ixy :)!
+
+            var buf = new double[] { ix, iy, ixy, a, a, a };
 
             if (a < 0)
                 for (var i = 0; i < 6; i++)
                     buf[i] = -buf[i];
 
-            
+            Debug.Assert(buf.All(i => i > 0));
+
             return buf;
         }
 

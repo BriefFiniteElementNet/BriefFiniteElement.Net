@@ -28,7 +28,7 @@ namespace BriefFiniteElementNet
         protected double g;
 
         /// <summary>
-        /// Gets or sets the e.
+        /// Gets or sets the elastic module of section.
         /// </summary>
         /// <value>
         /// The elastic modulus of member
@@ -40,7 +40,7 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Gets or sets the g.
+        /// Gets or sets the shear module of section.
         /// </summary>
         /// <value>
         /// The shear modulus of member

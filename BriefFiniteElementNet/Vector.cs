@@ -360,5 +360,16 @@ namespace BriefFiniteElementNet
         }
 
         #endregion
+
+
+        public static implicit operator Point(Vector v)
+        {
+            return new Point(v.x, v.y, v.z);
+        }
+
+        public static implicit operator Vector(Point v)
+        {
+            return new Vector(v.X, v.Y, v.Z);
+        }
     }
 }

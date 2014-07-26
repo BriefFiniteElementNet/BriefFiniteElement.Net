@@ -13,6 +13,7 @@ namespace CSparse.Double.Factorization
     using CSparse.Ordering;
     using CSparse.Storage;
 
+    [Serializable]
     /// <summary>
     /// Sparse Cholesky decomposition.
     /// </summary>

@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DynamicDataDisplay">
+      <HintPath>..\SharedLibs\DynamicDataDisplay.dll</HintPath>
+    </Reference>
     <Reference Include="HelixToolkit">
       <HintPath>..\SharedLibs\HelixToolkit.dll</HintPath>
     </Reference>
@@ -49,8 +52,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
+    <Compile Include="FunctionVisualizer.xaml.cs">
+      <DependentUpon>FunctionVisualizer.xaml</DependentUpon>
+    </Compile>
     <Compile Include="HelixHelp.xaml.cs">
       <DependentUpon>HelixHelp.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ModelInternalForceVisualizer.xaml.cs">
+      <DependentUpon>ModelInternalForceVisualizer.xaml</DependentUpon>
     </Compile>
     <Compile Include="ModelVisualizerControl.xaml.cs">
       <DependentUpon>ModelVisualizerControl.xaml</DependentUpon>
@@ -58,7 +67,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="FunctionVisualizer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="HelixHelp.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ModelInternalForceVisualizer.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

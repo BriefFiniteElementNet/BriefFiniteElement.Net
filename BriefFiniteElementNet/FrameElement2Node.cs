@@ -360,7 +360,17 @@ namespace BriefFiniteElementNet
             double a = _a, iz = _iz, iy = _iy, j = _j, ay = _ay, az = _az;
 
             if (!useOverridedProperties)
-                throw new Exception();
+            {
+                //should use Geeometry insted of a,iz etc.
+                var props = this.geometry.GetSectionGeometricalProperties();
+
+                iz = props[0];
+                iy = props[1];
+                j = props[2];
+                a = props[3];
+                ay = props[4];
+                az = props[5];
+            }
 
 
             var l = (this.EndNode.Location - this.StartNode.Location).Length;
