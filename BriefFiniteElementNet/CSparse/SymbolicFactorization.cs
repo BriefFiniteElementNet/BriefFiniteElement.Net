@@ -6,6 +6,7 @@ namespace CSparse
     /// <summary>
     /// Symbolic Cholesky, LU, or QR factorization.
     /// </summary>
+    [Serializable]
     class SymbolicFactorization
     {
         public int[] pinv;     // inverse row perm. for QR, fill red. perm for Chol
