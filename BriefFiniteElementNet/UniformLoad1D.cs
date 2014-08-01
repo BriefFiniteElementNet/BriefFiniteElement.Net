@@ -121,6 +121,13 @@ namespace BriefFiniteElementNet
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets the internal force based on only this load at defined position <see cref="x"/>.
+        /// </summary>
+        /// <param name="elm">The elm.</param>
+        /// <param name="x">The x.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
         public override Force GetInternalForceAt(Element1D elm, double x)
         {
             if (elm is FrameElement2Node)
@@ -156,10 +163,10 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// Initializes a new instance of the <see cref="UniformLoad1D"/> class.
         /// </summary>
-        /// <param name="magnitude">The magnitude.</param>
-        /// <param name="direction">The direction.</param>
-        /// <param name="sys">The system.</param>
-        /// <param name="cse">The cse.</param>
+        /// <param name="magnitude">The magnitude of load.</param>
+        /// <param name="direction">The direction of load.</param>
+        /// <param name="sys">The coordination system type.</param>
+        /// <param name="cse">The load case.</param>
         public UniformLoad1D(double magnitude, LoadDirection direction, CoordinationSystem sys, LoadCase cse)
         {
             this.magnitude = magnitude;
@@ -182,6 +189,9 @@ namespace BriefFiniteElementNet
         }
 
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UniformLoad1D"/> class.
+        /// </summary>
         public UniformLoad1D()
         {
         }

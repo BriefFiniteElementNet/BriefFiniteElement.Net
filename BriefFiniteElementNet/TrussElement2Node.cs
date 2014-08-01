@@ -35,7 +35,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <value>
         /// <c>true</c> if overrided properties (<see cref="A"/>,<see cref="A"/>) should be taken into account for calculations such as stiffness matrix calculation ];
-        /// <c>false</c> if geomtric properties of section should be calculated from <see cref="Geometry"/> Property of <see cref="TrussElement2Node"/>.
+        /// <c>false</c> if geometric properties of section should be calculated from <see cref="Geometry"/> Property of <see cref="TrussElement2Node"/>.
         /// </value>
         public bool UseOverridedProperties
         {
@@ -105,10 +105,10 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Gets the stifness matrix of member in global coordination system.
+        /// Gets the stiffness matrix of member in global coordination system.
         /// </summary>
         /// <returns>
-        /// The stiffnes matrix
+        /// The stiffness matrix
         /// </returns>
         /// <exception cref="System.NotImplementedException">
         /// </exception>
@@ -216,7 +216,7 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Converts the vector from global to localcoordinations system.
+        /// Converts the vector from local to global coordination system.
         /// </summary>
         /// <param name="v">The v.</param>
         /// <returns></returns>

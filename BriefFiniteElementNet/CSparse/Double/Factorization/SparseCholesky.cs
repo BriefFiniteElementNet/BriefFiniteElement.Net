@@ -5,6 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.Linq;
 using BriefFiniteElementNet;
 
 namespace CSparse.Double.Factorization
@@ -13,7 +15,7 @@ namespace CSparse.Double.Factorization
     using CSparse.Ordering;
     using CSparse.Storage;
 
-    [Serializable]
+    
     /// <summary>
     /// Sparse Cholesky decomposition.
     /// </summary>
@@ -21,6 +23,7 @@ namespace CSparse.Double.Factorization
     /// See Chapter 4 (Cholesky factorization) in "Direct Methods for Sparse Linear Systems"
     /// by Tim Davis.
     /// </remarks>
+    [Serializable]
     public class SparseCholesky : ISparseFactorization<double>
     {
         SymbolicFactorization symFactor;
@@ -246,6 +249,8 @@ namespace CSparse.Double.Factorization
             var li = L.RowIndices;
             var lx = L.Values;
 
+            var lst = new List<int>();
+
             for (k = 0; k < n; k++)
             {
                 lp[k] = c[k] = colp[k];
@@ -264,16 +269,25 @@ namespace CSparse.Double.Factorization
                 d = x[k]; // d = C(k,k)
                 x[k] = 0; // clear x for k+1st iteration
 
+               
+
                 // Triangular solve
                 for (; top < n; top++) // solve L(0:k-1,0:k-1) * x = C(:,k)
                 {
                     i = s[top];  // s [top..n-1] is pattern of L(k,:)
                     lki = x[i] / lx[lp[i]]; // L(k,i) = x (i) / L(i,i)
                     x[i] = 0;               // clear x for k+1st iteration
-                    for (p = lp[i] + 1; p < c[i]; p++)
+
+
+                    var cci = c[i];
+                    for (p = lp[i] + 1; p < cci; p++)
                     {
                         x[li[p]] -= lx[p] * lki;
                     }
+
+                    
+                    
+
                     d -= lki * lki; // d = d - L(k,i)*L(k,i)
                     p = c[i]++;
                     li[p] = k; // store L(k,i) in column i
@@ -289,6 +303,7 @@ namespace CSparse.Double.Factorization
                 li[p] = k; // store L(k,k) = sqrt (d) in column k
                 lx[p] = Math.Sqrt(d);
             }
+
             lp[n] = colp[n]; // finalize L
         }
 

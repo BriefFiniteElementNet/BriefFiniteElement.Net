@@ -171,7 +171,7 @@ namespace BriefFiniteElementNet
         #region LinearSolve method and overrides
 
         /// <summary>
-        /// Solves the instanse assuming linear behaviour (both geometric and material) for default load case.
+        /// Solves the instance assuming linear behavior (both geometric and material) for default load case.
         /// </summary>
         public void Solve()
         {
@@ -179,7 +179,7 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Solves the instanse assuming linear behaviour (both geometric and material) for specified cases.
+        /// Solves the instance assuming linear behavior (both geometric and material) for specified cases.
         /// </summary>
         /// <param name="cases">The cases.</param>
         public void Solve(params LoadCase[] cases)
@@ -188,7 +188,7 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Solves the instanse assuming linear behaviour (both geometric and material) for specified configuration.
+        /// Solves the instance assuming linear behavior (both geometric and material) for specified configuration.
         /// </summary>
         /// <param name="config">The configuration.</param>
         public void Solve(SolverConfiguration config)
@@ -208,7 +208,7 @@ namespace BriefFiniteElementNet
             var rElmMap = new int[maxNodePerElement*6];
             var kt = new CoordinateStorage<double>(c, c, 1);
 
-            #region Determining count of fixed and free dofs
+            #region Determining count of fixed and free DoFs
 
             var fixedDofCount =
                 nodes.Select(
@@ -257,7 +257,7 @@ namespace BriefFiniteElementNet
             }
 
             sp.Stop();
-            TraceUtil.WritePerformanceTrace("Assembling full stiffness matrix tooks about {0:#,##0} ms.",
+            TraceUtil.WritePerformanceTrace("Assembling full stiffness matrix took about {0:#,##0} ms.",
                 sp.ElapsedMilliseconds);
             sp.Restart();
 
@@ -368,7 +368,7 @@ namespace BriefFiniteElementNet
 
 
             sp.Stop();
-            TraceUtil.WritePerformanceTrace("Extracting kff,kfs and kss from Kt matrix tooks about {0:#,##0} ms",
+            TraceUtil.WritePerformanceTrace("Extracting kff,kfs and kss from Kt matrix took about {0:#,##0} ms",
                 sp.ElapsedMilliseconds);
             sp.Restart();
 
@@ -380,11 +380,12 @@ namespace BriefFiniteElementNet
             var kfs = (CSparse.Double.CompressedColumnStorage) Converter.ToCompressedColumnStorage(kfsCoord);
             var kss = (CSparse.Double.CompressedColumnStorage) Converter.ToCompressedColumnStorage(kssCoord);
 
-            var chol = new SparseCholesky(kff, ColumnOrdering.MinimumDegreeAtPlusA);
+            var chol = (SparseCholesky)new SparseCholesky(kff, ColumnOrdering.MinimumDegreeAtPlusA);
+            //var ldl = new SparseLDL(kff, ColumnOrdering.MinimumDegreeAtPlusA);
 
             sp.Stop();
 
-            TraceUtil.WritePerformanceTrace("cholesky decomposition of Kff tooks about {0:#,##0} ms",
+            TraceUtil.WritePerformanceTrace("cholesky decomposition of Kff took about {0:#,##0} ms",
                 sp.ElapsedMilliseconds);
 
             
@@ -396,6 +397,7 @@ namespace BriefFiniteElementNet
 
             var result = new StaticLinearAnalysisResult();
             result.KffCholesky = chol;
+            //result.KffLdl = ldl;
             result.Kfs = kfs;
             result.Kss = kss;
             result.Parent = this;

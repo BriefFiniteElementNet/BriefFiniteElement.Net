@@ -42,7 +42,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             model.Nodes.Add(n1, n2, n3, n4, n5);
             model.Elements.Add(e1, e2, e3, e4);
 
-            //Aplying restrains
+            //Applying restrains
 
 
             n1.Constraints = n2.Constraints = n3.Constraints = n4.Constraints = Constraint.Fixed;
@@ -51,7 +51,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
 
             //Applying load
             var force = new Force(0, 0, -1000, 0, 0, 0);
-            n5.Loads.Add(new NodalLoad(force));//adds a load whith LoadCase of DefaultLoadCase to node loads
+            n5.Loads.Add(new NodalLoad(force));//adds a load with LoadCase of DefaultLoadCase to node loads
             
             //Adds a NodalLoad with Default LoadCase
 

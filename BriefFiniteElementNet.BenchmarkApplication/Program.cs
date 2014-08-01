@@ -49,7 +49,8 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
 
-            var nums = new int[] {10, 20, 30, 40};
+            //10, 11, 12, 13, 14, 15
+            var nums = new int[] { 13};
 
             var cnt = 0;
 
@@ -91,11 +92,11 @@ namespace BriefFiniteElementNet.BenchmarkApplication
             }
 
             Console.WriteLine("Done, Write result to file?[type 'Y' for yes, anything else for no]");
-            var inf = Console.ReadKey();
+            var inf = ' ';//Console.ReadKey();
 
-            if (inf.KeyChar == 'y' || inf.KeyChar == 'Y')
+            //if (inf.KeyChar == 'y' || inf.KeyChar == 'Y')
             {
-                System.IO.File.WriteAllText("BriefFemNet benchmark.txt", sb.ToString());
+                //System.IO.File.WriteAllText("BriefFemNet benchmark.txt", sb.ToString());
             }
 
             Environment.Exit(0);

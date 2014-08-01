@@ -98,9 +98,10 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// The cholesky decmposition of Kff, will be used for fast solving the model under new load cases
+        /// The cholesky decomposition of Kff, will be used for fast solving the model under new load cases
         /// </summary>
         internal CSparse.Double.Factorization.SparseCholesky KffCholesky;
+        //internal CSparse.Double.Factorization.SparseLDL KffLdl;
 
 
 
@@ -113,7 +114,7 @@ namespace BriefFiniteElementNet
         /// Adds the analysis result.
         /// </summary>
         /// <param name="cse">The load case.</param>
-        /// <remarks>if model is analysed against specific load case, then displacements are available throgh <see cref="Displacements"/> property.
+        /// <remarks>if model is analyzed against specific load case, then displacements are available throgh <see cref="Displacements"/> property.
         /// If system is not analysed against a specific load case, then this method will analyse structure agains <see cref="loadCase"/>.
         /// While this method is using pre computed Cholesky Decomposition (the <see cref="StiffnessMatrixCholeskyDecomposition"/> is meant) , its have a high performance in solving the system.
         /// </remarks>
@@ -303,17 +304,17 @@ namespace BriefFiniteElementNet
             for (int i = 0; i < fixCount; i++)
                 ps[i] = 0; //no need existing values
 
-            var tmp=Kfs.RowIndices.Max();
             if (haveSettlement)
             {
                 KffCholesky.Solve(MathUtil.ArrayMinus(pf, MathUtil.Muly(Kfs, us)), uf); //uf = kff^-1(Pf-Kfs*us)
-
+                //KffLdl.Solve(MathUtil.ArrayMinus(pf, MathUtil.Muly(Kfs, us)), uf); //uf = kff^-1(Pf-Kfs*us)
                 this.Kfs.TransposeMultiply(uf, ps); //ps += Kfs*Uf
                 this.Kss.Multiply(us, ps); //ps += Kss*Us
             }
             else
             {
                 KffCholesky.Solve(pf, uf); //uf = kff^-1(Pf
+                //KffLdl.Solve(pf, uf); //uf = kff^-1(Pf
 
                 this.Kfs.TransposeMultiply(uf, ps); //ps += Kfs*Uf
             }
@@ -374,6 +375,7 @@ namespace BriefFiniteElementNet
             info.AddValue("ForcesValues", ForcesValues);
 
             info.AddValue("KffCholesky", KffCholesky);
+            //info.AddValue("KffLdl", KffLdl);
             info.AddValue("Kss", Kss);
             info.AddValue("Kfs", Kfs);
         }
@@ -417,6 +419,8 @@ namespace BriefFiniteElementNet
             ForcesValues = info.GetValue<List<double[]>>("ForcesValues");
 
             KffCholesky = info.GetValue<CSparse.Double.Factorization.SparseCholesky>("KffCholesky");
+            //KffLdl = info.GetValue<CSparse.Double.Factorization.SparseLDL>("KffLdl");
+
             Kss = info.GetValue<CSparse.Double.CompressedColumnStorage>("Kss");
             Kfs = info.GetValue<CSparse.Double.CompressedColumnStorage>("Kfs");
         }
