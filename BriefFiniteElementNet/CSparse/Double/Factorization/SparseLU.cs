@@ -5,12 +5,12 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace CSparse.Double.Factorization
-{
-    using System;
-    using CSparse.Ordering;
-    using CSparse.Storage;
+using System;
+using BriefFiniteElementNet.CSparse.Ordering;
+using BriefFiniteElementNet.CSparse.Storage;
 
+namespace BriefFiniteElementNet.CSparse.Double.Factorization
+{
     /// <summary>
     /// Sparse LU decomposition.
     /// </summary>

@@ -5,10 +5,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace CSparse.Storage
-{
-    using System;
+using System;
 
+namespace BriefFiniteElementNet.CSparse.Storage
+{
     /// <summary>
     /// Represents the nonzero pattern of a column-compressed matrix.
     /// </summary>

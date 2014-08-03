@@ -5,11 +5,11 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace CSparse
-{
-    using System;
-    using CSparse.Storage;
+using System;
+using BriefFiniteElementNet.CSparse.Storage;
 
+namespace BriefFiniteElementNet.CSparse
+{
     /// <summary>
     /// Helper methods for sparse direct solvers.
     /// </summary>

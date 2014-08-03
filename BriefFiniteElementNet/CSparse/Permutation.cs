@@ -1,8 +1,8 @@
 ﻿
-namespace CSparse
-{
-    using System;
+using System;
 
+namespace BriefFiniteElementNet.CSparse
+{
     /// <summary>
     /// Permutation helper methods.
     /// </summary>

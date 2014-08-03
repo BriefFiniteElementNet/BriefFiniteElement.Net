@@ -137,6 +137,8 @@ namespace BriefFiniteElementNet
 
         #endregion
 
+        #region Serialization stuff
+
         /// <summary>
         /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
         /// </summary>
@@ -159,7 +161,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
-        public Displacement(SerializationInfo info, StreamingContext context)
+        private Displacement(SerializationInfo info, StreamingContext context)
         {
             this.dx = info.GetDouble("dx");
             this.dy = info.GetDouble("dy");
@@ -169,6 +171,9 @@ namespace BriefFiniteElementNet
             this.ry = info.GetDouble("ry");
             this.rz = info.GetDouble("rz");
         }
+
+        #endregion
+
 
         public Displacement(double dx, double dy, double dz, double rx, double ry, double rz)
         {

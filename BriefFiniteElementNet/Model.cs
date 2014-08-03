@@ -9,9 +9,9 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters.Soap;
 using System.Text;
-using CSparse;
-using CSparse.Double.Factorization;
-using CSparse.Storage;
+using BriefFiniteElementNet.CSparse;
+using BriefFiniteElementNet.CSparse.Double.Factorization;
+using BriefFiniteElementNet.CSparse.Storage;
 
 namespace BriefFiniteElementNet
 {
@@ -19,7 +19,7 @@ namespace BriefFiniteElementNet
     /// Represents a structure which consists of nodes, elements and loads applied on its parts (parts means either nodes or elements)
     /// </summary>
     [Serializable]
-    public class Model:ISerializable
+    public sealed class Model:ISerializable
     {
         #region Constructors
 
@@ -445,7 +445,7 @@ namespace BriefFiniteElementNet
             info.AddValue("lastResult", lastResult);
         }
 
-        public Model(SerializationInfo info, StreamingContext context)
+        private Model(SerializationInfo info, StreamingContext context)
         {
             elements = info.GetValue<ElementCollection>("elements");
             nodes = info.GetValue<NodeCollection>("nodes");

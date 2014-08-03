@@ -1,5 +1,5 @@
 ﻿
-namespace CSparse
+namespace BriefFiniteElementNet.CSparse
 {
     /// <summary>
     /// Column ordering for AMD.

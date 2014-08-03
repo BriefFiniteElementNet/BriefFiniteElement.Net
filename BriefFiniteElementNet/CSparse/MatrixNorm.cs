@@ -1,5 +1,5 @@
 ﻿
-namespace CSparse
+namespace BriefFiniteElementNet.CSparse
 {
     /// <summary>
     /// Types of matrix norms.

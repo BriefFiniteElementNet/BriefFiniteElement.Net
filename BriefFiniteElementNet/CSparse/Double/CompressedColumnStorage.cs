@@ -5,14 +5,12 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Linq;
-using System.Runtime.Serialization;
+using BriefFiniteElementNet.CSparse.Storage;
 
-namespace CSparse.Double
+namespace BriefFiniteElementNet.CSparse.Double
 {
-    using System;
-    using CSparse.Storage;
-
     [Serializable]
     /// <inheritdoc />
     public class CompressedColumnStorage : CompressedColumnStorage<double>

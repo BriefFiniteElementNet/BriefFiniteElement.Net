@@ -1,8 +1,8 @@
 ﻿
-namespace CSparse
-{
-    using System;
+using System;
 
+namespace BriefFiniteElementNet.CSparse
+{
     /// <summary>
     /// Functions to help simplify the generic code.
     /// </summary>

@@ -1168,7 +1168,9 @@ namespace BriefFiniteElementNet
             }
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        #region Serialization stuff
+
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("rowCount", rowCount);
             info.AddValue("columnCount", columnCount);
@@ -1176,13 +1178,16 @@ namespace BriefFiniteElementNet
         }
 
         protected Matrix(
-           SerializationInfo info,
-           StreamingContext context)
+            SerializationInfo info,
+            StreamingContext context)
         {
-            this.rowCount = (int)info.GetValue("rowCount", typeof(int));
-            this.columnCount = (int)info.GetValue("columnCount", typeof(int));
-            this.CoreArray = (double[])info.GetValue("CoreArray", typeof(double[]));
+            this.rowCount = (int) info.GetValue("rowCount", typeof (int));
+            this.columnCount = (int) info.GetValue("columnCount", typeof (int));
+            this.CoreArray = (double[]) info.GetValue("CoreArray", typeof (double[]));
         }
+
+        #endregion
+
 
 
         /// <summary>
@@ -1208,7 +1213,11 @@ namespace BriefFiniteElementNet
         }
     }
 
-    public class MatrixException : Exception
+    /// <summary>
+    /// Represents a class for exceptions in <see cref="Matrix"/>
+    /// </summary>
+    [Serializable]
+    public class MatrixException : BriefFiniteElementNetException
     {
         public MatrixException()
         {

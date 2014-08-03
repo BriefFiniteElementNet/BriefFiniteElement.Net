@@ -6,6 +6,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet
 {
+    [Serializable]
     public abstract class Element1D : Element
     {
         /// <summary>

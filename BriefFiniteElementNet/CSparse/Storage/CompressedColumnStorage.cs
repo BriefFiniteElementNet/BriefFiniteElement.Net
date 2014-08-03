@@ -5,12 +5,10 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using System.Runtime.Serialization;
+using System;
 
-namespace CSparse.Storage
+namespace BriefFiniteElementNet.CSparse.Storage
 {
-    using System;
-    using System.Collections.Generic;
     //using System.Numerics;
 
     [Serializable]

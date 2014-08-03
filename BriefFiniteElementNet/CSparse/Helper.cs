@@ -5,10 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace CSparse
+namespace BriefFiniteElementNet.CSparse
 {
-    using System;
-
     internal static class Helper
     {
         /// <summary>

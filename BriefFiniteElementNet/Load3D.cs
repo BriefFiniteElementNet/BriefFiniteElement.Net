@@ -6,6 +6,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet
 {
+    [Serializable]
     public abstract class Load3D : Load
     {
         /// <summary>

@@ -34,7 +34,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 #endif
 
             Log("\tOS: {0}", Environment.OSVersion);
-            Log("\tIs OS 64bit: {0}", Environment.Is64BitOperatingSystem);
+            //Log("\tIs OS 64bit: {0}", Environment.Is64BitOperatingSystem);
             Log("\tDebugger is Attached: {0}", Debugger.IsAttached);
             Log("\tMode: {0}", isDebug ? "Debug" : "Release");
             Log("#########################################################");
@@ -50,7 +50,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
             var sw = System.Diagnostics.Stopwatch.StartNew();
 
             //10, 11, 12, 13, 14, 15
-            var nums = new int[] { 13};
+            var nums = new int[] { 10, 11, 12, 13, 14, 15 };
 
             var cnt = 0;
 

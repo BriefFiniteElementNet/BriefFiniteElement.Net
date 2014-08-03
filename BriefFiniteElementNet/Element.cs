@@ -10,7 +10,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents an abstract class for a 'Finite Element' with physical properties.
     /// </summary>
-    
+    [Serializable]
     public abstract class Element : StructurePart
     {
         protected ElementType elementType;

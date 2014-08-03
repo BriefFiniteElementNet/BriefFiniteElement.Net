@@ -1,8 +1,8 @@
 ﻿
-namespace CSparse
-{
-    using System;
+using System;
 
+namespace BriefFiniteElementNet.CSparse
+{
     /// <summary>
     /// Symbolic Cholesky, LU, or QR factorization.
     /// </summary>

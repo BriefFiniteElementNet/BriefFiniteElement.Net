@@ -12,6 +12,9 @@ namespace BriefFiniteElementNet
     [Serializable]
     public class StaticLinearAnalysisResult:ISerializable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StaticLinearAnalysisResult"/> class.
+        /// </summary>
         public StaticLinearAnalysisResult()
         {
         }
@@ -359,7 +362,7 @@ namespace BriefFiniteElementNet
         /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
         /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("ReleasedMap",ReleasedMap);
             info.AddValue("FixedMap",FixedMap);
@@ -405,7 +408,7 @@ namespace BriefFiniteElementNet
             }
         }
 
-        public StaticLinearAnalysisResult(SerializationInfo info, StreamingContext context)
+        protected StaticLinearAnalysisResult(SerializationInfo info, StreamingContext context)
         {
             ReleasedMap = info.GetValue<int[]>("ReleasedMap");
             FixedMap = info.GetValue<int[]>("FixedMap");

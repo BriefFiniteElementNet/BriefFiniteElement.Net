@@ -94,6 +94,7 @@ namespace BriefFiniteElementNet
 
         #endregion
 
+        #region Serialization Stuff
 
         /// <summary>
         /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
@@ -111,11 +112,14 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
-        public LoadCase(SerializationInfo info, StreamingContext context)
+        private LoadCase(SerializationInfo info, StreamingContext context)
         {
             caseName = info.GetString("caseName");
             loadType = (LoadType) info.GetInt32("loadType");
         }
+
+        #endregion
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LoadCase"/> struct.

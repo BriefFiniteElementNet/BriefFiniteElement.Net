@@ -269,7 +269,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
-        internal ConcentratedLoad1D(SerializationInfo info, StreamingContext context)
+        protected ConcentratedLoad1D(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             this.distanseFromStartNode = info.GetDouble("distanseFromStartNode");

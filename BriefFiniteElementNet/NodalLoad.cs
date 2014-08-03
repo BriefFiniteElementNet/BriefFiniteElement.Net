@@ -61,6 +61,7 @@ namespace BriefFiniteElementNet
 
         private LoadCase _case;
 
+        #region Serialization stuff
 
 
         /// <summary>
@@ -79,10 +80,13 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
-        public NodalLoad(SerializationInfo info, StreamingContext context)
+        private NodalLoad(SerializationInfo info, StreamingContext context)
         {
             force = (Force) info.GetValue("force", typeof (Force));
             _case = (LoadCase) info.GetValue("case", typeof (LoadCase));
         }
+
+        #endregion
+
     }
 }

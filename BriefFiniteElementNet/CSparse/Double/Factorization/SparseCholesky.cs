@@ -5,17 +5,13 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using BriefFiniteElementNet;
+using BriefFiniteElementNet.CSparse.Ordering;
+using BriefFiniteElementNet.CSparse.Storage;
 
-namespace CSparse.Double.Factorization
+namespace BriefFiniteElementNet.CSparse.Double.Factorization
 {
-    using System;
-    using CSparse.Ordering;
-    using CSparse.Storage;
-
-    
     /// <summary>
     /// Sparse Cholesky decomposition.
     /// </summary>

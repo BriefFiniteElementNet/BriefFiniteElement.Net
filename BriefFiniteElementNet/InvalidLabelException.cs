@@ -6,6 +6,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet
 {
+    [Serializable]
     public class InvalidLabelException : BriefFiniteElementNetException
     {
         public InvalidLabelException()

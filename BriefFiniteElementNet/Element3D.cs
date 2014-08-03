@@ -6,6 +6,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet
 {
+    [Serializable]
     public abstract class Element3D : Element
     {
         protected Element3D(int nodes) : base(nodes)

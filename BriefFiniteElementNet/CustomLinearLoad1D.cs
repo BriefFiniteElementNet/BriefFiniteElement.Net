@@ -6,6 +6,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet
 {
+    [Serializable]
     public sealed class CustomLinearLoad1D : Load1D
     {
         /// <summary>

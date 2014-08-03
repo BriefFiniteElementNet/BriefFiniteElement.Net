@@ -1,9 +1,5 @@
-﻿
-namespace CSparse
+﻿namespace BriefFiniteElementNet.CSparse
 {
-    using System;
-    using System.Runtime.InteropServices;
-
     /// <summary>
     /// Constants used in the library.
     /// </summary>

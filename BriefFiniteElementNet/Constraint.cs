@@ -324,6 +324,8 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+        #region Serialization stuff
+
         /// <summary>
         /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
         /// </summary>
@@ -331,13 +333,13 @@ namespace BriefFiniteElementNet
         /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("dx", (int)dx);
-            info.AddValue("dy", (int)dy);
-            info.AddValue("dz", (int)dz);
+            info.AddValue("dx", (int) dx);
+            info.AddValue("dy", (int) dy);
+            info.AddValue("dz", (int) dz);
 
-            info.AddValue("rx", (int)rx);
-            info.AddValue("ry", (int)ry);
-            info.AddValue("rz", (int)rz);
+            info.AddValue("rx", (int) rx);
+            info.AddValue("ry", (int) ry);
+            info.AddValue("rz", (int) rz);
 
         }
 
@@ -347,16 +349,19 @@ namespace BriefFiniteElementNet
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        public Constraint(SerializationInfo info, StreamingContext context):this()
+        private Constraint(SerializationInfo info, StreamingContext context) : this()
         {
-            this.dx = (DofConstraint)info.GetInt32("dx");
-            this.dy = (DofConstraint)info.GetInt32("dy");
-            this.dz = (DofConstraint)info.GetInt32("dz");
+            this.dx = (DofConstraint) info.GetInt32("dx");
+            this.dy = (DofConstraint) info.GetInt32("dy");
+            this.dz = (DofConstraint) info.GetInt32("dz");
 
-            this.rx = (DofConstraint)info.GetInt32("rx");
-            this.ry = (DofConstraint)info.GetInt32("ry");
-            this.rz = (DofConstraint)info.GetInt32("rz");
+            this.rx = (DofConstraint) info.GetInt32("rx");
+            this.ry = (DofConstraint) info.GetInt32("ry");
+            this.rz = (DofConstraint) info.GetInt32("rz");
         }
+
+        #endregion
+
 
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.

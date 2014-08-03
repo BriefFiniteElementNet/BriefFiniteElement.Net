@@ -1,9 +1,8 @@
 ﻿
-namespace CSparse.Storage
-{
-    using System;
-    using System.Collections.Generic;
+using System;
 
+namespace BriefFiniteElementNet.CSparse.Storage
+{
     [Serializable]
     /// <summary>
     /// TODO: Update summary.

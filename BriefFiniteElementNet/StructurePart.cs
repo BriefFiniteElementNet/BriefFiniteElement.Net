@@ -11,6 +11,7 @@ namespace BriefFiniteElementNet
     /// Represents an abstract class for being used by Node and Element classes
     /// </summary>
     [DebuggerDisplay("Label: {Label}")]
+    [Serializable]
     public abstract class StructurePart:ISerializable
     {
         /// <summary>

@@ -1,8 +1,8 @@
 ﻿
-namespace CSparse.Double
-{
-    using System;
+using System;
 
+namespace BriefFiniteElementNet.CSparse.Double
+{
     /// <summary>
     /// Vector helper methods.
     /// </summary>

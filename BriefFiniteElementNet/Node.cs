@@ -228,7 +228,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
-        internal Node(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected Node(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             location = (Point) info.GetValue("location", typeof (Point));
             Index = (int) info.GetValue("index", typeof (int));

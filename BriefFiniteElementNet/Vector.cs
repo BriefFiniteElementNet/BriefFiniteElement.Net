@@ -65,6 +65,12 @@ namespace BriefFiniteElementNet
 
         #endregion
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Vector"/> struct.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <param name="z">The z.</param>
         public Vector(double x, double y, double z) : this()
         {
             X = x;
@@ -352,7 +358,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
-        public Vector(SerializationInfo info, StreamingContext context)
+        private Vector(SerializationInfo info, StreamingContext context)
         {
             x = info.GetDouble("x");
             y = info.GetDouble("y");

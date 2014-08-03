@@ -5,11 +5,11 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-namespace CSparse.Ordering
-{
-    using System;
-    using CSparse.Storage;
+using System;
+using BriefFiniteElementNet.CSparse.Storage;
 
+namespace BriefFiniteElementNet.CSparse.Ordering
+{
     /// <summary>
     /// Approximate Minimum Degree ordering.
     /// </summary>

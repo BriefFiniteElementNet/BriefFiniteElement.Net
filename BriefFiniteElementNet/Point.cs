@@ -169,7 +169,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
-        public Point(SerializationInfo info, StreamingContext context)
+        private Point(SerializationInfo info, StreamingContext context)
         {
             x = info.GetDouble("x");
             y = info.GetDouble("y");

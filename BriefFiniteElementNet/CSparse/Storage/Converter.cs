@@ -1,8 +1,8 @@
 ﻿
-namespace CSparse.Storage
-{
-    using System;
+using System;
 
+namespace BriefFiniteElementNet.CSparse.Storage
+{
     /// <summary>
     /// Converter for different types of storages.
     /// </summary>

@@ -146,6 +146,13 @@ namespace BriefFiniteElementNet
 
         #endregion
 
+        #region Serialization Stuff
+
+        /// <summary>
+        /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
+        /// </summary>
+        /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
+        /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("fx", fx);
@@ -157,7 +164,12 @@ namespace BriefFiniteElementNet
             info.AddValue("mz", mz);
         }
 
-        public Force(SerializationInfo info, StreamingContext context)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Force"/> struct.
+        /// </summary>
+        /// <param name="info">The information.</param>
+        /// <param name="context">The context.</param>
+        private Force(SerializationInfo info, StreamingContext context)
         {
             fx = info.GetDouble("fx");
             fy = info.GetDouble("fy");
@@ -167,6 +179,9 @@ namespace BriefFiniteElementNet
             my = info.GetDouble("my");
             mz = info.GetDouble("mz");
         }
+
+        #endregion
+
 
         public Force(double fx, double fy, double fz, double mx, double my, double mz)
         {

@@ -207,7 +207,7 @@ namespace BriefFiniteElementNet
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        internal TrussElement2Node(SerializationInfo info, StreamingContext context):base(info,context)
+        protected TrussElement2Node(SerializationInfo info, StreamingContext context):base(info,context)
         {
             _a = info.GetDouble("_a");
             geometry = info.GetValue<PolygonYz>("geometry");

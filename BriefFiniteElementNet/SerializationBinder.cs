@@ -24,7 +24,6 @@ namespace BriefFiniteElementNet
             throw new NotImplementedException();
         }
     }
-}
 
 
     public class FemNetSurrogateSelector : ISurrogateSelector
@@ -78,7 +77,7 @@ namespace BriefFiniteElementNet
         /// <exception cref="System.NotImplementedException"></exception>
         public void GetObjectData(object obj, SerializationInfo info, StreamingContext context)
         {
-            if (obj is ISerializable)
+            if (obj.GetType().IsSerializable )
             {
                 ((ISerializable) obj).GetObjectData(info, context);
             }
@@ -102,5 +101,4 @@ namespace BriefFiniteElementNet
             throw new NotImplementedException();
         }
     }
-
-
+}

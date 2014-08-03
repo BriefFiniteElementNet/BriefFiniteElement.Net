@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BriefFiniteElementNet</RootNamespace>
     <AssemblyName>BriefFiniteElementNet</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
@@ -57,6 +57,15 @@
     <Compile Include="SectionGenerator.cs" />
     <Compile Include="SerializationBinder.cs" />
     <Compile Include="SolverConfiguration.cs" />
+    <Compile Include="Solver\DirectSolver.cs" />
+    <Compile Include="Solver\IdentityPreconditioner.cs" />
+    <Compile Include="Solver\IIterativeSolver.cs" />
+    <Compile Include="Solver\IPreconditioner.cs" />
+    <Compile Include="Solver\ISolver.cs" />
+    <Compile Include="Solver\IterativeSolver.cs" />
+    <Compile Include="Solver\PCG.cs" />
+    <Compile Include="Solver\SolverResult.cs" />
+    <Compile Include="Solver\SSOR.cs" />
     <Compile Include="StaticLinearAnalysisResult.cs" />
     <Compile Include="BriefFiniteElementNetException.cs" />
     <Compile Include="ConcentratedLoad1D.cs" />
