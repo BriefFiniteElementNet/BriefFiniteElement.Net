@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
 
 namespace BriefFiniteElementNet
@@ -16,7 +17,7 @@ namespace BriefFiniteElementNet
         #region Static Members
 
         /// <summary>
-        /// Gets a totally fixed Contraint.
+        /// Gets a totally fixed Constraint.
         /// </summary>
         /// <value>
         /// A totally Fixed Constraint.
@@ -31,7 +32,7 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Gets a totally free Contraint.
+        /// Gets a totally free Constraint.
         /// </summary>
         /// <value>
         /// A totally Released Constraint.
@@ -44,6 +45,12 @@ namespace BriefFiniteElementNet
             }
         }
 
+        /// <summary>
+        /// Gets a totally free Constraint.
+        /// </summary>
+        /// <value>
+        /// The free.
+        /// </value>
         [Obsolete("Use Constraint.Released instead")]
         public static Constraint Free
         {
@@ -54,7 +61,7 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Gets a movement fixed (but rotation free) Contraint.
+        /// Gets a movement fixed (but rotation free) Constraint.
         /// </summary>
         /// <value>
         /// A Movement Fixed and Rotation Released Constraint.
@@ -69,7 +76,7 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Gets a rotation fixed (but movement free) Contraint.
+        /// Gets a rotation fixed (but movement free) Constraint.
         /// </summary>
         /// <value>
         /// A Rotation Fixed and Movement Released Constraint.
@@ -84,7 +91,7 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Gets a totally free but Dx fixed Contraint.
+        /// Gets a totally free but Dx fixed Constraint.
         /// </summary>
         /// <value>
         /// A Dx fixed constraint.
@@ -100,7 +107,7 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Gets a totally free but Dy fixed Contraint.
+        /// Gets a totally free but Dy fixed Constraint.
         /// </summary>
         /// <value>
         /// A Dy fixed constraint.
@@ -116,7 +123,7 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Gets a totally free but Dz fixed Contraint.
+        /// Gets a totally free but Dz fixed Constraint.
         /// </summary>
         /// <value>
         /// A Dz fixed constraint.
@@ -132,7 +139,7 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Gets a totally free but Rx fixed Contraint.
+        /// Gets a totally free but Rx fixed Constraint.
         /// </summary>
         /// <value>
         /// A Rx fixed constraint.
@@ -148,7 +155,7 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Gets a totally free but Ry fixed Contraint.
+        /// Gets a totally free but Ry fixed Constraint.
         /// </summary>
         /// <value>
         /// A Ry fixed constraint.
@@ -164,7 +171,7 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Gets a totally free but Rz fixed Contraint.
+        /// Gets a totally free but Rz fixed Constraint.
         /// </summary>
         /// <value>
         /// A Rz fixed constraint.
@@ -287,7 +294,7 @@ namespace BriefFiniteElementNet
         #endregion
 
         /// <summary>
-        /// Creates new Constraint based on <see cref="constraint" parameter/>.
+        /// Creates new Constraint based on <see cref="constraint" /> parameter.
         /// </summary>
         /// <param name="constraint">The constraint.</param>
         /// <returns>new constraint</returns>
@@ -331,6 +338,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
         /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
+        [SecurityPermission(SecurityAction.LinkDemand,Flags=SecurityPermissionFlag.SerializationFormatter)]
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("dx", (int) dx);

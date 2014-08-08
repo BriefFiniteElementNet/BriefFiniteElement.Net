@@ -69,16 +69,6 @@ namespace BriefFiniteElementNet.CSparse.Storage
         int Keep(Func<int, int, T, double, bool> func, double tolerance);
 
         /// <summary>
-        /// Enumerates the sparse matrix storage.
-        /// </summary>
-        /// <returns>Enumeration of all storage entries (i, j, a_{ij}).</returns>
-        /// <remarks>
-        /// This enumerates the storage. It's not the same as MathNet's EnumerateIndexed, but
-        /// more like EnumerateNonZeroIndexed (but stored zero's aren't skipped).
-        /// </remarks>
-        //IEnumerable<Tuple<int, int, T>> EnumerateIndexed();
-
-        /// <summary>
         /// Computes the matrix-vector product y = alpha * A * x + beta * y.
         /// </summary>
         void Multiply(T alpha, T[] x, T beta, T[] y);

@@ -7,11 +7,13 @@ using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization.Formatters.Soap;
+using System.Security.Permissions;
 using System.Text;
 using BriefFiniteElementNet.CSparse;
+using BriefFiniteElementNet.CSparse.Double;
 using BriefFiniteElementNet.CSparse.Double.Factorization;
 using BriefFiniteElementNet.CSparse.Storage;
+using BriefFiniteElementNet.Solver;
 
 namespace BriefFiniteElementNet
 {
@@ -178,6 +180,26 @@ namespace BriefFiniteElementNet
             Solve(new SolverConfiguration(LoadCase.DefaultLoadCase));
         }
 
+
+        /// <summary>
+        /// Solves the instance with specified <see cref="SolverType" /> and assuming linear behavior (both geometric and material) and for default load case.
+        /// </summary>
+        /// <param name="solverType">The solver type.</param>
+        public void Solve(SolverType solverType)
+        {
+            Solve(new SolverConfiguration(LoadCase.DefaultLoadCase) {SolverType = solverType});
+        }
+
+
+        /// <summary>
+        /// Solves the instance with specified <see cref="solver" /> and assuming linear behavior (both geometric and material) and for default load case.
+        /// </summary>
+        /// <param name="solver">The solver.</param>
+        public void Solve(ISolver solver)
+        {
+            Solve(new SolverConfiguration(LoadCase.DefaultLoadCase) { CustomSolver = solver});
+        }
+
         /// <summary>
         /// Solves the instance assuming linear behavior (both geometric and material) for specified cases.
         /// </summary>
@@ -186,6 +208,7 @@ namespace BriefFiniteElementNet
         {
             Solve(new SolverConfiguration(cases));
         }
+
 
         /// <summary>
         /// Solves the instance assuming linear behavior (both geometric and material) for specified configuration.
@@ -374,30 +397,32 @@ namespace BriefFiniteElementNet
 
             #endregion
 
-            #region Cholesky decomposition of kff
+            #region converting kff, Kfs and Kss to compressed column storage
 
             var kff = (CSparse.Double.CompressedColumnStorage) Converter.ToCompressedColumnStorage(kffCoord);
             var kfs = (CSparse.Double.CompressedColumnStorage) Converter.ToCompressedColumnStorage(kfsCoord);
             var kss = (CSparse.Double.CompressedColumnStorage) Converter.ToCompressedColumnStorage(kssCoord);
 
-            var chol = (SparseCholesky)new SparseCholesky(kff, ColumnOrdering.MinimumDegreeAtPlusA);
-            //var ldl = new SparseLDL(kff, ColumnOrdering.MinimumDegreeAtPlusA);
-
             sp.Stop();
 
-            TraceUtil.WritePerformanceTrace("cholesky decomposition of Kff took about {0:#,##0} ms",
-                sp.ElapsedMilliseconds);
+            //TraceUtil.WritePerformanceTrace("cholesky decomposition of Kff took about {0:#,##0} ms",
+            //    sp.ElapsedMilliseconds);
 
             
             TraceUtil.WritePerformanceTrace("nnz of kff is {0:#,##0}, ~{1:0.0000}%", kff.Values.Length,
                 ((double) kff.Values.Length)/((double) kff.RowCount*kff.ColumnCount));
+
             sp.Restart();
 
             #endregion
 
             var result = new StaticLinearAnalysisResult();
-            result.KffCholesky = chol;
-            //result.KffLdl = ldl;
+
+            if (config.CustomSolver != null)
+                result.Solver = config.CustomSolver;
+            else
+                result.Solver = GenerateSolver(config.SolverType, kff);
+
             result.Kfs = kfs;
             result.Kss = kss;
             result.Parent = this;
@@ -425,6 +450,22 @@ namespace BriefFiniteElementNet
             }
         }
 
+
+        private static ISolver GenerateSolver(SolverType solverType, CompressedColumnStorage kff)
+        {
+            switch (solverType)
+            {
+                case SolverType.CholeskyDecomposition:
+                    return new CholeskySolver() {A = kff};
+                    break;
+                case SolverType.ConjugateGradient:
+                    return new PCG(new SSOR()) {A = kff};
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("solverType");
+            }
+        }
+
         #endregion
 
         #region Serialization stuff
@@ -435,6 +476,7 @@ namespace BriefFiniteElementNet
         /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
         /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
         /// <exception cref="System.NotImplementedException"></exception>
+        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             for (int i = 0; i < nodes.Count; i++)
@@ -442,16 +484,12 @@ namespace BriefFiniteElementNet
 
             info.AddValue("elements", elements);
             info.AddValue("nodes", nodes);
-            info.AddValue("lastResult", lastResult);
         }
 
         private Model(SerializationInfo info, StreamingContext context)
         {
             elements = info.GetValue<ElementCollection>("elements");
             nodes = info.GetValue<NodeCollection>("nodes");
-            lastResult = info.GetValue<StaticLinearAnalysisResult>("lastResult");
-            if (lastResult != null)
-                lastResult.Parent = this;
         }
 
         [OnDeserialized]

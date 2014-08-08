@@ -80,8 +80,8 @@ namespace BriefFiniteElementNet.CSparse.Storage
         /// <summary>
         /// Change the shape of the matrix (only used by Dulmage-Mendelsohn decomposition).
         /// </summary>
-        /// <param name="size"></param>
-        /// <returns></returns>
+        /// <param name="rowCount">The row count.</param>
+        /// <param name="columnCount">The column count.</param>
         internal void Reshape(int rowCount, int columnCount)
         {
             if (rowCount >= 0)

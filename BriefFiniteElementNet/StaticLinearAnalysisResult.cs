@@ -1,17 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
+using BriefFiniteElementNet.CSparse.Double;
+using BriefFiniteElementNet.Solver;
 
 namespace BriefFiniteElementNet
 {
     /// <summary>
     /// Represents the result of linear analysis of structure against defined load combinations
     /// </summary>
-    [Serializable]
-    public class StaticLinearAnalysisResult:ISerializable
+    //[Serializable]
+    public class StaticLinearAnalysisResult
     {
+        #region Constructors
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StaticLinearAnalysisResult"/> class.
         /// </summary>
@@ -19,35 +25,44 @@ namespace BriefFiniteElementNet
         {
         }
 
+        #endregion
+
+        #region Fields
+
         private Model parent;
         private Dictionary<LoadCase, double[]> displacements = new Dictionary<LoadCase, double[]>();
         private Dictionary<LoadCase, double[]> forces = new Dictionary<LoadCase, double[]>();
         private LoadCase settlementsLoadCase;
 
-        internal int[] ReleasedMap;             //ReleasedMap[GlobalDofIndex] = DoF index in free DoFs
-        internal int[] FixedMap;            //FixedMap[GlobalDofIndex] = DoF index in fixed DoFs
-        internal int[] ReversedReleasedMap;     //ReversedReleasedMap[DoF index in free DoFs] = GlobalDofIndex
-        internal int[] ReversedFixedMap;    //ReversedFixedMap[DoF index in fixed DoFs] = GlobalDofIndex
+        internal int[] ReleasedMap; //ReleasedMap[GlobalDofIndex] = DoF index in free DoFs
+        internal int[] FixedMap; //FixedMap[GlobalDofIndex] = DoF index in fixed DoFs
+        internal int[] ReversedReleasedMap; //ReversedReleasedMap[DoF index in free DoFs] = GlobalDofIndex
+        internal int[] ReversedFixedMap; //ReversedFixedMap[DoF index in fixed DoFs] = GlobalDofIndex
 
-        private List<double[]> DisplacementsValues;
-        private LoadCase[] DisplacementsCases;
-
-        private LoadCase[] ForcesCases;
-        private List<double[]> ForcesValues;
+        
 
 
         /// <summary>
-        /// Adds the analysis result if not exists.
+        /// The cholesky decomposition of Kff, will be used for fast solving the model under new load cases
         /// </summary>
-        /// <param name="cse">The cse.</param>
-        /// <remarks>If current instanse do not contains the results reloated to <see cref="cse"/>, then this method will add result related to <see cref="cse"/> using <see cref="StaticLinearAnalysisResult.AddAnalysisResult"/> method</remarks>
-        public void AddAnalysisResultIfNotExists(LoadCase cse)
-        {
-            if (displacements.ContainsKey(cse))
-                return;
+        //internal CSparse.Double.Factorization.SparseCholesky KffCholesky;
+        //internal CSparse.Double.Factorization.SparseLDL KffLdl;
 
-            AddAnalysisResult(cse);
-        }
+
+        #region Stiffness matrixes
+
+        internal CompressedColumnStorage Kff;
+        internal CompressedColumnStorage Kfs;
+        internal CompressedColumnStorage Kss;
+
+        #endregion
+
+
+        public ISolver Solver;
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets the displacements.
@@ -99,33 +114,38 @@ namespace BriefFiniteElementNet
             set { settlementsLoadCase = value; }
         }
 
+        #endregion
+
+        #region Methods
 
         /// <summary>
-        /// The cholesky decomposition of Kff, will be used for fast solving the model under new load cases
+        /// Adds the analysis result if not exists.
         /// </summary>
-        internal CSparse.Double.Factorization.SparseCholesky KffCholesky;
-        //internal CSparse.Double.Factorization.SparseLDL KffLdl;
+        /// <param name="cse">The load case.</param>
+        /// <remarks>If current instance do not contains the results related to <see cref="cse"/>, then this method will add result related to <see cref="cse"/> using <see cref="StaticLinearAnalysisResult.AddAnalysisResult"/> method</remarks>
+        public void AddAnalysisResultIfNotExists(LoadCase cse)
+        {
+            if (displacements.ContainsKey(cse))
+                return;
 
-
-
-        internal CSparse.Double.CompressedColumnStorage Kfs;
-        internal CSparse.Double.CompressedColumnStorage Kss;
-
-
+            AddAnalysisResult(cse);
+        }
 
         /// <summary>
         /// Adds the analysis result.
         /// </summary>
         /// <param name="cse">The load case.</param>
-        /// <remarks>if model is analyzed against specific load case, then displacements are available throgh <see cref="Displacements"/> property.
-        /// If system is not analysed against a specific load case, then this method will analyse structure agains <see cref="loadCase"/>.
+        /// <remarks>if model is analyzed against specific load case, then displacements are available through <see cref="Displacements"/> property.
+        /// If system is not analyses against a specific load case, then this method will analyses structure against <see cref="LoadCase"/>.
         /// While this method is using pre computed Cholesky Decomposition (the <see cref="StiffnessMatrixCholeskyDecomposition"/> is meant) , its have a high performance in solving the system.
         /// </remarks>
         public void AddAnalysisResult(LoadCase cse)
         {
-            var sp = System.Diagnostics.Stopwatch.StartNew();
+            var sp = Stopwatch.StartNew();
 
             var haveSettlement = false;
+
+            #region Determining force and displacement vectors
 
             var fixCount = this.Kfs.ColumnCount;
             var freeCount = this.Kfs.RowCount;
@@ -164,9 +184,9 @@ namespace BriefFiniteElementNet
 
             #endregion
 
-            TraceUtil.WritePerformanceTrace("Calculating end memeber forces took {0} ms", sp.ElapsedMilliseconds);
+            TraceUtil.WritePerformanceTrace("Calculating end member forces took {0} ms", sp.ElapsedMilliseconds);
             sp.Restart();
-            
+
 
 
             var fmap = this.FixedMap;
@@ -285,13 +305,12 @@ namespace BriefFiniteElementNet
                 #endregion
             }
 
+            #endregion
 
             TraceUtil.WritePerformanceTrace("forming Uf,Us,Ff,Fs took {0} ms", sp.ElapsedMilliseconds);
             sp.Restart();
 
-
-
-            #region determining that have settlement for better performance
+            #region Determining that have settlement or not
 
             for (int i = 0; i < fixCount; i++)
                 if (us[i] != 0)
@@ -304,31 +323,43 @@ namespace BriefFiniteElementNet
 
             #region Solving equation system
 
+            if (Solver == null)
+                throw new NullReferenceException("Solver");
+
             for (int i = 0; i < fixCount; i++)
                 ps[i] = 0; //no need existing values
 
-            if (haveSettlement)
-            {
-                KffCholesky.Solve(MathUtil.ArrayMinus(pf, MathUtil.Muly(Kfs, us)), uf); //uf = kff^-1(Pf-Kfs*us)
-                //KffLdl.Solve(MathUtil.ArrayMinus(pf, MathUtil.Muly(Kfs, us)), uf); //uf = kff^-1(Pf-Kfs*us)
-                this.Kfs.TransposeMultiply(uf, ps); //ps += Kfs*Uf
-                this.Kss.Multiply(us, ps); //ps += Kss*Us
-            }
-            else
-            {
-                KffCholesky.Solve(pf, uf); //uf = kff^-1(Pf
-                //KffLdl.Solve(pf, uf); //uf = kff^-1(Pf
 
-                this.Kfs.TransposeMultiply(uf, ps); //ps += Kfs*Uf
-            }
+            string message;
+
+            if (!Solver.IsInitialized)
+                Solver.Initialize();
+
+            var b = haveSettlement ? MathUtil.ArrayMinus(pf, MathUtil.Muly(Kfs, us)) : pf;
+
+            if (Solver.Solve(b, uf, out message) !=
+                SolverResult.Success)
+                throw new SolverFailException(message); //uf = kff^-1(Pf-Kfs*us)
+
+            var residual = CheckingUtil.GetResidual(Solver.A, uf, b);
+
+            this.Kfs.TransposeMultiply(uf, ps); //ps += Kfs*Uf
+
+            if (haveSettlement)
+                this.Kss.Multiply(us, ps); //ps += Kss*Us
 
             #endregion
 
-            TraceUtil.WritePerformanceTrace("resolving the system with pre computed cholesky decomposition tooks {0} ms", sp.ElapsedMilliseconds);
+            TraceUtil.WritePerformanceTrace(
+                "solver: {0}, duration: {1} ms, size: {2}x{3}, residual {4:g} ", Solver.SolverType,
+                sp.ElapsedMilliseconds, Solver.A.RowCount, Solver.A.ColumnCount, residual);
+
             sp.Restart();
 
-            var ut = new double[6 * n];
-            var ft = new double[6 * n];
+            #region Adding result to Displacements and Forces members
+
+            var ut = new double[6*n];
+            var ft = new double[6*n];
 
             var revFMap = this.ReversedFixedMap;
             var revRMap = this.ReversedReleasedMap;
@@ -352,9 +383,26 @@ namespace BriefFiniteElementNet
 
             displacements[cse] = ut;
             forces[cse] = ft;
+
+            #endregion
+
         }
 
+        #endregion
+
         #region Serialization stuff
+
+        /*
+        #region fields for using in serialization - deserialization
+
+        private List<double[]> DisplacementsValues;
+        private LoadCase[] DisplacementsCases;
+
+        private LoadCase[] ForcesCases;
+        private List<double[]> ForcesValues;
+
+        #endregion
+
 
         /// <summary>
         /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
@@ -377,7 +425,7 @@ namespace BriefFiniteElementNet
             info.AddValue("ForcesCases", ForcesCases);
             info.AddValue("ForcesValues", ForcesValues);
 
-            info.AddValue("KffCholesky", KffCholesky);
+            //info.AddValue("KffCholesky", );
             //info.AddValue("KffLdl", KffLdl);
             info.AddValue("Kss", Kss);
             info.AddValue("Kfs", Kfs);
@@ -444,7 +492,7 @@ namespace BriefFiniteElementNet
                 forces[ForcesCases[i]] = ForcesValues[i];
             }
         }
-
+        */
         #endregion
     }
 }

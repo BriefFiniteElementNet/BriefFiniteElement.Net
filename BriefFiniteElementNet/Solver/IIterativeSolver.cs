@@ -6,8 +6,7 @@ namespace BriefFiniteElementNet.Solver
     /// <summary>
     /// Iterative solver interface.
     /// </summary>
-    public interface IIterativeSolver<T> : ISolver<T>
-        where T : struct, IEquatable<T>, IFormattable
+    public interface IIterativeSolver: ISolver
     {
         /// <summary>
         /// Gets or sets the relative tolerance iteration stop criterium.

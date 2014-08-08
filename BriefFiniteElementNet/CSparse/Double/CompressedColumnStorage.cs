@@ -11,8 +11,9 @@ using BriefFiniteElementNet.CSparse.Storage;
 
 namespace BriefFiniteElementNet.CSparse.Double
 {
-    [Serializable]
+    
     /// <inheritdoc />
+    [Serializable]
     public class CompressedColumnStorage : CompressedColumnStorage<double>
     {
         /// <inheritdoc />

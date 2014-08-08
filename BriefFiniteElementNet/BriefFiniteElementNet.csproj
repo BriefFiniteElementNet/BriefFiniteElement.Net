@@ -36,12 +36,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization.Formatters.Soap" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CheckingUtil.cs" />
@@ -57,15 +51,33 @@
     <Compile Include="SectionGenerator.cs" />
     <Compile Include="SerializationBinder.cs" />
     <Compile Include="SolverConfiguration.cs" />
-    <Compile Include="Solver\DirectSolver.cs" />
-    <Compile Include="Solver\IdentityPreconditioner.cs" />
-    <Compile Include="Solver\IIterativeSolver.cs" />
-    <Compile Include="Solver\IPreconditioner.cs" />
-    <Compile Include="Solver\ISolver.cs" />
-    <Compile Include="Solver\IterativeSolver.cs" />
-    <Compile Include="Solver\PCG.cs" />
-    <Compile Include="Solver\SolverResult.cs" />
-    <Compile Include="Solver\SSOR.cs" />
+    <Compile Include="SolverFailException.cs" />
+    <Compile Include="SolverType.cs" />
+    <Compile Include="Solver\CholeskySolver.cs" />
+    <Compile Include="Solver\IdentityPreconditioner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Solver\IIterativeSolver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Solver\IPreconditioner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Solver\ISolver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Solver\IterativeSolver.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Solver\PCG.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Solver\SolverResult.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Solver\SSOR.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="StaticLinearAnalysisResult.cs" />
     <Compile Include="BriefFiniteElementNetException.cs" />
     <Compile Include="ConcentratedLoad1D.cs" />

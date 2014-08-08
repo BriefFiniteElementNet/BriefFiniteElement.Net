@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Security.Permissions;
 using System.Text;
-using System.Xml.Serialization;
 
 namespace BriefFiniteElementNet
 {
@@ -1170,6 +1170,7 @@ namespace BriefFiniteElementNet
 
         #region Serialization stuff
 
+        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("rowCount", rowCount);

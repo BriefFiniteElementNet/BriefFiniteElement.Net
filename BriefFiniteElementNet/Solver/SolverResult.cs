@@ -7,24 +7,12 @@ namespace BriefFiniteElementNet.Solver
     public enum SolverResult
     {
         /// <summary>
-        /// The iteration converged.
+        /// General success case.
         /// </summary>
-        Convergence,
-        /// <summary>
-        /// The iteration diverged.
-        /// </summary>
-        Divergence,
-        /// <summary>
-        /// Numerical breakdown.
-        /// </summary>
-        BreakDown,
+        Success,
         /// <summary>
         /// General failure case.
         /// </summary>
-        Failure,
-        /// <summary>
-        /// General success case.
-        /// </summary>
-        Success
+        Failure
     }
 }

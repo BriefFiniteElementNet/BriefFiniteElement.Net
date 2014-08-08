@@ -3,10 +3,11 @@ using System;
 
 namespace BriefFiniteElementNet.CSparse.Storage
 {
-    [Serializable]
+    
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
+    [Serializable]
     public abstract class SparseMatrixStorage<T> : ISparseMatrixStorage<T>
         where T : struct, IEquatable<T>, IFormattable
     {
@@ -72,8 +73,6 @@ namespace BriefFiniteElementNet.CSparse.Storage
         /// <inheritdoc />
         public abstract int Keep(Func<int, int, T, double, bool> func, double tolerance);
 
-        /// <inheritdoc />
-        //public abstract IEnumerable<Tuple<int, int, T>> EnumerateIndexed();
 
         /// <summary>
         /// Removes numerically zero entries from a matrix.

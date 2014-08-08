@@ -1,4 +1,5 @@
 ﻿
+using BriefFiniteElementNet.CSparse.Double;
 using BriefFiniteElementNet.CSparse.Storage;
 
 namespace BriefFiniteElementNet.Solver
@@ -9,9 +10,21 @@ namespace BriefFiniteElementNet.Solver
     /// Base class for iterative solver implementations.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public abstract class IterativeSolver<T> : IIterativeSolver<T>
-        where T : struct, IEquatable<T>, IFormattable
+    public abstract class IterativeSolver : IIterativeSolver
     {
+        public CompressedColumnStorage A { get; set; }
+
+
+        public void Initialize()
+        {
+            if (this.Preconditioner != null)
+            {
+                this.Preconditioner.Initialize(A);
+            }
+        }
+
+        public abstract SolverResult Solve(double[] input, double[] result,out string message);
+
         /// <summary>
         /// Number of iterations.
         /// </summary>
@@ -38,7 +51,7 @@ namespace BriefFiniteElementNet.Solver
         /// <summary>
         /// Gets or sets the preconditioner.
         /// </summary>
-        public IPreconditioner<T> Preconditioner
+        public IPreconditioner<double> Preconditioner
         {
             get;
             set;
@@ -62,13 +75,10 @@ namespace BriefFiniteElementNet.Solver
         }
 
         /// <inheritdoc />
-        public bool IsDirect
-        {
-            get { return false; }
-        }
+        public abstract SolverType SolverType { get; }
 
         /// <inheritdoc />
-        public virtual void Initialize(CompressedColumnStorage<T> matrix)
+        public virtual void Initialize(CompressedColumnStorage<double> matrix)
         {
             if (this.Preconditioner != null)
             {
@@ -76,7 +86,7 @@ namespace BriefFiniteElementNet.Solver
             }
         }
 
-        /// <inheritdoc />
-        public abstract SolverResult Solve(CompressedColumnStorage<T> A, T[] input, T[] result);
+        // /// <inheritdoc />
+        //public abstract SolverResult Solve(CompressedColumnStorage<double> A, double[] input, double[] result);
     }
 }

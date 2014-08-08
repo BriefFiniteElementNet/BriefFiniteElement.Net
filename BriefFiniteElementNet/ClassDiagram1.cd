@@ -3,10 +3,9 @@
   <Class Name="BriefFiniteElementNet.StaticLinearAnalysisResult" Collapsed="true">
     <Position X="14.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IggABAgAAKAAAAhgAAMAQAAgAAAYAAQAABAAIiAYAAA=</HashCode>
+      <HashCode>IggABAgAAKAAAAhgAAMAQAAoAAAYAAQAABAAAiAYAAA=</HashCode>
       <FileName>StaticLinearAnalysisResult.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
   </Class>
   <Class Name="BriefFiniteElementNet.ConcentratedLoad1D" Collapsed="true">
     <Position X="5.5" Y="3.25" Width="1.75" />
@@ -316,6 +315,13 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAIAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAACA=</HashCode>
       <FileName>ElementType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="BriefFiniteElementNet.SolverType">
+    <Position X="2.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>SolverType.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />

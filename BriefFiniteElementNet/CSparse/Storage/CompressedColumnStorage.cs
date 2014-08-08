@@ -11,11 +11,12 @@ namespace BriefFiniteElementNet.CSparse.Storage
 {
     //using System.Numerics;
 
-    [Serializable]
+    
     /// <summary>
     /// Compressed sparse column storage.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [Serializable]
     public abstract class CompressedColumnStorage<T> : SparseMatrixStorage<T>
         where T : struct, IEquatable<T>, IFormattable
     {
@@ -170,27 +171,6 @@ namespace BriefFiniteElementNet.CSparse.Storage
             return result;
         }
 
-        /// <inheritdoc />
-        
-        /*
-        public override IEnumerable<Tuple<int, int, T>> EnumerateIndexed()
-        {
-            int n = this.ColumnCount;
-
-            var ax = this.Values;
-            var ap = this.ColumnPointers;
-            var ai = this.RowIndices;
-
-            for (int i = 0; i < n; i++)
-            {
-                var end = ap[i + 1];
-                for (var j = ap[i]; j < end; j++)
-                {
-                    yield return new Tuple<int, int, T>(i, ai[j], ax[j]);
-                }
-            }
-        }
-        */
 
         /// <summary>
         /// TODO: doc

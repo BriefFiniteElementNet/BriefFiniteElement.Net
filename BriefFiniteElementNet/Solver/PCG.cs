@@ -1,9 +1,16 @@
-﻿
-using BriefFiniteElementNet.CSparse.Storage;
+﻿// -----------------------------------------------------------------------
+// <copyright file="PCG.cs">
+// Copyright (c) 2008 Lawrence Livermore National Security, LLC.
+// Copyright (c) 2014 Christian Woltering, C# version
+// </copyright>
+// -----------------------------------------------------------------------
 
 namespace BriefFiniteElementNet.Solver
 {
     using System;
+    using BriefFiniteElementNet.CSparse.Storage;
+
+    using Vector = BriefFiniteElementNet.CSparse.Double.Vector;
 
     /// <summary>
     /// Preconditioned conjugate gradient (Orthomin) functions
@@ -11,7 +18,7 @@ namespace BriefFiniteElementNet.Solver
     /// <remarks>
     /// From Hypre (LGPL): http://acts.nersc.gov/hypre/
     /// </remarks>
-    public class PCG : IterativeSolver<double>
+    public class PCG : IterativeSolver
     {
         double rel_residual_norm;
 
@@ -25,15 +32,24 @@ namespace BriefFiniteElementNet.Solver
             this.Preconditioner = M;
         }
 
-        /// <inheritdoc />
-        public override SolverResult Solve(CompressedColumnStorage<double> A, double[] input, double[] result)
+        public override SolverType SolverType
         {
+            get { return SolverType.ConjugateGradient; }
+        }
+
+        /// <inheritdoc />
+        public override SolverResult Solve( double[] input, double[] result,out string message)
+        {
+
             var M = this.Preconditioner;
 
             if (M == null || !M.IsInitialized)
             {
                 throw new Exception("Invalid preconditioner state.");
+                
             }
+
+            
 
             int max_iter = MaxIterations;
 
@@ -81,14 +97,14 @@ namespace BriefFiniteElementNet.Solver
             if (two_norm)
             {
                 // bi_prod = <b,b>
-                bi_prod = CSparse.Double.Vector.DotProduct(input, input);
+                bi_prod = Vector.DotProduct(input, input);
             }
             else
             {
                 // bi_prod = <C*b,b>
                 //Vector.Clear(p);
                 M.Solve(input, p);
-                bi_prod = CSparse.Double.Vector.DotProduct(p, input);
+                bi_prod = Vector.DotProduct(p, input);
             };
 
             eps = rtol * rtol; // note: this may be re-assigned below
@@ -116,15 +132,15 @@ namespace BriefFiniteElementNet.Solver
             else    // bi_prod==0.0: the rhs vector b is zero
             {
                 // Set x equal to zero and return
-                CSparse.Double.Vector.Copy(input, result);
-
-                return SolverResult.Convergence;
+                Vector.Copy(input, result);
+                message = "";
+                return SolverResult.Success;
                 // In this case, for the original parcsr pcg, the code would take special
                 // action to force iterations even though the exact value was known.
             }
 
             // r = b - Ax
-            CSparse.Double.Vector.Copy(input, r);
+            Vector.Copy(input, r);
             A.Multiply(-1.0, result, 1.0, r);
 
             // p = C*r
@@ -132,18 +148,18 @@ namespace BriefFiniteElementNet.Solver
             M.Solve(r, p);
 
             // gamma = <r,p>
-            gamma = CSparse.Double.Vector.DotProduct(r, p);
+            gamma = Vector.DotProduct(r, p);
 
             // Set initial residual norm
             if (ctol > 0.0)
             {
                 if (two_norm)
-                    i_prod_0 = CSparse.Double.Vector.DotProduct(r, r);
+                    i_prod_0 = Vector.DotProduct(r, r);
                 else
                     i_prod_0 = gamma;
             }
 
-            while ((i + 1) <= max_iter)
+            while (i < max_iter)
             {
                 // the core CG calculations...
                 i++;
@@ -158,7 +174,7 @@ namespace BriefFiniteElementNet.Solver
                 A.Multiply(1.0, p, 0.0, s);
 
                 // alpha = gamma / <s,p>
-                sdotp = CSparse.Double.Vector.DotProduct(s, p);
+                sdotp = Vector.DotProduct(s, p);
                 if (sdotp == 0.0)
                 {
                     // ++ierr;
@@ -170,17 +186,17 @@ namespace BriefFiniteElementNet.Solver
                 gamma_old = gamma;
 
                 // x = x + alpha*p
-                CSparse.Double.Vector.Axpy(alpha, p, result);
+                Vector.Axpy(alpha, p, result);
 
                 // r = r - alpha*s
                 if (!recompute_true_residual)
                 {
-                    CSparse.Double.Vector.Axpy(-alpha, s, r);
+                    Vector.Axpy(-alpha, s, r);
                 }
                 else
                 {
                     //Recomputing the residual...
-                    CSparse.Double.Vector.Copy(input, r);
+                    Vector.Copy(input, r);
                     A.Multiply(-1.0, result, 1.0, r);
                 }
 
@@ -188,7 +204,7 @@ namespace BriefFiniteElementNet.Solver
                 if (rtol_1 > 0 && two_norm)
                 {
                     // use that r_new-r_old = alpha * s
-                    double drob2 = alpha * alpha * CSparse.Double.Vector.DotProduct(s, s) / bi_prod;
+                    double drob2 = alpha * alpha * Vector.DotProduct(s, s) / bi_prod;
                     if (drob2 < rtol_1 * rtol_1)
                     {
                         break;
@@ -196,11 +212,11 @@ namespace BriefFiniteElementNet.Solver
                 }
 
                 // s = C*r
-                CSparse.Double.Vector.Clear(s);
+                Vector.Clear(s);
                 M.Solve(r, s);
 
                 // gamma = <r,s>
-                gamma = CSparse.Double.Vector.DotProduct(r, s);
+                gamma = Vector.DotProduct(r, s);
 
                 // residual-based stopping criteria: ||r_new-r_old||_C < rtol ||b||_C
                 if (rtol_1 > 0 && !two_norm)
@@ -215,7 +231,7 @@ namespace BriefFiniteElementNet.Solver
 
                 // set i_prod for convergence test
                 if (two_norm)
-                    i_prod = CSparse.Double.Vector.DotProduct(r, r);
+                    i_prod = Vector.DotProduct(r, r);
                 else
                     i_prod = gamma;
 
@@ -231,19 +247,19 @@ namespace BriefFiniteElementNet.Solver
                 // concern for problems where CG takes many iterations.
                 {
                     // r = b - Ax
-                    CSparse.Double.Vector.Copy(input, r);
+                    Vector.Copy(input, r);
                     A.Multiply(-1.0, result, 1.0, r);
 
                     // set i_prod for convergence test
                     if (two_norm)
-                        i_prod = CSparse.Double.Vector.DotProduct(r, r);
+                        i_prod = Vector.DotProduct(r, r);
                     else
                     {
                         // s = C*r
-                        CSparse.Double.Vector.Clear(s);
+                        Vector.Clear(s);
                         M.Solve(r, s);
                         // iprod = gamma = <r,s>
-                        i_prod = CSparse.Double.Vector.DotProduct(r, s);
+                        i_prod = Vector.DotProduct(r, s);
                     }
                     if (i_prod / bi_prod >= eps) tentatively_converged = false;
                 }
@@ -251,8 +267,8 @@ namespace BriefFiniteElementNet.Solver
                 // At user request, don't treat this as converged unless x didn't change
                 // much in the last iteration.
                 {
-                    pi_prod = CSparse.Double.Vector.DotProduct(p, p);
-                    xi_prod = CSparse.Double.Vector.DotProduct(result, result);
+                    pi_prod = Vector.DotProduct(p, p);
+                    xi_prod = Vector.DotProduct(result, result);
                     ratio = alpha * alpha * pi_prod / xi_prod;
                     if (ratio >= eps) tentatively_converged = false;
                 }
@@ -265,6 +281,7 @@ namespace BriefFiniteElementNet.Solver
                 if ((gamma < 1.0e-292) && ((-gamma) < 1.0e-292))
                 {
                     // ierr = 1, hypre_error(HYPRE_ERROR_CONV)
+                    message = "method did not converge as expected";
                     return SolverResult.Failure;
                 }
                 // ... gamma should be >=0.  IEEE subnormal numbers are < 2**(-1022)=2.2e-308
@@ -288,6 +305,7 @@ namespace BriefFiniteElementNet.Solver
                         // and we're just calculating garbage - time to bail out before the
                         // next step, which will be a divide by zero (or close to it).
                         // ierr = 1, hypre_error(HYPRE_ERROR_CONV)
+                        message = "method did not converge as expected";
                         return SolverResult.Failure;
                     }
                     cf_ave_1 = Math.Pow(i_prod / i_prod_0, 1.0 / (2.0 * i));
@@ -307,11 +325,11 @@ namespace BriefFiniteElementNet.Solver
                 // p = s + beta p
                 if (!recompute_true_residual)
                 {
-                    CSparse.Double.Vector.Scale(beta, p);
-                    CSparse.Double.Vector.Axpy(1.0, s, p);
+                    Vector.Scale(beta, p);
+                    Vector.Axpy(1.0, s, p);
                 }
                 else
-                    CSparse.Double.Vector.Copy(s, p);
+                    Vector.Copy(s, p);
             }
 
             // Finish up with some outputs.
@@ -322,7 +340,11 @@ namespace BriefFiniteElementNet.Solver
             else // actually, we'll never get here...
                 rel_residual_norm = 0.0;
 
-            return SolverResult.Convergence;
+            message = (numIterations < max_iter)
+                ? ""
+                : string.Format("Max number of {0} iterations exceed", numIterations);
+
+            return (numIterations < max_iter) ? SolverResult.Success : SolverResult.Failure;
         }
     }
 }

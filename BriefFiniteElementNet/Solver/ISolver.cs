@@ -1,4 +1,5 @@
 ﻿
+using BriefFiniteElementNet.CSparse.Double;
 using BriefFiniteElementNet.CSparse.Storage;
 
 namespace BriefFiniteElementNet.Solver
@@ -6,34 +7,43 @@ namespace BriefFiniteElementNet.Solver
     using System;
 
     /// <summary>
-    /// Iterative solver interface.
+    /// Represents an interface for a solver to solve A*x = b.
+    /// 
     /// </summary>
-    public interface ISolver<T>
-        where T : struct, IEquatable<T>, IFormattable
+    public interface ISolver 
     {
+        /// <summary>
+        /// Gets or sets A in A*x=b.
+        /// </summary>
+        /// <value>
+        /// A value in A*x=b equation.
+        /// </value>
+        CompressedColumnStorage A { get; set; }
+
         /// <summary>
         /// Gets a value indicating whether the solver is initialized.
         /// </summary>
         bool IsInitialized { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the solver is direct or iterative.
+        /// Gets the type of the solver.
         /// </summary>
-        bool IsDirect { get; }
+        SolverType SolverType { get; }
 
         /// <summary>
-        /// Initializes the solver.
+        /// Initializes the solver regarding <see cref="A" /> matrix.
         /// </summary>
-        /// <param name="matrix">The system matrix.</param>
-        void Initialize(CompressedColumnStorage<T> matrix);
+        void Initialize();
 
         /// <summary>
-        /// Solves a system of linear equations iteratively.
+        /// Solves a the system of A*x=b and store the x in <see cref="result" />.
         /// </summary>
-        /// <param name="A">Linear operator providing a matrix-vector product implementation.</param>
-        /// <param name="input">Right hand side</param>
-        /// <param name="result">Solution</param>
-        /// <returns>Iterative solver result.</returns>
-        SolverResult Solve(CompressedColumnStorage<T> A, T[] input, T[] result);
+        /// <param name="input">Right hand side vector.</param>
+        /// <param name="result">Solution vector.</param>
+        /// <param name="message">The message.</param>
+        /// <returns>
+        /// Solver result.
+        /// </returns>
+        SolverResult Solve( double[] input, double[] result,out string message);
     }
 }

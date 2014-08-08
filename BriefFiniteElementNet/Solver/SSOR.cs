@@ -1,4 +1,11 @@
-﻿
+﻿// -----------------------------------------------------------------------
+// <copyright file="SSOR.cs">
+// Copyright (c) 2003-2006 Bjørn-Ove Heimsund
+// Copyright (c) 2006-2014 Samuel Halliday
+// Copyright (c) 2014 Christian Woltering, C# version
+// </copyright>
+// -----------------------------------------------------------------------
+
 using BriefFiniteElementNet.CSparse.Storage;
 
 namespace BriefFiniteElementNet.Solver
@@ -11,7 +18,7 @@ namespace BriefFiniteElementNet.Solver
     /// For best performance, omega must be carefully chosen (between 0 and 2).
     /// </summary>
     /// <remarks>
-    /// From matrix-toolkits-java (LGPL).
+    /// From matrix-toolkits-java (LGPL): https://github.com/fommil/matrix-toolkits-java
     /// </remarks>
     public sealed class SSOR : IPreconditioner<double>
     {

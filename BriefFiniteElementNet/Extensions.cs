@@ -10,6 +10,23 @@ namespace BriefFiniteElementNet
     public static class Extensions
     {
 
+        public static double Max(this double[] array)
+        {
+            if (array.Length == 0)
+                throw new Exception();
+
+            var max = array[0];
+
+            for (int i = array.Length - 1; i >= 0; i--)
+            {
+                if (array[i] > max)
+                    max = array[i];
+            }
+
+            return max;
+        }
+
+
         /// <summary>
         /// Simplify the accessing to <see cref="SerializationInfo.GetValue"/> and then casting the returned type.
         /// </summary>
@@ -55,7 +72,7 @@ namespace BriefFiniteElementNet
             return frc;
         }
 
-
+        
         public static int IndexOfReference<T>(this IEnumerable<T> arr, T obj)
         {
             var cnt = arr.Count();
@@ -98,6 +115,19 @@ namespace BriefFiniteElementNet
                     var row = csr.RowIndices[j];
                     buf[row, col] = csr.Values[j];
                 }
+            }
+
+            return buf;
+        }
+
+        public static double GetLargestAbsoluteValue(this double[] vals)
+        {
+            var buf = 0.0;
+
+            for (var i = 0; i < vals.Length; i++)
+            {
+                if (Math.Abs(vals[i]) > buf)
+                    buf = Math.Abs(vals[i]);
             }
 
             return buf;
