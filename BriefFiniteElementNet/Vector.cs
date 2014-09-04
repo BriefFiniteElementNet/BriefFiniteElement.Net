@@ -326,6 +326,53 @@ namespace BriefFiniteElementNet
 
         #endregion
 
+        #region equals
+
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(Vector other)
+        {
+            return x.Equals(other.x) && y.Equals(other.y) && z.Equals(other.z);
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is Vector && Equals((Vector) obj);
+        }
+
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// </returns>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = x.GetHashCode();
+                hashCode = (hashCode*397) ^ y.GetHashCode();
+                hashCode = (hashCode*397) ^ z.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        #endregion
+
+
 
         /// <summary>
         /// Calculates the cross product of two vectors
@@ -369,11 +416,25 @@ namespace BriefFiniteElementNet
         #endregion
 
 
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Vector"/> to <see cref="Point"/>.
+        /// </summary>
+        /// <param name="v">The v.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator Point(Vector v)
         {
             return new Point(v.x, v.y, v.z);
         }
 
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="Point"/> to <see cref="Vector"/>.
+        /// </summary>
+        /// <param name="v">The v.</param>
+        /// <returns>
+        /// The result of the conversion.
+        /// </returns>
         public static implicit operator Vector(Point v)
         {
             return new Vector(v.X, v.Y, v.Z);

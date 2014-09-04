@@ -21,17 +21,17 @@ namespace BriefFiniteElementNet
         public static PolygonYz GetRectangularSection(double h, double w)
         {
             var buf = new PolygonYz(
-                new PointYz(-w/2, -h/2),
-                new PointYz(-w/2, h/2),
-                new PointYz(w/2, h/2),
-                new PointYz(w/2, -h/2),
-                new PointYz(-w/2, -h/2));
+                new PointYZ(-w/2, -h/2),
+                new PointYZ(-w/2, h/2),
+                new PointYZ(w/2, h/2),
+                new PointYZ(w/2, -h/2),
+                new PointYZ(-w/2, -h/2));
 
             return buf;
         }
 
         /// <summary>
-        /// Gets an I setion with defined parameters.
+        /// Gets an I section with defined parameters.
         /// </summary>
         /// <param name="w">The overall width of section.</param>
         /// <param name="h">The overall height of section.</param>
@@ -42,26 +42,25 @@ namespace BriefFiniteElementNet
         public static PolygonYz GetISetion(double w, double h, double tf, double tw)
         {
             var buf = new PolygonYz(
-                new PointYz(-w/2, -h/2),
-                new PointYz(-w/2, -h/2 + tf),
-                new PointYz(-tw/2, -h/2 + tf),
-                new PointYz(-tw/2, h/2 - tf),
-                new PointYz(-w/2, h/2 - tf),
-                new PointYz(-w/2, h/2),
+                new PointYZ(-w/2, -h/2),
+                new PointYZ(-w/2, -h/2 + tf),
+                new PointYZ(-tw/2, -h/2 + tf),
+                new PointYZ(-tw/2, h/2 - tf),
+                new PointYZ(-w/2, h/2 - tf),
+                new PointYZ(-w/2, h/2),
 
-                new PointYz(w/2, h/2),
-                new PointYz(w/2, h/2 - tf),
-                new PointYz(tw/2, h/2 - tf), 
-                new PointYz(tw/2, -h/2 + tf),
-                new PointYz(w/2, -h/2 + tf),
-                new PointYz(w/2, -h/2),
+                new PointYZ(w/2, h/2),
+                new PointYZ(w/2, h/2 - tf),
+                new PointYZ(tw/2, h/2 - tf), 
+                new PointYZ(tw/2, -h/2 + tf),
+                new PointYZ(w/2, -h/2 + tf),
+                new PointYZ(w/2, -h/2),
 
-                new PointYz(-w/2, -h/2)
+                new PointYZ(-w/2, -h/2)
                 );
 
 
             return buf;
-            throw new NotImplementedException();
         }
     }
 }

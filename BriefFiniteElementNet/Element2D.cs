@@ -10,6 +10,10 @@ namespace BriefFiniteElementNet
     [Serializable]
     public abstract class Element2D : Element
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Element2D"/> class.
+        /// </summary>
+        /// <param name="nodes">The number of nodes that the <see cref="Element" /> connect together.</param>
         protected Element2D(int nodes) : base(nodes)
         {
         }

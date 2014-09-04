@@ -28,6 +28,13 @@ namespace BriefFiniteElementNet
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Gets the residual of Ax-b.
+        /// </summary>
+        /// <param name="A">A.</param>
+        /// <param name="x">The x.</param>
+        /// <param name="b">The b.</param>
+        /// <returns></returns>
         public static double GetResidual(CompressedColumnStorage A, double[] x, double[] b)
         {
             var buf = 0.0;

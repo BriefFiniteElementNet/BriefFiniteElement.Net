@@ -32,6 +32,7 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// The parent
         /// </summary>
+        [NonSerialized]
         private Model parent;
 
         /// <summary>
@@ -48,7 +49,7 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Ensures the node label validity. If not satiffies, throws exception.
+        /// Ensures the node label validity. If not satisfies, throws exception.
         /// </summary>
         /// <param name="elm">The node.</param>
         /// <exception cref="System.InvalidOperationException">This member is child of another Model

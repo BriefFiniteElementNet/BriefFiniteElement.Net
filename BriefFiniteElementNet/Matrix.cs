@@ -9,6 +9,9 @@ using System.Text;
 
 namespace BriefFiniteElementNet
 {
+    /// <summary>
+    /// Represents a dense real matrix
+    /// </summary>
     [DebuggerDisplay("Matrix {RowCount} x {ColumnCount}")]
     [Serializable]
     public class Matrix : ISerializable, IEnumerable<double>
@@ -1175,7 +1178,7 @@ namespace BriefFiniteElementNet
         {
             info.AddValue("rowCount", rowCount);
             info.AddValue("columnCount", columnCount);
-            info.AddValue("CoreArray", CoreArray);
+            info.AddValue("coreArray", coreArray);
         }
 
         protected Matrix(
@@ -1184,7 +1187,7 @@ namespace BriefFiniteElementNet
         {
             this.rowCount = (int) info.GetValue("rowCount", typeof (int));
             this.columnCount = (int) info.GetValue("columnCount", typeof (int));
-            this.CoreArray = (double[]) info.GetValue("CoreArray", typeof (double[]));
+            this.coreArray = (double[]) info.GetValue("coreArray", typeof (double[]));
         }
 
         #endregion

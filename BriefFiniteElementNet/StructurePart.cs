@@ -23,6 +23,7 @@ namespace BriefFiniteElementNet
         protected Guid id;
         protected string label;
         protected string tag;
+        [NonSerialized]
         protected Model parent;
 
 

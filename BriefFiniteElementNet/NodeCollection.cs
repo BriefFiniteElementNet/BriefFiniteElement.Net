@@ -17,11 +17,16 @@ namespace BriefFiniteElementNet
     [Serializable]
     public class NodeCollection : IList<Node>, ISerializable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NodeCollection"/> class.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
         public NodeCollection(Model parent)
         {
             this.parent = parent;
         }
 
+        [NonSerialized]
         private Model parent;
 
         /// <summary>
@@ -38,7 +43,7 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Ensures the node label validity. If not satiffies, throws exception.
+        /// Ensures the node label validity. If not satisfies, throws exception.
         /// </summary>
         /// <param name="node">The node.</param>
         /// <exception cref="System.InvalidOperationException">

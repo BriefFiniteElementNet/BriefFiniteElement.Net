@@ -49,7 +49,6 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
 
-            //10, 11, 12, 13, 14, 15
             var nums = new int[] { 10, 11, 12, 13, 14, 15 };
 
             var cnt = 0;
@@ -78,11 +77,14 @@ namespace BriefFiniteElementNet.BenchmarkApplication
                     foreach (var nde in st.Nodes)
                         nde.Loads.Add(new NodalLoad(GetRandomForce(), LoadCase.DefaultLoadCase));
 
-                    var conf = new SolverConfiguration(new LoadCase()) {SolverType = solverType};
+                    var conf = new SolverConfiguration(new LoadCase(), new LoadCase("case2", LoadType.Default))
+                    {
+                        SolverType = solverType
+                    };
 
                     GC.Collect();
 
-                    sw.Restart();
+                   
 
 
                     Log("");
@@ -91,8 +93,11 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
                     try
                     {
+                        sw.Restart();
+
                         st.Solve(conf);
-                        
+
+                        sw.Stop();
 
                         Log("\t\tgeneral solve time: {0}", sw.Elapsed);
 
@@ -147,7 +152,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
             {
                 var cns = model.Nodes[i].Constraints;
 
-                buf += 6 - ((int) cns.Dx + (int) cns.Dy + (int) cns.Dz + (int) cns.Rx + (int) cns.Ry + (int) cns.Rz);
+                buf += 6 - ((int) cns.DX + (int) cns.DY + (int) cns.DZ + (int) cns.RX + (int) cns.RY + (int) cns.RZ);
             }
 
             return buf;

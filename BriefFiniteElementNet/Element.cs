@@ -12,9 +12,10 @@ namespace BriefFiniteElementNet
     /// Represents an abstract class for a 'Finite Element' with physical properties.
     /// </summary>
     [Serializable]
+    [CLSCompliant(true)]
     public abstract class Element : StructurePart
     {
-        protected ElementType elementType;
+        public ElementType elementType;
 
         /// <summary>
         /// Gets the type of the element.
@@ -55,6 +56,8 @@ namespace BriefFiniteElementNet
             private set { nodes = value; }
         }
 
+
+        [NonSerialized]
         protected Node[] nodes;
 
         internal int[] nodeNumbers;

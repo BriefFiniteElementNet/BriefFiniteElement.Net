@@ -6,7 +6,7 @@ using System.Text;
 namespace BriefFiniteElementNet
 {
     /// <summary>
-    /// Represent a Utility class for framgmentation of a double range
+    /// Represent a Utility class for fragmentation of a double range
     /// </summary>
     public static class RangeUtil
     {

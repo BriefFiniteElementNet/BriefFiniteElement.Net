@@ -37,8 +37,10 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// The connected elements, used for calculating 
         /// </summary>
+        [NonSerialized]
         internal List<Element> ConnectedElements = new List<Element>(); 
         private List<NodalLoad> loads;
+        [NonSerialized]
         private List<NodalLoad> memberLoads=new List<NodalLoad>();
         private Point location;
         private Displacement settlements;
@@ -183,13 +185,13 @@ namespace BriefFiniteElementNet
             var buf = f + -f1;
 
 
-            if (constraints.Dx == DofConstraint.Released) buf.Fx = 0;
-            if (constraints.Dy == DofConstraint.Released) buf.Fy = 0;
-            if (constraints.Dz == DofConstraint.Released) buf.Fz = 0;
+            if (constraints.DX == DofConstraint.Released) buf.Fx = 0;
+            if (constraints.DY == DofConstraint.Released) buf.Fy = 0;
+            if (constraints.DZ == DofConstraint.Released) buf.Fz = 0;
 
-            if (constraints.Rx == DofConstraint.Released) buf.Mx = 0;
-            if (constraints.Ry == DofConstraint.Released) buf.My = 0;
-            if (constraints.Rz == DofConstraint.Released) buf.Mz = 0;
+            if (constraints.RX == DofConstraint.Released) buf.Mx = 0;
+            if (constraints.RY == DofConstraint.Released) buf.My = 0;
+            if (constraints.RZ == DofConstraint.Released) buf.Mz = 0;
 
 
             return buf;

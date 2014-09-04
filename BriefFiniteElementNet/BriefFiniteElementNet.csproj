@@ -43,6 +43,7 @@
     <Compile Include="CSparse\Tuple.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IElement1DLoad.cs" />
+    <Compile Include="NotPositiveDefiniteException.cs" />
     <Compile Include="PointYz.cs" />
     <Compile Include="PolygonYz.cs" />
     <Compile Include="FrameElement2Node.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Point.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model.cs" />
+    <Compile Include="StiffnessMatrixCheckingUtility.cs" />
     <Compile Include="StructureGenerator.cs" />
     <Compile Include="StructurePart.cs" />
     <Compile Include="StructurePartCollection.cs" />

@@ -16,26 +16,26 @@ namespace BriefFiniteElementNet
     /// Points are not editable.
     /// </summary>
     [Serializable]
-    public sealed class PolygonYz : IEnumerable<PointYz>,ISerializable
+    public sealed class PolygonYz : IEnumerable<PointYZ>,ISerializable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PolygonYz"/> class.
         /// </summary>
         /// <param name="points">The points.</param>
-        public PolygonYz(params PointYz[] points)
+        public PolygonYz(params PointYZ[] points)
         {
-            this.points = new List<PointYz>(points);
+            this.points = new List<PointYZ>(points);
         }
 
         /// <summary>
-        /// Gets the <see cref="PointYz"/> with the specified index.
+        /// Gets the <see cref="PointYZ"/> with the specified index.
         /// </summary>
         /// <value>
-        /// The <see cref="PointYz"/>.
+        /// The <see cref="PointYZ"/>.
         /// </value>
         /// <param name="i">The index.</param>
         /// <returns></returns>
-        public PointYz this[int i]
+        public PointYZ this[int i]
         {
             get { return points[i]; }
         }
@@ -51,7 +51,7 @@ namespace BriefFiniteElementNet
             get { return points.Count; }
         }
 
-        private List<PointYz> points;
+        private List<PointYZ> points;
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
@@ -70,7 +70,7 @@ namespace BriefFiniteElementNet
         /// <returns>
         /// A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.
         /// </returns>
-        public IEnumerator<PointYz> GetEnumerator()
+        public IEnumerator<PointYZ> GetEnumerator()
         {
             return points.GetEnumerator();
         }
@@ -100,8 +100,8 @@ namespace BriefFiniteElementNet
 
             for (int i = 0; i < points.Count; i++)
             {
-                x[i] = points[i].Y+3;
-                y[i] = points[i].Z+2;
+                x[i] = points[i].Y;
+                y[i] = points[i].Z;
             }
 
             var l = points.Count - 1;
@@ -157,7 +157,7 @@ namespace BriefFiniteElementNet
         /// <param name="context">The context.</param>
         private PolygonYz(SerializationInfo info, StreamingContext context)
         {
-            points = info.GetValue<List<PointYz>>("points");
+            points = info.GetValue<List<PointYZ>>("points");
         }
     }
 }

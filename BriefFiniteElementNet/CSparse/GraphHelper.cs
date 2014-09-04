@@ -85,7 +85,11 @@ namespace BriefFiniteElementNet.CSparse
 
             parent = new int[n]; // allocate result
             w = new int[n + (ata ? m : 0)]; // get workspace
-            if (w == null || parent == null) return null;
+            if (w == null || parent == null)
+            {
+                return null;
+            }
+
             ancestor = w; prev = w;
             int prev_offset = n;
             if (ata) for (i = 0; i < m; i++) prev[prev_offset + i] = -1;

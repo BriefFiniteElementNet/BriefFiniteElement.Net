@@ -91,12 +91,12 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Gets a totally free but Dx fixed Constraint.
+        /// Gets a totally free but DX fixed Constraint.
         /// </summary>
         /// <value>
-        /// A Dx fixed constraint.
+        /// A DX fixed constraint.
         /// </value>
-        public static Constraint FixedDx
+        public static Constraint FixedDX
         {
             get
             {
@@ -107,12 +107,12 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Gets a totally free but Dy fixed Constraint.
+        /// Gets a totally free but DY fixed Constraint.
         /// </summary>
         /// <value>
-        /// A Dy fixed constraint.
+        /// A DY fixed constraint.
         /// </value>
-        public static Constraint FixedDy
+        public static Constraint FixedDY
         {
             get
             {
@@ -123,12 +123,12 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Gets a totally free but Dz fixed Constraint.
+        /// Gets a totally free but DZ fixed Constraint.
         /// </summary>
         /// <value>
-        /// A Dz fixed constraint.
+        /// A DZ fixed constraint.
         /// </value>
-        public static Constraint FixedDz
+        public static Constraint FixedDZ
         {
             get
             {
@@ -139,12 +139,12 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Gets a totally free but Rx fixed Constraint.
+        /// Gets a totally free but RX fixed Constraint.
         /// </summary>
         /// <value>
-        /// A Rx fixed constraint.
+        /// A RX fixed constraint.
         /// </value>
-        public static Constraint FixedRx
+        public static Constraint FixedRX
         {
             get
             {
@@ -155,12 +155,12 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Gets a totally free but Ry fixed Constraint.
+        /// Gets a totally free but RY fixed Constraint.
         /// </summary>
         /// <value>
-        /// A Ry fixed constraint.
+        /// A RY fixed constraint.
         /// </value>
-        public static Constraint FixedRy
+        public static Constraint FixedRY
         {
             get
             {
@@ -171,12 +171,12 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Gets a totally free but Rz fixed Constraint.
+        /// Gets a totally free but RZ fixed Constraint.
         /// </summary>
         /// <value>
-        /// A Rz fixed constraint.
+        /// A RZ fixed constraint.
         /// </value>
-        public static Constraint FixedRz
+        public static Constraint FixedRZ
         {
             get
             {
@@ -225,7 +225,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// Constraint on degree of freedom of movement in X direction
         /// </value>
-        public DofConstraint Dx
+        public DofConstraint DX
         {
             get { return dx; }
             set { dx = value; }
@@ -237,7 +237,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// Constraint on degree of freedom of movement in Y direction
         /// </value>
-        public DofConstraint Dy
+        public DofConstraint DY
         {
             get { return dy; }
             set { dy = value; }
@@ -249,7 +249,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// Constraint on degree of freedom of movement in Z direction
         /// </value>
-        public DofConstraint Dz
+        public DofConstraint DZ
         {
             get { return dz; }
             set { dz = value; }
@@ -261,7 +261,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// Constraint on degree of freedom of rotation in X direction
         /// </value>
-        public DofConstraint Rx
+        public DofConstraint RX
         {
             get { return rx; }
             set { rx = value; }
@@ -273,7 +273,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// Constraint on degree of freedom of rotation in Y direction
         /// </value>
-        public DofConstraint Ry
+        public DofConstraint RY
         {
             get { return ry; }
             set { ry = value; }
@@ -285,7 +285,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// Constraint on degree of freedom of rotation in Z direction
         /// </value>
-        public DofConstraint Rz
+        public DofConstraint RZ
         {
             get { return rz; }
             set { rz = value; }
@@ -320,13 +320,13 @@ namespace BriefFiniteElementNet
 
             var buf = new Constraint();
 
-            buf.Dx = (DofConstraint)(int)char.GetNumericValue(constraint[0]);
-            buf.Dy = (DofConstraint)(int)char.GetNumericValue(constraint[1]);
-            buf.Dz = (DofConstraint)(int)char.GetNumericValue(constraint[2]);
+            buf.DX = (DofConstraint)(int)char.GetNumericValue(constraint[0]);
+            buf.DY = (DofConstraint)(int)char.GetNumericValue(constraint[1]);
+            buf.DZ = (DofConstraint)(int)char.GetNumericValue(constraint[2]);
             
-            buf.Rx = (DofConstraint)(int)char.GetNumericValue(constraint[3]);
-            buf.Ry = (DofConstraint)(int)char.GetNumericValue(constraint[4]);
-            buf.Rz = (DofConstraint)(int)char.GetNumericValue(constraint[5]);
+            buf.RX = (DofConstraint)(int)char.GetNumericValue(constraint[3]);
+            buf.RY = (DofConstraint)(int)char.GetNumericValue(constraint[4]);
+            buf.RZ = (DofConstraint)(int)char.GetNumericValue(constraint[5]);
 
             return buf;
         }
@@ -403,17 +403,40 @@ namespace BriefFiniteElementNet
             return new string(buf);
         }
 
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <param name="other">An object to compare with this object.</param>
+        /// <returns>
+        /// true if the current object is equal to the <paramref name="other" /> parameter; otherwise, false.
+        /// </returns>
         public bool Equals(Constraint other)
         {
             return dx == other.dx && dy == other.dy && dz == other.dz && rx == other.rx && ry == other.ry && rz == other.rz;
         }
 
-        public override bool Equals(object obj)
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public override bool Equals(object other)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            return obj is Constraint && Equals((Constraint) obj);
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+            return other is Constraint && Equals((Constraint) other);
         }
 
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// </returns>
         public override int GetHashCode()
         {
             unchecked
@@ -428,16 +451,40 @@ namespace BriefFiniteElementNet
             }
         }
 
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static bool operator ==(Constraint left, Constraint right)
         {
             return left.Equals(right);
         }
 
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static bool operator !=(Constraint left, Constraint right)
         {
             return !left.Equals(right);
         }
 
+        /// <summary>
+        /// Implements the operator &amp;.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
         public static Constraint operator &(Constraint left, Constraint right)
         {
             var buf = new Constraint();

@@ -237,11 +237,11 @@ namespace BriefFiniteElementNet.Controls
             if (elm.UseOverridedProperties)
             {
                 section = new PolygonYz(
-                    new PointYz(-r, -r),
-                    new PointYz(-r, r),
-                    new PointYz(r, r),
-                    new PointYz(r, -r),
-                    new PointYz(-r, -r));
+                    new PointYZ(-r, -r),
+                    new PointYZ(-r, r),
+                    new PointYZ(r, r),
+                    new PointYZ(r, -r),
+                    new PointYZ(-r, -r));
             }
             else
                 section = elm.Geometry;
@@ -279,11 +279,11 @@ namespace BriefFiniteElementNet.Controls
             if (elm.UseOverridedProperties)
             {
                 section = new PolygonYz(
-                    new PointYz(-r, -r),
-                    new PointYz(-r, r),
-                    new PointYz(r, r),
-                    new PointYz(r, -r),
-                    new PointYz(-r, -r));
+                    new PointYZ(-r, -r),
+                    new PointYZ(-r, r),
+                    new PointYZ(r, r),
+                    new PointYZ(r, -r),
+                    new PointYZ(-r, -r));
             }
             else
                 section = elm.Geometry;

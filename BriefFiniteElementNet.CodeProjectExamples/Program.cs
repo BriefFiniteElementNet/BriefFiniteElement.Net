@@ -112,7 +112,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
                     n3.Constraints =
                         n4.Constraints =
                             n5.Constraints =
-                                Constraint.FixedDy & Constraint.FixedRx & Constraint.FixedRz;//Dy fixed and Rx fixed and Rz fixed
+                                Constraint.FixedDY & Constraint.FixedRX & Constraint.FixedRZ;//DY fixed and RX fixed and RZ fixed
 
 
             n1.Constraints = n1.Constraints & Constraint.MovementFixed;

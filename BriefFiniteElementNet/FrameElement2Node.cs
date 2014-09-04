@@ -751,11 +751,11 @@ namespace BriefFiniteElementNet
 
             var displVector = new double[]
             {
-                lStartDisp.Dx, lStartDisp.Dy, lStartDisp.Dz,
-                lStartDisp.Rx, lStartDisp.Ry, lStartDisp.Rz,
+                lStartDisp.DX, lStartDisp.DY, lStartDisp.DZ,
+                lStartDisp.RX, lStartDisp.RY, lStartDisp.RZ,
 
-                lEndDisp.Dx, lEndDisp.Dy, lEndDisp.Dz,
-                lEndDisp.Rx, lEndDisp.Ry, lEndDisp.Rz
+                lEndDisp.DX, lEndDisp.DY, lEndDisp.DZ,
+                lEndDisp.RX, lEndDisp.RY, lEndDisp.RZ
             };
 
             var lStartForces = Matrix.Multiply(GetLocalStiffnessMatrix(), displVector);
@@ -887,12 +887,14 @@ namespace BriefFiniteElementNet
         /// The last transformation parameters
         /// </summary>
         /// <remarks>Storing transformation parameters corresponding to <see cref="LastElementVector"/> for better performance.</remarks>
+        [NonSerialized]
         private double[] LastTransformationParameters = new double[9];
 
         /// <summary>
         /// The last element vector
         /// </summary>
         /// <remarks>Last vector corresponding to current <see cref="LastTransformationParameters"/> </remarks>
+        [NonSerialized]
         private Vector LastElementVector;
 
 
@@ -1043,7 +1045,7 @@ namespace BriefFiniteElementNet
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        internal FrameElement2Node(SerializationInfo info, StreamingContext context):base(info,context)
+        private FrameElement2Node(SerializationInfo info, StreamingContext context):base(info,context)
         {
             _a = info.GetDouble("_a");
             _ay = info.GetDouble("_ay");

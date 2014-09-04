@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Security;
 using System.Security.Permissions;
 using System.Text;
 
@@ -26,7 +27,7 @@ namespace BriefFiniteElementNet
         /// Initializes a new instance of the <see cref="ConcentratedLoad1D" /> class.
         /// </summary>
         /// <param name="force">The force.</param>
-        /// <param name="distanseFromStartNode">The distanse from start node.</param>
+        /// <param name="distanseFromStartNode">The distance from start node.</param>
         /// <param name="coordinationSystem">The coordination system.</param>
         /// <param name="cse">The load case.</param>
         public ConcentratedLoad1D(Force force, double distanseFromStartNode, CoordinationSystem coordinationSystem, LoadCase cse)
@@ -42,7 +43,7 @@ namespace BriefFiniteElementNet
         /// Initializes a new instance of the <see cref="ConcentratedLoad1D"/> class.
         /// </summary>
         /// <param name="force">The force.</param>
-        /// <param name="distanseFromStartNode">The distanse from start node.</param>
+        /// <param name="distanseFromStartNode">The distance from start node.</param>
         /// <param name="coordinationSystem">The coordination system.</param>
         public ConcentratedLoad1D(Force force, double distanseFromStartNode, CoordinationSystem coordinationSystem)
         {

@@ -111,8 +111,11 @@ namespace BriefFiniteElementNet
         /// <param name="model">The model.</param>
         public static void Save(string fileAddress, Model model)
         {
-            var str = File.OpenWrite(fileAddress);
-            Save(str, model);
+            using (var str = File.OpenWrite(fileAddress))
+            {
+                Save(str, model);    
+            }
+            
         }
 
         /// <summary>
@@ -133,8 +136,10 @@ namespace BriefFiniteElementNet
         /// <returns></returns>
         public static Model Load(string fileAddress)
         {
-            var str = File.OpenRead(fileAddress);
-            return Load(str);
+            using (var str = File.OpenRead(fileAddress))
+            {
+                return Load(str);    
+            }
         }
 
         /// <summary>
@@ -236,8 +241,8 @@ namespace BriefFiniteElementNet
             var fixedDofCount =
                 nodes.Select(
                     i =>
-                        (int) i.Constraints.Dx + (int) i.Constraints.Dy + (int) i.Constraints.Dz +
-                        (int) i.Constraints.Rx + (int) i.Constraints.Ry + (int) i.Constraints.Rz).Sum();
+                        (int) i.Constraints.DX + (int) i.Constraints.DY + (int) i.Constraints.DZ +
+                        (int) i.Constraints.RX + (int) i.Constraints.RY + (int) i.Constraints.RZ).Sum();
 
             var freeDofCount = c - fixedDofCount;
 
@@ -294,14 +299,14 @@ namespace BriefFiniteElementNet
             {
                 var cns = nodes[i].Constraints;
 
-                if (cns.Dx == DofConstraint.Fixed) fixity[6*i + 0] = true;
-                if (cns.Dy == DofConstraint.Fixed) fixity[6*i + 1] = true;
-                if (cns.Dz == DofConstraint.Fixed) fixity[6*i + 2] = true;
+                if (cns.DX == DofConstraint.Fixed) fixity[6*i + 0] = true;
+                if (cns.DY == DofConstraint.Fixed) fixity[6*i + 1] = true;
+                if (cns.DZ == DofConstraint.Fixed) fixity[6*i + 2] = true;
 
 
-                if (cns.Rx == DofConstraint.Fixed) fixity[6*i + 3] = true;
-                if (cns.Ry == DofConstraint.Fixed) fixity[6*i + 4] = true;
-                if (cns.Rz == DofConstraint.Fixed) fixity[6*i + 5] = true;
+                if (cns.RX == DofConstraint.Fixed) fixity[6*i + 3] = true;
+                if (cns.RY == DofConstraint.Fixed) fixity[6*i + 4] = true;
+                if (cns.RZ == DofConstraint.Fixed) fixity[6*i + 5] = true;
             }
 
             

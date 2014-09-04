@@ -65,7 +65,7 @@ namespace BriefFiniteElementNet
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        internal CustomLinearLoad1D(SerializationInfo info, StreamingContext context)
+        private CustomLinearLoad1D(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             throw new NotImplementedException();

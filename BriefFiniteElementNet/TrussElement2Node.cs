@@ -249,12 +249,14 @@ namespace BriefFiniteElementNet
         /// The last transformation parameters
         /// </summary>
         /// <remarks>Storing transformation parameters corresponding to <see cref="LastElementVector"/> for better performance.</remarks>
+        [NonSerialized]
         private double[] LastTransformationParameters = new double[9];
 
         /// <summary>
         /// The last element vector
         /// </summary>
         /// <remarks>Last vector corresponding to current <see cref="LastTransformationParameters"/> </remarks>
+        [NonSerialized]
         private Vector LastElementVector;
 
 

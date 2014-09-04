@@ -8,18 +8,18 @@ namespace BriefFiniteElementNet
 {
     /// <summary>
     /// Represents a point in Y-Z plane with only two properties (Y and Z). 
-    /// This struct is used for representing cross secion of members as as polygon.
+    /// This struct is used for representing cross section of members as polygon.
     /// </summary>
     [Serializable]
     [DebuggerDisplay("Y:{Y}, Z:{Z}")]
-    public struct PointYz : IEquatable<PointYz>
+    public struct PointYZ : IEquatable<PointYZ>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PointYz"/> struct.
+        /// Initializes a new instance of the <see cref="PointYZ"/> struct.
         /// </summary>
         /// <param name="y">The y.</param>
         /// <param name="z">The z.</param>
-        public PointYz(double y, double z)
+        public PointYZ(double y, double z)
         {
             this.y = y;
             this.z = z;
@@ -55,7 +55,7 @@ namespace BriefFiniteElementNet
 
         #region Equality members
 
-        public bool Equals(PointYz other)
+        public bool Equals(PointYZ other)
         {
             return y.Equals(other.y) && z.Equals(other.z);
         }
@@ -63,7 +63,7 @@ namespace BriefFiniteElementNet
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is PointYz && Equals((PointYz) obj);
+            return obj is PointYZ && Equals((PointYZ) obj);
         }
 
         public override int GetHashCode()
@@ -74,12 +74,12 @@ namespace BriefFiniteElementNet
             }
         }
 
-        public static bool operator ==(PointYz left, PointYz right)
+        public static bool operator ==(PointYZ left, PointYZ right)
         {
             return left.Equals(right);
         }
 
-        public static bool operator !=(PointYz left, PointYz right)
+        public static bool operator !=(PointYZ left, PointYZ right)
         {
             return !left.Equals(right);
         }

@@ -214,45 +214,45 @@ namespace BriefFiniteElementNet
 
                 #region DX
 
-                if (cns.Dx == DofConstraint.Released)
+                if (cns.DX == DofConstraint.Released)
                 {
                     pf[rmap[6*i + 0]] = force.Fx;
-                    uf[rmap[6*i + 0]] = disp.Dx;
+                    uf[rmap[6*i + 0]] = disp.DX;
                 }
                 else
                 {
                     ps[fmap[6*i + 0]] = force.Fx;
-                    us[fmap[6*i + 0]] = disp.Dx;
+                    us[fmap[6*i + 0]] = disp.DX;
                 }
 
                 #endregion
 
                 #region DY
 
-                if (cns.Dy == DofConstraint.Released)
+                if (cns.DY == DofConstraint.Released)
                 {
                     pf[rmap[6*i + 1]] = force.Fy;
-                    uf[rmap[6*i + 1]] = disp.Dy;
+                    uf[rmap[6*i + 1]] = disp.DY;
                 }
                 else
                 {
                     ps[fmap[6*i + 1]] = force.Fy;
-                    us[fmap[6*i + 1]] = disp.Dy;
+                    us[fmap[6*i + 1]] = disp.DY;
                 }
 
                 #endregion
 
                 #region DZ
 
-                if (cns.Dz == DofConstraint.Released)
+                if (cns.DZ == DofConstraint.Released)
                 {
                     pf[rmap[6*i + 2]] = force.Fz;
-                    uf[rmap[6*i + 2]] = disp.Dz;
+                    uf[rmap[6*i + 2]] = disp.DZ;
                 }
                 else
                 {
                     ps[fmap[6*i + 2]] = force.Fz;
-                    us[fmap[6*i + 2]] = disp.Dz;
+                    us[fmap[6*i + 2]] = disp.DZ;
                 }
 
                 #endregion
@@ -261,45 +261,45 @@ namespace BriefFiniteElementNet
 
                 #region RX
 
-                if (cns.Rx == DofConstraint.Released)
+                if (cns.RX == DofConstraint.Released)
                 {
                     pf[rmap[6*i + 3]] = force.Mx;
-                    uf[rmap[6*i + 3]] = disp.Rx;
+                    uf[rmap[6*i + 3]] = disp.RX;
                 }
                 else
                 {
                     ps[fmap[6*i + 3]] = force.Mx;
-                    us[fmap[6*i + 3]] = disp.Rx;
+                    us[fmap[6*i + 3]] = disp.RX;
                 }
 
                 #endregion
 
-                #region Ry
+                #region RY
 
-                if (cns.Ry == DofConstraint.Released)
+                if (cns.RY == DofConstraint.Released)
                 {
                     pf[rmap[6*i + 4]] = force.My;
-                    uf[rmap[6*i + 4]] = disp.Ry;
+                    uf[rmap[6*i + 4]] = disp.RY;
                 }
                 else
                 {
                     ps[fmap[6*i + 4]] = force.My;
-                    us[fmap[6*i + 4]] = disp.Ry;
+                    us[fmap[6*i + 4]] = disp.RY;
                 }
 
                 #endregion
 
-                #region Rz
+                #region RZ
 
-                if (cns.Rz == DofConstraint.Released)
+                if (cns.RZ == DofConstraint.Released)
                 {
                     pf[rmap[6*i + 5]] = force.Mz;
-                    uf[rmap[6*i + 5]] = disp.Rz;
+                    uf[rmap[6*i + 5]] = disp.RZ;
                 }
                 else
                 {
                     ps[fmap[6*i + 5]] = force.Mz;
-                    us[fmap[6*i + 5]] = disp.Rz;
+                    us[fmap[6*i + 5]] = disp.RZ;
                 }
 
                 #endregion

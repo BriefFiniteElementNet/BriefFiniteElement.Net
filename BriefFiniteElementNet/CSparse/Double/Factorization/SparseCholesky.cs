@@ -48,12 +48,10 @@ namespace BriefFiniteElementNet.CSparse.Double.Factorization
             // Ordering and symbolic analysis
             SymbolicAnalysis(order, A);
             sp.Stop();
-            TraceUtil.WritePerformanceTrace("symbolic factorization tooks: {0}", sp.Elapsed);
             // Numeric Cholesky factorization
             sp.Restart();
             Factorize(A);
 
-            TraceUtil.WritePerformanceTrace("factorization tooks: {0}", sp.Elapsed);
         }
 
         /// <summary>
@@ -123,7 +121,8 @@ namespace BriefFiniteElementNet.CSparse.Double.Factorization
         /// Sparse Cholesky update, L*L' + w*w'
         /// </summary>
         /// <param name="w">The update matrix.</param>
-        /// <returns>False, if updated matrix is not positive definite, otherwise true.</returns>
+        /// <returns>False, if updated matrix is not pos
+        /// itive definite, otherwise true.</returns>
         public bool Update(CompressedColumnStorage<double> w)
         {
             return UpDown(1, w);
@@ -245,7 +244,7 @@ namespace BriefFiniteElementNet.CSparse.Double.Factorization
             var li = L.RowIndices;
             var lx = L.Values;
 
-            var lst = new List<int>();
+            //var lst = new List<int>();
 
             for (k = 0; k < n; k++)
             {
@@ -274,6 +273,7 @@ namespace BriefFiniteElementNet.CSparse.Double.Factorization
                     lki = x[i] / lx[lp[i]]; // L(k,i) = x (i) / L(i,i)
                     x[i] = 0;               // clear x for k+1st iteration
 
+                    p = lp[i] + 1;
 
                     var cci = c[i];
                     for (p = lp[i] + 1; p < cci; p++)
@@ -292,7 +292,7 @@ namespace BriefFiniteElementNet.CSparse.Double.Factorization
                 // Compute L(k,k)
                 if (d <= 0)
                 {
-                    throw new Exception("not pos def"); // TODO: ex
+                    throw new NotPositiveDefiniteException("not pos def"); // TODO: ex
                 }
 
                 p = c[k]++;

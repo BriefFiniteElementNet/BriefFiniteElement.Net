@@ -29,7 +29,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// The movement in X direction.
         /// </value>
-        public double Dx
+        public double DX
         {
             get { return dx; }
             set { dx = value; }
@@ -41,7 +41,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// The movement in Y direction.
         /// </value>
-        public double Dy
+        public double DY
         {
             get { return dy; }
             set { dy = value; }
@@ -54,7 +54,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// The movement in Z direction.
         /// </value>
-        public double Dz
+        public double DZ
         {
             get { return dz; }
             set { dz = value; }
@@ -66,7 +66,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// The rotation in X direction (in radian).
         /// </value>
-        public double Rx
+        public double RX
         {
             get { return rx; }
             set { rx = value; }
@@ -78,7 +78,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// The rotation in Y direction (in radian).
         /// </value>
-        public double Ry
+        public double RY
         {
             get { return ry; }
             set { ry = value; }
@@ -90,7 +90,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// The rotation in Z direction (in radian).
         /// </value>
-        public double Rz
+        public double RZ
         {
             get { return rz; }
             set { rz = value; }
@@ -177,6 +177,15 @@ namespace BriefFiniteElementNet
         #endregion
 
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Displacement"/> struct.
+        /// </summary>
+        /// <param name="dx">The displacement in x direction.</param>
+        /// <param name="dy">The displacement in y direction.</param>
+        /// <param name="dz">The displacement in z direction.</param>
+        /// <param name="rx">The rotation in x direction.</param>
+        /// <param name="ry">The rotation in y direction.</param>
+        /// <param name="rz">The rotation in z direction.</param>
         public Displacement(double dx, double dy, double dz, double rx, double ry, double rz)
         {
             this.dx = dx;
@@ -187,6 +196,11 @@ namespace BriefFiniteElementNet
             this.rz = rz;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Displacement"/> struct.
+        /// </summary>
+        /// <param name="displacements">The displacements.</param>
+        /// <param name="rotations">The rotations.</param>
         public Displacement(Vector displacements, Vector rotations) : this()
         {
             this.Displacements = displacements;
@@ -283,6 +297,56 @@ namespace BriefFiniteElementNet
             return new
                 Displacement(- d1.dx, -d1.dy, -d1.dz, -d1.rx, -d1.ry, -d1.rz);
         }
+        #endregion
+
+        #region Equality members
+
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public bool Equals(Displacement obj)
+        {
+            return dx.Equals(obj.dx) && dy.Equals(obj.dy) && dz.Equals(obj.dz) && rx.Equals(obj.rx) &&
+                   ry.Equals(obj.ry) && rz.Equals(obj.rz);
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object" />, is equal to this instance.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object" /> to compare with this instance.</param>
+        /// <returns>
+        ///   <c>true</c> if the specified <see cref="System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is Displacement && Equals((Displacement) obj);
+        }
+
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// </returns>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = dx.GetHashCode();
+                hashCode = (hashCode*397) ^ dy.GetHashCode();
+                hashCode = (hashCode*397) ^ dz.GetHashCode();
+                hashCode = (hashCode*397) ^ rx.GetHashCode();
+                hashCode = (hashCode*397) ^ ry.GetHashCode();
+                hashCode = (hashCode*397) ^ rz.GetHashCode();
+                return hashCode;
+            }
+        }
+
         #endregion
 
     }
