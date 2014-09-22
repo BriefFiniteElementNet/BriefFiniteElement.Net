@@ -11,7 +11,7 @@ namespace BriefFiniteElementNet
         public static void WritePerformanceTrace(string format, params object[] pars)
         {
             var st = string.Format(format, pars);
-            Trace.WriteLine(st,"PerformanceStats");
+            System.Diagnostics.Trace.WriteLine(st,"PerformanceStats");
         }
     }
 }

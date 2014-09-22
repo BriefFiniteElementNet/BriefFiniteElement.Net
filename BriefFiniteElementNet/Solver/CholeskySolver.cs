@@ -30,6 +30,8 @@ namespace BriefFiniteElementNet.Solver
         {
         }
 
+        public Model Target { get; private set; }
+
         /// <inheritdoc />
         public CompressedColumnStorage A { get; set; }
 
@@ -61,8 +63,10 @@ namespace BriefFiniteElementNet.Solver
 
             sp.Stop();
 
-            TraceUtil.WritePerformanceTrace("cholesky decomposition of Kff took about {0:#,##0} ms",
-                sp.ElapsedMilliseconds);
+            if (Target != null)
+                Target.Trace.Write(TraceRecord.Create(BriefFiniteElementNet.TraceLevel.Info,
+                    string.Format("cholesky decomposition of Kff took about {0:#,##0} ms",
+                        sp.ElapsedMilliseconds)));
         }
 
         /// <inheritdoc />

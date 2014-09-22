@@ -347,7 +347,19 @@ namespace BriefFiniteElementNet
             }
         }
 
+
+        public static bool operator ==(Displacement left, Displacement right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Displacement left, Displacement right)
+        {
+            return !left.Equals(right);
+        }
+
         #endregion
 
+        
     }
 }

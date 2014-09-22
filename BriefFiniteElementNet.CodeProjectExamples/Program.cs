@@ -101,7 +101,6 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             e1.G = e2.G = e3.G = e4.G = 210e9/(2*(1 + 0.3));//G = E / (2*(1+no))
 
             e1.UseOverridedProperties = 
-
                 e2.UseOverridedProperties = e3.UseOverridedProperties = e4.UseOverridedProperties = false;
 
             model.Elements.Add(e1, e2, e3, e4);
@@ -124,9 +123,12 @@ namespace BriefFiniteElementNet.CodeProjectExamples
 
             e2.Loads.Add(ll);
             e3.Loads.Add(lr);
-            
-            model.Solve();
 
+            var wnd = WpfTraceListener.CreateModelTrace(model);
+            model.CheckForErrors();
+            //wnd.ShowDialog();
+            model.Solve();
+            wnd.ShowDialog();
         }
 
 

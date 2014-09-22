@@ -49,6 +49,9 @@ namespace BriefFiniteElementNet.CSparse.Double.Factorization
             SymbolicAnalysis(order, A);
             sp.Stop();
             // Numeric Cholesky factorization
+            //TraceUtil.WritePerformanceTrace("Symbolic analysis took {0:#,##0} ms",
+            //    sp.ElapsedMilliseconds);
+
             sp.Restart();
             Factorize(A);
 

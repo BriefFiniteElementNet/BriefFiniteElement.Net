@@ -14,6 +14,7 @@ namespace BriefFiniteElementNet.Solver
     {
         public CompressedColumnStorage A { get; set; }
 
+        public Model Target { get; private set; }
 
         public void Initialize()
         {

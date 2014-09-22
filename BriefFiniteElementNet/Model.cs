@@ -76,6 +76,18 @@ namespace BriefFiniteElementNet
             private set { lastResult = value; }
         }
 
+        #region Trace property and field
+
+        public Trace Trace
+        {
+            get { return _trace; }
+            private set { _trace = value; }
+        }
+
+        private Trace _trace=new Trace();
+
+        #endregion
+
         #endregion
 
         #region Methods
@@ -173,6 +185,12 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+
+        public void CheckForErrors()
+        {
+            new ModelWarningChecker().CheckModel(this);
+        }
+
         #endregion
 
         #region LinearSolve method and overrides
@@ -221,8 +239,8 @@ namespace BriefFiniteElementNet
         /// <param name="config">The configuration.</param>
         public void Solve(SolverConfiguration config)
         {
-            TraceUtil.WritePerformanceTrace("Started solving model");
-
+            //TraceUtil.WritePerformanceTrace("Started solving model");
+            this.Trace.Write(TraceRecord.Create(TraceLevel.Info, "Started solving model"));
             var sp = System.Diagnostics.Stopwatch.StartNew();
 
             for (int i = 0; i < nodes.Count; i++)
@@ -246,7 +264,9 @@ namespace BriefFiniteElementNet
 
             var freeDofCount = c - fixedDofCount;
 
-            TraceUtil.WritePerformanceTrace("Model with {0} free DoFs and {1} fixed DoFs", freeDofCount, fixedDofCount);
+            this.Trace.Write(TraceRecord.Create(TraceLevel.Info, string.Format("Model with {0} free DoFs and {1} fixed DoFs", freeDofCount, fixedDofCount)));
+
+            //TraceUtil.WritePerformanceTrace("Model with {0} free DoFs and {1} fixed DoFs", freeDofCount, fixedDofCount);
 
             #endregion
 
@@ -285,8 +305,12 @@ namespace BriefFiniteElementNet
             }
 
             sp.Stop();
-            TraceUtil.WritePerformanceTrace("Assembling full stiffness matrix took about {0:#,##0} ms.",
-                sp.ElapsedMilliseconds);
+
+            //TraceUtil.WritePerformanceTrace("Assembling full stiffness matrix took about {0:#,##0} ms.",
+            //    sp.ElapsedMilliseconds);
+
+            this.Trace.Write(TraceRecord.Create(TraceLevel.Info, string.Format("Assembling full stiffness matrix took {0:#,##0} ms.", sp.ElapsedMilliseconds)));
+
             sp.Restart();
 
             #endregion
@@ -396,8 +420,12 @@ namespace BriefFiniteElementNet
 
 
             sp.Stop();
-            TraceUtil.WritePerformanceTrace("Extracting kff,kfs and kss from Kt matrix took about {0:#,##0} ms",
-                sp.ElapsedMilliseconds);
+            
+           // TraceUtil.WritePerformanceTrace("Extracting kff,kfs and kss from Kt matrix took about {0:#,##0} ms",
+           //     sp.ElapsedMilliseconds);
+
+            this.Trace.Write(TraceRecord.Create(TraceLevel.Info, string.Format("Extracting kff,kfs and kss from Kt matrix took about {0:#,##0} ms", sp.ElapsedMilliseconds)));
+
             sp.Restart();
 
             #endregion
@@ -414,8 +442,11 @@ namespace BriefFiniteElementNet
             //    sp.ElapsedMilliseconds);
 
             
-            TraceUtil.WritePerformanceTrace("nnz of kff is {0:#,##0}, ~{1:0.0000}%", kff.Values.Length,
-                ((double) kff.Values.Length)/((double) kff.RowCount*kff.ColumnCount));
+            //TraceUtil.WritePerformanceTrace("nnz of kff is {0:#,##0}, ~{1:0.0000}%", kff.Values.Length,
+            //    ((double) kff.Values.Length)/((double) kff.RowCount*kff.ColumnCount));
+
+            this.Trace.Write(TraceRecord.Create(TraceLevel.Info, string.Format("nnz of kff is {0:#,##0}, ~{1:0.0000}%", kff.Values.Length,
+                ((double)kff.Values.Length) / ((double)kff.RowCount * kff.ColumnCount))));
 
             sp.Restart();
 
@@ -518,5 +549,7 @@ namespace BriefFiniteElementNet
         }
 
         #endregion
+
+        
     }
 }

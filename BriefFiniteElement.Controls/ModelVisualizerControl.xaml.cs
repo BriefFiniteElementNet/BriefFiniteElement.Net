@@ -213,8 +213,11 @@ namespace BriefFiniteElementNet.Controls
             var minZ = points.Select(i => i.Z).Min();
             var maxZ = points.Select(i => i.Z).Max();
 
+            var dims = new double[] {maxX - minX, maxY - minY, maxZ - minZ};
 
-            var dim = new double[] {maxX - minX, maxY - minY, maxZ - minZ}.Where(i => i != 0).Min();
+            var epsi1on = dims.Max()*1e-6;
+
+            var dim = new double[] { maxX - minX, maxY - minY, maxZ - minZ }.Where(i => Math.Abs(i) > epsi1on).Min();
 
             var d1 = 0.01*dim;
 

@@ -132,7 +132,7 @@ namespace BriefFiniteElementNet
                 for (var i = 0; i < 6; i++)
                     buf[i] = -buf[i];
 
-            Debug.Assert(buf.All(i => i > 0));
+            Debug.Assert(buf.All(i => i >= 0));
 
             return buf;
         }

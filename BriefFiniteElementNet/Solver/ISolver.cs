@@ -12,6 +12,8 @@ namespace BriefFiniteElementNet.Solver
     /// </summary>
     public interface ISolver 
     {
+        //Model Target { get; }
+
         /// <summary>
         /// Gets or sets A in A*x=b.
         /// </summary>

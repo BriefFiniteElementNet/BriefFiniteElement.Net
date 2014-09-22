@@ -402,7 +402,8 @@ namespace BriefFiniteElementNet.CSparse.Double
 
             // check inputs
             if (other == null) throw new Exception();
-            if (this.ColumnCount != other.RowCount) throw new Exception();
+            if (this.ColumnCount != other.RowCount) 
+                throw new MatrixException();
 
             bp = other.ColumnPointers;
             bi = other.RowIndices;

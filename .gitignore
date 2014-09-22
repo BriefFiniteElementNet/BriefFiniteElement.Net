@@ -15,6 +15,7 @@ build/
 [Bb]in/
 [Oo]bj/
 
+
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/
 
@@ -33,6 +34,9 @@ build/
 *.pgd
 *.rsp
 *.sbr
+*.rar
+*.psess
+*.crdata
 *.tlb
 *.tli
 *.tlh

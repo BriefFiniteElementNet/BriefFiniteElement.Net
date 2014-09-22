@@ -1,0 +1,74 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:local="clr-namespace:BriefFiniteElementNet.Controls" x:Class="BriefFiniteElementNet.Controls.WpfTraceListener"
+        mc:Ignorable="d"
+        x:Name="window"
+        Title="Model Trace Listener" Height="500" Width="700">
+    <Window.Resources>
+        <local:ParametricVisibilityConverter x:Key="ParametricVisibilityConverter"/>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="247*" />
+        </Grid.RowDefinitions>
+        <DataGrid CanUserAddRows="False" CanUserDeleteRows="False" AutoGenerateColumns="False" Grid.Row="2"
+			ItemsSource="{Binding TraceRecords, ElementName=window}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="TimeStamp" Binding="{Binding TimeStamp, StringFormat=HH:mm:ss}"
+					IsReadOnly="True" />
+                
+
+                <DataGridTemplateColumn Header="Message" Width="300" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Message}" ToolTip="{Binding Message}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTextColumn Header="Error ID" Binding="{Binding ErrorId}" IsReadOnly="True" />
+                
+                <DataGridTemplateColumn Header="Level" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="16"/>
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Image ToolTip="Error" Height="16" Source="Images/error.png" Stretch="Uniform" Visibility="{Binding Level, ConverterParameter=Error, Converter={StaticResource ParametricVisibilityConverter}}"/>
+                                <Image ToolTip="Warning" Height="16" Source="Images/warning.png" Stretch="Uniform" Visibility="{Binding Level, ConverterParameter=Warning, Converter={StaticResource ParametricVisibilityConverter}}"/>
+                                <Image ToolTip="Info" Height="16" Source="Images/info.png" Stretch="Uniform" Visibility="{Binding Level, ConverterParameter=Info, Converter={StaticResource ParametricVisibilityConverter}}"/>
+                                <TextBlock Text="{Binding Level}" Margin="3,0" Grid.Column="1"/>
+                            </Grid>
+
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+
+                <DataGridTextColumn Header="Target" Binding="{Binding TargetIdentifier}" IsReadOnly="True" />
+
+
+                <DataGridTemplateColumn Header="HelpLink" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock><Hyperlink NavigateUri="{Binding HelpLink}" RequestNavigate="Hyperlink_RequestNavigate"><InlineUIContainer>
+										<TextBlock Text="{Binding HelpLink}" />
+									</InlineUIContainer></Hyperlink></TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+
+            </DataGrid.Columns>
+        </DataGrid>
+        <TextBlock Text="To Continue analyzing the Model close this window" FontSize="16" />
+        <TextBlock Grid.Row="1" Margin="5" Text="Errors and Warnings:" />
+    </Grid>
+</Window>

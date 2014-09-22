@@ -184,7 +184,12 @@ namespace BriefFiniteElementNet
 
             #endregion
 
-            TraceUtil.WritePerformanceTrace("Calculating end member forces took {0} ms", sp.ElapsedMilliseconds);
+            //TraceUtil.WritePerformanceTrace("Calculating end member forces took {0} ms", sp.ElapsedMilliseconds);
+
+            parent.Trace.Write(TraceRecord.Create(TraceLevel.Info,
+                    string.Format("Calculating end member forces took {0} ms",
+                        sp.ElapsedMilliseconds)));
+
             sp.Restart();
 
 
@@ -307,7 +312,12 @@ namespace BriefFiniteElementNet
 
             #endregion
 
-            TraceUtil.WritePerformanceTrace("forming Uf,Us,Ff,Fs took {0} ms", sp.ElapsedMilliseconds);
+            //TraceUtil.WritePerformanceTrace("forming Uf,Us,Ff,Fs took {0} ms", sp.ElapsedMilliseconds);
+
+            parent.Trace.Write(TraceRecord.Create(TraceLevel.Info,
+                   string.Format("forming Uf,Us,Ff,Fs took {0} ms",
+                       sp.ElapsedMilliseconds)));
+
             sp.Restart();
 
             #region Determining that have settlement or not
@@ -350,9 +360,13 @@ namespace BriefFiniteElementNet
 
             #endregion
 
-            TraceUtil.WritePerformanceTrace(
-                "solver: {0}, duration: {1} ms, size: {2}x{3}, residual {4:g} ", Solver.SolverType,
-                sp.ElapsedMilliseconds, Solver.A.RowCount, Solver.A.ColumnCount, residual);
+            //TraceUtil.WritePerformanceTrace(
+            //    "solver: {0}, duration: {1} ms, size: {2}x{3}, residual {4:g} ", Solver.SolverType,
+            //    sp.ElapsedMilliseconds, Solver.A.RowCount, Solver.A.ColumnCount, residual);
+
+            parent.Trace.Write(TraceRecord.Create(TraceLevel.Info,
+                  string.Format("solver: {0}, duration: {1} ms, size: {2}x{3}, residual {4:g} ", Solver.SolverType,
+                sp.ElapsedMilliseconds, Solver.A.RowCount, Solver.A.ColumnCount, residual)));
 
             sp.Restart();
 
@@ -378,7 +392,11 @@ namespace BriefFiniteElementNet
                 ft[revFMap[i]] = ps[i];
             }
 
-            TraceUtil.WritePerformanceTrace("Assembling Ut, Pt from Uf,Ff,Us,Fs tooks {0} ms", sp.ElapsedMilliseconds);
+            //TraceUtil.WritePerformanceTrace("Assembling Ut, Pt from Uf,Ff,Us,Fs tooks {0} ms", sp.ElapsedMilliseconds);
+
+            parent.Trace.Write(TraceRecord.Create(TraceLevel.Info,
+                string.Format("Assembling Ut, Pt from Uf,Ff,Us,Fs tooks {0} ms", sp.ElapsedMilliseconds)));
+
             sp.Restart();
 
             displacements[cse] = ut;
