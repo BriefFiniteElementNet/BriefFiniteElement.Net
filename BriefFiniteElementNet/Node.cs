@@ -160,6 +160,8 @@ namespace BriefFiniteElementNet
                 parent.LastResult.AddAnalysisResultIfNotExists(cse);
 
 
+            #region From Connected Elements
+
             foreach (var elm in ConnectedElements)
             {
                 var ind = elm.Nodes.IndexOfReference(this);
@@ -175,11 +177,27 @@ namespace BriefFiniteElementNet
 
                         f1 += cmb[cse]*loads[ind];
                     }
-
-
-                    f += cmb[cse] * Force.FromVector(parent.LastResult.Forces[cse], 6 * this.Index);
                 }
-                
+            }
+
+            #endregion
+
+            #region From Loads on this node
+
+            foreach (var load in this.loads)
+            {
+                if (!cmb.ContainsKey(load.Case))
+                    continue;
+
+                f1 += cmb[load.Case]*load.Force;
+            }
+
+            #endregion
+
+
+            foreach (var cse in cmb.Keys)//
+            {
+                f += cmb[cse] * Force.FromVector(parent.LastResult.Forces[cse], 6 * this.Index);
             }
 
             var buf = f + -f1;
