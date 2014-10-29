@@ -15,7 +15,7 @@ namespace BriefFiniteElementNet
     [CLSCompliant(true)]
     public abstract class Element : StructurePart
     {
-        public ElementType elementType;
+        protected ElementType elementType;
 
         /// <summary>
         /// Gets the type of the element.
@@ -56,11 +56,13 @@ namespace BriefFiniteElementNet
             private set { nodes = value; }
         }
 
+       
 
         [NonSerialized]
         protected Node[] nodes;
 
         internal int[] nodeNumbers;
+
 
         /// <summary>
         /// Gets the stifness matrix of member in global coordination system.
@@ -69,6 +71,22 @@ namespace BriefFiniteElementNet
         /// <remarks>
         /// The number of DoFs is in element local regrading order in <see cref="Nodes"/>!</remarks>
         public abstract Matrix GetGlobalStifnessMatrix();
+
+        /// <summary>
+        /// Gets the consistent mass matrix of member in global coordination system.
+        /// </summary>
+        /// <returns>The consistent mass matrix</returns>
+        /// <remarks>
+        /// The number of DoFs is in element local regrading order in <see cref="Nodes"/>!</remarks>
+        public abstract Matrix GetGlobalMassMatrix();
+
+
+        /// <summary>
+        /// Gets the damping matrix in global coordination system.
+        /// </summary>
+        /// <returns>the damping matrix</returns>
+        public abstract Matrix GetGlobalDampingMatrix();        
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Element"/> class.
@@ -104,6 +122,7 @@ namespace BriefFiniteElementNet
             info.AddValue("elementType", (int)elementType);
             info.AddValue("loads", loads);
             info.AddValue("nodeNumbers", nodeNumbers);
+            info.AddValue("_massFormulationType", (int) _massFormulationType);
 
             base.GetObjectData(info, context);
         }
@@ -119,9 +138,29 @@ namespace BriefFiniteElementNet
             nodeNumbers = info.GetValue<int[]>("nodeNumbers");
             elementType = (ElementType)info.GetInt32("elementType");
             loads = info.GetValue<List<Load>>("loads");
-            this.nodes=new Node[nodeNumbers.Length];
+            _massFormulationType = (MassFormulation)info.GetValue<int>("_massFormulationType");
+
+            this.nodes = new Node[nodeNumbers.Length];
         }
 
+
+        #region MassFormulationType property and field
+
+        private MassFormulation _massFormulationType;
+
+        /// <summary>
+        /// Gets or sets the type of the mass formulation.
+        /// </summary>
+        /// <value>
+        /// The type of the mass formulation.
+        /// </value>
+        public MassFormulation MassFormulationType
+        {
+            get { return _massFormulationType; }
+            set { _massFormulationType = value; }
+        }
+
+        #endregion
 
 
     }

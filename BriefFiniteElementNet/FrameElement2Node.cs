@@ -50,6 +50,7 @@ namespace BriefFiniteElementNet
         private bool considerShearDeformation;
         private bool hingedAtStart;
         private bool hingedAtEnd;
+        private double _massDensity;
 
         /// <summary>
         /// Gets or sets a.
@@ -246,6 +247,19 @@ namespace BriefFiniteElementNet
         {
             get { return webRotation; }
             set { webRotation = value; }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the mass density.
+        /// </summary>
+        /// <value>
+        /// The mass density of member in kg/m^3.
+        /// </value>
+        public double MassDensity
+        {
+            get { return _massDensity; }
+            set { _massDensity = value; }
         }
 
         #endregion
@@ -732,7 +746,6 @@ namespace BriefFiniteElementNet
         /// <param name="x">The position (from start point).</param>
         /// <param name="cmb">The <see cref="LoadCombination" />.</param>
         /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
         /// <remarks>
         /// Will calculate the internal forces of member regarding the <see cref="cmb" /> <see cref="LoadCombination" />
         /// </remarks>
@@ -1063,5 +1076,99 @@ namespace BriefFiniteElementNet
 
         #endregion
 
+
+        ///<inheritdoc/>
+        public override Matrix GetGlobalMassMatrix()
+        {
+            var m = GetLocalMassMatrix();
+            var mArr = m.CoreArray;
+
+            var r = GetTransformationParameters();
+
+            for (int i = 0; i < 4; i++)
+            {
+                for (int j = i; j < 4; j++)
+                {
+                    MultSubMatrix(mArr, r, i, j);
+                }
+            }
+
+            MathUtil.FillLowerTriangleFromUpperTriangle(m);
+
+           
+            return m;
+        }
+
+        /// <summary>
+        /// Gets the mass matrix in Local Coordination system of element.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private Matrix GetLocalMassMatrix()
+        {
+            var m = new Matrix(12, 12);
+
+            var l = (this.EndNode.Location - this.StartNode.Location).Length;
+            var ro = this.MassDensity;
+            var a = this._a;
+            var i0 = _iy + _iz;
+            var c = ro*a*l/420.0;
+
+            #region filling m
+
+            m[0, 0] = 140;
+            m[1, 1] = 156;
+            m[2, 2] = 156;
+            m[3, 3] = 140*i0/a;
+            m[4, 4] = 4*l*l;
+            m[5, 5] = 4*l*l;
+
+            m[6, 6] = 140;
+            m[7, 7] = 156;
+            m[8, 8] = 156;
+            m[9, 9] = 140*i0/a;
+            m[10, 10] = 4*l*l;
+            m[11, 11] = 4*l*l;
+
+
+            m[0, 6] = 70;
+
+            m[1, 5] = 22*l;
+            m[1, 7] = 54;
+            m[1, 11] = -13*l;
+
+            m[2, 4] = -22*l;
+            m[2, 8] = 54;
+            m[2, 10] = 13*l;
+
+            m[3, 9] = 70*i0/a;
+
+            m[4, 8] = -13*l;
+            m[4, 10] = -3*l*l;
+
+            m[5, 7] = 13*l;
+            m[5, 11] = -3*l*l;
+
+            m[7, 11] = -22*l;
+
+            m[8, 10] = 22*l;
+
+            #endregion
+
+            if (hingedAtStart || hingedAtEnd)
+                throw new NotImplementedException();
+
+            for (int i = 0; i < m.CoreArray.Length; i++)//m=c*m
+                m.CoreArray[i] *= c;
+
+
+            return m;
+        }
+
+        ///<inheritdoc/>
+        public override Matrix GetGlobalDampingMatrix()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

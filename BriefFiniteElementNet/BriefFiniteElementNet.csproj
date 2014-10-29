@@ -43,6 +43,7 @@
     <Compile Include="CSparse\Tuple.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="IElement1DLoad.cs" />
+    <Compile Include="MassFormulation.cs" />
     <Compile Include="ModelConsole.cs" />
     <Compile Include="NotPositiveDefiniteException.cs" />
     <Compile Include="PointYz.cs" />

@@ -5,23 +5,22 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BriefFiniteElementNet")]
-[assembly: AssemblyDescription("A brief finite element library for analyzing solids and structures in .NET released under the GNU General Public License")]
+[assembly: AssemblyTitle("BriefFiniteElementNet.StructuralExample.Lib")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("BriefFiniteElementNet")]
-[assembly: AssemblyCopyright("Copyright ©  2014 Ehsan Mohammad Ali")]
+[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyProduct("BriefFiniteElementNet.StructuralExample.Lib")]
+[assembly: AssemblyCopyright("Copyright © Microsoft 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: InternalsVisibleTo("BriefFiniteElementNet.Controls")]
-[assembly: InternalsVisibleTo("BriefFiniteElementNet.StructuralExample")]
+
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 
 // COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("536f3631-f860-4084-b2c9-3895f1bf24ab")]
+[assembly: Guid("6ae387ca-22b6-4a56-870d-0db5d0d22acb")]
 
 // Version information for an assembly consists of the following four values:
 //

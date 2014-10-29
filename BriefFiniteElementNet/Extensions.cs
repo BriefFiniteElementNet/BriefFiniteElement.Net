@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -131,6 +132,54 @@ namespace BriefFiniteElementNet
             }
 
             return buf;
+        }
+
+        /// <summary>
+        /// Transforms the force in local coordination system into the global coordination system.
+        /// </summary>
+        /// <param name="elm">The elm.</param>
+        /// <param name="force">The force.</param>
+        /// <returns>transformed force</returns>
+        public static Force TransformLocalToGlobal(this FrameElement2Node elm,Force force)
+        {
+            var f = elm.TransformLocalToGlobal(force.Forces);
+            var m = elm.TransformLocalToGlobal(force.Moments);
+
+            return new Force(f,m);
+        }
+
+
+        /// <summary>
+        /// Transforms the force in global coordination system into the local coordination system.
+        /// </summary>
+        /// <param name="elm">The elm.</param>
+        /// <param name="force">The force.</param>
+        /// <returns>transformed force</returns>
+        public static Force TransformGlobalToLocal(this FrameElement2Node elm, Force force)
+        {
+            var f = elm.TransformGlobalToLocal(force.Forces);
+            var m = elm.TransformGlobalToLocal(force.Moments);
+
+            return new Force(f, m);
+        }
+
+
+        /// <summary>
+        /// Clones the specified model.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <returns>a clone on the <see cref="model"/></returns>
+        public static Model Clone(this Model model)
+        {
+            var str = new MemoryStream();
+
+            Model.Save(str, model);
+
+            str.Position = 0;
+
+            var clone = Model.Load(str);
+
+            return clone;
         }
     }
 }

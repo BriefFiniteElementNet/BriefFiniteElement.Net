@@ -34,10 +34,10 @@ namespace BriefFiniteElementNet
         private Dictionary<LoadCase, double[]> forces = new Dictionary<LoadCase, double[]>();
         private LoadCase settlementsLoadCase;
 
-        internal int[] ReleasedMap; //ReleasedMap[GlobalDofIndex] = DoF index in free DoFs
-        internal int[] FixedMap; //FixedMap[GlobalDofIndex] = DoF index in fixed DoFs
-        internal int[] ReversedReleasedMap; //ReversedReleasedMap[DoF index in free DoFs] = GlobalDofIndex
-        internal int[] ReversedFixedMap; //ReversedFixedMap[DoF index in fixed DoFs] = GlobalDofIndex
+        public int[] ReleasedMap; //ReleasedMap[GlobalDofIndex] = DoF index in free DoFs
+        public int[] FixedMap; //FixedMap[GlobalDofIndex] = DoF index in fixed DoFs
+        public int[] ReversedReleasedMap; //ReversedReleasedMap[DoF index in free DoFs] = GlobalDofIndex
+        public int[] ReversedFixedMap; //ReversedFixedMap[DoF index in fixed DoFs] = GlobalDofIndex
 
         
 
@@ -175,7 +175,7 @@ namespace BriefFiniteElementNet
 
                     var frc = ld.GetGlobalEquivalentNodalLoads(elm);
 
-                    for (int i = 0; i < nc; i++)
+                    for (var i = 0; i < nc; i++)
                     {
                         elm.Nodes[i].MembersLoads.Add(new NodalLoad(frc[i], cse));
                     }

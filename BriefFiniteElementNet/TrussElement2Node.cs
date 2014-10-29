@@ -335,5 +335,18 @@ namespace BriefFiniteElementNet
          
         }
 
+
+        ///<inheritdoc/>
+        public override Matrix GetGlobalMassMatrix()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        ///<inheritdoc/>
+        public override Matrix GetGlobalDampingMatrix()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -178,6 +178,17 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
+        /// Gets a zero displacement.
+        /// </summary>
+        /// <value>
+        /// A zero displacement.
+        /// </value>
+        public static Displacement Zero
+        {
+            get { return new Displacement(0, 0, 0, 0, 0, 0); }
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Displacement"/> struct.
         /// </summary>
         /// <param name="dx">The displacement in x direction.</param>
