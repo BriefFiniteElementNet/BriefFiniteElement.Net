@@ -1158,7 +1158,7 @@ namespace BriefFiniteElementNet
             if (hingedAtStart || hingedAtEnd)
                 throw new NotImplementedException();
 
-            for (int i = 0; i < m.CoreArray.Length; i++)//m=c*m
+            for (var i = 0; i < m.CoreArray.Length; i++)//m=c*m
                 m.CoreArray[i] *= c;
 
 

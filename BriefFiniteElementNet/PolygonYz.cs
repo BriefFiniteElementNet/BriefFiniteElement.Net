@@ -123,10 +123,10 @@ namespace BriefFiniteElementNet
             iy = iy*1/12.0;
             ix = ix*1/12.0;
             ixy = ixy*1/24.0;
-            //var j = ix + iy;
+            var j = ix + iy;
             //not sure which one is correct j = ix + iy or j = ixy :)!
 
-            var buf = new double[] { ix, iy, ixy, a, a, a };
+            var buf = new double[] { ix, iy, j, a, a, a };
 
             if (a < 0)
                 for (var i = 0; i < 6; i++)

@@ -185,7 +185,7 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-
+        [Obsolete]
         public void CheckForErrors()
         {
             new ModelWarningChecker().CheckModel(this);
@@ -305,9 +305,6 @@ namespace BriefFiniteElementNet
             }
 
             sp.Stop();
-
-            //TraceUtil.WritePerformanceTrace("Assembling full stiffness matrix took about {0:#,##0} ms.",
-            //    sp.ElapsedMilliseconds);
 
             this.Trace.Write(TraceRecord.Create(TraceLevel.Info, string.Format("Assembling full stiffness matrix took {0:#,##0} ms.", sp.ElapsedMilliseconds)));
 

@@ -150,7 +150,6 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="cmb">The CMB.</param>
         /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
         public Force GetSupportReaction(LoadCombination cmb)
         {
             var f1 = new Force();

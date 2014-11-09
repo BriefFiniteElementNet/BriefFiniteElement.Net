@@ -65,9 +65,9 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Gets the stifness matrix of member in global coordination system.
+        /// Gets the stiffness matrix of member in global coordination system.
         /// </summary>
-        /// <returns>The stiffnes matrix</returns>
+        /// <returns>The stiffness matrix</returns>
         /// <remarks>
         /// The number of DoFs is in element local regrading order in <see cref="Nodes"/>!</remarks>
         public abstract Matrix GetGlobalStifnessMatrix();
@@ -138,7 +138,14 @@ namespace BriefFiniteElementNet
             nodeNumbers = info.GetValue<int[]>("nodeNumbers");
             elementType = (ElementType)info.GetInt32("elementType");
             loads = info.GetValue<List<Load>>("loads");
-            _massFormulationType = (MassFormulation)info.GetValue<int>("_massFormulationType");
+
+
+            foreach (var pair in info)
+            {
+                if (pair.Name == "_massFormulationType")
+                    _massFormulationType = (MassFormulation) info.GetValue<int>("_massFormulationType");
+            }
+            
 
             this.nodes = new Node[nodeNumbers.Length];
         }
