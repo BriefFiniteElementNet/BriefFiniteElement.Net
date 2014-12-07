@@ -15,7 +15,7 @@ namespace BriefFiniteElementNet
     /// In comparing two different load case, white space characters and 
     /// </remarks>
     [Serializable]
-    [DebuggerDisplay("{CaseName} ({LoadType})")]
+    [DebuggerDisplay("{CaseName} (Type : {LoadType})")]
     public struct LoadCase : IEquatable<LoadCase>, ISerializable
     {
 
@@ -79,7 +79,7 @@ namespace BriefFiniteElementNet
         {
             unchecked
             {
-                return ((caseName != null ? new FemNetStringCompairer().GetHashCode(caseName) : 0)*397) ^ (int) loadType;
+                return ((caseName != null ? new FemNetStringCompairer().GetHashCode(caseName) : 4321)*397) ^ (int) loadType;
             }
         }
 

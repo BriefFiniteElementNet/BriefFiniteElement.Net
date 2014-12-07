@@ -9,7 +9,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// 
     /// </summary>
-    internal static class ExceptionHelper
+    public static class ExceptionHelper
     {
         /// <summary>
         /// Throws the member with same label exists exception.
@@ -20,6 +20,38 @@ namespace BriefFiniteElementNet
         public static void ThrowMemberWithSameLabelExistsException(string label)
         {
             throw new InvalidLabelException(string.Format("Member with same label ({0}) exists in the Model", label));
+        }
+
+
+        /// <summary>
+        /// Throws an exception with specified message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="issueId">The issue identifier.</param>
+        [DebuggerHidden]
+        public static void Throw(string message,string issueId)
+        {
+            var ex = new BriefFiniteElementNetException(message);
+            ex.IssueId = issueId;
+
+            throw ex;
+        }
+
+
+
+        /// <summary>
+        /// Throws the specified message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="issueId">The issue identifier.</param>
+        public static void Throw(string issueId)
+        {
+            var msg = string.Format("An error of number {0} is occurred.", issueId);
+
+            var ex = new BriefFiniteElementNetException(msg);
+            ex.IssueId = issueId;
+
+            throw ex;
         }
     }
 }

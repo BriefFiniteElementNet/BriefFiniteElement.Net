@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{0B651704-69B3-4191-AAD4-8D927B3CAF5A}</ProjectGuid>
+    <ProjectGuid>{7A20CE01-552E-457A-A9C3-18BED244D897}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BriefFiniteElementNet.StructuralExample.Lib</RootNamespace>
-    <AssemblyName>BriefFiniteElementNet.StructuralExample.Lib</AssemblyName>
+    <RootNamespace>BriefFiniteElementNet.Validation</RootNamespace>
+    <AssemblyName>BriefFiniteElementNet.Validation</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -39,8 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DiaphragmLoadDistributor.cs" />
-    <Compile Include="RigidDiaphragm.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Frame3ddValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

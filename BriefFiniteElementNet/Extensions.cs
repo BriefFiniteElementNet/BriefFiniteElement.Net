@@ -181,5 +181,28 @@ namespace BriefFiniteElementNet
 
             return clone;
         }
+
+
+        /// <summary>
+        /// Returns the first occurrence of <see cref="value"/> in the <see cref="arr"/>.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arr">The enumerable.</param>
+        /// <param name="value">The value.</param>
+        /// <returns>first occurrence of <see cref="value"/> in the <see cref="arr"/>.</returns>
+        public static int FirstIndexOf<T>(this IEnumerable<T> arr, T value) where T : struct
+        {
+            var cnt = 0;
+
+            foreach (var obj in arr)
+            {
+                if (obj.Equals(value))
+                    return cnt;
+
+                cnt++;
+            }
+
+            return -1;
+        }
     }
 }

@@ -126,12 +126,12 @@ namespace BriefFiniteElementNet
         /// Gets or sets the j.
         /// </summary>
         /// <value>
-        /// The j.
+        /// The polar moment of inertial.
         /// </value>
         /// <remarks>
-        ///     /
-        /// J= | Y.Z . dA
-        ///    /A
+        ///     /          /
+        /// J= | ρ². dA = | (y²+z²).dA = <see cref="Iy"/> + <see cref="Iz"/> 
+        ///    /A         /A
         /// </remarks>
         public double J
         {
@@ -735,6 +735,8 @@ namespace BriefFiniteElementNet
                 Array.Copy(k.CoreArray, buf.CoreArray, 144);
             }
 
+            if (buf.Any(i => i.Equals(double.NaN)))
+                Guid.NewGuid();
 
             return buf;
         }

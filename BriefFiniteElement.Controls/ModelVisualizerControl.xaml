@@ -14,7 +14,7 @@
         <helixToolkit:HelixViewport3D Name="MainViewport" RotateGesture="RightClick" PanGesture="LeftClick" Grid.RowSpan="2"/>
         <Grid Margin="0" Background="#5900FFC5">
         	<TextBlock Grid.Row="0" x:Name="txtHelp" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Mouse Gestures HELP!" ToolTipService.InitialShowDelay="0"  VerticalAlignment="Center" Margin="10,0,0,0"/>
-        	<TextBlock Text="3D Visulization in this window is powered by Helix toolkit" HorizontalAlignment="Right" VerticalAlignment="Center" MouseDown="TextBlock_MouseDown" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" Margin="0,0,10,0"/>
+        	<TextBlock Text="3D Visualization in this window is powered by Helix toolkit" HorizontalAlignment="Right" VerticalAlignment="Center" MouseDown="TextBlock_MouseDown" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" Margin="0,0,10,0"/>
         </Grid>
     </Grid>
 </UserControl>

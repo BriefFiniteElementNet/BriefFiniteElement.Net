@@ -17,6 +17,8 @@ namespace BriefFiniteElementNet
         /// </summary>
         public BriefFiniteElementNetException()
         {
+            this.HelpLink =
+                "https://brieffiniteelementnet.codeplex.com/wikipage?title=Error%20message%20list&referringTitle=Documentation";
         }
 
         /// <summary>
@@ -25,6 +27,8 @@ namespace BriefFiniteElementNet
         /// <param name="message">The message that describes the error.</param>
         public BriefFiniteElementNetException(string message) : base(message)
         {
+            this.HelpLink =
+                "https://brieffiniteelementnet.codeplex.com/wikipage?title=Error%20message%20list&referringTitle=Documentation";
         }
 
         /// <summary>
@@ -34,6 +38,8 @@ namespace BriefFiniteElementNet
         /// <param name="innerException">The exception that is the cause of the current exception, or a null reference (Nothing in Visual Basic) if no inner exception is specified.</param>
         public BriefFiniteElementNetException(string message, Exception innerException) : base(message, innerException)
         {
+            this.HelpLink =
+                "https://brieffiniteelementnet.codeplex.com/wikipage?title=Error%20message%20list&referringTitle=Documentation";
         }
 
         /// <summary>
@@ -43,7 +49,11 @@ namespace BriefFiniteElementNet
         /// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext" /> that contains contextual information about the source or destination.</param>
         protected BriefFiniteElementNetException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
+            this.HelpLink =
+                "https://brieffiniteelementnet.codeplex.com/wikipage?title=Error%20message%20list&referringTitle=Documentation";
         }
+
+        public string IssueId;
     }
 
 

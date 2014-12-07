@@ -70,7 +70,7 @@ namespace BriefFiniteElementNet.CSparse.Storage
         /// <summary>
         /// Initializes a new instance of the CoordinateStorage class.
         /// </summary>
-        public CoordinateStorage(int rowCount, int columnCount, int nzmax, bool alloc = true)
+        public CoordinateStorage(int rowCount, int columnCount, int nzmax=1, bool alloc = true)
         {
             this.nrows = rowCount;
             this.ncols = columnCount;

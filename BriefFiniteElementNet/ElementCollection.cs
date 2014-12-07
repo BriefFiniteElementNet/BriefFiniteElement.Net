@@ -24,7 +24,7 @@ namespace BriefFiniteElementNet
         /// Initializes a new instance of the <see cref="ElementCollection" /> class.
         /// </summary>
         /// <param name="parent">The parent.</param>
-        public ElementCollection(Model parent)
+        internal ElementCollection(Model parent)
         {
             this.parent = parent;
         }

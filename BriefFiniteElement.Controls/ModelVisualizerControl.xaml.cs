@@ -126,7 +126,6 @@ namespace BriefFiniteElementNet.Controls
 
         #endregion
 
-
         /// <summary>
         /// Updates the UI.
         /// </summary>

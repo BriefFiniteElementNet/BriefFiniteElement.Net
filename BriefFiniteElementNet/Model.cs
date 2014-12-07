@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet
     /// Represents a structure which consists of nodes, elements and loads applied on its parts (parts means either nodes or elements)
     /// </summary>
     [Serializable]
-    public sealed class Model:ISerializable
+    public sealed class Model : ISerializable
     {
         #region Constructors
 
@@ -32,6 +32,7 @@ namespace BriefFiniteElementNet
         {
             this.nodes = new NodeCollection(this);
             this.elements = new ElementCollection(this);
+            this.rigidElements = new RigidElementCollection(this);
         }
 
         #endregion
@@ -41,6 +42,9 @@ namespace BriefFiniteElementNet
         private NodeCollection nodes;
         private ElementCollection elements;
         private StaticLinearAnalysisResult lastResult;
+        private RigidElementCollection rigidElements;
+        private LoadCase settlementLoadCase;
+
 
         /// <summary>
         /// Gets the nodes.
@@ -73,8 +77,28 @@ namespace BriefFiniteElementNet
         public StaticLinearAnalysisResult LastResult
         {
             get { return lastResult; }
-            private set { lastResult = value; }
+            set { lastResult = value; }
         }
+
+        public RigidElementCollection RigidElements
+        {
+            get { return rigidElements; }
+        }
+
+        /// <summary>
+        /// Gets or sets the settlement load case.
+        /// </summary>
+        /// <value>
+        /// The load case associated with settlements.
+        /// </value>
+        public LoadCase SettlementLoadCase
+        {
+            get { return settlementLoadCase; }
+            set { settlementLoadCase = value; }
+        }
+
+
+
 
         #region Trace property and field
 
@@ -84,7 +108,8 @@ namespace BriefFiniteElementNet
             private set { _trace = value; }
         }
 
-        private Trace _trace=new Trace();
+       
+        private Trace _trace = new Trace();
 
         #endregion
 
@@ -125,9 +150,9 @@ namespace BriefFiniteElementNet
         {
             using (var str = File.OpenWrite(fileAddress))
             {
-                Save(str, model);    
+                Save(str, model);
             }
-            
+
         }
 
         /// <summary>
@@ -137,8 +162,35 @@ namespace BriefFiniteElementNet
         /// <param name="model">The model.</param>
         public static void Save(Stream st, Model model)
         {
-            var formatter = new BinaryFormatter() ;
+            var formatter = new BinaryFormatter();
             formatter.Serialize(st, model);
+        }
+
+        /// <summary>
+        /// Serializes the model into a byte array.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        public static byte[] ToByteArray(Model model)
+        {
+            var memstr = new MemoryStream();
+
+            Save(memstr, model);
+
+            return memstr.GetBuffer();
+        }
+
+        /// <summary>
+        /// Dematerializes the byte array into a <see cref="Model"/>.
+        /// </summary>
+        /// <param name="binaryData">The binary data.</param>
+        /// <returns>retrieved model</returns>
+        public static Model FromByteArray(byte[] binaryData)
+        {
+            var memstr = new MemoryStream(binaryData);
+
+            var buf = Load(memstr);
+
+            return buf;
         }
 
         /// <summary>
@@ -150,7 +202,7 @@ namespace BriefFiniteElementNet
         {
             using (var str = File.OpenRead(fileAddress))
             {
-                return Load(str);    
+                return Load(str);
             }
         }
 
@@ -163,7 +215,7 @@ namespace BriefFiniteElementNet
         {
             var formatter = new BinaryFormatter();
 
-            var buf = (Model)formatter.Deserialize(str) ;
+            var buf = (Model) formatter.Deserialize(str);
 
 
             return buf;
@@ -177,9 +229,9 @@ namespace BriefFiniteElementNet
         [Obsolete("only Usage for VS Debugger display issue on 18 of July 2014")]
         public static Model LoadWithBinder(Stream str)
         {
-            var formatter = new BinaryFormatter() { Binder = new FemNetSerializationBinder() };
+            var formatter = new BinaryFormatter() {Binder = new FemNetSerializationBinder()};
 
-            var buf = (Model)formatter.Deserialize(str);
+            var buf = (Model) formatter.Deserialize(str);
 
 
             return buf;
@@ -205,7 +257,7 @@ namespace BriefFiniteElementNet
 
 
         /// <summary>
-        /// Solves the instance with specified <see cref="SolverType" /> and assuming linear behavior (both geometric and material) and for default load case.
+        /// Solves the instance with specified <see cref="solverType" /> and assuming linear behavior (both geometric and material) and for default load case.
         /// </summary>
         /// <param name="solverType">The solver type.</param>
         public void Solve(SolverType solverType)
@@ -220,7 +272,7 @@ namespace BriefFiniteElementNet
         /// <param name="solver">The solver.</param>
         public void Solve(ISolver solver)
         {
-            Solve(new SolverConfiguration(LoadCase.DefaultLoadCase) { CustomSolver = solver});
+            Solve(new SolverConfiguration(LoadCase.DefaultLoadCase) {CustomSolver = solver});
         }
 
         /// <summary>
@@ -264,7 +316,8 @@ namespace BriefFiniteElementNet
 
             var freeDofCount = c - fixedDofCount;
 
-            this.Trace.Write(TraceRecord.Create(TraceLevel.Info, string.Format("Model with {0} free DoFs and {1} fixed DoFs", freeDofCount, fixedDofCount)));
+            this.Trace.Write(TraceRecord.Create(TraceLevel.Info,
+                string.Format("Model with {0} free DoFs and {1} fixed DoFs", freeDofCount, fixedDofCount)));
 
             //TraceUtil.WritePerformanceTrace("Model with {0} free DoFs and {1} fixed DoFs", freeDofCount, fixedDofCount);
 
@@ -274,7 +327,7 @@ namespace BriefFiniteElementNet
             var rMap = new int[c];
             var rrmap = new int[freeDofCount];
             var rfmap = new int[fixedDofCount];
-            
+
             #region Assembling Kt
 
             foreach (var elm in elements)
@@ -306,7 +359,8 @@ namespace BriefFiniteElementNet
 
             sp.Stop();
 
-            this.Trace.Write(TraceRecord.Create(TraceLevel.Info, string.Format("Assembling full stiffness matrix took {0:#,##0} ms.", sp.ElapsedMilliseconds)));
+            this.Trace.Write(TraceRecord.Create(TraceLevel.Info,
+                string.Format("Assembling full stiffness matrix took {0:#,##0} ms.", sp.ElapsedMilliseconds)));
 
             sp.Restart();
 
@@ -330,7 +384,7 @@ namespace BriefFiniteElementNet
                 if (cns.RZ == DofConstraint.Fixed) fixity[6*i + 5] = true;
             }
 
-            
+
 
             int fCnt = 0, rCnt = 0;
 
@@ -417,11 +471,13 @@ namespace BriefFiniteElementNet
 
 
             sp.Stop();
-            
-           // TraceUtil.WritePerformanceTrace("Extracting kff,kfs and kss from Kt matrix took about {0:#,##0} ms",
-           //     sp.ElapsedMilliseconds);
 
-            this.Trace.Write(TraceRecord.Create(TraceLevel.Info, string.Format("Extracting kff,kfs and kss from Kt matrix took about {0:#,##0} ms", sp.ElapsedMilliseconds)));
+            // TraceUtil.WritePerformanceTrace("Extracting kff,kfs and kss from Kt matrix took about {0:#,##0} ms",
+            //     sp.ElapsedMilliseconds);
+
+            this.Trace.Write(TraceRecord.Create(TraceLevel.Info,
+                string.Format("Extracting kff,kfs and kss from Kt matrix took about {0:#,##0} ms",
+                    sp.ElapsedMilliseconds)));
 
             sp.Restart();
 
@@ -438,29 +494,33 @@ namespace BriefFiniteElementNet
             //TraceUtil.WritePerformanceTrace("cholesky decomposition of Kff took about {0:#,##0} ms",
             //    sp.ElapsedMilliseconds);
 
-            
+
             //TraceUtil.WritePerformanceTrace("nnz of kff is {0:#,##0}, ~{1:0.0000}%", kff.Values.Length,
             //    ((double) kff.Values.Length)/((double) kff.RowCount*kff.ColumnCount));
 
-            this.Trace.Write(TraceRecord.Create(TraceLevel.Info, string.Format("nnz of kff is {0:#,##0}, ~{1:0.0000}%", kff.Values.Length,
-                ((double)kff.Values.Length) / ((double)kff.RowCount * kff.ColumnCount))));
+            this.Trace.Write(TraceRecord.Create(TraceLevel.Info,
+                string.Format("nnz of kff is {0:#,##0}, ~{1:0.0000}%", kff.Values.Length,
+                    ((double) kff.Values.Length)/((double) kff.RowCount*kff.ColumnCount))));
 
             sp.Restart();
 
             #endregion
 
-            var result = new StaticLinearAnalysisResult();
+            var result = lastResult = new StaticLinearAnalysisResult();
 
             if (config.CustomSolver != null)
                 result.Solver = config.CustomSolver;
             else
                 result.Solver = GenerateSolver(config.SolverType, kff);
 
+            result.SolverType = config.SolverType;
+
+
             result.Kfs = kfs;
             result.Kss = kss;
             result.Parent = this;
-            result.SettlementsLoadCase = config.SettlementsLoadCase;
-            
+            //result.SettlementsLoadCase = this.SettlementLoadCase;
+
             result.ReleasedMap = rMap;
             result.FixedMap = fMap;
             result.ReversedReleasedMap = rrmap;
@@ -468,7 +528,7 @@ namespace BriefFiniteElementNet
 
             foreach (var cse in config.LoadCases)
             {
-                result.AddAnalysisResult(cse);
+                result.AddAnalResult(cse);
             }
 
 
@@ -517,12 +577,16 @@ namespace BriefFiniteElementNet
 
             info.AddValue("elements", elements);
             info.AddValue("nodes", nodes);
+            info.AddValue("rigidElements", rigidElements);
+            info.AddValue("settlementLoadCase", settlementLoadCase);
         }
 
         private Model(SerializationInfo info, StreamingContext context)
         {
             elements = info.GetValue<ElementCollection>("elements");
+            rigidElements = info.GetValue<RigidElementCollection>("rigidElements");
             nodes = info.GetValue<NodeCollection>("nodes");
+            settlementLoadCase = info.GetValue<LoadCase>("settlementLoadCase");
         }
 
         [OnDeserialized]
@@ -542,11 +606,18 @@ namespace BriefFiniteElementNet
             foreach (var nde in nodes)
                 nde.Parent = this;
 
-            
+
+            foreach (var relm in rigidElements)
+            {
+                for (int i = 0; i < relm.nodeNumbers.Length; i++)
+                {
+                    relm.Nodes.Add(this.nodes[relm.nodeNumbers[i]]);
+                }
+            }
         }
 
         #endregion
 
-        
+
     }
 }

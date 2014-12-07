@@ -7,6 +7,7 @@ using System.Security.Permissions;
 using System.Text;
 using BriefFiniteElementNet.CSparse.Double;
 using BriefFiniteElementNet.Solver;
+using CCS = BriefFiniteElementNet.CSparse.Double.CompressedColumnStorage;
 
 namespace BriefFiniteElementNet
 {
@@ -57,6 +58,10 @@ namespace BriefFiniteElementNet
 
         #endregion
 
+        /// <summary>
+        /// The solvers with key of master mapping! Solvers[Master Mapping] = appropriated solver
+        /// </summary>
+        public Dictionary<int[], ISolver> Solvers = new Dictionary<int[], ISolver>();
 
         public ISolver Solver;
 
@@ -108,10 +113,25 @@ namespace BriefFiniteElementNet
         /// <value>
         /// The load case that settlements should be threated
         /// </value>
+        [Obsolete("Use Model.SettlementLoadCase instead")]
         internal LoadCase SettlementsLoadCase
         {
             get { return settlementsLoadCase; }
             set { settlementsLoadCase = value; }
+        }
+
+        private SolverType _solverType;
+
+        /// <summary>
+        /// Gets or sets the type of the solver who should be used.
+        /// </summary>
+        /// <value>
+        /// The type of the solver.
+        /// </value>
+        public SolverType SolverType
+        {
+            get { return _solverType; }
+            set { _solverType = value; }
         }
 
         #endregion
@@ -128,7 +148,7 @@ namespace BriefFiniteElementNet
             if (displacements.ContainsKey(cse))
                 return;
 
-            AddAnalysisResult(cse);
+            AddAnalResult(cse);
         }
 
         /// <summary>
@@ -214,7 +234,7 @@ namespace BriefFiniteElementNet
                 var cns = nodes[i].Constraints;
                 var disp = new Displacement();
 
-                if (cse == this.SettlementsLoadCase) disp = nodes[i].Settlements;
+                if (cse == this.parent.SettlementLoadCase) disp = nodes[i].Settlements;
 
 
                 #region DX
@@ -333,6 +353,10 @@ namespace BriefFiniteElementNet
 
             #region Solving equation system
 
+
+            ISolver solver;
+
+
             if (Solver == null)
                 throw new NullReferenceException("Solver");
 
@@ -404,6 +428,264 @@ namespace BriefFiniteElementNet
 
             #endregion
 
+        }
+
+        public void AddAnalResult(LoadCase loadCase)
+        {
+            var solver = (ISolver) null;
+
+            var map = DofMappingManager.Create(parent, loadCase);
+
+
+            var n = parent.Nodes.Count;
+            var m = map.M;
+
+
+            var masters = map.MasterMap;
+
+            var dispPermute = PermutationGenerator.GetDisplacementPermute(parent, map);
+            var forcePermute = PermutationGenerator.GetForcePermute(parent, map);
+
+            var ft = GetTotalForceVector(loadCase,map);
+            var ut = GetTotalDispVector(loadCase, map);
+
+            for (var i = 0; i < map.Fixity.Length; i++)
+            {
+                if (map.Fixity[i] == DofConstraint.Fixed)
+                    ft[i] = 0;
+                else
+                    ut[i] = 0;
+            }
+
+
+            var kt = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(parent);
+
+            var kr = (CCS)((CCS)forcePermute.Multiply(kt)).Multiply(dispPermute);
+            var fr = forcePermute.Multiply(ft);
+            var ur = new double[fr.Length];
+
+            for (var i = 0; i < 6*m; i++)
+            {
+                ur[i] = ut[map.RMap1[i]];
+            }
+
+            var stiff =
+                //MatrixAssemblerUtil.DivideZones(parent, kr, map);
+                CalcUtil.GetReucedZoneDevidedMatrix(kr, map);
+
+            var frf = GetFreePartOfReducedVector(fr, map);
+            var urs = GetFixedPartOfReducedVector(ur, map);
+
+            if (Solvers.ContainsKey(map.MasterMap))
+            {
+                solver = Solvers[map.MasterMap];
+            }
+            else
+            {
+                solver = CreateSolver(stiff.ReleasedReleasedPart);
+                solver.A = stiff.ReleasedReleasedPart;
+            }
+
+            if (!solver.IsInitialized)
+                solver.Initialize();
+
+            #region ff-kfs*us
+            //درسته، تغییرش نده گوس...
+
+            for (var i = 0; i < frf.Length; i++)
+                frf[i] = -frf[i];
+
+            stiff.ReleasedFixedPart.Multiply(urs, frf); 
+
+            for (var i = 0; i < frf.Length; i++)
+                frf[i] = -frf[i];
+
+            #endregion
+
+            var urf = new double[map.RMap2.Length];
+
+            string msg;
+
+            var res = solver.Solve(frf, urf, out msg);
+
+            if (res != SolverResult.Success)
+                throw new BriefFiniteElementNetException(msg);
+
+            var frs = CalcUtil.Add(stiff.FixedReleasedPart.Multiply(urf), stiff.FixedFixedPart.Multiply(urs));
+
+            for (var i = 0; i < urf.Length; i++)
+            {
+                ur[map.RMap2[i]] = urf[i];
+            }
+
+            for (var i = 0; i < frs.Length; i++)
+            {
+                fr[map.RMap3[i]] = frs[i];
+            }
+
+            for (var i = 0; i < map.RMap3.Length; i++)
+            {
+                var ind = i;
+                var gi = map.RMap1[map.RMap3[ind]];
+                ft[gi] = frs[ind];
+            }
+
+            var ut2 = dispPermute.Multiply(ur);
+
+            for (int i = 0; i < 6*n; i++)
+            {
+                if (map.Fixity[i] == DofConstraint.Fixed)
+                    ut2[i] = ut[i];
+            }
+
+            forces[loadCase] = ft;
+            displacements[loadCase] = ut2;
+        }
+
+        private ISolver CreateSolver(CCS a)
+        {
+            ISolver buf;
+
+            switch (parent.LastResult.SolverType)
+            {
+                case SolverType.CholeskyDecomposition:
+                    buf = new CholeskySolver(a);
+                    break;
+                case SolverType.ConjugateGradient:
+                    buf = new PCG(new SSOR());
+                    buf.A = a;
+                    break;
+                default:
+                    throw new NotImplementedException();
+            }
+
+            return buf;
+        }
+
+        private double[] GetTotalForceVector(LoadCase cse, DofMappingManager map)
+        {
+            //only and only free part will be used
+
+            
+            var n = parent.Nodes.Count;
+
+            var buf = new double[6 * n];
+
+
+            #region Initializing Node.MembersLoads
+
+            for (var i = 0; i < n; i++) parent.Nodes[i].MembersLoads.Clear();
+
+            foreach (var elm in parent.Elements)
+            {
+                var nc = elm.Nodes.Length;
+
+                foreach (var ld in elm.Loads)
+                {
+                    if (ld.Case != cse)
+                        continue;
+
+                    var frc = ld.GetGlobalEquivalentNodalLoads(elm);
+
+                    for (var i = 0; i < nc; i++)
+                    {
+                        elm.Nodes[i].MembersLoads.Add(new NodalLoad(frc[i], cse));
+                    }
+                }
+            }
+
+            #endregion
+
+            var nodes = parent.Nodes;
+
+            for (int i = 0; i < n; i++)
+            {
+                var force = new Force();
+
+                foreach (var ld in nodes[i].MembersLoads)
+                    force += ld.Force;
+
+
+                foreach (var ld in nodes[i].Loads)
+                    if (ld.Case == cse)
+                        force += ld.Force;
+
+                buf[6 * i + 0] = force.Fx;
+                buf[6 * i + 1] = force.Fy;
+                buf[6 * i + 2] = force.Fz;
+
+                buf[6 * i + 3] = force.Mx;
+                buf[6 * i + 4] = force.My;
+                buf[6 * i + 5] = force.Mz;
+            }
+
+            for (int i = 6 * map.N - 1; i >= 0; i--)
+            {
+                if (map.Fixity[i] == DofConstraint.Fixed)
+                    buf[i] = 0;
+            }
+
+
+            return buf;
+        }
+
+        private double[] GetTotalDispVector(LoadCase cse, DofMappingManager map)
+        {
+            //only and only fixed part will be used
+            var n = parent.Nodes.Count;
+
+            var buf = new double[6 * n];
+
+            if (this.settlementsLoadCase != cse)
+                return buf;
+
+            var nodes = parent.Nodes;
+
+            for (var i = 0; i < n; i++)
+            {
+                var disp = nodes[i].Settlements;
+
+                buf[6 * i + 0] = disp.DX;
+                buf[6 * i + 1] = disp.DY;
+                buf[6 * i + 2] = disp.DZ;
+
+                buf[6 * i + 3] = disp.RX;
+                buf[6 * i + 4] = disp.RY;
+                buf[6 * i + 5] = disp.RZ;
+            }
+
+
+            for (int i = 6*map.N-1; i >=0 ; i--)
+            {
+                if (map.Fixity[i] == DofConstraint.Released)
+                    buf[i] = 0;
+            }
+
+            return buf;
+        }
+
+        private double[] GetFreePartOfReducedVector(double[] vr, DofMappingManager map)
+        {
+            var buf = new double[map.RMap2.Length];
+
+            for (var i = 0; i < buf.Length; i++)
+            {
+                buf[i] = vr[map.RMap2[i]];
+            }
+
+            return buf;
+        }
+
+        private double[] GetFixedPartOfReducedVector(double[] vr, DofMappingManager map)
+        {
+            var buf = new double[map.RMap3.Length];
+
+            for (var i = 0; i < buf.Length; i++)
+            {
+                buf[i] = vr[map.RMap3[i]];
+            }
+
+            return buf;
         }
 
         #endregion

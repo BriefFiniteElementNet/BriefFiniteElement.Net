@@ -191,7 +191,14 @@ namespace BriefFiniteElementNet.CSparse.Double
             }
         }
 
+        public double[] Multiply(double[] x)
+        {
+            var buf = new double[this.RowCount];
 
+            Multiply(x, buf);
+
+            return buf;
+        }
 
 
         /// <summary>

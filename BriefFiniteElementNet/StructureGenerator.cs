@@ -141,6 +141,7 @@ namespace BriefFiniteElementNet
                         elm.StartNode = nodes[j, i, k];
                         elm.EndNode = nodes[j+1, i , k];
                         buf.Elements.Add(elm);
+                        
                     }
                 }
             }
@@ -167,9 +168,9 @@ namespace BriefFiniteElementNet
                     continue;
 
                 framElm.A = 0.01;
-                framElm.Iy = framElm.Iz = framElm.J = 0.1 * 0.1 * 0.1 * 0.1 / 12;
+                framElm.Iy = framElm.Iz = framElm.J = 0.1 * 0.1 * 0.1 * 0.1 / 12.0;
                 framElm.E = framElm.G = 210e9;
-
+                framElm.MassDensity = 1;
             }
 
 

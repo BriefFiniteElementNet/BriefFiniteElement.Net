@@ -8,7 +8,8 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents a class for mapping DOFs
     /// </summary>
-    public class DofMap
+    [Obsolete("Not used anywhere")]
+    class DofMap
     {
         /// <summary>
         /// The free map
