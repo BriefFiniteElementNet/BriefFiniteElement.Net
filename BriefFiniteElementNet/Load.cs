@@ -54,7 +54,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
-        public Load(SerializationInfo info, StreamingContext context)
+        protected Load(SerializationInfo info, StreamingContext context)
         {
             _case = info.GetValue<LoadCase>("case");
         }

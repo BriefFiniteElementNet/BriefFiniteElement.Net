@@ -39,8 +39,6 @@ namespace BriefFiniteElementNet
 
         public override Force[] GetGlobalEquivalentNodalLoads(Element element)
         {
-
-
             if (element is FrameElement2Node)
             {
                 var frElm = element as FrameElement2Node;
@@ -82,6 +80,51 @@ namespace BriefFiniteElementNet
             }
 
             throw new NotImplementedException();
+        }
+
+        private void GetLocalEquivalentNodalLoads(Element element)
+        {
+            throw new NotImplementedException();
+
+            if (element is FrameElement2Node)
+            {
+                var frElm = element as FrameElement2Node;
+
+                var l = (frElm.EndNode.Location - frElm.StartNode.Location).Length;
+
+                var w = GetLocalDistributedLoad(element as Element1D);
+
+                var localEndForces = new Force[2];
+
+                if (frElm.HingedAtEnd & frElm.HingedAtStart)
+                {
+                    localEndForces[0] = new Force(w.X * l / 2, w.Y * l / 2, w.Z * l / 2, 0, 0, 0);
+                    localEndForces[1] = new Force(w.X * l / 2, w.Y * l / 2, w.Z * l / 2, 0, 0, 0);
+                }
+                else if (!frElm.HingedAtEnd & frElm.HingedAtStart)
+                {
+                    throw new NotImplementedException();
+                }
+                else if (frElm.HingedAtEnd & !frElm.HingedAtStart)
+                {
+                    throw new NotImplementedException();
+                }
+                else if (!frElm.HingedAtEnd & !frElm.HingedAtStart)
+                {
+                    localEndForces[0] = new Force(w.X * l / 2, w.Y * l / 2, w.Z * l / 2, 0, -w.Z * l * l / 12.0, w.Y * l * l / 12.0);
+                    localEndForces[1] = new Force(w.X * l / 2, w.Y * l / 2, w.Z * l / 2, 0, w.Z * l * l / 12.0, -w.Y * l * l / 12.0);
+                }
+
+
+                for (var i = 0; i < element.Nodes.Length; i++)
+                {
+                    var frc = localEndForces[i];
+                    localEndForces[i] = new Force(frElm.TransformLocalToGlobal(frc.Forces),
+                        frElm.TransformLocalToGlobal(frc.Moments));
+                }
+
+                //return localEndForces;
+            }
         }
 
         /// <summary>

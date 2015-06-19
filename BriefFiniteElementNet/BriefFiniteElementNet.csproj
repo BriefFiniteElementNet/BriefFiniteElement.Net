@@ -36,13 +36,17 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CheckingUtil.cs" />
     <Compile Include="CSparse\Double\Factorization\SparseLDL.cs" />
     <Compile Include="CSparse\Tuple.cs" />
+    <Compile Include="DoF.cs" />
     <Compile Include="DofMap.cs" />
     <Compile Include="DofMappingManager.cs" />
+    <Compile Include="Elements\ConcentratedMass.cs" />
+    <Compile Include="Elements\SdofMass.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="CalcUtil.cs" />
     <Compile Include="IElement1DLoad.cs" />
@@ -58,7 +62,7 @@
     <Compile Include="PermutationMatrixAssembler.cs" />
     <Compile Include="PointYz.cs" />
     <Compile Include="PolygonYz.cs" />
-    <Compile Include="FrameElement2Node.cs" />
+    <Compile Include="Elements\FrameElement2Node.cs" />
     <Compile Include="RandomStuff.cs" />
     <Compile Include="RangeUtil.cs" />
     <Compile Include="RigidElement.cs" />
@@ -125,10 +129,10 @@
     <Compile Include="LoadDirection.cs" />
     <Compile Include="Displacement.cs" />
     <Compile Include="DofConstraint.cs" />
-    <Compile Include="Element.cs" />
-    <Compile Include="Element1D.cs" />
-    <Compile Include="Element2D.cs" />
-    <Compile Include="Element3D.cs" />
+    <Compile Include="Elements\Element.cs" />
+    <Compile Include="Elements\Element1D.cs" />
+    <Compile Include="Elements\Element2D.cs" />
+    <Compile Include="Elements\Element3D.cs" />
     <Compile Include="ElementCollection.cs" />
     <Compile Include="ElementType.cs" />
     <Compile Include="ExceptionHelper.cs" />
@@ -153,14 +157,20 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="ModelWarningChecker.cs" />
+    <Compile Include="StrainTensor3D.cs" />
+    <Compile Include="StressTensor3D.cs" />
     <Compile Include="StructureGenerator.cs" />
     <Compile Include="StructurePart.cs" />
     <Compile Include="StructurePartCollection.cs" />
+    <Compile Include="TetrahedralIso.cs" />
     <Compile Include="Trace.cs" />
     <Compile Include="TraceUtil.cs" />
-    <Compile Include="TrussElement2Node.cs" />
+    <Compile Include="Elements\TrussElement2Node.cs" />
     <Compile Include="UniformLoad1D.cs" />
+    <Compile Include="UniformBodyLoad3D.cs" />
+    <Compile Include="UniformSurfaceLoad3D.cs" />
     <Compile Include="Vector.cs" />
+    <Compile Include="XmlIO.cs" />
     <Compile Include="ZoneDevidedMatrix.cs" />
   </ItemGroup>
   <ItemGroup>

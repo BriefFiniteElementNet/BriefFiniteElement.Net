@@ -1,0 +1,35 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:Controls="clr-namespace:BriefFiniteElementNet.Controls;assembly=BriefFiniteElementNet.Controls"
+    x:Class="BriefFiniteElementNet.SimpleUI.MainWindow"
+    Title="MainWindow" Height="350" Width="525">
+    <Grid >
+    	<Grid.RowDefinitions>
+    		<RowDefinition Height="20"/>
+    		<RowDefinition />
+    	</Grid.RowDefinitions>
+
+        <Controls:ModelVisualizerControl Grid.RowSpan="2" Grid.Row="5" ModelToVisualize="{Binding Model}"/>
+        <Menu IsMainMenu="True" VerticalAlignment="Top" Grid.RowSpan="2">
+            <MenuItem Header="_File" >
+                <MenuItem Header="Open Binary Format" Click="OpenBin_Click"/>
+                <MenuItem Header="Open XML Format" Click="OpenXml_Click"/>
+                <MenuItem Header="Save Frame3DD Format" Click="SaveFrame3dd_Click"/>
+                <MenuItem Visibility="Collapsed" Header="Save XML Format" Click="SaveXml_Click"/>
+                <Separator />
+                <MenuItem Header="_Exit" IsCheckable="true" Click="Exit_Click"/>
+            </MenuItem>
+
+            <MenuItem Header="_Tools" >
+                <MenuItem Header="_Create Grid Structure" Click="CreateGrid_Click"/>
+                
+            </MenuItem>
+
+
+            <MenuItem Header="_Help" />
+            
+        </Menu>
+
+    </Grid>
+</Window>

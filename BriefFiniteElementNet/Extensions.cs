@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Xml;
 using BriefFiniteElementNet.CSparse.Double;
 
 namespace BriefFiniteElementNet
@@ -203,6 +204,83 @@ namespace BriefFiniteElementNet
             }
 
             return -1;
+        }
+
+
+        /// <summary>
+        /// Assembles the <see cref="submatrix"/> inside the <see cref="main"/> matrix.
+        /// </summary>
+        /// <param name="main">The main matrix.</param>
+        /// <param name="submatrix">The sub matrix.</param>
+        /// <param name="i">The i</param>
+        /// <param name="j">The j</param>
+        public static void AssembleInside(this Matrix main, Matrix submatrix, int i, int j)
+        {
+            if (main.RowCount < i + submatrix.RowCount || main.ColumnCount < j + submatrix.ColumnCount)
+                throw new InvalidOperationException("dimension mismatch");
+
+            for (var _i = 0; _i < submatrix.RowCount; _i++)
+            {
+                for (var _j = 0; _j < submatrix.ColumnCount; _j++)
+                {
+                    main[i + _i, j + _j] = submatrix[_i, _j];
+                }
+            }
+
+        }
+
+
+        /// <summary>
+        /// Multiplies the <see cref="matrix"/> by a constant value.
+        /// </summary>
+        /// <param name="matrix">The Matrix</param>
+        /// <param name="constant">The constant value</param>
+        public static void MultiplyByConstant(this Matrix matrix, double constant)
+        {
+            for (var i = matrix.CoreArray.Length - 1; i != 0; i++)
+            {
+                matrix.CoreArray[i] *= constant;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets the sum of external loads (both from external sources and supports) which are applying to the node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="loadCase">The load case.</param>
+        /// <returns>Resultant of external load on <see cref="node"/></returns>
+        public static Force GetExternalLoads(this Node node, LoadCase loadCase)
+        {
+            var forces = node.Parent.LastResult.Forces[loadCase];
+
+            var force = Force.FromVector(forces, 6*node.Index);
+
+            return force;
+        }
+
+        public static void WriteValue<T>(this XmlWriter rwtr, string attributeName, T value)
+        {
+            if (typeof (T).IsValueType)
+                WriteStructValue(rwtr, attributeName, (ValueType) (object) value);
+            else
+                WriteClassValue(rwtr, attributeName, (object) value);
+        }
+
+        public static void WriteClassValue(this XmlWriter rwtr, string attributeName, object value) 
+        {
+            if (!value.IsNull())
+                rwtr.WriteAttributeString(attributeName, value.ToString());
+        }
+
+        public static void WriteStructValue(this XmlWriter rwtr, string attributeName, ValueType value) 
+        {
+            rwtr.WriteAttributeString(attributeName, value.ToString());
+        }
+
+        public static bool IsNull<T>(this T obj) where T : class
+        {
+            return ReferenceEquals(obj, null);
         }
     }
 }

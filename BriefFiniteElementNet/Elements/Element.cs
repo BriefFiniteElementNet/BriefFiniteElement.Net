@@ -13,6 +13,7 @@ namespace BriefFiniteElementNet
     /// </summary>
     [Serializable]
     [CLSCompliant(true)]
+    [DebuggerDisplay("{ElementType}, Label: {Label}")]
     public abstract class Element : StructurePart
     {
         protected ElementType elementType;

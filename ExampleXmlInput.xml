@@ -1,0 +1,40 @@
+﻿<Model SlLoadCaseName="Default" SlLoadCaseType="Default">
+
+	<Nodes>
+		<Node X="1.2" Y="2.2" Z="2.2" DxFix="true" DzFix="false" DxStl="5.255" Label="N1" Tag="tag" />
+	</Nodes>
+
+	<Elements>
+
+		<FrameElement2Node Node1Index="5" Node1Label="N1" Node2Index="9" Node2Label="N1" Iy="1.2" Iz="2.3" J="2.2" A="2.2"
+                       Ay="2.2" Az="2.2" Density="2.2"
+                       HingedAtStart="true" HingedAtEnd="false" ConsiderShearEffect="true" WebRoation="30" />
+
+
+		<TrussElement2Node Node1Index="5" Node1Label="N1" Node2Index="9" Node2Label="N1" A="2.2" Density="2.2" />
+
+		<RigidElement Label="Rg1" UseForAllLoads="true">
+
+			<AppliedLoadCases>
+				<LoadCase Type="Quake" Name="Default" />
+			</AppliedLoadCases>
+
+			<AppliedLoadTypes>
+				<LoadType Type="Quake" />
+			</AppliedLoadTypes>
+
+			<Node Index="0" />
+			<Node Index="1" IsCenter="true" />
+			<Node Label="N1" />
+
+			
+		</RigidElement>
+
+	</Elements>
+
+	<LoadSet LoadCaseName="DeadOnes" LoadCaseType="Quake">
+		<NodalLoad NodeIndex="10" NodeLabel="10" Fx="0.0" Fy="0.0" Fz="0.0" Mx="0.0" My="0.0" Mz="0.0" />
+		<UniformLoad ElementIndex="10" ElementLabel="elm1" Magnitude="10.2563" Direction="X" System="Global" />
+	</LoadSet>
+
+</Model>

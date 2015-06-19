@@ -13,6 +13,37 @@ namespace BriefFiniteElementNet
     /// </summary>
     public static class CalcUtil
     {
+        public static int GetHashCode(params Point[] objects)
+        {
+            if (objects == null)
+                throw new ArgumentNullException("objects");
+
+            if (objects.Length == 0)
+                return 0;
+
+            var buf = objects[0].GetHashCode();
+
+            for (var i = 1; i < objects.Length; i++)
+            {
+                buf = (buf*397) ^ GetPointHashCode(objects[i]);
+            }
+
+            buf = (buf*397) ^ objects.Length;
+
+            return buf;
+        }
+
+        public static int GetPointHashCode(Point pt)
+        {
+            unchecked
+            {
+                var hashCode = pt.X.GetHashCode();
+                hashCode = (hashCode * 397) ^ pt.Y.GetHashCode();
+                hashCode = (hashCode * 397) ^ pt.Z.GetHashCode();
+                return hashCode;
+            }
+        }
+
         /// <summary>
         /// Enumerates the discrete parts of the graph.
         /// </summary>
@@ -333,6 +364,42 @@ namespace BriefFiniteElementNet
         public static CCS ToCCs(this Coord crd)
         {
             return (CCS) Converter.ToCompressedColumnStorage(crd);
+        }
+
+        /// <summary>
+        /// Determines whether defined matrix is diagonal matrix or not.
+        /// Diagonal matrix is a matrix that only have nonzero elements on its main diagonal.
+        /// </summary>
+        /// <param name="mtx">The MTX.</param>
+        /// <returns></returns>
+        public static bool IsDiagonalMatrix(this CCS mtx)
+        {
+            var n = mtx.ColumnCount;
+
+            if (n != mtx.RowCount)
+                return false;
+
+            if (mtx.Values.Length > n)
+                return false;
+
+            for (int i = 0; i < n; i++)
+            {
+                var col = i;
+
+                var st = mtx.ColumnPointers[i];
+                var en = mtx.ColumnPointers[i+1];
+
+                for (int j = st; j < en; j++)
+                {
+                    var row = mtx.RowIndices[j];
+
+                    if (row != col)
+                        return false;
+                }
+            }
+
+
+            return true;
         }
     }
 }

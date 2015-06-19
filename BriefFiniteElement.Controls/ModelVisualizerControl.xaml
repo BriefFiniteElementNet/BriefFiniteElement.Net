@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="BriefFiniteElementNet.Controls.ModelVisualizerControl"
+﻿<UserControl x:Name="userControl" x:Class="BriefFiniteElementNet.Controls.ModelVisualizerControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -11,10 +11,26 @@
             <RowDefinition Height="30"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <helixToolkit:HelixViewport3D Name="MainViewport" RotateGesture="RightClick" PanGesture="LeftClick" Grid.RowSpan="2"/>
+
+
+        <Grid Grid.Row="1">
+            <helixToolkit:HelixViewport3D x:Name="MainViewport" RotateGesture="RightClick" PanGesture="LeftClick" />
+            <Canvas x:Name="MainCanvas"/>
+        </Grid>
+
         <Grid Margin="0" Background="#5900FFC5">
-        	<TextBlock Grid.Row="0" x:Name="txtHelp" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Mouse Gestures HELP!" ToolTipService.InitialShowDelay="0"  VerticalAlignment="Center" Margin="10,0,0,0"/>
-        	<TextBlock Text="3D Visualization in this window is powered by Helix toolkit" HorizontalAlignment="Right" VerticalAlignment="Center" MouseDown="TextBlock_MouseDown" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" Margin="0,0,10,0"/>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="138*"/>
+                <ColumnDefinition Width="233*"/>
+                <ColumnDefinition Width="322*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" x:Name="txtHelp" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Mouse Gestures HELP!" ToolTipService.InitialShowDelay="0"  VerticalAlignment="Center" Margin="10,7,0,7"/>
+            <TextBlock Text="3D Visualization in this window is powered by Helix toolkit" HorizontalAlignment="Right" VerticalAlignment="Center" MouseDown="TextBlock_MouseDown" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" Margin="0,7,9,7" Grid.Column="2"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <ToggleButton Content="Nodes" IsChecked="{Binding ShowNodes, ElementName=userControl}"/>
+                <ToggleButton Content="Elements" IsChecked="{Binding ShowElements, ElementName=userControl}"/>
+                <ToggleButton Content="RigidElements" IsChecked="{Binding ShowRigidElements, ElementName=userControl}"/>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

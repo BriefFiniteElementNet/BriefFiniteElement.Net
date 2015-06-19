@@ -180,6 +180,7 @@ namespace BriefFiniteElementNet
         /// <exception cref="System.NotImplementedException"></exception>
         public static ZoneDevidedMatrix DivideZones(Model model,CCS matrix, DofMappingManager dofMap)
         {
+            //see Calcutil.GetReucedZoneDevidedMatrix
             throw new NotImplementedException();
         }
     }

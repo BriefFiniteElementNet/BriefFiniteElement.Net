@@ -11,7 +11,7 @@ namespace BriefFiniteElementNet
     public enum ElementType
     {
         /// <summary>
-        /// Defauls value.
+        /// Default value.
         /// </summary>
         Undefined = 0,
 
@@ -23,6 +23,17 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// <see cref="ElementType"/> associated with <see cref="TrussElement2Node"/>
         /// </summary>
-        TrussElement2Noded = 2
+        TrussElement2Noded = 2,
+
+
+        /// <summary>
+        /// <see cref="ElementType"/> associated with <see cref="TetrahedralIso"/>
+        /// </summary>
+        TetrahedralIso = 3,
+
+        /// <summary>
+        /// <see cref="ElementType"/> associated with <see cref="ConcentratedMass"/>
+        /// </summary>
+        ConcentratedMass=4,
     }
 }

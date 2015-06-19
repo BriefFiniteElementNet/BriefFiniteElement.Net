@@ -9,6 +9,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Permissions;
 using System.Text;
+using System.Xml.Serialization;
 using BriefFiniteElementNet.CSparse;
 using BriefFiniteElementNet.CSparse.Double;
 using BriefFiniteElementNet.CSparse.Double.Factorization;
@@ -154,6 +155,7 @@ namespace BriefFiniteElementNet
             }
 
         }
+
 
         /// <summary>
         /// Saves the model to stream.
@@ -592,6 +594,8 @@ namespace BriefFiniteElementNet
         [OnDeserialized]
         private void ReassignNodeReferences(StreamingContext context)
         {
+            #region Element's nodes
+
             foreach (var elm in elements)
             {
                 for (int i = 0; i < elm.nodeNumbers.Length; i++)
@@ -606,6 +610,9 @@ namespace BriefFiniteElementNet
             foreach (var nde in nodes)
                 nde.Parent = this;
 
+            #endregion
+
+            #region RigidElement's nodes
 
             foreach (var relm in rigidElements)
             {
@@ -614,10 +621,37 @@ namespace BriefFiniteElementNet
                     relm.Nodes.Add(this.nodes[relm.nodeNumbers[i]]);
                 }
             }
+
+            #endregion
+
+            #region UniformSurfaceLoad3D's surface nodes
+
+            foreach (var elm in elements)
+            {
+                foreach (var ld in elm.Loads)
+                {
+                    if (ld is UniformSurfaceLoad3D)
+                    {
+                        var sld = ld as UniformSurfaceLoad3D;
+
+                        if (sld.SurfaceNodes == null || sld.SurfaceNodes.Length != 3)
+                            sld.SurfaceNodes = new Node[3];
+
+
+                        for (var i = 0; i < sld.SurfaceNodes.Length; i++)
+                        {
+                            sld.SurfaceNodes[i] = this.nodes[sld.nodeNumbers[i]];
+                        }
+                    }
+                }
+            }
+
+            #endregion
+
         }
 
-        #endregion
 
+        #endregion
 
     }
 }

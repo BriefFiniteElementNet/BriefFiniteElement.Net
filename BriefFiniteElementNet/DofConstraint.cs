@@ -14,6 +14,7 @@ namespace BriefFiniteElementNet
         /// Indicates the degree of freedom is released
         /// </summary>
         Released = 0,
+
         /// <summary>
         /// Indicates the degree of freedom is Fixed
         /// </summary>

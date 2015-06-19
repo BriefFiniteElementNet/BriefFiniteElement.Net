@@ -1,0 +1,32 @@
+﻿<Window x:Class="BriefFiniteElementNet.SimpleUI.Window2"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Window2" Height="206" Width="300">
+    <Grid>
+    	<Grid.ColumnDefinitions>
+    		<ColumnDefinition Width="100"/>
+    		<ColumnDefinition/>
+    	</Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="35"/>
+			<RowDefinition Height="35"/>
+            <RowDefinition Height="35"/>
+        </Grid.RowDefinitions>
+    	<StackPanel Orientation="Horizontal" Grid.Row="4" HorizontalAlignment="Right" Grid.Column="1">
+    		<Button Content="Ok" Click="btn_ok_Click" />
+    		<Button Content="Cancel" Click="btn_cancel_Click" />
+
+    	</StackPanel>
+    	<TextBlock Margin="5" TextWrapping="Wrap" Text="X Spans"/>
+    	<TextBlock Margin="5" TextWrapping="Wrap" Text="Y Spans" Grid.Row="1"/>
+    	<TextBlock Margin="5" TextWrapping="Wrap" Text="Z Spans" Grid.Row="2"/>
+    	<TextBox Grid.Column="1" Margin="5" TextWrapping="Wrap" Text="{Binding XSpans}"/>
+    	<TextBox Grid.Column="1" Margin="5" TextWrapping="Wrap" Text="{Binding YSpans}" Grid.Row="1"/>
+    	<TextBox Grid.Column="1" Margin="5" TextWrapping="Wrap" Text="{Binding ZSpans}" Grid.Row="2"/>
+    	<TextBlock Margin="5" Grid.Row="3" TextWrapping="Wrap" Text="Random loads"/>
+    	<CheckBox Grid.Column="1" IsChecked="{Binding RandomLoads}" Margin="5" Grid.Row="3" VerticalAlignment="Center"/>
+
+    </Grid>
+</Window>

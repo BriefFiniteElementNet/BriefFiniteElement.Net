@@ -7,7 +7,7 @@ using System.Text;
 namespace BriefFiniteElementNet
 {
     /// <summary>
-    /// Represents a string compairer which ignores case and white-space characters (Space, tab, linefeed, carriage-return, formfeed, vertical-tab and newline)
+    /// Represents a string comparer which ignores case and white-space characters (Space, tab, linefeed, carriage-return, formfeed, vertical-tab and newline)
     /// </summary>
     internal class FemNetStringCompairer : IEqualityComparer<string>
     {

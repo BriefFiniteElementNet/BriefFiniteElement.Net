@@ -1,0 +1,21 @@
+syms xi yi zi xj yj zj xk yk zk xl yl zl
+
+a=[xj,yj,zj;xk,yk,zk;xl,yl,zl;];det(a)
+xj*yk*zl - xj*yl*zk - xk*yj*zl + xk*yl*zj + xl*yj*zk - xl*yk*zj
+
+
+b=[1,yj,zj;1,yk,zk;1,yl,zl;];-det(b)
+-yj*zk + yj*zl + yk*zj - yk*zl - yl*zj + yl*zk
+
+c=[xj,1,zj;xk,1,zk;xl,1,zl;];det(c)
+-xj*zk + xj*zl + xk*zj - xk*zl - xl*zj + xl*zk
+
+d=[xj,yj,1;xk,yk,1;xl,yl,1;];-det(d)
+-xj*yk + xj*yl + xk*yj - xk*yl - xl*yj + xl*yk
+
+volume = [1 xii yi zi;1 xj yj zj;1 xk yk zk;1 xl yl zl]
+
+-x[i]*y[j]*z[k] + x[i]*y[j]*z[l] + x[i]*y[k]*z[j] - x[i]*y[k]*z[l] - x[i]*y[l]*z[j] + x[i]*y[l]*z[k] + x[j]*y[i]*
+z[k] - x[j]*y[i]*z[l] - x[j]*y[k]*z[i] + x[j]*y[k]*z[l] + x[j]*y[l]*z[i] - x[j]*y[l]*z[k] - x[k]*y[i]*z[j] + x[k]*y[i]*
+z[l] + x[k]*y[j]*z[i] - x[k]*y[j]*z[l] - x[k]*y[l]*z[i] + x[k]*y[l]*z[j] + x[l]*y[i]*z[j] - x[l]*y[i]*z[k] - x[l]*y[j]*z[i] +
+ x[l]*y[j]*z[k] + x[l]*y[k]*z[i] - x[l]*y[k]*z[j]

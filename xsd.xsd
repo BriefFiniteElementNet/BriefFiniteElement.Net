@@ -1,0 +1,202 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:simpleType name="LoadDirection">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="X" />
+			<xs:enumeration value="Y" />
+			<xs:enumeration value="Z" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="CoordinationSystem">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Local" />
+			<xs:enumeration value="Global" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="LoadType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Default" />
+			<xs:enumeration value="Dead" />
+			<xs:enumeration value="Live" />
+			<xs:enumeration value="Snow" />
+			<xs:enumeration value="Wind" />
+			<xs:enumeration value="Quake" />
+			<xs:enumeration value="Crane" />
+			<xs:enumeration value="Other" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:element name="Model">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Nodes">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Node">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute type="xs:float" name="X" use="required"/>
+											<xs:attribute type="xs:float" name="Y" use="required"/>
+											<xs:attribute type="xs:float" name="Z" use="required"/>
+											
+											<xs:attribute type="xs:boolean" name="DxFix"/>
+											<xs:attribute type="xs:boolean" name="DyFix"/>
+											<xs:attribute type="xs:boolean" name="DzFix"/>
+											<xs:attribute type="xs:boolean" name="RxFix"/>
+											<xs:attribute type="xs:boolean" name="RyFix"/>
+											<xs:attribute type="xs:boolean" name="RzFix"/>
+											<xs:attribute type="xs:float" name="DxStl"/>
+											<xs:attribute type="xs:float" name="DyStl"/>
+											<xs:attribute type="xs:float" name="DzStl"/>
+											<xs:attribute type="xs:float" name="RxStl"/>
+											<xs:attribute type="xs:float" name="RyStl"/>
+											<xs:attribute type="xs:float" name="RzStl"/>
+											
+											<xs:attribute type="xs:string" name="Label"/>
+											<xs:attribute type="xs:string" name="Tag"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Elements">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="FrameElement2Node">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute type="xs:byte" name="Node1Index"/>
+											<xs:attribute type="xs:string" name="Node1Label"/>
+											<xs:attribute type="xs:byte" name="Node2Index"/>
+											<xs:attribute type="xs:string" name="Node2Label"/>
+											<xs:attribute type="xs:float" name="Iy" use="required"/>
+											<xs:attribute type="xs:float" name="Iz" use="required"/>
+											<xs:attribute type="xs:float" name="J" use="required"/>
+											<xs:attribute type="xs:float" name="A" use="required"/>
+											<xs:attribute type="xs:float" name="Ay" />
+											<xs:attribute type="xs:float" name="Az" />
+											<xs:attribute type="xs:float" name="Density" use="required"/>
+											<xs:attribute type="xs:boolean" name="HingedAtStart" default="false"/>
+											<xs:attribute type="xs:boolean" name="HingedAtEnd" default="false"/>
+											<xs:attribute type="xs:boolean" name="ConsiderShearEffect" default="false"/>
+											<xs:attribute type="xs:float" name="WebRoation"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="TrussElement2Node">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute type="xs:integer" name="Node1Index"/>
+											<xs:attribute type="xs:string" name="Node1Label"/>
+											<xs:attribute type="xs:integer" name="Node2Index"/>
+											<xs:attribute type="xs:string" name="Node2Label"/>
+											<xs:attribute type="xs:float" name="A" use="required"/>
+											<xs:attribute type="xs:float" name="Density" use="required"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="RigidElement">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="AppliedLoadCases">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="LoadCase">
+														<xs:complexType>
+															<xs:simpleContent>
+																<xs:extension base="xs:string">
+																	<xs:attribute type="LoadType" name="Type" default="Default"/>
+																	<xs:attribute type="xs:string" name="Name"/>
+																</xs:extension>
+															</xs:simpleContent>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="AppliedLoadTypes">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="LoadType">
+														<xs:complexType>
+															<xs:simpleContent>
+																<xs:extension base="xs:string">
+																	<xs:attribute type="LoadType" name="Type" default="Default"/>
+																</xs:extension>
+															</xs:simpleContent>
+														</xs:complexType>
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="Node" maxOccurs="unbounded" minOccurs="0">
+											<xs:complexType>
+												<xs:simpleContent>
+													<xs:extension base="xs:string">
+														<xs:attribute type="xs:byte" name="NodeIndex" />
+														<xs:attribute type="xs:boolean" name="IsCenter" />
+														<xs:attribute type="xs:string" name="NodeLabel" />
+													</xs:extension>
+												</xs:simpleContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute type="xs:string" name="Label"/>
+									<xs:attribute type="xs:boolean" name="UseForAllLoads" default="true" />
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="LoadSet">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="NodalLoad">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute type="xs:integer" name="NodeIndex"/>
+											<xs:attribute type="xs:string" name="NodeLabel"/>
+											<xs:attribute type="xs:float" name="Fx"/>
+											<xs:attribute type="xs:float" name="Fy"/>
+											<xs:attribute type="xs:float" name="Fz"/>
+											<xs:attribute type="xs:float" name="Mx"/>
+											<xs:attribute type="xs:float" name="My"/>
+											<xs:attribute type="xs:float" name="Mz"/>
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="UniformLoad">
+								<xs:complexType>
+									<xs:simpleContent>
+										<xs:extension base="xs:string">
+											<xs:attribute type="xs:byte" name="ElementIndex"/>
+											<xs:attribute type="xs:string" name="ElementLabel"/>
+											<xs:attribute type="xs:float" name="Magnitude" use="required"/>
+											<xs:attribute type="LoadDirection" name="Direction" use="required"/>
+											<xs:attribute type="CoordinationSystem" name="System" use="required" />
+										</xs:extension>
+									</xs:simpleContent>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute type="xs:string" name="LoadCaseName"/>
+						<xs:attribute type="LoadType" name="LoadCaseType"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute type="xs:string" name="SlLoadCaseName"/>
+			<xs:attribute type="LoadType" name="SlLoadCaseType" default="Default" />
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

@@ -5,6 +5,9 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using System.Xml;
+using System.Xml.Schema;
+using System.Xml.Serialization;
 
 namespace BriefFiniteElementNet
 {
@@ -13,7 +16,7 @@ namespace BriefFiniteElementNet
     /// </summary>
     [DebuggerDisplay("Label: {Label}")]
     [Serializable]
-    public abstract class StructurePart:ISerializable
+    public abstract class StructurePart:ISerializable,IXmlSerializable
     {
         /// <summary>
         /// Represents the hash code of ID, used for better performance (probably!)
@@ -85,6 +88,8 @@ namespace BriefFiniteElementNet
             set { parent = value; }
         }
 
+        #region ISerializable
+
         /// <summary>
         /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
         /// </summary>
@@ -101,7 +106,7 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// This is constructor for deserialization. Satisfies the rule CA2229.
+        /// This is constructor for de serialization. Satisfies the rule CA2229.
         /// </summary>
         /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
         /// <param name="context">The source (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
@@ -112,6 +117,30 @@ namespace BriefFiniteElementNet
             label = info.GetValue<string>("label");
             tag = info.GetValue<string>("tag");
         }
+
+        #endregion
+
+        #region IXmlSerializable
+
+        public XmlSchema GetSchema()
+        {
+            return null;
+        }
+
+        public void ReadXml(XmlReader reader)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void WriteXml(XmlWriter writer)
+        {
+            writer.WriteValue("idHashCode", idHashCode);
+            writer.WriteValue("id", id);
+            writer.WriteValue("label", label);
+            writer.WriteValue("tag", tag);
+        }
+
+        #endregion
 
 
         /// <summary>

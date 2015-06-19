@@ -1,0 +1,24 @@
+NOTE: this is not implemented yet!
+
+Model
+	Nodes (X,Y,Z Constraints, Settlements)
+	Elements
+	Loads
+		LoadSet
+			NodalLoads
+			ElementLoads
+
+
+<Model>
+
+
+<Node X="" Y="" Z="" Constraints="000111" DXSettlement = "" DYSettlement = "" DZSettlement = "" RXSettlement = "" RYSettlement = "" RZSettlement = "" />
+<FrameElement2Node Node1 = "" Node2 = "" Iy = "" Iz = "" J = "" A = "" Ay = "" Az = "" Density = "" HingedAtStart = "" HingedAtEnd = "" ConsiderShearEffect = ""/>
+
+<LoadSet Name = "CaseName" Type = "CaseType" />
+
+<NodalLoad Node = "" Force = "0,0,0" Moment = "0,0,0" />
+<ElementConsentratedLoad Element = "" Force = "0,0,0" Moment = "0,0,0" Location = "" />
+<ElementUniformLoad Element = "" Magnitude = "" Direction = "" System = "" />
+
+</Model>

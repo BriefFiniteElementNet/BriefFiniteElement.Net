@@ -94,8 +94,6 @@ namespace BriefFiniteElementNet
             set { _appliedLoadTypes = value; }
         }
 
-        
-
 
         internal int[] nodeNumbers;
 
@@ -116,6 +114,11 @@ namespace BriefFiniteElementNet
             info.AddValue("_appliedLoadCases", _appliedLoadCases);
             info.AddValue("nodeNumbers", nodeNumbers);
 
+            if (_centralNode != null)
+                _centralNodeNumber = _centralNode.Index;
+
+            info.AddValue("_centralNodeNumber", _centralNodeNumber);
+
             base.GetObjectData(info, context);
         }
 
@@ -125,6 +128,9 @@ namespace BriefFiniteElementNet
             nodeNumbers = info.GetValue<int[]>("nodeNumbers");
             _useForAllLoads = info.GetBoolean("_useForAllLoads");
             _appliedLoadCases = info.GetValue<LoadCaseCollection>("_appliedLoadCases");
+            
+            _centralNodeNumber = info.GetValue<int?>("_centralNodeNumber");
+
             this._nodes = new NodeList();
         }
 
@@ -149,7 +155,12 @@ namespace BriefFiniteElementNet
             }
         }
 
-        private Node _centralNode;
+        /// <summary>
+        /// The central node number. used for 
+        /// </summary>
+        private int? _centralNodeNumber;
+
+        [NonSerialized] private Node _centralNode;
 
         /// <summary>
         /// Gets or sets the central node.

@@ -128,7 +128,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             model.CheckForErrors();
             //wnd.ShowDialog();
             model.Solve();
-            wnd.ShowDialog();
+            //wnd.ShowDialog();
         }
 
 

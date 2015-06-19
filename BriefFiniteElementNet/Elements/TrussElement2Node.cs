@@ -11,11 +11,24 @@ namespace BriefFiniteElementNet
     /// Represents a 2 noded truss element (start and end)
     /// </summary>
     [Serializable]
-    public class TrussElement2Node : Element1D
+    public sealed class TrussElement2Node : Element1D
     {
         #region Members
 
         private double _a;
+
+        /// <summary>
+        /// Gets or sets the mass density.
+        /// </summary>
+        /// <value>
+        /// The mass density of member in kg/m^3.
+        /// </value>
+        public double MassDensity
+        {
+            get { return _massDensity; }
+            private set { _massDensity = value; }
+        }
+
 
         /// <summary>
         /// Gets or sets a.
@@ -200,6 +213,7 @@ namespace BriefFiniteElementNet
             info.AddValue("_a",_a);
             info.AddValue("geometry", geometry);
             info.AddValue("useOverridedProperties", useOverridedProperties);
+            info.AddValue("_massDensity", _massDensity);
             base.GetObjectData(info, context);
         }
 
@@ -214,6 +228,7 @@ namespace BriefFiniteElementNet
             _a = info.GetDouble("_a");
             geometry = info.GetValue<PolygonYz>("geometry");
             useOverridedProperties = info.GetBoolean("useOverridedProperties");
+            _massDensity = info.GetDouble("_massDensity");
         }
 
 
@@ -258,6 +273,8 @@ namespace BriefFiniteElementNet
         /// <remarks>Last vector corresponding to current <see cref="LastTransformationParameters"/> </remarks>
         [NonSerialized]
         private Vector LastElementVector;
+
+        private double _massDensity;
 
 
         /// <summary>

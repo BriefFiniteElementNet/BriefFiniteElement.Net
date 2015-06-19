@@ -12,11 +12,24 @@ namespace BriefFiniteElementNet.Validation
     /// </summary>
     public class Frame3DDValidator
     {
+        public Frame3DDValidator(Model model)
+        {
+            this.model = model;
+            this.ndes = model.Nodes.ToArray();
+            this.elements = model.Elements.Where(i => i is FrameElement2Node).Cast<FrameElement2Node>().ToArray();
+        }
+
         private Model model;
         private Node[] ndes;
         private FrameElement2Node[] elements;
         public string Frame3ddOutputMessage;
         public string ValidationResult;
+
+        public Model Model
+        {
+            get { return model; }
+            set { model = value; }
+        }
 
         public void Validate()
         {
@@ -178,12 +191,13 @@ namespace BriefFiniteElementNet.Validation
 
         private List<LoadCase> GetDistinctLoadCases()
         {
-            var allLoadCases =
-                model.Nodes.SelectMany(i => i.Loads).Select(i => i.Case).Distinct()
-                    .Union(model.Elements.SelectMany(i => i.Loads).Select(i => i.Case).Distinct())
+           var allLoadCases =
+                model.Nodes.SelectMany(i => i.Loads).Select(i => i.Case).Distinct().ToArray()
+                    .Concat(model.Elements.SelectMany(i => i.Loads).Select(i => i.Case).Distinct().ToArray())
                     .Distinct()
-                    .Union(new LoadCase[] {model.SettlementLoadCase}).Cast<LoadCase>().ToList();
+                    .Concat(new LoadCase[] { model.SettlementLoadCase }).Cast<LoadCase>().ToList();
 
+            //throw new NotImplementedException();
             return allLoadCases;
         }
 
@@ -206,7 +220,7 @@ namespace BriefFiniteElementNet.Validation
             sb.AppendLine(@"# gravitational acceleration for self-weight loading (global)");
             sb.AppendLine(@"#.gX	gY	gZ");
             sb.AppendLine(@"#.m./s^2	m./s^2	m./s^2");
-            sb.AppendLineArray(0.Union(0, 0));
+            sb.AppendLineArray(0.0.Union(0.0, 10));
             sb.AppendLine();
 
             WriteLoadedNodes(sb, lcase);
@@ -313,7 +327,7 @@ namespace BriefFiniteElementNet.Validation
                 .ToList();
 
 
-            sb.AppendLine("{0}\t# number of concentrated interior point loads (local)", countOfAllConcentratedLoads);
+            sb.AppendLine("{0}\t# number of concentrated interior point loads (local)", countOfAllConcentratedLoads.Count);
             sb.AppendLine("#.elmnt\tX-load\tY-load\tZ-load\tx-loc'n  point loads in member coordinates ");
             sb.AppendLine("#\tN\tN\tN\tm");
 
@@ -388,6 +402,9 @@ namespace BriefFiniteElementNet.Validation
             }
             throw new NotImplementedException();
         }
+
+
+
 
     }
 }

@@ -27,7 +27,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
-        public FrameElement2Node(Node start,Node end)
+        public FrameElement2Node(Node start, Node end)
             : base(2)
         {
             this.nodes[0] = start;
@@ -38,18 +38,18 @@ namespace BriefFiniteElementNet
 
         #region Members
 
-        private double webRotation;
+        private double _webRotation;
         private double _a;
         private double _ay;
         private double _az;
         private double _iy;
         private double _iz;
         private double _j;
-        private bool useOverridedProperties = true;
-        private PolygonYz geometry;
-        private bool considerShearDeformation;
-        private bool hingedAtStart;
-        private bool hingedAtEnd;
+        private bool _useOverridedProperties = true;
+        private PolygonYz _geometry;
+        private bool _considerShearDeformation;
+        private bool _hingedAtStart;
+        private bool _hingedAtEnd;
         private double _massDensity;
 
         /// <summary>
@@ -148,23 +148,23 @@ namespace BriefFiniteElementNet
         /// </value>
         public bool UseOverridedProperties
         {
-            get { return useOverridedProperties; }
-            set { useOverridedProperties = value; }
+            get { return _useOverridedProperties; }
+            set { _useOverridedProperties = value; }
         }
 
         /// <summary>
-        /// Gets or sets the geometry.
+        /// Gets or sets the _geometry.
         /// </summary>
         /// <value>
-        /// The geometry of section.
+        /// The _geometry of section.
         /// </value>
         /// <remarks>
-        /// When <see cref="UseOverridedProperties"/> is setted to <c>false</c>, geometric properties of section of <see cref="FrameElement2Node"/> such as Area and Second moments of area etc. will be calculated with regard to this geometry.
+        /// When <see cref="UseOverridedProperties"/> is setted to <c>false</c>, geometric properties of section of <see cref="FrameElement2Node"/> such as Area and Second moments of area etc. will be calculated with regard to this _geometry.
         /// </remarks>
         public PolygonYz Geometry
         {
-            get { return geometry; }
-            set { geometry = value; }
+            get { return _geometry; }
+            set { _geometry = value; }
         }
 
         /// <summary>
@@ -179,8 +179,8 @@ namespace BriefFiniteElementNet
         /// </remarks>
         public bool ConsiderShearDeformation
         {
-            get { return considerShearDeformation; }
-            set { considerShearDeformation = value; }
+            get { return _considerShearDeformation; }
+            set { _considerShearDeformation = value; }
         }
 
         /// <summary>
@@ -218,8 +218,8 @@ namespace BriefFiniteElementNet
         /// </remarks>
         public bool HingedAtStart
         {
-            get { return hingedAtStart; }
-            set { hingedAtStart = value; }
+            get { return _hingedAtStart; }
+            set { _hingedAtStart = value; }
         }
 
         /// <summary>
@@ -233,8 +233,8 @@ namespace BriefFiniteElementNet
         /// </remarks>
         public bool HingedAtEnd
         {
-            get { return hingedAtEnd; }
-            set { hingedAtEnd = value; }
+            get { return _hingedAtEnd; }
+            set { _hingedAtEnd = value; }
         }
 
         /// <summary>
@@ -245,8 +245,8 @@ namespace BriefFiniteElementNet
         /// </value>
         public double WebRotation
         {
-            get { return webRotation; }
-            set { webRotation = value; }
+            get { return _webRotation; }
+            set { _webRotation = value; }
         }
 
 
@@ -265,7 +265,6 @@ namespace BriefFiniteElementNet
         #endregion
 
         #region Methods
-
 
         /// <summary>
         /// Gets the stifness matrix of member in global coordination system.
@@ -318,7 +317,6 @@ namespace BriefFiniteElementNet
             #endregion
             /**/
             return k;
-
         }
 
         private static void MultSubMatrix(double[] k, double[] r, int i, int j)
@@ -373,10 +371,10 @@ namespace BriefFiniteElementNet
         {
             double a = _a, iz = _iz, iy = _iy, j = _j, ay = _ay, az = _az;
 
-            if (!useOverridedProperties)
+            if (!_useOverridedProperties)
             {
                 //should use Geeometry insted of a,iz etc.
-                var props = this.geometry.GetSectionGeometricalProperties();
+                var props = this._geometry.GetSectionGeometricalProperties();
 
                 iz = props[0];
                 iy = props[1];
@@ -394,7 +392,7 @@ namespace BriefFiniteElementNet
             var baseArr = new double[144];
             var buf = Matrix.FromRowColCoreArray(12, 12, baseArr);
 
-            if (!this.considerShearDeformation)
+            if (!this._considerShearDeformation)
             {
                 #region With no shear
 
@@ -425,8 +423,6 @@ namespace BriefFiniteElementNet
                 buf[10, 10] = iy*4*l2;
                 buf[11, 11] = iz*4*l2;
 
-
-
                 #endregion
 
                 var alfa = E/(l*l*l);
@@ -436,7 +432,6 @@ namespace BriefFiniteElementNet
             else
             {
                 #region With Shear
-
 
                 if (ay == 0 || az == 0 || g == 0)
                     throw new InvalidOperationException(
@@ -472,8 +467,6 @@ namespace BriefFiniteElementNet
                 buf[10, 10] = (iy/(l*(l2/12 + ey)))*((l2/3 + ey));
                 buf[11, 11] = (iz/(l*(l2/12 + ez)))*((l2/3 + ez));
 
-
-
                 #endregion
 
                 var alfa = E;
@@ -483,260 +476,8 @@ namespace BriefFiniteElementNet
 
             MathUtil.FillLowerTriangleFromUpperTriangle(buf);
 
-
-
-            if (this.hingedAtStart || this.hingedAtEnd)
-            {
-                var k = new Matrix(12, 12);
-
-                //Array.Copy(buf.CoreArray, k.CoreArray, 144);
-
-                if (this.hingedAtStart && !this.hingedAtEnd)
-                {
-                    #region begin released and end fixed
-
-                    k[00, 00] = buf[00, 00];
-                    k[00, 01] = buf[00, 01];
-                    k[00, 02] = buf[00, 02];
-                    k[00, 03] = buf[00, 03];
-                    k[00, 04] = buf[00, 04];
-                    k[00, 05] = buf[00, 05];
-                    k[00, 06] = buf[00, 06];
-                    k[00, 07] = buf[00, 07];
-                    k[00, 08] = buf[00, 08];
-                    k[00, 09] = buf[00, 09];
-                    k[00, 10] = buf[00, 10];
-                    k[00, 11] = buf[00, 11];
-                    k[01, 01] = buf[01, 01] + -(1.5/l)*buf[05, 01];
-                    k[01, 02] = buf[01, 02] + -(1.5/l)*buf[05, 02];
-                    k[01, 03] = buf[01, 03] + -(1.5/l)*buf[05, 03];
-                    k[01, 04] = buf[01, 04] + -(1.5/l)*buf[05, 04];
-                    k[01, 05] = buf[01, 05] + -(1.5/l)*buf[05, 05];
-                    k[01, 06] = buf[01, 06] + -(1.5/l)*buf[05, 06];
-                    k[01, 07] = buf[01, 07] + -(1.5/l)*buf[05, 07];
-                    k[01, 08] = buf[01, 08] + -(1.5/l)*buf[05, 08];
-                    k[01, 09] = buf[01, 09] + -(1.5/l)*buf[05, 09];
-                    k[01, 10] = buf[01, 10] + -(1.5/l)*buf[05, 10];
-                    k[01, 11] = buf[01, 11] + -(1.5/l)*buf[05, 11];
-                    k[02, 02] = buf[02, 02] + -(-1.5/l)*buf[04, 02];
-                    k[02, 03] = buf[02, 03] + -(-1.5/l)*buf[04, 03];
-                    k[02, 04] = buf[02, 04] + -(-1.5/l)*buf[04, 04];
-                    k[02, 05] = buf[02, 05] + -(-1.5/l)*buf[04, 05];
-                    k[02, 06] = buf[02, 06] + -(-1.5/l)*buf[04, 06];
-                    k[02, 07] = buf[02, 07] + -(-1.5/l)*buf[04, 07];
-                    k[02, 08] = buf[02, 08] + -(-1.5/l)*buf[04, 08];
-                    k[02, 09] = buf[02, 09] + -(-1.5/l)*buf[04, 09];
-                    k[02, 10] = buf[02, 10] + -(-1.5/l)*buf[04, 10];
-                    k[02, 11] = buf[02, 11] + -(-1.5/l)*buf[04, 11];
-                    k[03, 03] = buf[03, 03];
-                    k[03, 04] = buf[03, 04];
-                    k[03, 05] = buf[03, 05];
-                    k[03, 06] = buf[03, 06];
-                    k[03, 07] = buf[03, 07];
-                    k[03, 08] = buf[03, 08];
-                    k[03, 09] = buf[03, 09];
-                    k[03, 10] = buf[03, 10];
-                    k[03, 11] = buf[03, 11];
-                    k[06, 06] = buf[06, 06];
-                    k[06, 07] = buf[06, 07];
-                    k[06, 08] = buf[06, 08];
-                    k[06, 09] = buf[06, 09];
-                    k[06, 10] = buf[06, 10];
-                    k[06, 11] = buf[06, 11];
-                    k[07, 07] = 1.5/l*buf[05, 07] + buf[07, 07];
-                    k[07, 08] = 1.5/l*buf[05, 08] + buf[07, 08];
-                    k[07, 09] = 1.5/l*buf[05, 09] + buf[07, 09];
-                    k[07, 10] = 1.5/l*buf[05, 10] + buf[07, 10];
-                    k[07, 11] = 1.5/l*buf[05, 11] + buf[07, 11];
-                    k[08, 08] = -1.5/l*buf[04, 08] + buf[08, 08];
-                    k[08, 09] = -1.5/l*buf[04, 09] + buf[08, 09];
-                    k[08, 10] = -1.5/l*buf[04, 10] + buf[08, 10];
-                    k[08, 11] = -1.5/l*buf[04, 11] + buf[08, 11];
-                    k[09, 09] = buf[09, 09];
-                    k[09, 10] = buf[09, 10];
-                    k[09, 11] = buf[09, 11];
-                    k[10, 10] = -0.5*buf[04, 10] + buf[10, 10];
-                    k[10, 11] = -0.5*buf[04, 11] + buf[10, 11];
-                    k[11, 11] = -0.5*buf[05, 11] + buf[11, 11];
-
-
-                    #endregion
-                }
-
-                if (!this.hingedAtStart && this.hingedAtEnd)
-                {
-                    #region begin fixed and end releases
-
-                    k[00, 00] = buf[00, 00];
-                    k[00, 01] = buf[00, 01];
-                    k[00, 02] = buf[00, 02];
-                    k[00, 03] = buf[00, 03];
-                    k[00, 04] = buf[00, 04];
-                    k[00, 05] = buf[00, 05];
-                    k[00, 06] = buf[00, 06];
-                    k[00, 07] = buf[00, 07];
-                    k[00, 08] = buf[00, 08];
-                    k[00, 09] = buf[00, 09];
-                    k[00, 10] = buf[00, 10];
-                    k[00, 11] = buf[00, 11];
-                    k[01, 01] = buf[01, 01] + -(1.5/l)*buf[11, 01];
-                    k[01, 02] = buf[01, 02] + -(1.5/l)*buf[11, 02];
-                    k[01, 03] = buf[01, 03] + -(1.5/l)*buf[11, 03];
-                    k[01, 04] = buf[01, 04] + -(1.5/l)*buf[11, 04];
-                    k[01, 05] = buf[01, 05] + -(1.5/l)*buf[11, 05];
-                    k[01, 06] = buf[01, 06] + -(1.5/l)*buf[11, 06];
-                    k[01, 07] = buf[01, 07] + -(1.5/l)*buf[11, 07];
-                    k[01, 08] = buf[01, 08] + -(1.5/l)*buf[11, 08];
-                    k[01, 09] = buf[01, 09] + -(1.5/l)*buf[11, 09];
-                    k[01, 10] = buf[01, 10] + -(1.5/l)*buf[11, 10];
-                    k[01, 11] = buf[01, 11] + -(1.5/l)*buf[11, 11];
-                    k[02, 02] = buf[02, 02] + -(-1.5/l)*buf[10, 02];
-                    k[02, 03] = buf[02, 03] + -(-1.5/l)*buf[10, 03];
-                    k[02, 04] = buf[02, 04] + -(-1.5/l)*buf[10, 04];
-                    k[02, 05] = buf[02, 05] + -(-1.5/l)*buf[10, 05];
-                    k[02, 06] = buf[02, 06] + -(-1.5/l)*buf[10, 06];
-                    k[02, 07] = buf[02, 07] + -(-1.5/l)*buf[10, 07];
-                    k[02, 08] = buf[02, 08] + -(-1.5/l)*buf[10, 08];
-                    k[02, 09] = buf[02, 09] + -(-1.5/l)*buf[10, 09];
-                    k[02, 10] = buf[02, 10] + -(-1.5/l)*buf[10, 10];
-                    k[02, 11] = buf[02, 11] + -(-1.5/l)*buf[10, 11];
-                    k[03, 03] = buf[03, 03];
-                    k[03, 04] = buf[03, 04];
-                    k[03, 05] = buf[03, 05];
-                    k[03, 06] = buf[03, 06];
-                    k[03, 07] = buf[03, 07];
-                    k[03, 08] = buf[03, 08];
-                    k[03, 09] = buf[03, 09];
-                    k[03, 10] = buf[03, 10];
-                    k[03, 11] = buf[03, 11];
-                    k[04, 04] = buf[04, 04] + -0.5*buf[10, 04];
-                    k[04, 05] = buf[04, 05] + -0.5*buf[10, 05];
-                    k[04, 06] = buf[04, 06] + -0.5*buf[10, 06];
-                    k[04, 07] = buf[04, 07] + -0.5*buf[10, 07];
-                    k[04, 08] = buf[04, 08] + -0.5*buf[10, 08];
-                    k[04, 09] = buf[04, 09] + -0.5*buf[10, 09];
-                    k[04, 10] = buf[04, 10] + -0.5*buf[10, 10];
-                    k[04, 11] = buf[04, 11] + -0.5*buf[10, 11];
-                    k[05, 05] = buf[05, 05] + -0.5*buf[11, 05];
-                    k[05, 06] = buf[05, 06] + -0.5*buf[11, 06];
-                    k[05, 07] = buf[05, 07] + -0.5*buf[11, 07];
-                    k[05, 08] = buf[05, 08] + -0.5*buf[11, 08];
-                    k[05, 09] = buf[05, 09] + -0.5*buf[11, 09];
-                    k[05, 10] = buf[05, 10] + -0.5*buf[11, 10];
-                    k[05, 11] = buf[05, 11] + -0.5*buf[11, 11];
-                    k[06, 06] = buf[06, 06];
-                    k[06, 07] = buf[06, 07];
-                    k[06, 08] = buf[06, 08];
-                    k[06, 09] = buf[06, 09];
-                    k[06, 10] = buf[06, 10];
-                    k[06, 11] = buf[06, 11];
-                    k[07, 07] = buf[07, 07] + 1.5/l*buf[11, 07];
-                    k[07, 08] = buf[07, 08] + 1.5/l*buf[11, 08];
-                    k[07, 09] = buf[07, 09] + 1.5/l*buf[11, 09];
-                    k[07, 10] = buf[07, 10] + 1.5/l*buf[11, 10];
-                    k[07, 11] = buf[07, 11] + 1.5/l*buf[11, 11];
-                    k[08, 08] = buf[08, 08] + -1.5/l*buf[10, 08];
-                    k[08, 09] = buf[08, 09] + -1.5/l*buf[10, 09];
-                    k[08, 10] = buf[08, 10] + -1.5/l*buf[10, 10];
-                    k[08, 11] = buf[08, 11] + -1.5/l*buf[10, 11];
-                    k[09, 09] = buf[09, 09];
-                    k[09, 10] = buf[09, 10];
-                    k[09, 11] = buf[09, 11];
-
-
-                    #endregion
-                }
-
-                if (this.hingedAtStart && this.hingedAtEnd)
-                {
-                    if (!considerShearDeformation)
-                    {
-                        //boosting performance
-                        k[0, 0] = k[6, 6] = e*a/l;
-                        k[0, 6] = k[6, 0] = -e*a/l;
-
-                        k[3, 3] = k[9, 9] = -(k[3, 9] = -g*j/l);
-                    }
-                    else
-                    {
-                        #region begin released and end released
-
-                        k[00, 00] = buf[00, 00];
-                        k[00, 01] = buf[00, 01];
-                        k[00, 02] = buf[00, 02];
-                        k[00, 03] = buf[00, 03];
-                        k[00, 04] = buf[00, 04];
-                        k[00, 05] = buf[00, 05];
-                        k[00, 06] = buf[00, 06];
-                        k[00, 07] = buf[00, 07];
-                        k[00, 08] = buf[00, 08];
-                        k[00, 09] = buf[00, 09];
-                        k[00, 10] = buf[00, 10];
-                        k[00, 11] = buf[00, 11];
-                        k[01, 01] = buf[01, 01] + -(1/l)*buf[05, 01] + -(1/l)*buf[11, 01];
-                        k[01, 02] = buf[01, 02] + -(1/l)*buf[05, 02] + -(1/l)*buf[11, 02];
-                        k[01, 03] = buf[01, 03] + -(1/l)*buf[05, 03] + -(1/l)*buf[11, 03];
-                        k[01, 04] = buf[01, 04] + -(1/l)*buf[05, 04] + -(1/l)*buf[11, 04];
-                        k[01, 05] = buf[01, 05] + -(1/l)*buf[05, 05] + -(1/l)*buf[11, 05];
-                        k[01, 06] = buf[01, 06] + -(1/l)*buf[05, 06] + -(1/l)*buf[11, 06];
-                        k[01, 07] = buf[01, 07] + -(1/l)*buf[05, 07] + -(1/l)*buf[11, 07];
-                        k[01, 08] = buf[01, 08] + -(1/l)*buf[05, 08] + -(1/l)*buf[11, 08];
-                        k[01, 09] = buf[01, 09] + -(1/l)*buf[05, 09] + -(1/l)*buf[11, 09];
-                        k[01, 10] = buf[01, 10] + -(1/l)*buf[05, 10] + -(1/l)*buf[11, 10];
-                        k[01, 11] = buf[01, 11] + -(1/l)*buf[05, 11] + -(1/l)*buf[11, 11];
-                        k[02, 02] = buf[02, 02] + -(-1/l)*buf[04, 02] + -(-1/l)*buf[10, 02];
-                        k[02, 03] = buf[02, 03] + -(-1/l)*buf[04, 03] + -(-1/l)*buf[10, 03];
-                        k[02, 04] = buf[02, 04] + -(-1/l)*buf[04, 04] + -(-1/l)*buf[10, 04];
-                        k[02, 05] = buf[02, 05] + -(-1/l)*buf[04, 05] + -(-1/l)*buf[10, 05];
-                        k[02, 06] = buf[02, 06] + -(-1/l)*buf[04, 06] + -(-1/l)*buf[10, 06];
-                        k[02, 07] = buf[02, 07] + -(-1/l)*buf[04, 07] + -(-1/l)*buf[10, 07];
-                        k[02, 08] = buf[02, 08] + -(-1/l)*buf[04, 08] + -(-1/l)*buf[10, 08];
-                        k[02, 09] = buf[02, 09] + -(-1/l)*buf[04, 09] + -(-1/l)*buf[10, 09];
-                        k[02, 10] = buf[02, 10] + -(-1/l)*buf[04, 10] + -(-1/l)*buf[10, 10];
-                        k[02, 11] = buf[02, 11] + -(-1/l)*buf[04, 11] + -(-1/l)*buf[10, 11];
-                        k[03, 03] = buf[03, 03];
-                        k[03, 04] = buf[03, 04];
-                        k[03, 05] = buf[03, 05];
-                        k[03, 06] = buf[03, 06];
-                        k[03, 07] = buf[03, 07];
-                        k[03, 08] = buf[03, 08];
-                        k[03, 09] = buf[03, 09];
-                        k[03, 10] = buf[03, 10];
-                        k[03, 11] = buf[03, 11];
-                        k[06, 06] = buf[06, 06];
-                        k[06, 07] = buf[06, 07];
-                        k[06, 08] = buf[06, 08];
-                        k[06, 09] = buf[06, 09];
-                        k[06, 10] = buf[06, 10];
-                        k[06, 11] = buf[06, 11];
-                        k[07, 07] = 1/l*buf[05, 07] + buf[07, 07] + 1/l*buf[11, 07];
-                        k[07, 08] = 1/l*buf[05, 08] + buf[07, 08] + 1/l*buf[11, 08];
-                        k[07, 09] = 1/l*buf[05, 09] + buf[07, 09] + 1/l*buf[11, 09];
-                        k[07, 10] = 1/l*buf[05, 10] + buf[07, 10] + 1/l*buf[11, 10];
-                        k[07, 11] = 1/l*buf[05, 11] + buf[07, 11] + 1/l*buf[11, 11];
-                        k[08, 08] = -1/l*buf[04, 08] + buf[08, 08] + -1/l*buf[10, 08];
-                        k[08, 09] = -1/l*buf[04, 09] + buf[08, 09] + -1/l*buf[10, 09];
-                        k[08, 10] = -1/l*buf[04, 10] + buf[08, 10] + -1/l*buf[10, 10];
-                        k[08, 11] = -1/l*buf[04, 11] + buf[08, 11] + -1/l*buf[10, 11];
-                        k[09, 09] = buf[09, 09];
-                        k[09, 10] = buf[09, 10];
-                        k[09, 11] = buf[09, 11];
-
-
-
-
-
-                        #endregion
-                    }
-                }
-
-                MathUtil.FillLowerTriangleFromUpperTriangle(k); //again
-
-                Array.Copy(k.CoreArray, buf.CoreArray, 144);
-            }
-
-            if (buf.Any(i => i.Equals(double.NaN)))
-                Guid.NewGuid();
+            if (_hingedAtStart || _hingedAtEnd)
+                buf = GetReleaseMatrix() * buf; 
 
             return buf;
         }
@@ -768,7 +509,6 @@ namespace BriefFiniteElementNet
             {
                 lStartDisp.DX, lStartDisp.DY, lStartDisp.DZ,
                 lStartDisp.RX, lStartDisp.RY, lStartDisp.RZ,
-
                 lEndDisp.DX, lEndDisp.DY, lEndDisp.DZ,
                 lEndDisp.RX, lEndDisp.RY, lEndDisp.RZ
             };
@@ -808,7 +548,6 @@ namespace BriefFiniteElementNet
 
             return GetInternalForceAt(x, cmb);
         }
-
 
 
         /// <summary>
@@ -891,7 +630,6 @@ namespace BriefFiniteElementNet
                     pars[3]*v.X + pars[4]*v.Y + pars[5]*v.Z,
                     pars[6]*v.X + pars[7]*v.Y + pars[8]*v.Z);
                 bf[i] = tv;
-
             }
 
             return bf;
@@ -902,18 +640,13 @@ namespace BriefFiniteElementNet
         /// The last transformation parameters
         /// </summary>
         /// <remarks>Storing transformation parameters corresponding to <see cref="LastElementVector"/> for better performance.</remarks>
-        [NonSerialized]
-        private double[] LastTransformationParameters = new double[9];
+        [NonSerialized] private double[] LastTransformationParameters = new double[9];
 
         /// <summary>
         /// The last element vector
         /// </summary>
         /// <remarks>Last vector corresponding to current <see cref="LastTransformationParameters"/> </remarks>
-        [NonSerialized]
-        private Vector LastElementVector;
-
-
-
+        [NonSerialized] private Vector LastElementVector;
 
         private double[] GetTransformationParameters()
         {
@@ -943,10 +676,10 @@ namespace BriefFiniteElementNet
             var czz = 0.0;
 
 
-            var teta = webRotation;
+            var teta = _webRotation;
 
-            var s = Math.Sin(teta * Math.PI / 180.0);
-            var c = Math.Cos(teta * Math.PI / 180.0);
+            var s = Math.Sin(teta*Math.PI/180.0);
+            var c = Math.Cos(teta*Math.PI/180.0);
 
             var v = this.EndNode.Location - this.StartNode.Location;
 
@@ -981,22 +714,21 @@ namespace BriefFiniteElementNet
             }
 
 
-
             this.LastElementVector = v;
 
             var pars = this.LastTransformationParameters;
 
             pars[0] = cxx;
-            pars[1] = cxy * c + cxz * s;
-            pars[2] = -cxy * s + cxz * c;
+            pars[1] = cxy*c + cxz*s;
+            pars[2] = -cxy*s + cxz*c;
 
             pars[3] = cyx;
             pars[4] = cyy*c + cyz*s;
-            pars[5] = -cyy * s + cyz * c;
+            pars[5] = -cyy*s + cyz*c;
 
             pars[6] = czx;
             pars[7] = czy*c + czz*s;
-            pars[8] = -czy * s + czz * c;
+            pars[8] = -czy*s + czz*c;
 
 
             /* backup
@@ -1045,12 +777,14 @@ namespace BriefFiniteElementNet
             info.AddValue("_iy", _iy);
             info.AddValue("_iz", _iz);
             info.AddValue("_j", _j);
-            info.AddValue("geometry", geometry);
-            info.AddValue("useOverridedProperties", useOverridedProperties);
-            info.AddValue("considerShearDeformation", considerShearDeformation);
-            info.AddValue("hingedAtStart", hingedAtStart);
-            info.AddValue("hingedAtEnd", hingedAtEnd);
-            info.AddValue("webRotation", webRotation);
+            info.AddValue("_geometry", _geometry);
+            info.AddValue("_useOverridedProperties", _useOverridedProperties);
+            info.AddValue("_considerShearDeformation", _considerShearDeformation);
+            info.AddValue("_hingedAtStart", _hingedAtStart);
+            info.AddValue("_hingedAtEnd", _hingedAtEnd);
+            info.AddValue("_webRotation", _webRotation);
+            info.AddValue("_massDensity", _massDensity);
+
             base.GetObjectData(info, context);
         }
 
@@ -1060,7 +794,7 @@ namespace BriefFiniteElementNet
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        private FrameElement2Node(SerializationInfo info, StreamingContext context):base(info,context)
+        private FrameElement2Node(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _a = info.GetDouble("_a");
             _ay = info.GetDouble("_ay");
@@ -1068,15 +802,98 @@ namespace BriefFiniteElementNet
             _iy = info.GetDouble("_iy");
             _iz = info.GetDouble("_iz");
             _j = info.GetDouble("_j");
-            geometry = info.GetValue<PolygonYz>("geometry");
-            useOverridedProperties = info.GetBoolean("useOverridedProperties");
-            considerShearDeformation = info.GetBoolean("considerShearDeformation");
-            hingedAtStart = info.GetBoolean("hingedAtStart");
-            hingedAtEnd = info.GetBoolean("hingedAtEnd");
-            webRotation = info.GetDouble("webRotation");
+            _geometry = info.GetValue<PolygonYz>("_geometry");
+            _useOverridedProperties = info.GetBoolean("_useOverridedProperties");
+            _considerShearDeformation = info.GetBoolean("_considerShearDeformation");
+            _hingedAtStart = info.GetBoolean("_hingedAtStart");
+            _hingedAtEnd = info.GetBoolean("_hingedAtEnd");
+            _webRotation = info.GetDouble("_webRotation");
+            _massDensity = info.GetDouble("_massDensity");
         }
 
         #endregion
+
+        /// <summary>
+        /// Calculates the M matrix.
+        /// </summary>
+        /// <remarks>M matrix is related to member partial release conditions.</remarks>
+        private Matrix GetReleaseMatrix()
+        {
+            var buf = Matrix.Eye(12);
+
+            var l = (this.EndNode.Location - this.StartNode.Location).Length;
+
+
+            var y = new Matrix(3, 3);
+            y[1, 2] = -(y[2, 1] = -1.5/l);
+            var z = new Matrix(3, 3);
+            var x = new Matrix(3, 3);
+            x[1, 1] = x[2, 2] = -0.5;
+            var w = new Matrix(3, 3);
+            w[0, 0] = 1;
+
+
+            var c = 2*(_hingedAtStart ? 0 : 1) + (_hingedAtEnd ? 0 : 1); //2*H(3)+H(4)=1
+
+            switch (c)
+            {
+                case 0:
+                    //2*H(3)+H(4)=0
+                    //y = 2/3*y
+                    // M =
+                    //  I -y  z -y  
+                    //  z  w  z  z
+                    //  z  y  I  y
+                    //  z  z  z  w
+                    y.MultiplyByConstant(2.0/3.0);
+                    buf.AssembleInside(-y, 0, 3);
+                    buf.AssembleInside(w, 3, 3);
+                    buf.AssembleInside(y, 6, 3);
+                    //buf.AssembleInside(z, 9, 3); no need!
+                    buf.AssembleInside(-y, 0, 9);
+                    //buf.AssembleInside(z, 3, 9); no need!
+                    buf.AssembleInside(y, 6, 9);
+                    buf.AssembleInside(w, 9, 9);
+
+                    break;
+                case 1:
+                    //2*H(3)+H(4)=1
+                    // M =
+                    //  I -y  z  z  
+                    //  z  w  z  z
+                    //  z  y  I  z
+                    //  z  x  z  I
+                    buf.AssembleInside(-y, 0, 3);
+                    buf.AssembleInside(w, 3, 3);
+                    buf.AssembleInside(y, 6, 3);
+                    buf.AssembleInside(x, 9, 3);
+
+                    break;
+                case 2:
+                    //2*H(3)+H(4)=2
+                    // M =
+                    //  I  z  z -y  
+                    //  z  I  z  x
+                    //  z  z  I  y
+                    //  z  z  z  w
+                    buf.AssembleInside(-y, 0, 9);
+                    buf.AssembleInside(x, 3, 9);
+                    buf.AssembleInside(y, 6, 9);
+                    buf.AssembleInside(w, 9, 9);
+
+                    break;
+                case 3:
+                    //2*H(3)+H(4)=3
+                    //both ends are fixed
+                    // M = eye(12)
+
+                    break;
+                default:
+                    throw new Exception();
+            }
+
+            return buf;
+        }
 
 
         ///<inheritdoc/>
@@ -1097,7 +914,7 @@ namespace BriefFiniteElementNet
 
             MathUtil.FillLowerTriangleFromUpperTriangle(m);
 
-           
+
             return m;
         }
 
@@ -1114,55 +931,82 @@ namespace BriefFiniteElementNet
             var ro = this.MassDensity;
             var a = this._a;
             var i0 = _iy + _iz;
-            var c = ro*a*l/420.0;
-
-            #region filling m
-
-            m[0, 0] = 140;
-            m[1, 1] = 156;
-            m[2, 2] = 156;
-            m[3, 3] = 140*i0/a;
-            m[4, 4] = 4*l*l;
-            m[5, 5] = 4*l*l;
-
-            m[6, 6] = 140;
-            m[7, 7] = 156;
-            m[8, 8] = 156;
-            m[9, 9] = 140*i0/a;
-            m[10, 10] = 4*l*l;
-            m[11, 11] = 4*l*l;
+            
 
 
-            m[0, 6] = 70;
+            if (MassFormulationType == MassFormulation.Consistent)
+            {
+                #region filling m
 
-            m[1, 5] = 22*l;
-            m[1, 7] = 54;
-            m[1, 11] = -13*l;
+                m[0, 0] = 140;
+                m[1, 1] = 156;
+                m[2, 2] = 156;
+                m[3, 3] = 140*i0/a;
+                m[4, 4] = 4*l*l;
+                m[5, 5] = 4*l*l;
 
-            m[2, 4] = -22*l;
-            m[2, 8] = 54;
-            m[2, 10] = 13*l;
+                m[6, 6] = 140;
+                m[7, 7] = 156;
+                m[8, 8] = 156;
+                m[9, 9] = 140*i0/a;
+                m[10, 10] = 4*l*l;
+                m[11, 11] = 4*l*l;
 
-            m[3, 9] = 70*i0/a;
 
-            m[4, 8] = -13*l;
-            m[4, 10] = -3*l*l;
+                m[0, 6] = 70;
 
-            m[5, 7] = 13*l;
-            m[5, 11] = -3*l*l;
+                m[1, 5] = 22*l;
+                m[1, 7] = 54;
+                m[1, 11] = -13*l;
 
-            m[7, 11] = -22*l;
+                m[2, 4] = -22*l;
+                m[2, 8] = 54;
+                m[2, 10] = 13*l;
 
-            m[8, 10] = 22*l;
+                m[3, 9] = 70*i0/a;
 
-            #endregion
+                m[4, 8] = -13*l;
+                m[4, 10] = -3*l*l;
 
-            if (hingedAtStart || hingedAtEnd)
-                throw new NotImplementedException();
+                m[5, 7] = 13*l;
+                m[5, 11] = -3*l*l;
 
-            for (var i = 0; i < m.CoreArray.Length; i++)//m=c*m
-                m.CoreArray[i] *= c;
+                m[7, 11] = -22*l;
 
+                m[8, 10] = 22*l;
+
+                #endregion
+
+                var c = ro * a * l / 420.0;
+
+                for (var i = 0; i < m.CoreArray.Length; i++) //m=c*m
+                    m.CoreArray[i] *= c;
+            }
+            else
+            {
+                #region filling m
+
+                for (int i = 0; i < 12; i++)
+                {
+                    m[i, i] = 1;
+                }
+
+                m[3, 3] = m[9, 9] = i0/a;
+                m[4, 4] = m[5, 5] = m[10, 10] = m[11, 11] = 0;
+
+                #endregion
+
+                var c = ro * a * l / 2.0;
+
+                for (var i = 0; i < m.CoreArray.Length; i++) //m=c*m
+                    m.CoreArray[i] *= c;
+            }
+
+
+           
+
+            if (_hingedAtStart || _hingedAtEnd)
+                m = GetReleaseMatrix()*m;
 
             return m;
         }

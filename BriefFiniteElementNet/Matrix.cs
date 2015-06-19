@@ -181,6 +181,8 @@ namespace BriefFiniteElementNet
             this.rowCount = rows;
             this.columnCount = cols;
 
+            this.coreArray = new double[rows * cols];
+
             for (int i = 0; i < rows; i++)
                 for (int j = 0; j < cols; j++)
                     this.CoreArray[j * rows + i] = vals[i, j];
@@ -198,6 +200,8 @@ namespace BriefFiniteElementNet
             //var buf = new Matrix(rows, cols);
             this.rowCount = rows;
             this.columnCount = cols;
+
+            this.coreArray = new double[rows*cols];
 
             for (int i = 0; i < rows; i++)
                 for (int j = 0; j < cols; j++)
@@ -863,6 +867,22 @@ namespace BriefFiniteElementNet
             for (int i = 0; i < mtx.RowCount; i++)
                 for (int j = 0; j < mtx.ColumnCount; j++)
                     buf[i, j] = mtx.CoreArray[j * mtx.RowCount + i];
+
+            return buf;
+        }
+
+        public static double[][] ToJaggedArray(Matrix mtx)
+        {
+            var buf = new double[mtx.RowCount][ ];
+
+            for (int i = 0; i < buf.Length; i++)
+            {
+                buf[i] = new double[mtx.ColumnCount];
+            }
+
+            for (int i = 0; i < mtx.RowCount; i++)
+                for (int j = 0; j < mtx.ColumnCount; j++)
+                    buf[i][ j] = mtx.CoreArray[j * mtx.RowCount + i];
 
             return buf;
         }

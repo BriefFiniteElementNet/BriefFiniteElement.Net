@@ -146,20 +146,6 @@ namespace BriefFiniteElementNet
                 }
             }
 
-            /*
-            for (int k = 0; k < l-1; k++)
-            {
-                for (int num = 0; num < n*m; num++)
-                {
-                    var elm = new FrameElement2Node();
-                    elm.StartNode = buf.Nodes[k * n * m + num];
-                    elm.EndNode = buf.Nodes[(k + 1)*n*m + num];
-                    buf.Elements.Add(elm);
-                }
-            }
-            */
-
-
             foreach (var elm in buf.Elements)
             {
                 var framElm = elm as FrameElement2Node;
@@ -167,10 +153,10 @@ namespace BriefFiniteElementNet
                 if (framElm == null)
                     continue;
 
-                framElm.A = 0.01;
-                framElm.Iy = framElm.Iz = framElm.J = 0.1 * 0.1 * 0.1 * 0.1 / 12.0;
+                framElm.A = 7.64*1e-4;// 0.01;
+                framElm.Iy = framElm.Iz = framElm.J = 80*1e-8;// 0.1 * 0.1 * 0.1 * 0.1 / 12.0;
                 framElm.E = framElm.G = 210e9;
-                framElm.MassDensity = 1;
+                framElm.MassDensity = 7800;
             }
 
 
