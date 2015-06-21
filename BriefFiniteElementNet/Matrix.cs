@@ -882,7 +882,7 @@ namespace BriefFiniteElementNet
 
             for (int i = 0; i < mtx.RowCount; i++)
                 for (int j = 0; j < mtx.ColumnCount; j++)
-                    buf[i][ j] = mtx.CoreArray[j * mtx.RowCount + i];
+                    buf[i][j] = mtx[i, j];
 
             return buf;
         }

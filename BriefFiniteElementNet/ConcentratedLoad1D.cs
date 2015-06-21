@@ -72,10 +72,10 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Gets or sets the distanse of concentrated load from start node.
+        /// Gets or sets the distance of concentrated load from start node.
         /// </summary>
         /// <value>
-        /// The distanse of the <see cref="ConcentratedLoad1D"/> from start node.
+        /// The distance of the <see cref="ConcentratedLoad1D"/> from start node.
         /// </value>
         public double DistanseFromStartNode
         {
@@ -153,7 +153,6 @@ namespace BriefFiniteElementNet
 
                     return buf;
                 }
-                throw new NotImplementedException();
             }
 
             throw new NotImplementedException();
@@ -182,42 +181,42 @@ namespace BriefFiniteElementNet
 
                 var l = (e.EndNode.Location - e.StartNode.Location).Length;
 
-                var l1 = distanseFromStartNode;
-                var l2 = l - l1;
+                var a = distanseFromStartNode;
+                var b = l - a;
 
-                var mymy1 = localForce.My*l2/(l*l)*(l2 - 2*l1);
-                var mymy2 = localForce.My*l1/(l*l)*(l1 - 2*l2);
+                var mymy1 = localForce.My*b/(l*l)*(b - 2*a);
+                var mymy2 = localForce.My*a/(l*l)*(a - 2*b);
 
-                var myfz1 = 6*localForce.My*l1*l2/(l*l*l);
+                var myfz1 = 6*localForce.My*a*b/(l*l*l);
                 var myfz2 = -myfz1;
 
 
-                var mzmz1 = localForce.Mz*l2/(l*l)*(l2 - 2*l1);
-                var mzmz2 = localForce.Mz*l1/(l*l)*(l1 - 2*l2);
+                var mzmz1 = localForce.Mz*b/(l*l)*(b - 2*a);
+                var mzmz2 = localForce.Mz*a/(l*l)*(a - 2*b);
 
-                var mzfy1 = -6*localForce.Mz*l1*l2/(l*l*l);
+                var mzfy1 = -6*localForce.Mz*a*b/(l*l*l);
                 var mzfy2 = -mzfy1;
 
 
-                var fzmy1 = -localForce.Fz*l1*l2*l2/(l*l);
-                var fzmy2 = localForce.Fz*l1*l1*l2/(l*l);
+                var fzmy1 = -localForce.Fz*a*b*b/(l*l);
+                var fzmy2 = localForce.Fz*a*a*b/(l*l);
 
-                var fzfz1 = localForce.Fz*l2*l2/(l*l*l)*(3*l1 + l2);
-                var fzfz2 = localForce.Fz*l1*l1/(l*l*l)*(3*l2 + l1);
-
-
-                var fymz1 = localForce.Fy*l1*l2*l2/(l*l);
-                var fymz2 = -localForce.Fy*l1*l1*l2/(l*l);
-
-                var fyfy1 = localForce.Fy*l2*l2/(l*l*l)*(3*l1 + l2);
-                var fyfy2 = localForce.Fy*l1*l1/(l*l*l)*(3*l2 + l1);
+                var fzfz1 = localForce.Fz*b*b/(l*l*l)*(3*a + b);
+                var fzfz2 = localForce.Fz*a*a/(l*l*l)*(3*b + a);
 
 
-                var fxfx1 = localForce.Fx*l2/l;
-                var fxfx2 = localForce.Fx*l1/l;
+                var fymz1 = localForce.Fy*a*b*b/(l*l);
+                var fymz2 = -localForce.Fy*a*a*b/(l*l);
 
-                var mxmx1 = localForce.Mx*l2/l;
-                var mxmx2 = localForce.Mx*l1/l;
+                var fyfy1 = localForce.Fy*b*b/(l*l*l)*(3*a + b);
+                var fyfy2 = localForce.Fy*a*a/(l*l*l)*(3*b + a);
+
+
+                var fxfx1 = localForce.Fx*b/l;
+                var fxfx2 = localForce.Fx*a/l;
+
+                var mxmx1 = localForce.Mx*b/l;
+                var mxmx2 = localForce.Mx*a/l;
 
                 var f1 = new Force(
                     fxfx1,
@@ -239,10 +238,10 @@ namespace BriefFiniteElementNet
 
 
                 var vecs = new Vector[] {f1.Forces, f1.Moments, f2.Forces, f2.Moments};
-                vecs = e.TransformLocalToGlobal(vecs);
+                var tvecs = e.TransformLocalToGlobal(vecs);
 
-                buf[0] = new Force(vecs[0], vecs[1]);
-                buf[1] = new Force(vecs[2], vecs[3]);
+                buf[0] = new Force(tvecs[0], tvecs[1]);
+                buf[1] = new Force(tvecs[2], tvecs[3]);
 
                 return buf;
             }

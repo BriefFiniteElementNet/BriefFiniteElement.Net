@@ -8,7 +8,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents a class for comparing two arrays of int
     /// </summary>
-    public class IntArrayCompairer:IEqualityComparer<int[]>
+    public class IntArrayCompairer : IEqualityComparer<int[]>
     {
         /// <inheritdoc/>
         public int GetHashCode(int[] values)
@@ -18,7 +18,7 @@ namespace BriefFiniteElementNet
 
             for (var i = 0; i < values.Length; i++)
             {
-                shift = (shift + 11) % 21;
+                shift = (shift + 11)%21;
                 result ^= (values[i] + 1024) << shift;
             }
 

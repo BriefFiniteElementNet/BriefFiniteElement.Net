@@ -9,17 +9,17 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents the type of solver for use in solving equation system
     /// </summary>
-    public enum SolverType
+    public enum BuiltInSolverType
     {
         /// <summary>
         /// Represents the Cholesky Decomposition Method
         /// </summary>
-        [Description("Cholesky Decomposition")] 
+        [Description("Cholesky Decomposition (Direct)")] 
         CholeskyDecomposition,
         /// <summary>
         /// Represents the Conjugate Gradient Method
         /// </summary>
-        [Description("Conjugate Gradient")] 
+        [Description("Conjugate Gradient (Iterative)")] 
         ConjugateGradient
     }
 }

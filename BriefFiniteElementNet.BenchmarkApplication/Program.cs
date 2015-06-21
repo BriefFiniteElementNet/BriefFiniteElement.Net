@@ -1,23 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using BriefFiniteElementNet.CSparse.Double;
+using BriefFiniteElementNet.Solver;
 
 namespace BriefFiniteElementNet.BenchmarkApplication
 {
-    class Program
+    internal class Program
     {
-
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             //Note: Before executing this benchmark set the Configuration to Release and use 'DEBUG>Start Without Debugging' or 'Ctrl+F5' to get the highest possible performance
 
 
             Log("###############################################################################");
-            Log("**Performance benchmark for BriefFiniteElement.NET library \navailable via http://brieffiniteelmentnet.codeplex.com");
+            Log(
+                "**Performance benchmark for BriefFiniteElement.NET library \navailable via http://brieffiniteelmentnet.codeplex.com");
             Log("Benchmark 1: Uniform 3D Grid");
 
             Log("-------------------------------------------------------------------------------");
@@ -39,86 +43,87 @@ namespace BriefFiniteElementNet.BenchmarkApplication
             var sysInfo = GetSystemInfo();
             Log("\tCPU Model: {0}", sysInfo[0]);
             Log("\tCPU Clock Speed: {0}", sysInfo[1]);
-            Log("\tTotal RAM: {0:0.00} GB", double.Parse(sysInfo[2]) / (1024.0 * 1024.0));
+            Log("\tTotal RAM: {0:0.00} GB", double.Parse(sysInfo[2])/(1024.0*1024.0));
 
             Log("###############################################################################");
             Log("");
             Log("Benchmark Info:");
 
-            var solvers = Enum.GetValues(typeof (SolverType));
+            var solvers = Enum.GetValues(typeof (BuiltInSolverType));
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
 
-            var nums = new int[] { 10, 11, 12, 13, 14, 15 };
+            var nums = new int[] {10, 11, 12, 13, 14, 15};
 
             var cnt = 0;
 
+            var case1 = new LoadCase("c1", LoadType.Other);
+            var case2 = new LoadCase("c2", LoadType.Other);
+
+
             foreach (var nm in nums)
             {
-                
-
                 var paramerts = new string[]
-                    {
-                        String.Format("grid size: {0}x{0}x{0}", nm),
-                        String.Format("{0} elements", 3*nm*nm*(nm-1)),
-                        String.Format("{0} nodes", nm*nm*nm),
-                        String.Format("{0} free DoFs", 6*nm*nm*(nm-1))
-                    };
+                {
+                    String.Format("grid size: {0}x{0}x{0}", nm),
+                    String.Format("{0} elements", 3*nm*nm*(nm - 1)),
+                    String.Format("{0} nodes", nm*nm*nm),
+                    String.Format("{0} free DoFs", 6*nm*nm*(nm - 1))
+                };
 
                 Log("Try # {0}", cnt++);
                 Log(string.Join(", ", paramerts));
-                
 
-                foreach (SolverType solverType in solvers)
+
+                foreach (BuiltInSolverType solverType in solvers)
                 {
                     var st = StructureGenerator.Generate3DGrid(nm, nm, nm);
 
 
                     foreach (var nde in st.Nodes)
-                        nde.Loads.Add(new NodalLoad(GetRandomForce(), LoadCase.DefaultLoadCase));
-
-                    var conf = new SolverConfiguration(new LoadCase(), new LoadCase("case2", LoadType.Default))
                     {
-                        SolverType = solverType
+                        nde.Loads.Add(new NodalLoad(GetRandomForce(), case1));
+                        nde.Loads.Add(new NodalLoad(GetRandomForce(), case2));
+                    }
+
+                    var type = solverType;
+
+                    var conf = new SolverConfiguration()
+                    {
+                        SolverGenerator = i => CreateInternalSolver(type, i)
                     };
 
                     GC.Collect();
 
-                   
-
-
                     Log("");
-                    Log("\tSolver type: {0}", solverType);
+                    Log("\tSolver type: {0}", GetEnumDescription(solverType));
 
 
                     try
                     {
-                        sw.Restart();
-
                         st.Solve(conf);
 
+                        sw.Restart();
+                        st.LastResult.AddAnalysisResultIfNotExists(case1);
                         sw.Stop();
 
                         Log("\t\tgeneral solve time: {0}", sw.Elapsed);
 
                         sw.Restart();
-                        st.LastResult.AddAnalysisResult(LoadCase.DefaultLoadCase);
+                        st.LastResult.AddAnalysisResultIfNotExists(case2);
                         sw.Stop();
 
                         Log("\t\textra solve time per LoadCase: {0}", sw.Elapsed);
-
                     }
                     catch (Exception ex)
                     {
                         Log("\t\tFailed, err = {0}", ex.Message);
                     }
-                    
+
                     sw.Stop();
 
                     GC.Collect();
-
                 }
-
             }
 
             Console.WriteLine();
@@ -136,6 +141,36 @@ namespace BriefFiniteElementNet.BenchmarkApplication
             Environment.Exit(0);
         }
 
+        public static string GetEnumDescription(Enum value)
+        {
+            FieldInfo fi = value.GetType().GetField(value.ToString());
+
+            DescriptionAttribute[] attributes =
+                (DescriptionAttribute[]) fi.GetCustomAttributes(
+                    typeof (DescriptionAttribute),
+                    false);
+
+            if (attributes != null &&
+                attributes.Length > 0)
+                return attributes[0].Description;
+            else
+                return value.ToString();
+        }
+
+        private static ISolver CreateInternalSolver(BuiltInSolverType type, CompressedColumnStorage ccs)
+        {
+            switch (type)
+            {
+                case BuiltInSolverType.CholeskyDecomposition:
+                    return new CholeskySolver(ccs);
+                    break;
+                case BuiltInSolverType.ConjugateGradient:
+                    return new PCG(new SSOR()) {A = ccs};
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("type");
+            }
+        }
 
         /// <summary>
         /// Gets the count of free DoFs of <see cref="model"/>.
@@ -172,7 +207,6 @@ namespace BriefFiniteElementNet.BenchmarkApplication
                 Mo = new ManagementObject("Win32_OperatingSystem=@");
                 buf[2] = (Mo["TotalVisibleMemorySize"]).ToString();
                 Mo.Dispose();
-
             }
             catch (Exception ex)
             {
@@ -186,6 +220,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
             return buf;
         }
+
         private static void Log(string format, params object[] parameters)
         {
             var str = string.Format(format, parameters);
@@ -197,14 +232,13 @@ namespace BriefFiniteElementNet.BenchmarkApplication
         private static StringBuilder sb = new StringBuilder();
 
 
-
         private static Random rnd = new Random();
 
         private static Force GetRandomForce()
         {
             var buf = new Force(
-                100 * (1 - rnd.NextDouble()), 100 * (1 - rnd.NextDouble()), 100 * (1 - rnd.NextDouble()),
-                100 * (1 - rnd.NextDouble()), 100 * (1 - rnd.NextDouble()), 100 * (1 - rnd.NextDouble()));
+                100*(1 - rnd.NextDouble()), 100*(1 - rnd.NextDouble()), 100*(1 - rnd.NextDouble()),
+                100*(1 - rnd.NextDouble()), 100*(1 - rnd.NextDouble()), 100*(1 - rnd.NextDouble()));
 
             return buf;
         }

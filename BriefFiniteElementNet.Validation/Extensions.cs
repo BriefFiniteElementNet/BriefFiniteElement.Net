@@ -7,6 +7,16 @@ namespace BriefFiniteElementNet.Validation
 {
     public static class Extensions
     {
+        public static int ToInt(this object obj)
+        {
+            return Convert.ToInt32(obj);
+        }
+
+        public static double ToDouble(this object obj)
+        {
+            return Convert.ToDouble(obj);
+        }
+
         public static object[] Union<T>(this object num, params T[] others)
         {
             var buf = new object[others.Length + 1];

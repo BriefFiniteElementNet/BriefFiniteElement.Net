@@ -30,7 +30,7 @@ namespace BriefFiniteElementNet.Solver
         /// <summary>
         /// Gets the type of the solver.
         /// </summary>
-        SolverType SolverType { get; }
+        BuiltInSolverType SolverType { get; }
 
         /// <summary>
         /// Initializes the solver regarding <see cref="A" /> matrix.

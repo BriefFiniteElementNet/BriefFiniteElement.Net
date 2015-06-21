@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.CSparse.Storage;
+using BriefFiniteElementNet.Solver;
 using CCS = BriefFiniteElementNet.CSparse.Double.CompressedColumnStorage;
 using Coord = BriefFiniteElementNet.CSparse.Storage.CoordinateStorage<double>;
 
@@ -13,6 +14,26 @@ namespace BriefFiniteElementNet
     /// </summary>
     public static class CalcUtil
     {
+        /// <summary>
+        /// Creates a built in solver appropriated with <see cref="tp"/>.
+        /// </summary>
+        /// <param name="type">The solver type.</param>
+        /// <returns></returns>
+        public static ISolver CreateBuiltInSolver(BuiltInSolverType type)
+        {
+            switch (type)
+            {
+                case BuiltInSolverType.CholeskyDecomposition:
+                    return new CholeskySolver();
+                    break;
+                case BuiltInSolverType.ConjugateGradient:
+                    return new PCG(new SSOR());
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("type");
+            }
+        }
+
         public static int GetHashCode(params Point[] objects)
         {
             if (objects == null)
@@ -307,7 +328,13 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static ZoneDevidedMatrix GetReucedZoneDevidedMatrix(CCS reducedMatrix, DofMappingManager map)
+        /// <summary>
+        /// Gets the reduced zone divided matrix.
+        /// </summary>
+        /// <param name="reducedMatrix">The reduced matrix.</param>
+        /// <param name="map">The map.</param>
+        /// <returns></returns>
+        public static ZoneDevidedMatrix GetReducedZoneDividedMatrix(CCS reducedMatrix, DofMappingManager map)
         {
             var m = map.M;
             var n = map.N;

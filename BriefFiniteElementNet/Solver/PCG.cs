@@ -32,9 +32,9 @@ namespace BriefFiniteElementNet.Solver
             this.Preconditioner = M;
         }
 
-        public override SolverType SolverType
+        public override BuiltInSolverType SolverType
         {
-            get { return SolverType.ConjugateGradient; }
+            get { return BuiltInSolverType.ConjugateGradient; }
         }
 
         /// <inheritdoc />

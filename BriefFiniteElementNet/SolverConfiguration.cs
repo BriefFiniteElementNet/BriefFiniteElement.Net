@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BriefFiniteElementNet.CSparse.Double;
 using BriefFiniteElementNet.Solver;
 
 namespace BriefFiniteElementNet
@@ -13,16 +14,27 @@ namespace BriefFiniteElementNet
     {
         #region Constructors
 
-        public SolverConfiguration(SolverType solverType):this()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SolverConfiguration"/> class.
+        /// </summary>
+        /// <param name="solverType">Type of the solver.</param>
+        public SolverConfiguration(BuiltInSolverType solverType):this()
         {
             this.solverType = solverType;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SolverConfiguration"/> class.
+        /// </summary>
         public SolverConfiguration()
         {
             this.loadCases = new List<LoadCase>();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SolverConfiguration"/> class.
+        /// </summary>
+        /// <param name="loadCases">The load cases.</param>
         public SolverConfiguration(params LoadCase[] loadCases)
         {
             this.loadCases = new List<LoadCase>(loadCases);
@@ -48,6 +60,21 @@ namespace BriefFiniteElementNet
             set { loadCases = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the solver generator.
+        /// </summary>
+        /// <value>
+        /// The solver generator that generates a <see cref="ISolver"/> for every <see cref="CompressedColumnStorage"/> matrix.
+        /// </value>
+        public Func<CompressedColumnStorage, ISolver> SolverGenerator
+        {
+            get { return _solverGenerator; }
+            set { _solverGenerator = value; }
+        }
+
+
+        private Func<CompressedColumnStorage, ISolver> _solverGenerator;
+
 
 
         private LoadCase settlementsLoadCase;
@@ -58,6 +85,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// The load case for treating settlements.
         /// </value>
+        [Obsolete]
         public LoadCase SettlementsLoadCase
         {
             get { return settlementsLoadCase; }
@@ -67,7 +95,7 @@ namespace BriefFiniteElementNet
 
 
 
-        private SolverType solverType;
+        private BuiltInSolverType solverType;
 
         /// <summary>
         /// Gets or sets the type of the solver.
@@ -75,7 +103,8 @@ namespace BriefFiniteElementNet
         /// <value>
         /// The type of the solver who should be used in solving process.
         /// </value>
-        public SolverType SolverType
+        [Obsolete("Pass solver instead of using this")]
+        public BuiltInSolverType SolverType
         {
             get { return solverType; }
             set { solverType = value; }
@@ -84,7 +113,7 @@ namespace BriefFiniteElementNet
         
 
 
-        private ISolver customSolver;
+        private ISolver _solver;
 
         /// <summary>
         /// Gets or sets the custom solver.
@@ -92,11 +121,21 @@ namespace BriefFiniteElementNet
         /// <value>
         /// A custom solver to be used for solving equations.
         /// </value>
+        [Obsolete("Use Solver property instead")]
         public ISolver CustomSolver
         {
-            get { return customSolver; }
-            set { customSolver = value; }
+            get { return _solver; }
+            set { _solver = value; }
         }
+
+        [Obsolete("Use SolverGenerator property instead")]
+        public ISolver Solver
+        {
+            get { return _solver; }
+            set { _solver = value; }
+        }
+
+   
 
         #endregion
     }

@@ -324,6 +324,33 @@ namespace BriefFiniteElementNet
             return new Vector(v.X / c, v.Y / c, v.Z / c);
         }
 
+
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="v1">The v1.</param>
+        /// <param name="v2">The v2.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
+        public static bool operator ==(Vector v1, Vector v2)
+        {
+            return v1.Equals(v2);
+        }
+
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="v1">The v1.</param>
+        /// <param name="v2">The v2.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
+        public static bool operator !=(Vector v1, Vector v2)
+        {
+            return !v1.Equals(v2);
+        }
+
         #endregion
 
         #region equals

@@ -254,7 +254,18 @@ namespace BriefFiniteElementNet
         /// </summary>
         public void Solve()
         {
-            Solve(new SolverConfiguration(LoadCase.DefaultLoadCase));
+            var cfg = new SolverConfiguration();
+
+            cfg.SolverGenerator = i =>
+            {
+                var sl = CalcUtil.CreateBuiltInSolver(BuiltInSolverType.CholeskyDecomposition);
+                sl.A = i;
+                return sl;
+            };
+
+            cfg.LoadCases = new List<LoadCase>() { LoadCase.DefaultLoadCase };
+
+            Solve(cfg);
         }
 
 
@@ -262,19 +273,45 @@ namespace BriefFiniteElementNet
         /// Solves the instance with specified <see cref="solverType" /> and assuming linear behavior (both geometric and material) and for default load case.
         /// </summary>
         /// <param name="solverType">The solver type.</param>
-        public void Solve(SolverType solverType)
+        public void Solve(BuiltInSolverType solverType)
         {
-            Solve(new SolverConfiguration(LoadCase.DefaultLoadCase) {SolverType = solverType});
+            Solve(new SolverConfiguration(LoadCase.DefaultLoadCase)
+            {
+                SolverGenerator = i =>
+                {
+                    var sl = CalcUtil.CreateBuiltInSolver(solverType);
+                    sl.A = i;
+                    return sl;
+                }
+            });
         }
 
 
         /// <summary>
         /// Solves the instance with specified <see cref="solver" /> and assuming linear behavior (both geometric and material) and for default load case.
         /// </summary>
+        /// <remarks>
+        /// This is not possible to use this, </remarks>
         /// <param name="solver">The solver.</param>
+        [Obsolete("use Solve(Func<CompressedColumnStorage, ISolver> solverGenerator) instead")]
         public void Solve(ISolver solver)
         {
-            Solve(new SolverConfiguration(LoadCase.DefaultLoadCase) {CustomSolver = solver});
+            Solve(new SolverConfiguration(LoadCase.DefaultLoadCase) { CustomSolver = solver });
+        }
+
+        /// <summary>
+        /// Solves the model using specified solver generator.
+        /// </summary>
+        /// <param name="solverGenerator">The solver generator.</param>
+        public void Solve(Func<CompressedColumnStorage, ISolver> solverGenerator)
+        {
+            var cfg = new SolverConfiguration();
+
+            cfg.SolverGenerator = solverGenerator;
+
+            cfg.LoadCases = new List<LoadCase>() { LoadCase.DefaultLoadCase };
+
+            Solve(cfg);
         }
 
         /// <summary>
@@ -283,9 +320,19 @@ namespace BriefFiniteElementNet
         /// <param name="cases">The cases.</param>
         public void Solve(params LoadCase[] cases)
         {
-            Solve(new SolverConfiguration(cases));
-        }
+            var cfg = new SolverConfiguration();
 
+            cfg.SolverGenerator = i =>
+            {
+                var sl = CalcUtil.CreateBuiltInSolver(BuiltInSolverType.CholeskyDecomposition);
+                sl.A = i;
+                return sl;
+            };
+
+            cfg.LoadCases = new List<LoadCase>(cases);
+
+            Solve(cfg);
+        }
 
         /// <summary>
         /// Solves the instance assuming linear behavior (both geometric and material) for specified configuration.
@@ -293,271 +340,14 @@ namespace BriefFiniteElementNet
         /// <param name="config">The configuration.</param>
         public void Solve(SolverConfiguration config)
         {
-            //TraceUtil.WritePerformanceTrace("Started solving model");
-            this.Trace.Write(TraceRecord.Create(TraceLevel.Info, "Started solving model"));
-            var sp = System.Diagnostics.Stopwatch.StartNew();
-
-            for (int i = 0; i < nodes.Count; i++)
-                nodes[i].Index = i;
-
-            var n = nodes.Count;
-            var c = 6*n;
-
-
-            var maxNodePerElement = elements.Select(i => i.Nodes.Length).Max();
-            var rElmMap = new int[maxNodePerElement*6];
-            var kt = new CoordinateStorage<double>(c, c, 1);
-
-            #region Determining count of fixed and free DoFs
-
-            var fixedDofCount =
-                nodes.Select(
-                    i =>
-                        (int) i.Constraints.DX + (int) i.Constraints.DY + (int) i.Constraints.DZ +
-                        (int) i.Constraints.RX + (int) i.Constraints.RY + (int) i.Constraints.RZ).Sum();
-
-            var freeDofCount = c - fixedDofCount;
-
-            this.Trace.Write(TraceRecord.Create(TraceLevel.Info,
-                string.Format("Model with {0} free DoFs and {1} fixed DoFs", freeDofCount, fixedDofCount)));
-
-            //TraceUtil.WritePerformanceTrace("Model with {0} free DoFs and {1} fixed DoFs", freeDofCount, fixedDofCount);
-
-            #endregion
-
-            var fMap = new int[c];
-            var rMap = new int[c];
-            var rrmap = new int[freeDofCount];
-            var rfmap = new int[fixedDofCount];
-
-            #region Assembling Kt
-
-            foreach (var elm in elements)
+            //new version
+            lastResult = new StaticLinearAnalysisResult();
+            lastResult.Parent = this;
+            lastResult.SolverGenerator = config.SolverGenerator;
+            
+            foreach (var loadCase in config.LoadCases)
             {
-                var c2 = elm.Nodes.Length;
-
-                for (var i = 0; i < c2; i++)
-                {
-                    rElmMap[6*i + 0] = elm.Nodes[i].Index*6 + 0;
-                    rElmMap[6*i + 1] = elm.Nodes[i].Index*6 + 1;
-                    rElmMap[6*i + 2] = elm.Nodes[i].Index*6 + 2;
-
-                    rElmMap[6*i + 3] = elm.Nodes[i].Index*6 + 3;
-                    rElmMap[6*i + 4] = elm.Nodes[i].Index*6 + 4;
-                    rElmMap[6*i + 5] = elm.Nodes[i].Index*6 + 5;
-                }
-
-                var mtx = elm.GetGlobalStifnessMatrix();
-                var d = c2*6;
-
-                for (var i = 0; i < d; i++)
-                {
-                    for (var j = 0; j < d; j++)
-                    {
-                        kt.At(rElmMap[i], rElmMap[j], mtx[i, j]);
-                    }
-                }
-            }
-
-            sp.Stop();
-
-            this.Trace.Write(TraceRecord.Create(TraceLevel.Info,
-                string.Format("Assembling full stiffness matrix took {0:#,##0} ms.", sp.ElapsedMilliseconds)));
-
-            sp.Restart();
-
-            #endregion
-
-            #region Extracting kff, kfs and kss
-
-            var fixity = new bool[c];
-
-            for (var i = 0; i < n; i++)
-            {
-                var cns = nodes[i].Constraints;
-
-                if (cns.DX == DofConstraint.Fixed) fixity[6*i + 0] = true;
-                if (cns.DY == DofConstraint.Fixed) fixity[6*i + 1] = true;
-                if (cns.DZ == DofConstraint.Fixed) fixity[6*i + 2] = true;
-
-
-                if (cns.RX == DofConstraint.Fixed) fixity[6*i + 3] = true;
-                if (cns.RY == DofConstraint.Fixed) fixity[6*i + 4] = true;
-                if (cns.RZ == DofConstraint.Fixed) fixity[6*i + 5] = true;
-            }
-
-
-
-            int fCnt = 0, rCnt = 0;
-
-            /** /
-            for (var i = 0; i < c; i++)
-            {
-                if (fixity[i])
-                    fMap[i] = fCnt++;
-                else
-                    rMap[i] = rCnt++;
-            }
-            /**/
-
-            /**/
-            for (var i = 0; i < c; i++)
-            {
-                if (fixity[i])
-                    rfmap[fMap[i] = fCnt++] = i;
-                else
-                    rrmap[rMap[i] = rCnt++] = i;
-            }
-            /**/
-
-            var ktSparse = Converter.ToCompressedColumnStorage(kt);
-
-
-            var ind = ktSparse.ColumnPointers;
-            var v = ktSparse.RowIndices;
-            var values = ktSparse.Values;
-
-            var cnt = values.Count(i => i == 0.0);
-
-            var kffCoord = new CoordinateStorage<double>(freeDofCount, freeDofCount, 128 + freeDofCount);
-            var kfsCoord = new CoordinateStorage<double>(freeDofCount, fixedDofCount, 128);
-            var ksfCoord = new CoordinateStorage<double>(fixedDofCount, freeDofCount, 128);
-            var kssCoord = new CoordinateStorage<double>(fixedDofCount, fixedDofCount, 128);
-
-            var cnr = 0;
-
-            for (var i = 0; i < ind.Length - 1; i++)
-            {
-                var st = ind[i];
-                var en = ind[i + 1];
-
-                for (var j = st; j < en; j++)
-                {
-                    cnr++;
-                    var row = i;
-                    var col = v[j];
-                    var val = values[j];
-
-                    if (!fixity[row] && !fixity[col])
-                    {
-                        kffCoord.At(rMap[row], rMap[col], val);
-                        continue;
-                    }
-
-                    if (!fixity[row] && fixity[col])
-                    {
-                        kfsCoord.At(rMap[row], fMap[col], val);
-                        continue;
-                    }
-
-                    if (fixity[row] && !fixity[col])
-                    {
-                        ksfCoord.At(fMap[row], rMap[col], val);
-                        continue;
-                    }
-
-                    if (fixity[row] && fixity[col])
-                    {
-                        kssCoord.At(fMap[row], fMap[col], val);
-                        continue;
-                    }
-
-
-                    Guid.NewGuid();
-
-                }
-            }
-
-            var tmp = kffCoord.NonZerosCount + kfsCoord.NonZerosCount + ksfCoord.NonZerosCount + kssCoord.NonZerosCount;
-
-
-
-            sp.Stop();
-
-            // TraceUtil.WritePerformanceTrace("Extracting kff,kfs and kss from Kt matrix took about {0:#,##0} ms",
-            //     sp.ElapsedMilliseconds);
-
-            this.Trace.Write(TraceRecord.Create(TraceLevel.Info,
-                string.Format("Extracting kff,kfs and kss from Kt matrix took about {0:#,##0} ms",
-                    sp.ElapsedMilliseconds)));
-
-            sp.Restart();
-
-            #endregion
-
-            #region converting kff, Kfs and Kss to compressed column storage
-
-            var kff = (CSparse.Double.CompressedColumnStorage) Converter.ToCompressedColumnStorage(kffCoord);
-            var kfs = (CSparse.Double.CompressedColumnStorage) Converter.ToCompressedColumnStorage(kfsCoord);
-            var kss = (CSparse.Double.CompressedColumnStorage) Converter.ToCompressedColumnStorage(kssCoord);
-
-            sp.Stop();
-
-            //TraceUtil.WritePerformanceTrace("cholesky decomposition of Kff took about {0:#,##0} ms",
-            //    sp.ElapsedMilliseconds);
-
-
-            //TraceUtil.WritePerformanceTrace("nnz of kff is {0:#,##0}, ~{1:0.0000}%", kff.Values.Length,
-            //    ((double) kff.Values.Length)/((double) kff.RowCount*kff.ColumnCount));
-
-            this.Trace.Write(TraceRecord.Create(TraceLevel.Info,
-                string.Format("nnz of kff is {0:#,##0}, ~{1:0.0000}%", kff.Values.Length,
-                    ((double) kff.Values.Length)/((double) kff.RowCount*kff.ColumnCount))));
-
-            sp.Restart();
-
-            #endregion
-
-            var result = lastResult = new StaticLinearAnalysisResult();
-
-            if (config.CustomSolver != null)
-                result.Solver = config.CustomSolver;
-            else
-                result.Solver = GenerateSolver(config.SolverType, kff);
-
-            result.SolverType = config.SolverType;
-
-
-            result.Kfs = kfs;
-            result.Kss = kss;
-            result.Parent = this;
-            //result.SettlementsLoadCase = this.SettlementLoadCase;
-
-            result.ReleasedMap = rMap;
-            result.FixedMap = fMap;
-            result.ReversedReleasedMap = rrmap;
-            result.ReversedFixedMap = rfmap;
-
-            foreach (var cse in config.LoadCases)
-            {
-                result.AddAnalResult(cse);
-            }
-
-
-            this.lastResult = result;
-
-            foreach (var elm in elements)
-            {
-                foreach (var nde in elm.Nodes)
-                {
-                    nde.ConnectedElements.Add(elm);
-                }
-            }
-        }
-
-
-        private static ISolver GenerateSolver(SolverType solverType, CompressedColumnStorage kff)
-        {
-            switch (solverType)
-            {
-                case SolverType.CholeskyDecomposition:
-                    return new CholeskySolver() {A = kff};
-                    break;
-                case SolverType.ConjugateGradient:
-                    return new PCG(new SSOR()) {A = kff};
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("solverType");
+                lastResult.AddAnalysisResultIfNotExists(loadCase);
             }
         }
 

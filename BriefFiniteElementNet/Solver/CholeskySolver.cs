@@ -46,9 +46,9 @@ namespace BriefFiniteElementNet.Solver
         }
 
         /// <inheritdoc />
-        public SolverType SolverType
+        public BuiltInSolverType SolverType
         {
-            get { return SolverType.CholeskyDecomposition; }
+            get { return BuiltInSolverType.CholeskyDecomposition; }
         }
 
         /// <inheritdoc />

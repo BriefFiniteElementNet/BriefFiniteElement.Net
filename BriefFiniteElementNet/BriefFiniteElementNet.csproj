@@ -71,7 +71,7 @@
     <Compile Include="SerializationBinder.cs" />
     <Compile Include="SolverConfiguration.cs" />
     <Compile Include="SolverFailException.cs" />
-    <Compile Include="SolverType.cs" />
+    <Compile Include="BuiltInSolverType.cs" />
     <Compile Include="Solver\CholeskySolver.cs" />
     <Compile Include="Solver\IdentityPreconditioner.cs">
       <SubType>Code</SubType>

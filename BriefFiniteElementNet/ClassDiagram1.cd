@@ -3,7 +3,7 @@
   <Class Name="BriefFiniteElementNet.StaticLinearAnalysisResult" Collapsed="true">
     <Position X="18" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IggEAAgEAIAAAApgAACAQAAIAAAQAACAABAAAiAYIEA=</HashCode>
+      <HashCode>IggEAAgCAIAAAApgAACAQAAIAAAQAACAABAAAiAYIEA=</HashCode>
       <FileName>StaticLinearAnalysisResult.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -181,7 +181,7 @@
   <Class Name="BriefFiniteElementNet.SolverConfiguration" Collapsed="true">
     <Position X="16.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAEAAAABAAAAAAAAAAAAAIAAAACAQBAAAEAQAAA=</HashCode>
+      <HashCode>AAAAAAECABAAAAAAAAAAAAAIAIIAAACAQBAAAEAQAAA=</HashCode>
       <FileName>SolverConfiguration.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -202,7 +202,7 @@
   <Class Name="BriefFiniteElementNet.TetrahedralIso" Collapsed="true">
     <Position X="9.75" Y="9.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IAAAAAAEEABAAAgCAAAAiEAAAAAAAACkAQACAgCAAAA=</HashCode>
+      <HashCode>IBAAAAAEEABAAAgCAAAAiEAAAAAAAADkAQACAgCAAAA=</HashCode>
       <FileName>TetrahedralIso.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -283,7 +283,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAkAAAAAAE5AUAAABgCQBAAIAAAADgCaCBYIE=</HashCode>
+      <HashCode>AAAAAAAAkAAAAAAE5AUAAABgCQBAAIAAAADgCaCBYqE=</HashCode>
       <FileName>Vector.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -342,15 +342,15 @@
   <Enum Name="BriefFiniteElementNet.ElementType" Collapsed="true">
     <Position X="19.75" Y="7" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAIAAAAAAAAAAAAAAABgAAAAAAAAAAAAAAACA=</HashCode>
+      <HashCode>AAAAAAAAIAAAAAAAAAAAAQAABgAAAAAAAAAAAAAAACA=</HashCode>
       <FileName>ElementType.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="BriefFiniteElementNet.SolverType" Collapsed="true">
+  <Enum Name="BriefFiniteElementNet.BuiltInSolverType" Collapsed="true">
     <Position X="18" Y="7.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
-      <FileName>SolverType.cs</FileName>
+      <FileName>BuiltInSolverType.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />

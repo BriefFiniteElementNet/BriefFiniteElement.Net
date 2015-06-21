@@ -94,8 +94,8 @@ namespace BriefFiniteElementNet.SimpleUI
             {
                 var valdt = new Validation.Frame3DDValidator(null);
                 valdt.Model = Context.Model;
-                var content = valdt.Createf3DDInputFile();
-                File.WriteAllText(dlg.FileName, content);
+                //var content = valdt.Createf3DDInputFile();
+                //File.WriteAllText(dlg.FileName, content);
             }
             catch (Exception ex)
             {

@@ -76,7 +76,7 @@ namespace BriefFiniteElementNet.Solver
         }
 
         /// <inheritdoc />
-        public abstract SolverType SolverType { get; }
+        public abstract BuiltInSolverType SolverType { get; }
 
         /// <inheritdoc />
         public virtual void Initialize(CompressedColumnStorage<double> matrix)
