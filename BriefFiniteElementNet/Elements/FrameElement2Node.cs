@@ -817,7 +817,7 @@ namespace BriefFiniteElementNet
         /// Calculates the M matrix.
         /// </summary>
         /// <remarks>M matrix is related to member partial release conditions.</remarks>
-        private Matrix GetReleaseMatrix()
+        internal Matrix GetReleaseMatrix()
         {
             var buf = Matrix.Eye(12);
 

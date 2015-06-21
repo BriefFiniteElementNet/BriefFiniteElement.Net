@@ -428,5 +428,52 @@ namespace BriefFiniteElementNet
 
             return true;
         }
+
+        /// <summary>
+        /// Applies the release matrix to calculated local end forces.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="localEndForces">The local end forces.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// When <see cref="FrameElement2Node"/> has one or two hinged ends, then local end forces due to element interior loads (like distributed loads) 
+        /// will be different than normal ones (both ends fixed). This method will apply end releases...
+        /// </remarks>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public static Force[] ApplyReleaseMatrixToEndForces(FrameElement2Node element, Force[] localEndForces)
+        {
+            if (localEndForces.Length != 2)
+                throw new NotImplementedException();
+
+            var fullLoadVector = new double[12];//for applying release matrix
+
+            
+            {
+                fullLoadVector[00] = localEndForces[0].Fx;
+                fullLoadVector[01] = localEndForces[0].Fy;
+                fullLoadVector[02] = localEndForces[0].Fz;
+                fullLoadVector[03] = localEndForces[0].Mx;
+                fullLoadVector[04] = localEndForces[0].My;
+                fullLoadVector[05] = localEndForces[0].Mz;
+
+                fullLoadVector[06] = localEndForces[1].Fx;
+                fullLoadVector[07] = localEndForces[1].Fy;
+                fullLoadVector[08] = localEndForces[1].Fz;
+                fullLoadVector[09] = localEndForces[1].Mx;
+                fullLoadVector[10] = localEndForces[1].My;
+                fullLoadVector[11] = localEndForces[1].Mz;
+            }
+
+            var ld = new Matrix(fullLoadVector);
+            var rsm = element.GetReleaseMatrix();
+            ld = rsm*ld;
+
+            var buf = new Force[2];
+
+            buf[0] = Force.FromVector(ld.CoreArray, 0);
+            buf[1] = Force.FromVector(ld.CoreArray, 6);
+
+            return buf;
+        }
     }
 }

@@ -49,6 +49,7 @@ namespace BriefFiniteElementNet
 
                 var localEndForces = new Force[2];
 
+                /*
                 if (frElm.HingedAtEnd & frElm.HingedAtStart)
                 {
                     localEndForces[0] = new Force(w.X*l/2, w.Y*l/2, w.Z*l/2, 0, 0, 0);
@@ -63,17 +64,24 @@ namespace BriefFiniteElementNet
                     throw new NotImplementedException();
                 }
                 else if (!frElm.HingedAtEnd & !frElm.HingedAtStart)
-                {
-                    localEndForces[0] = new Force(w.X*l/2, w.Y*l/2, w.Z*l/2, 0, -w.Z*l*l/12.0, w.Y*l*l/12.0);
-                    localEndForces[1] = new Force(w.X*l/2, w.Y*l/2, w.Z*l/2, 0, w.Z*l*l/12.0, -w.Y*l*l/12.0);
-                }
+                */
+
+                localEndForces[0] = new Force(w.X*l/2, w.Y*l/2, w.Z*l/2, 0, -w.Z*l*l/12.0, w.Y*l*l/12.0);
+                localEndForces[1] = new Force(w.X*l/2, w.Y*l/2, w.Z*l/2, 0, w.Z*l*l/12.0, -w.Y*l*l/12.0);
+                
+
+                localEndForces = CalcUtil.ApplyReleaseMatrixToEndForces(frElm, localEndForces);//applying release matrix to end forces
+
 
 
                 for (var i = 0; i < element.Nodes.Length; i++)
                 {
                     var frc = localEndForces[i];
-                    localEndForces[i] = new Force(frElm.TransformLocalToGlobal(frc.Forces),
-                        frElm.TransformLocalToGlobal(frc.Moments));
+
+                    localEndForces[i] =
+                        new Force(
+                            frElm.TransformLocalToGlobal(frc.Forces),
+                            frElm.TransformLocalToGlobal(frc.Moments));
                 }
 
                 return localEndForces;

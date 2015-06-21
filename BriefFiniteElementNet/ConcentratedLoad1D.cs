@@ -236,8 +236,13 @@ namespace BriefFiniteElementNet
                     mzmz2 + fymz2
                     );
 
+                var localEndForces = new Force[2];
+                localEndForces[0] = f1;
+                localEndForces[1] = f2;
 
-                var vecs = new Vector[] {f1.Forces, f1.Moments, f2.Forces, f2.Moments};
+                localEndForces = CalcUtil.ApplyReleaseMatrixToEndForces(e, localEndForces);//applying release matrix to end forces
+
+                var vecs = new Vector[] { localEndForces[0].Forces, localEndForces[0].Moments, localEndForces[1].Forces, localEndForces[1].Moments };
                 var tvecs = e.TransformLocalToGlobal(vecs);
 
                 buf[0] = new Force(tvecs[0], tvecs[1]);

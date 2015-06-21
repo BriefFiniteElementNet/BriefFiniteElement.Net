@@ -1021,6 +1021,16 @@ namespace BriefFiniteElementNet
             return Matrix.Multiply(m1, m2);
         }
 
+        public static double[] operator *(
+            Matrix m1, double[] vec)
+        {
+            var m2 = new Matrix(vec);
+
+            var res = Matrix.Multiply(m1, m2);
+
+            return res.coreArray;
+        }
+        
         public static Matrix operator *(
             double coeff, Matrix mat)
         {
