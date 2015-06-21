@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
     /// Represents a single DoF mass element
     /// </summary>
+    [Serializable]
     public class SdofMass : Element
     {
         /// <summary>
@@ -29,7 +31,7 @@ namespace BriefFiniteElementNet.Elements
         }
 
         /// <inheritdoc />
-        public SdofMass(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected SdofMass(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _massAmount = info.GetDouble("_massAmount");
             _appliedDof = (DoF) info.GetInt32("_appliedDof");
@@ -88,6 +90,7 @@ namespace BriefFiniteElementNet.Elements
 
 
         /// <inheritdoc />
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("_massAmount", _massAmount);

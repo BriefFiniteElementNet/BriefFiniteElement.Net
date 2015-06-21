@@ -10,6 +10,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents a uniform load which is applying to one side of a 3d element
     /// </summary>
+    [Serializable]
     public class UniformSurfaceLoad3D : Load3D
     {
         /// <inheritdoc />
@@ -127,7 +128,7 @@ namespace BriefFiniteElementNet
       
 
         /// <inheritdoc />
-        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             this.nodeNumbers = new int[this._surfaceNodes.Length];

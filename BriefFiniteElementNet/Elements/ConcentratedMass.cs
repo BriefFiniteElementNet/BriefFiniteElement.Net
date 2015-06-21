@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -32,7 +33,7 @@ namespace BriefFiniteElementNet.Elements
         }
 
         /// <inheritdoc />
-        public ConcentratedMass(SerializationInfo info, StreamingContext context)
+        protected ConcentratedMass(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             _massAmount = info.GetDouble("_massAmount");
@@ -78,6 +79,7 @@ namespace BriefFiniteElementNet.Elements
 
 
         /// <inheritdoc />
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("_massAmount", _massAmount);

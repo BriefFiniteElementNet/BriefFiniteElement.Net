@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet
 {
@@ -51,9 +52,21 @@ namespace BriefFiniteElementNet
         {
             this.HelpLink =
                 "https://brieffiniteelementnet.codeplex.com/wikipage?title=Error%20message%20list&referringTitle=Documentation";
+            IssueId = (string)info.GetValue("IssueId", typeof(string));
         }
 
         public string IssueId;
+
+        #region ISerialization Implementation
+
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("IssueId", IssueId);
+        }
+
+        #endregion
     }
 
 

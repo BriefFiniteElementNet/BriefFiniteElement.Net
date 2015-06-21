@@ -55,6 +55,7 @@
     <Compile Include="LoadTypeCollection.cs" />
     <Compile Include="MassFormulation.cs" />
     <Compile Include="MatrixAssemblerUtil.cs" />
+    <Compile Include="MatrixException.cs" />
     <Compile Include="ModelConsole.cs" />
     <Compile Include="NodeList.cs" />
     <Compile Include="NotPositiveDefiniteException.cs" />
@@ -68,7 +69,7 @@
     <Compile Include="RigidElement.cs" />
     <Compile Include="RigidElementCollection.cs" />
     <Compile Include="SectionGenerator.cs" />
-    <Compile Include="SerializationBinder.cs" />
+    <Compile Include="FemNetSerializationBinder.cs" />
     <Compile Include="SolverConfiguration.cs" />
     <Compile Include="SolverFailException.cs" />
     <Compile Include="BuiltInSolverType.cs" />

@@ -27,7 +27,7 @@ namespace BriefFiniteElementNet
         /// <returns></returns>
         public static Matrix FromRowColCoreArray(int rows, int cols, double[] coreArr)
         {
-            return new Matrix() {columnCount = cols, rowCount = rows, coreArray = coreArr};
+            return new Matrix() { columnCount = cols, rowCount = rows, coreArray = coreArr };
         }
 
         public static Matrix RandomMatrix(int m, int n)
@@ -201,7 +201,7 @@ namespace BriefFiniteElementNet
             this.rowCount = rows;
             this.columnCount = cols;
 
-            this.coreArray = new double[rows*cols];
+            this.coreArray = new double[rows * cols];
 
             for (int i = 0; i < rows; i++)
                 for (int j = 0; j < cols; j++)
@@ -291,10 +291,10 @@ namespace BriefFiniteElementNet
             for (var i = 0; i < r; i++)
             {
                 var tmp = 0.0;
-                
+
                 for (var j = 0; j < c; j++)
                 {
-                    tmp += m[i, j]*vec[j];
+                    tmp += m[i, j] * vec[j];
                 }
 
                 buf[i] = tmp;
@@ -402,7 +402,7 @@ namespace BriefFiniteElementNet
         public bool IsSymmetric()
         {
             for (int i = 0; i < this.rowCount; i++)
-                for (int j = i+1; j < this.columnCount; j++)
+                for (int j = i + 1; j < this.columnCount; j++)
                     if (!MathUtil.Equals(this[i, j], this[j, i], 1e-3))
                     {
                         return false;
@@ -873,7 +873,7 @@ namespace BriefFiniteElementNet
 
         public static double[][] ToJaggedArray(Matrix mtx)
         {
-            var buf = new double[mtx.RowCount][ ];
+            var buf = new double[mtx.RowCount][];
 
             for (int i = 0; i < buf.Length; i++)
             {
@@ -1193,7 +1193,7 @@ namespace BriefFiniteElementNet
 
         #region Serialization stuff
 
-        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("rowCount", rowCount);
@@ -1205,9 +1205,9 @@ namespace BriefFiniteElementNet
             SerializationInfo info,
             StreamingContext context)
         {
-            this.rowCount = (int) info.GetValue("rowCount", typeof (int));
-            this.columnCount = (int) info.GetValue("columnCount", typeof (int));
-            this.coreArray = (double[]) info.GetValue("coreArray", typeof (double[]));
+            this.rowCount = (int)info.GetValue("rowCount", typeof(int));
+            this.columnCount = (int)info.GetValue("columnCount", typeof(int));
+            this.coreArray = (double[])info.GetValue("coreArray", typeof(double[]));
         }
 
         #endregion
@@ -1237,36 +1237,5 @@ namespace BriefFiniteElementNet
         }
     }
 
-    /// <summary>
-    /// Represents a class for exceptions in <see cref="Matrix"/>
-    /// </summary>
-    [Serializable]
-    public class MatrixException : BriefFiniteElementNetException
-    {
-        public MatrixException()
-        {
-        }
 
-        public MatrixException(string message)
-            : base(message)
-        {
-        }
-
-        public MatrixException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
-
-        protected MatrixException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-
-        [DebuggerHidden]
-        public static void ThrowIf(bool condition, string message)
-        {
-            if (condition)
-                throw new MatrixException(message);
-        }
-    }
 }

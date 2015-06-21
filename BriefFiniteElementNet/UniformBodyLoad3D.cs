@@ -10,6 +10,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents a uniformly distributed load on a whole of 3d <see cref="Element"/>'s body.
     /// </summary>
+    [Serializable]
     public class UniformBodyLoad3D : Load3D
     {
         private double _vx, _vy, _vz;
@@ -96,7 +97,7 @@ namespace BriefFiniteElementNet
         }
 
         /// <inheritdoc/>
-        [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("vx", _vx);

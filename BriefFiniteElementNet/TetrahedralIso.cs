@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Remoting.Channels;
 using System.Text;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet
 {
@@ -11,6 +13,7 @@ namespace BriefFiniteElementNet
     /// </summary>
     /// <remarks>
     /// Not fully implemented yet!</remarks>
+    [Serializable]
     public class TetrahedralIso : Element3D
     {
         private double _e;
@@ -20,26 +23,31 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// the a, look at UpdateGeoMatrix()
         /// </summary>
+        [NonSerialized]
         internal double[] a;
 
         /// <summary>
         /// The b, look at UpdateGeoMatrix()
         /// </summary>
+        [NonSerialized]
         internal double[] b;
 
         /// <summary>
         /// The c, look at UpdateGeoMatrix()
         /// </summary>
+        [NonSerialized]
         internal double[] c;
 
         /// <summary>
         /// The d, look at UpdateGeoMatrix()
         /// </summary>
+        [NonSerialized]
         internal double[] d;
 
         /// <summary>
         /// The determinant, look at UpdateGeoMatrix()
         /// </summary>
+        [NonSerialized]
         internal double det;
 
         /// <summary>
@@ -259,5 +267,32 @@ namespace BriefFiniteElementNet
         {
             throw new NotImplementedException();
         }
+
+        #region Deserialization Constructor
+
+        protected TetrahedralIso(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            _e = (double)info.GetValue("_e", typeof(double));
+            _nu = (double)info.GetValue("_nu", typeof(double));
+            _massDensity = (double)info.GetValue("_massDensity", typeof(double));
+            hash = (int)info.GetValue("hash", typeof(int));
+        }
+
+        #endregion
+
+        #region ISerialization Implementation
+
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("_e", _e);
+            info.AddValue("_nu", _nu);
+            info.AddValue("_massDensity", _massDensity);
+            info.AddValue("hash", hash);
+        }
+
+        #endregion
     }
 }

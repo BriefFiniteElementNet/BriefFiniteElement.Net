@@ -8,6 +8,7 @@
 using System;
 using System.Linq;
 using BriefFiniteElementNet.CSparse.Storage;
+using BriefFiniteElementNet;
 
 namespace BriefFiniteElementNet.CSparse.Double
 {
