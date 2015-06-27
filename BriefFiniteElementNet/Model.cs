@@ -410,6 +410,11 @@ namespace BriefFiniteElementNet
                 {
                     relm.Nodes.Add(this.nodes[relm.nodeNumbers[i]]);
                 }
+
+                if(relm._centralNodeNumber.HasValue)
+                {
+                    relm.CentralNode = this.nodes[relm._centralNodeNumber.Value];
+                }
             }
 
             #endregion

@@ -17,6 +17,72 @@ namespace BriefFiniteElementNet
     public class Matrix : ISerializable, IEnumerable<double>
     {
         /// <summary>
+        /// Horizontally join the two matrices.
+        /// </summary>
+        /// <param name="m1">The m1.</param>
+        /// <param name="m2">The m2.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public static Matrix HorizontalConcat(Matrix m1, Matrix m2)
+        {
+            if (m1.RowCount != m2.RowCount)
+                throw new Exception();
+
+            var buf = new Matrix(m1.RowCount, m1.columnCount + m2.columnCount);
+
+            for (var i = 0; i < m1.rowCount; i++)
+            {
+                for (var j = 0; j < m1.columnCount; j++)
+                {
+                    buf[i, j] = m1[i, j];
+                }
+            }
+
+            for (var i = 0; i < m2.rowCount; i++)
+            {
+                for (var j = 0; j < m2.columnCount; j++)
+                {
+                    buf[i + m1.columnCount, j] = m2[i, j];
+                }
+            }
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Vertically join the two matrices.
+        /// </summary>
+        /// <param name="m1">The m1.</param>
+        /// <param name="m2">The m2.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public static Matrix VerticalConcat(Matrix m1, Matrix m2)
+        {
+            if (m1.columnCount != m2.columnCount)
+                throw new Exception();
+
+            var buf = new Matrix(m1.RowCount + m2.RowCount, m1.columnCount);
+
+            for (var i = 0; i < m1.rowCount; i++)
+            {
+                for (var j = 0; j < m1.columnCount; j++)
+                {
+                    buf[i, j] = m1[i, j];
+                }
+            }
+
+            for (var i = 0; i < m2.rowCount; i++)
+            {
+                for (var j = 0; j < m2.columnCount; j++)
+                {
+                    buf[i, j + m1.rowCount] = m2[i, j];
+                }
+            }
+
+            return buf;
+        }
+
+        /// <summary>
         /// Creates a matrix from rowcount, colcount and core array
         /// </summary>
         /// <param name="rows">The rows.</param>

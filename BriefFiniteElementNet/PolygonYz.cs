@@ -137,6 +137,56 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+        /// <summary>
+        /// Gets the section geometrical properties.
+        /// </summary>
+        /// <returns>An array containing geometrical properties of section</returns>
+        /// <remarks>
+        /// This is the order of returned array: [Iz,Iy,J,A,Ay,Az]
+        /// Note: Ay and Az are spotted as same value as A (e.g. Ay = A and Az = A)
+        /// </remarks>
+        public static double[] GetSectionGeometricalProperties(PointYZ[] pts)
+        {
+            var lastPoint = pts.Last();
+
+            if (lastPoint != pts[0])
+                throw new InvalidOperationException("First point and last point ot PolygonYz should put on each other");
+
+            double a = 0.0, iz = 0.0, iy = 0.0, iyz = 0.0;
+
+            var l = pts.Length - 1;
+
+            var ai = 0.0;
+
+            for (var i = 0; i < l; i++)
+            {
+                ai = pts[i].Y * pts[i + 1].Z - pts[i + 1].Y * pts[i].Z;
+                a += ai;
+                iy += (pts[i].Z * pts[i].Z + pts[i].Z * pts[i + 1].Z + pts[i + 1].Z * pts[i + 1].Z) * ai;
+                iz += (pts[i].Y * pts[i].Y + pts[i].Y * pts[i + 1].Y + pts[i + 1].Y * pts[i + 1].Y) * ai;
+
+                iyz += (pts[i].Y * pts[i + 1].Z + 2 * pts[i].Y * pts[i].Z + 2 * pts[i + 1].Y * pts[i + 1].Z + pts[i + 1].Y * pts[i].Z) * ai;
+
+            }
+
+            a = a * 0.5;
+            iz = iz * 1 / 12.0;
+            iy = iy * 1 / 12.0;
+            iyz = iyz * 1 / 24.0;
+            var j = iy + iz;
+            //not sure which one is correct j = ix + iy or j = ixy :)!
+
+            var buf = new double[] { iy, iz, j, a, a, a };
+
+            if (a < 0)
+                for (var i = 0; i < 6; i++)
+                    buf[i] = -buf[i];
+
+            Debug.Assert(buf.All(i => i >= 0));
+
+            return buf;
+        }
+        
 
         /// <summary>
         /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.

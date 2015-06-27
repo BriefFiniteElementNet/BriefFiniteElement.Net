@@ -129,7 +129,7 @@
   <Class Name="BriefFiniteElementNet.Model" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="18" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACAgyIAAAAQAABAAAIgQAAAoAACAAnAAAAIAAAAgIAA=</HashCode>
+      <HashCode>ACAgyIAAAAAAABAAAIgQAAAoAACAAnAAAAIAAAAgIAA=</HashCode>
       <FileName>Model.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -145,7 +145,7 @@
   <Class Name="BriefFiniteElementNet.BriefFiniteElementNetException" Collapsed="true">
     <Position X="9.5" Y="4.5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAEAAAAAAAAAA=</HashCode>
       <FileName>BriefFiniteElementNetException.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -192,7 +192,7 @@
       <FileName>UniformLoad1D.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="BriefFiniteElementNet.TrussElement2Node" Collapsed="true">
+  <Class Name="BriefFiniteElementNet.Elements.TrussElement2Node" Collapsed="true">
     <Position X="5.25" Y="9.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AACAAAIEEQgCQggAIBBAAEAoAAAAABAAAAACIAAAgAA=</HashCode>
@@ -202,7 +202,7 @@
   <Class Name="BriefFiniteElementNet.TetrahedralIso" Collapsed="true">
     <Position X="9.75" Y="9.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IBAAAAAEEABAAAgCAAAAiEAAAAAAAADkAQACAgCAAAA=</HashCode>
+      <HashCode>IBAAAAAEEABAAAgCAAAAiEAgAAAAAADkAQACAgCAAAA=</HashCode>
       <FileName>TetrahedralIso.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -296,7 +296,7 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Struct>
-  <Struct Name="BriefFiniteElementNet.StrainTensor3D">
+  <Struct Name="BriefFiniteElementNet.StrainTensor3D" Collapsed="true">
     <Position X="12.5" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAABAAAAAAAAAAAACAAAAAAABAAAAAAAAAAAAAAAA=</HashCode>

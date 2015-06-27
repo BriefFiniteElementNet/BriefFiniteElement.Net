@@ -15,6 +15,93 @@ namespace BriefFiniteElementNet
     public static class CalcUtil
     {
         /// <summary>
+        /// Gets the transformation matrix for converting local coordinate to global coordinate for a two node straight element.
+        /// </summary>
+        /// <param name="v">The [ end - start ] vector.</param>
+        /// <param name="webR">The web rotation in radian.</param>
+        /// <returns>
+        /// transformation matrix
+        /// </returns>
+        public static Matrix Get2NodeElementTransformationMatrix(Vector v, double webR)
+        {
+            var cxx = 0.0;
+            var cxy = 0.0;
+            var cxz = 0.0;
+
+            var cyx = 0.0;
+            var cyy = 0.0;
+            var cyz = 0.0;
+
+            var czx = 0.0;
+            var czy = 0.0;
+            var czz = 0.0;
+
+
+            var teta = webR;
+
+            var s = webR.Equals(0.0) ? 0.0 : Math.Sin(teta);
+            var c = webR.Equals(0.0) ? 1.0 : Math.Cos(teta);
+
+            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
+            {
+                if (v.Z > 0)
+                {
+                    czx = 1;
+                    cyy = 1;
+                    cxz = -1;
+                }
+                else
+                {
+                    czx = -1;
+                    cyy = 1;
+                    cxz = 1;
+                }
+            }
+            else
+            {
+                var l = v.Length;
+                cxx = v.X/l;
+                cyx = v.Y/l;
+                czx = v.Z/l;
+                var d = Math.Sqrt(cxx*cxx + cyx*cyx);
+                cxy = -cyx/d;
+                cyy = cxx/d;
+                cxz = -cxx*czx/d;
+                cyz = -cyx*czx/d;
+                czz = d;
+            }
+
+            var t = new Matrix(3, 3);
+
+            t[0, 0] = cxx;
+            t[0, 1] = cxy*c + cxz*s;
+            t[0, 2] = -cxy*s + cxz*c;
+
+            t[1, 0] = cyx;
+            t[1, 1] = cyy*c + cyz*s;
+            t[1, 2] = -cyy*s + cyz*c;
+
+            t[2, 0] = czx;
+            t[2, 1] = czy*c + czz*s;
+            t[2, 2] = -czy*s + czz*c;
+
+            return t;
+        }
+
+
+        /// <summary>
+        /// Gets the transformation matrix for converting local coordinate to global coordinate for a two node straight element.
+        /// </summary>
+        /// <param name="v">The [ end - start ] vector.</param>
+        /// <returns>
+        /// transformation matrix
+        /// </returns>
+        public static Matrix Get2NodeElementTransformationMatrix(Vector v)
+        {
+            return Get2NodeElementTransformationMatrix(v, 0);
+        }
+
+        /// <summary>
         /// Creates a built in solver appropriated with <see cref="tp"/>.
         /// </summary>
         /// <param name="type">The solver type.</param>

@@ -470,11 +470,11 @@ namespace BriefFiniteElementNet.Controls
             #region Adding rigidelements
 
             if(ShowRigidElements)
-            foreach (var nde in ModelToVisualize.RigidElements)
+            foreach (var elm in ModelToVisualize.RigidElements)
             {
                 var builder = new MeshBuilder(false, false);
 
-                AddRigidElement(builder, nde);
+                AddRigidElement(builder, elm);
 
                 var gradient = new LinearGradientBrush();//to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
 
@@ -496,7 +496,7 @@ namespace BriefFiniteElementNet.Controls
                 var modelElement = new ModelUIElement3D();
                 modelElement.Model = mygeometry;
 
-                BindMouseEvents(modelElement, nde);
+                BindMouseEvents(modelElement, elm);
                 // var myModelVisual3D = new ModelVisual3D();
                 //myModelVisual3D.Content = modelGroup;
 
@@ -1040,7 +1040,7 @@ namespace BriefFiniteElementNet.Controls
                 }
                 */
             }
-            else
+            //else
             {
                 for (var i = 0; i < elm.Nodes.Count; i++)
                 {

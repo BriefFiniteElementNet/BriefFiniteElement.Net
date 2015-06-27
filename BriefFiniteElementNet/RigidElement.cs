@@ -158,7 +158,7 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// The central node number. used for 
         /// </summary>
-        private int? _centralNodeNumber;
+        internal int? _centralNodeNumber;
 
         [NonSerialized] private Node _centralNode;
 

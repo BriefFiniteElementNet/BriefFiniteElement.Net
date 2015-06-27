@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
-using System.Text;
 
-namespace BriefFiniteElementNet
+namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
-    /// Represents a 2 noded truss element (start and end)
+    /// Represents a 2 node truss element (start and end)
     /// </summary>
     [Serializable]
     public sealed class TrussElement2Node : Element1D
@@ -42,7 +39,7 @@ namespace BriefFiniteElementNet
             set { _a = value; }
         }
 
-        private bool useOverridedProperties=true;
+        private bool useOverridedProperties = true;
 
         /// <summary>
         /// Gets or sets a value indicating whether [use overrided properties].
@@ -76,13 +73,12 @@ namespace BriefFiniteElementNet
 
         #endregion
 
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TrussElement2Node"/> class.
         /// </summary>
         /// <param name="start">The start.</param>
         /// <param name="end">The end.</param>
-        public TrussElement2Node(Node start,Node end) : base(2)
+        public TrussElement2Node(Node start, Node end) : base(2)
         {
             this.nodes[0] = start;
             this.nodes[1] = end;
@@ -101,6 +97,7 @@ namespace BriefFiniteElementNet
         /// </remarks>
         public override Force GetInternalForceAt(double x, LoadCombination cmb)
         {
+            
             throw new NotImplementedException();
         }
 
@@ -115,7 +112,9 @@ namespace BriefFiniteElementNet
         /// </remarks>
         public override Force GetInternalForceAt(double x)
         {
-            throw new NotImplementedException();
+            var cmb = new LoadCombination();
+            cmb[LoadCase.DefaultLoadCase] = 1.0;
+            return GetInternalForceAt(x, cmb);
         }
 
         /// <summary>
@@ -131,6 +130,9 @@ namespace BriefFiniteElementNet
         /// </remarks>
         public override Matrix GetGlobalStifnessMatrix()
         {
+            throw new NotImplementedException();
+
+            //TODO: these are not correct, to be fixed...
             var v = this.EndNode.Location - this.StartNode.Location;
 
             var l = v.Length;
@@ -138,28 +140,67 @@ namespace BriefFiniteElementNet
             var cy = v.Y/l;
             var cz = v.Z/l;
 
+            var localS = new Matrix(2, 2);
+
+            var a = this.A;//area
+
+            localS[0, 0] = localS[1, 1] = this.e * a / l;
+            localS[1, 0] = localS[0, 1] = -this.e * a / l;
+
+            var t = new Matrix(2, 6);
+            t[0, 0] = cx;
+            t[0, 1] = cy;
+            t[0, 2] = cz;
+
+            t[1, 3] = cx;
+            t[1, 4] = cy;
+            t[1, 5] = cz;
+
+
             var buf = new Matrix(12, 12);
 
-            buf[0 + 0, 0] = cx * cx; buf[0 + 0, 1] = cx * cy; buf[0 + 0, 2] = cx * cz;
-            buf[1 + 0, 0] = cx * cy; buf[1 + 0, 1] = cy * cy; buf[1 + 0, 2] = cy * cz;
-            buf[2 + 0, 0] = cx * cz; buf[2 + 0, 1] = cy * cz; buf[2 + 0, 2] = cz * cz;
+            buf[0 + 0, 0] = cx*cx;
+            buf[0 + 0, 1] = cx*cy;
+            buf[0 + 0, 2] = cx*cz;
+            buf[1 + 0, 0] = cx*cy;
+            buf[1 + 0, 1] = cy*cy;
+            buf[1 + 0, 2] = cy*cz;
+            buf[2 + 0, 0] = cx*cz;
+            buf[2 + 0, 1] = cy*cz;
+            buf[2 + 0, 2] = cz*cz;
 
 
+            buf[0 + 6, 0] = -cx*cx;
+            buf[0 + 6, 1] = -cx*cy;
+            buf[0 + 6, 2] = -cx*cz;
+            buf[1 + 6, 0] = -cx*cy;
+            buf[1 + 6, 1] = -cy*cy;
+            buf[1 + 6, 2] = -cy*cz;
+            buf[2 + 6, 0] = -cx*cz;
+            buf[2 + 6, 1] = -cy*cz;
+            buf[2 + 6, 2] = -cz*cz;
 
-            buf[0 + 6, 0] = -cx * cx; buf[0 + 6, 1] = -cx * cy; buf[0 + 6, 2] = -cx * cz;
-            buf[1 + 6, 0] = -cx * cy; buf[1 + 6, 1] = -cy * cy; buf[1 + 6, 2] = -cy * cz;
-            buf[2 + 6, 0] = -cx * cz; buf[2 + 6, 1] = -cy * cz; buf[2 + 6, 2] = -cz * cz;
+
+            buf[0, 0 + 6] = -cx*cx;
+            buf[0, 1 + 6] = -cx*cy;
+            buf[0, 2 + 6] = -cx*cz;
+            buf[1, 0 + 6] = -cx*cy;
+            buf[1, 1 + 6] = -cy*cy;
+            buf[1, 2 + 6] = -cy*cz;
+            buf[2, 0 + 6] = -cx*cz;
+            buf[2, 1 + 6] = -cy*cz;
+            buf[2, 2 + 6] = -cz*cz;
 
 
-
-            buf[0, 0 + 6] = -cx * cx; buf[0, 1 + 6] = -cx * cy; buf[0, 2 + 6] = -cx * cz;
-            buf[1, 0 + 6] = -cx * cy; buf[1, 1 + 6] = -cy * cy; buf[1, 2 + 6] = -cy * cz;
-            buf[2, 0 + 6] = -cx * cz; buf[2, 1 + 6] = -cy * cz; buf[2, 2 + 6] = -cz * cz;
-
-
-            buf[0 + 6, 0 + 6] = cx * cx; buf[0 + 6, 1 + 6] = cx * cy; buf[0 + 6, 2 + 6] = cx * cz;
-            buf[1 + 6, 0 + 6] = cx * cy; buf[1 + 6, 1 + 6] = cy * cy; buf[1 + 6, 2 + 6] = cy * cz;
-            buf[2 + 6, 0 + 6] = cx * cz; buf[2 + 6, 1 + 6] = cy * cz; buf[2 + 6, 2 + 6] = cz * cz;
+            buf[0 + 6, 0 + 6] = cx*cx;
+            buf[0 + 6, 1 + 6] = cx*cy;
+            buf[0 + 6, 2 + 6] = cx*cz;
+            buf[1 + 6, 0 + 6] = cx*cy;
+            buf[1 + 6, 1 + 6] = cy*cy;
+            buf[1 + 6, 2 + 6] = cy*cz;
+            buf[2 + 6, 0 + 6] = cx*cz;
+            buf[2 + 6, 1 + 6] = cy*cz;
+            buf[2 + 6, 2 + 6] = cz*cz;
 
             if (!useOverridedProperties)
                 throw new NotImplementedException();
@@ -174,6 +215,18 @@ namespace BriefFiniteElementNet
             return buf;
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// The last transformation matrix associated with <see cref="_lastElementVector"/>
+        /// </summary>
+        [NonSerialized]
+        private Matrix _lastTransformationMatrix;
+
+        /// <summary>
+        /// The last transformation matrix associated with <see cref="_lastTransformationMatrix"/>
+        /// </summary>
+        [NonSerialized]
+        private Vector _lastElementVector;
 
 
         /// <summary>
@@ -210,7 +263,7 @@ namespace BriefFiniteElementNet
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("_a",_a);
+            info.AddValue("_a", _a);
             info.AddValue("geometry", geometry);
             info.AddValue("useOverridedProperties", useOverridedProperties);
             info.AddValue("_massDensity", _massDensity);
@@ -223,13 +276,14 @@ namespace BriefFiniteElementNet
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        private TrussElement2Node(SerializationInfo info, StreamingContext context):base(info,context)
+        private TrussElement2Node(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _a = info.GetDouble("_a");
             geometry = info.GetValue<PolygonYz>("geometry");
             useOverridedProperties = info.GetBoolean("useOverridedProperties");
             _massDensity = info.GetDouble("_massDensity");
         }
+
 
 
         /// <summary>
@@ -239,118 +293,50 @@ namespace BriefFiniteElementNet
         /// <returns></returns>
         internal Vector TransformLocalToGlobal(Vector v)
         {
-            var pars = GetTransformationParameters();
-            var buf = new Vector(
-                pars[0] * v.X + pars[1] * v.Y + pars[2] * v.Z,
-                pars[3] * v.X + pars[4] * v.Y + pars[5] * v.Z,
-                pars[6] * v.X + pars[7] * v.Y + pars[8] * v.Z);
+            var t = GetTransformationMatrix();
+            var vm = new Matrix(new[] {v.X, v.Y, v.Z});
 
-            return buf;
+            var buf = t*vm;
+
+            return new Vector(buf[0, 0], buf[1, 0], buf[2, 0]);
+        }
+
+        /// <summary>
+        /// Converts the vector from global to local coordination system.
+        /// </summary>
+        /// <param name="v">The v.</param>
+        /// <returns></returns>
+        internal Vector TransformGlobalToLocal(Vector v)
+        {
+            var t = GetTransformationMatrix();
+            var vm = new Matrix(new[] { v.X, v.Y, v.Z });
+
+            var buf = t.Transpose() * vm;
+
+            return new Vector(buf[0, 0], buf[1, 0], buf[2, 0]);
         }
 
 
-        private double[] GetTransformationParameters()
+
+        /// <summary>
+        /// Gets the transformation matrix.
+        /// </summary>
+        /// <returns></returns>
+        private Matrix GetTransformationMatrix()
         {
             var v = this.EndNode.Location - this.StartNode.Location;
 
-            if (!v.Equals(LastElementVector))
-                ReCalculateTransformationParameters();
+            if (!v.Equals(_lastElementVector))
+            {
+                _lastTransformationMatrix = CalcUtil.Get2NodeElementTransformationMatrix(v);
+                _lastElementVector = v;
+            }
 
-            return LastTransformationParameters;
+            return _lastTransformationMatrix;
         }
 
-
-        /// <summary>
-        /// The last transformation parameters
-        /// </summary>
-        /// <remarks>Storing transformation parameters corresponding to <see cref="LastElementVector"/> for better performance.</remarks>
-        [NonSerialized]
-        private double[] LastTransformationParameters = new double[9];
-
-        /// <summary>
-        /// The last element vector
-        /// </summary>
-        /// <remarks>Last vector corresponding to current <see cref="LastTransformationParameters"/> </remarks>
-        [NonSerialized]
-        private Vector LastElementVector;
 
         private double _massDensity;
-
-
-        /// <summary>
-        /// Calculates the transformation parameters for this <see cref="FrameElement2Node"/>
-        /// </summary>
-        private void ReCalculateTransformationParameters()
-        {
-            var cxx = 0.0;
-            var cxy = 0.0;
-            var cxz = 0.0;
-
-            var cyx = 0.0;
-            var cyy = 0.0;
-            var cyz = 0.0;
-
-            var czx = 0.0;
-            var czy = 0.0;
-            var czz = 0.0;
-
-
-            var teta = 0.0;
-
-            var s = Math.Sin(teta * Math.PI / 180.0);
-            var c = Math.Cos(teta * Math.PI / 180.0);
-
-            var v = this.EndNode.Location - this.StartNode.Location;
-
-
-            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
-            {
-                if (v.Z > 0)
-                {
-                    czx = 1;
-                    cyy = 1;
-                    cxz = -1;
-                }
-                else
-                {
-                    czx = -1;
-                    cyy = 1;
-                    cxz = 1;
-                }
-            }
-            else
-            {
-                var l = v.Length;
-                cxx = v.X / l;
-                cyx = v.Y / l;
-                czx = v.Z / l;
-                var d = Math.Sqrt(cxx * cxx + cyx * cyx);
-                cxy = -cyx / d;
-                cyy = cxx / d;
-                cxz = -cxx * czx / d;
-                cyz = -cyx * czx / d;
-                czz = d;
-            }
-
-
-
-            this.LastElementVector = v;
-
-            var pars = this.LastTransformationParameters;
-
-            pars[0] = cxx;
-            pars[1] = cxy * c + cxz * s;
-            pars[2] = -cxy * s + cxz * c;
-
-            pars[3] = cyx;
-            pars[4] = cyy * c + cyz * s;
-            pars[5] = -cyy * s + cyz * c;
-
-            pars[6] = czx;
-            pars[7] = czy * c + czz * s;
-            pars[8] = -czy * s + czz * c;
-         
-        }
 
 
         ///<inheritdoc/>
