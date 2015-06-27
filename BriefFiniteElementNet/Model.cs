@@ -235,12 +235,10 @@ namespace BriefFiniteElementNet
 
             var buf = (Model) formatter.Deserialize(str);
 
-
             return buf;
         }
 
-        [Obsolete]
-        public void CheckForErrors()
+        private void PrecheckForErrors()
         {
             new ModelWarningChecker().CheckModel(this);
         }
@@ -254,6 +252,9 @@ namespace BriefFiniteElementNet
         /// </summary>
         public void Solve()
         {
+
+            PrecheckForErrors();
+
             var cfg = new SolverConfiguration();
 
             cfg.SolverGenerator = i =>

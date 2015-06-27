@@ -502,6 +502,12 @@ namespace BriefFiniteElementNet
                 //MatrixAssemblerUtil.DivideZones(parent, kr, map);
                 CalcUtil.GetReducedZoneDividedMatrix(kr, map);
 
+            AnalyseStiffnessMatrixForWarnings(krd, map,loadCase);
+            
+#if DEBUG
+            //CheckForSymmetricity(krd.ReleasedReleasedPart);
+#endif
+
             var frf = GetFreePartOfReducedVector(fr, map);
             var urs = GetFixedPartOfReducedVector(ur, map);
 
@@ -569,6 +575,75 @@ namespace BriefFiniteElementNet
 
             forces[loadCase] = ft;
             displacements[loadCase] = ut2;
+        }
+
+        /// <summary>
+        /// Analyses the stiffness matrix for warnings.
+        /// </summary>
+        /// <param name="mtx">The MTX.</param>
+        /// <param name="map">The map.</param>
+        /// <param name="currentCase">The current load case which error is with it.</param>
+        /// <remarks>
+        /// Only searches for zero elements on matrix diagonal
+        /// </remarks>
+        private void AnalyseStiffnessMatrixForWarnings(ZoneDevidedMatrix mtx, DofMappingManager map,
+            LoadCase currentCase)
+        {
+            var cs = mtx.ReleasedReleasedPart;
+
+            var n = cs.ColumnCount;
+
+            var t = new bool[n]; //true if i'th diagonal member nonzero, false if diagonal member zero!
+
+            for (var i = 0; i < n; i++)
+            {
+                var st = cs.ColumnPointers[i];
+                var en = cs.ColumnPointers[i + 1];
+
+                var col = i;
+
+                for (var j = st; j < en; j++)
+                {
+                    var row = cs.RowIndices[j];
+                    //var val = cs.Values[j];
+
+                    if (row == col)
+                        t[row] = true;
+                }
+            }
+
+            for (var i = 0; i < n; i++)
+            {
+                if (t[i])
+                    continue;
+
+                var globalDofNum = map.RMap1[map.RMap2[i]];
+
+                var nodeNum = globalDofNum/6;
+                var dof = (DoF) (globalDofNum%6);
+
+                var rec = TraceRecords.GetRecord(30000, parent.Nodes[nodeNum].Label);
+
+                rec.TargetIdentifier = string.Format(
+                    "{0} DoF on node #{1} for load case with [name = '{2}'] and [nature = {3}]", dof, nodeNum,
+                    currentCase.CaseName, currentCase.LoadType);
+
+                parent.Trace.Write(rec);
+            }
+        }
+
+        private void CheckForSymmetricity(CompressedColumnStorage cs)
+        {
+            var cr = cs.Transpose();
+
+            for (int i = 0; i < cs.NonZerosCount; i++)
+            {
+                if (cr.RowIndices[i] != cs.RowIndices[i])
+                    throw new Exception();
+
+                if (Math.Abs(cr.Values[i] - cs.Values[i]) > 1e-5)
+                    throw new Exception();
+            }
         }
 
         [Obsolete]

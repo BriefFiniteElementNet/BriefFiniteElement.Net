@@ -31,7 +31,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 
-                <DataGridTextColumn Header="Error ID" Binding="{Binding ErrorId}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Error ID" Binding="{Binding IssueId}" IsReadOnly="True" />
                 
                 <DataGridTemplateColumn Header="Level" >
                     <DataGridTemplateColumn.CellTemplate>
@@ -59,7 +59,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBlock><Hyperlink NavigateUri="{Binding HelpLink}" RequestNavigate="Hyperlink_RequestNavigate"><InlineUIContainer>
-										<TextBlock Text="{Binding HelpLink}" />
+										<TextBlock Text="Click to see" />
 									</InlineUIContainer></Hyperlink></TextBlock>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

@@ -8,6 +8,35 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents a class for mapping Dof numbers in real structure, reduced structure (after applying rigid elements) and free and fixed part of reduced structure
     /// </summary>
+    /// <remarks>
+    /// 
+    /// -------------------------------------------------
+    /// # of DoF in whole structure: 1
+    /// # of DoF in reduced structure: 2
+    /// map1[1] = 2     , l = 6*n
+    /// rMap1[2] = 1    , l = 6*m
+    /// -------------------------------------------------
+    /// # of Dof in reduced structure: 3
+    /// # of DoF in released DoFs of reduced structurez: 4
+    /// map2[3] = 4     , l = 6*m
+    /// rmap2[4] = 3    , l = mr
+    /// -------------------------------------------------
+    /// # of Dof in reduced structure: 5
+    /// # of DoF in fixed DoFs of reduced structurez: 6
+    /// map3[5] = 6     , l = 6*m
+    /// rmap3[6] = 5    , l = mf
+    /// -------------------------------------------------
+    /// # of node in whole structure
+    /// # of node in reduced structure
+    /// map4[7] = 8
+    /// rmap4[8] = 7
+    /// -------------------------------------------------
+    /// # of node in main structure: 9
+    /// # of master node: 10
+    /// # of master node in all masters: 11
+    /// masters[9] = 10
+    /// rMasters[9] = 11
+    /// </remarks>
     public class DofMappingManager
     {
         private int _n;

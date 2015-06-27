@@ -23,6 +23,22 @@ namespace BriefFiniteElementNet
             }
         }
 
+
+        /// <summary>
+        /// Writes the specified message to all listeners.
+        /// </summary>
+        /// <param name="level">The level.</param>
+        /// <param name="message">The message.</param>
+        /// <param name="formats">The formats.</param>
+        public void Write(TraceLevel level,string message,params object[] formats)
+        {
+            foreach (var listener in _listeners)
+            {
+                if (listener != null)
+                    listener.Write(TraceRecord.Create(level, string.Format(message, formats)));
+            }
+        }
+
         private List<ITraceListener> _listeners = new List<ITraceListener>();
 
         /// <summary>
@@ -86,11 +102,11 @@ namespace BriefFiniteElementNet
         private string _category;
         private string _message;
         private string _detailedMessage;
-        private DateTime _timeStamp;
+        private DateTime _timeStamp = DateTime.Now;
         private string _solution;
-        private string _errorId;
+        private string _issueId;
         private TraceLevel _level;
-        private string _helpLink;
+        private string _helpLink = "https://brieffiniteelementnet.codeplex.com/wikipage?title=Error%20message%20list&referringTitle=Documentation";
 
         #endregion
 
@@ -102,12 +118,19 @@ namespace BriefFiniteElementNet
             get { return _number; }
         }
 
+        [Obsolete]
         public string Category
         {
             get { return _category; }
             set { _category = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the message.
+        /// </summary>
+        /// <value>
+        /// The message.
+        /// </value>
         public string Message
         {
             get { return _message; }
@@ -121,6 +144,12 @@ namespace BriefFiniteElementNet
             set { _detailedMessage = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the time stamp.
+        /// </summary>
+        /// <value>
+        /// The time stamp of record.
+        /// </value>
         public DateTime TimeStamp
         {
             get { return _timeStamp; }
@@ -134,10 +163,17 @@ namespace BriefFiniteElementNet
             set { _solution = value; }
         }
 
-        public string ErrorId
+        /// <summary>
+        /// Gets or sets the issue identifier.
+        /// </summary>
+        /// <value>
+        /// The issue id which exists here with detailed info:
+        ///  https://brieffiniteelementnet.codeplex.com/wikipage?title=Error%20message%20list
+        /// </value>
+        public string IssueId
         {
-            get { return _errorId; }
-            set { _errorId = value; }
+            get { return _issueId; }
+            set { _issueId = value; }
         }
 
         public TraceLevel Level
@@ -152,6 +188,12 @@ namespace BriefFiniteElementNet
             set { _helpLink = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the target identifier.
+        /// </summary>
+        /// <value>
+        /// The identifier of either node or element or anything else who causes this.
+        /// </value>
         public string TargetIdentifier
         {
             get { return _targetIdentifier; }
@@ -194,10 +236,10 @@ namespace BriefFiniteElementNet
         /// Gets the ready filled record.
         /// </summary>
         /// <param name="errorNumber">The error Number.</param>
-        /// <param name="elementIdentifier">The element identifier.</param>
+        /// <param name="identifier">The element identifier.</param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public static TraceRecord GetRecord(int errorNumber, string elementIdentifier)
+        public static TraceRecord GetRecord(int errorNumber, string identifier)
         {
             var rec = new TraceRecord();
             rec.TimeStamp = DateTime.Now;
@@ -205,36 +247,38 @@ namespace BriefFiniteElementNet
             rec.HelpLink = @"https://brieffiniteelementnet.codeplex.com/wikipage?title=Error%20message%20list"
                            + "#MA" + errorNumber;
 
-            rec.TargetIdentifier = elementIdentifier;
+            rec.TargetIdentifier = identifier;
 
             switch (errorNumber)
             {
                 case 10000:
-                    rec.ErrorId = "MA10000";
-                    rec.Category = "Elements";
+                    rec.IssueId = "MA10000";
                     rec.Level = TraceLevel.Warning;
                     rec.Message = "FrameElement2Node.Geometry & FrameElement2Node.UseOverridedProperties values are inconsistent";
                     break;
+                
                 case 10010:
-                    rec.ErrorId = "MA10010";
-                    rec.Category = "Elements";
+                    rec.IssueId = "MA10010";
                     rec.Level = TraceLevel.Warning;
-                    rec.Message = "Neither FrameElement2Node.Geometry and one of {FrameElement2Node.A,FrameElement2Node.Iy,FrameElement2Node.Iz} values are setted";
+                    rec.Message = "Neither FrameElement2Node.Geometry and one of {FrameElement2Node.A,FrameElement2Node.Iy,FrameElement2Node.Iz} values are set";
                     break;
 
                 case 10020:
-                    rec.ErrorId = "MA10020";
-                    rec.Category = "Elements";
+                    rec.IssueId = "MA10020";
                     rec.Level = TraceLevel.Warning;
                     rec.Message = "FrameElement2Node.ConsiderShearDeformation & FrameElement2Node.Ay and FrameElement2Node.Az values are inconsistent";
-                    
                     break;
 
                 case 10100:
-                    rec.ErrorId = "MA10100";
-                    rec.Category = "Elements";
+                    rec.IssueId = "MA10100";
                     rec.Level = TraceLevel.Warning;
-                    rec.Message = "Either FrameElement2Node.E or FrameElement2Node.G is not setted";
+                    rec.Message = "Either FrameElement2Node.E or FrameElement2Node.G is not set";
+                    break;
+
+                case 30000:
+                    rec.IssueId = "MA30000";
+                    rec.Level = TraceLevel.Error;
+                    rec.Message = "DoF is not properly restrained";
                     break;
 
                 default:
