@@ -224,6 +224,35 @@ namespace BriefFiniteElementNet
             return GetSupportReaction(LoadCombination.DefaultLoadCombination);
         }
 
+        /// <summary>
+        /// Gets the total external force.
+        /// </summary>
+        /// <param name="combination">The combination.</param>
+        /// <remarks>
+        /// This will return all loads which are applying to this node from anywhere other than connected elements!
+        /// </remarks>
+        /// <returns></returns>
+        public Force GetTotalExternalForce(LoadCombination combination)
+        {
+            var buf = new Force();
+
+            foreach (var kv in combination)
+            {
+                var cse = kv.Key;
+
+                if (!parent.LastResult.Forces.ContainsKey(cse))
+                    parent.LastResult.AddAnalysisResultIfNotExists(cse);
+
+                var totForceVector = parent.LastResult.Forces[cse];
+
+                var fc = Force.FromVector(totForceVector, this.Index*6);
+
+                buf += fc*combination[cse];
+            }
+
+            return buf;
+        }
+
         #region Serialization stuff
 
         /// <summary>

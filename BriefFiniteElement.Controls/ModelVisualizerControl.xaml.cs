@@ -359,6 +359,9 @@ namespace BriefFiniteElementNet.Controls
             if (ModelToVisualize == null)
                 return;
 
+            if (!ModelToVisualize.Nodes.Any())
+                return;
+
 
             if (ElementVisualThickness == 0)
                 ElementVisualThickness = GetSmartElementThichness();
@@ -467,7 +470,7 @@ namespace BriefFiniteElementNet.Controls
             #endregion
 
 
-            #region Adding rigidelements
+            #region Adding rigid elements
 
             if(ShowRigidElements)
             foreach (var elm in ModelToVisualize.RigidElements)
@@ -949,7 +952,10 @@ namespace BriefFiniteElementNet.Controls
 
             var d1 = 0.01*dim;
 
-            var d2 = 0.05*
+            var d2 = 0.0;
+
+            if (ModelToVisualize.Elements.Any())
+                d2 = 0.05*
                      ModelToVisualize.Elements.Where(i => i.Nodes.Length > 1)
                          .Select(i => (i.Nodes[0].Location - i.Nodes.Last().Location).Length)
                          .Min();

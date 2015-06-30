@@ -29,6 +29,7 @@ namespace BriefFiniteElementNet.SimpleUI
             InitializeComponent();
 
             this.DataContext = this.Context = new MainWindowDataContext();
+            Context.Model = new Model();
 
         }
 
@@ -130,6 +131,16 @@ namespace BriefFiniteElementNet.SimpleUI
                 StructureGenerator.AddRandomiseLoading(grd);
 
             Context.Model = grd;
+        }
+
+        private void AddNodes_Click(object sender, RoutedEventArgs e)
+        {
+            var wnd = new AddNodesWindow();
+            wnd.Context.Target = this.Context.Model;
+
+            wnd.ShowDialog();
+
+            VisualizerControl.UpdateUi();
         }
     }
 

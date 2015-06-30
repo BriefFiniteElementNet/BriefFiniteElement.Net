@@ -3,14 +3,14 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Controls="clr-namespace:BriefFiniteElementNet.Controls;assembly=BriefFiniteElementNet.Controls"
     x:Class="BriefFiniteElementNet.SimpleUI.MainWindow"
-    Title="MainWindow" Height="350" Width="525">
+    Title="Simple UI for BriefFiniteElement.NET" Height="400" Width="838">
     <Grid >
-    	<Grid.RowDefinitions>
-    		<RowDefinition Height="20"/>
-    		<RowDefinition />
-    	</Grid.RowDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="159*"/>
+        </Grid.RowDefinitions>
 
-        <Controls:ModelVisualizerControl Grid.RowSpan="2" Grid.Row="5" ModelToVisualize="{Binding Model}"/>
+        <Controls:ModelVisualizerControl Grid.RowSpan="2" Grid.Row="1" ModelToVisualize="{Binding Model}" Name="VisualizerControl"/>
         <Menu IsMainMenu="True" VerticalAlignment="Top" Grid.RowSpan="2">
             <MenuItem Header="_File" >
                 <MenuItem Header="Open Binary Format" Click="OpenBin_Click"/>
@@ -23,12 +23,17 @@
 
             <MenuItem Header="_Tools" >
                 <MenuItem Header="_Create Grid Structure" Click="CreateGrid_Click"/>
-                
+
             </MenuItem>
 
 
+            <MenuItem Header="_Add" >
+                <MenuItem Header="_Node(s)" Click="AddNodes_Click"/>
+
+            </MenuItem>
+
             <MenuItem Header="_Help" />
-            
+
         </Menu>
 
     </Grid>

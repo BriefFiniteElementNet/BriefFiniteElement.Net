@@ -369,6 +369,11 @@ namespace BriefFiniteElementNet
         /// <exception cref="System.InvalidOperationException">When considering shear defoemation none of the parameters Ay, Az and G should be zero</exception>
         public Matrix GetLocalStiffnessMatrix()
         {
+
+            if (this.e.Equals(0.0))
+                throw new BriefFiniteElementNetException("E should be set on a frame element");
+
+
             double a = _a, iz = _iz, iy = _iy, j = _j, ay = _ay, az = _az;
 
             if (!_useOverridedProperties)

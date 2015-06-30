@@ -24,12 +24,13 @@
                 <ColumnDefinition Width="233*"/>
                 <ColumnDefinition Width="322*"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" x:Name="txtHelp" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Mouse Gestures HELP!" ToolTipService.InitialShowDelay="0"  VerticalAlignment="Center" Margin="10,7,0,7"/>
-            <TextBlock Text="3D Visualization in this window is powered by Helix toolkit" HorizontalAlignment="Right" VerticalAlignment="Center" MouseDown="TextBlock_MouseDown" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" Margin="0,7,9,7" Grid.Column="2"/>
+            <TextBlock Grid.Row="0" x:Name="txtHelp" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Mouse Gestures HELP!" ToolTipService.InitialShowDelay="0"  VerticalAlignment="Center" Margin="0"/>
+            <TextBlock Text="3D Visualization in this window is powered by Helix toolkit" HorizontalAlignment="Center" VerticalAlignment="Center" MouseDown="TextBlock_MouseDown" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" Grid.Column="2"/>
             <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <ToggleButton Content="Nodes" IsChecked="{Binding ShowNodes, ElementName=userControl}"/>
                 <ToggleButton Content="Elements" IsChecked="{Binding ShowElements, ElementName=userControl}"/>
                 <ToggleButton Content="RigidElements" IsChecked="{Binding ShowRigidElements, ElementName=userControl}"/>
+                <ToggleButton Content="Loads" IsChecked="{Binding ShowRigidElements, ElementName=userControl}"/>
             </StackPanel>
         </Grid>
     </Grid>
