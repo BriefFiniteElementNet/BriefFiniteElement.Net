@@ -126,7 +126,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             e3.Loads.Add(lr);
 
             var wnd = WpfTraceListener.CreateModelTrace(model);
-            model.CheckForErrors();
+            //model.c();
             //wnd.ShowDialog();
             model.Solve();
             //wnd.ShowDialog();

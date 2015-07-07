@@ -60,6 +60,11 @@ namespace BriefFiniteElementNet.Controls
             Dispatcher.PushFrame(frame);
         }
 
+        /// <inheritdoc/>
+        public ReadOnlyCollection<TraceRecord> Records
+        {
+            get { return new ReadOnlyCollection<TraceRecord>(this.Records); }
+        }
 
         #region TraceRecords Property and Property Change Routed event
 

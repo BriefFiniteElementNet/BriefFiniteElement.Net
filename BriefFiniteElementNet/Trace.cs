@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
@@ -63,6 +64,14 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="record">The record.</param>
         void Write(TraceRecord record);
+
+        /// <summary>
+        /// Gets the records catched by this listener.
+        /// </summary>
+        /// <value>
+        /// The records catched by this yet.
+        /// </value>
+        ReadOnlyCollection<TraceRecord> Records { get; }
     }
 
     /// <summary>

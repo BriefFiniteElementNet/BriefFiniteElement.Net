@@ -92,7 +92,7 @@ namespace BriefFiniteElementNet
 
             
 
-            double a = 0.0, iy = 0.0, ix = 0.0, ixy = 0.0;
+            double a = 0.0, iz = 0.0, iy = 0.0, ixy = 0.0;
 
 
             var x = new double[this.points.Count];
@@ -112,21 +112,21 @@ namespace BriefFiniteElementNet
             {
                 ai = x[i] * y[i + 1] - x[i + 1] * y[i];
                 a += ai;
-                ix += (y[i]*y[i] + y[i]*y[i + 1] + y[i + 1]*y[i + 1])*ai;
-                iy += (x[i]*x[i] + x[i]*x[i + 1] + x[i + 1]*x[i + 1])*ai;
+                iy += (y[i]*y[i] + y[i]*y[i + 1] + y[i + 1]*y[i + 1])*ai;
+                iz += (x[i]*x[i] + x[i]*x[i + 1] + x[i + 1]*x[i + 1])*ai;
 
                 ixy += (x[i]*y[i + 1] + 2*x[i]*y[i] + 2*x[i + 1]*y[i + 1] + x[i + 1]*y[i])*ai;
 
             }
 
             a = a*0.5;
+            iz = iz*1/12.0;
             iy = iy*1/12.0;
-            ix = ix*1/12.0;
             ixy = ixy*1/24.0;
-            var j = ix + iy;
+            var j = iy + iz;
             //not sure which one is correct j = ix + iy or j = ixy :)!
 
-            var buf = new double[] { ix, iy, j, a, a, a };
+            var buf = new double[] { iz, iy, j, a, a, a };
 
             if (a < 0)
                 for (var i = 0; i < 6; i++)

@@ -70,7 +70,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <returns>The stiffness matrix</returns>
         /// <remarks>
-        /// The number of DoFs is in element local regrading order in <see cref="Nodes"/>!</remarks>
+        /// The number of DoFs is in element local regrading order in <see cref="Element.Nodes"/>!</remarks>
         public abstract Matrix GetGlobalStifnessMatrix();
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <returns>The consistent mass matrix</returns>
         /// <remarks>
-        /// The number of DoFs is in element local regrading order in <see cref="Nodes"/>!</remarks>
+        /// The number of DoFs is in element local regrading order in <see cref="Element.Nodes"/>!</remarks>
         public abstract Matrix GetGlobalMassMatrix();
 
 
