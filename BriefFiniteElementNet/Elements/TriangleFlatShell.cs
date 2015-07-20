@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
     /// Represents a flat shell element who is combination of a triangle membrane element and a triangle plate bending element.
     /// </summary>
+    [Serializable]
     public class TriangleFlatShell : Element3D
     {
         private double _thickness;
@@ -52,10 +54,12 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
-        public TriangleFlatShell(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected TriangleFlatShell(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            info.AddValue("_membraneFormulation", (int)_membraneFormulation);
-            info.AddValue("_thickness", _thickness);
+
+
+            _membraneFormulation = (MembraneFormulation)info.GetInt32("_membraneFormulation");
+            _thickness = info.GetDouble("_thickness");
             throw new NotImplementedException();
         }
 
@@ -147,10 +151,11 @@ namespace BriefFiniteElementNet.Elements
         }
 
         /// <inheritdoc />
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            _membraneFormulation = (MembraneFormulation)info.GetInt32("_membraneFormulation");
-            _thickness = info.GetDouble("_thickness");
+            info.AddValue("_membraneFormulation", (int)_membraneFormulation);
+            info.AddValue("_thickness", _thickness);
             base.GetObjectData(info, context);
         }
     }

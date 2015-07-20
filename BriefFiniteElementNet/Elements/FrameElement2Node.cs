@@ -264,7 +264,6 @@ namespace BriefFiniteElementNet
 
         #endregion
 
-        #region Methods
 
         /// <summary>
         /// Gets the stifness matrix of member in global coordination system.
@@ -373,22 +372,17 @@ namespace BriefFiniteElementNet
             if (this.e.Equals(0.0))
                 throw new BriefFiniteElementNetException("E should be set on a frame element");
 
+            var props = GetGeometricProperties();
 
-            double a = _a, iz = _iz, iy = _iy, j = _j, ay = _ay, az = _az;
-
-            if (!_useOverridedProperties)
-            {
-                //should use Geeometry insted of a,iz etc.
-                var props = this._geometry.GetSectionGeometricalProperties();
-
-                iz = props[0];
-                iy = props[1];
-                j = props[2];
-                a = props[3];
-                ay = props[4];
+            double iz = props[0],
+                iy = props[1],
+                j = props[2],
+                a = props[3],
+                ay = props[4],
                 az = props[5];
-            }
 
+
+            
 
             var l = (this.EndNode.Location - this.StartNode.Location).Length;
             var l2 = l*l;
@@ -763,9 +757,6 @@ namespace BriefFiniteElementNet
              */
         }
 
-        #endregion
-
-        #region Serialization stuff
 
         /// <summary>
         /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
@@ -815,8 +806,6 @@ namespace BriefFiniteElementNet
             _webRotation = info.GetDouble("_webRotation");
             _massDensity = info.GetDouble("_massDensity");
         }
-
-        #endregion
 
         /// <summary>
         /// Calculates the M matrix.
@@ -900,7 +889,6 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-
         ///<inheritdoc/>
         public override Matrix GetGlobalMassMatrix()
         {
@@ -932,11 +920,19 @@ namespace BriefFiniteElementNet
         {
             var m = new Matrix(12, 12);
 
+            var props = GetGeometricProperties();
+
+            double iz = props[0],
+                iy = props[1],
+                j = props[2],
+                a = props[3],
+                ay = props[4],
+                az = props[5];
+
+
             var l = (this.EndNode.Location - this.StartNode.Location).Length;
             var ro = this.MassDensity;
-            var a = this._a;
-            var i0 = _iy + _iz;
-            
+            var i0 = iy + iz;
 
 
             if (MassFormulationType == MassFormulation.Consistent)
@@ -1020,6 +1016,22 @@ namespace BriefFiniteElementNet
         public override Matrix GetGlobalDampingMatrix()
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Gets the geometric properties that should be used in calculations.
+        /// </summary>
+        /// <returns>Geometric properties</returns>
+        /// <remarks>
+        /// if UseOverridedProperties set to false then geometric properties from Geometry polygon should be used.
+        /// This method will return whatever properties that should be used regarding to UseOverridedProperties;
+        /// </remarks>
+        private double[] GetGeometricProperties()
+        {
+            if (this._useOverridedProperties)
+                return new[] {Iz, Iy, J, A, Ay, Az};
+            else
+                return Geometry.GetSectionGeometricalProperties();
         }
     }
 }

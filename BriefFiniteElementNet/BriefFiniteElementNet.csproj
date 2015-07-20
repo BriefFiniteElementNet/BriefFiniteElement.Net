@@ -46,6 +46,7 @@
     <Compile Include="DofMap.cs" />
     <Compile Include="DofMappingManager.cs" />
     <Compile Include="Elements\ConcentratedMass.cs" />
+    <Compile Include="Elements\DktElement.cs" />
     <Compile Include="Elements\SdofMass.cs" />
     <Compile Include="Elements\TriangleFlatShell.cs" />
     <Compile Include="Extensions.cs" />
