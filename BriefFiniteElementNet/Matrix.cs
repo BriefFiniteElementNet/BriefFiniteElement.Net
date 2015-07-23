@@ -16,6 +16,40 @@ namespace BriefFiniteElementNet
     [Serializable]
     public class Matrix : ISerializable, IEnumerable<double>
     {
+
+        public static Matrix Repeat(Matrix mtx, int ni, int nj)
+        {
+            var r = mtx.rowCount;
+            var c = mtx.columnCount;
+
+            var buf = new Matrix(r*ni, c*nj);
+
+            for (var i = 0; i < ni; i++)
+                for (var j = 0; j < nj; j++)
+                    for (var ii = 0; ii < mtx.rowCount; ii++)
+                        for (var jj = 0; jj < mtx.columnCount; jj++)
+                            buf[i*r + ii, j*c + jj] = mtx[ii, jj];
+
+            return buf;
+        }
+
+
+        public static Matrix DiagonallyRepeat(Matrix mtx, int n)
+        {
+            var r = mtx.rowCount;
+            var c = mtx.columnCount;
+
+            var buf = new Matrix(r * n, c * n);
+
+            for (var i = 0; i < n; i++)
+                //for (var j = 0; j < n; j++)
+                    for (var ii = 0; ii < mtx.rowCount; ii++)
+                        for (var jj = 0; jj < mtx.columnCount; jj++)
+                            buf[i * r + ii, i * c + jj] = mtx[ii, jj];
+
+            return buf;
+        }
+
         /// <summary>
         /// Horizontally join the two matrices.
         /// </summary>
@@ -75,7 +109,7 @@ namespace BriefFiniteElementNet
             {
                 for (var j = 0; j < m2.columnCount; j++)
                 {
-                    buf[i, j + m1.rowCount] = m2[i, j];
+                    buf[i + m1.rowCount, j] = m2[i, j];
                 }
             }
 

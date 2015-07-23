@@ -992,7 +992,7 @@ namespace BriefFiniteElementNet
                     m[i, i] = 1;
                 }
 
-                m[3, 3] = m[9, 9] = i0/a;
+                m[3, 3] = m[9, 9] = 0*i0/a;
                 m[4, 4] = m[5, 5] = m[10, 10] = m[11, 11] = 0;
 
                 #endregion
@@ -1007,6 +1007,7 @@ namespace BriefFiniteElementNet
            
 
             if (_hingedAtStart || _hingedAtEnd)
+                if (MassFormulationType != MassFormulation.Lumped)
                 m = GetReleaseMatrix()*m;
 
             return m;

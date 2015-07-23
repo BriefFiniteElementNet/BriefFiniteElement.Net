@@ -14,6 +14,25 @@ namespace BriefFiniteElementNet
     /// </summary>
     public static class CalcUtil
     {
+
+
+        public static CCS GetReducedFreeFreeStiffnessMatrix(this Model model)
+        {
+            return GetReducedFreeFreeStiffnessMatrix(model, LoadCase.DefaultLoadCase);
+        }
+
+        public static CCS GetReducedFreeFreeStiffnessMatrix(this Model model,
+            LoadCase lc)
+        {
+            var fullst = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(model);
+
+            var mgr = DofMappingManager.Create(model, lc);
+
+            var dvd = CalcUtil.GetReducedZoneDividedMatrix(fullst, mgr);
+
+            return dvd.ReleasedReleasedPart;
+        }
+
         /// <summary>
         /// Gets the transformation matrix for converting local coordinate to global coordinate for a two node straight element.
         /// </summary>

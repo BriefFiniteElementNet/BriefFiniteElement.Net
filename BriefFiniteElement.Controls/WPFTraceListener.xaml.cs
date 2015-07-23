@@ -63,7 +63,7 @@ namespace BriefFiniteElementNet.Controls
         /// <inheritdoc/>
         public ReadOnlyCollection<TraceRecord> Records
         {
-            get { return new ReadOnlyCollection<TraceRecord>(this.Records); }
+            get { return new ReadOnlyCollection<TraceRecord>(this.TraceRecords); }
         }
 
         #region TraceRecords Property and Property Change Routed event

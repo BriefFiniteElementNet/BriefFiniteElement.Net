@@ -11,6 +11,24 @@ namespace BriefFiniteElementNet
 {
     public static class Extensions
     {
+        public static Matrix ToMatrix(this Point pt)
+        {
+            return new Matrix(new[] {pt.X, pt.Y, pt.Z});
+        }
+
+        public static Matrix ToMatrix(this Vector pt)
+        {
+            return new Matrix(new[] { pt.X, pt.Y, pt.Z });
+        }
+
+        public static Point ToPoint(this Matrix pt)
+        {
+            if (pt.RowCount != 3 || pt.ColumnCount != 1)
+                throw new Exception();
+
+            return new Point(pt[0, 0], pt[1, 0], pt[2, 0]);
+        }
+
         public delegate double FunctionDelegate(double d);
 
         public static double GaussianIntegrate(this Func<double, double> f, double start, double end, int samples)
