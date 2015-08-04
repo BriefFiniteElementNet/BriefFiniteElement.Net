@@ -62,6 +62,7 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         public DktElement() : base(3)
         {
+            this.elementType = ElementType.Dkt;
         }
 
         /// <summary>
@@ -71,6 +72,7 @@ namespace BriefFiniteElementNet.Elements
         /// <param name="context">The context.</param>
         protected DktElement(SerializationInfo info, StreamingContext context) : base(info, context)
         {
+            this.elementType = ElementType.Dkt;
             throw new NotImplementedException();
         }
 
@@ -332,9 +334,14 @@ namespace BriefFiniteElementNet.Elements
                     var no = eval_points[i][1];
 
                     var b = B(kesi, no);
+                    //var b = GetBMatrix(no, kesi);
+
+                    //var dd = b2 - b;
+
                     var bt = b.Transpose();
-                    
-                    var ki = bt*d*b;
+
+                    var ki = bt * d * b;
+
 
                     klocal += w * ki;
                 }
@@ -346,26 +353,28 @@ namespace BriefFiniteElementNet.Elements
 
             var pt = Matrix.DiagonallyRepeat(p, 3);
 
-            var buf2 = (pt*klocal)*pt.Transpose();
+            var buf2 = (pt*klocal)*pt.Transpose();//local expanded stiffness matrix
 
             return buf2;
         }
 
 
-        private void GetBMatrix(double ksi,double eta)
+        private Matrix GetBMatrix(double ksi,double eta)
         {
             // get node coordinates
+            //Ported from oofem library
+
             double x1, x2, x3, y1, y2, y3;
             var locs = GetLocalPoints();
 
             x1 = locs[0].X;
             y1 = locs[0].Y;
 
-            x2 = locs[0].X;
-            y2 = locs[0].Y;
+            x2 = locs[1].X;
+            y2 = locs[1].Y;
 
-            x3 = locs[0].X;
-            y3 = locs[0].Y;
+            x3 = locs[2].X;
+            y3 = locs[2].Y;
 
             double N1dk = 4.0 * ksi - 1.0;
             double N2dk = 0.0;
@@ -470,41 +479,42 @@ namespace BriefFiniteElementNet.Elements
             double T68 = -0.25 * c6 * s6 - 0.5 * c6 * s6;
             double T69 = -0.25 * s6 * s6 + 0.5 * c6 * c6;
 
-            var buf = new Matrix(5, 9);
+            var buf = new Matrix(3, 9);
 
-            buf[1, 1] = T21 * dN108 + T61 * dN112;
-            buf[1, 2] = T22 * dN108 + T62 * dN112;
-            buf[1, 3] = dN102 + T23 * dN108 + T63 * dN112;
-            buf[1, 4] = T24 * dN108 + T44 * dN110;
-            buf[1, 5] = T25 * dN108 + T45 * dN110;
-            buf[1, 6] = dN104 + T26 * dN108 + T46 * dN110;
-            buf[1, 7] = T47 * dN110 + T67 * dN112;
-            buf[1, 8] = T48 * dN110 + T68 * dN112;
-            buf[1, 9] = dN106 + T49 * dN110 + T69 * dN112;
+            buf[0, 1 - 1] = T21 * dN108 + T61 * dN112;
+            buf[0, 2 - 1] = T22 * dN108 + T62 * dN112;
+            buf[0, 3 - 1] = dN102 + T23 * dN108 + T63 * dN112;
+            buf[0, 4 - 1] = T24 * dN108 + T44 * dN110;
+            buf[0, 5 - 1] = T25 * dN108 + T45 * dN110;
+            buf[0, 6 - 1] = dN104 + T26 * dN108 + T46 * dN110;
+            buf[0, 7 - 1] = T47 * dN110 + T67 * dN112;
+            buf[0, 8 - 1] = T48 * dN110 + T68 * dN112;
+            buf[0, 9 - 1] = dN106 + T49 * dN110 + T69 * dN112;
 
-            buf[2, 1] = T11 * dN207 + T51 * dN211;
-            buf[2, 2] = dN201 + T12 * dN207 + T52 * dN211;
-            buf[2, 3] = T13 * dN207 + T53 * dN211;
-            buf[2, 4] = T14 * dN207 + T34 * dN209;
-            buf[2, 5] = dN203 + T15 * dN207 + T35 * dN209;
-            buf[2, 6] = T16 * dN207 + T36 * dN209;
-            buf[2, 7] = T37 * dN209 + T57 * dN211;
-            buf[2, 8] = dN205 + T38 * dN209 + T58 * dN211;
-            buf[2, 9] = T39 * dN209 + T59 * dN211;
+            buf[1, 1 - 1] = T11 * dN207 + T51 * dN211;
+            buf[1, 2 - 1] = dN201 + T12 * dN207 + T52 * dN211;
+            buf[1, 3 - 1] = T13 * dN207 + T53 * dN211;
+            buf[1, 4 - 1] = T14 * dN207 + T34 * dN209;
+            buf[1, 5 - 1] = dN203 + T15 * dN207 + T35 * dN209;
+            buf[1, 6 - 1] = T16 * dN207 + T36 * dN209;
+            buf[1, 7 - 1] = T37 * dN209 + T57 * dN211;
+            buf[1, 8 - 1] = dN205 + T38 * dN209 + T58 * dN211;
+            buf[1, 9 - 1] = T39 * dN209 + T59 * dN211;
 
-            buf[3, 1] = -T11 * dN108 - T51 * dN112 - T21 * dN207 - T61 * dN211;
-            buf[3, 2] = -dN102 - T12 * dN108 - T52 * dN112 - T22 * dN207 - T62 * dN211;
-            buf[3, 3] = -dN201 - T13 * dN108 - T53 * dN112 - T23 * dN207 - T63 * dN211;
-            buf[3, 4] = -T14 * dN108 - T34 * dN110 - T24 * dN207 - T44 * dN209;
-            buf[3, 5] = -dN104 - T15 * dN108 - T35 * dN110 - T25 * dN207 - T45 * dN209;
-            buf[3, 6] = -dN203 - T16 * dN108 - T36 * dN110 - T26 * dN207 - T46 * dN209;
-            buf[3, 7] = -T37 * dN110 - T57 * dN112 - T47 * dN209 - T67 * dN211;
-            buf[3, 8] = -dN106 - T38 * dN110 - T58 * dN112 - T48 * dN209 - T68 * dN211;
-            buf[3, 9] = -dN205 - T39 * dN110 - T59 * dN112 - T49 * dN209 - T69 * dN211;
+            buf[2, 1 - 1] = -T11 * dN108 - T51 * dN112 - T21 * dN207 - T61 * dN211;
+            buf[2, 2 - 1] = -dN102 - T12 * dN108 - T52 * dN112 - T22 * dN207 - T62 * dN211;
+            buf[2, 3 - 1] = -dN201 - T13 * dN108 - T53 * dN112 - T23 * dN207 - T63 * dN211;
+            buf[2, 4 - 1] = -T14 * dN108 - T34 * dN110 - T24 * dN207 - T44 * dN209;
+            buf[2, 5 - 1] = -dN104 - T15 * dN108 - T35 * dN110 - T25 * dN207 - T45 * dN209;
+            buf[2, 6 - 1] = -dN203 - T16 * dN108 - T36 * dN110 - T26 * dN207 - T46 * dN209;
+            buf[2, 7 - 1] = -T37 * dN110 - T57 * dN112 - T47 * dN209 - T67 * dN211;
+            buf[2, 8 - 1] = -dN106 - T38 * dN110 - T58 * dN112 - T48 * dN209 - T68 * dN211;
+            buf[2, 9 - 1] = -dN205 - T39 * dN110 - T59 * dN112 - T49 * dN209 - T69 * dN211;
 
             // Note: no shear strains, no shear forces => the 4th and 5th rows are zero
-        }
 
+            return buf;
+        }
 
         /// <inheritdoc />
         public override Matrix GetGlobalMassMatrix()

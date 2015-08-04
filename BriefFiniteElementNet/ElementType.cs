@@ -35,6 +35,11 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// <see cref="ElementType"/> associated with <see cref="ConcentratedMass"/>
         /// </summary>
-        ConcentratedMass=4,
+        ConcentratedMass = 4,
+
+        /// <summary>
+        /// <see cref="ElementType"/> associated with <see cref="DktElement"/>
+        /// </summary>
+        Dkt = 5,
     }
 }

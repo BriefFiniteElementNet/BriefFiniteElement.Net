@@ -42,6 +42,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="F3ddFileReader.cs" />
     <Compile Include="Frame3ddValidator.cs" />
+    <Compile Include="InternalExternalEquibliriumChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -394,6 +394,10 @@ namespace BriefFiniteElementNet.Controls
                         AddTrussElement(builder, elm as TrussElement2Node);
                         break;
 
+                    case ElementType.Dkt:
+                        AddDktElement(builder, elm as DktElement);
+                        break;
+
                     default:
                         sb.AppendLine("Unknown element type for rendering: " + elm.ElementType);
                         break;
@@ -1104,6 +1108,22 @@ namespace BriefFiniteElementNet.Controls
                 bldr.AddTriangle(p1, p3, p2);
                 bldr.AddTriangle(p4, p2, p3);
             }
+
+        }
+
+        private void AddDktElement(MeshBuilder bldr, DktElement elm)
+        {
+            PolygonYz section = null;
+
+            var r = ElementVisualThickness / 2;
+
+
+            var p1 = elm.Nodes[0].Location;
+            var p2 = elm.Nodes[1].Location;
+            var p3 = elm.Nodes[2].Location;
+
+
+            bldr.AddTriangle(p1, p3, p2);
 
         }
 
