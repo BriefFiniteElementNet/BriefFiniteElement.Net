@@ -395,7 +395,11 @@ namespace BriefFiniteElementNet.Controls
                         break;
 
                     case ElementType.Dkt:
-                        AddDktElement(builder, elm as DktElement);
+                        AddDktElement(builder, elm as Obsolete__DktElement);
+                        break;
+
+                    case ElementType.Cst:
+                        AddCstElement(builder, elm as CstElement);
                         break;
 
                     default:
@@ -1111,7 +1115,23 @@ namespace BriefFiniteElementNet.Controls
 
         }
 
-        private void AddDktElement(MeshBuilder bldr, DktElement elm)
+        private void AddDktElement(MeshBuilder bldr, Obsolete__DktElement elm)
+        {
+            PolygonYz section = null;
+
+            var r = ElementVisualThickness / 2;
+
+
+            var p1 = elm.Nodes[0].Location;
+            var p2 = elm.Nodes[1].Location;
+            var p3 = elm.Nodes[2].Location;
+
+
+            bldr.AddTriangle(p1, p3, p2);
+
+        }
+
+        private void AddCstElement(MeshBuilder bldr, CstElement elm)
         {
             PolygonYz section = null;
 

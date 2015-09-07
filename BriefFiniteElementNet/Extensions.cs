@@ -11,6 +11,18 @@ namespace BriefFiniteElementNet
 {
     public static class Extensions
     {
+        public static double[] Negate(this double[] arr)
+        {
+            arr = (double[])arr.Clone();
+
+            for (int i = 0; i < arr.Length; i++)
+            {
+                arr[i] = -arr[i];
+            }
+
+            return arr;
+        }
+
         public static Matrix ToMatrix(this Point pt)
         {
             return new Matrix(new[] {pt.X, pt.Y, pt.Z});
@@ -423,6 +435,30 @@ namespace BriefFiniteElementNet
         public static bool IsNull<T>(this T obj) where T : class
         {
             return ReferenceEquals(obj, null);
+        }
+
+        public static double[] Minus(this double[] x, double[] y)
+        {
+            var buf = (double[])x.Clone();
+
+            for (int i = 0; i < buf.Length; i++)
+            {
+                buf[i] -= y[i];
+            }
+
+            return buf;
+        }
+
+        public static double[] Plus(this double[] x, double[] y)
+        {
+            var buf = (double[])x.Clone();
+
+            for (int i = 0; i < buf.Length; i++)
+            {
+                buf[i] += y[i];
+            }
+
+            return buf;
         }
     }
 }

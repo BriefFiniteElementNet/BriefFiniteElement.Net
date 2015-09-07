@@ -259,6 +259,25 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
+        /// Implements the operator -.
+        /// </summary>
+        /// <param name="d1">The d1.</param>
+        /// <param name="d2">The d2.</param>
+        /// <returns>
+        /// The result of the operator.
+        /// </returns>
+        public static Displacement operator -(Displacement d1, Displacement d2)
+        {
+            return new
+                Displacement(d1.dx - d2.dx,
+                    d1.dy - d2.dy,
+                    d1.dz - d2.dz,
+                    d1.rx - d2.rx,
+                    d1.ry - d2.ry,
+                    d1.rz - d2.rz);
+        }
+
+        /// <summary>
         /// Implements the operator *.
         /// </summary>
         /// <param name="c">The c.</param>

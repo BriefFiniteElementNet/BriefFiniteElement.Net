@@ -6,7 +6,7 @@ using System.Text;
 namespace BriefFiniteElementNet
 {
     /// <summary>
-    /// Reprenest enum for membrane formualtion
+    /// Represent enum for membrane formulation
     /// </summary>
     public enum MembraneFormulation
     {

@@ -17,6 +17,11 @@ namespace BriefFiniteElementNet
         {
         }
 
+        protected Load(LoadCase @case)
+        {
+            _case = @case;
+        }
+
         private LoadCase _case;
 
         /// <summary>

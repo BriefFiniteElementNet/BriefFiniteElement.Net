@@ -439,6 +439,9 @@ namespace BriefFiniteElementNet.Controls
                 {
                     var x = delta * i;
                     var force = elm.GetInternalForceAt(x, TargetCombination);
+
+                    //force = elm.TransformLocalToGlobal(force);
+
                     var y = 0.0;
                     var z = 0.0;
 

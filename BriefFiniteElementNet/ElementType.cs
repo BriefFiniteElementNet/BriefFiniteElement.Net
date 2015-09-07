@@ -38,8 +38,18 @@ namespace BriefFiniteElementNet
         ConcentratedMass = 4,
 
         /// <summary>
-        /// <see cref="ElementType"/> associated with <see cref="DktElement"/>
+        /// <see cref="ElementType"/> associated with <see cref="Obsolete__DktElement"/>
         /// </summary>
         Dkt = 5,
+
+        /// <summary>
+        /// <see cref="ElementType"/> associated with <see cref="DkqElement"/>
+        /// </summary>
+        Dkq=6,
+
+        /// <summary>
+        /// <see cref="ElementType"/> associated with <see cref="CstElement"/>
+        /// </summary>
+        Cst=7
     }
 }

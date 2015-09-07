@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Validation
 {
-    public class InternalExternalEquibliriumChecker
+    public class NodeInternalExternalEquibliriumChecker
     {
         public static void CheckForEquiblirium(Model model, LoadCase lc)
         {
@@ -43,9 +43,9 @@ namespace BriefFiniteElementNet.Validation
                 if (els.Length == 0)
                     continue;
 
-                var eq1 = new Force();
-                var eq2 = new Force();
-                var eq3 = new Force();
+                var eq1 = new Force();//forces from elements
+                var eq2 = new Force();//forces from external nodal loads
+                var eq3 = new Force();//forces from support reaction
 
                 foreach (var elm in els)
                 {

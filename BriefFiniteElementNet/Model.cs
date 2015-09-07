@@ -420,15 +420,15 @@ namespace BriefFiniteElementNet
 
             #endregion
 
-            #region UniformSurfaceLoad3D's surface nodes
+            #region UniformSurfaceLoadFor3DElement's surface nodes
 
             foreach (var elm in elements)
             {
                 foreach (var ld in elm.Loads)
                 {
-                    if (ld is UniformSurfaceLoad3D)
+                    if (ld is UniformSurfaceLoadFor3DElement)
                     {
-                        var sld = ld as UniformSurfaceLoad3D;
+                        var sld = ld as UniformSurfaceLoadFor3DElement;
 
                         if (sld.SurfaceNodes == null || sld.SurfaceNodes.Length != 3)
                             sld.SurfaceNodes = new Node[3];

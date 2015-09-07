@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Security.Cryptography;
 using System.Security.Permissions;
 using System.Text;
 using BriefFiniteElementNet.CSparse.Double;
@@ -34,6 +35,10 @@ namespace BriefFiniteElementNet
 
         private Dictionary<LoadCase, double[]> displacements = new Dictionary<LoadCase, double[]>();
         private Dictionary<LoadCase, double[]> forces = new Dictionary<LoadCase, double[]>();
+        private Dictionary<LoadCase, double[]> elementForces = new Dictionary<LoadCase, double[]>();
+        private Dictionary<LoadCase, double[]> concentratedForces = new Dictionary<LoadCase, double[]>();
+        private Dictionary<LoadCase, double[]> supportReactions = new Dictionary<LoadCase, double[]>();
+
         private LoadCase settlementsLoadCase { get; set; }
 
         [Obsolete]
@@ -104,23 +109,47 @@ namespace BriefFiniteElementNet
             internal set { forces = value; }
         }
 
+        /// <summary>
+        /// Gets the element forces.
+        /// </summary>
+        /// <value>
+        /// The sum of element equivalent nodal loads on each node.
+        /// </value>
+        public Dictionary<LoadCase, double[]> ElementForces
+        {
+            get { return elementForces; }
+            internal set { elementForces = value; }
+        }
+
+        /// <summary>
+        /// Gets the concentrated forces.
+        /// </summary>
+        /// <value>
+        /// The sum of concentrated nodal loads on each node.
+        /// </value>
+        public Dictionary<LoadCase, double[]> ConcentratedForces
+        {
+            get { return concentratedForces; }
+            internal set { concentratedForces = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the support reactions.
+        /// </summary>
+        /// <value>
+        /// The support reactions due to loads on free DoFs.
+        /// </value>
+        public Dictionary<LoadCase, double[]> SupportReactions
+        {
+            get { return supportReactions; }
+            set { supportReactions = value; }
+        }
+
+
         internal Model Parent
         {
             get { return parent; }
             set { parent = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the settlements load case.
-        /// </summary>
-        /// <value>
-        /// The load case that settlements should be threated
-        /// </value>
-        [Obsolete("Use Model.SettlementLoadCase instead")]
-        internal LoadCase SettlementsLoadCase
-        {
-            get { return settlementsLoadCase; }
-            set { settlementsLoadCase = value; }
         }
 
         private BuiltInSolverType _solverType;
@@ -145,6 +174,8 @@ namespace BriefFiniteElementNet
         /// The solver generator which generates an <see cref="ISolver"/> for every <see cref="CompressedColumnStorage"/>.
         /// </value>
         public Func<CompressedColumnStorage, ISolver> SolverGenerator { get; set; }
+
+        
 
         #endregion
 
@@ -461,7 +492,8 @@ namespace BriefFiniteElementNet
         /// If system is not analyses against a specific load case, then this method will analyses structure against <see cref="LoadCase"/>.
         /// While this method is using pre computed Cholesky Decomposition , its have a high performance in solving the system.
         /// </remarks>
-        private void AddAnalysisResult(LoadCase loadCase)
+        [Obsolete("Use AddAnalysisResult instead")]
+        private void AddAnalysisResult2(LoadCase loadCase)
         {
             ISolver solver;
 
@@ -477,6 +509,7 @@ namespace BriefFiniteElementNet
 
             var ft = GetTotalForceVector(loadCase, map);
             var ut = GetTotalDispVector(loadCase, map);
+            var kt = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(parent);
 
             for (var i = 0; i < map.Fixity.Length; i++)
             {
@@ -486,10 +519,7 @@ namespace BriefFiniteElementNet
                     ut[i] = 0;
             }
 
-
-            var kt = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(parent);
             var kr = (CCS)((CCS)forcePermute.Multiply(kt)).Multiply(dispPermute);
-
             var fr = forcePermute.Multiply(ft);
             var ur = new double[fr.Length];
 
@@ -498,18 +528,12 @@ namespace BriefFiniteElementNet
                 ur[i] = ut[map.RMap1[i]];
             }
 
-            var krd =
-                //MatrixAssemblerUtil.DivideZones(parent, kr, map);
-                CalcUtil.GetReducedZoneDividedMatrix(kr, map);
+            var krd = CalcUtil.GetReducedZoneDividedMatrix(kr, map);
 
             AnalyseStiffnessMatrixForWarnings(krd, map,loadCase);
-            
-#if DEBUG
-            //CheckForSymmetricity(krd.ReleasedReleasedPart);
-#endif
 
-            var frf = GetFreePartOfReducedVector(fr, map);
-            var urs = GetFixedPartOfReducedVector(ur, map);
+            var ff_r = GetFreePartOfReducedVector(fr, map);
+            var us_r = GetFixedPartOfReducedVector(ur, map);
 
             if (Solvers.ContainsKey(map.MasterMap))
             {
@@ -524,16 +548,18 @@ namespace BriefFiniteElementNet
             if (!solver.IsInitialized)
                 solver.Initialize();
 
-            #region ff-kfs*us
+            #region ff - kfs * us
             //درسته، تغییرش نده گوس...
 
-            for (var i = 0; i < frf.Length; i++)
-                frf[i] = -frf[i];
+            var ff_r_negative = ff_r.Clone();
 
-            krd.ReleasedFixedPart.Multiply(urs, frf); 
+            for (var i = 0; i < ff_r.Length; i++)
+                ff_r[i] = -ff_r[i];
 
-            for (var i = 0; i < frf.Length; i++)
-                frf[i] = -frf[i];
+            krd.ReleasedFixedPart.Multiply(us_r, ff_r); 
+
+            for (var i = 0; i < ff_r.Length; i++)
+                ff_r[i] = -ff_r[i];
 
             #endregion
 
@@ -541,12 +567,12 @@ namespace BriefFiniteElementNet
 
             string msg;
 
-            var res = solver.Solve(frf, urf, out msg);
+            var res = solver.Solve(ff_r, urf, out msg);
 
             if (res != SolverResult.Success)
                 throw new BriefFiniteElementNetException(msg);
 
-            var frs = CalcUtil.Add(krd.FixedReleasedPart.Multiply(urf), krd.FixedFixedPart.Multiply(urs));
+            var frs = CalcUtil.Add(krd.FixedReleasedPart.Multiply(urf), krd.FixedFixedPart.Multiply(us_r));
 
             for (var i = 0; i < urf.Length; i++)
             {
@@ -575,6 +601,139 @@ namespace BriefFiniteElementNet
 
             forces[loadCase] = ft;
             displacements[loadCase] = ut2;
+        }
+
+        /// <summary>
+        /// Adds the analysis result.
+        /// </summary>
+        /// <param name="loadCase">The load case.</param>
+        /// <remarks>if model is analyzed against specific load case, then displacements are available through <see cref="Displacements"/> property.
+        /// If system is not analyses against a specific load case, then this method will analyses structure against <see cref="LoadCase"/>.
+        /// While this method is using pre computed Cholesky Decomposition , its have a high performance in solving the system.
+        /// </remarks>
+        private void AddAnalysisResult(LoadCase loadCase)
+        {
+            ISolver solver;
+
+            var map = DofMappingManager.Create(parent, loadCase);
+
+            var n = parent.Nodes.Count;//node count
+            var m = map.M;//master node count
+
+            var pu = PermutationGenerator.GetDisplacementPermute(parent, map);//permutation of U
+            var pf = PermutationGenerator.GetForcePermute(parent, map);//permutation of F
+
+            var fe = elementForces[loadCase] = GetTotalElementsForceVector(loadCase, map);
+            var fc = concentratedForces[loadCase] = GetTotalConcentratedForceVector(loadCase, map);
+            
+
+            var ft = fe.Plus(fc);
+
+
+            var fr = pf.Multiply(ft);
+            var ffr = GetFreePartOfReducedVector(fr, map);
+            var fsr = GetFixedPartOfReducedVector(fr, map);
+
+            var kt = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(parent);
+            var kr = (CCS)((CCS)pf.Multiply(kt)).Multiply(pu);
+
+            #region  U_s,r
+            var usr = new double[map.RMap3.Length];
+
+            {
+                //should fill usr
+                var ut_temp = GetTotalDispVector(loadCase, map);
+
+                for (int i = 0; i < usr.Length; i++)
+                {
+                    var t1 = map.RMap3[i];
+                    var t2 = map.RMap1[t1];
+
+                    usr[i] = ut_temp[t2];
+                }
+
+            }
+
+            #endregion
+
+            #region  K_r,d and solver
+            var krd = CalcUtil.GetReducedZoneDividedMatrix(kr, map);
+
+            AnalyseStiffnessMatrixForWarnings(krd, map, loadCase);
+
+            if (Solvers.ContainsKey(map.MasterMap))
+            {
+                solver = Solvers[map.MasterMap];
+            }
+            else
+            {
+                solver = SolverGenerator(krd.ReleasedReleasedPart);
+                Solvers[map.MasterMap] = solver;
+            }
+
+            
+            if (!solver.IsInitialized)
+                solver.Initialize();
+
+            #endregion
+
+            double[] ufr = new double[map.RMap2.Length];
+            string message;
+
+            var input = ffr.Minus(krd.ReleasedFixedPart.Multiply(usr));
+
+
+            var res2 = solver.Solve(input, ufr, out message);
+
+            if (res2 != SolverResult.Success)
+                throw new BriefFiniteElementNetException(message);
+
+            var fpsr = krd.FixedReleasedPart.Multiply(ufr).Plus(krd.FixedFixedPart.Multiply(usr));
+
+            var fsrt = fpsr.Minus(fsr);// no needed
+
+            var fx = supportReactions[loadCase] = new double[6*n];
+
+
+
+            #region forming ft
+
+
+            for (var i = 0; i < map.Fixity.Length; i++)
+                if (map.Fixity[i] == DofConstraint.Fixed)
+                    ft[i] = 0;
+            
+            for (var i = 0; i < fpsr.Length; i++)
+            {
+                var totDofNum = map.RMap1[map.RMap3[i]];
+
+                ft[totDofNum] = fx[totDofNum] = fpsr[i];
+            }
+            
+            
+            #endregion
+
+            #region forming ur
+
+            var ur = new double[map.M*6];
+
+
+            for (var i = 0; i < usr.Length; i++)
+            {
+                ur[map.RMap3[i]] = usr[i];
+            }
+
+            for (var i = 0; i < ufr.Length; i++)
+            {
+                ur[map.RMap2[i]] = ufr[i];
+            }
+
+            #endregion
+
+            var ut = pu.Multiply(ur);
+
+            forces[loadCase] = ft;
+            displacements[loadCase] = ut;
         }
 
         /// <summary>
@@ -678,24 +837,22 @@ namespace BriefFiniteElementNet
         /// Just is used for known forces (like forces on free DoFs).
         /// </remarks>
         /// <returns></returns>
+        [Obsolete("use GetTotalConcentratedForceVector and GetTotalElementsForceVector instead")]
         private double[] GetTotalForceVector(LoadCase cse, DofMappingManager map)
         {
-            //only and only free part will be used
+            //force vector for both free and fixed dof
 
             var n = parent.Nodes.Count;
 
+            var loads = new Force[ n];//loads from connected element to node is stored in this array instead of Node.ElementLoads.
 
 
-            var loads = new Force[6 * n];//loads from connected element to node is stored in this array instead of Node.ElementLoads.
-
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < n; i++)//re indexing
             {
                 parent.Nodes[i].Index = i;
             }
 
             #region adding element loads
-
-            for (var i = 0; i < n; i++) parent.Nodes[i].MembersLoads.Clear();
 
             foreach (var elm in parent.Elements)
             {
@@ -750,17 +907,121 @@ namespace BriefFiniteElementNet
                 buf[6 * i + 5] = force.Mz;
             }
 
-            /**/
-            for (int i = 6 * map.N - 1; i >= 0; i--)
-            {
-                if (map.Fixity[i] == DofConstraint.Fixed)
-                    buf[i] = 0;
-            }
-            /**/
+            return buf;
+        }
 
+        /// <summary>
+        /// Gets the total concentrated forces on loads vector.
+        /// </summary>
+        /// <param name="cse">The load case.</param>
+        /// <param name="map">The map.</param>
+        /// <returns></returns>
+        private double[] GetTotalConcentratedForceVector(LoadCase cse, DofMappingManager map)
+        {
+            //force vector for both free and fixed dof
+
+            var n = parent.Nodes.Count;
+
+            var loads = new Force[n];//loads from connected element to node is stored in this array instead of Node.ElementLoads.
+
+            for (int i = 0; i < n; i++)//re indexing
+            {
+                parent.Nodes[i].Index = i;
+            }
+
+            #region adding concentrated nodal loads
+
+            for (int i = 0; i < n; i++)
+            {
+                foreach (var load in parent.Nodes[i].Loads)
+                {
+                    if (load.Case != cse)
+                        continue;
+
+                    loads[parent.Nodes[i].Index] += load.Force;
+                }
+            }
+
+            #endregion
+
+
+            var buf = new double[6 * n];
+            for (int i = 0; i < n; i++)
+            {
+                var force = loads[i];
+
+                buf[6 * i + 0] = force.Fx;
+                buf[6 * i + 1] = force.Fy;
+                buf[6 * i + 2] = force.Fz;
+
+                buf[6 * i + 3] = force.Mx;
+                buf[6 * i + 4] = force.My;
+                buf[6 * i + 5] = force.Mz;
+            }
 
             return buf;
         }
+
+        /// <summary>
+        /// Gets the total elements equivalent nodal force vector.
+        /// </summary>
+        /// <param name="cse">The load case.</param>
+        /// <param name="map">The map.</param>
+        /// <returns></returns>
+        private double[] GetTotalElementsForceVector(LoadCase cse, DofMappingManager map)
+        {
+            //force vector for both free and fixed dof
+
+            var n = parent.Nodes.Count;
+
+            var loads = new Force[n];//loads from connected element to node is stored in this array instead of Node.ElementLoads.
+
+            for (int i = 0; i < n; i++)//re indexing
+            {
+                parent.Nodes[i].Index = i;
+            }
+
+            #region adding element loads
+
+            foreach (var elm in parent.Elements)
+            {
+                var nc = elm.Nodes.Length;
+
+                foreach (var ld in elm.Loads)
+                {
+                    if (ld.Case != cse)
+                        continue;
+
+                    var frcs = ld.GetGlobalEquivalentNodalLoads(elm);
+
+                    for (var i = 0; i < nc; i++)
+                    {
+                        var nde = elm.Nodes[i];
+                        loads[nde.Index] += frcs[i];
+                    }
+                }
+            }
+
+            #endregion
+
+
+            var buf = new double[6 * n];
+            for (int i = 0; i < n; i++)
+            {
+                var force = loads[i];
+
+                buf[6 * i + 0] = force.Fx;
+                buf[6 * i + 1] = force.Fy;
+                buf[6 * i + 2] = force.Fz;
+
+                buf[6 * i + 3] = force.Mx;
+                buf[6 * i + 4] = force.My;
+                buf[6 * i + 5] = force.Mz;
+            }
+
+            return buf;
+        }
+
 
         /// <summary>
         /// Gets the total displacement vector for whole structure for specified <see cref="cse"/>
@@ -774,7 +1035,8 @@ namespace BriefFiniteElementNet
         /// <returns></returns>
         private double[] GetTotalDispVector(LoadCase cse, DofMappingManager map)
         {
-            //only and only fixed part will be used
+            //displacement vector. free part can be assume zero however didn't touch that
+
             var n = parent.Nodes.Count;
 
             var buf = new double[6 * n];
@@ -797,12 +1059,6 @@ namespace BriefFiniteElementNet
                 buf[6 * i + 5] = disp.RZ;
             }
 
-
-            for (int i = 6*map.N-1; i >=0 ; i--)
-            {
-                if (map.Fixity[i] == DofConstraint.Released)
-                    buf[i] = 0;
-            }
 
             return buf;
         }

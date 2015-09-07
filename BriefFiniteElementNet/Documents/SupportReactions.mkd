@@ -1,0 +1,74 @@
+﻿# Support Reaction
+The standard form of Eq. system of a model under certain load case will be like this:
+
+```
+K_r = Pf * Kt * Pd
+F_r = Pf * ft
+
+| Kff_r Kfs_r| |Uf_r|   |Ff_r|
+|            |*|    | = |    |
+| Ksf_r Kss_r| |Us_r|   |Fs_r|
+```
+Kt : Total stiffness matrix
+Ft : Total force vector
+Ut : Total displacement vector
+
+Pf : Force permutation matrix
+Pd : Displacement permutation matrix
+
+K_r : Reduced total stiffness matrix
+F_r : Reduced total force vector
+U_r : Reduced total displacement vector
+
+NOTE: Ff_r and Fs_r contains both concentrated nodal loads and equivalent nodal loads from forces in elements body.
+
+in above equations _r denotes reduced (due to rigid elements, if any) and f,s denotes free and fixed. after solving for unknown vector Df_r and Fs_r then will get them!
+
+## Step by step procedure
+
+### form Ft
+Ft consists of concentrated nodal loads + equivalent nodal loads for all DoFs (both fixed and free)
+
+### form Fr
+Fr = Pf * Ft
+
+### form Ff,r and Fs,r
+extract free and fixed part of Fr into these two
+
+### form Kt, then Kr
+create full stiffness matrix Kt and then Kr = Pf . K . Pd and then devide it
+
+### form Us,r
+in this stage Ut and other things can not be created, only we can create Us,r vector and fill it with settlements.
+
+```C#
+usr = new double [6*m];
+```
+
+```
+where: 
+    usr[i] : settlement of i'th DoF in fixed part
+    i : number of DoF in reduced fixed part
+
+### Rest of calcs
+U_f,r = k_ff,r^-1 (f_f,r - k_fs,r * U_s,r)
+F'_s,r = K_sf,r * U_f,r + K_ss,r * U_s,r
+    F'_s,r is support reaction due to loads on free DoFs, it should be then summed with negative of forces on fixed DoFs themselves.
+F_s,r,t = F'_s,r - F_s,r 
+
+where:
+    F_s,r,t is total support reaction.
+    F_s,r is taken from step [form Ff,r and Fs,r]
+    F'_s,r is taken from step [Rest of calcs]
+### create ft
+ft theoretically consists of sum of external loads (equivalent element loads + concentrated loads + support reactions). It should be created from two parts, free and fixed
+
+#### free part
+can be simply generated like step [form Ft]
+
+### fixed part
+ should be taken from F'_s,r
+
+### create ut
+ut theoretically consists of total displacement vector, it is not complicated as ft! :)
+first form Ur, then Ut = Pu * Ur

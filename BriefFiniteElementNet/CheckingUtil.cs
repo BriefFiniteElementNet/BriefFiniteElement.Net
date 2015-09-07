@@ -7,8 +7,10 @@ using BriefFiniteElementNet.CSparse.Double;
 
 namespace BriefFiniteElementNet
 {
+    [Obsolete]
     public class CheckingUtil
     {
+        
         public static bool IsInStaticEquilibrium(StaticLinearAnalysisResult res, LoadCase cse)
         {
             var allForces = new Force[res.Parent.Nodes.Count];

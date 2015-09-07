@@ -17,12 +17,12 @@ namespace BriefFiniteElementNet
     /// rMap1[2] = 1    , l = 6*m
     /// -------------------------------------------------
     /// # of Dof in reduced structure: 3
-    /// # of DoF in released DoFs of reduced structurez: 4
+    /// # of DoF in released DoFs of reduced structure: 4
     /// map2[3] = 4     , l = 6*m
     /// rmap2[4] = 3    , l = mr
     /// -------------------------------------------------
     /// # of Dof in reduced structure: 5
-    /// # of DoF in fixed DoFs of reduced structurez: 6
+    /// # of DoF in fixed DoFs of reduced structure: 6
     /// map3[5] = 6     , l = 6*m
     /// rmap3[6] = 5    , l = mf
     /// -------------------------------------------------
@@ -42,12 +42,24 @@ namespace BriefFiniteElementNet
         private int _n;
         private int _m;
 
+        /// <summary>
+        /// Gets or sets the number of total nodes.
+        /// </summary>
+        /// <value>
+        /// The n.
+        /// </value>
         public int N
         {
             get { return _n; }
             set { _n = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the number of master nodes.
+        /// </summary>
+        /// <value>
+        /// The m.
+        /// </value>
         public int M
         {
             get { return _m; }

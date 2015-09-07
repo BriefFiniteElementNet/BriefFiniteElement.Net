@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using BriefFiniteElementNet.Elements;
 
 namespace BriefFiniteElementNet
 {
@@ -67,6 +68,8 @@ namespace BriefFiniteElementNet
                 case ElementType.TetrahedralIso:
                     return GetGlobalEquivalentNodalLoads((TetrahedralIso) element);
                     break;
+                case ElementType.Dkt:
+                    return GetGlobalEquivalentNodalLoads(element as Obsolete__DktElement);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -94,6 +97,23 @@ namespace BriefFiniteElementNet
             f.Fz = v / 4 * _vz;
 
             return new[] {f, f, f, f};
+        }
+
+        private Force[] GetGlobalEquivalentNodalLoads(Obsolete__DktElement elm)
+        {
+            //using lumped method.
+
+            var area = elm.GetArea();
+
+            var totv = area*elm.Thickness;
+
+            var totfx = _vx*totv;
+            var totfy = _vy*totv;
+            var totfz = _vz*totv;
+
+            var f = new Force(totfx/3, totfy/3, totfz/3, 0, 0, 0);
+
+            return new Force[] {f, f, f};
         }
 
         /// <inheritdoc/>

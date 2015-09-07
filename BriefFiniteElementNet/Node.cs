@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet
         public Node()
         {
             loads = new List<NodalLoad>();
-            memberLoads = new List<NodalLoad>();
+            //memberLoads = new List<NodalLoad>();
         }
 
         public Node(Point location):this()
@@ -37,11 +37,9 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// The connected elements, used for calculating 
         /// </summary>
-        [NonSerialized]
+        [NonSerialized][Obsolete]
         internal List<Element> ConnectedElements = new List<Element>(); 
         private List<NodalLoad> loads;
-        [NonSerialized]
-        private List<NodalLoad> memberLoads=new List<NodalLoad>();
         private Point location;
         private Displacement settlements;
         private Constraint constraints;
@@ -95,6 +93,7 @@ namespace BriefFiniteElementNet
             set { constraints = value; }
         }
 
+        /*
         /// <summary>
         /// Gets or sets the member loads.
         /// </summary>
@@ -104,12 +103,13 @@ namespace BriefFiniteElementNet
         /// <remarks>
         /// For creating forces load, distributed loads should convert to nodal load, the <see cref="MembersLoads"/> is the nodal loads resulting from <see cref="Load"/>s applied to members.
         /// These loads are in global coordination system</remarks>
+        [Obsolete("See comments in StaticLinearAnalysisResult.GetTotalForceVector()")]
         internal List<NodalLoad> MembersLoads
         {
             get { return memberLoads; }
             private set { memberLoads = value; }
         }
-
+        */
 
         /// <summary>
         /// Gets the nodal displacement regarding specified <see cref="LoadCombination"/> <see cref="cmb"/>.
@@ -152,12 +152,35 @@ namespace BriefFiniteElementNet
         /// <returns></returns>
         public Force GetSupportReaction(LoadCombination cmb)
         {
+            var buf = new Force();
+
+            foreach (var kv in cmb)
+            {
+                buf += kv.Value*GetSupportReaction(kv.Key);
+            }
+
+            return buf;
+        }
+
+
+
+        /// <summary>
+        /// Gets the supports reaction that are from load combination of <see cref="cmb"/>, which are applying to this <see cref="Node"/> from supports.
+        /// </summary>
+        /// <param name="cmb">The CMB.</param>
+        /// <returns></returns>
+        [Obsolete("Use GetSupportReaction")]
+        internal Force GetSupportReaction2(LoadCombination cmb)
+        {
+            //TODO: this methods not works correctly!
+
             var f1 = new Force();
             var f = new Force();
 
             foreach (var cse in cmb.Keys)
                 parent.LastResult.AddAnalysisResultIfNotExists(cse);
 
+            
 
             #region From Connected Elements
 
@@ -174,7 +197,7 @@ namespace BriefFiniteElementNet
 
                         var loads = lde.GetGlobalEquivalentNodalLoads(elm);
 
-                        f1 += cmb[cse]*loads[ind];
+                        f1 += cmb[cse] * loads[ind];
                     }
                 }
             }
@@ -188,7 +211,7 @@ namespace BriefFiniteElementNet
                 if (!cmb.ContainsKey(load.Case))
                     continue;
 
-                f1 += cmb[load.Case]*load.Force;
+                f1 += cmb[load.Case] * load.Force;
             }
 
             #endregion
@@ -213,6 +236,44 @@ namespace BriefFiniteElementNet
 
             return buf;
             throw new NotImplementedException();
+        }
+
+
+        /// <summary>
+        /// Gets the supports reaction that is from load cse which are applying to this <see cref="Node"/> from supports.
+        /// </summary>
+        /// <param name="cse">The loadCase.</param>
+        /// <returns></returns>
+        public Force GetSupportReaction(LoadCase cse)
+        {
+            if (constraints == Constraint.Released)
+                return new Force();
+
+
+            parent.LastResult.AddAnalysisResultIfNotExists(cse);
+
+            var cs = Force.FromVector(parent.LastResult.ConcentratedForces[cse], 6 * Index);
+            var es = Force.FromVector(parent.LastResult.ElementForces[cse], 6 * Index);
+            var ss = Force.FromVector(parent.LastResult.SupportReactions[cse], 6 * Index);
+
+            var buf = ss- cs - es;
+
+            if (constraints.DX == DofConstraint.Released)
+                buf.Fx = 0;
+            if (constraints.DY == DofConstraint.Released)
+                buf.Fy = 0;
+            if (constraints.DZ == DofConstraint.Released)
+                buf.Fz = 0;
+
+
+            if (constraints.RX == DofConstraint.Released)
+                buf.Mx = 0;
+            if (constraints.RY == DofConstraint.Released)
+                buf.My = 0;
+            if (constraints.RZ == DofConstraint.Released)
+                buf.Mz = 0;
+            
+            return buf;
         }
 
         /// <summary>

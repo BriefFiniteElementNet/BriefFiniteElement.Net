@@ -11,7 +11,7 @@ namespace BriefFiniteElementNet
     /// Represents a uniform load which is applying to one side of a 3d element
     /// </summary>
     [Serializable]
-    public class UniformSurfaceLoad3D : Load3D
+    public class UniformSurfaceLoadFor3DElement : Load3D
     {
         /// <inheritdoc />
         public override Force[] GetGlobalEquivalentNodalLoads(Element element)
@@ -147,7 +147,7 @@ namespace BriefFiniteElementNet
         }        
 
          /// <inheritdoc/>
-         protected UniformSurfaceLoad3D(SerializationInfo info, StreamingContext context)
+         protected UniformSurfaceLoadFor3DElement(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             _sx = info.GetDouble("sx");

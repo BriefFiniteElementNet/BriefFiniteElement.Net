@@ -39,10 +39,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ElementEquibiliriumChecker.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="F3ddFileReader.cs" />
     <Compile Include="Frame3ddValidator.cs" />
-    <Compile Include="InternalExternalEquibliriumChecker.cs" />
+    <Compile Include="ModelStaticEquibChecker.cs" />
+    <Compile Include="NodeInternalExternalEquibliriumChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -46,9 +46,10 @@
     <Compile Include="DofMap.cs" />
     <Compile Include="DofMappingManager.cs" />
     <Compile Include="Elements\ConcentratedMass.cs" />
-    <Compile Include="Elements\DktElement.cs" />
+    <Compile Include="Elements\CstElement.cs" />
+    <Compile Include="Elements\DkqElement.cs" />
+    <Compile Include="Elements\Obsolete__DktElement.cs" />
     <Compile Include="Elements\SdofMass.cs" />
-    <Compile Include="Elements\TriangleFlatShell.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="CalcUtil.cs" />
     <Compile Include="IElement1DLoad.cs" />
@@ -172,13 +173,15 @@
     <Compile Include="Elements\TrussElement2Node.cs" />
     <Compile Include="UniformLoad1D.cs" />
     <Compile Include="UniformBodyLoad3D.cs" />
-    <Compile Include="UniformSurfaceLoad3D.cs" />
+    <Compile Include="UniformLoadForPlanarElements.cs" />
+    <Compile Include="UniformSurfaceLoadFor3DElement.cs" />
     <Compile Include="Vector.cs" />
     <Compile Include="XmlIO.cs" />
     <Compile Include="ZoneDevidedMatrix.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
+    <None Include="Documents\SupportReactions.mkd" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CSparse\IO\" />
