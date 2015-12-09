@@ -261,5 +261,13 @@ namespace BriefFiniteElementNet
         }
 
         #endregion
+
+        public void AddRange(IEnumerable<Node> nodes)
+        {
+            foreach (var nde in nodes)
+            {
+                this.Add(nde);
+            }
+        }
     }
 }
