@@ -252,21 +252,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         public void Solve()
         {
-
-            PrecheckForErrors();
-
-            var cfg = new SolverConfiguration();
-
-            cfg.SolverGenerator = i =>
-            {
-                var sl = CalcUtil.CreateBuiltInSolver(BuiltInSolverType.CholeskyDecomposition);
-                sl.A = i;
-                return sl;
-            };
-
-            cfg.LoadCases = new List<LoadCase>() { LoadCase.DefaultLoadCase };
-
-            Solve(cfg);
+            Solve(BuiltInSolverType.CholeskyDecomposition);
         }
 
 
@@ -276,18 +262,17 @@ namespace BriefFiniteElementNet
         /// <param name="solverType">The solver type.</param>
         public void Solve(BuiltInSolverType solverType)
         {
-            Solve(new SolverConfiguration(LoadCase.DefaultLoadCase)
+            var gen = new Func<CompressedColumnStorage, ISolver>(i =>
             {
-                SolverGenerator = i =>
-                {
-                    var sl = CalcUtil.CreateBuiltInSolver(solverType);
-                    sl.A = i;
-                    return sl;
-                }
+                var sl = CalcUtil.CreateBuiltInSolver(solverType);
+                sl.A = i;
+                return sl;
             });
+
+            Solve(gen);
         }
 
-
+        /*
         /// <summary>
         /// Solves the instance with specified <see cref="solver" /> and assuming linear behavior (both geometric and material) and for default load case.
         /// </summary>
@@ -297,8 +282,16 @@ namespace BriefFiniteElementNet
         [Obsolete("use Solve(Func<CompressedColumnStorage, ISolver> solverGenerator) instead")]
         public void Solve(ISolver solver)
         {
-            Solve(new SolverConfiguration(LoadCase.DefaultLoadCase) { CustomSolver = solver });
-        }
+            PrecheckForErrors();
+
+            var cfg = new SolverConfiguration();
+
+            cfg.CustomSolver = solver;
+
+            cfg.LoadCases = new List<LoadCase>() { LoadCase.DefaultLoadCase };
+
+            Solve(cfg);
+        }*/
 
         /// <summary>
         /// Solves the model using specified solver generator.

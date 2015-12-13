@@ -13,15 +13,16 @@ namespace BriefFiniteElementNet
     public class SolverConfiguration
     {
         #region Constructors
-
+        /*
         /// <summary>
         /// Initializes a new instance of the <see cref="SolverConfiguration"/> class.
         /// </summary>
         /// <param name="solverType">Type of the solver.</param>
+        [Obsolete]
         public SolverConfiguration(BuiltInSolverType solverType):this()
         {
             this.solverType = solverType;
-        }
+        }*/
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SolverConfiguration"/> class.
@@ -76,7 +77,7 @@ namespace BriefFiniteElementNet
         private Func<CompressedColumnStorage, ISolver> _solverGenerator;
 
 
-
+        /*
         private LoadCase settlementsLoadCase;
 
         /// <summary>
@@ -90,13 +91,14 @@ namespace BriefFiniteElementNet
         {
             get { return settlementsLoadCase; }
             set { settlementsLoadCase = value; }
-        }
+        }*/
 
 
 
 
-        private BuiltInSolverType solverType;
+        //private BuiltInSolverType solverType;
 
+        /*
         /// <summary>
         /// Gets or sets the type of the solver.
         /// </summary>
@@ -109,11 +111,11 @@ namespace BriefFiniteElementNet
             get { return solverType; }
             set { solverType = value; }
         }
-
+        */
         
 
 
-        private ISolver _solver;
+        //private ISolver _solver;
 
         /// <summary>
         /// Gets or sets the custom solver.
@@ -121,20 +123,22 @@ namespace BriefFiniteElementNet
         /// <value>
         /// A custom solver to be used for solving equations.
         /// </value>
+        /*
         [Obsolete("Use Solver property instead")]
         public ISolver CustomSolver
         {
             get { return _solver; }
             set { _solver = value; }
-        }
+        }*/
 
+        /*
         [Obsolete("Use SolverGenerator property instead")]
         public ISolver Solver
         {
             get { return _solver; }
             set { _solver = value; }
         }
-
+        */
    
 
         #endregion
