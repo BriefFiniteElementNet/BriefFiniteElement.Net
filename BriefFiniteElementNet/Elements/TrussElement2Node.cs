@@ -97,8 +97,42 @@ namespace BriefFiniteElementNet.Elements
         /// </remarks>
         public override Force GetInternalForceAt(double x, LoadCombination cmb)
         {
-            
-            throw new NotImplementedException();
+            var gStartDisp = StartNode.GetNodalDisplacement(cmb);
+            var gEndDisp = EndNode.GetNodalDisplacement(cmb);
+
+            var lStartDisp = new Displacement(
+                TransformGlobalToLocal(gStartDisp.Displacements),
+                TransformGlobalToLocal(gStartDisp.Rotations));
+
+            var lEndDisp = new Displacement(
+                TransformGlobalToLocal(gEndDisp.Displacements),
+                TransformGlobalToLocal(gEndDisp.Rotations));
+
+            var displVector = new double[]
+            {
+                lStartDisp.DX, lStartDisp.DY, lStartDisp.DZ,
+                lStartDisp.RX, lStartDisp.RY, lStartDisp.RZ,
+                lEndDisp.DX, lEndDisp.DY, lEndDisp.DZ,
+                lEndDisp.RX, lEndDisp.RY, lEndDisp.RZ
+            };
+
+            var lStartForces = Matrix.Multiply(GetLocalStiffnessMatrix(), displVector);
+
+            var startForce = Force.FromVector(lStartForces, 0);
+
+            var forceAtX = -startForce.Move(new Vector(x, 0, 0));
+
+            foreach (var ld in loads)
+            {
+                if (!cmb.ContainsKey(ld.Case))
+                    continue;
+
+                var frc = ((Load1D)ld).GetInternalForceAt(this, x);
+
+                forceAtX += cmb[ld.Case] * frc;
+            }
+
+            return forceAtX;
         }
 
         /// <summary>
@@ -112,9 +146,7 @@ namespace BriefFiniteElementNet.Elements
         /// </remarks>
         public override Force GetInternalForceAt(double x)
         {
-            var cmb = new LoadCombination();
-            cmb[LoadCase.DefaultLoadCase] = 1.0;
-            return GetInternalForceAt(x, cmb);
+            return GetInternalForceAt(x, LoadCombination.DefaultLoadCombination);
         }
 
         /// <summary>
@@ -130,90 +162,185 @@ namespace BriefFiniteElementNet.Elements
         /// </remarks>
         public override Matrix GetGlobalStifnessMatrix()
         {
-            throw new NotImplementedException();
+            var k = GetLocalStiffnessMatrix();
+            var kArr = k.CoreArray;
 
-            //TODO: these are not correct, to be fixed...
-            var v = this.EndNode.Location - this.StartNode.Location;
+            var r = GetTransformationParameters();
 
-            var l = v.Length;
-            var cx = v.X/l;
-            var cy = v.Y/l;
-            var cz = v.Z/l;
-
-            var localS = new Matrix(2, 2);
-
-            var a = this.A;//area
-
-            localS[0, 0] = localS[1, 1] = this.e * a / l;
-            localS[1, 0] = localS[0, 1] = -this.e * a / l;
-
-            var t = new Matrix(2, 6);
-            t[0, 0] = cx;
-            t[0, 1] = cy;
-            t[0, 2] = cz;
-
-            t[1, 3] = cx;
-            t[1, 4] = cy;
-            t[1, 5] = cz;
-
-
-            var buf = new Matrix(12, 12);
-
-            buf[0 + 0, 0] = cx*cx;
-            buf[0 + 0, 1] = cx*cy;
-            buf[0 + 0, 2] = cx*cz;
-            buf[1 + 0, 0] = cx*cy;
-            buf[1 + 0, 1] = cy*cy;
-            buf[1 + 0, 2] = cy*cz;
-            buf[2 + 0, 0] = cx*cz;
-            buf[2 + 0, 1] = cy*cz;
-            buf[2 + 0, 2] = cz*cz;
-
-
-            buf[0 + 6, 0] = -cx*cx;
-            buf[0 + 6, 1] = -cx*cy;
-            buf[0 + 6, 2] = -cx*cz;
-            buf[1 + 6, 0] = -cx*cy;
-            buf[1 + 6, 1] = -cy*cy;
-            buf[1 + 6, 2] = -cy*cz;
-            buf[2 + 6, 0] = -cx*cz;
-            buf[2 + 6, 1] = -cy*cz;
-            buf[2 + 6, 2] = -cz*cz;
-
-
-            buf[0, 0 + 6] = -cx*cx;
-            buf[0, 1 + 6] = -cx*cy;
-            buf[0, 2 + 6] = -cx*cz;
-            buf[1, 0 + 6] = -cx*cy;
-            buf[1, 1 + 6] = -cy*cy;
-            buf[1, 2 + 6] = -cy*cz;
-            buf[2, 0 + 6] = -cx*cz;
-            buf[2, 1 + 6] = -cy*cz;
-            buf[2, 2 + 6] = -cz*cz;
-
-
-            buf[0 + 6, 0 + 6] = cx*cx;
-            buf[0 + 6, 1 + 6] = cx*cy;
-            buf[0 + 6, 2 + 6] = cx*cz;
-            buf[1 + 6, 0 + 6] = cx*cy;
-            buf[1 + 6, 1 + 6] = cy*cy;
-            buf[1 + 6, 2 + 6] = cy*cz;
-            buf[2 + 6, 0 + 6] = cx*cz;
-            buf[2 + 6, 1 + 6] = cy*cz;
-            buf[2 + 6, 2 + 6] = cz*cz;
-
-            if (!useOverridedProperties)
-                throw new NotImplementedException();
-
-            var cf = this.e*this._a/l;
-
-            for (int i = 0; i < 144; i++)
+            for (int i = 0; i < 4; i++)
             {
-                buf.CoreArray[i] *= cf;
+                for (int j = i; j < 4; j++)
+                {
+                    MultSubMatrix(kArr, r, i, j);
+                }
             }
 
+            MathUtil.FillLowerTriangleFromUpperTriangle(k);
+
+            return k;
+        }
+
+
+        private static void MultSubMatrix(double[] k, double[] r, int i, int j)
+        {
+            var st = j * 36 + 3 * i;
+
+            var tmp = new double[9];
+            var tmp2 = new double[9];
+
+            tmp[0] = r[00] * k[st + 00] + r[01] * k[st + 01] + r[02] * k[st + 02];
+            tmp[3] = r[00] * k[st + 12] + r[01] * k[st + 13] + r[02] * k[st + 14];
+            tmp[6] = r[00] * k[st + 24] + r[01] * k[st + 25] + r[02] * k[st + 26];
+            tmp[1] = r[03] * k[st + 00] + r[04] * k[st + 01] + r[05] * k[st + 02];
+            tmp[4] = r[03] * k[st + 12] + r[04] * k[st + 13] + r[05] * k[st + 14];
+            tmp[7] = r[03] * k[st + 24] + r[04] * k[st + 25] + r[05] * k[st + 26];
+            tmp[2] = r[06] * k[st + 00] + r[07] * k[st + 01] + r[08] * k[st + 02];
+            tmp[5] = r[06] * k[st + 12] + r[07] * k[st + 13] + r[08] * k[st + 14];
+            tmp[8] = r[06] * k[st + 24] + r[07] * k[st + 25] + r[08] * k[st + 26];
+
+            tmp2[0] = tmp[00] * r[00] + tmp[03] * r[01] + tmp[06] * r[02];
+            tmp2[3] = tmp[00] * r[03] + tmp[03] * r[04] + tmp[06] * r[05];
+            tmp2[6] = tmp[00] * r[06] + tmp[03] * r[07] + tmp[06] * r[08];
+            tmp2[1] = tmp[01] * r[00] + tmp[04] * r[01] + tmp[07] * r[02];
+            tmp2[4] = tmp[01] * r[03] + tmp[04] * r[04] + tmp[07] * r[05];
+            tmp2[7] = tmp[01] * r[06] + tmp[04] * r[07] + tmp[07] * r[08];
+            tmp2[2] = tmp[02] * r[00] + tmp[05] * r[01] + tmp[08] * r[02];
+            tmp2[5] = tmp[02] * r[03] + tmp[05] * r[04] + tmp[08] * r[05];
+            tmp2[8] = tmp[02] * r[06] + tmp[05] * r[07] + tmp[08] * r[08];
+
+
+            //var tmp3 = Matrix.FromRowColCoreArray(3, 3, tmp2);
+            //var dif = (buf - tmp3).Select(l=>Math.Abs(l)).Max();
+
+            k[st + 00] = tmp2[0];
+            k[st + 12] = tmp2[3];
+            k[st + 24] = tmp2[6];
+            k[st + 01] = tmp2[1];
+            k[st + 13] = tmp2[4];
+            k[st + 25] = tmp2[7];
+            k[st + 02] = tmp2[2];
+            k[st + 14] = tmp2[5];
+            k[st + 26] = tmp2[8];
+        }
+
+        private double[] GetTransformationParameters()
+        {
+            var v = this.EndNode.Location - this.StartNode.Location;
+
+            if (!v.Equals(LastElementVector))
+                ReCalculateTransformationParameters();
+
+            return LastTransformationParameters;
+        }
+
+
+        /// <summary>
+        /// The last transformation parameters
+        /// </summary>
+        /// <remarks>Storing transformation parameters corresponding to <see cref="LastElementVector"/> for better performance.</remarks>
+        [NonSerialized]
+        private double[] LastTransformationParameters = new double[9];
+
+        /// <summary>
+        /// The last element vector
+        /// </summary>
+        /// <remarks>Last vector corresponding to current <see cref="LastTransformationParameters"/> </remarks>
+        [NonSerialized]
+        private Vector LastElementVector;
+
+        /// <summary>
+        /// Calculates the transformation parameters for this <see cref="FrameElement2Node"/>
+        /// </summary>
+        private void ReCalculateTransformationParameters()
+        {
+            var cxx = 0.0;
+            var cxy = 0.0;
+            var cxz = 0.0;
+
+            var cyx = 0.0;
+            var cyy = 0.0;
+            var cyz = 0.0;
+
+            var czx = 0.0;
+            var czy = 0.0;
+            var czz = 0.0;
+
+            var teta = 0.0;
+
+            var s = Math.Sin(teta * Math.PI / 180.0);
+            var c = Math.Cos(teta * Math.PI / 180.0);
+
+            var v = this.EndNode.Location - this.StartNode.Location;
+
+            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
+            {
+                if (v.Z > 0)
+                {
+                    czx = 1;
+                    cyy = 1;
+                    cxz = -1;
+                }
+                else
+                {
+                    czx = -1;
+                    cyy = 1;
+                    cxz = 1;
+                }
+            }
+            else
+            {
+                var l = v.Length;
+                cxx = v.X / l;
+                cyx = v.Y / l;
+                czx = v.Z / l;
+                var d = Math.Sqrt(cxx * cxx + cyx * cyx);
+                cxy = -cyx / d;
+                cyy = cxx / d;
+                cxz = -cxx * czx / d;
+                cyz = -cyx * czx / d;
+                czz = d;
+            }
+
+
+            this.LastElementVector = v;
+
+            var pars = this.LastTransformationParameters;
+
+            pars[0] = cxx;
+            pars[1] = cxy * c + cxz * s;
+            pars[2] = -cxy * s + cxz * c;
+
+            pars[3] = cyx;
+            pars[4] = cyy * c + cyz * s;
+            pars[5] = -cyy * s + cyz * c;
+
+            pars[6] = czx;
+            pars[7] = czy * c + czz * s;
+            pars[8] = -czy * s + czz * c;
+            
+        }
+
+        public Matrix GetLocalStiffnessMatrix()
+        {
+            //codes borrowed from FrameElement2Node
+            double area = 0;
+
+            if (this.useOverridedProperties)
+                area = A;
+            else if (geometry != null)
+                area = Geometry.GetSectionGeometricalProperties()[0];
+
+            double a = area;
+
+            var l = (this.EndNode.Location - this.StartNode.Location).Length;
+
+            var baseArr = new double[144];
+            var buf = Matrix.FromRowColCoreArray(12, 12, baseArr);
+
+            buf[0, 0] = buf[6, 6] = E*a/l;
+            buf[6, 0] = buf[0, 6] = -E*a/l;
+
             return buf;
-            throw new NotImplementedException();
         }
 
         /// <summary>

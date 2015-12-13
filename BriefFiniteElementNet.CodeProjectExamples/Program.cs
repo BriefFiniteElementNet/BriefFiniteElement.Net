@@ -13,7 +13,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
         [STAThread]
         static void Main(string[] args)
         {
-            Example2();
+            Example1();
         }
 
         private static void Example1()
@@ -67,7 +67,6 @@ namespace BriefFiniteElementNet.CodeProjectExamples
 
             var rt = r1 + r2 + r3 + r4;//shows the Fz=1000 and Fx=Fy=Mx=My=Mz=0.0
 
-            
         }
 
         private static void Example2()

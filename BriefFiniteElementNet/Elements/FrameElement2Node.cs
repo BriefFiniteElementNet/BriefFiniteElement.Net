@@ -369,8 +369,8 @@ namespace BriefFiniteElementNet
         public Matrix GetLocalStiffnessMatrix()
         {
 
-            if (this.e.Equals(0.0))
-                throw new BriefFiniteElementNetException("E should be set on a frame element");
+            //if (this.e.Equals(0.0))
+            //Is it really need?    throw new BriefFiniteElementNetException("E should be set on a frame element");
 
             var props = GetGeometricProperties();
 
