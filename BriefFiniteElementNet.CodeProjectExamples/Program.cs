@@ -51,7 +51,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
 
 
             //Applying load
-            var force = new Force(0, 0, -1000, 0, 0, 0);
+            var force = new Force(0, 1000, -1000, 0, 0, 0);
             n5.Loads.Add(new NodalLoad(force));//adds a load with LoadCase of DefaultLoadCase to node loads
             
             //Adds a NodalLoad with Default LoadCase
@@ -63,10 +63,9 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             var r3 = n3.GetSupportReaction();
             var r4 = n4.GetSupportReaction();
 
-
-
             var rt = r1 + r2 + r3 + r4;//shows the Fz=1000 and Fx=Fy=Mx=My=Mz=0.0
 
+            e1.GetInternalForceAt(0.001);
         }
 
         private static void Example2()

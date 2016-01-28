@@ -238,6 +238,8 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+
+        [Obsolete]
         private void PrecheckForErrors()
         {
             new ModelWarningChecker().CheckModel(this);
