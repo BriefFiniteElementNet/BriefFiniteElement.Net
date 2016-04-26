@@ -956,7 +956,10 @@ namespace BriefFiniteElementNet.Controls
 
             var epsi1on = dims.Max()*1e-6;
 
-            var dim = new double[] { maxX - minX, maxY - minY, maxZ - minZ }.Where(i => Math.Abs(i) > epsi1on).Min();
+
+            var dim = new double[] {maxX - minX, maxY - minY, maxZ - minZ}.Where(i => Math.Abs(i) > epsi1on).Any()
+                ? new double[] {maxX - minX, maxY - minY, maxZ - minZ}.Where(i => Math.Abs(i) > epsi1on).Min()
+                : 1.0;
 
             var d1 = 0.01*dim;
 

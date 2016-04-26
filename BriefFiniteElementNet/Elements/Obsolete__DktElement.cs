@@ -132,9 +132,9 @@ namespace BriefFiniteElementNet.Elements
 
         internal Vector TranformGlobalToLocal(Vector v)
         {
-            var mtx = GetTransformationMatrix().Transpose();
+            var mtx = GetTransformationMatrix();
 
-            var b = mtx * v.ToMatrix();
+            var b = mtx.Transpose() * v.ToMatrix();//eq. 5.14, p. 86
 
             return new Vector(b[0, 0], b[1, 0], b[2, 0]);
         }
@@ -152,7 +152,7 @@ namespace BriefFiniteElementNet.Elements
         /// </remarks>
         private Matrix GetTransformationMatrix()
         {
-            //these calculations are a noted in page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara available on the web
+            //these calculations are noted in page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara available on the web
 
             var cp = new Point[3];// clockwise points
 
@@ -180,8 +180,7 @@ namespace BriefFiniteElementNet.Elements
                 new[] {lamX.X, lamY.X, lamZ.X},
                 new[] {lamX.Y, lamY.Y, lamZ.Y},
                 new[] {lamX.Z, lamY.Z, lamZ.Z}
-
-            });//3x3 matrix
+            });//eq. 5.13
 
             return lambda;
         }
@@ -246,6 +245,7 @@ namespace BriefFiniteElementNet.Elements
 
             var klocal = new Matrix(9, 9);
 
+            //start of eq. 4.32 page 49 ref [1]
             for (var i = 0; i < eval_points.Count; i++)
             {
                 for (var j = 0; j < eval_points.Count; j++)
@@ -260,12 +260,20 @@ namespace BriefFiniteElementNet.Elements
 
                     var ki = b.Transpose() * d * b;
 
-                    ki.MultiplyByConstant(2 * a * wi * wj);
+                    ki.MultiplyByConstant( wi * wj);
 
                     klocal += ki;
                 }
             }
 
+            klocal.MultiplyByConstant(2*a);
+            //end of eq. 4.32 page 49 ref [1]
+
+
+
+            //klocal DoF order is as noted in eq. 4.21 p. 44 : w1, θx1, θy1, w2, θx2, θy2, w3, θx3, θy3
+            //it should convert to u1, v1, w1, θx1, θy1, θz1, ... and so on
+            //will done with permutation matrix p, this formulation is not noted in any reference of this doc
             var p = new Matrix(6, 3);
             p[2, 0] = p[3, 1] = p[4, 2] = 1;
 
@@ -385,6 +393,8 @@ namespace BriefFiniteElementNet.Elements
             */
             throw new NotImplementedException();
         }
+
+
         /// <summary>
         /// Gets the b matrix.
         /// </summary>
@@ -452,7 +462,7 @@ namespace BriefFiniteElementNet.Elements
                     };
 
                     return Matrix.FromRowColCoreArray(9, 1, buf);
-                });
+                });//eq. 4.27 ref [1], also noted in several other references
 
 
 
@@ -473,7 +483,7 @@ namespace BriefFiniteElementNet.Elements
                     };
 
                     return Matrix.FromRowColCoreArray(9, 1, buf);
-                });
+                });//eq. 4.28 ref [1], also noted in several other references
 
             var hx_eta = new Func<double, double, Matrix>(
                 (xi, eta) =>
@@ -492,7 +502,7 @@ namespace BriefFiniteElementNet.Elements
                     };
 
                     return Matrix.FromRowColCoreArray(9, 1, buf);
-                });
+                });//eq. 4.29 ref [1], also noted in several other references
 
             var hy_eta = new Func<double, double, Matrix>(
                 (xi, eta) =>
@@ -511,7 +521,7 @@ namespace BriefFiniteElementNet.Elements
                     };
 
                     return Matrix.FromRowColCoreArray(9, 1, buf);
-                });
+                });//eq. 4.30 ref [1], also noted in several other references
 
 
             #endregion
@@ -529,7 +539,7 @@ namespace BriefFiniteElementNet.Elements
                    buf.MultiplyByConstant(1 / (2 * a));
 
                    return buf;
-               });
+               });//eq. 4.26 page 46 ref [1]
 
             return B(k, e);
         }

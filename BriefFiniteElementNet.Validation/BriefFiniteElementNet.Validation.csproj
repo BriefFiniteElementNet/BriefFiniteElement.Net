@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DktElementChecker.cs" />
     <Compile Include="ElementEquibiliriumChecker.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="F3ddFileReader.cs" />

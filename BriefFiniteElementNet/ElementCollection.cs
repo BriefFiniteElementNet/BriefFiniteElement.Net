@@ -332,6 +332,7 @@ namespace BriefFiniteElementNet
             _list = (List<Element>) info.GetValue("_list", typeof (List<Element>));
         }
 
+
         #endregion
     }
 }

@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BriefFiniteElementNet.TempConsole")]
+[assembly: AssemblyTitle("BriefFiniteElementNet.TestConsole")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("BriefFiniteElementNet.TempConsole")]
+[assembly: AssemblyProduct("BriefFiniteElementNet.TestConsole")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ee73f1f8-7b11-479d-8a97-738296a1308b")]
+[assembly: Guid("592daaf4-1ecc-40f4-8dd8-2ffb5d1802ab")]
 
 // Version information for an assembly consists of the following four values:
 //

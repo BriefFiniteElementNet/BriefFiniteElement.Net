@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CheckingUtil.cs" />
+    <Compile Include="ConsoleTraceListener.cs" />
     <Compile Include="CSparse\Double\Factorization\SparseLDL.cs" />
     <Compile Include="CSparse\Tuple.cs" />
     <Compile Include="DoF.cs" />
