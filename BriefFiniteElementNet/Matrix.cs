@@ -233,7 +233,7 @@ namespace BriefFiniteElementNet
         /// Initializes a new instance of the <see cref="Matrix"/> class.
         /// </summary>
         /// <param name="m">The row.</param>
-        /// <param name="n">The n.</param>
+        /// <param name="n">The columns.</param>
         /// <exception cref="System.ArgumentException">
         /// row
         /// or

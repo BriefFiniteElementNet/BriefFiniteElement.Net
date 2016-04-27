@@ -11,9 +11,9 @@ namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
     /// represents a discrete Kirchoff triangular element with constant thickness.
-    /// Whole formulation is taken from "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara available on the web
+
     /// references: 
-    /// https://woodem.org/theory/membrane-element.html
+    /// 
     /// 
     /// implementations:
     /// https://github.com/eudoxos/woodem/blob/9e232d3a737cd3095a7c1eaa82e9e28829af97ab/pkg/fem/Membrane.cpp
@@ -23,7 +23,10 @@ namespace BriefFiniteElementNet.Elements
     /// https://github.com/jiamingkang/bles/blob/939394f241f8e01a296d38ff52feac246793cbc9/CHak2DPlate3.cpp
     /// https://github.com/cescjf/locistream-fsi-coupling/blob/610a5b50933333bf6f43bc0b0ec19cc849dcb543/src/FSI/nlams_dkt_shape.f90
     /// 
-    /// 
+    /// refs:
+    ///     [1] "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara available on the web
+    ///     [2] "A STUDY OF THREE-NODE TRIANGULAR PLATE BENDING ELEMENTS" by JEAN-LOUIS BATOZ,KLAUS-JORGEN BATHE and LEE-WING HO
+    ///     [3] "Membrane element" https://woodem.org/theory/membrane-element.html
     /// </summary>
     [Serializable]
     [Obsolete("This class give wrong results")]
@@ -208,8 +211,6 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
-
-
         /// <summary>
         /// Gets the transformation matrix which converts local and global coordinates to each other.
         /// </summary>
@@ -256,6 +257,11 @@ namespace BriefFiniteElementNet.Elements
                     var xi_i = eval_points[i][0];
                     var eta_j = eval_points[j][1];
 
+                    var vi = eval_points[i][0];
+                    var vj = eval_points[j][1];
+
+
+
                     var b = GetBMatrix(xi_i, eta_j,lpts);
 
                     var ki = b.Transpose() * d * b;
@@ -283,7 +289,6 @@ namespace BriefFiniteElementNet.Elements
 
             return buf2;
         }
-
 
         public Matrix GetLocalStifnessMatrix2()
         {
@@ -393,7 +398,6 @@ namespace BriefFiniteElementNet.Elements
             */
             throw new NotImplementedException();
         }
-
 
         /// <summary>
         /// Gets the b matrix.
@@ -543,7 +547,6 @@ namespace BriefFiniteElementNet.Elements
 
             return B(k, e);
         }
-
 
         private Matrix GetBMatrixPy(double k, double e)
         {
@@ -813,7 +816,6 @@ namespace BriefFiniteElementNet.Elements
 
             return buf;
         }
-
 
         /// <inheritdoc />
         public override Matrix GetGlobalMassMatrix()

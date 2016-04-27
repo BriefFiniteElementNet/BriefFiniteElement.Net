@@ -53,6 +53,7 @@
     <Compile Include="Elements\SdofMass.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="CalcUtil.cs" />
+    <Compile Include="CustomGaussianIntegrator.cs" />
     <Compile Include="IElement1DLoad.cs" />
     <Compile Include="IntArrayCompairer.cs" />
     <Compile Include="LoadCaseCollection.cs" />

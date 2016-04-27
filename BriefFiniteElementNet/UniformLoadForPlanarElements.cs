@@ -72,6 +72,7 @@ namespace BriefFiniteElementNet
                     throw new NotSupportedException();
                     break;
                 case ElementType.Dkt:
+
                     return GetGlobalEquivalentNodalLoads(element as Obsolete__DktElement);
 
                     break;
