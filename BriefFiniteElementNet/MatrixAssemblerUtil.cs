@@ -22,7 +22,7 @@ namespace BriefFiniteElementNet
         {
             var elements = model.Elements.ToArray();
 
-            var maxNodePerElement = elements.Select(i => i.Nodes.Length).Max();
+            var maxNodePerElement = elements.Any() ? elements.Select(i => i.Nodes.Length).Max() : 1;
             var rElmMap = new int[maxNodePerElement*6];
 
             var c = model.Nodes.Count*6;

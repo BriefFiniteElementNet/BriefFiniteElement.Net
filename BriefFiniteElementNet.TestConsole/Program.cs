@@ -12,9 +12,10 @@ namespace BriefFiniteElementNet.TestConsole
 {
     class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
-            DktElementChecker.Test1();
+            DkqElementChecker.Test1();
         }
     }
 }

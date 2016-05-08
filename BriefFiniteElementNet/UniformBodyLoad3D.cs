@@ -69,7 +69,7 @@ namespace BriefFiniteElementNet
                     return GetGlobalEquivalentNodalLoads((TetrahedralIso) element);
                     break;
                 case ElementType.Dkt:
-                    return GetGlobalEquivalentNodalLoads(element as Obsolete__DktElement);
+                    return GetGlobalEquivalentNodalLoads(element as DktElement);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -99,7 +99,7 @@ namespace BriefFiniteElementNet
             return new[] {f, f, f, f};
         }
 
-        private Force[] GetGlobalEquivalentNodalLoads(Obsolete__DktElement elm)
+        private Force[] GetGlobalEquivalentNodalLoads(DktElement elm)
         {
             //using lumped method.
 

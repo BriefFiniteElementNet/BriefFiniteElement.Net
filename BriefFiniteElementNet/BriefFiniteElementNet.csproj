@@ -48,14 +48,19 @@
     <Compile Include="DofMappingManager.cs" />
     <Compile Include="Elements\ConcentratedMass.cs" />
     <Compile Include="Elements\CstElement.cs" />
+    <Compile Include="Elements\DktElement.cs" />
     <Compile Include="Elements\DkqElement.cs" />
-    <Compile Include="Elements\Obsolete__DktElement.cs" />
     <Compile Include="Elements\SdofMass.cs" />
+    <Compile Include="Elements\TriangleFlatShell.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="CalcUtil.cs" />
     <Compile Include="CustomGaussianIntegrator.cs" />
     <Compile Include="IElement1DLoad.cs" />
     <Compile Include="IntArrayCompairer.cs" />
+    <Compile Include="Integration\FunctionMatrixFunction.cs" />
+    <Compile Include="Integration\GaussianIntegrator.cs" />
+    <Compile Include="Integration\GaussPoints.cs" />
+    <Compile Include="Integration\IMatrixFunction.cs" />
     <Compile Include="LoadCaseCollection.cs" />
     <Compile Include="LoadTypeCollection.cs" />
     <Compile Include="MassFormulation.cs" />
@@ -76,6 +81,7 @@
     <Compile Include="RigidElementCollection.cs" />
     <Compile Include="SectionGenerator.cs" />
     <Compile Include="FemNetSerializationBinder.cs" />
+    <Compile Include="SimplePermuteManager.cs" />
     <Compile Include="SolverConfiguration.cs" />
     <Compile Include="SolverFailException.cs" />
     <Compile Include="BuiltInSolverType.cs" />
@@ -184,6 +190,8 @@
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
     <None Include="Documents\SupportReactions.mkd" />
+    <None Include="Elements\TriangleFlatShell.md" />
+    <None Include="Integration\GaussianIntegrator.md" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CSparse\IO\" />

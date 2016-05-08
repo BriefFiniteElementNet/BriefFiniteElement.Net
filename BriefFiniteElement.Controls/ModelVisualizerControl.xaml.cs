@@ -42,7 +42,7 @@ namespace BriefFiniteElementNet.Controls
 
         public static readonly DependencyProperty ModelToVisualizeProperty
             = DependencyProperty.Register(
-                "ModelToVisualize", typeof (BriefFiniteElementNet.Model), typeof (ModelVisualizerControl),
+                "ModelToVisualize", typeof(BriefFiniteElementNet.Model), typeof(ModelVisualizerControl),
                 new PropertyMetadata(null, OnModelToVisualizeChanged, ModelToVisualizeCoerceValue));
 
         public BriefFiniteElementNet.Model ModelToVisualize
@@ -55,8 +55,8 @@ namespace BriefFiniteElementNet.Controls
             = EventManager.RegisterRoutedEvent(
                 "ModelToVisualizeChanged",
                 RoutingStrategy.Direct,
-                typeof (RoutedPropertyChangedEventHandler<BriefFiniteElementNet.Model>),
-                typeof (ModelVisualizerControl));
+                typeof(RoutedPropertyChangedEventHandler<BriefFiniteElementNet.Model>),
+                typeof(ModelVisualizerControl));
 
         private static object ModelToVisualizeCoerceValue(DependencyObject d, object value)
         {
@@ -87,14 +87,13 @@ namespace BriefFiniteElementNet.Controls
             obj.UpdateUi();
         }
 
-
         #endregion
 
         #region ElementVisualThickness Property and Property Change Routed event
 
         public static readonly DependencyProperty ElementVisualThicknessProperty
             = DependencyProperty.Register(
-                "ElementVisualThickness", typeof (double), typeof (ModelVisualizerControl),
+                "ElementVisualThickness", typeof(double), typeof(ModelVisualizerControl),
                 new PropertyMetadata(0.0, OnElementVisualThicknessChanged, ElementVisualThicknessCoerceValue));
 
         public double ElementVisualThickness
@@ -107,8 +106,8 @@ namespace BriefFiniteElementNet.Controls
             = EventManager.RegisterRoutedEvent(
                 "ElementVisualThicknessChanged",
                 RoutingStrategy.Direct,
-                typeof (RoutedPropertyChangedEventHandler<double>),
-                typeof (ModelVisualizerControl));
+                typeof(RoutedPropertyChangedEventHandler<double>),
+                typeof(ModelVisualizerControl));
 
         private static object ElementVisualThicknessCoerceValue(DependencyObject d, object value)
         {
@@ -137,14 +136,13 @@ namespace BriefFiniteElementNet.Controls
             obj.RaiseEvent(args);
         }
 
-
         #endregion
 
         #region DisableEditingProperties Property and Property Change Routed event
 
         public static readonly DependencyProperty DisableEditingPropertiesProperty
             = DependencyProperty.Register(
-                "DisableEditingProperties", typeof (bool), typeof (ModelVisualizerControl),
+                "DisableEditingProperties", typeof(bool), typeof(ModelVisualizerControl),
                 new PropertyMetadata(false, OnDisableEditingPropertiesChanged, DisableEditingPropertiesCoerceValue));
 
         public bool DisableEditingProperties
@@ -157,8 +155,8 @@ namespace BriefFiniteElementNet.Controls
             = EventManager.RegisterRoutedEvent(
                 "DisableEditingPropertiesChanged",
                 RoutingStrategy.Direct,
-                typeof (RoutedPropertyChangedEventHandler<bool>),
-                typeof (ModelVisualizerControl));
+                typeof(RoutedPropertyChangedEventHandler<bool>),
+                typeof(ModelVisualizerControl));
 
         private static object DisableEditingPropertiesCoerceValue(DependencyObject d, object value)
         {
@@ -185,18 +183,15 @@ namespace BriefFiniteElementNet.Controls
                 (bool) e.NewValue);
             args.RoutedEvent = ModelVisualizerControl.DisableEditingPropertiesChangedEvent;
             obj.RaiseEvent(args);
-            
         }
 
-
         #endregion
-
 
         #region ShowNodes Property and Property Change Routed event
 
         public static readonly DependencyProperty ShowNodesProperty
             = DependencyProperty.Register(
-                "ShowNodes", typeof (bool), typeof (ModelVisualizerControl),
+                "ShowNodes", typeof(bool), typeof(ModelVisualizerControl),
                 new PropertyMetadata(true, OnShowNodesChanged, ShowNodesCoerceValue));
 
         public bool ShowNodes
@@ -209,8 +204,8 @@ namespace BriefFiniteElementNet.Controls
             = EventManager.RegisterRoutedEvent(
                 "ShowNodesChanged",
                 RoutingStrategy.Direct,
-                typeof (RoutedPropertyChangedEventHandler<bool>),
-                typeof (ModelVisualizerControl));
+                typeof(RoutedPropertyChangedEventHandler<bool>),
+                typeof(ModelVisualizerControl));
 
         private static object ShowNodesCoerceValue(DependencyObject d, object value)
         {
@@ -240,14 +235,13 @@ namespace BriefFiniteElementNet.Controls
             obj.UpdateUi();
         }
 
-
         #endregion
 
         #region ShowElements Property and Property Change Routed event
 
         public static readonly DependencyProperty ShowElementsProperty
             = DependencyProperty.Register(
-                "ShowElements", typeof (bool), typeof (ModelVisualizerControl),
+                "ShowElements", typeof(bool), typeof(ModelVisualizerControl),
                 new PropertyMetadata(true, OnShowElementsChanged, ShowElementsCoerceValue));
 
         public bool ShowElements
@@ -260,8 +254,8 @@ namespace BriefFiniteElementNet.Controls
             = EventManager.RegisterRoutedEvent(
                 "ShowElementsChanged",
                 RoutingStrategy.Direct,
-                typeof (RoutedPropertyChangedEventHandler<bool>),
-                typeof (ModelVisualizerControl));
+                typeof(RoutedPropertyChangedEventHandler<bool>),
+                typeof(ModelVisualizerControl));
 
         private static object ShowElementsCoerceValue(DependencyObject d, object value)
         {
@@ -291,14 +285,13 @@ namespace BriefFiniteElementNet.Controls
             obj.UpdateUi();
         }
 
-
         #endregion
 
         #region ShowRigidElements Property and Property Change Routed event
 
         public static readonly DependencyProperty ShowRigidElementsProperty
             = DependencyProperty.Register(
-                "ShowRigidElements", typeof (bool), typeof (ModelVisualizerControl),
+                "ShowRigidElements", typeof(bool), typeof(ModelVisualizerControl),
                 new PropertyMetadata(true, OnShowRigidElementsChanged, ShowRigidElementsCoerceValue));
 
         public bool ShowRigidElements
@@ -311,8 +304,8 @@ namespace BriefFiniteElementNet.Controls
             = EventManager.RegisterRoutedEvent(
                 "ShowRigidElementsChanged",
                 RoutingStrategy.Direct,
-                typeof (RoutedPropertyChangedEventHandler<bool>),
-                typeof (ModelVisualizerControl));
+                typeof(RoutedPropertyChangedEventHandler<bool>),
+                typeof(ModelVisualizerControl));
 
         private static object ShowRigidElementsCoerceValue(DependencyObject d, object value)
         {
@@ -343,7 +336,6 @@ namespace BriefFiniteElementNet.Controls
             obj.UpdateUi();
         }
 
-
         #endregion
 
         /// <summary>
@@ -370,162 +362,163 @@ namespace BriefFiniteElementNet.Controls
 
             var sb = new StringBuilder();
 
-            
-            if(ShowElements)
-            foreach (var elm in ModelToVisualize.Elements)
-            {
-                var builder = new MeshBuilder(false, false);
 
-                switch (elm.ElementType)
+            if (ShowElements)
+                foreach (var elm in ModelToVisualize.Elements)
                 {
-                    case ElementType.Undefined:
-                        sb.AppendLine("Undefined element type! ");
-                        break;
+                    var builder = new MeshBuilder(false, false);
 
-                    case ElementType.FrameElement2Node:
-                        AddFrameElement(builder, elm as FrameElement2Node);
-                        break;
+                    switch (elm.ElementType)
+                    {
+                        case ElementType.Undefined:
+                            sb.AppendLine("Undefined element type! ");
+                            break;
 
-                    case ElementType.ConcentratedMass:
-                        AddMassElement(builder, elm as ConcentratedMass);
-                        break;
+                        case ElementType.FrameElement2Node:
+                            AddFrameElement(builder, elm as FrameElement2Node);
+                            break;
 
-                    case ElementType.TrussElement2Noded:
-                        AddTrussElement(builder, elm as TrussElement2Node);
-                        break;
+                        case ElementType.ConcentratedMass:
+                            AddMassElement(builder, elm as ConcentratedMass);
+                            break;
 
-                    case ElementType.Dkt:
-                        AddDktElement(builder, elm as Obsolete__DktElement);
-                        break;
+                        case ElementType.TrussElement2Noded:
+                            AddTrussElement(builder, elm as TrussElement2Node);
+                            break;
 
-                    case ElementType.Cst:
-                        AddCstElement(builder, elm as CstElement);
-                        break;
+                        case ElementType.Dkt:
+                            AddDktElement(builder, elm as DktElement);
+                            break;
 
-                    default:
-                        sb.AppendLine("Unknown element type for rendering: " + elm.ElementType);
-                        break;
+                        case ElementType.Dkq:
+                            AddDkqElement(builder, elm as DkqElement);
+                            break;
+
+                        case ElementType.Cst:
+                            AddCstElement(builder, elm as CstElement);
+                            break;
+
+                        default:
+                            sb.AppendLine("Unknown element type for rendering: " + elm.ElementType);
+                            break;
+                    }
+
+                    var gradient = new LinearGradientBrush();
+                        //to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
+
+                    gradient.GradientStops.Add(new GradientStop(Colors.Blue, 0));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Cyan, 0.2));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Green, 0.4));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Yellow, 0.6));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Red, 0.8));
+                    gradient.GradientStops.Add(new GradientStop(Colors.White, 1));
+
+
+                    var mesh = builder.ToMesh(true);
+
+                    var material = MaterialHelper.CreateMaterial(gradient, null, null, 1, 0);
+
+                    var mygeometry = new GeometryModel3D(mesh, material) {BackMaterial = material};
+
+                    var modelElement = new ModelUIElement3D();
+                    modelElement.Model = mygeometry;
+
+
+                    BindMouseEvents(modelElement, elm);
+                    // var myModelVisual3D = new ModelVisual3D();
+                    //myModelVisual3D.Content = modelGroup;
+
+
+                    MainViewport.Children.Add(modelElement);
                 }
 
-                var gradient = new LinearGradientBrush();//to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
-
-                gradient.GradientStops.Add(new GradientStop(Colors.Blue, 0));
-                gradient.GradientStops.Add(new GradientStop(Colors.Cyan, 0.2));
-                gradient.GradientStops.Add(new GradientStop(Colors.Green, 0.4));
-                gradient.GradientStops.Add(new GradientStop(Colors.Yellow, 0.6));
-                gradient.GradientStops.Add(new GradientStop(Colors.Red, 0.8));
-                gradient.GradientStops.Add(new GradientStop(Colors.White, 1));
-
-
-                var mesh = builder.ToMesh(true);
-                
-                var material = MaterialHelper.CreateMaterial(gradient, null, null, 1, 0);
-
-                var mygeometry = new GeometryModel3D(mesh, material) { BackMaterial = material };
-
-                var modelElement = new ModelUIElement3D();
-                modelElement.Model = mygeometry;
-
-
-                BindMouseEvents(modelElement, elm);
-               // var myModelVisual3D = new ModelVisual3D();
-                //myModelVisual3D.Content = modelGroup;
-
-
-                MainViewport.Children.Add(modelElement);
-                
-            }
-
             #endregion
-
 
             #region Adding nodes
 
-            if(ShowNodes)
-            foreach (var nde in ModelToVisualize.Nodes)
-            {
-                var builder = new MeshBuilder(false, false);
+            if (ShowNodes)
+                foreach (var nde in ModelToVisualize.Nodes)
+                {
+                    var builder = new MeshBuilder(false, false);
 
-                AddNode(builder, nde);
+                    AddNode(builder, nde);
 
-                var gradient = new LinearGradientBrush();//to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
+                    var gradient = new LinearGradientBrush();
+                        //to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
 
-                gradient.GradientStops.Add(new GradientStop(Colors.Blue, 0));
-                gradient.GradientStops.Add(new GradientStop(Colors.Cyan, 0.2));
-                gradient.GradientStops.Add(new GradientStop(Colors.Green, 0.4));
-                gradient.GradientStops.Add(new GradientStop(Colors.Yellow, 0.6));
-                gradient.GradientStops.Add(new GradientStop(Colors.Red, 0.8));
-                gradient.GradientStops.Add(new GradientStop(Colors.White, 1));
-
-
-                var mesh = builder.ToMesh(true);
-
-                var material = MaterialHelper.CreateMaterial(Brushes.Crimson);
-
-                var mygeometry = new GeometryModel3D(mesh, material) { BackMaterial = material };
-
-                var modelElement = new ModelUIElement3D();
-                modelElement.Model = mygeometry;
-
-                BindMouseEvents(modelElement, nde);
-                // var myModelVisual3D = new ModelVisual3D();
-                //myModelVisual3D.Content = modelGroup;
+                    gradient.GradientStops.Add(new GradientStop(Colors.Blue, 0));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Cyan, 0.2));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Green, 0.4));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Yellow, 0.6));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Red, 0.8));
+                    gradient.GradientStops.Add(new GradientStop(Colors.White, 1));
 
 
-                MainViewport.Children.Add(modelElement);
-            }
+                    var mesh = builder.ToMesh(true);
+
+                    var material = MaterialHelper.CreateMaterial(Brushes.Crimson);
+
+                    var mygeometry = new GeometryModel3D(mesh, material) {BackMaterial = material};
+
+                    var modelElement = new ModelUIElement3D();
+                    modelElement.Model = mygeometry;
+
+                    BindMouseEvents(modelElement, nde);
+                    // var myModelVisual3D = new ModelVisual3D();
+                    //myModelVisual3D.Content = modelGroup;
+
+
+                    MainViewport.Children.Add(modelElement);
+                }
 
             #endregion
 
-
             #region Adding rigid elements
 
-            if(ShowRigidElements)
-            foreach (var elm in ModelToVisualize.RigidElements)
-            {
-                var builder = new MeshBuilder(false, false);
+            if (ShowRigidElements)
+                foreach (var elm in ModelToVisualize.RigidElements)
+                {
+                    var builder = new MeshBuilder(false, false);
 
-                AddRigidElement(builder, elm);
+                    AddRigidElement(builder, elm);
 
-                var gradient = new LinearGradientBrush();//to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
+                    var gradient = new LinearGradientBrush();
+                        //to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
 
-                gradient.GradientStops.Add(new GradientStop(Colors.Blue, 0));
-                gradient.GradientStops.Add(new GradientStop(Colors.Cyan, 0.2));
-                gradient.GradientStops.Add(new GradientStop(Colors.Green, 0.4));
-                gradient.GradientStops.Add(new GradientStop(Colors.Yellow, 0.6));
-                gradient.GradientStops.Add(new GradientStop(Colors.Red, 0.8));
-                gradient.GradientStops.Add(new GradientStop(Colors.White, 1));
-
-
-                var mesh = builder.ToMesh(true);
-
-                var material = MaterialHelper.CreateMaterial(Brushes.GreenYellow, Brushes.Green, Brushes.Green,1,100);
-                
-
-                var mygeometry = new GeometryModel3D(mesh, material) { BackMaterial = material };
-
-                var modelElement = new ModelUIElement3D();
-                modelElement.Model = mygeometry;
-
-                BindMouseEvents(modelElement, elm);
-                // var myModelVisual3D = new ModelVisual3D();
-                //myModelVisual3D.Content = modelGroup;
+                    gradient.GradientStops.Add(new GradientStop(Colors.Blue, 0));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Cyan, 0.2));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Green, 0.4));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Yellow, 0.6));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Red, 0.8));
+                    gradient.GradientStops.Add(new GradientStop(Colors.White, 1));
 
 
-                MainViewport.Children.Add(modelElement);
-            }
+                    var mesh = builder.ToMesh(true);
+
+                    var material = MaterialHelper.CreateMaterial(Brushes.GreenYellow, Brushes.Green, Brushes.Green, 1,
+                        100);
+
+
+                    var mygeometry = new GeometryModel3D(mesh, material) {BackMaterial = material};
+
+                    var modelElement = new ModelUIElement3D();
+                    modelElement.Model = mygeometry;
+
+                    BindMouseEvents(modelElement, elm);
+                    // var myModelVisual3D = new ModelVisual3D();
+                    //myModelVisual3D.Content = modelGroup;
+
+
+                    MainViewport.Children.Add(modelElement);
+                }
 
             #endregion
 
             if (sb.Length != 0)
                 MessageBox.Show(sb.ToString());
 
-            
-            
+
             MainViewport.Children.Add(new DefaultLights());
-
-
-
         }
 
         private void BindMouseEvents(ModelUIElement3D model, Element elm)
@@ -534,7 +527,6 @@ namespace BriefFiniteElementNet.Controls
 
             Material oldfrontm = null;
             Material oldbackm = null;
-
 
             #region MouseEnter
 
@@ -549,7 +541,7 @@ namespace BriefFiniteElementNet.Controls
                 if (tb == null)
                 {
                     MainCanvas.Children.Add(tb = new Border() {Tag = tagGuid});
-                    
+
                     tb.MouseMove += (o, args) => { args.Handled = false; };
                     tb.PreviewMouseMove += (o, args) => { args.Handled = false; };
                     tb.Child = new TextBlock();
@@ -570,7 +562,6 @@ namespace BriefFiniteElementNet.Controls
                     oldbackm = geo.BackMaterial;
 
                     geo.Material = geo.BackMaterial = MaterialHelper.CreateMaterial(Brushes.Aqua);
-
                 }
             };
 
@@ -603,7 +594,135 @@ namespace BriefFiniteElementNet.Controls
 
                 Canvas.SetLeft(tb, mousePos.X - tb.ActualWidth - 10);
                 Canvas.SetTop(tb, mousePos.Y - tb.ActualHeight - 10);
+            };
 
+            #endregion
+
+            #region MouseLeave
+
+            model.MouseLeave += (sender, args) =>
+            {
+                Border tb = null;
+
+                foreach (var child in MainCanvas.Children)
+                {
+                    if (child is Border)
+                    {
+                        if (tagGuid.Equals((child as Border).Tag))
+                        {
+                            tb = child as Border;
+                            break;
+                        }
+                    }
+                }
+
+                if (tb == null)
+                    return;
+
+                tb.Visibility = Visibility.Collapsed;
+
+                var geo = model.Model as GeometryModel3D;
+
+                if (geo != null)
+                {
+                    geo.Material = oldfrontm;
+                    geo.BackMaterial = oldbackm;
+                }
+            };
+
+            #endregion
+
+            model.MouseDown += (sender, args) =>
+            {
+                var grd = new DataGrid();
+
+                PropertyHelper.Populate(grd, elm);
+                grd.ItemsSource = new[] {elm};
+
+                if (DisableEditingProperties)
+                    grd.IsReadOnly = true;
+
+                var wnd = new Window();
+                wnd.Content = grd;
+                wnd.ShowDialog();
+                args.Handled = true;
+            };
+        }
+
+        private void BindMouseEvents(ModelUIElement3D model, RigidElement elm)
+        {
+            var tagGuid = @"35DA1A20-AA6D-4436-890E-CBFA341F9E51";
+
+            Material oldfrontm = null;
+            Material oldbackm = null;
+
+            /**/
+
+            #region MouseEnter
+
+            model.MouseEnter += (sender, e) =>
+            {
+                var tb = MainCanvas.Children
+                    .Cast<UIElement>()
+                    .Where(i => i is Border)
+                    .Cast<Border>()
+                    .FirstOrDefault(i => tagGuid.Equals(i.Tag));
+
+                if (tb == null)
+                {
+                    MainCanvas.Children.Add(tb = new Border() {Tag = tagGuid});
+
+                    tb.MouseMove += (o, args) => { args.Handled = false; };
+                    tb.PreviewMouseMove += (o, args) => { args.Handled = false; };
+                    tb.Child = new TextBlock();
+                    StyleTexblock(tb);
+                }
+
+
+                var tx = tb.Child as TextBlock;
+
+                if (tx != null)
+                    tx.Text = "RigidELEMENT";
+                var geo = model.Model as GeometryModel3D;
+
+                if (geo != null)
+                {
+                    oldfrontm = geo.Material;
+                    oldbackm = geo.BackMaterial;
+
+                    geo.Material = geo.BackMaterial = MaterialHelper.CreateMaterial(Brushes.Aqua);
+                }
+            };
+
+            #endregion
+
+            #region MouseMove
+
+            model.MouseMove += (sender, e) =>
+            {
+                Border tb = null;
+
+                foreach (var child in MainCanvas.Children)
+                {
+                    if (child is Border)
+                    {
+                        if (tagGuid.Equals((child as Border).Tag))
+                        {
+                            tb = child as Border;
+                            break;
+                        }
+                    }
+                }
+
+                if (tb == null)
+                    return;
+
+                tb.Visibility = Visibility.Visible;
+
+                var mousePos = e.GetPosition(MainCanvas);
+
+                Canvas.SetLeft(tb, mousePos.X - tb.ActualWidth - 10);
+                Canvas.SetTop(tb, mousePos.Y - tb.ActualHeight - 10);
             };
 
             #endregion
@@ -658,140 +777,7 @@ namespace BriefFiniteElementNet.Controls
                 args.Handled = true;
             };
 
-        }
-
-        private void BindMouseEvents(ModelUIElement3D model, RigidElement elm)
-        {
-            var tagGuid = @"35DA1A20-AA6D-4436-890E-CBFA341F9E51";
-
-            Material oldfrontm = null;
-            Material oldbackm = null;
-
             /**/
-            
-            #region MouseEnter
-
-            model.MouseEnter += (sender, e) =>
-            {
-                var tb = MainCanvas.Children
-                    .Cast<UIElement>()
-                    .Where(i => i is Border)
-                    .Cast<Border>()
-                    .FirstOrDefault(i => tagGuid.Equals(i.Tag));
-
-                if (tb == null)
-                {
-                    MainCanvas.Children.Add(tb = new Border() { Tag = tagGuid });
-
-                    tb.MouseMove += (o, args) => { args.Handled = false; };
-                    tb.PreviewMouseMove += (o, args) => { args.Handled = false; };
-                    tb.Child = new TextBlock();
-                    StyleTexblock(tb);
-                }
-
-
-                var tx = tb.Child as TextBlock;
-
-                if (tx != null)
-                    tx.Text = "RigidELEMENT";
-                var geo = model.Model as GeometryModel3D;
-
-                if (geo != null)
-                {
-                    oldfrontm = geo.Material;
-                    oldbackm = geo.BackMaterial;
-
-                    geo.Material = geo.BackMaterial = MaterialHelper.CreateMaterial(Brushes.Aqua);
-
-                }
-            };
-
-            #endregion
-
-            #region MouseMove
-
-            model.MouseMove += (sender, e) =>
-            {
-                Border tb = null;
-
-                foreach (var child in MainCanvas.Children)
-                {
-                    if (child is Border)
-                    {
-                        if (tagGuid.Equals((child as Border).Tag))
-                        {
-                            tb = child as Border;
-                            break;
-                        }
-                    }
-                }
-
-                if (tb == null)
-                    return;
-
-                tb.Visibility = Visibility.Visible;
-
-                var mousePos = e.GetPosition(MainCanvas);
-
-                Canvas.SetLeft(tb, mousePos.X - tb.ActualWidth - 10);
-                Canvas.SetTop(tb, mousePos.Y - tb.ActualHeight - 10);
-
-            };
-
-            #endregion
-
-            #region MouseLeave
-
-            model.MouseLeave += (sender, args) =>
-            {
-                Border tb = null;
-
-                foreach (var child in MainCanvas.Children)
-                {
-                    if (child is Border)
-                    {
-                        if (tagGuid.Equals((child as Border).Tag))
-                        {
-                            tb = child as Border;
-                            break;
-                        }
-                    }
-                }
-
-                if (tb == null)
-                    return;
-
-                tb.Visibility = Visibility.Collapsed;
-
-                var geo = model.Model as GeometryModel3D;
-
-                if (geo != null)
-                {
-                    geo.Material = oldfrontm;
-                    geo.BackMaterial = oldbackm;
-                }
-            };
-
-            #endregion
-
-            model.MouseDown += (sender, args) =>
-            {
-                var grd = new DataGrid();
-
-                PropertyHelper.Populate(grd, elm);
-                grd.ItemsSource = new[] { elm };
-
-                if (DisableEditingProperties)
-                    grd.IsReadOnly = true;
-
-                var wnd = new Window();
-                wnd.Content = grd;
-                wnd.ShowDialog();
-                args.Handled = true;
-            };
-
-            /**/
-
         }
 
         private void StyleTexblock(Border txt)
@@ -811,7 +797,6 @@ namespace BriefFiniteElementNet.Controls
             Material oldfrontm = null;
             Material oldbackm = null;
 
-
             #region MouseEnter
 
             model.MouseEnter += (sender, e) =>
@@ -824,8 +809,8 @@ namespace BriefFiniteElementNet.Controls
 
                 if (tb == null)
                 {
-                    MainCanvas.Children.Add(tb = new Border() { Tag = tagGuid });
-                    tb.Child=new TextBlock();
+                    MainCanvas.Children.Add(tb = new Border() {Tag = tagGuid});
+                    tb.Child = new TextBlock();
                     tb.MouseMove += (o, args) => { args.Handled = false; };
                     tb.PreviewMouseMove += (o, args) => { args.Handled = false; };
                     StyleTexblock(tb);
@@ -836,7 +821,6 @@ namespace BriefFiniteElementNet.Controls
                 if (tx != null)
                     tx.Text = "NODE: " + elm.Label;
 
-                
 
                 var geo = model.Model as GeometryModel3D;
 
@@ -846,7 +830,6 @@ namespace BriefFiniteElementNet.Controls
                     oldbackm = geo.BackMaterial;
 
                     geo.Material = geo.BackMaterial = MaterialHelper.CreateMaterial(Brushes.Aqua);
-
                 }
             };
 
@@ -879,7 +862,6 @@ namespace BriefFiniteElementNet.Controls
 
                 Canvas.SetLeft(tb, mousePos.X - tb.ActualWidth - 10);
                 Canvas.SetTop(tb, mousePos.Y - tb.ActualHeight - 10);
-
             };
 
             #endregion
@@ -923,7 +905,7 @@ namespace BriefFiniteElementNet.Controls
                 var grd = new DataGrid();
 
                 PropertyHelper.Populate(grd, elm);
-                grd.ItemsSource = new[] { elm };
+                grd.ItemsSource = new[] {elm};
 
                 if (DisableEditingProperties)
                     grd.IsReadOnly = true;
@@ -932,9 +914,7 @@ namespace BriefFiniteElementNet.Controls
                 wnd.Content = grd;
                 wnd.ShowDialog();
                 args.Handled = true;
-
             };
-
         }
 
 
@@ -977,7 +957,6 @@ namespace BriefFiniteElementNet.Controls
         }
 
 
-
         private void AddFrameElement(MeshBuilder bldr, FrameElement2Node elm)
         {
             PolygonYz section = null;
@@ -997,8 +976,8 @@ namespace BriefFiniteElementNet.Controls
             else
                 section = elm.Geometry;
 
-            
-            for (var i = 0; i < section.Count-1; i++)
+
+            for (var i = 0; i < section.Count - 1; i++)
             {
                 var v1 = new Vector(0, section[i].Y, section[i].Z);
                 var v2 = new Vector(0, section[i + 1].Y, section[i + 1].Z);
@@ -1017,7 +996,6 @@ namespace BriefFiniteElementNet.Controls
                 bldr.AddTriangle(p1, p3, p2);
                 bldr.AddTriangle(p4, p2, p3);
             }
-
         }
 
         private void AddMassElement(MeshBuilder bldr, ConcentratedMass elm)
@@ -1033,7 +1011,7 @@ namespace BriefFiniteElementNet.Controls
             if (elm.Nodes.Count(i => !ReferenceEquals(i, null)) < 2)
                 return;
 
-            var r = ElementVisualThickness / 2;
+            var r = ElementVisualThickness/2;
 
             var cnt = elm.CentralNode;
 
@@ -1070,17 +1048,16 @@ namespace BriefFiniteElementNet.Controls
                     var st = elm.Nodes[i].Location.ToPoint3D();
                     var en = cnt.Location.ToPoint3D();
 
-                    bldr.AddPipe(st, en, ElementVisualThickness / 2, ElementVisualThickness / 1.9, 4);
+                    bldr.AddPipe(st, en, ElementVisualThickness/2, ElementVisualThickness/1.9, 4);
                 }
             }
-            
         }
 
         private void AddTrussElement(MeshBuilder bldr, TrussElement2Node elm)
         {
             PolygonYz section = null;
 
-            var r = ElementVisualThickness / 2;
+            var r = ElementVisualThickness/2;
 
 
             if (elm.UseOverridedProperties)
@@ -1115,14 +1092,13 @@ namespace BriefFiniteElementNet.Controls
                 bldr.AddTriangle(p1, p3, p2);
                 bldr.AddTriangle(p4, p2, p3);
             }
-
         }
 
-        private void AddDktElement(MeshBuilder bldr, Obsolete__DktElement elm)
+        private void AddDktElement(MeshBuilder bldr, DktElement elm)
         {
             PolygonYz section = null;
 
-            var r = ElementVisualThickness / 2;
+            var r = ElementVisualThickness/2;
 
 
             var p1 = elm.Nodes[0].Location;
@@ -1131,14 +1107,31 @@ namespace BriefFiniteElementNet.Controls
 
 
             bldr.AddTriangle(p1, p3, p2);
+        }
 
+        private void AddDkqElement(MeshBuilder bldr, DkqElement elm)
+        {
+            PolygonYz section = null;
+
+            var r = ElementVisualThickness/2;
+
+
+            var p1 = elm.Nodes[0].Location;
+            var p2 = elm.Nodes[1].Location;
+            var p3 = elm.Nodes[2].Location;
+            var p4 = elm.Nodes[3].Location;
+
+
+            bldr.AddTriangle(p1, p2, p3);
+
+            bldr.AddTriangle(p1, p3, p4);
         }
 
         private void AddCstElement(MeshBuilder bldr, CstElement elm)
         {
             PolygonYz section = null;
 
-            var r = ElementVisualThickness / 2;
+            var r = ElementVisualThickness/2;
 
 
             var p1 = elm.Nodes[0].Location;
@@ -1147,7 +1140,6 @@ namespace BriefFiniteElementNet.Controls
 
 
             bldr.AddTriangle(p1, p3, p2);
-
         }
 
         private void AddNode(MeshBuilder bldr, Node nde)
@@ -1160,8 +1152,5 @@ namespace BriefFiniteElementNet.Controls
         {
             System.Diagnostics.Process.Start(@"https://helixtoolkit.codeplex.com/");
         }
-
-
-        
     }
 }

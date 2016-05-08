@@ -6,14 +6,12 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Security.Permissions;
 using System.Text;
+using BriefFiniteElementNet.Integration;
 
 namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
     /// represents a discrete Kirchoff triangular element with constant thickness.
-
-    /// references: 
-    /// 
     /// 
     /// implementations:
     /// https://github.com/eudoxos/woodem/blob/9e232d3a737cd3095a7c1eaa82e9e28829af97ab/pkg/fem/Membrane.cpp
@@ -29,14 +27,14 @@ namespace BriefFiniteElementNet.Elements
     ///     [3] "Membrane element" https://woodem.org/theory/membrane-element.html
     /// </summary>
     [Serializable]
-    [Obsolete("This class give wrong results")]
-    public class Obsolete__DktElement : Element2D
+    public class DktElement : Element2D
     {
         private double _thickness;
 
         private double _poissonRatio;
 
         private double _elasticModulus;
+
 
         /// <summary>
         /// Gets or sets the thickness.
@@ -74,20 +72,21 @@ namespace BriefFiniteElementNet.Elements
             set { _elasticModulus = value; }
         }
 
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="Obsolete__DktElement"/> class.
+        /// Initializes a new instance of the <see cref="DktElement"/> class.
         /// </summary>
-        public Obsolete__DktElement() : base(3)
+        public DktElement() : base(3)
         {
             this.elementType = ElementType.Dkt;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Obsolete__DktElement"/> class.
+        /// Initializes a new instance of the <see cref="DktElement"/> class.
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
-        protected Obsolete__DktElement(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected DktElement(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             this._thickness = info.GetDouble("_thickness");
             this._poissonRatio = info.GetDouble("_poissonRatio");
@@ -202,11 +201,11 @@ namespace BriefFiniteElementNet.Elements
 
             var lambda = GetTransformationMatrix();
 
-            var t = Matrix.DiagonallyRepeat(lambda.Transpose(), 6);// eq. 5-17 page 78 (87 of file)
+            var t = Matrix.DiagonallyRepeat(lambda.Transpose(), 6);// eq. 5-16 page 78 (87 of file)
 
             var buf = t.Transpose() * local * t;//eq. 5-15 p77
 
-            var tmp = (buf - buf.Transpose()).Max(i=>Math.Abs(i));
+            //var tmp = (buf - buf.Transpose()).Max(i=>Math.Abs(i));
 
             return buf;
         }
@@ -215,7 +214,7 @@ namespace BriefFiniteElementNet.Elements
         /// Gets the transformation matrix which converts local and global coordinates to each other.
         /// </summary>
         /// <returns>Transformation matrix.</returns>
-        public Matrix GetLocalStifnessMatrix()
+        public Matrix GetLocalStifnessMatrix_old()
         {
             //TODO: check with this one: https://github.com/ahojukka5/FEMTools/blob/dfecb12d445feeac94ea2e8bcb2b6cc785fbaa72/TeeFEM/examples/platemodels.py
 
@@ -289,6 +288,91 @@ namespace BriefFiniteElementNet.Elements
 
             return buf2;
         }
+
+        /// <summary>
+        /// Gets the transformation matrix which converts local and global coordinates to each other.
+        /// </summary>
+        /// <returns>Transformation matrix.</returns>
+        public Matrix GetLocalStifnessMatrix()
+        {
+            var lpts = GetLocalPoints();
+
+            var a = GetArea();
+
+            var d = new Matrix(3, 3);
+
+            {
+                //page 50 of pdf
+
+                var cf = this._elasticModulus * this._thickness * this._thickness * this._thickness /
+                         (12 * (1 - _poissonRatio * _poissonRatio));
+
+                d[0, 0] = d[1, 1] = 1;
+                d[1, 0] = d[0, 1] = _poissonRatio;
+                d[2, 2] = (1 - _poissonRatio) / 2;
+
+                d.MultiplyByConstant(cf);
+            }
+
+            /*
+            var eval_points = new List<double[]>();//eval_points[i][0] : kesi, eval_points[i][1] : no, eval_points[i][2] : weight
+
+            eval_points.Add(new[] { 0.5, 0.0, 1 / 3.0 });
+            eval_points.Add(new[] { 0.5, 0.5, 1 / 3.0 });
+            eval_points.Add(new[] { 0.0, 0.5, 1 / 3.0 });
+            */
+
+
+            var intg = new Integration.GaussianIntegrator();
+
+            intg.A2 = 1;
+            intg.A1 = 0;
+
+            intg.F2 = (gama => 1);
+            intg.F1 = (gama => 0);
+
+            intg.G2 = ((nu, gama) => 1 - nu);
+            intg.G1 = ((nu, gama) => 0);
+
+            intg.XiPointCount = intg.NuPointCount = 3;
+            intg.GammaPointCount = 1;
+
+            intg.H = new FunctionMatrixFunction((xi, nu, gamma) =>
+            {
+                var b = GetBMatrix(xi, nu, lpts);
+
+                var ki = b.Transpose()*d*b;
+
+                return ki;
+            });
+
+            /**/
+
+            var res = intg.Integrate();
+
+            res.MultiplyByConstant(2*a);
+
+           
+
+            //klocal DoF order is as noted in eq. 4.21 p. 44 : w1, θx1, θy1, w2, θx2, θy2, w3, θx3, θy3
+            //it should convert to u1, v1, w1, θx1, θy1, θz1, ... and so on
+            //will done with permutation matrix p, this formulation is not noted in any reference of this doc
+
+            var p = new Matrix(6, 3);
+            p[2, 0] = p[3, 1] = p[4, 2] = 1;
+
+            var pt = Matrix.DiagonallyRepeat(p, 3);
+
+            var buf2 = (pt * res) * pt.Transpose();//local expanded stiffness matrix
+
+            //adding drilling dof:
+
+            var maxKii = Enumerable.Range(0, res.RowCount).Max(i => res[i, i]);
+            buf2[5, 5] = buf2[11, 11] = buf2[17, 17] = maxKii/1e3;//eq 5.2, p. 71 ref [1]
+
+            return buf2;
+        }
+
 
         public Matrix GetLocalStifnessMatrix2()
         {
@@ -842,6 +926,97 @@ namespace BriefFiniteElementNet.Elements
 
             var cross = Vector.Cross(v1, v2);
             return cross.Length/2;
+        }
+
+
+
+        /// <summary>
+        /// Gets the equivalent nodal load. in global coordination system.
+        /// </summary>
+        /// <param name="load">The load.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public Force[] GetEquivalentNodalLoad(UniformLoadForPlanarElements load)
+        {
+            var N1 = new Func<double, double, double>((xi, nu) => 2*(1 - xi - nu)*(0.5 - xi - nu));
+            var N2 = new Func<double, double, double>((xi, nu) => xi*(2.0*xi - 1));
+            var N3 = new Func<double, double, double>((xi, nu) => nu*(2.0*nu - 1));
+            var N4 = new Func<double, double, double>((xi, nu) => 4*xi*nu);
+            var N5 = new Func<double, double, double>((xi, nu) => 4*nu*(1 - xi - nu));
+            var N6 = new Func<double, double, double>((xi, nu) => 4*nu*(1 - xi - nu));
+
+            var q = 0.0; //orthogonal component of load, to be calculated
+            var a = GetArea(); //area
+
+            if (load.CoordinationSystem == CoordinationSystem.Local)
+            {
+                q = load.Uz;
+            }
+            else
+            {
+                var globVec = new Vector(load.Ux, load.Uy, load.Uz);
+                var lVec = TranformGlobalToLocal(globVec);
+                q = lVec.Z;
+            }
+
+            var intg = new CustomGaussianIntegrator();
+
+            intg.v = new[] {-Math.Sqrt(1.0/3.0), Math.Sqrt(1.0/3.0)};
+            intg.w = new[] {1.0, 1.0};
+
+            intg.a2 = 1;
+            intg.a1 = 0;
+
+            intg.f2 = (gama => 1);
+            intg.f1 = (gama => 0);
+
+            intg.g2 = ((nu, gama) => 1 - nu);
+            intg.g1 = ((nu, gama) => 0);
+
+            intg.H = 6;
+            intg.W = 1;
+
+            intg.G = (nu, gama, xi) =>
+            {
+                var tmpb = new double[]
+                {
+                    N1(xi, nu),
+                    N2(xi, nu),
+                    N3(xi, nu),
+                    N4(xi, nu),
+                    N5(xi, nu),
+                    N6(xi, nu)
+                };
+
+                var mtx = new Matrix(tmpb);
+                mtx.MultiplyByConstant(q);
+                return mtx;
+            };
+
+            var res = intg.Integrate();
+
+            /*
+            var f1 = new Force(0, 0, res[0, 0], res[1, 0], res[2, 0], 0);//for node 1, in local system
+            var f2 = new Force(0, 0, res[3, 0], res[4, 0], res[5, 0], 0);//for node 2, in local system
+            var f3 = new Force(0, 0, res[6, 0], res[7, 0], res[8, 0], 0);//for node 3, in local system
+            */
+            var f1 = new Force(0, 0, q*a/3, 0, 0, 0); //for node 1, in local system
+            var f2 = new Force(0, 0, q*a/3, 0, 0, 0); //for node 2, in local system
+            var f3 = new Force(0, 0, q*a/3, 0, 0, 0); //for node 3, in local system
+
+            var f1g = TranformLocalToGlobal(f1.Forces);
+            var m1g = TranformLocalToGlobal(f1.Moments);
+
+            var f2g = TranformLocalToGlobal(f2.Forces);
+            var m2g = TranformLocalToGlobal(f2.Moments);
+
+            var f3g = TranformLocalToGlobal(f3.Forces);
+            var m3g = TranformLocalToGlobal(f3.Moments);
+
+            var buf = new Force[] {new Force(f1g, m1g), new Force(f2g, m2g), new Force(f3g, m3g)};
+
+            return buf;
+            throw new NotImplementedException();
         }
     }
 }

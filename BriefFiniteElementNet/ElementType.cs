@@ -38,7 +38,7 @@ namespace BriefFiniteElementNet
         ConcentratedMass = 4,
 
         /// <summary>
-        /// <see cref="ElementType"/> associated with <see cref="Obsolete__DktElement"/>
+        /// <see cref="ElementType"/> associated with <see cref="DktElement"/>
         /// </summary>
         Dkt = 5,
 

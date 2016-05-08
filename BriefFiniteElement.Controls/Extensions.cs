@@ -35,7 +35,10 @@ namespace BriefFiniteElementNet.Controls
             bulder.AddTriangle(p1.ToPoint3D(), p2.ToPoint3D(), p3.ToPoint3D());
         }
 
-
+        public static void AddQuad(this MeshBuilder bulder, Point p1, Point p2, Point p3,Point p4)
+        {
+            bulder.AddQuad(p1.ToPoint3D(), p2.ToPoint3D(), p3.ToPoint3D(), p4.ToPoint3D());
+        }
 
         /// <summary>
         /// Visualizes the specified model.

@@ -322,5 +322,9 @@ namespace BriefFiniteElementNet.Elements
             var cross = Vector.Cross(v1, v2);
             return cross.Length / 2;
         }
+
+
+
+
     }
 }

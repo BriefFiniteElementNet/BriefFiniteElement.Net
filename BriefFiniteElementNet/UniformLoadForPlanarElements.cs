@@ -73,7 +73,12 @@ namespace BriefFiniteElementNet
                     break;
                 case ElementType.Dkt:
 
-                    return GetGlobalEquivalentNodalLoads(element as Obsolete__DktElement);
+                    return (element as DktElement).GetEquivalentNodalLoad(this);
+
+                    break;
+                case ElementType.Dkq:
+
+                    return (element as DkqElement).GetEquivalentNodalLoad(this);
 
                     break;
                 default:
@@ -83,9 +88,9 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public Force[] GetGlobalEquivalentNodalLoads(Obsolete__DktElement element)
+        public Force[] GetGlobalEquivalentNodalLoads(DktElement element)
         {
-            var a = (element as Obsolete__DktElement).GetArea();
+            var a = (element as DktElement).GetArea();
 
             Vector local = Vector.Zero;
 
