@@ -294,5 +294,11 @@ namespace BriefFiniteElementNet
         }
 
         #endregion
+
+        ///<inheritdoc/>
+        public override Force[] GetEquivalentNodalLoads(Load load)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

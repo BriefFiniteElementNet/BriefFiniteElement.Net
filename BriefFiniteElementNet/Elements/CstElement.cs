@@ -323,7 +323,11 @@ namespace BriefFiniteElementNet.Elements
             return cross.Length / 2;
         }
 
-
+        ///<inheritdoc/>
+        public override Force[] GetEquivalentNodalLoads(Load load)
+        {
+            throw new NotImplementedException();
+        }
 
 
     }

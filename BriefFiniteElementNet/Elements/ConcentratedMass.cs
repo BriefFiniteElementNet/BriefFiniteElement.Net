@@ -87,6 +87,10 @@ namespace BriefFiniteElementNet.Elements
             base.GetObjectData(info, context);
         }
 
-
+        ///<inheritdoc/>
+        public override Force[] GetEquivalentNodalLoads(Load load)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

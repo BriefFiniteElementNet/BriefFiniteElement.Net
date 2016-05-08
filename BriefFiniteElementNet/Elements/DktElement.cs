@@ -1018,5 +1018,11 @@ namespace BriefFiniteElementNet.Elements
             return buf;
             throw new NotImplementedException();
         }
+
+        ///<inheritdoc/>
+        public override Force[] GetEquivalentNodalLoads(Load load)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

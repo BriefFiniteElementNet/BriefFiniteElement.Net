@@ -170,6 +170,11 @@ namespace BriefFiniteElementNet
 
         #endregion
 
-        
+        /// <summary>
+        /// Gets the equivalent nodal loads due to specified <see cref="load"/>.
+        /// </summary>
+        /// <param name="load">The load.</param>
+        /// <returns>Equivalent nodal loads in global coordinate system</returns>
+        public abstract Force[] GetEquivalentNodalLoads(Load load);
     }
 }

@@ -1034,5 +1034,11 @@ namespace BriefFiniteElementNet
             else
                 return Geometry.GetSectionGeometricalProperties();
         }
+
+        ///<inheritdoc/>
+        public override Force[] GetEquivalentNodalLoads(Load load)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -532,5 +532,11 @@ namespace BriefFiniteElementNet.Elements
 
             return buf;
         }
+
+        ///<inheritdoc/>
+        public override Force[] GetEquivalentNodalLoads(Load load)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

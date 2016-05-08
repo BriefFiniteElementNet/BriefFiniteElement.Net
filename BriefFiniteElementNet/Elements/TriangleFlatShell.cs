@@ -98,6 +98,12 @@ namespace BriefFiniteElementNet.Elements
         {
             throw new NotImplementedException();
         }
+
+        ///<inheritdoc/>
+        public override Force[] GetEquivalentNodalLoads(Load load)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>
