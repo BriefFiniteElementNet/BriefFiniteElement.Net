@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
-using System.Text;
 
-namespace BriefFiniteElementNet
+namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
     /// Represents an abstract class for a 'Finite Element' with physical properties.

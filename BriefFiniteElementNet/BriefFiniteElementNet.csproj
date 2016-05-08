@@ -175,7 +175,7 @@
     <Compile Include="StructureGenerator.cs" />
     <Compile Include="StructurePart.cs" />
     <Compile Include="StructurePartCollection.cs" />
-    <Compile Include="TetrahedralIso.cs" />
+    <Compile Include="Elements\TetrahedralIso.cs" />
     <Compile Include="Trace.cs" />
     <Compile Include="TraceUtil.cs" />
     <Compile Include="Elements\TrussElement2Node.cs" />

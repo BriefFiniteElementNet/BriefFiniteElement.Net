@@ -9,6 +9,7 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
 using System.Diagnostics;
+using BriefFiniteElementNet.Elements;
 
 namespace BriefFiniteElementNet
 {

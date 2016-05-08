@@ -5,6 +5,7 @@ using System.Runtime.Remoting.Channels;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using BriefFiniteElementNet.Elements;
 
 namespace BriefFiniteElementNet
 {
