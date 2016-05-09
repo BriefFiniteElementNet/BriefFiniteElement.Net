@@ -43,6 +43,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomMeshBuilder.cs" />
     <Compile Include="DktElementChecker.cs" />
     <Compile Include="ElementEquibiliriumChecker.cs" />
     <Compile Include="Extensions.cs" />

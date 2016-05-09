@@ -27,6 +27,7 @@ namespace BriefFiniteElementNet.Elements
     ///     [3] "Membrane element" https://woodem.org/theory/membrane-element.html
     /// </summary>
     [Serializable]
+    [Obsolete("Not validated still")]
     public class DktElement : Element2D
     {
         private double _thickness;
@@ -619,6 +620,7 @@ namespace BriefFiniteElementNet.Elements
                {
                    var b1 = (y31 * hx_xi(xi, eta) + y12 * hx_eta(xi, eta));
                    var b2 = (-x31 * hy_xi(xi, eta) - x12 * hy_eta(xi, eta));
+
                    var b3 =
                        (-x31 * hx_xi(xi, eta) - x12 * hx_eta(xi, eta) + y31 * hy_xi(xi, eta) + y12 * hy_eta(xi, eta));
 
@@ -629,10 +631,12 @@ namespace BriefFiniteElementNet.Elements
                    return buf;
                });//eq. 4.26 page 46 ref [1]
 
-            return B(k, e);
+            var buff = B(k, e);
+
+            return buff;
         }
 
-        private Matrix GetBMatrixPy(double k, double e)
+        private Matrix GetBMatrixPy(double xi, double eta)
         {
             // Ported from teefem/models/dkt.py
 
@@ -678,54 +682,54 @@ namespace BriefFiniteElementNet.Elements
 
             var Hxk = new Matrix(new[]
             {
-                P6*(1 - 2*k) + (P5 - P6)*e,
-                q6*(1 - 2*k) - (q5 + q6)*e,
-                -4 + 6*(k + e) + r6*(1 - 2*k) - e*(r5 + r6),
-                -P6*(1 - 2*k) + e*(P4 + P6),
-                q6*(1 - 2*k) - e*(q6 - q4),
-                -2 + 6*k + r6*(1 - 2*k) + e*(r4 - r6),
-                -e*(P5 + P4),
-                e*(q4 - q5),
-                -e*(r5 - r4)
+                P6*(1 - 2*xi) + (P5 - P6)*eta,
+                q6*(1 - 2*xi) - (q5 + q6)*eta,
+                -4 + 6*(xi + eta) + r6*(1 - 2*xi) - eta*(r5 + r6),
+                -P6*(1 - 2*xi) + eta*(P4 + P6),
+                q6*(1 - 2*xi) - eta*(q6 - q4),
+                -2 + 6*xi + r6*(1 - 2*xi) + eta*(r4 - r6),
+                -eta*(P5 + P4),
+                eta*(q4 - q5),
+                -eta*(r5 - r4)
             });
 
             var Hyk = new Matrix(new[]
             {
-                t6*(1 - 2*k) + e*(t5 - t6),
-                1 + r6*(1 - 2*k) - e*(r5 + r6),
-                -q6*(1 - 2*k) + e*(q5 + q6),
-                -t6*(1 - 2*k) + e*(t4 + t6),
-                -1 + r6*(1 - 2*k) + e*(r4 - r6),
-                -q6*(1 - 2*k) - e*(q4 - q6),
-                -e*(t4 + t5),
-                e*(r4 - r5),
-                -e*(q4 - q5)
+                t6*(1 - 2*xi) + eta*(t5 - t6),
+                1 + r6*(1 - 2*xi) - eta*(r5 + r6),
+                -q6*(1 - 2*xi) + eta*(q5 + q6),
+                -t6*(1 - 2*xi) + eta*(t4 + t6),
+                -1 + r6*(1 - 2*xi) + eta*(r4 - r6),
+                -q6*(1 - 2*xi) - eta*(q4 - q6),
+                -eta*(t4 + t5),
+                eta*(r4 - r5),
+                -eta*(q4 - q5)
             });
 
             var Hxe = new Matrix(new[]
             {
-                -P5*(1 - 2*e) - k*(P6 - P5),
-                q5*(1 - 2*e) - k*(q5 + q6),
-                -4 + 6*(k + e) + r5*(1 - 2*e) - k*(r5 + r6),
-                k*(P4 + P6),
-                k*(q4 - q6),
-                -k*(r6 - r4),
-                P5*(1 - 2*e) - k*(P4 + P5),
-                q5*(1 - 2*e) + k*(q4 - q5),
-                -2 + 6*e + r5*(1 - 2*e) + k*(r4 - r5)
+                -P5*(1 - 2*eta) - xi*(P6 - P5),
+                q5*(1 - 2*eta) - xi*(q5 + q6),
+                -4 + 6*(xi + eta) + r5*(1 - 2*eta) - xi*(r5 + r6),
+                xi*(P4 + P6),
+                xi*(q4 - q6),
+                -xi*(r6 - r4),
+                P5*(1 - 2*eta) - xi*(P4 + P5),
+                q5*(1 - 2*eta) + xi*(q4 - q5),
+                -2 + 6*eta + r5*(1 - 2*eta) + xi*(r4 - r5)
             });
 
             var Hye = new Matrix(new[]
             {
-                - t5*(1 - 2*e) - k*(t6 - t5),
-                1 + r5*(1 - 2*e) - k*(r5 + r6),
-                -q5*(1 - 2*e) + k*(q5 + q6),
-                k*(t4 + t6),
-                k*(r4 - r6),
-                -k*(q4 - q6),
-                t5*(1 - 2*e) - k*(t4 + t5),
-                -1 + r5*(1 - 2*e) + k*(r4 - r5),
-                -q5*(1 - 2*e) - k*(q4 - q5)
+                - t5*(1 - 2*eta) - xi*(t6 - t5),
+                1 + r5*(1 - 2*eta) - xi*(r5 + r6),
+                -q5*(1 - 2*eta) + xi*(q5 + q6),
+                xi*(t4 + t6),
+                xi*(r4 - r6),
+                -xi*(q4 - q6),
+                t5*(1 - 2*eta) - xi*(t4 + t5),
+                -1 + r5*(1 - 2*eta) + xi*(r4 - r5),
+                -q5*(1 - 2*eta) - xi*(q4 - q5)
             });
 
 
@@ -921,11 +925,7 @@ namespace BriefFiniteElementNet.Elements
         /// <returns></returns>
         public double GetArea()
         {
-            var v1 = nodes[1].Location - nodes[0].Location;
-            var v2 = nodes[2].Location - nodes[0].Location;
-
-            var cross = Vector.Cross(v1, v2);
-            return cross.Length/2;
+            return CalcUtil.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
         }
 
 
@@ -938,13 +938,6 @@ namespace BriefFiniteElementNet.Elements
         /// <exception cref="System.NotImplementedException"></exception>
         public Force[] GetEquivalentNodalLoad(UniformLoadForPlanarElements load)
         {
-            var N1 = new Func<double, double, double>((xi, nu) => 2*(1 - xi - nu)*(0.5 - xi - nu));
-            var N2 = new Func<double, double, double>((xi, nu) => xi*(2.0*xi - 1));
-            var N3 = new Func<double, double, double>((xi, nu) => nu*(2.0*nu - 1));
-            var N4 = new Func<double, double, double>((xi, nu) => 4*xi*nu);
-            var N5 = new Func<double, double, double>((xi, nu) => 4*nu*(1 - xi - nu));
-            var N6 = new Func<double, double, double>((xi, nu) => 4*nu*(1 - xi - nu));
-
             var q = 0.0; //orthogonal component of load, to be calculated
             var a = GetArea(); //area
 
@@ -958,6 +951,16 @@ namespace BriefFiniteElementNet.Elements
                 var lVec = TranformGlobalToLocal(globVec);
                 q = lVec.Z;
             }
+
+            /*
+            var N1 = new Func<double, double, double>((xi, nu) => 2*(1 - xi - nu)*(0.5 - xi - nu));
+            var N2 = new Func<double, double, double>((xi, nu) => xi*(2.0*xi - 1));
+            var N3 = new Func<double, double, double>((xi, nu) => nu*(2.0*nu - 1));
+            var N4 = new Func<double, double, double>((xi, nu) => 4*xi*nu);
+            var N5 = new Func<double, double, double>((xi, nu) => 4*nu*(1 - xi - nu));
+            var N6 = new Func<double, double, double>((xi, nu) => 4*nu*(1 - xi - nu));
+
+           
 
             var intg = new CustomGaussianIntegrator();
 
@@ -994,7 +997,7 @@ namespace BriefFiniteElementNet.Elements
             };
 
             var res = intg.Integrate();
-
+            */
             /*
             var f1 = new Force(0, 0, res[0, 0], res[1, 0], res[2, 0], 0);//for node 1, in local system
             var f2 = new Force(0, 0, res[3, 0], res[4, 0], res[5, 0], 0);//for node 2, in local system
@@ -1022,6 +1025,10 @@ namespace BriefFiniteElementNet.Elements
         ///<inheritdoc/>
         public override Force[] GetEquivalentNodalLoads(Load load)
         {
+            if (load is UniformLoadForPlanarElements)
+                return GetEquivalentNodalLoad(load as UniformLoadForPlanarElements);
+
+            return new Force[3];
             throw new NotImplementedException();
         }
     }

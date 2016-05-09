@@ -35,6 +35,9 @@ namespace BriefFiniteElementNet
         /// <returns>permuted matrix</returns>
         public Matrix ApplyTo(Matrix matrix)
         {
+            if (matrix.RowCount != OriginalLength && matrix.ColumnCount != OriginalLength)
+                throw new Exception();
+
             var buf = new Matrix(NewLength, NewLength);
 
             for (int i = 0; i < matrix.RowCount; i++)

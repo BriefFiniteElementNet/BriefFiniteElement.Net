@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Media.Media3D;
+using BriefFiniteElementNet.Elements;
 using HelixToolkit;
 
 namespace BriefFiniteElementNet.Controls

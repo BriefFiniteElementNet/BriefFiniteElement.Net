@@ -14,6 +14,7 @@ namespace BriefFiniteElementNet.Elements
     [DebuggerDisplay("{ElementType}, Label: {Label}")]
     public abstract class Element : StructurePart
     {
+        [Obsolete]
         protected ElementType elementType;
 
         /// <summary>
@@ -22,6 +23,8 @@ namespace BriefFiniteElementNet.Elements
         /// <value>
         /// The type of the element.
         /// </value>
+        /// <remarks>Obsolete because logically prevent us to make an element outside this library</remarks>
+        [Obsolete]
         public ElementType ElementType
         {
             get { return elementType; }
@@ -55,8 +58,6 @@ namespace BriefFiniteElementNet.Elements
             private set { nodes = value; }
         }
 
-       
-
         [NonSerialized]
         protected Node[] nodes;
 
@@ -70,6 +71,7 @@ namespace BriefFiniteElementNet.Elements
         /// <remarks>
         /// The number of DoFs is in element local regrading order in <see cref="Element.Nodes"/>!</remarks>
         public abstract Matrix GetGlobalStifnessMatrix();
+
 
         /// <summary>
         /// Gets the consistent mass matrix of member in global coordination system.

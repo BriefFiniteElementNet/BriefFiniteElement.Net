@@ -536,6 +536,34 @@ namespace BriefFiniteElementNet.Elements
         ///<inheritdoc/>
         public override Force[] GetEquivalentNodalLoads(Load load)
         {
+            if (load is UniformLoadForPlanarElements)
+            {
+                var tri1Area = CalcUtil.GetTriangleArea(
+                    this.nodes[0].Location, this.nodes[1].Location, this.nodes[2].Location);
+
+                var tri2Area = CalcUtil.GetTriangleArea(
+                    this.nodes[0].Location, this.nodes[2].Location, this.nodes[3].Location);
+
+                var totArea = tri2Area + tri1Area;
+
+
+                var loadVec = new Vector(
+                    (load as UniformLoadForPlanarElements).Ux,
+                    (load as UniformLoadForPlanarElements).Uy,
+                    (load as UniformLoadForPlanarElements).Uz);
+
+                Vector globalVec;
+
+                if ((load as UniformLoadForPlanarElements).CoordinationSystem == CoordinationSystem.Local)
+                    globalVec = this.TranformLocalToGlobal(loadVec);
+                else
+                    globalVec = loadVec;
+
+
+                var frc = new Force(globalVec * totArea, Vector.Zero);
+
+                return new Force[] { frc, frc, frc, frc };//equivalently distributed over all nodes! >:}~
+            }
             throw new NotImplementedException();
         }
     }

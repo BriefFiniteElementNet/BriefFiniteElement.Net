@@ -59,33 +59,11 @@ namespace BriefFiniteElementNet
         /// <inheritdoc />
         public override Force[] GetGlobalEquivalentNodalLoads(Element element)
         {
-            var buf = new Force[3];
+            //var buf = new Force[3];
 
-            
-            switch (element.ElementType)
-            {
-                case ElementType.Undefined:
-                case ElementType.FrameElement2Node:
-                case ElementType.TrussElement2Noded:
-                case ElementType.TetrahedralIso:
-                case ElementType.ConcentratedMass:
-                    throw new NotSupportedException();
-                    break;
-                case ElementType.Dkt:
+            return element.GetEquivalentNodalLoads(this);
 
-                    return (element as DktElement).GetEquivalentNodalLoad(this);
-
-                    break;
-                case ElementType.Dkq:
-
-                    return (element as DkqElement).GetEquivalentNodalLoad(this);
-
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            return buf;
+            //return buf;
         }
 
         public Force[] GetGlobalEquivalentNodalLoads(DktElement element)
