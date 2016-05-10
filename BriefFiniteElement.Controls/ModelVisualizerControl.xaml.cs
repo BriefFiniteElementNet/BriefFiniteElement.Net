@@ -612,7 +612,7 @@ namespace BriefFiniteElementNet.Controls
 
             model.MouseDown += (sender, args) =>
             {
-                PropertyHelper.BrowseObjectProperties(sender);
+                PropertyHelper.BrowseObjectProperties(elm);
 
                 args.Handled = true;
             };

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -14,43 +15,98 @@ namespace BriefFiniteElementNet.Controls
     {
         public static void Populate(DataGrid dg, object obj)
         {
-            var props = obj.GetType().GetProperties();
-            dg.AutoGenerateColumns = false;
+            PropertyInfo[] infs = new PropertyInfo[0];
 
-            foreach (var inf in props)
+            
+
+
+            if (obj is IEnumerable)
             {
-                DataGridTextColumn cl = null;
-                if (!inf.CanRead)
-                    continue;
-                
-                dg.Columns.Add(cl = new DataGridTextColumn() {Header = inf.Name, Binding = new Binding(inf.Name)});
+                var first = (obj as IEnumerable).Cast<object>().FirstOrDefault();
+                if (first != null)
 
-                if (!inf.CanWrite)
-                    cl.IsReadOnly = true;
+                    infs = first.GetType().GetProperties();
             }
 
-            dg.MouseDoubleClick += (sender, args) =>
+            else
             {
-                var cl = dg.SelectedCells.FirstOrDefault();
+                infs = obj.GetType().GetProperties();
 
-                if (cl == null)
-                    return;
+            }
 
-                var t = cl.Item;
 
-                //(cl.Column as DataGridTextColumn).Binding.
-                if (t != null)
-                    BrowseObjectProperties(t);
-            };
+            {
+                var props = infs;
+                dg.AutoGenerateColumns = false;
+
+                foreach (var inf in props)
+                {
+                    DataGridTextColumn cl = null;
+                    if (!inf.CanRead)
+                        continue;
+
+                    dg.Columns.Add(cl = new DataGridTextColumn() { Header = inf.Name, Binding = new Binding(inf.Name) });
+
+                    if (!inf.CanWrite)
+                        cl.IsReadOnly = true;
+                }
+
+                dg.MouseDoubleClick += (sender, args) =>
+                {
+                    var cl = (sender as DataGrid).CurrentCell;
+
+                    if (cl == null)
+                        return;
+
+                    var t = cl.Item;
+
+
+                    if (t == null)
+                        return;
+
+                    var d = (cl.Column as DataGridTextColumn);
+
+                    if (d == null)
+                        return;
+
+
+                    var f = d.Binding as Binding;
+
+                    if (f == null)
+                        return;
+
+                    var g = f.Path;
+
+
+                    var prp = t.GetType().GetProperty(g.Path);
+
+                    if (prp == null)
+                        return;
+
+                    var val = prp.GetValue(t, null);
+
+                    //(cl.Column as DataGridTextColumn).Binding.
+                    if (t != null)
+                        BrowseObjectProperties(val);
+                };
+            }
+
+           
         }
 
 
          public static void BrowseObjectProperties(object obj)
-        {
-            var grd = new DataGrid();
+         {
+             var grd = new DataGrid() {SelectionMode = DataGridSelectionMode.Single};
 
             PropertyHelper.Populate(grd, obj);
+
+            if(obj is IEnumerable)
+                grd.ItemsSource = obj as IEnumerable;
+            else
             grd.ItemsSource = new[] { obj };
+
+            
 
 
             var wnd = new Window();
