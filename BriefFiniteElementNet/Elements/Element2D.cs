@@ -27,7 +27,7 @@ namespace BriefFiniteElementNet
             base.GetObjectData(info, context);
         }
 
-        internal Element2D(SerializationInfo info, StreamingContext context)
+        protected Element2D(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

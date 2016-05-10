@@ -368,40 +368,18 @@ namespace BriefFiniteElementNet.Controls
                 {
                     var builder = new MeshBuilder(false, false);
 
-                    switch (elm.ElementType)
-                    {
-                        case ElementType.Undefined:
-                            sb.AppendLine("Undefined element type! ");
-                            break;
-
-                        case ElementType.FrameElement2Node:
-                            AddFrameElement(builder, elm as FrameElement2Node);
-                            break;
-
-                        case ElementType.ConcentratedMass:
-                            AddMassElement(builder, elm as ConcentratedMass);
-                            break;
-
-                        case ElementType.TrussElement2Noded:
-                            AddTrussElement(builder, elm as TrussElement2Node);
-                            break;
-
-                        case ElementType.Dkt:
-                            AddDktElement(builder, elm as DktElement);
-                            break;
-
-                        case ElementType.Dkq:
-                            AddDkqElement(builder, elm as DkqElement);
-                            break;
-
-                        case ElementType.Cst:
-                            AddCstElement(builder, elm as CstElement);
-                            break;
-
-                        default:
-                            sb.AppendLine("Unknown element type for rendering: " + elm.ElementType);
-                            break;
-                    }
+                    if(elm is FrameElement2Node)
+                        AddFrameElement(builder, elm as FrameElement2Node);
+                    else if (elm is ConcentratedMass)
+                        AddMassElement(builder, elm as ConcentratedMass);
+                    else if (elm is TrussElement2Node)
+                        AddTrussElement(builder, elm as TrussElement2Node);
+                    else if (elm is DktElement)
+                        AddDktElement(builder, elm as DktElement);
+                    else if (elm is CstElement)
+                        AddCstElement(builder, elm as CstElement);
+                    else if (elm is Element2D)
+                        AddElement2d(builder, elm as Element2D);
 
                     var gradient = new LinearGradientBrush();
                         //to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
@@ -634,17 +612,8 @@ namespace BriefFiniteElementNet.Controls
 
             model.MouseDown += (sender, args) =>
             {
-                var grd = new DataGrid();
+                PropertyHelper.BrowseObjectProperties(sender);
 
-                PropertyHelper.Populate(grd, elm);
-                grd.ItemsSource = new[] {elm};
-
-                if (DisableEditingProperties)
-                    grd.IsReadOnly = true;
-
-                var wnd = new Window();
-                wnd.Content = grd;
-                wnd.ShowDialog();
                 args.Handled = true;
             };
         }
@@ -763,18 +732,9 @@ namespace BriefFiniteElementNet.Controls
 
             model.MouseDown += (sender, args) =>
             {
-                var grd = new DataGrid();
-
-                PropertyHelper.Populate(grd, elm);
-                grd.ItemsSource = new[] {elm};
-
-                if (DisableEditingProperties)
-                    grd.IsReadOnly = true;
-
-                var wnd = new Window();
-                wnd.Content = grd;
-                wnd.ShowDialog();
                 args.Handled = true;
+
+                PropertyHelper.BrowseObjectProperties(sender);
             };
 
             /**/
@@ -905,6 +865,7 @@ namespace BriefFiniteElementNet.Controls
                 var grd = new DataGrid();
 
                 PropertyHelper.Populate(grd, elm);
+
                 grd.ItemsSource = new[] {elm};
 
                 if (DisableEditingProperties)
@@ -1114,6 +1075,24 @@ namespace BriefFiniteElementNet.Controls
             PolygonYz section = null;
 
             var r = ElementVisualThickness/2;
+
+
+            var p1 = elm.Nodes[0].Location;
+            var p2 = elm.Nodes[1].Location;
+            var p3 = elm.Nodes[2].Location;
+            var p4 = elm.Nodes[3].Location;
+
+
+            bldr.AddTriangle(p1, p2, p3);
+
+            bldr.AddTriangle(p1, p3, p4);
+        }
+
+        private void AddElement2d(MeshBuilder bldr, Element2D elm)
+        {
+            PolygonYz section = null;
+
+            var r = ElementVisualThickness / 2;
 
 
             var p1 = elm.Nodes[0].Location;

@@ -94,15 +94,15 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\error.png" />
+    <Resource Include="Images\info.png" />
+    <Resource Include="Images\warning.png" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj">
       <Project>{7cda20d4-9bc8-4bc3-9f22-cb86cd4dc3e1}</Project>
       <Name>BriefFiniteElementNet</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\error.png" />
-    <Resource Include="Images\info.png" />
-    <Resource Include="Images\warning.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

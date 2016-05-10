@@ -6,7 +6,6 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using BriefFiniteElementNet.Validation;
-using Newtonsoft.Json;
 
 namespace BriefFiniteElementNet.TestConsole
 {

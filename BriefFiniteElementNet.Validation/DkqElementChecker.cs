@@ -91,7 +91,7 @@ namespace BriefFiniteElementNet.Validation
 
             var d = nodes[n / 2][n / 2].GetNodalDisplacement();
 
-            Controls.ModelVisualizerControl.VisualizeInNewWindow(model);
+            //Controls.ModelVisualizerControl.VisualizeInNewWindow(model);
         }
 
     }
