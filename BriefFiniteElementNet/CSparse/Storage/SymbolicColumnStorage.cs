@@ -75,6 +75,12 @@ namespace BriefFiniteElementNet.CSparse.Storage
                 this.ColumnPointers = new int[columnCount + 1];
                 this.RowIndices = new int[valueCount];
             }
+
+            if (valueCount == 0)
+            {
+                this.ColumnPointers = new int[0];
+                this.RowIndices = new int[0];
+            }
         }
 
         /// <summary>
@@ -178,6 +184,11 @@ namespace BriefFiniteElementNet.CSparse.Storage
 
             var result = new SymbolicColumnStorage(n, m, 0);
 
+            //edited by epsi1on to fix this: https://brieffiniteelementnet.codeplex.com/workitem/6
+            if (m == 0 || n == 0)
+                return result;
+            //
+
             var ci = new int[m + 1];
             var cj = new int[RowIndices.Length];
 
@@ -222,6 +233,11 @@ namespace BriefFiniteElementNet.CSparse.Storage
             if (rowCount != other.rowCount || columnCount != other.columnCount)
             {
                 throw new ArgumentException();
+            }
+
+            if (rowCount == 0 || columnCount == 0)
+            {
+                return new SymbolicColumnStorage(0, 0, 0);
             }
 
             int m = rowCount;
@@ -389,8 +405,10 @@ namespace BriefFiniteElementNet.CSparse.Storage
                 }
             }
 
+
             // Record new nonzero count.
-            ColumnPointers[columnCount] = nz;
+            if (ColumnPointers.Length > 0)
+                ColumnPointers[columnCount] = nz;
 
             // Remove extra space.
             Array.Resize<int>(ref this.RowIndices, nz);
@@ -521,9 +539,15 @@ namespace BriefFiniteElementNet.CSparse.Storage
 
             int m = mat.RowCount;
             int n = mat.ColumnCount;
+
             int nnz = mat.NonZerosCount;
 
             var result = new SymbolicColumnStorage(m, n, clone ? nnz : 0);
+
+            //edited by epsi1on to fix this: https://brieffiniteelementnet.codeplex.com/workitem/6
+            if (m == 0 || n == 0)
+                return result;
+            //
 
             if (clone)
             {

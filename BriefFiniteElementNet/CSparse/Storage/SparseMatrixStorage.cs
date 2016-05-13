@@ -47,12 +47,12 @@ namespace BriefFiniteElementNet.CSparse.Storage
         /// </summary>
         public SparseMatrixStorage(int rowCount, int columnCount)
         {
-            if (rowCount <= 0)
+            if (rowCount < 0)
             {
                 throw new ArgumentOutOfRangeException(); // TODO: Resources.MatrixRowsMustBePositive
             }
 
-            if (columnCount <= 0)
+            if (columnCount < 0)
             {
                 throw new ArgumentOutOfRangeException(); // TODO: Resources.MatrixColumnsMustBePositive
             }

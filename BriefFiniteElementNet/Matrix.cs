@@ -1323,6 +1323,16 @@ namespace BriefFiniteElementNet
         #endregion
 
 
+        /// <summary>
+        /// Clears this instance. Turn all members to 0...
+        /// </summary>
+        public void Clear()
+        {
+            for (int i = 0; i < coreArray.Length; i++)
+            {
+                coreArray[i] = 0;
+            }
+        }
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection.

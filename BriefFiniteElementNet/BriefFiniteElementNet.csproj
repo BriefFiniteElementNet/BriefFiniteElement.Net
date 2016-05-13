@@ -55,6 +55,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="CalcUtil.cs" />
     <Compile Include="CustomGaussianIntegrator.cs" />
+    <Compile Include="FluentElementPermuteManager.cs" />
     <Compile Include="IElement1DLoad.cs" />
     <Compile Include="IntArrayCompairer.cs" />
     <Compile Include="Integration\FunctionMatrixFunction.cs" />

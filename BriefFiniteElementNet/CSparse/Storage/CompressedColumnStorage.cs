@@ -40,7 +40,7 @@ namespace BriefFiniteElementNet.CSparse.Storage
         /// </summary>
         public override int NonZerosCount
         {
-            get { return ColumnPointers[ncols]; }
+            get { return ColumnPointers.Length==0?0: ColumnPointers[ncols]; }
         }
 
         /// <summary>

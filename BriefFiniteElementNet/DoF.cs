@@ -16,31 +16,31 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// Displacement in X direction
         /// </summary>
-        Dx,
+        Dx = 0,
 
         /// <summary>
         /// Displacement in Y direction
         /// </summary>
-        Dy,
+        Dy = 1,
 
         /// <summary>
         /// Displacement in Z direction
         /// </summary>
-        Dz,
+        Dz = 2,
 
         /// <summary>
         /// Rotation in X direction
         /// </summary>
-        Rx,
+        Rx = 3,
 
         /// <summary>
         /// Rotation in Y direction
         /// </summary>
-        Ry,
+        Ry = 4,
 
         /// <summary>
         /// Rotation in Z direction
         /// </summary>
-        Rz
+        Rz = 5
     }
 }

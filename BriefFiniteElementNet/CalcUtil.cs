@@ -496,6 +496,12 @@ namespace BriefFiniteElementNet
 
         public static CCS ToCCs(this Coord crd)
         {
+            //workitem #6:
+            //https://brieffiniteelementnet.codeplex.com/workitem/6
+            if (crd.RowCount == 0 || crd.ColumnCount == 0)
+                return new CCS(0, 0){ColumnPointers = new int[0], RowIndices = new int[0], Values = new double[0]};
+
+
             return (CCS) Converter.ToCompressedColumnStorage(crd);
         }
 
