@@ -18,7 +18,7 @@ namespace BriefFiniteElementNet.Elements
 
         private double _elasticModulus;
 
-        private FlatShellBehaviour _behaviour;
+        private FlatShellBehaviour _behaviour = FlatShellBehaviour.ThinShell;
 
         private bool _addDrillingDof = true;
 
@@ -143,10 +143,10 @@ namespace BriefFiniteElementNet.Elements
             var kl = new Matrix(18,18);
 
             if (_behaviour == FlatShellBehaviour.Membrane || _behaviour == FlatShellBehaviour.ThinShell)
-                kl = GetLocalMembraneStiffnessMatrix();
+                kl += GetLocalMembraneStiffnessMatrix();
 
             if (_behaviour == FlatShellBehaviour.ThinPlate || _behaviour == FlatShellBehaviour.ThinShell)
-                kl = GetLocalPlateBendingStiffnessMatrix();
+                kl += GetLocalPlateBendingStiffnessMatrix();
             
             //return buf;
 

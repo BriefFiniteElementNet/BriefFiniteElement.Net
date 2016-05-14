@@ -14,7 +14,9 @@ namespace BriefFiniteElementNet.TestConsole
         [STAThread]
         static void Main(string[] args)
         {
-            FlatShellElementChecker.ShowSapResults();
+            FlatShellElementChecker.Test1();
+
+            Console.ReadKey();
         }
 
        
