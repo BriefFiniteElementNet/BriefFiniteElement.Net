@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomMeshBuilder.cs" />
-    <Compile Include="DktElementChecker.cs" />
+    <Compile Include="FlatShellElementChecker.cs" />
     <Compile Include="ElementEquibiliriumChecker.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="F3ddFileReader.cs" />

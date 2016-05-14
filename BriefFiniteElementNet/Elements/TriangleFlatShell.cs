@@ -8,7 +8,6 @@ using System.Text;
 namespace BriefFiniteElementNet.Elements
 {
     [Serializable]
-    [Obsolete("Not validated yet")]
     public class TriangleFlatShell : Element2D
     {
         #region field and properties
@@ -141,10 +140,15 @@ namespace BriefFiniteElementNet.Elements
         #region stiffness
         public override Matrix GetGlobalStifnessMatrix()
         {
-            var localMembrane = GetLocalMembraneStiffnessMatrix();
-            var localBending = GetLocalPlateBendingStiffnessMatrix();
+            var kl = new Matrix(18,18);
 
-            var kl = localMembrane + localBending;
+            if (_behaviour == FlatShellBehaviour.Membrane || _behaviour == FlatShellBehaviour.ThinShell)
+                kl = GetLocalMembraneStiffnessMatrix();
+
+            if (_behaviour == FlatShellBehaviour.ThinPlate || _behaviour == FlatShellBehaviour.ThinShell)
+                kl = GetLocalPlateBendingStiffnessMatrix();
+            
+            //return buf;
 
             if (this._addDrillingDof)
             {
@@ -154,8 +158,6 @@ namespace BriefFiniteElementNet.Elements
 
                 kl[5, 5] = kl[11, 11] = kl[17, 17] = max;
             }
-
-            
 
             var lambda = GetTransformationMatrix();
 
@@ -264,10 +266,15 @@ namespace BriefFiniteElementNet.Elements
         /// </remarks>
         public FlatShellStressTensor GetInternalForce(double xi, double eta, LoadCombination combination)
         {
-            var t1 = GetMembraneInternalForce(xi, eta, combination);
-            var t2 = GetBendingInternalForce(xi, eta, combination);
+            var buf = new FlatShellStressTensor();
 
-            return new FlatShellStressTensor() {BendingTensor = t2, MembraneTensor = t1};
+            if (_behaviour == FlatShellBehaviour.Membrane || _behaviour == FlatShellBehaviour.ThinShell)
+                buf.MembraneTensor = GetMembraneInternalForce(xi, eta, combination); ;
+
+            if (_behaviour == FlatShellBehaviour.ThinPlate || _behaviour == FlatShellBehaviour.ThinShell)
+                buf.BendingTensor = GetBendingInternalForce(xi, eta, combination);
+
+            return buf;
         }
 
         private MembraneStressTensor GetMembraneInternalForce(double xi, double eta, LoadCombination combination)
@@ -354,7 +361,7 @@ namespace BriefFiniteElementNet.Elements
 
             var b = DktElement.GetBMatrix(xi, eta,
                 lp.Select(i => i.X).ToArray(),
-                lp.Select(i => i.y).ToArray());
+                lp.Select(i => i.Y).ToArray());
 
             var mDkt = dbDkt * b * uDkt; //eq. 32, batoz article
 
@@ -398,6 +405,13 @@ namespace BriefFiniteElementNet.Elements
                     var trans = GetTransformationMatrix();
                     u = (trans*u.ToMatrix()).ToPoint(); //local to global
                 }
+
+                if (_behaviour == FlatShellBehaviour.Membrane)
+                    u.Z = 0;//remove one for plate bending
+
+                if (_behaviour == FlatShellBehaviour.ThinPlate)
+                    u.Y = u.X = 0;//remove those for membrane
+
 
                 var area = CalcUtil.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
 

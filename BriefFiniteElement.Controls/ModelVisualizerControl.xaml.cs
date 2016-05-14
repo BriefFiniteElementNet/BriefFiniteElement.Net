@@ -384,7 +384,8 @@ namespace BriefFiniteElementNet.Controls
                         AddElement2d(builder, elm as Element2D);
 
                     var gradient = new LinearGradientBrush();
-                        //to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
+                        //TODO: to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
+
 
                     gradient.GradientStops.Add(new GradientStop(Colors.Blue, 0));
                     gradient.GradientStops.Add(new GradientStop(Colors.Cyan, 0.2));
@@ -1087,40 +1088,33 @@ namespace BriefFiniteElementNet.Controls
             bldr.AddTriangle(p1, p3, p2);
         }
 
-        private void AddDkqElement(MeshBuilder bldr, DkqElement elm)
-        {
-            PolygonYz section = null;
-
-            var r = ElementVisualThickness/2;
-
-
-            var p1 = elm.Nodes[0].Location;
-            var p2 = elm.Nodes[1].Location;
-            var p3 = elm.Nodes[2].Location;
-            var p4 = elm.Nodes[3].Location;
-
-
-            bldr.AddTriangle(p1, p2, p3);
-
-            bldr.AddTriangle(p1, p3, p4);
-        }
-
         private void AddElement2d(MeshBuilder bldr, Element2D elm)
         {
-            PolygonYz section = null;
 
-            var r = ElementVisualThickness / 2;
-
-
-            var p1 = elm.Nodes[0].Location;
-            var p2 = elm.Nodes[1].Location;
-            var p3 = elm.Nodes[2].Location;
-            var p4 = elm.Nodes[3].Location;
+            if (elm.Nodes.Length == 4)
+            {
+                var p1 = elm.Nodes[0].Location;
+                var p2 = elm.Nodes[1].Location;
+                var p3 = elm.Nodes[2].Location;
+                var p4 = elm.Nodes[3].Location;
 
 
-            bldr.AddTriangle(p1, p2, p3);
+                bldr.AddTriangle(p1, p2, p3);
 
-            bldr.AddTriangle(p1, p3, p4);
+                bldr.AddTriangle(p1, p3, p4);
+            }
+
+
+            if (elm.Nodes.Length == 3)
+            {
+                var p1 = elm.Nodes[0].Location;
+                var p2 = elm.Nodes[1].Location;
+                var p3 = elm.Nodes[2].Location;
+
+
+                bldr.AddTriangle(p1, p2, p3);
+            }
+
         }
 
         private void AddCstElement(MeshBuilder bldr, CstElement elm)

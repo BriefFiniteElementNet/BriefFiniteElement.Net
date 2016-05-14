@@ -14,7 +14,7 @@ namespace BriefFiniteElementNet.TestConsole
         [STAThread]
         static void Main(string[] args)
         {
-            DktElementChecker.Test6();
+            FlatShellElementChecker.ShowSapResults();
         }
 
        

@@ -6,8 +6,118 @@ using BriefFiniteElementNet.Elements;
 
 namespace BriefFiniteElementNet.Validation
 {
-    public class DktElementChecker
+    public class FlatShellElementChecker
     {
+        public static void ShowSapResults()
+        {
+            Test3();
+            Test6();
+            Test5();
+        }
+
+        public static void Test3()
+        {
+            //example #2 p118
+
+            Console.WriteLine("Example 2: CST element Test");
+
+
+            #region creating model
+
+            var model = new Model();
+
+            var l = 48 * 0.0254; //in [m]
+            var b = 12 * 0.0254; //
+            var t = 1 * 0.0254;
+
+            var e = 206842772603; //30000 ksi
+            var no = 0.25; //Poisson ratio
+
+            var n = 9;
+            var m = 3;
+
+
+            var span = l / (n - 1);
+
+            var nodes = new Node[n][];
+
+            for (var i = 0; i < n; i++)
+            {
+                nodes[i] = new Node[m];
+
+                for (var j = 0; j < m; j++)
+                {
+                    model.Nodes.Add(nodes[i][j] = new Node(i * span, j * span, 0));
+
+                    if (i == 0)
+                        nodes[i][j].Constraints = Constraint.Fixed;
+
+                    var newCns = new Constraint(
+                        DofConstraint.Released, DofConstraint.Released, DofConstraint.Fixed,
+                        DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Fixed);
+
+                    nodes[i][j].Constraints = nodes[i][j].Constraints & newCns;
+                }
+            }
+
+            for (var i = 0; i < n - 1; i++)
+            {
+                for (var j = 0; j < m - 1; j++)
+                {
+                    var elm1 = new TriangleFlatShell()
+                    {
+                        ElasticModulus = e,
+                        PoissonRatio = no,
+                        Thickness = t,
+                        Behavior = FlatShellBehaviour.Membrane
+                    };
+
+                    elm1.Nodes[2] = nodes[i][j + 1];
+                    elm1.Nodes[1] = nodes[i + 1][j + 1];
+                    elm1.Nodes[0] = nodes[i + 1][j];
+
+                    model.Elements.Add(elm1);
+
+
+                    var elm2 = new TriangleFlatShell()
+                    {
+                        ElasticModulus = e,
+                        PoissonRatio = no,
+                        Thickness = t,
+                        Behavior = FlatShellBehaviour.Membrane
+                    };
+
+                    elm2.Nodes[2] = nodes[i][j];
+                    elm2.Nodes[1] = nodes[i][j + 1];
+                    elm2.Nodes[0] = nodes[i + 1][j];
+
+                    model.Elements.Add(elm2);
+                }
+            }
+
+            var pt = 177928.864; //40 kips
+
+            nodes.Last()[0].Loads.Add(new NodalLoad(new Force(0, pt / 6, 0, 0, 00, 0)));
+            nodes.Last()[1].Loads.Add(new NodalLoad(new Force(0, 4 * pt / 6, 0, 0, 00, 0)));
+            nodes.Last()[2].Loads.Add(new NodalLoad(new Force(0, pt / 6, 0, 0, 00, 0)));
+
+            #endregion
+
+            model.Trace.Listeners.Add(new BriefFiniteElementNet.ConsoleTraceListener());
+            new ModelWarningChecker().CheckModel(model);
+
+            model.Solve();
+
+            var d8 = 1 / 0.0254 * nodes[4].Last().GetNodalDisplacement().Displacements;
+            var d10 = 1 / 0.0254 * nodes.Last().Last().GetNodalDisplacement().Displacements;
+
+            var sap2000D8 = new Vector(-0.025605, 0.062971, 0);
+            var sap2000D10 = new Vector(-0.034271, 0.194456, 0);
+
+            Console.WriteLine("Err at A against Sap2000: {0:0.0}%", GetError(d8, sap2000D8));
+            Console.WriteLine("Err at B against Sap2000: {0:0.0}%", GetError(d10, sap2000D10));
+        }
+
         public static void Test1()
         {
             //Example 7, page 120 of "Kaushalkumar Kansara" thesis
@@ -311,6 +421,156 @@ namespace BriefFiniteElementNet.Validation
             Console.WriteLine("Err at A against Sap2000: {0:0.0}%", GetError(da, sap2000Da));
             Console.WriteLine("Err at B against Sap2000: {0:0.0}%", GetError(db, sap2000Db));
 
+        }
+
+        public static void Test5()
+        {
+            //example #11 p131
+
+            Console.WriteLine("Example 11: Regular plate with hole");
+
+            #region creating model
+
+            var model = new Model();
+
+            var l1 = UnitConverter.In2M(96); //in [m]
+            var b1 = UnitConverter.In2M(120); //in [m]
+
+            var t = UnitConverter.In2M(10); //
+
+            var e = UnitConverter.Ksi2Pas(3600); //3600 ksi
+            var no = 0.2; //Poisson ratio
+
+            var n = 9;
+            var m = 11;
+
+            var xSpan = b1 / (m - 1);
+            var ySpan = l1 / (n - 1);
+
+
+            var nodes = new Node[m][];
+
+            for (var i = 0; i < m; i++)
+            {
+                nodes[i] = new Node[n];
+
+                for (var j = 0; j < n; j++)
+                {
+                    model.Nodes.Add(nodes[i][j] = new Node(i * xSpan, j * ySpan, 0));
+
+                    if (i == 0 || i == n - 1 || j == 0 || j == n - 1)
+                        nodes[i][j].Constraints = BriefFiniteElementNet.Constraint.Fixed;
+
+                    /*
+                    var newCns = new Constraint(DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Released,
+                        DofConstraint.Released, DofConstraint.Released, DofConstraint.Fixed);
+
+                    nodes[i][j].Constraints = nodes[i][j].Constraints & newCns;
+
+                    */
+                }
+            }
+
+            var skipsX = new int[] { 4, 5 };
+            var skipsY = new int[] { 2, 3, 4, 5 };
+
+            for (var i = 0; i < m - 1; i++)
+            {
+                for (var j = 0; j < n - 1; j++)
+                {
+                    if (skipsX.Contains(i) && skipsY.Contains(j))
+                        continue;
+
+                    var elm1 = new TriangleFlatShell()
+                    {
+                        ElasticModulus = e,
+                        PoissonRatio = no,
+                        Thickness = t,
+                        Behavior = FlatShellBehaviour.ThinPlate
+                    };
+
+                    elm1.Nodes[0] = nodes[i][j];
+                    elm1.Nodes[1] = nodes[i][j + 1];
+                    elm1.Nodes[2] = nodes[i + 1][j];
+
+                    model.Elements.Add(elm1);
+
+                    //second elements
+                    var elm2 = new TriangleFlatShell()
+                    {
+                        ElasticModulus = e,
+                        PoissonRatio = no,
+                        Thickness = t,
+                        Behavior = FlatShellBehaviour.ThinPlate
+                    };
+
+                    elm2.Nodes[0] = nodes[i + 1][j + 1];
+                    elm2.Nodes[1] = nodes[i][j + 1];
+                    elm2.Nodes[2] = nodes[i + 1][j];
+
+                    model.Elements.Add(elm2);
+
+                }
+            }
+
+            //node conttraints
+            for (var i = 0; i < m; i++)
+            {
+                for (var j = 0; j < n; j++)
+                {
+                    nodes[i][j].Constraints = Constraint.FixedRZ & Constraint.FixedDX & Constraint.FixedDY;
+
+                    if (i > 3 && i < 7 && j > 1 && j < 7)
+                    {
+                        nodes[i][j].Constraints &= Constraint.MovementFixed;
+                    }
+
+
+                    if (i == 0 || i == 10)
+                    {
+                        nodes[i][j].Constraints &= Constraint.MovementFixed;
+                    }
+
+                    if (j == 0 || j == 8)
+                    {
+                        nodes[i][j].Constraints &= BriefFiniteElementNet.Constraint.MovementFixed;
+                    }
+
+
+                    if (i == 5 && j > 2 && j < 6)
+                    {
+                        nodes[i][j].Constraints = Constraint.Fixed;
+                    }
+                }
+            }
+
+
+            //loading, 0.01 kips/sq. in. on all elements
+            foreach (var elm in model.Elements)
+            {
+                elm.Loads.Add(new UniformLoadForPlanarElements()
+                {
+                    CoordinationSystem = CoordinationSystem.Global,
+                    Uz = -UnitConverter.KipsIn2Pas(0.2) //0.2 kips/sq. in.
+                });
+            }
+
+            #endregion
+
+            model.Trace.Listeners.Add(new BriefFiniteElementNet.ConsoleTraceListener());
+            new ModelWarningChecker().CheckModel(model);
+
+            model.Solve();
+
+            var da = 1 / 0.0254 * nodes[2][4].GetNodalDisplacement().Displacements;
+            var sap2000Da = new Vector(0, 0, -0.030028);
+
+            Console.WriteLine("Err at A against Sap2000: {0:0.0}%", GetError(da, sap2000Da));
+        }
+
+        public static void Test7()
+        {
+            
         }
 
         private static double GetError(Vector test, Vector accurate)

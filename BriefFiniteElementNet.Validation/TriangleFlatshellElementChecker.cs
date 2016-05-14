@@ -8,6 +8,7 @@ namespace BriefFiniteElementNet.Validation
 {
     public class TriangleFlatshellElementChecker
     {
+        /*
         public static void Test1()
         {
             #region creating model
@@ -79,7 +80,7 @@ namespace BriefFiniteElementNet.Validation
                     nodes[i][j].Loads.Add(new NodalLoad(new Force(0, 0, 100, 0, 0, 0)));
                 }
             }
-            */
+            * /
 
 
             #endregion
@@ -93,6 +94,8 @@ namespace BriefFiniteElementNet.Validation
 
             //Controls.ModelVisualizerControl.VisualizeInNewWindow(model);
         }
+
+        */
 
     }
 }
