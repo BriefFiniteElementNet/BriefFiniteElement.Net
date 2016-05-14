@@ -23,7 +23,7 @@ namespace BriefFiniteElementNet.Elements
 
         private bool _addDrillingDof = true;
 
-        private MembraneFormulation _formulationType;
+        private MembraneFormulation _formulationType = MembraneFormulation.PlaneStress;
 
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace BriefFiniteElementNet.Elements
         /// <value>
         /// The type of the formulation.
         /// </value>
-        public MembraneFormulation FormulationType
+        public MembraneFormulation MembraneFormulationType
         {
             get { return _formulationType; }
             set { _formulationType = value; }

@@ -6,7 +6,7 @@ using BriefFiniteElementNet.Elements;
 
 namespace BriefFiniteElementNet.Validation
 {
-    public class DkqElementChecker
+    public class TriangleFlatshellElementChecker
     {
         public static void Test1()
         {

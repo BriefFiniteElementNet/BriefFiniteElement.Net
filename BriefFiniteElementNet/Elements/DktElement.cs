@@ -27,7 +27,7 @@ namespace BriefFiniteElementNet.Elements
     ///     [3] "Membrane element" https://woodem.org/theory/membrane-element.html
     /// </summary>
     [Serializable]
-    //[Obsolete("Not validated still")]
+    [Obsolete("Use Triangle Plate Shell with Behavior = ThinPlate")]
     public class DktElement : Element2D
     {
         #region fields and properties

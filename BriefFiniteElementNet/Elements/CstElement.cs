@@ -14,7 +14,7 @@ namespace BriefFiniteElementNet.Elements
     /// Whole formulation is taken from "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara available on the web
     /// </summary>
     [Serializable]
-    [Obsolete("Not fully tested yet!")]
+    [Obsolete("Use Triangle Plate Shell with Behavior = Membrane")]
     public class CstElement : Element2D
     {
         private double _thickness;
