@@ -14,7 +14,7 @@ namespace BriefFiniteElementNet.TestConsole
         [STAThread]
         static void Main(string[] args)
         {
-            IndividualTests.TestNoFreeDof();
+            DktElementChecker.Test6();
         }
 
        

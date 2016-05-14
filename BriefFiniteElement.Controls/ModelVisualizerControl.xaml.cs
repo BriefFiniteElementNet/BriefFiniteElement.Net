@@ -376,6 +376,8 @@ namespace BriefFiniteElementNet.Controls
                         AddTrussElement(builder, elm as TrussElement2Node);
                     else if (elm is DktElement)
                         AddDktElement(builder, elm as DktElement);
+                    else if (elm is TriangleFlatShell)
+                        AddFlatshellElement(builder, elm as TriangleFlatShell);
                     else if (elm is CstElement)
                         AddCstElement(builder, elm as CstElement);
                     else if (elm is Element2D)
@@ -1070,6 +1072,21 @@ namespace BriefFiniteElementNet.Controls
             bldr.AddTriangle(p1, p3, p2);
         }
 
+        private void AddFlatshellElement(MeshBuilder bldr, TriangleFlatShell elm)
+        {
+            PolygonYz section = null;
+
+            var r = ElementVisualThickness / 2;
+
+
+            var p1 = elm.Nodes[0].Location;
+            var p2 = elm.Nodes[1].Location;
+            var p3 = elm.Nodes[2].Location;
+
+
+            bldr.AddTriangle(p1, p3, p2);
+        }
+
         private void AddDkqElement(MeshBuilder bldr, DkqElement elm)
         {
             PolygonYz section = null;
@@ -1130,6 +1147,11 @@ namespace BriefFiniteElementNet.Controls
         private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
             System.Diagnostics.Process.Start(@"https://helixtoolkit.codeplex.com/");
+        }
+
+        private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            MainViewport.ZoomExtents();
         }
     }
 }

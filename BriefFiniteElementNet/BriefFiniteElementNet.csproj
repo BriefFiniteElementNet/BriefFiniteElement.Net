@@ -55,6 +55,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="CalcUtil.cs" />
     <Compile Include="CustomGaussianIntegrator.cs" />
+    <Compile Include="FlatShellStressTensor.cs" />
     <Compile Include="FluentElementPermuteManager.cs" />
     <Compile Include="IElement1DLoad.cs" />
     <Compile Include="IntArrayCompairer.cs" />
@@ -68,6 +69,7 @@
     <Compile Include="MatrixAssemblerUtil.cs" />
     <Compile Include="MatrixException.cs" />
     <Compile Include="MembraneFormulation.cs" />
+    <Compile Include="MembraneStressTensor.cs" />
     <Compile Include="ModelConsole.cs" />
     <Compile Include="NodeList.cs" />
     <Compile Include="NotPositiveDefiniteException.cs" />

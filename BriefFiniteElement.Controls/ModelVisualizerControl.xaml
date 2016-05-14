@@ -27,6 +27,7 @@
             <TextBlock Grid.Row="0" x:Name="txtHelp" HorizontalAlignment="Center" TextWrapping="Wrap" Text="Mouse Gestures HELP!" ToolTipService.InitialShowDelay="0"  VerticalAlignment="Center" Margin="0"/>
             <TextBlock Text="3D Visualization in this window is powered by Helix toolkit" HorizontalAlignment="Center" VerticalAlignment="Center" MouseDown="TextBlock_MouseDown" TextDecorations="Underline" Foreground="Blue" Cursor="Hand" Grid.Column="2"/>
             <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Content="Zoom2Extent" Click="ButtonBase_OnClick"></Button>
                 <ToggleButton Content="Nodes" IsChecked="{Binding ShowNodes, ElementName=userControl}"/>
                 <ToggleButton Content="Elements" IsChecked="{Binding ShowElements, ElementName=userControl}"/>
                 <ToggleButton Content="RigidElements" IsChecked="{Binding ShowRigidElements, ElementName=userControl}"/>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using BriefFiniteElementNet.Integration;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -195,13 +196,42 @@ namespace BriefFiniteElementNet.Elements
         /// <inheritdoc />
         public override Matrix GetGlobalStifnessMatrix()
         {
-            var local = GetLocalStifnessMatrix();
+            //step 1 : get points in local system
+            //step 2 : get local stiffness matrix
+            //step 3 : expand local stiffness matrix
+            //step 4 : get global stiffness matrix
+
+            //step 1
+            var ls = GetLocalPoints();
+
+            var xs = new [] { ls[0].X, ls[1].X, ls[2].X };
+            var ys = new [] { ls[0].Y, ls[1].Y, ls[2].Y };
+
+            //step 2
+            var kl = CstElement.GetStiffnessMatrix(xs, ys, this._thickness, this.ElasticModulus, this.PoissonRatio,
+                this._formulationType);
+
+            //step 3
+            var currentOrder = new []
+            {
+                new FluentElementPermuteManager.ElementLocalDof(0, DoF.Dx),
+                new FluentElementPermuteManager.ElementLocalDof(0, DoF.Dy),
+
+                new FluentElementPermuteManager.ElementLocalDof(1, DoF.Dx),
+                new FluentElementPermuteManager.ElementLocalDof(1, DoF.Dy),
+
+                new FluentElementPermuteManager.ElementLocalDof(2, DoF.Dx),
+                new FluentElementPermuteManager.ElementLocalDof(2, DoF.Dy),
+            };
+
+            var kle = FluentElementPermuteManager.FullyExpand(kl, currentOrder, 3);
 
             var lambda = GetTransformationMatrix();
 
-            var t = Matrix.DiagonallyRepeat(lambda.Transpose(), 6);// eq. 5-17 page 78 (87 of file)
+            var tr = Matrix.DiagonallyRepeat(lambda.Transpose(), 6); // eq. 5-16 page 78 (87 of file)
 
-            var buf = t.Transpose() * local * t;//eq. 5-15 p77
+            //step 4 : get global stiffness matrix
+            var buf = tr.Transpose() * kle * tr; //eq. 5-15 p77
 
             return buf;
         }
@@ -212,37 +242,11 @@ namespace BriefFiniteElementNet.Elements
         /// <returns>Transformation matrix.</returns>
         public Matrix GetLocalStifnessMatrix()
         {
+            throw new NotImplementedException();
+            /*
             var lpts = GetLocalPoints();
 
-            var d = new Matrix(3, 3);
-
-            {
-                if (_formulationType == MembraneFormulation.PlaneStress)
-                {
-                    //page 23 of JAVA Thesis pdf
-
-                    var cf = this._elasticModulus/(1 - _poissonRatio*_poissonRatio);
-
-                    d[0, 0] = d[1, 1] = 1;
-                    d[1, 0] = d[0, 1] = _poissonRatio;
-                    d[2, 2] = (1 - _poissonRatio) / 2;
-
-                    d.MultiplyByConstant(cf);    
-                }
-                else
-                {
-                    //page 24 of JAVA Thesis pdf
-
-                    var cf = this._elasticModulus/((1 + _poissonRatio)*(1 - 2*_poissonRatio));
-
-                    d[0, 0] = d[1, 1] = 1-_poissonRatio;
-                    d[1, 0] = d[0, 1] = _poissonRatio;
-                    d[2, 2] = (1 - 2*_poissonRatio) / 2;
-
-                    d.MultiplyByConstant(cf);    
-                }
-                
-            }
+            var d = GetDMatrix(_elasticModulus, _poissonRatio, _formulationType);
 
             var b = GetBMatrix(0, 0, lpts);//only one Gaussian point
 
@@ -258,29 +262,97 @@ namespace BriefFiniteElementNet.Elements
             var buf2 = (pt * klocal) * pt.Transpose();//local expanded stiffness matrix
 
             return buf2;
+            */
+        }
+
+
+        #region statics
+
+        /// <summary>
+        /// Gets the stiffness matrix of DKT element.
+        /// </summary>
+        /// <param name="x">The x location of points, in local coordinates.</param>
+        /// <param name="y">The y location of points, in local coordinates.</param>
+        /// <param name="t">The thickness.</param>
+        /// <param name="e">The elastic modulus.</param>
+        /// <param name="nu">The Poisson ratio.</param>
+        /// <returns></returns>
+        internal static Matrix GetStiffnessMatrix(double[] x, double[] y,double t, double e, double nu,MembraneFormulation f)
+        {
+            double a;//area
+
+            {
+                var x31 = x[2] - x[0];
+                var x12 = x[0] - x[1];
+                var y31 = y[2] - y[0];
+                var y12 = y[0] - y[1];
+
+                a = 0.5 * Math.Abs(x31 * y12 - x12 * y31);
+            }
+
+            var d = GetDMatrix(e, nu, f);
+
+            var b = GetBMatrix(0, 0, x,y);//only one Gaussian point
+
+            var klocal = b.Transpose() * d * b;
+
+            klocal.MultiplyByConstant(t * a);
+
+            return klocal;
+        }
+
+        internal static Matrix GetDMatrix(double e, double nu, MembraneFormulation f)
+        {
+            var d = new Matrix(3, 3);
+
+            if (f == MembraneFormulation.PlaneStress)
+            {
+                //page 23 of JAVA Thesis pdf
+
+                var cf = e/(1 - nu*nu);
+
+                d[0, 0] = d[1, 1] = 1;
+                d[1, 0] = d[0, 1] = nu;
+                d[2, 2] = (1 - nu)/2;
+
+                d.MultiplyByConstant(cf);
+            }
+            else
+            {
+                //page 24 of JAVA Thesis pdf
+
+                var cf = e/((1 + nu)*(1 - 2*nu));
+
+                d[0, 0] = d[1, 1] = 1 - nu;
+                d[1, 0] = d[0, 1] = nu;
+                d[2, 2] = (1 - 2*nu)/2;
+
+                d.MultiplyByConstant(cf);
+            }
+
+            return d;
         }
 
         /// <summary>
         /// Gets the b matrix.
         /// </summary>
-        /// <param name="k">The k.</param>
-        /// <param name="e">The e.</param>
+        /// <param name="xi">The k.</param>
+        /// <param name="eta">The e.</param>
         /// <param name="lpts">The local points.</param>
         /// <returns></returns>
-        private Matrix GetBMatrix(double k, double e, Point[] lpts)
+        internal static Matrix GetBMatrix(double xi, double eta, double[] x, double[] y)
         {
-            var x = new double[] { lpts[0].X, lpts[1].X, lpts[2].X };
-            var y = new double[] { lpts[0].Y, lpts[1].Y, lpts[2].Y };
-
             var x32 = x[2] - x[1];
             var x13 = x[0] - x[2];
+            var x31 = -x13;
             var x21 = x[1] - x[0];
+            var x12 = -x21;
 
             var y23 = y[1] - y[2];
             var y31 = y[2] - y[0];
             var y12 = y[0] - y[1];
 
-            var a = GetArea();
+            var a = 0.5 * Math.Abs(x31 * y12 - x12 * y31);
 
             //eq 3.24 page 29 of thesis pdf
 
@@ -291,10 +363,14 @@ namespace BriefFiniteElementNet.Elements
                 new double[] {x32, y23, x13, y31, x21, y12},
             });
 
+
             buf2.MultiplyByConstant(1/(2*a));
 
             return buf2;
         }
+
+        #endregion
+
 
         /// <inheritdoc />
         public override Matrix GetGlobalMassMatrix()
