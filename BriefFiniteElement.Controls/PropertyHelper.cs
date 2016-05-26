@@ -95,26 +95,27 @@ namespace BriefFiniteElementNet.Controls
         }
 
 
-         public static void BrowseObjectProperties(object obj)
-         {
-             var grd = new DataGrid() {SelectionMode = DataGridSelectionMode.Single};
+        public static void BrowseObjectProperties(object obj)
+        {
+            var grd = new DataGrid() {SelectionMode = DataGridSelectionMode.Single};
 
             PropertyHelper.Populate(grd, obj);
 
-            if(obj is IEnumerable)
+            if (obj is IEnumerable)
                 grd.ItemsSource = obj as IEnumerable;
             else
-            grd.ItemsSource = new[] { obj };
+                grd.ItemsSource = new[] {obj};
 
-            
+
 
 
             var wnd = new Window();
             wnd.Content = grd;
+            wnd.Title = obj.GetType().FullName;
             wnd.ShowDialog();
-            
+
         }
 
-       
+
     }
 }

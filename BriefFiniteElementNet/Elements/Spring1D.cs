@@ -48,6 +48,9 @@ namespace BriefFiniteElementNet.Elements
         }
 
 
+        
+
+
         public override Force GetInternalForceAt(double x, LoadCombination cmb)
         {
             throw new NotImplementedException();
@@ -61,6 +64,13 @@ namespace BriefFiniteElementNet.Elements
 
         public Spring1D() : base(2)
         {
+        }
+
+        public Spring1D(Node start, Node end)
+            : base(2)
+        {
+            this.nodes[0] = start;
+            this.nodes[1] = end;
         }
 
         public Spring1D(SerializationInfo info, StreamingContext context) : base(info, context)

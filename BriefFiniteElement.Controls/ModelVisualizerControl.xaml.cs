@@ -386,7 +386,8 @@ namespace BriefFiniteElementNet.Controls
                         AddElement2d(builder, elm as Element2D);
                     else if (elm is Element3D)
                         AddElement3D(builder, elm as Element3D);
-
+                    else if (elm is Spring1D)
+                        AddSpringElement(builder, elm as Spring1D);
 
                     var gradient = new LinearGradientBrush();
                         //TODO: to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
@@ -925,6 +926,20 @@ namespace BriefFiniteElementNet.Controls
             return res;
         }
 
+        private void AddSpringElement(MeshBuilder bldr, Spring1D elm)
+        {
+            PolygonYz section = null;
+
+            var r = ElementVisualThickness / 2;
+
+            if (elm.StartNode.Location.Equals(elm.EndNode.Location))
+            {
+                bldr.AddSphere(new Point3D(elm.StartNode.Location.X, 
+                    elm.StartNode.Location.Y, 
+                    elm.StartNode.Location.Z), ElementVisualThickness * 3);
+            }
+            
+        }
 
         private void AddFrameElement(MeshBuilder bldr, FrameElement2Node elm)
         {
