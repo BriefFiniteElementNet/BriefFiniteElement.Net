@@ -23,13 +23,11 @@ namespace BriefFiniteElementNet
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
-            throw new NotImplementedException();
         }
 
-        internal Element3D(SerializationInfo info, StreamingContext context)
+        protected Element3D(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            throw new NotImplementedException();
         }
 
         #endregion

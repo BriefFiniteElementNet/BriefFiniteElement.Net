@@ -180,6 +180,36 @@ namespace BriefFiniteElementNet
 
         #endregion
 
-        
+        public bool Equals(Point other)
+        {
+            return x.Equals(other.x) && y.Equals(other.y) && z.Equals(other.z);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is Point && Equals((Point) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = x.GetHashCode();
+                hashCode = (hashCode*397) ^ y.GetHashCode();
+                hashCode = (hashCode*397) ^ z.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        public static bool operator ==(Point left, Point right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(Point left, Point right)
+        {
+            return !left.Equals(right);
+        }
     }
 }

@@ -336,16 +336,16 @@ namespace BriefFiniteElementNet
         {
             get
             {
-                //MatrixException.ThrowIf(row >= this.RowCount || column >= this.ColumnCount,
-                //                        "Invalid column or row specified");
+                MatrixException.ThrowIf(row >= this.RowCount || column >= this.ColumnCount,
+                                        "Invalid column or row specified");
 
                 return this.CoreArray[column * this.rowCount + row];
             }
 
             set
             {
-                //MatrixException.ThrowIf(row >= this.RowCount || column >= this.ColumnCount,
-                //                       "Invalid column or row specified");
+                MatrixException.ThrowIf(row >= this.RowCount || column >= this.ColumnCount,
+                                       "Invalid column or row specified");
 
                 this.CoreArray[column * this.rowCount + row] = value;
             }
@@ -1354,6 +1354,51 @@ namespace BriefFiniteElementNet
         public IEnumerator<double> GetEnumerator()
         {
             return (IEnumerator<double>)new List<double>(coreArray).GetEnumerator();
+        }
+
+
+        /// <summary>
+        /// Fills the matrix rowise (all rows of new matrix are beside each other).
+        /// </summary>
+        /// <param name="members">The members.</param>
+        /// <exception cref="System.Exception"></exception>
+        public void FillMatrixRowise(params double[] members)
+        {
+            if (members.Length != this.coreArray.Length)
+                throw new Exception();
+
+            for (int i = 0; i < this.rowCount; i++)
+            {
+                for (int j = 0; j < this.columnCount; j++)
+                {
+                    //column * this.rowCount + row
+                    this[i, j] = members[this.columnCount*i + j];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fills the matrix col wise.
+        /// </summary>
+        /// <param name="members">The members.</param>
+        /// <exception cref="System.Exception"></exception>
+        public void FillMatrixColWise(params double[] members)
+        {
+            if (members.Length != this.coreArray.Length)
+                throw new Exception();
+
+            Array.Copy(members,this.coreArray,this.coreArray.Length);
+
+            //more simple:
+            /*
+            for (int i = 0; i < this.rowCount; i++)
+            {
+                for (int j = 0; j < this.columnCount; j++)
+                {
+                    this[i, j] = members[this.rowCount*i + j];
+                }
+            }
+            */
         }
     }
 

@@ -376,12 +376,17 @@ namespace BriefFiniteElementNet.Controls
                         AddTrussElement(builder, elm as TrussElement2Node);
                     else if (elm is DktElement)
                         AddDktElement(builder, elm as DktElement);
+                    else if (elm is Tetrahedral)
+                        AddTetrahedronElement(builder, elm as Tetrahedral);
                     else if (elm is TriangleFlatShell)
                         AddFlatshellElement(builder, elm as TriangleFlatShell);
                     else if (elm is CstElement)
                         AddCstElement(builder, elm as CstElement);
                     else if (elm is Element2D)
                         AddElement2d(builder, elm as Element2D);
+                    else if (elm is Element3D)
+                        AddElement3D(builder, elm as Element3D);
+
 
                     var gradient = new LinearGradientBrush();
                         //TODO: to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
@@ -1073,6 +1078,26 @@ namespace BriefFiniteElementNet.Controls
             bldr.AddTriangle(p1, p3, p2);
         }
 
+        private void AddTetrahedronElement(MeshBuilder bldr, Tetrahedral elm)
+        {
+            PolygonYz section = null;
+
+            var r = ElementVisualThickness / 2;
+
+
+            var p1 = elm.Nodes[0].Location;
+            var p2 = elm.Nodes[1].Location;
+            var p3 = elm.Nodes[2].Location;
+            var p4 = elm.Nodes[3].Location;
+
+
+            bldr.AddTriangle(p1, p3, p4);
+            bldr.AddTriangle(p3, p2, p4);
+            bldr.AddTriangle(p1, p2, p4);
+            bldr.AddTriangle(p1, p2, p3);
+            
+        }
+
         private void AddFlatshellElement(MeshBuilder bldr, TriangleFlatShell elm)
         {
             PolygonYz section = null;
@@ -1130,6 +1155,35 @@ namespace BriefFiniteElementNet.Controls
 
 
             bldr.AddTriangle(p1, p3, p2);
+        }
+
+        private void AddElement3D(MeshBuilder bldr, Element3D elm)
+        {
+            if (elm.Nodes.Length == 8)
+            {
+                //brick
+
+                var p = new Func<Node, Point>(i => i.Location);
+
+                var sides = new int[][]
+                {
+                    new int[] {1, 2, 6}, new int[] {1, 5, 6},
+                    new int[] {2, 6, 3}, new int[] {7, 6, 3},
+                    new int[] {4, 3, 7}, new int[] {4, 8, 7},
+
+                    new int[] {1, 4, 8}, new int[] {1, 5, 8},
+                    new int[] {5, 6, 7}, new int[] {5, 8, 7},
+                    new int[] {1, 2, 3}, new int[] {1, 4, 3},
+                };
+
+
+
+                foreach (var side in sides)
+                {
+                    bldr.AddTriangle(p(elm.Nodes[side[0]-1]), p(elm.Nodes[side[1]-1]), p(elm.Nodes[side[2]-1]));
+                }
+                
+            }
         }
 
         private void AddNode(MeshBuilder bldr, Node nde)

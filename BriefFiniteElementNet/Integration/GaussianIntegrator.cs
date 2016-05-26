@@ -44,6 +44,7 @@ namespace BriefFiniteElementNet.Integration
         /// </summary>
         public int GammaPointCount;
 
+
         /// <summary>
         /// The G2 function, parameters: G2(η,γ)
         /// </summary>
@@ -70,6 +71,7 @@ namespace BriefFiniteElementNet.Integration
         /// upper level of η integration
         /// </value>
         public Func<double, double> F2;
+
 
         /// <summary>
         /// The A1

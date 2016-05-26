@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+
+
+
 
 namespace BriefFiniteElementNet
 {
@@ -31,6 +35,7 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+        [DebuggerDisplay("{Dof} - {NodeIndex}")]
         public struct ElementLocalDof
         {
             public int NodeIndex;

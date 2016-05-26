@@ -26,7 +26,7 @@ namespace BriefFiniteElementNet
                 case ElementType.TrussElement2Noded:
                     break;
                 case ElementType.TetrahedralIso:
-                    return GetGlobalEquivalentNodalLoads((TetrahedralIso)element);
+                    return GetGlobalEquivalentNodalLoads((Tetrahedral)element);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -35,11 +35,11 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Gets the global equivalent nodal loads for <see cref="TetrahedralIso"/> element.
+        /// Gets the global equivalent nodal loads for <see cref="Tetrahedral"/> element.
         /// </summary>
         /// <param name="element">The element.</param>
         /// <returns></returns>
-        public Force[] GetGlobalEquivalentNodalLoads(TetrahedralIso element)
+        public Force[] GetGlobalEquivalentNodalLoads(Tetrahedral element)
         {
             //p.264 of Structural Analysis with the Finite Element Method Linear Statics, ISBN: 978-1-4020-8733-2
             //formula (8.39) - (8.42) : Uniform surface tractions are distributed in equal parts between the three nodes of the linear tetrahedron face affected by the loading.

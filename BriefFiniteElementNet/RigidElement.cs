@@ -13,6 +13,23 @@ namespace BriefFiniteElementNet
     [Serializable]
     public sealed class RigidElement : StructurePart
     {
+
+        private bool _hingedConnections;
+
+
+        /// <summary>
+        /// Gets or sets a value indicating whether connections is hinged or fully connections.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if all connections are hinged; otherwise, <c>false</c>.
+        /// </value>
+        public bool HingedConnections
+        {
+            get { return _hingedConnections; }
+            set { _hingedConnections = value; }
+        }
+
+
         private NodeList _nodes;
 
         /// <summary>
@@ -69,6 +86,7 @@ namespace BriefFiniteElementNet
         private LoadCaseCollection _appliedLoadCases = new LoadCaseCollection();
 
 
+
         /// <summary>
         /// Gets the load cases which this <see cref="RigidElement"/> should be considered while analyzing regarding those <see cref="LoadCase"/>s.
         /// </summary>
@@ -114,6 +132,8 @@ namespace BriefFiniteElementNet
             info.AddValue("_appliedLoadCases", _appliedLoadCases);
             info.AddValue("nodeNumbers", nodeNumbers);
 
+            info.AddValue("_hingedConnections", _hingedConnections);
+
             if (_centralNode != null)
                 _centralNodeNumber = _centralNode.Index;
 
@@ -128,8 +148,9 @@ namespace BriefFiniteElementNet
             nodeNumbers = info.GetValue<int[]>("nodeNumbers");
             _useForAllLoads = info.GetBoolean("_useForAllLoads");
             _appliedLoadCases = info.GetValue<LoadCaseCollection>("_appliedLoadCases");
-            
+
             _centralNodeNumber = info.GetValue<int?>("_centralNodeNumber");
+            _hingedConnections = info.GetBoolean("_hingedConnections");
 
             this._nodes = new NodeList();
         }

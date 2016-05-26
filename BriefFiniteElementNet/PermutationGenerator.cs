@@ -73,7 +73,9 @@ namespace BriefFiniteElementNet
                 InsertSubmatrix(pd, i, j, buf);
             }
 
-            return (CCS) Converter.ToCompressedColumnStorage(buf);
+            var buff = (CCS) Converter.ToCompressedColumnStorage(buf);
+
+            return buff;
         }
 
         /// <summary>
@@ -263,7 +265,6 @@ namespace BriefFiniteElementNet
             buf[5, 0] = -(buf[3, 2] = d.Y);
             buf[4, 2] = -(buf[5, 1] = d.X);
 
-
             return buf;
         }
 
@@ -275,6 +276,11 @@ namespace BriefFiniteElementNet
         /// <returns></returns>
         private Matrix GetPdij(int master, int slave)
         {
+            return GetPdij(master, slave, false);
+        }
+
+        private Matrix GetPdij(int master, int slave, bool hinged)
+        {
             //Note: this is transpose of Pfij
             var _masterMap = DofMap.MasterMap;
 
@@ -285,11 +291,9 @@ namespace BriefFiniteElementNet
 
             var buf = Matrix.Eye(6);
 
-
             buf[0, 4] = -(buf[1, 3] = d.Z);
             buf[2, 3] = -(buf[0, 5] = d.Y);
             buf[1, 5] = -(buf[2, 4] = d.X);
-
 
             return buf;
         }

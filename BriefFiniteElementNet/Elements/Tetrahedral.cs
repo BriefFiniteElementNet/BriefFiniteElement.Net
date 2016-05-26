@@ -1,20 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting.Channels;
-using System.Text;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using Elo = BriefFiniteElementNet.FluentElementPermuteManager.ElementLocalDof;
 
-namespace BriefFiniteElementNet
+namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
     /// Represents a tetrahedron with isotropic material.
     /// </summary>
     /// <remarks>
-    /// Not fully implemented yet!</remarks>
+    /// Not fully implemented yet!
+    /// </remarks>
     [Serializable]
-    public class TetrahedralIso : Element3D
+    public class Tetrahedral : Element3D
     {
         private double _e;
         private double _nu;
@@ -61,30 +59,30 @@ namespace BriefFiniteElementNet
         /// </summary>
         public void UpdateGeoMatrix()
         {
-            var p1 = nodes[0].Location;
-            var p2 = nodes[1].Location;
-            var p3 = nodes[2].Location;
-            var p4 = nodes[3].Location;
+            var p0 = nodes[0].Location;
+            var p1 = nodes[1].Location;
+            var p2 = nodes[2].Location;
+            var p3 = nodes[3].Location;
 
-            var newHash = CalcUtil.GetHashCode(p1, p2, p3, p4);
+            var newHash = CalcUtil.GetHashCode(p0, p1, p2, p3);
 
             if (newHash == hash)
                 return;
 
-            var x1 = p1.X;
-            var x2 = p2.X;
-            var x3 = p3.X;
-            var x4 = p4.X;
+            var x1 = p0.X;
+            var x2 = p1.X;
+            var x3 = p2.X;
+            var x4 = p3.X;
 
-            var y1 = p1.Y;
-            var y2 = p2.Y;
-            var y3 = p3.Y;
-            var y4 = p4.Y;
+            var y1 = p0.Y;
+            var y2 = p1.Y;
+            var y3 = p2.Y;
+            var y4 = p3.Y;
 
-            var z1 = p1.Z;
-            var z2 = p2.Z;
-            var z3 = p3.Z;
-            var z4 = p4.Z;
+            var z1 = p0.Z;
+            var z2 = p1.Z;
+            var z3 = p2.Z;
+            var z4 = p3.Z;
 
             if (a == null) a = new double[4];
             if (b == null) b = new double[4];
@@ -157,9 +155,9 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TetrahedralIso"/> class.
+        /// Initializes a new instance of the <see cref="Tetrahedral"/> class.
         /// </summary>
-        public TetrahedralIso()
+        public Tetrahedral()
             : base(4)
         {
             this.elementType = ElementType.TetrahedralIso;
@@ -170,41 +168,194 @@ namespace BriefFiniteElementNet
         {
             //Code ported from D3_TETRAH.m from fem_toolbox
 
-            UpdateGeoMatrix();
+            var newNodeOrder = new int[4];
 
-            var v = det/6.0;
+           
 
-            var buf = new Matrix(12, 12);
-            
-            var d1 = _e*(1 - _nu)/((1 + _nu)*(1 - 2*_nu)); //this is D[0,0] equals to D[1,1] equals to D[2,2]
-            var d2 = _e*_nu/((1 + _nu)*(1 - 2*_nu)); //this is D[0,1] equals to D[0,2] equals to D[1,2]
-            var d3 = _e/(2*(1 + _nu));
+
+            {
+                //based on "9 - The Linear Tetrahedron, file: AFEM.Ch09, page 9-4
+                //http://www.colorado.edu/engineering/CAS/courses.d/AFEM.d/AFEM.Ch09.d/AFEM.Ch09.pdf
+                //we do select points 1 and 4
+                //then will change 2-3 to 3-2 if invalid :)
+
+                newNodeOrder[0] = 0;
+                newNodeOrder[1] = 1;
+                newNodeOrder[2] = 2;
+                newNodeOrder[3] = 3;
+
+                var Jp = new Matrix(4, 4);
+
+                for (var i = 0; i < 4; i++)
+                {
+                    Jp[0, i] = 1;
+                    Jp[1, i] = nodes[newNodeOrder[i]].Location.X;
+                    Jp[2, i] = nodes[newNodeOrder[i]].Location.Y;
+                    Jp[3, i] = nodes[newNodeOrder[i]].Location.Z;
+                }
+
+                if (Jp.Determinant() < 0)
+                {
+                    newNodeOrder[1] = 2;
+                    newNodeOrder[2] = 1;
+                }
+
+                for (var i = 0; i < 4; i++)
+                {
+                    Jp[0, i] = 1;
+                    Jp[1, i] = nodes[newNodeOrder[i]].Location.X;
+                    Jp[2, i] = nodes[newNodeOrder[i]].Location.Y;
+                    Jp[3, i] = nodes[newNodeOrder[i]].Location.Z;
+                }
+
+                if (Jp.Determinant() < 0)
+                    throw new Exception("!");
+            }
+
+
+
+
+            var J = new Matrix(4, 4);
 
             for (var i = 0; i < 4; i++)
             {
-                for (var j = 0; j < 4; j++)
-                {
-                    buf[3 * i + 0, 3 * j + 0] = a[i] * a[j] * d1 + b[i] * b[j] * d3 + c[i] * c[j] * d3;
-                    buf[3 * i + 0, 3 * j + 1] = a[i] * b[j] * d2 + a[j] * b[i] * d3;
-                    buf[3 * i + 0, 3 * j + 2] = a[i] * c[j] * d2 + a[j] * c[i] * d3;
-
-                    buf[3 * i + 1, 3 * j + 0] = a[j] * b[i] * d2 + a[i] * b[j] * d3;
-                    buf[3 * i + 1, 3 * j + 1] = a[i] * a[j] * d3 + b[i] * b[j] * d1 + c[i] * c[j] * d3;
-                    buf[3 * i + 1, 3 * j + 2] = b[i] * c[j] * d2 + b[j] * c[i] * d3;
-
-                    buf[3 * i + 2, 3 * j + 0] = a[j] * c[i] * d2 + a[i] * c[j] * d3;
-                    buf[3 * i + 2, 3 * j + 1] = b[j] * c[i] * d2 + b[i] * c[j] * d3;
-                    buf[3 * i + 2, 3 * j + 2] = a[i] * a[j] * d3 + b[i] * b[j] * d3 + c[i] * c[j] * d1;
-                }
+                J[0, i] = 1;
+                J[1, i] = nodes[newNodeOrder[i]].Location.X;
+                J[2, i] = nodes[newNodeOrder[i]].Location.Y;
+                J[3, i] = nodes[newNodeOrder[i]].Location.Z;
             }
 
-            for (var i = buf.CoreArray.Length - 1; i >= 0; i--)
+
+            var detJ = J.Determinant();
+            var V = detJ / 6;
+
+
+            if (V < 0)
+                throw new Exception();
+
+
+            var Q = detJ * J.Inverse();
+
+            double a1 = Q[0, 1]; double b1 = Q[0, 2]; double c1 = Q[0, 3];
+            double a2 = Q[1, 1]; double b2 = Q[1, 2]; double c2 = Q[1, 3];
+            double a3 = Q[2, 1]; double b3 = Q[2, 2]; double c3 = Q[2, 3];
+            double a4 = Q[3, 1]; double b4 = Q[3, 2]; double c4 = Q[3, 3];
+
+            var b = new Matrix(6, 12);//transpose of b
+
+            b.FillMatrixRowise(
+                a1, 0, 0, a2, 0, 0, a3, 0, 0, a4, 0, 0,
+                0, b1, 0, 0, b2, 0, 0, b3, 0, 0, b4, 0,
+                0, 0, c1, 0, 0, c2, 0, 0, c3, 0, 0, c4,
+                0, c1, b1, 0, c2, b2, 0, c3, b3, 0, c4, b4,
+                c1, 0, a1, c2, 0, a2, c3, 0, a3, c4, 0, a4,
+                b1, a1, 0, b2, a2, 0, b3, a3, 0, b4, a4, 0);
+
+
+
+            b.MultiplyByConstant(1 / (6 * V));
+
+            var miu = this.Nu;
+            var s = (1 - miu);
+            var E = new Matrix(6, 6);
+
+            E.FillMatrixRowise(1, miu / s, miu / s, 0, 0, 0, miu / s, 1, miu / s, 0, 0, 0, miu / s, miu / s, 1, 0, 0, 0, 0, 0, 0,
+                (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s));
+
+            E.MultiplyByConstant(this.E * (1 - miu) / ((1 + miu) * (1 - 2 * miu)));
+
+
+
+            var buf = b.Transpose() * E * b;
+
+            buf.MultiplyByConstant(V);
+
+            var currentOrder = new Elo[12];
+
+            for (var i = 0; i < 4; i++)
             {
-                buf.CoreArray[i] /= (36.0*v);
+                currentOrder[3 * i + 0] = new Elo(newNodeOrder[i], DoF.Dx);
+                currentOrder[3 * i + 1] = new Elo(newNodeOrder[i], DoF.Dy);
+                currentOrder[3 * i + 2] = new Elo(newNodeOrder[i], DoF.Dz);
             }
-            
 
-            return buf;
+            var bufEx = FluentElementPermuteManager.FullyExpand(buf, currentOrder, 4);
+
+            return bufEx;
+        }
+
+        public Matrix GetGlobalStifnessMatrix_old()
+        {
+            //Code ported from D3_TETRAH.m from fem_toolbox
+
+            UpdateGeoMatrix();
+
+
+            var J = new Matrix(4, 4);
+
+            for (var i = 0; i < 4; i++)
+            {
+                J[0, i] = 1;
+                J[1, i] = nodes[i].Location.X;
+                J[2, i] = nodes[i].Location.Y;
+                J[3, i] = nodes[i].Location.Z;
+            }
+
+            var detJ = J.Determinant();
+            var V = detJ / 6;
+
+            var Q = detJ * J.Inverse();
+
+
+
+
+            double a1 = a[0]; double b1 = b[0]; double c1 = c[0]; double d1 = d[0];
+            double a2 = a[1]; double b2 = b[1]; double c2 = c[1]; double d2 = d[1];
+            double a3 = a[2]; double b3 = b[2]; double c3 = c[2]; double d3 = d[2];
+            double a4 = a[3]; double b4 = b[3]; double c4 = c[3]; double d4 = d[3];
+
+            var B = new Matrix(6, 12);//transpose of b
+
+            B.FillMatrixRowise(
+                b1, 0, 0, b2, 0, 0, b3, 0, 0, b4, 0, 0,
+                0, c1, 0, 0, c2, 0, 0, c3, 0, 0, c4, 0,
+                0, 0, d1, 0, 0, d2, 0, 0, d3, 0, 0, d4,
+                c1, b1, 0, c2, b2, 0, c3, b3, 0, c4, b4, 0,
+                0, d1, c1, 0, d2, c2, 0, d3, c3, 0, d4, c4,
+                d1, 0, b1, d2, 0, b2, d3, 0, b3, d4, 0, b4);
+
+
+
+            B.MultiplyByConstant(1 / (2 * V));
+
+            var miu = this.Nu;
+            var s = (1 - miu);
+            var E = new Matrix(6, 6);
+
+            E.FillMatrixRowise(1, miu / s, miu / s, 0, 0, 0, miu / s, 1, miu / s, 0, 0, 0, miu / s, miu / s, 1, 0, 0, 0, 0, 0, 0,
+                (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s));
+
+            E.MultiplyByConstant(this.E * (1 - miu) / ((1 + miu) * (1 - 2 * miu)));
+
+            var buf = B.Transpose() * E * B;
+
+            buf.MultiplyByConstant(V);
+
+            var currentOrder = new Elo[12];
+
+            for (var i = 0; i < 4; i++)
+            {
+                currentOrder[3 * i + 0] = new Elo(i, DoF.Dx);
+                currentOrder[3 * i + 1] = new Elo(i, DoF.Dy);
+                currentOrder[3 * i + 2] = new Elo(i, DoF.Dz);
+            }
+
+
+            var bufEx = FluentElementPermuteManager.FullyExpand(buf, currentOrder, 4);
+
+            var tmp2 = GetGlobalStifnessMatrix_old();
+
+            return tmp2;
         }
 
         /// <inheritdoc />
@@ -270,7 +421,7 @@ namespace BriefFiniteElementNet
 
         #region Deserialization Constructor
 
-        protected TetrahedralIso(SerializationInfo info, StreamingContext context)
+        protected Tetrahedral(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             _e = (double)info.GetValue("_e", typeof(double));

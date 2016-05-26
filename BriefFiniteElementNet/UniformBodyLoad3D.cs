@@ -66,22 +66,24 @@ namespace BriefFiniteElementNet
                 case ElementType.TrussElement2Noded:
                     break;
                 case ElementType.TetrahedralIso:
-                    return GetGlobalEquivalentNodalLoads((TetrahedralIso) element);
+                    return GetGlobalEquivalentNodalLoads((Tetrahedral) element);
                     break;
                 case ElementType.Dkt:
                     return GetGlobalEquivalentNodalLoads(element as DktElement);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            return element.GetEquivalentNodalLoads(this);
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Gets the global equivalent nodal loads for <see cref="TetrahedralIso"/> element.
+        /// Gets the global equivalent nodal loads for <see cref="Tetrahedral"/> element.
         /// </summary>
         /// <param name="elm">The elm.</param>
-        /// <returns>global equivalent nodal loads for <see cref="TetrahedralIso"/> element</returns>
-        private Force[] GetGlobalEquivalentNodalLoads(TetrahedralIso elm)
+        /// <returns>global equivalent nodal loads for <see cref="Tetrahedral"/> element</returns>
+        private Force[] GetGlobalEquivalentNodalLoads(Tetrahedral elm)
         {
             //p.263 of Structural Analysis with the Finite Element Method Linear Statics, ISBN: 978-1-4020-8733-2
             //formula (8.37c) : the total body force is distributed in equal parts between the four nodes, as expected!
@@ -133,6 +135,11 @@ namespace BriefFiniteElementNet
             _vx = info.GetDouble("vx");
             _vy = info.GetDouble("vy");
             _vz = info.GetDouble("vz");
+        }
+
+        public UniformBodyLoad3D()
+        {
+            
         }
     }
 }

@@ -302,6 +302,56 @@ namespace BriefFiniteElementNet
             return masters;
         }
 
+        public static int[] GetMasterMapping(Model model, LoadCase cse,out bool[] hinged)
+        {
+            for (int i = 0; i < model.Nodes.Count; i++)
+                model.Nodes[i].Index = i;
+
+
+            var n = model.Nodes.Count;
+            var masters = new int[n];
+            hinged = new bool[n];
+
+
+            for (var i = 0; i < n; i++)
+            {
+                masters[i] = i;
+            }
+
+            var masterCount = 0;
+
+            #region filling the masters
+
+            var distinctElements = GetDistinctRigidElements(model, cse);
+
+            var centralNodePrefreation = new bool[n];
+
+
+            foreach (var elm in model.RigidElements)
+            {
+                if (elm.CentralNode != null)
+                    centralNodePrefreation[elm.CentralNode.Index] = true;
+            }
+
+
+            foreach (var elm in distinctElements)
+            {
+                if (elm.Count == 0)
+                    continue;
+
+                var elmMasterIndex = GetMasterNodeIndex(model, elm, centralNodePrefreation);
+
+                for (var i = 0; i < elm.Count; i++)
+                {
+                    masters[elm[i]] = elmMasterIndex;
+                }
+            }
+
+            #endregion
+
+            return masters;
+        }
+
         private static List<List<int>> GetDistinctRigidElements(Model model, LoadCase loadCase)
         {
             for (int i = 0; i < model.Nodes.Count; i++)
@@ -309,31 +359,35 @@ namespace BriefFiniteElementNet
 
             var n = model.Nodes.Count;
 
-            var crd = new CoordinateStorage<double>(n, n, 1);
+            var ecrd = new CoordinateStorage<double>(n, n, 1);//for storing existence of rigid elements
+            var crd = new CoordinateStorage<double>(n, n, 1);//for storing hinged connection of rigid elements
 
-            foreach (var elm in model.RigidElements)
+            for (int ii = 0; ii < model.RigidElements.Count; ii++)
             {
+                var elm = model.RigidElements[ii];
+
                 if (IsAppliableRigidElement(elm, loadCase))
                 {
                     for (var i = 0; i < elm.Nodes.Count; i++)
                     {
-                        crd.At(elm.Nodes[i].Index, elm.Nodes[i].Index, 1.0);
+                        ecrd.At(elm.Nodes[i].Index, elm.Nodes[i].Index, 1.0);
                     }
 
                     for (var i = 0; i < elm.Nodes.Count - 1; i++)
                     {
-                        crd.At(elm.Nodes[i].Index, elm.Nodes[i + 1].Index, 1.0);
-                        crd.At(elm.Nodes[i + 1].Index, elm.Nodes[i].Index, 1.0);
+                        ecrd.At(elm.Nodes[i].Index, elm.Nodes[i + 1].Index, 1.0);
+                        ecrd.At(elm.Nodes[i + 1].Index, elm.Nodes[i].Index, 1.0);
                     }
                 }
             }
 
-            var graph = Converter.ToCompressedColumnStorage(crd);
+            var graph = Converter.ToCompressedColumnStorage(ecrd);
 
             var buf = CalcUtil.EnumerateGraphParts(graph);
 
             return buf;
         }
+
 
         private static bool IsAppliableRigidElement(RigidElement elm, LoadCase loadCase)
         {

@@ -334,8 +334,8 @@ namespace BriefFiniteElementNet.Elements
 
             var l = (this.EndNode.Location - this.StartNode.Location).Length;
 
-            var baseArr = new double[144];
-            var buf = Matrix.FromRowColCoreArray(12, 12, baseArr);
+            //var baseArr = new double[144];
+            var buf = new Matrix(12,12);//.FromRowColCoreArray(12, 12, baseArr);
 
             buf[0, 0] = buf[6, 6] = E*a/l;
             buf[6, 0] = buf[0, 6] = -E*a/l;

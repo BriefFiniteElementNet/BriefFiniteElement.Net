@@ -50,12 +50,14 @@
     <Compile Include="Elements\CstElement.cs" />
     <Compile Include="Elements\DktElement.cs" />
     <Compile Include="Elements\SdofMass.cs" />
+    <Compile Include="Elements\Spring1D.cs" />
     <Compile Include="Elements\TriangleFlatShell.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="CalcUtil.cs" />
     <Compile Include="CustomGaussianIntegrator.cs" />
     <Compile Include="FlatShellStressTensor.cs" />
     <Compile Include="FluentElementPermuteManager.cs" />
+    <Compile Include="HingeLink.cs" />
     <Compile Include="IElement1DLoad.cs" />
     <Compile Include="IntArrayCompairer.cs" />
     <Compile Include="Integration\FunctionMatrixFunction.cs" />
@@ -81,6 +83,8 @@
     <Compile Include="RangeUtil.cs" />
     <Compile Include="RigidElement.cs" />
     <Compile Include="RigidElementCollection.cs" />
+    <Compile Include="RigidLink.cs" />
+    <Compile Include="RigidLinkCollection.cs" />
     <Compile Include="SectionGenerator.cs" />
     <Compile Include="FemNetSerializationBinder.cs" />
     <Compile Include="SimplePermuteManager.cs" />
@@ -177,7 +181,7 @@
     <Compile Include="StructureGenerator.cs" />
     <Compile Include="StructurePart.cs" />
     <Compile Include="StructurePartCollection.cs" />
-    <Compile Include="Elements\TetrahedralIso.cs" />
+    <Compile Include="Elements\Tetrahedral.cs" />
     <Compile Include="Trace.cs" />
     <Compile Include="TraceUtil.cs" />
     <Compile Include="Elements\TrussElement2Node.cs" />
@@ -192,17 +196,18 @@
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
     <None Include="Documents\SupportReactions.mkd" />
+    <None Include="Elements\Spring1D.md" />
+    <None Include="Elements\Tehrahedral.md" />
     <None Include="Elements\TriangleFlatShell.md" />
+    <None Include="HingeLink.md" />
     <None Include="Integration\GaussianIntegrator.md" />
+    <None Include="RigidElement.md" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CSparse\IO\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="checksum" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="TestFile.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

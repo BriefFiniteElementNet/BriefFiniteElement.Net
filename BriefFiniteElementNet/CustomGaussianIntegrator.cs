@@ -24,6 +24,7 @@ namespace BriefFiniteElementNet
     /// <remarks>
     /// baghie document poshte safe 14 thesisam!
     /// </remarks>
+    [Obsolete("use GaussianIntegrator instead")]
     public class CustomGaussianIntegrator
     {
         public Func<double, double, double, Matrix> G;//G parameter order: nu,gama,xi
