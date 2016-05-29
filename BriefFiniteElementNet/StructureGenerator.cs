@@ -12,33 +12,34 @@ namespace BriefFiniteElementNet
     public static class StructureGenerator
     {
 
-        public static void AddRandomiseLoading(Model mdl, params LoadCase[] cases)
+        public static void AddRandomiseLoading(Model mdl, bool addNodalLoads, bool addElementLoads,
+            params LoadCase[] cases)
         {
-            foreach (var nde in mdl.Nodes)
-                foreach (var cse in cases)
-                {
-                    nde.Loads.Add(new NodalLoad(RandomStuff.GetRandomForce(-1000, 1000), cse));
-                }
+            if (addNodalLoads)
+                foreach (var nde in mdl.Nodes)
+                    foreach (var cse in cases)
+                    {
+                        nde.Loads.Add(new NodalLoad(RandomStuff.GetRandomForce(-1000, 1000), cse));
+                    }
+
+            if (addElementLoads)
+                foreach (var elm in mdl.Elements)
+                    foreach (var cse in cases)
+                    {
+                        var uniformLoad =
+                            new UniformLoad1D(rnd.GetRandomNumber(-1000, 1000), LoadDirection.X,
+                                CoordinationSystem.Global,
+                                cse);
+
+                        var l = (elm.Nodes[0].Location - elm.Nodes[1].Location).Length;
+
+                        var concenstratedLoad = new ConcentratedLoad1D(rnd.GetRandomForce(-1000, 1000),
+                            rnd.GetRandomNumber(0, l), CoordinationSystem.Global, cse);
 
 
-            foreach (var elm in mdl.Elements)
-                foreach (var cse in cases)
-                {
-                    var uniformLoad =
-                        new UniformLoad1D(rnd.GetRandomNumber(-1000, 1000), LoadDirection.X, CoordinationSystem.Global,
-                            cse);
-
-                    var l = (elm.Nodes[0].Location - elm.Nodes[1].Location).Length;
-
-                    var concenstratedLoad = new ConcentratedLoad1D(rnd.GetRandomForce(-1000, 1000),
-                        rnd.GetRandomNumber(0, l), CoordinationSystem.Global, cse);
-
-
-                    elm.Loads.Add(uniformLoad);
-                    elm.Loads.Add(concenstratedLoad);
-                }
-
-
+                        elm.Loads.Add(uniformLoad);
+                        elm.Loads.Add(concenstratedLoad);
+                    }
 
 
         }

@@ -128,7 +128,7 @@ namespace BriefFiniteElementNet.SimpleUI
                 wnd.Context.ZSpans + 1);
 
             if (wnd.Context.RandomLoads)
-                StructureGenerator.AddRandomiseLoading(grd);
+                StructureGenerator.AddRandomiseLoading(grd, true, false);
 
             Context.Model = grd;
         }

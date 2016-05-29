@@ -279,6 +279,25 @@ namespace BriefFiniteElementNet.Controls
         #endregion
 
 
+        public static void VisualizeInNewWindow(Model model)
+        {
+            var wnd = new Window();
+
+            var ctrl = new ModelInternalForceVisualizer()
+            {
+                ModelToVisualize = model,
+                SamplingCount = 10,
+                TargetCombination = LoadCombination.DefaultLoadCombination,
+                CurrentInternalForceType = InternalForceType.My
+            };
+
+            wnd.Content = ctrl;
+
+            ctrl.UpdateUi();
+
+            wnd.ShowDialog();
+        }
+
         internal LoadCombination TargetCombination;
 
 
@@ -354,7 +373,7 @@ namespace BriefFiniteElementNet.Controls
                 switch (elm.ElementType)
                 {
                     case ElementType.Undefined:
-                        throw new Exception();
+                        //throw new Exception();
                         break;
                     case ElementType.FrameElement2Node:
                         AddFrameElement(elementsBuilder, elm as FrameElement2Node);
@@ -407,6 +426,7 @@ namespace BriefFiniteElementNet.Controls
             MainViewport.Children.Add(myModelVisual3D);
             MainViewport.Children.Add(new DefaultLights());
 
+            MainViewport.ZoomExtents();
         }
 
 

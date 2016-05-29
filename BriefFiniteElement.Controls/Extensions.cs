@@ -61,16 +61,7 @@ namespace BriefFiniteElementNet.Controls
 
         public static void ShowInternalForce(this Model model)
         {
-            var wnd = new Window();
-            var ctrl = new ModelInternalForceVisualizer();
-            ctrl.ModelToVisualize = model;
-            ctrl.TargetCombination = LoadCombination.DefaultLoadCombination;
-            ctrl.CurrentInternalForceType = InternalForceType.My;
-
-            wnd.Content = ctrl;
-            ctrl.UpdateUi();
-            wnd.ShowDialog();
-
+            ModelInternalForceVisualizer.VisualizeInNewWindow(model);
         }
 
 

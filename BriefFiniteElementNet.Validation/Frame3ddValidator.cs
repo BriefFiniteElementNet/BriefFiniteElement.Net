@@ -49,6 +49,17 @@ namespace BriefFiniteElementNet.Validation
             start.RedirectStandardError = true;
             start.UseShellExecute = false;
 
+
+            if (!System.IO.File.Exists(start.FileName))
+            {
+                Console.WriteLine(@"frame3dd.exe not found, please download it from 
+http://master.dl.sourceforge.net/project/frame3dd/frame3dd/0.20091203/Frame3DD_20091203_win32.zip
+and place frame3dd.exe beside this application.");
+                return;
+
+            }
+
+
             using (var process = Process.Start(start))
             {
                 using (StreamReader reader = process.StandardOutput)
@@ -63,9 +74,10 @@ namespace BriefFiniteElementNet.Validation
             }
 
             if (!string.IsNullOrEmpty(Frame3ddErrorMessage))
+            {
+                Console.WriteLine("Error message from Frame3dd.exe stderr: ");
                 Console.WriteLine(Frame3ddErrorMessage);
-
-            var f3Res = System.IO.File.ReadAllText(output);
+            }
 
             var nodeLoadCases = model.Nodes.SelectMany(i => i.Loads).Select(i => i.Case).Distinct().ToList();
             var elementLoadCases = model.Elements.SelectMany(i => i.Loads).Select(i => i.Case).Distinct().ToList();
@@ -88,15 +100,34 @@ namespace BriefFiniteElementNet.Validation
             var f3ds = ReadF3dDisplacementVector(output);
             var myds = ReadMyDisplacementVector(cmb);
 
-            var d = GetRelativeDifference(f3ds, myds);
-            var dm = GetRelativeDifference(f3ds, myds).Max();
+            var d = GetAbsDifference(f3ds, myds);
+            //var dm = GetRelativeDifference(f3ds, myds).Max();
+
+
+            Console.WriteLine("");
+            Console.WriteLine("========== Absolute error in result from BFE against results from FRAME3DD application:");
+
+            var minError = d.Min(i => Math.Abs(i));
+            var avgnError = d.Average(i => Math.Abs(i));
+            var maxError = d.Max(i => Math.Abs(i));
+
+
+            Console.WriteLine("");
+            Console.WriteLine("--ABSOLUTE ERRORS ");
+            Console.WriteLine("Min : {0} ({1:E})", minError, minError);
+            Console.WriteLine("Average : {0} ({1:E})", avgnError, avgnError);
+            Console.WriteLine("Max : {0} ({1:E})", maxError, maxError);
 
             var err =
                 Enumerable.Range(0, f3ds.Length).Select(i => d[i]*Math.Max(Math.Abs(f3ds[i]), Math.Abs(myds[i]))).Sum()
                 /Enumerable.Range(0, f3ds.Length).Select(i => Math.Max(Math.Abs(f3ds[i]), Math.Abs(myds[i]))).Sum();
+
+            Console.WriteLine("");
+            Console.WriteLine("--RELATIVE ERRORS ");
+            Console.WriteLine("Average (regarding weight of values) : {0:0.00}% ({1:E})", err*100, err);
         }
 
-        private static double[] GetRelativeDifference(double[] d1, double[] d2)
+        private static double[] GetAbsDifference(double[] d1, double[] d2)
         {
             if (d1.Length != d2.Length)
                 throw new Exception();
@@ -108,12 +139,7 @@ namespace BriefFiniteElementNet.Validation
                 var v1 = d1[i];
                 var v2 = d2[i];
 
-                
-                buf[i] = Math.Abs(d2[i] - d1[i])/Math.Min(Math.Abs(d1[i]), Math.Abs(d2[i]));
-
-                if (v1 == v2)
-                    buf[i] = 0;
-
+                buf[i] = Math.Abs(v2 - v1);
             }
 
             return buf;
