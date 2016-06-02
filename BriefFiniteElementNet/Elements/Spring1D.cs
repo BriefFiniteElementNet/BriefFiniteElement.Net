@@ -162,5 +162,11 @@ namespace BriefFiniteElementNet.Elements
         {
             throw new NotImplementedException();
         }
+
+        ///<inheritdoc/>
+        public override Matrix GetD(params double[] location)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
