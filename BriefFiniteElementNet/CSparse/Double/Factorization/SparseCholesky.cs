@@ -218,6 +218,8 @@ namespace BriefFiniteElementNet.CSparse.Double.Factorization
             return (beta2 > 0);
         }
 
+        public int Progress;
+
         /// <summary>
         /// Compute the Numeric Cholesky factorization, L = chol (A, [pinv parent cp]).
         /// </summary>
@@ -262,9 +264,11 @@ namespace BriefFiniteElementNet.CSparse.Double.Factorization
             {
                 if (100*k/n != percent)
                 {
-                    Console.WriteLine("{0}% solve", percent = (100*k)/n);
+                    Progress = percent = (100*k)/n;
+
+                    //Console.WriteLine("{0}% solve", percent);
                 }
-                
+
                 // Find nonzero pattern of L(k,:)
                 top = GraphHelper.EtreeReach(SymbolicColumnStorage.Create(C, false), k, parent, s, c);
                 x[k] = 0;                           // x (0:k) is now zero

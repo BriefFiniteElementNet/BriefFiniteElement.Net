@@ -87,54 +87,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
                         bnch.SolverType = solverType;
                         bnch.Dimension = nm;
                         bnch.DoTheBenchmark();
-
-
-
-                        var st = StructureGenerator.Generate3DGrid(nm, nm, nm);
-
-
-                        foreach (var nde in st.Nodes)
-                        {
-                            nde.Loads.Add(new NodalLoad(GetRandomForce(), case1));
-                            nde.Loads.Add(new NodalLoad(GetRandomForce(), case2));
-                        }
-
-                        var type = solverType;
-
-                        var conf = new SolverConfiguration()
-                        {
-                            SolverGenerator = i => CreateInternalSolver(type, i)
-                        };
-
-                        GC.Collect();
-
-                        Log("");
-                        Log("\tSolver type: {0}", GetEnumDescription(solverType));
-
-
-                        try
-                        {
-                            st.Solve(conf);
-
-                            sw.Restart();
-                            st.LastResult.AddAnalysisResultIfNotExists(case1);
-                            sw.Stop();
-
-                            Log("\t\tgeneral solve time: {0}", sw.Elapsed);
-
-                            sw.Restart();
-                            st.LastResult.AddAnalysisResultIfNotExists(case2);
-                            sw.Stop();
-
-                            Log("\t\textra solve time per LoadCase: {0}", sw.Elapsed);
-                        }
-                        catch (Exception ex)
-                        {
-                            Log("\t\tFailed, err = {0}", ex.Message);
-                        }
-
-                        sw.Stop();
-
+                        
                         GC.Collect();
                     }
                 }
@@ -144,15 +97,19 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
             Console.WriteLine();
             Console.WriteLine("----------------------------------------------------------------------------");
-            Console.WriteLine("Done, Write result to file?[type 'Y' for yes, anything else for no]");
+            //Console.WriteLine("Done, Write result to file?[type 'Y' for yes, anything else for no]");
+            Console.WriteLine("Done, press any key to exit...");
+
             var inf = Console.ReadKey();
 
+            /*
             if (inf.KeyChar == 'y' || inf.KeyChar == 'Y')
             {
                 var fileName = "BriefFemNet benchmark.txt";
                 System.IO.File.WriteAllText(fileName, sb.ToString());
                 System.Diagnostics.Process.Start(fileName);
             }
+            */
 
             Environment.Exit(0);
         }
