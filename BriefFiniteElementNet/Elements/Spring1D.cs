@@ -157,6 +157,10 @@ namespace BriefFiniteElementNet.Elements
             
         }
 
-      
+        ///<inheritdoc/>
+        public override Matrix ComputeB(params double[] location)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

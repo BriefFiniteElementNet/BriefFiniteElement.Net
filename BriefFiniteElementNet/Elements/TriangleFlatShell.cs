@@ -444,6 +444,12 @@ namespace BriefFiniteElementNet.Elements
 
             return new[] { p0, p1, p2 };
         }
+
+        ///<inheritdoc/>
+        public override Matrix ComputeB(params double[] location)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     /// <summary>

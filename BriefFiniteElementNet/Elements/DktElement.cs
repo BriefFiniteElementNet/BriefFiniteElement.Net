@@ -800,5 +800,11 @@ namespace BriefFiniteElementNet.Elements
             return new Force[3];
             throw new NotImplementedException();
         }
+
+        ///<inheritdoc/>
+        public override Matrix ComputeB(params double[] location)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

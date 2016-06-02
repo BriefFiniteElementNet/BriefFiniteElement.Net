@@ -176,5 +176,13 @@ namespace BriefFiniteElementNet.Elements
         /// <param name="load">The load.</param>
         /// <returns>Equivalent nodal loads in global coordinate system</returns>
         public abstract Force[] GetEquivalentNodalLoads(Load load);
+
+
+        /// <summary>
+        /// Computes the B matrix.
+        /// </summary>
+        /// <param name="location">The location, in local coordination system (local means xi-eta things..., between -1 to 1).</param>
+        /// <returns>The B matrix at specified <see cref="location"/></returns>
+        public abstract Matrix ComputeB(params double[] location);
     }
 }
