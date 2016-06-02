@@ -8,9 +8,6 @@ namespace BriefFiniteElementNet.Elements
     /// <summary>
     /// Represents a tetrahedron with isotropic material.
     /// </summary>
-    /// <remarks>
-    /// Not fully implemented yet!
-    /// </remarks>
     [Serializable]
     public class Tetrahedral : Element3D
     {
@@ -166,11 +163,53 @@ namespace BriefFiniteElementNet.Elements
         /// <inheritdoc />
         public override Matrix GetGlobalStifnessMatrix()
         {
+            int[] newOrder;
+
+            var E = GetConstitutive();
+            var b = GetB(out newOrder);
+            var V = Math.Abs(det)/6;
+
+
+            var buf = b.Transpose() * E * b;
+
+            buf.MultiplyByConstant(V);
+
+            var currentOrder = new Elo[12];
+
+            for (var i = 0; i < 4; i++)
+            {
+                currentOrder[3 * i + 0] = new Elo(newOrder[i], DoF.Dx);
+                currentOrder[3 * i + 1] = new Elo(newOrder[i], DoF.Dy);
+                currentOrder[3 * i + 2] = new Elo(newOrder[i], DoF.Dz);
+            }
+
+            var bufEx = FluentElementPermuteManager.FullyExpand(buf, currentOrder, 4);
+
+            return bufEx;
+        }
+
+
+        private Matrix GetConstitutive()
+        {
+            var miu = this.Nu;
+            var s = (1 - miu);
+            var E = new Matrix(6, 6);
+
+            E.FillMatrixRowise(1, miu / s, miu / s, 0, 0, 0, miu / s, 1, miu / s, 0, 0, 0, miu / s, miu / s, 1, 0, 0, 0, 0, 0, 0,
+                (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s));
+
+            E.MultiplyByConstant(this.E * (1 - miu) / ((1 + miu) * (1 - 2 * miu)));
+
+            return E;
+        }
+
+        private Matrix GetB(out int[] newOrder)
+        {
             //Code ported from D3_TETRAH.m from fem_toolbox
 
-            var newNodeOrder = new int[4];
+            var newNodeOrder = newOrder = new int[4];
 
-           
+
 
 
             {
@@ -252,36 +291,9 @@ namespace BriefFiniteElementNet.Elements
                 b1, a1, 0, b2, a2, 0, b3, a3, 0, b4, a4, 0);
 
 
-
             b.MultiplyByConstant(1 / (6 * V));
 
-            var miu = this.Nu;
-            var s = (1 - miu);
-            var E = new Matrix(6, 6);
-
-            E.FillMatrixRowise(1, miu / s, miu / s, 0, 0, 0, miu / s, 1, miu / s, 0, 0, 0, miu / s, miu / s, 1, 0, 0, 0, 0, 0, 0,
-                (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s));
-
-            E.MultiplyByConstant(this.E * (1 - miu) / ((1 + miu) * (1 - 2 * miu)));
-
-
-
-            var buf = b.Transpose() * E * b;
-
-            buf.MultiplyByConstant(V);
-
-            var currentOrder = new Elo[12];
-
-            for (var i = 0; i < 4; i++)
-            {
-                currentOrder[3 * i + 0] = new Elo(newNodeOrder[i], DoF.Dx);
-                currentOrder[3 * i + 1] = new Elo(newNodeOrder[i], DoF.Dy);
-                currentOrder[3 * i + 2] = new Elo(newNodeOrder[i], DoF.Dz);
-            }
-
-            var bufEx = FluentElementPermuteManager.FullyExpand(buf, currentOrder, 4);
-
-            return bufEx;
+            return b;
         }
 
         public Matrix GetGlobalStifnessMatrix_old()
@@ -402,22 +414,47 @@ namespace BriefFiniteElementNet.Elements
         /// <summary>
         /// Gets the stress tensor at specified location.
         /// </summary>
-        /// <param name="location">The location in global coordination system.</param>
-        /// <returns>The stress tensor at specified global coordination system location</returns>
-        public StressTensor3D GetStressAt(Point location)
+        /// <returns>The stress tensor in global coordination system</returns>
+        /// <remarks>Stress in tetrahedral is constant</remarks>
+        public StressTensor3D GetInternalForce(LoadCombination cmb)
         {
-            throw new NotImplementedException();
+            int[] newOrder;
+
+            var b = GetB(out newOrder);
+            var d = GetConstitutive();
+
+            var u = new Matrix(12);
+
+            var us = new Displacement[4];
+
+            us[0] = nodes[newOrder[0]].GetNodalDisplacement(cmb);
+            us[1] = nodes[newOrder[1]].GetNodalDisplacement(cmb);
+            us[2] = nodes[newOrder[2]].GetNodalDisplacement(cmb);
+            us[3] = nodes[newOrder[3]].GetNodalDisplacement(cmb);
+
+            for (int i = 0; i < 4; i++)
+            {
+                u[3 * i + 0, 0] = us[i].DX;
+                u[3 * i + 1, 0] = us[i].DY;
+                u[3 * i + 2, 0] = us[i].DZ;
+            }
+
+            var buf = d*b*u;
+
+            var tensor = new StressTensor3D();
+
+            tensor.S11 = buf[0, 0];
+            tensor.S22 = buf[1, 1];
+            tensor.S33 = buf[2, 2];
+
+            tensor.S32 = -(tensor.S23 = buf[3, 0]);
+            tensor.S31 = -(tensor.S13 = buf[4, 0]);
+            tensor.S21 = -(tensor.S12 = buf[5, 0]);
+            
+
+            return tensor;
         }
 
-        /// <summary>
-        /// Gets the strain tensor at specified location.
-        /// </summary>
-        /// <param name="location">The location in global coordination system.</param>
-        /// <returns>The stress tensor at specified global coordination system location</returns>
-        public StressTensor3D GetStrainAt(Point location)
-        {
-            throw new NotImplementedException();
-        }
 
         #region Deserialization Constructor
 

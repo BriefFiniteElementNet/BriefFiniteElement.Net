@@ -198,6 +198,7 @@
     <None Include="Documents\SupportReactions.mkd" />
     <None Include="Elements\Spring1D.md" />
     <None Include="Elements\Tehrahedral.md" />
+    <None Include="Elements\Tetrahedral.md" />
     <None Include="Elements\TriangleFlatShell.md" />
     <None Include="HingeLink.md" />
     <None Include="Integration\GaussianIntegrator.md" />
