@@ -1042,13 +1042,19 @@ namespace BriefFiniteElementNet
         }
 
         ///<inheritdoc/>
-        public override Matrix ComputeB(params double[] location)
+        public override Matrix ComputeBMatrix(params double[] location)
         {
             throw new NotImplementedException();
         }
 
         ///<inheritdoc/>
-        public override Matrix GetD(params double[] location)
+        public override Matrix ComputeDMatrixAt(params double[] location)
+        {
+            throw new NotImplementedException();
+        }
+
+        ///<inheritdoc/>
+        public override Matrix ComputeNMatrixAt(params double[] location)
         {
             throw new NotImplementedException();
         }

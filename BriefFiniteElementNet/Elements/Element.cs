@@ -183,7 +183,7 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         /// <param name="location">The location, in local coordination system (local means xi-eta things..., between -1 to 1).</param>
         /// <returns>The B matrix at specified <see cref="location"/></returns>
-        public abstract Matrix ComputeB(params double[] location);
+        public abstract Matrix ComputeBMatrix(params double[] location);
 
 
 
@@ -194,6 +194,15 @@ namespace BriefFiniteElementNet.Elements
         /// <returns>
         /// The constitutive matrix at specified <see cref="location" />
         /// </returns>
-        public abstract Matrix GetD(params double[] location);
+        public abstract Matrix ComputeDMatrixAt(params double[] location);
+
+        /// <summary>
+        /// Gets the N matrix (shape function) in local coordination system at specified <see cref="location" />.
+        /// </summary>
+        /// <param name="location">The location, in local coordination system (local means xi-eta things..., between -1 to 1).</param>
+        /// <returns>
+        /// The N matrix at specified <see cref="location" />
+        /// </returns>
+        public abstract Matrix ComputeNMatrixAt(params double[] location);
     }
 }
