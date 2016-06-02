@@ -449,6 +449,25 @@ namespace BriefFiniteElementNet.Elements
         ///<inheritdoc/>
         public override Force[] GetEquivalentNodalLoads(Load load)
         {
+            if (load is UniformBodyLoad3D)
+            {
+                //p.263 of Structural Analysis with the Finite Element Method Linear Statics, ISBN: 978-1-4020-8733-2
+                //formula (8.37c) : the total body force is distributed in equal parts between the four nodes, as expected!
+
+                this.UpdateGeoMatrix();
+
+                var v = Math.Abs(this.det) / 6;
+
+                var f = new Force();
+
+                f.Fx = v / 4 * ((UniformBodyLoad3D)load).Vx;
+                f.Fy = v / 4 * ((UniformBodyLoad3D)load).Vy;
+                f.Fz = v / 4 * ((UniformBodyLoad3D)load).Vz;
+
+                return new[] { f, f, f, f };
+            }
+           
+
             throw new NotImplementedException();
         }
     }

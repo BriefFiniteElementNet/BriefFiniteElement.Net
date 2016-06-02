@@ -60,71 +60,87 @@ namespace BriefFiniteElementNet.BenchmarkApplication
             var case1 = new LoadCase("c1", LoadType.Other);
             var case2 = new LoadCase("c2", LoadType.Other);
 
+            var benchs = new IBenchmarkCase[] {new Benchmark1(), };
 
-            foreach (var nm in nums)
+            foreach (var bnch in benchs)
             {
-                var paramerts = new string[]
+                foreach (var nm in nums)
                 {
-                    String.Format("grid size: {0}x{0}x{0}", nm),
-                    String.Format("{0} elements", 3*nm*nm*(nm - 1)),
-                    String.Format("{0} nodes", nm*nm*nm),
-                    String.Format("{0} free DoFs", 6*nm*nm*(nm - 1))
-                };
-
-                Log("Try # {0}", cnt++);
-                Log(string.Join(", ", paramerts));
-
-
-                foreach (BuiltInSolverType solverType in solvers)
-                {
-                    var st = StructureGenerator.Generate3DGrid(nm, nm, nm);
-
-
-                    foreach (var nde in st.Nodes)
+                    var paramerts = new string[]
                     {
-                        nde.Loads.Add(new NodalLoad(GetRandomForce(), case1));
-                        nde.Loads.Add(new NodalLoad(GetRandomForce(), case2));
-                    }
-
-                    var type = solverType;
-
-                    var conf = new SolverConfiguration()
-                    {
-                        SolverGenerator = i => CreateInternalSolver(type, i)
+                        String.Format("grid size: {0}x{0}x{0}", nm),
+                        String.Format("{0} elements", 3*nm*nm*(nm - 1)),
+                        String.Format("{0} nodes", nm*nm*nm),
+                        String.Format("{0} free DoFs", 6*nm*nm*(nm - 1))
                     };
 
-                    GC.Collect();
 
-                    Log("");
-                    Log("\tSolver type: {0}", GetEnumDescription(solverType));
+                    Log("Try # {0}", cnt++);
+                    Log(string.Join(", ", paramerts));
 
 
-                    try
+
+
+                    foreach (BuiltInSolverType solverType in solvers)
                     {
-                        st.Solve(conf);
+                        //Benchmark1.DoIt(nm, solverType);
+                        bnch.SolverType = solverType;
+                        bnch.Dimension = nm;
+                        bnch.DoTheBenchmark();
 
-                        sw.Restart();
-                        st.LastResult.AddAnalysisResultIfNotExists(case1);
+
+
+                        var st = StructureGenerator.Generate3DGrid(nm, nm, nm);
+
+
+                        foreach (var nde in st.Nodes)
+                        {
+                            nde.Loads.Add(new NodalLoad(GetRandomForce(), case1));
+                            nde.Loads.Add(new NodalLoad(GetRandomForce(), case2));
+                        }
+
+                        var type = solverType;
+
+                        var conf = new SolverConfiguration()
+                        {
+                            SolverGenerator = i => CreateInternalSolver(type, i)
+                        };
+
+                        GC.Collect();
+
+                        Log("");
+                        Log("\tSolver type: {0}", GetEnumDescription(solverType));
+
+
+                        try
+                        {
+                            st.Solve(conf);
+
+                            sw.Restart();
+                            st.LastResult.AddAnalysisResultIfNotExists(case1);
+                            sw.Stop();
+
+                            Log("\t\tgeneral solve time: {0}", sw.Elapsed);
+
+                            sw.Restart();
+                            st.LastResult.AddAnalysisResultIfNotExists(case2);
+                            sw.Stop();
+
+                            Log("\t\textra solve time per LoadCase: {0}", sw.Elapsed);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log("\t\tFailed, err = {0}", ex.Message);
+                        }
+
                         sw.Stop();
 
-                        Log("\t\tgeneral solve time: {0}", sw.Elapsed);
-
-                        sw.Restart();
-                        st.LastResult.AddAnalysisResultIfNotExists(case2);
-                        sw.Stop();
-
-                        Log("\t\textra solve time per LoadCase: {0}", sw.Elapsed);
+                        GC.Collect();
                     }
-                    catch (Exception ex)
-                    {
-                        Log("\t\tFailed, err = {0}", ex.Message);
-                    }
-
-                    sw.Stop();
-
-                    GC.Collect();
                 }
             }
+
+            
 
             Console.WriteLine();
             Console.WriteLine("----------------------------------------------------------------------------");

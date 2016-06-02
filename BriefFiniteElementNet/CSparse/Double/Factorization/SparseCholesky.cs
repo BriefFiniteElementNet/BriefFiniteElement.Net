@@ -26,6 +26,9 @@ namespace BriefFiniteElementNet.CSparse.Double.Factorization
         CompressedColumnStorage<double> L;
         int n;
 
+        int percent;
+
+
         /// <summary>
         /// Creates a sparse Cholesky factorization.
         /// </summary>
@@ -249,12 +252,19 @@ namespace BriefFiniteElementNet.CSparse.Double.Factorization
 
             //var lst = new List<int>();
 
+            var percent = 0;
+
             for (k = 0; k < n; k++)
             {
                 lp[k] = c[k] = colp[k];
             }
             for (k = 0; k < n; k++) // compute L(k,:) for L*L' = C
             {
+                if (100*k/n != percent)
+                {
+                    Console.WriteLine("{0}% solve", percent = (100*k)/n);
+                }
+                
                 // Find nonzero pattern of L(k,:)
                 top = GraphHelper.EtreeReach(SymbolicColumnStorage.Create(C, false), k, parent, s, c);
                 x[k] = 0;                           // x (0:k) is now zero
