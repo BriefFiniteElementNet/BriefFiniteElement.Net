@@ -179,9 +179,12 @@ namespace BriefFiniteElementNet.Elements
 
 
         /// <summary>
-        /// Computes the B matrix.
+        /// Computes the B matrix (strain-displacement matrix).
         /// </summary>
         /// <param name="location">The location, in local coordination system (local means xi-eta things..., between -1 to 1).</param>
+        /// <remarks>B matrix can be in iso parametric coordination system, local coordinate system (linear transform from global) or global coordination system.
+        /// This will not be used expect by element itself!
+        /// </remarks>
         /// <returns>The B matrix at specified <see cref="location"/></returns>
         public abstract Matrix ComputeBMatrix(params double[] location);
 

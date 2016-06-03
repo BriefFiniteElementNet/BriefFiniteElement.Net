@@ -200,6 +200,7 @@
     <None Include="Elements\Tehrahedral.md" />
     <None Include="Elements\Tetrahedral.md" />
     <None Include="Elements\TriangleFlatShell.md" />
+    <None Include="Elements\FrameElement2Node.md" />
     <None Include="HingeLink.md" />
     <None Include="Integration\GaussianIntegrator.md" />
     <None Include="RigidElement.md" />

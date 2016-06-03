@@ -1044,6 +1044,34 @@ namespace BriefFiniteElementNet
         ///<inheritdoc/>
         public override Matrix ComputeBMatrix(params double[] location)
         {
+            var l = (EndNode.Location - StartNode.Location).Length;
+
+
+            //location is xi varies from -1 to 1
+            var xi = location[0];
+
+            if (xi < -1 || xi > 1)
+                throw new ArgumentOutOfRangeException(nameof(location));
+
+            //beam 1
+            var b1 = new Matrix(1, 4);
+            b1.FillMatrixColWise(6 * xi, -(1 - 3 * xi) * l, -6 * xi, (1 + 3 * xi) * l);
+            b1.MultiplyByConstant(l);
+
+            //beam 2
+            var b2 = b1.Clone();
+
+            //truss
+            var b3 = new Matrix(1, 2);
+            b3.FillMatrixColWise(2,-1);
+            b3.MultiplyByConstant(l);
+
+
+            //torsion
+            var b4 = b3.Clone();
+
+
+            
             throw new NotImplementedException();
         }
 

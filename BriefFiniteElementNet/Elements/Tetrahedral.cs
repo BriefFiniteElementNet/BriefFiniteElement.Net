@@ -423,7 +423,7 @@ namespace BriefFiniteElementNet.Elements
             var b = GetB(out newOrder);
             var d = GetConstitutive();
 
-            var u = new Matrix(12);
+            var u = new Matrix(12,1);
 
             var us = new Displacement[4];
 
@@ -439,13 +439,16 @@ namespace BriefFiniteElementNet.Elements
                 u[3 * i + 2, 0] = us[i].DZ;
             }
 
-            var buf = d*b*u;
+            var strain = b * u;
+            ;
+
+            var buf = d*strain;
 
             var tensor = new StressTensor3D();
 
             tensor.S11 = buf[0, 0];
-            tensor.S22 = buf[1, 1];
-            tensor.S33 = buf[2, 2];
+            tensor.S22 = buf[1, 0];
+            tensor.S33 = buf[2, 0];
 
             tensor.S32 = -(tensor.S23 = buf[3, 0]);
             tensor.S31 = -(tensor.S13 = buf[4, 0]);
