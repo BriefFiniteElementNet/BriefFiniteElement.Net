@@ -11,9 +11,52 @@ namespace BriefFiniteElementNet.Elements
     [Serializable]
     public class Tetrahedral : Element3D
     {
+
+        #region mechanical props
+
         private double _e;
         private double _nu;
         private double _massDensity;
+
+
+        /// <summary>
+        /// Gets or sets the elastic modulus.
+        /// </summary>
+        /// <value>
+        /// The elastic modulus in Pa (N/M) units.
+        /// </value>
+        public double E
+        {
+            get { return _e; }
+            set { _e = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the Poisson ratio of material.
+        /// </summary>
+        /// <value>
+        /// The Poisson ratio in unknown units.
+        /// </value>
+        public double Nu
+        {
+            get { return _nu; }
+            set { _nu = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the mass density.
+        /// </summary>
+        /// <value>
+        /// The mass density of member in kg/m^3.
+        /// </value>
+        public double MassDensity
+        {
+            get { return _massDensity; }
+            set { _massDensity = value; }
+        }
+
+        #endregion
+
 
         /// <summary>
         /// the a, look at UpdateGeoMatrix()
@@ -115,41 +158,6 @@ namespace BriefFiniteElementNet.Elements
             hash = newHash;
         }
 
-        /// <summary>
-        /// Gets or sets the elastic modulus.
-        /// </summary>
-        /// <value>
-        /// The elastic modulus in Pa (N/M) units.
-        /// </value>
-        public double E
-        {
-            get { return _e; }
-            set { _e = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the Poisson ratio of material.
-        /// </summary>
-        /// <value>
-        /// The Poisson ratio in unknown units.
-        /// </value>
-        public double Nu
-        {
-            get { return _nu; }
-            set { _nu = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets the mass density.
-        /// </summary>
-        /// <value>
-        /// The mass density of member in kg/m^3.
-        /// </value>
-        public double MassDensity
-        {
-            get { return _massDensity; }
-            set { _massDensity = value; }
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tetrahedral"/> class.
@@ -164,6 +172,8 @@ namespace BriefFiniteElementNet.Elements
         public override Matrix GetGlobalStifnessMatrix()
         {
             int[] newOrder;
+
+            UpdateGeoMatrix();
 
             var E = GetConstitutive();
             var b = GetB(out newOrder);
@@ -526,6 +536,12 @@ namespace BriefFiniteElementNet.Elements
 
         ///<inheritdoc/>
         public override Matrix ComputeNMatrixAt(params double[] location)
+        {
+            throw new NotImplementedException();
+        }
+
+        ///<inheritdoc/>
+        public override Matrix ComputeJMatrixAt(params double[] location)
         {
             throw new NotImplementedException();
         }

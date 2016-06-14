@@ -5,11 +5,11 @@ using System.Text;
 
 namespace BriefFiniteElementNet.BenchmarkApplication
 {
-    public class Benchmark1:IBenchmarkCase
+    public class Benchmark2:IBenchmarkCase
     {
         public string GetBenchmarkInfo()
         {
-            return "3D Grid with frame element"; 
+            return "3D Grid with Tetrahedron Element"; 
         }
 
         public int Dimension { get; set; }
@@ -20,7 +20,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
 
-            var st = StructureGenerator.Generate3DFrameElementGrid(Dimension, Dimension, Dimension);
+            var st = StructureGenerator.Generate3DTet4Grid(Dimension, Dimension, Dimension);
 
 
             var case1 = new LoadCase("c1", LoadType.Other);

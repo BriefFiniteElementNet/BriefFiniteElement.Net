@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Benchmark2.cs" />
     <Compile Include="Benchmark1.cs" />
     <Compile Include="IBenchmarkCase.cs" />
     <Compile Include="MemoryMonitor.cs" />

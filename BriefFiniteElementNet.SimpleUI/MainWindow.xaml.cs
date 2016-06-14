@@ -124,7 +124,7 @@ namespace BriefFiniteElementNet.SimpleUI
             if (!res.HasValue || !res.Value)
                 return;
 
-            var grd = StructureGenerator.Generate3DGrid(wnd.Context.XSpans + 1, wnd.Context.YSpans + 1,
+            var grd = StructureGenerator.Generate3DFrameElementGrid(wnd.Context.XSpans + 1, wnd.Context.YSpans + 1,
                 wnd.Context.ZSpans + 1);
 
             if (wnd.Context.RandomLoads)

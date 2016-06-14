@@ -14,5 +14,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
 
         void DoTheBenchmark();
+
+        string GetBenchmarkInfo();
     }
 }

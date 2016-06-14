@@ -47,7 +47,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
             Log("###############################################################################");
             Log("");
-            Log("Benchmark Info:");
+            //Log("Benchmarks:");
 
             var solvers = Enum.GetValues(typeof (BuiltInSolverType));
 
@@ -60,18 +60,26 @@ namespace BriefFiniteElementNet.BenchmarkApplication
             var case1 = new LoadCase("c1", LoadType.Other);
             var case2 = new LoadCase("c2", LoadType.Other);
 
-            var benchs = new IBenchmarkCase[] {new Benchmark1(), };
+            var benchs = new IBenchmarkCase[] { new Benchmark1(), new Benchmark2() };
+
+            var cnt1 = 1;
 
             foreach (var bnch in benchs)
             {
+                Log("Benchmark #{0}: {1}", cnt1++, bnch.GetBenchmarkInfo());
+                //Log("\t{0}", bnch.GetBenchmarkInfo());
+                Log("");
+
                 foreach (var nm in nums)
                 {
+                    cnt = 0;
+
                     var paramerts = new string[]
                     {
                         String.Format("grid size: {0}x{0}x{0}", nm),
-                        String.Format("{0} elements", 3*nm*nm*(nm - 1)),
+                        String.Format("{0} elements", 5*nm*nm*(nm - 1)),
                         String.Format("{0} nodes", nm*nm*nm),
-                        String.Format("{0} free DoFs", 6*nm*nm*(nm - 1))
+                        String.Format("{0} free DoFs", 3*nm*nm*(nm - 1)/3)
                     };
 
 

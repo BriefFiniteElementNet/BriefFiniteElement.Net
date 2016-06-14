@@ -16,7 +16,6 @@ namespace BriefFiniteElementNet
     [Serializable]
     public class Matrix : ISerializable, IEnumerable<double>
     {
-
         public static Matrix Repeat(Matrix mtx, int ni, int nj)
         {
             var r = mtx.rowCount;
@@ -39,13 +38,13 @@ namespace BriefFiniteElementNet
             var r = mtx.rowCount;
             var c = mtx.columnCount;
 
-            var buf = new Matrix(r * n, c * n);
+            var buf = new Matrix(r*n, c*n);
 
             for (var i = 0; i < n; i++)
                 //for (var j = 0; j < n; j++)
-                    for (var ii = 0; ii < mtx.rowCount; ii++)
-                        for (var jj = 0; jj < mtx.columnCount; jj++)
-                            buf[i * r + ii, i * c + jj] = mtx[ii, jj];
+                for (var ii = 0; ii < mtx.rowCount; ii++)
+                    for (var jj = 0; jj < mtx.columnCount; jj++)
+                        buf[i*r + ii, i*c + jj] = mtx[ii, jj];
 
             return buf;
         }
@@ -127,7 +126,7 @@ namespace BriefFiniteElementNet
         /// <returns></returns>
         public static Matrix FromRowColCoreArray(int rows, int cols, double[] coreArr)
         {
-            return new Matrix() { columnCount = cols, rowCount = rows, coreArray = coreArr };
+            return new Matrix() {columnCount = cols, rowCount = rows, coreArray = coreArr};
         }
 
         public static Matrix RandomMatrix(int m, int n)
@@ -136,9 +135,9 @@ namespace BriefFiniteElementNet
 
             var rnd = new Random(0);
 
-            for (int i = 0; i < m * n; i++)
+            for (int i = 0; i < m*n; i++)
             {
-                buf.CoreArray[i] = rnd.NextDouble() * 100;
+                buf.CoreArray[i] = rnd.NextDouble()*100;
             }
 
 
@@ -160,7 +159,7 @@ namespace BriefFiniteElementNet
 
                 for (int t = 0; t < i; t++)
                 {
-                    lii -= l[i, t] * l[i, t];
+                    lii -= l[i, t]*l[i, t];
                 }
 
                 lii = System.Math.Sqrt(lii);
@@ -173,10 +172,10 @@ namespace BriefFiniteElementNet
 
                     for (int t = 0; t < i; t++)
                     {
-                        lji -= l[i, t] * l[j, t];
+                        lji -= l[i, t]*l[j, t];
                     }
 
-                    lji = lji / lii;
+                    lji = lji/lii;
 
                     l[j, i] = lji;
                 }
@@ -250,7 +249,7 @@ namespace BriefFiniteElementNet
             if (columnCount <= 0)
                 throw new ArgumentException("n");
 
-            this.CoreArray = new double[m * n];
+            this.CoreArray = new double[m*n];
         }
 
         /// <summary>
@@ -265,7 +264,7 @@ namespace BriefFiniteElementNet
             if (n <= 0)
                 throw new ArgumentException("n");
 
-            this.CoreArray = new double[n * n];
+            this.CoreArray = new double[n*n];
         }
 
         /// <summary>
@@ -281,11 +280,11 @@ namespace BriefFiniteElementNet
             this.rowCount = rows;
             this.columnCount = cols;
 
-            this.coreArray = new double[rows * cols];
+            this.coreArray = new double[rows*cols];
 
             for (int i = 0; i < rows; i++)
                 for (int j = 0; j < cols; j++)
-                    this.CoreArray[j * rows + i] = vals[i, j];
+                    this.CoreArray[j*rows + i] = vals[i, j];
         }
 
         /// <summary>
@@ -301,12 +300,12 @@ namespace BriefFiniteElementNet
             this.rowCount = rows;
             this.columnCount = cols;
 
-            this.coreArray = new double[rows * cols];
+            this.coreArray = new double[rows*cols];
 
             for (int i = 0; i < rows; i++)
                 for (int j = 0; j < cols; j++)
                     if (vals[i].Length > j)
-                        this.CoreArray[j * rows + i] = vals[i][j];
+                        this.CoreArray[j*rows + i] = vals[i][j];
         }
 
         /// <summary>
@@ -317,7 +316,7 @@ namespace BriefFiniteElementNet
         {
             this.rowCount = vals.Length;
             this.columnCount = 1;
-            this.CoreArray = (double[])vals.Clone();
+            this.CoreArray = (double[]) vals.Clone();
         }
 
         #endregion
@@ -337,17 +336,17 @@ namespace BriefFiniteElementNet
             get
             {
                 MatrixException.ThrowIf(row >= this.RowCount || column >= this.ColumnCount,
-                                        "Invalid column or row specified");
+                    "Invalid column or row specified");
 
-                return this.CoreArray[column * this.rowCount + row];
+                return this.CoreArray[column*this.rowCount + row];
             }
 
             set
             {
                 MatrixException.ThrowIf(row >= this.RowCount || column >= this.ColumnCount,
-                                       "Invalid column or row specified");
+                    "Invalid column or row specified");
 
-                this.CoreArray[column * this.rowCount + row] = value;
+                this.CoreArray[column*this.rowCount + row] = value;
             }
         }
 
@@ -362,9 +361,9 @@ namespace BriefFiniteElementNet
                 for (int j = 0; j < m2.columnCount; j++)
                     for (int k = 0; k < m1.columnCount; k++)
                     {
-                        res.CoreArray[j * res.rowCount + i] +=
-                            m1.CoreArray[k * m1.rowCount + i] *
-                            m2.CoreArray[j * m2.rowCount + k];
+                        res.CoreArray[j*res.rowCount + i] +=
+                            m1.CoreArray[k*m1.rowCount + i]*
+                            m2.CoreArray[j*m2.rowCount + k];
                     }
 
 
@@ -394,7 +393,7 @@ namespace BriefFiniteElementNet
 
                 for (var j = 0; j < c; j++)
                 {
-                    tmp += m[i, j] * vec[j];
+                    tmp += m[i, j]*vec[j];
                 }
 
                 buf[i] = tmp;
@@ -412,7 +411,7 @@ namespace BriefFiniteElementNet
 
             for (int j = 0; j < this.ColumnCount; j++)
             {
-                this.CoreArray[j * this.RowCount + i] = values[j];
+                this.CoreArray[j*this.RowCount + i] = values[j];
             }
         }
 
@@ -424,7 +423,7 @@ namespace BriefFiniteElementNet
 
             for (int i = 0; i < this.RowCount; i++)
             {
-                this.CoreArray[j * this.RowCount + i] = values[i];
+                this.CoreArray[j*this.RowCount + i] = values[i];
             }
         }
 
@@ -436,7 +435,7 @@ namespace BriefFiniteElementNet
         {
             var buf = new Matrix(this.RowCount, this.ColumnCount);
 
-            buf.CoreArray = (double[])this.CoreArray.Clone();
+            buf.CoreArray = (double[]) this.CoreArray.Clone();
             return buf;
         }
 
@@ -483,7 +482,7 @@ namespace BriefFiniteElementNet
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Matrix)obj);
+            return Equals((Matrix) obj);
         }
 
         #endregion
@@ -519,7 +518,7 @@ namespace BriefFiniteElementNet
         {
             for (int j = 1; j <= columnCount; j++)
                 for (int i = j + 1; i <= rowCount; i++)
-                    if (!MathUtil.Equals(this.CoreArray[j * this.RowCount + i], 0))
+                    if (!MathUtil.Equals(this.CoreArray[j*this.RowCount + i], 0))
                         return false;
 
             return true;
@@ -533,7 +532,7 @@ namespace BriefFiniteElementNet
         {
             for (int i = 1; i <= rowCount; i++)
                 for (int j = i + 1; j <= columnCount; j++)
-                    if (!MathUtil.Equals(this.CoreArray[j * this.RowCount + i], 0))
+                    if (!MathUtil.Equals(this.CoreArray[j*this.RowCount + i], 0))
                         return false;
 
             return true;
@@ -636,7 +635,7 @@ namespace BriefFiniteElementNet
 
             for (int j = 0; j < this.ColumnCount; j++)
             {
-                mtx.CoreArray[j] = this.CoreArray[j * this.RowCount + i];
+                mtx.CoreArray[j] = this.CoreArray[j*this.RowCount + i];
             }
 
             return mtx;
@@ -657,7 +656,7 @@ namespace BriefFiniteElementNet
 
             for (int i = 0; i < this.RowCount; i++)
             {
-                mtx.CoreArray[i] = this.CoreArray[j * this.RowCount + i];
+                mtx.CoreArray[i] = this.CoreArray[j*this.RowCount + i];
             }
 
             return mtx;
@@ -680,7 +679,7 @@ namespace BriefFiniteElementNet
 
             var sign = 1.0;
 
-            var epsi1on = 1e-10 * clone.CoreArray.Select(System.Math.Abs).Min();
+            var epsi1on = 1e-10*clone.CoreArray.Select(System.Math.Abs).Min();
 
             if (epsi1on == 0)
                 epsi1on = 1e-9;
@@ -707,14 +706,13 @@ namespace BriefFiniteElementNet
                 }
 
 
-
                 for (var j = i + 1; j < n; j++)
                 {
-                    var alfa = (clone.CoreArray[j * n + i] / clone.CoreArray[i * n + i]);
+                    var alfa = (clone.CoreArray[j*n + i]/clone.CoreArray[i*n + i]);
 
                     for (var k = i; k < n; k++)
                     {
-                        clone.CoreArray[j * n + k] -= alfa * clone.CoreArray[i * n + k];
+                        clone.CoreArray[j*n + k] -= alfa*clone.CoreArray[i*n + k];
                     }
                 }
             }
@@ -724,12 +722,12 @@ namespace BriefFiniteElementNet
             var arr = new double[n];
 
             for (var i = 0; i < n; i++)
-                arr[i] = clone.CoreArray[i * n + i];
+                arr[i] = clone.CoreArray[i*n + i];
 
             Array.Sort(arr);
 
             for (var i = 0; i < n; i++)
-                buf = buf * arr[n - i - 1];
+                buf = buf*arr[n - i - 1];
 
             return buf;
         }
@@ -748,7 +746,7 @@ namespace BriefFiniteElementNet
             var clone = this.Clone();
             var eye = Eye(n);
 
-            var epsi1on = 1e-10 * clone.CoreArray.Select(System.Math.Abs).Min();
+            var epsi1on = 1e-10*clone.CoreArray.Select(System.Math.Abs).Min();
 
             if (epsi1on == 0)
                 epsi1on = 1e-9;
@@ -781,12 +779,12 @@ namespace BriefFiniteElementNet
                         }
                     }
 
-                    var alfa = clone[i, j] / clone[j, j];
+                    var alfa = clone[i, j]/clone[j, j];
 
                     for (var k = 0; k < n; k++)
                     {
-                        clone[i, k] -= alfa * clone[j, k];
-                        eye[i, k] -= alfa * eye[j, k];
+                        clone[i, k] -= alfa*clone[j, k];
+                        eye[i, k] -= alfa*eye[j, k];
                     }
                 }
             }
@@ -817,12 +815,12 @@ namespace BriefFiniteElementNet
                         }
                     }
 
-                    var alfa = clone[i, j] / clone[j, j];
+                    var alfa = clone[i, j]/clone[j, j];
 
                     for (var k = n - 1; k >= 0; k--)
                     {
-                        clone[i, k] -= alfa * clone[j, k];
-                        eye[i, k] -= alfa * eye[j, k];
+                        clone[i, k] -= alfa*clone[j, k];
+                        eye[i, k] -= alfa*eye[j, k];
                     }
                 }
             }
@@ -831,7 +829,7 @@ namespace BriefFiniteElementNet
 
             for (var i = 0; i < n; i++)
             {
-                var alfa = 1 / clone[i, i];
+                var alfa = 1/clone[i, i];
 
                 for (var j = 0; j < n; j++)
                 {
@@ -856,7 +854,7 @@ namespace BriefFiniteElementNet
             var clone = this.Clone();
             var eye = Eye(n);
 
-            var epsi1on = 1e-10 * clone.CoreArray.Select(System.Math.Abs).Min();
+            var epsi1on = 1e-10*clone.CoreArray.Select(System.Math.Abs).Min();
 
             if (epsi1on == 0)
                 epsi1on = 1e-9;
@@ -872,12 +870,12 @@ namespace BriefFiniteElementNet
             {
                 for (var i = j + 1; i < n; i++)
                 {
-                    if (System.Math.Abs(clonea[j + j * n]) < epsi1on)
+                    if (System.Math.Abs(clonea[j + j*n]) < epsi1on)
                     {
                         var firstNonZero = -1;
 
                         for (var k = j + 1; k < n; k++)
-                            if (System.Math.Abs(clonea[k + j * n]) > epsi1on)
+                            if (System.Math.Abs(clonea[k + j*n]) > epsi1on)
                                 firstNonZero = k;
 
                         if (firstNonZero == -1)
@@ -892,12 +890,12 @@ namespace BriefFiniteElementNet
                         }
                     }
 
-                    var alfa = clonea[i + j * n] / clonea[j + j * n];
+                    var alfa = clonea[i + j*n]/clonea[j + j*n];
 
                     for (var k = 0; k < n; k++)
                     {
-                        clonea[i + k * n] -= alfa * clonea[j + k * n];
-                        eyea[i + k * n] -= alfa * eyea[j + k * n];
+                        clonea[i + k*n] -= alfa*clonea[j + k*n];
+                        eyea[i + k*n] -= alfa*eyea[j + k*n];
                     }
                 }
             }
@@ -908,12 +906,12 @@ namespace BriefFiniteElementNet
             {
                 for (var i = j - 1; i >= 0; i--)
                 {
-                    if (System.Math.Abs(clonea[j + j * n]) < epsi1on)
+                    if (System.Math.Abs(clonea[j + j*n]) < epsi1on)
                     {
                         var firstNonZero = -1;
 
                         for (var k = j - 1; k >= 0; k--)
-                            if (System.Math.Abs(clonea[k + j * n]) > epsi1on)
+                            if (System.Math.Abs(clonea[k + j*n]) > epsi1on)
                                 firstNonZero = k;
 
                         if (firstNonZero == -1)
@@ -928,12 +926,12 @@ namespace BriefFiniteElementNet
                         }
                     }
 
-                    var alfa = clonea[i + j * n] / clonea[j + j * n];
+                    var alfa = clonea[i + j*n]/clonea[j + j*n];
 
                     for (var k = n - 1; k >= 0; k--)
                     {
-                        clonea[i + k * n] -= alfa * clonea[j + k * n];
-                        eyea[i + k * n] -= alfa * eyea[j + k * n];
+                        clonea[i + k*n] -= alfa*clonea[j + k*n];
+                        eyea[i + k*n] -= alfa*eyea[j + k*n];
                     }
                 }
             }
@@ -942,12 +940,12 @@ namespace BriefFiniteElementNet
 
             for (var i = 0; i < n; i++)
             {
-                var alfa = 1 / clonea[i + i * n];
+                var alfa = 1/clonea[i + i*n];
 
                 for (var j = 0; j < n; j++)
                 {
-                    clonea[i + j * n] *= alfa;
-                    eyea[i + j * n] *= alfa;
+                    clonea[i + j*n] *= alfa;
+                    eyea[i + j*n] *= alfa;
                 }
             }
 
@@ -966,7 +964,7 @@ namespace BriefFiniteElementNet
 
             for (int i = 0; i < mtx.RowCount; i++)
                 for (int j = 0; j < mtx.ColumnCount; j++)
-                    buf[i, j] = mtx.CoreArray[j * mtx.RowCount + i];
+                    buf[i, j] = mtx.CoreArray[j*mtx.RowCount + i];
 
             return buf;
         }
@@ -997,7 +995,7 @@ namespace BriefFiniteElementNet
             var buf = new Matrix(n, n);
 
             for (int i = 0; i < n; i++)
-                buf.CoreArray[i * n + i] = 1.0;
+                buf.CoreArray[i*n + i] = 1.0;
 
             return buf;
         }
@@ -1033,7 +1031,7 @@ namespace BriefFiniteElementNet
         {
             var buf = new Matrix(m, n);
 
-            for (int i = 0; i < m * n; i++)
+            for (int i = 0; i < m*n; i++)
                 buf.CoreArray[i] = 1.0;
 
             return buf;
@@ -1048,7 +1046,7 @@ namespace BriefFiniteElementNet
         {
             var buf = new Matrix(n);
 
-            for (int i = 0; i < n * n; i++)
+            for (int i = 0; i < n*n; i++)
                 buf.CoreArray[i] = 1.0;
 
             return buf;
@@ -1065,7 +1063,7 @@ namespace BriefFiniteElementNet
 
             for (int i = 0; i < dim; i++)
             {
-                buf *= this.CoreArray[i * this.RowCount + i];
+                buf *= this.CoreArray[i*this.RowCount + i];
             }
 
             return buf;
@@ -1098,7 +1096,7 @@ namespace BriefFiniteElementNet
             var M = new Matrix(dim, dim);
 
             for (int i = 0; i < dim; i++)
-                M.CoreArray[i * dim + i] = diag_vector.CoreArray[i];
+                M.CoreArray[i*dim + i] = diag_vector.CoreArray[i];
 
             return M;
         }
@@ -1130,16 +1128,16 @@ namespace BriefFiniteElementNet
 
             return res.coreArray;
         }
-        
+
         public static Matrix operator *(
             double coeff, Matrix mat)
         {
-            var newMat = new double[mat.RowCount * mat.ColumnCount];
+            var newMat = new double[mat.RowCount*mat.ColumnCount];
 
 
             for (int i = 0; i < newMat.Length; i++)
             {
-                newMat[i] = coeff * mat.CoreArray[i];
+                newMat[i] = coeff*mat.CoreArray[i];
             }
 
             var buf = new Matrix(mat.RowCount, mat.ColumnCount);
@@ -1214,7 +1212,7 @@ namespace BriefFiniteElementNet
 
             var mtx = this;
 
-            var epsi1on = mtx.CoreArray.Select(i => System.Math.Abs(i)).Min() * 1e-9;
+            var epsi1on = mtx.CoreArray.Select(i => System.Math.Abs(i)).Min()*1e-9;
 
             if (epsi1on == 0)
                 epsi1on = 1e-9;
@@ -1248,7 +1246,7 @@ namespace BriefFiniteElementNet
         {
             var rc = rowCount - 1;
 
-            var arr2 = new double[(rowCount - 1) * columnCount];
+            var arr2 = new double[(rowCount - 1)*columnCount];
 
             var ext = 0;
 
@@ -1261,22 +1259,19 @@ namespace BriefFiniteElementNet
                 else
                     for (var j = 0; j < columnCount; j++)
                     {
-                        arr2[i + ext + j * rc] = coreArray[i + j * rowCount];
+                        arr2[i + ext + j*rc] = coreArray[i + j*rowCount];
                     }
-
-
             }
 
             this.coreArray = arr2;
             this.rowCount--;
-
         }
 
         public void RemoveColumn(int n)
         {
-            var l = this.rowCount * (this.columnCount - 1);
+            var l = this.rowCount*(this.columnCount - 1);
 
-            for (var k = n * this.rowCount; k < l; k++)
+            for (var k = n*this.rowCount; k < l; k++)
             {
                 this.coreArray[k] = this.coreArray[k + rowCount];
             }
@@ -1315,13 +1310,12 @@ namespace BriefFiniteElementNet
             SerializationInfo info,
             StreamingContext context)
         {
-            this.rowCount = (int)info.GetValue("rowCount", typeof(int));
-            this.columnCount = (int)info.GetValue("columnCount", typeof(int));
-            this.coreArray = (double[])info.GetValue("coreArray", typeof(double[]));
+            this.rowCount = (int) info.GetValue("rowCount", typeof (int));
+            this.columnCount = (int) info.GetValue("columnCount", typeof (int));
+            this.coreArray = (double[]) info.GetValue("coreArray", typeof (double[]));
         }
 
         #endregion
-
 
         /// <summary>
         /// Clears this instance. Turn all members to 0...
@@ -1353,7 +1347,7 @@ namespace BriefFiniteElementNet
         /// </returns>
         public IEnumerator<double> GetEnumerator()
         {
-            return (IEnumerator<double>)new List<double>(coreArray).GetEnumerator();
+            return (IEnumerator<double>) new List<double>(coreArray).GetEnumerator();
         }
 
 
@@ -1387,7 +1381,7 @@ namespace BriefFiniteElementNet
             if (members.Length != this.coreArray.Length)
                 throw new Exception();
 
-            Array.Copy(members,this.coreArray,this.coreArray.Length);
+            Array.Copy(members, this.coreArray, this.coreArray.Length);
 
             //more simple:
             /*
@@ -1400,7 +1394,67 @@ namespace BriefFiniteElementNet
             }
             */
         }
+
+        #region nonzero Pattern
+
+        /// <summary>
+        /// The nonzero pattern for each column
+        /// </summary>
+        internal List<int>[] ColumnNonzeros;
+
+        /// <summary>
+        /// The nonzero pattern for each row
+        /// </summary>
+        internal List<int>[] RowNonzeros;
+
+
+        public void UpdateNonzeroPattern()
+        {
+            #region row nonzeros
+
+            if (RowNonzeros == null)
+                RowNonzeros = new List<int>[rowCount];
+
+            for (int i = 0; i < rowCount; i++)
+            {
+                if (RowNonzeros[i] == null)
+                    RowNonzeros[i] = new List<int>();
+                else
+                    RowNonzeros[i].Clear();
+
+
+                for (int j = 0; j < columnCount; j++)
+                {
+                    if (!this[i, j].Equals(0.0))
+                        RowNonzeros[i].Add(j);
+                }
+            }
+
+            #endregion
+
+            #region col nonzeros
+
+            if (ColumnNonzeros == null)
+                ColumnNonzeros = new List<int>[columnCount];
+
+            for (int j = 0; j < columnCount; j++)
+            {
+                if (ColumnNonzeros[j] == null)
+                    ColumnNonzeros[j] = new List<int>();
+                else
+                    ColumnNonzeros[j].Clear();
+
+
+                for (int i = 0; i < rowCount; i++)
+                {
+                    if (!this[i, j].Equals(0.0))
+                        ColumnNonzeros[j].Add(i);
+                }
+            }
+
+            #endregion
+        }
+
+        #endregion
     }
-
-
 }

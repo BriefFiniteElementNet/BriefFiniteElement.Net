@@ -116,6 +116,7 @@
     <Compile Include="Solver\SSOR.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SparseMatrixMultiplication.cs" />
     <Compile Include="StaticLinearAnalysisResult.cs" />
     <Compile Include="BriefFiniteElementNetException.cs" />
     <Compile Include="ConcentratedLoad1D.cs" />
@@ -196,6 +197,7 @@
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
     <None Include="Documents\SupportReactions.mkd" />
+    <None Include="Elements\SdofMass.md" />
     <None Include="Elements\Spring1D.md" />
     <None Include="Elements\Tehrahedral.md" />
     <None Include="Elements\Tetrahedral.md" />

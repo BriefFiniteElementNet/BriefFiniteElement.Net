@@ -174,5 +174,11 @@ namespace BriefFiniteElementNet.Elements
         {
             throw new NotImplementedException();
         }
+
+        ///<inheritdoc/>
+        public override Matrix ComputeJMatrixAt(params double[] location)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

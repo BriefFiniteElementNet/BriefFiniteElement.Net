@@ -184,6 +184,7 @@ namespace BriefFiniteElementNet.Elements
         /// <param name="location">The location, in local coordination system (local means xi-eta things..., between -1 to 1).</param>
         /// <remarks>B matrix can be in iso parametric coordination system, local coordinate system (linear transform from global) or global coordination system.
         /// This will not be used expect by element itself!
+        /// For example B is ∂N / ∂x and is NOT ∂N / ∂ξ
         /// </remarks>
         /// <returns>The B matrix at specified <see cref="location"/></returns>
         public abstract Matrix ComputeBMatrix(params double[] location);
@@ -207,5 +208,20 @@ namespace BriefFiniteElementNet.Elements
         /// The N matrix at specified <see cref="location" />
         /// </returns>
         public abstract Matrix ComputeNMatrixAt(params double[] location);
+
+
+        /// <summary>
+        /// Computes the J matrix at specified <see cref="location"/>.
+        /// </summary>
+        /// <remarks>
+        /// for 1D J is 1x1 matrix:
+        /// J =  ∂x / ∂ξ
+        /// 
+        /// for 2D:
+        /// ...
+        /// </remarks>
+        /// <param name="location">The location.</param>
+        /// <returns>the Jacobian matrix</returns>
+        public abstract Matrix ComputeJMatrixAt(params double[] location);
     }
 }

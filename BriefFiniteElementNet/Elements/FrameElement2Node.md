@@ -18,6 +18,7 @@ kt = int(Bᵀ*D*B,x,0,l)
 
 # Shape Functions
 
+
 ## Beam
 in iso coord system, with xi from -1 to 1:
 
@@ -27,9 +28,42 @@ M1(xi) = L/8 (1-xi)^2 (xi+1) [slope(-1) = 1, slope(1) = val(1) = val(-1) = 0]
 N2(xi) = 1/4 (1+xi)^2 (2-xi) [val(1) = 1, slope(-1) = slope(1) = val(-1) = 0]
 M2(xi) = L/8 (1+xi)^2 (xi-1) [slope(1) = 1, slope(-1) = val(1) = val(-1) = 0]
 
-B = 1 / l^2 * [6*xi, -(1-3*xi)*l, -6*xi, (1+3*xi)*l] (eq. 14.8 ref[2] p. 245 (258 of PDF))
+N = [N1 M1 N2 M2]
 
+xi = (2*x)/L - 1 -> ∂xi/∂x = 2/L -> J = [L/2]
+
+B = ∂²N/∂x² = ∂²N/∂xi² * ∂xi²/∂x² = ∂²N/∂xi² * (∂xi/∂x)² =  ∂²N/∂xi² * (2/L)²
+
+J = ∂x/∂xi 
+
+K = int(Bᵀ * D * B * |J|);
+
+
+## Truss
+
+N = [1+xi 1-xi]/2
+
+xi = (2*x)/L - 1 -> ∂xi/∂x = 2/L -> J = [L/2]
+
+B = ∂N/∂x = ∂N/∂xi * ∂xi/∂x =  ∂N/∂xi * (2/L)
+
+J = ∂x/∂xi 
+
+K = int(Bᵀ * D * B * |J|);
+
+Calculations are inside BehindTheScene folder in root folder
+
+# Local and Global coordinate system
+there is a local and a global system which are linearly transformable.
+transformation formulas are taken from ref [3], p.107 (p.107 of PDF).
+
+lambda = [CXx CYx CZx ;CXy CYy CZy ;CXz CYz CZz]
+
+T = [Lambda 0 0; 0 Lambda 0;0 0 Lambda]
+
+Kg= T' * Kl * T
 
 #refs
 ref[1]: "Numerical Modelling of Building Response to Tunnelling" by John Anthony Pickhaver, A Thesis submitted for the degree of Doctor of Philosophy at the University of Oxford.
 ref[2]: "Finite Element Analysis" by S.S.BHAVIKATTI, A NEW AGE INTERNATIONAL PUBLISHERS
+ref[3]: "MATLAB Codes for Finite Element Analysis" A.J.M. Ferreira, Springer

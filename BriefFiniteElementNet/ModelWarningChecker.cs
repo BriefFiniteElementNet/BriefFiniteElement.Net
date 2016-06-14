@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using BriefFiniteElementNet.CSparse.Double;
+using BriefFiniteElementNet.Elements;
 
 namespace BriefFiniteElementNet
 {
@@ -54,6 +55,37 @@ namespace BriefFiniteElementNet
 
                     //10100
                     if (elm.G==0 || elm.E==0)
+                    {
+                        var rec = TraceRecords.GetRecord(10100, elementIdentifier);
+                        model.Trace.Write(rec);
+                    }
+                }
+
+
+                if (model.Elements[i] is TrussElement2Node)
+                {
+                    var elm = model.Elements[i] as TrussElement2Node;
+                    if (elm.Label != null)
+                        elementIdentifier = elm.Label;
+
+                    //10000
+                    if (elm.Geometry != null && elm.UseOverridedProperties)
+                    {
+                        var rec = TraceRecords.GetRecord(10000, elementIdentifier);
+                        model.Trace.Write(rec);
+                    }
+
+
+                    //10010
+                    if (elm.Geometry == null && (elm.A == 0 ))
+                    {
+                        var rec = TraceRecords.GetRecord(10010, elementIdentifier);
+                        model.Trace.Write(rec);
+                    }
+
+
+                    //10100
+                    if (elm.E == 0)
                     {
                         var rec = TraceRecords.GetRecord(10100, elementIdentifier);
                         model.Trace.Write(rec);

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using BriefFiniteElementNet.Elements;
 using rnd=BriefFiniteElementNet.RandomStuff;
 
 
@@ -77,7 +78,7 @@ namespace BriefFiniteElementNet
         }
 
 
-        public static Model Generate3DGrid(int m, int n, int l)
+        public static Model Generate3DFrameElementGrid(int m, int n, int l)
         {
             var buf = new Model();
 
@@ -162,6 +163,93 @@ namespace BriefFiniteElementNet
 
 
             for (int i = 0; i < n*m; i++)
+            {
+                buf.Nodes[i].Constraints = Constraint.Fixed;
+            }
+
+
+            return buf;
+        }
+
+        public static Model Generate3DTet4Grid(int m, int n, int l)
+        {
+            var buf = new Model();
+
+            var dx = 1.0;
+            var dy = 1.0;
+            var dz = 1.0;
+
+            var nodes = new Node[m, n, l];
+
+            for (int k = 0; k < l; k++)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < m; j++)
+                    {
+
+                        var pos = new Point(i * dx, j * dy, k * dz);
+                        var nde = new Node() { Location = pos };
+                        buf.Nodes.Add(nde);
+
+                        nde.Constraints = Constraint.RotationFixed;
+
+                        nodes[j, i, k] = nde;
+                    }
+                }
+            }
+
+
+            var elm=new Func<Node, Node, Node, Node,Tetrahedral>((n1, n2, n3, n4) =>
+            {
+                var buff = new Tetrahedral();
+
+                buff.Nodes[0] = n1;
+                buff.Nodes[1] = n2;
+                buff.Nodes[2] = n3;
+                buff.Nodes[3] = n4;
+
+                buff.E = 210e9;
+                buff.Nu = 0.33;
+                
+                return buff;
+            });
+
+            var elms = new List<Element>();
+
+            for (int i = 0; i < m - 1; i++)
+            {
+                for (int j = 0; j < n-1; j++)
+                {
+                    for (int k = 0; k < l - 1; k++)
+                    {
+                        var ns = new Node[] {
+                            nodes[i, j, k],
+                            nodes[i+1, j, k],
+                            nodes[i+1, j+1, k],
+                            nodes[i, j+1, k],
+
+                            nodes[i, j, k+1],
+                            nodes[i+1, j, k+1],
+                            nodes[i+1, j+1, k+1],
+                            nodes[i, j+1, k+1],
+                        };
+
+
+                        elms.Add(elm(ns[0], ns[1], ns[3], ns[4]));
+                        elms.Add(elm(ns[2], ns[1], ns[3], ns[6]));
+                        elms.Add(elm(ns[1], ns[3], ns[4], ns[6]));
+
+                        elms.Add(elm(ns[4], ns[5], ns[6], ns[1]));
+                        elms.Add(elm(ns[4], ns[6], ns[7], ns[3]));
+
+                    }
+                }
+            }
+            
+            buf.Elements.Add(elms.ToArray());
+
+            for (int i = 0; i < n * m; i++)
             {
                 buf.Nodes[i].Constraints = Constraint.Fixed;
             }
