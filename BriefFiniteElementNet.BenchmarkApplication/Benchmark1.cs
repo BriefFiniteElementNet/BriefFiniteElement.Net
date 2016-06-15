@@ -16,11 +16,19 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
         public BuiltInSolverType SolverType { get; set; }
 
+        public TextLogger Logger { get; set; }
+        public Model GetCaseModel()
+        {
+            var st = StructureGenerator.Generate3DFrameElementGrid(Dimension, Dimension, Dimension);
+            
+            return st;
+        }
+
         public void DoTheBenchmark()
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
 
-            var st = StructureGenerator.Generate3DFrameElementGrid(Dimension, Dimension, Dimension);
+            var st = GetCaseModel();
 
 
             var case1 = new LoadCase("c1", LoadType.Other);
@@ -42,8 +50,8 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
             GC.Collect();
 
-            Util.Log("");
-            Util.Log("\tSolver type: {0}", Util.GetEnumDescription(SolverType));
+            Logger.Log("");
+            Logger.Log("\tSolver type: {0}", Util.GetEnumDescription(SolverType));
 
 
             try
@@ -54,17 +62,17 @@ namespace BriefFiniteElementNet.BenchmarkApplication
                 st.LastResult.AddAnalysisResultIfNotExists(case1);
                 sw.Stop();
 
-                Util.Log("\t\tgeneral solve time: {0}", sw.Elapsed);
+                Logger.Log("\t\tgeneral solve time: {0}", sw.Elapsed);
 
                 sw.Restart();
                 st.LastResult.AddAnalysisResultIfNotExists(case2);
                 sw.Stop();
 
-                Util.Log("\t\textra solve time per LoadCase: {0}", sw.Elapsed);
+                Logger.Log("\t\textra solve time per LoadCase: {0}", sw.Elapsed);
             }
             catch (Exception ex)
             {
-                Util.Log("\t\tFailed, err = {0}", ex.Message);
+                Logger.Log("\t\tFailed, err = {0}", ex.Message);
             }
 
             sw.Stop();

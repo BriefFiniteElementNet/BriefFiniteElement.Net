@@ -49,6 +49,7 @@
     <Compile Include="MemoryMonitor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TextLogger.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>

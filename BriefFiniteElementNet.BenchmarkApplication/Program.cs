@@ -18,14 +18,15 @@ namespace BriefFiniteElementNet.BenchmarkApplication
         {
             //Note: Before executing this benchmark set the Configuration to Release and use 'DEBUG>Start Without Debugging' or 'Ctrl+F5' to get the highest possible performance
 
+            var logger = new TextLogger();
 
-            Log("###############################################################################");
-            Log(
+
+
+            logger.Log("###############################################################################");
+            logger.Log(
                 "**Performance benchmark for BriefFiniteElement.NET library \navailable via http://brieffiniteelmentnet.codeplex.com");
-            Log("Benchmark 1: Uniform 3D Grid");
-
-            Log("-------------------------------------------------------------------------------");
-            Log("Environment Info:");
+            logger.Log("-------------------------------------------------------------------------------");
+            logger.Log("Environment Info:");
 
             bool isDebug;
 #if DEBUG
@@ -34,19 +35,19 @@ namespace BriefFiniteElementNet.BenchmarkApplication
             isDebug = false;
 #endif
 
-            Log("\tOS: {0}", Environment.OSVersion);
+            logger.Log("\tOS: {0}", Environment.OSVersion);
             //Log("\tIs OS 64bit: {0}", Environment.Is64BitOperatingSystem);
-            Log("\tDebugger is Attached: {0}", Debugger.IsAttached);
-            Log("\tMode: {0}", isDebug ? "Debug" : "Release");
-            Log("-------------------------------------------------------------------------------");
-            Log("System Info:");
+            logger.Log("\tDebugger is Attached: {0}", Debugger.IsAttached);
+            logger.Log("\tMode: {0}", isDebug ? "Debug" : "Release");
+            logger.Log("-------------------------------------------------------------------------------");
+            logger.Log("System Info:");
             var sysInfo = GetSystemInfo();
-            Log("\tCPU Model: {0}", sysInfo[0]);
-            Log("\tCPU Clock Speed: {0}", sysInfo[1]);
-            Log("\tTotal RAM: {0:0.00} GB", double.Parse(sysInfo[2])/(1024.0*1024.0));
+            logger.Log("\tCPU Model: {0}", sysInfo[0]);
+            logger.Log("\tCPU clock: {0} MHz", sysInfo[1]);
+            logger.Log("\tTotal RAM: {0:0.00} GB", double.Parse(sysInfo[2])/(1024.0*1024.0));
 
-            Log("###############################################################################");
-            Log("");
+            logger.Log("###############################################################################");
+            logger.Log("");
             //Log("Benchmarks:");
 
             var solvers = Enum.GetValues(typeof (BuiltInSolverType));
@@ -60,31 +61,46 @@ namespace BriefFiniteElementNet.BenchmarkApplication
             var case1 = new LoadCase("c1", LoadType.Other);
             var case2 = new LoadCase("c2", LoadType.Other);
 
-            var benchs = new IBenchmarkCase[] { new Benchmark1(), new Benchmark2() };
+            var benchs = new IBenchmarkCase[] {new Benchmark1() {Logger = logger}, new Benchmark2() {Logger = logger}};
+
+            //var bnchTypes = new Type[] {typeof(Benchmark1), typeof(Benchmark2)};// IBenchmarkCase[] { new Benchmark1() { Logger = logger }, new Benchmark2() { Logger = logger } };
+
 
             var cnt1 = 1;
 
+            //foreach (var bnchTp in bnchTypes)
             foreach (var bnch in benchs)
             {
-                Log("Benchmark #{0}: {1}", cnt1++, bnch.GetBenchmarkInfo());
-                //Log("\t{0}", bnch.GetBenchmarkInfo());
-                Log("");
+
+                //var bnch = (IBenchmarkCase)Activator.CreateInstance(bnchTp);
+                bnch.Logger = logger;
+
+                logger.Log("");
+                logger.Log("=========");
+                logger.Log("Benchmark #{0}: {1}", cnt1++, bnch.GetBenchmarkInfo());
+                
+                logger.Log("");
+
+                cnt = 0;
 
                 foreach (var nm in nums)
                 {
-                    cnt = 0;
+                    bnch.Dimension = nm;
+
+                    var model = bnch.GetCaseModel();
+
 
                     var paramerts = new string[]
                     {
-                        String.Format("grid size: {0}x{0}x{0}", nm),
-                        String.Format("{0} elements", 5*nm*nm*(nm - 1)),
-                        String.Format("{0} nodes", nm*nm*nm),
-                        String.Format("{0} free DoFs", 3*nm*nm*(nm - 1)/3)
+                        String.Format("Benchamrk Dimension: {0}", nm),
+                        String.Format("{0} elements", model.Elements.Count),
+                        String.Format("{0} nodes", model.Nodes.Count),
+                        String.Format("{0} free DoFs", Util.GetFreeDofsCount(model))
                     };
 
 
-                    Log("Try # {0}", cnt++);
-                    Log(string.Join(", ", paramerts));
+                    logger.Log("Try # {0}", cnt++);
+                    logger.Log(string.Join(", ", paramerts));
 
 
 
@@ -93,7 +109,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
                     {
                         //Benchmark1.DoIt(nm, solverType);
                         bnch.SolverType = solverType;
-                        bnch.Dimension = nm;
+                        
                         bnch.DoTheBenchmark();
                         
                         GC.Collect();
@@ -105,19 +121,20 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
             Console.WriteLine();
             Console.WriteLine("----------------------------------------------------------------------------");
-            //Console.WriteLine("Done, Write result to file?[type 'Y' for yes, anything else for no]");
-            Console.WriteLine("Done, press any key to exit...");
+            Console.WriteLine("Done, Write result to file? [y/n]");
 
             var inf = Console.ReadKey();
 
-            /*
             if (inf.KeyChar == 'y' || inf.KeyChar == 'Y')
             {
-                var fileName = "BriefFemNet benchmark.txt";
-                System.IO.File.WriteAllText(fileName, sb.ToString());
+                var fileName = "BFEbenchmark.txt";
+                System.IO.File.WriteAllText(fileName, logger.GetAllLog());
                 System.Diagnostics.Process.Start(fileName);
             }
-            */
+            
+
+            Console.WriteLine("Done, press any key to exit...");
+
 
             Environment.Exit(0);
         }
@@ -202,16 +219,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
             return buf;
         }
 
-        private static void Log(string format, params object[] parameters)
-        {
-            var str = string.Format(format, parameters);
-
-            Console.WriteLine(str);
-            sb.AppendLine(str);
-        }
-
-        private static StringBuilder sb = new StringBuilder();
-
+      
 
         private static Random rnd = new Random();
 

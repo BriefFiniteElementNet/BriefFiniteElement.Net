@@ -16,5 +16,10 @@ namespace BriefFiniteElementNet.BenchmarkApplication
         void DoTheBenchmark();
 
         string GetBenchmarkInfo();
+
+        TextLogger Logger { get; set; }
+
+        Model GetCaseModel();
+
     }
 }

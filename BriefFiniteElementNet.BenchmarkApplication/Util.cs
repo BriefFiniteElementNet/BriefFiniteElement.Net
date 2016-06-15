@@ -40,13 +40,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
             }
         }
 
-        public static void Log(string format, params object[] parameters)
-        {
-            var str = string.Format(format, parameters);
-
-            Console.WriteLine(str);
-            sb.AppendLine(str);
-        }
+    
 
         public static string GetEnumDescription(Enum value)
         {
@@ -62,6 +56,35 @@ namespace BriefFiniteElementNet.BenchmarkApplication
                 return attributes[0].Description;
             else
                 return value.ToString();
+        }
+
+        public static int GetFreeDofsCount(Model model)
+        {
+            var buf = 0;
+
+            foreach (var nde in model.Nodes)
+            {
+                if (nde.Constraints.DX == DofConstraint.Released)
+                    buf++;
+
+                if (nde.Constraints.DY == DofConstraint.Released)
+                    buf++;
+
+                if (nde.Constraints.DZ == DofConstraint.Released)
+                    buf++;
+
+
+                if (nde.Constraints.RX == DofConstraint.Released)
+                    buf++;
+
+                if (nde.Constraints.RY == DofConstraint.Released)
+                    buf++;
+
+                if (nde.Constraints.RZ == DofConstraint.Released)
+                    buf++;
+            }
+
+            return buf;
         }
     }
 }
