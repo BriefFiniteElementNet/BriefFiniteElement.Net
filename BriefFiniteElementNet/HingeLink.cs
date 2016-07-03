@@ -11,6 +11,7 @@ namespace BriefFiniteElementNet
     /// For more info see HingeLink.md
     /// </summary>
     [Serializable]
+    [Obsolete("use spring1d at the moment")]
     public class HingeLink: StructurePart
     {
         public HingeLink(SerializationInfo info, StreamingContext context) : base(info, context)

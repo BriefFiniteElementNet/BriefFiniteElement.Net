@@ -9,15 +9,22 @@ using BriefFiniteElementNet.Elements;
 namespace BriefFiniteElementNet
 {
     /// <summary>
-    /// 
+    /// Represents a base class for elemental loads.
     /// </summary>
     [Serializable]
     public abstract class Load:ISerializable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Load"/> class.
+        /// </summary>
         protected Load()
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Load"/> class.
+        /// </summary>
+        /// <param name="case">The case.</param>
         protected Load(LoadCase @case)
         {
             _case = @case;

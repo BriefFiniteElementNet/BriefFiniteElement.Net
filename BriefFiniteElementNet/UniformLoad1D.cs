@@ -10,7 +10,7 @@ using BriefFiniteElementNet.Elements;
 namespace BriefFiniteElementNet
 {
     /// <summary>
-    /// Represents a uniform load with specified magnitude which is applying to an <see cref="Element1D"/> body.
+    /// Represents a uniform load with specified magnitude which is applying to an <see cref="FrameElement2Node"/> element.
     /// </summary>
     [Serializable]
     public class UniformLoad1D : Load1D
@@ -23,7 +23,7 @@ namespace BriefFiniteElementNet
         /// Gets or sets the magnitude.
         /// </summary>
         /// <remarks>
-        /// Value is magnitude of distributed load, the unit is [Force/Length]
+        /// Value is magnitude of distributed load, the unit is [N/m]
         /// </remarks>
         /// <value>
         /// The magnitude of distributed load along the member.

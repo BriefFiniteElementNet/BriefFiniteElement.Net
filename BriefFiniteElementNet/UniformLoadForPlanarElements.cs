@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using BriefFiniteElementNet.Elements;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet
 {
@@ -41,6 +42,7 @@ namespace BriefFiniteElementNet
             _coordinationSystem = (CoordinationSystem) info.GetInt32("_coordinationSystem");
         }
 
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("_ux", _ux);

@@ -58,7 +58,6 @@
     <Compile Include="FlatShellStressTensor.cs" />
     <Compile Include="FluentElementPermuteManager.cs" />
     <Compile Include="HingeLink.cs" />
-    <Compile Include="IElement1DLoad.cs" />
     <Compile Include="IntArrayCompairer.cs" />
     <Compile Include="Integration\FunctionMatrixFunction.cs" />
     <Compile Include="Integration\GaussianIntegrator.cs" />
@@ -71,7 +70,6 @@
     <Compile Include="MatrixException.cs" />
     <Compile Include="MembraneFormulation.cs" />
     <Compile Include="MembraneStressTensor.cs" />
-    <Compile Include="ModelConsole.cs" />
     <Compile Include="NodeList.cs" />
     <Compile Include="NotPositiveDefiniteException.cs" />
     <Compile Include="PermutationGenerator.cs" />
@@ -80,11 +78,8 @@
     <Compile Include="PolygonYz.cs" />
     <Compile Include="Elements\FrameElement2Node.cs" />
     <Compile Include="RandomStuff.cs" />
-    <Compile Include="RangeUtil.cs" />
     <Compile Include="RigidElement.cs" />
     <Compile Include="RigidElementCollection.cs" />
-    <Compile Include="RigidLink.cs" />
-    <Compile Include="RigidLinkCollection.cs" />
     <Compile Include="SectionGenerator.cs" />
     <Compile Include="FemNetSerializationBinder.cs" />
     <Compile Include="SimplePermuteManager.cs" />
@@ -158,8 +153,6 @@
     <Compile Include="ExceptionHelper.cs" />
     <Compile Include="FemNetStringCompairer.cs" />
     <Compile Include="Force.cs" />
-    <Compile Include="IElementLoad.cs" />
-    <Compile Include="IFuzzyEquatable.cs" />
     <Compile Include="Load.cs" />
     <Compile Include="Load1D.cs" />
     <Compile Include="Load2D.cs" />
@@ -199,13 +192,13 @@
     <None Include="Documents\SupportReactions.mkd" />
     <None Include="Elements\SdofMass.md" />
     <None Include="Elements\Spring1D.md" />
-    <None Include="Elements\Tehrahedral.md" />
     <None Include="Elements\Tetrahedral.md" />
     <None Include="Elements\TriangleFlatShell.md" />
     <None Include="Elements\FrameElement2Node.md" />
     <None Include="HingeLink.md" />
     <None Include="Integration\GaussianIntegrator.md" />
     <None Include="RigidElement.md" />
+    <None Include="UniformLoad1D.md" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="CSparse\IO\" />

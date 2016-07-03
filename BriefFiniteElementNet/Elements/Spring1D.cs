@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.Elements
 {
+    /// <summary>
+    /// Represents an spring element with defined stiffness.
+    /// </summary>
     [Serializable]
     public class Spring1D:Element1D
     {
@@ -78,6 +82,7 @@ namespace BriefFiniteElementNet.Elements
             _k = info.GetDouble("_k");
         }
 
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("_k", _k);

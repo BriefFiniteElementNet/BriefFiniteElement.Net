@@ -1,4 +1,16 @@
-﻿# Combine shape matrix and B matrix of truss + beam + torsion
+﻿# Intro
+The FrameElement2Node object is a frame element in 3D system with arbitrary section.
+Theorically a frame 3d element is combination of a truss element (carries axial load) and two beams (for moments in two directions).
+
+# Section Geometry
+There are two ways to specify the geometrical properties for section of frame element:
+- Specifiy ```A, Ay, Az, Iy, Iz, J``` properties one by one on a FrameElement2Node instance
+- Specifiy ```Geometry``` property on a FrameElement2Node instance and set ```UseOverridedProperties``` to false to let the element know that it should not use ```A, Ay, Az, Iy, Iz, J``` and should calculate these from Geometry which is a polygon
+
+# Partial End Release
+TODO
+
+# Combine shape matrix and B matrix of truss + beam + torsion
 
 kt = Sum(ki)
 

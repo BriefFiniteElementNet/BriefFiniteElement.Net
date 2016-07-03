@@ -13,23 +13,6 @@ namespace BriefFiniteElementNet
     [Serializable]
     public sealed class RigidElement : StructurePart
     {
-
-        private bool _hingedConnections;
-
-
-        /// <summary>
-        /// Gets or sets a value indicating whether connections is hinged or fully connections.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if all connections are hinged; otherwise, <c>false</c>.
-        /// </value>
-        public bool HingedConnections
-        {
-            get { return _hingedConnections; }
-            set { _hingedConnections = value; }
-        }
-
-
         private NodeList _nodes;
 
         /// <summary>
