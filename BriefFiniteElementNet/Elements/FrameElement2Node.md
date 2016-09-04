@@ -1,12 +1,12 @@
 ###Table of Contents:
 
-[Set Geometrical - Cross Section Properties of ```FrameElement2Node```] (##Geometrical-/-Cross-Section-Properties)
+[Set Geometrical - Cross Section Properties of ```FrameElement2Node```] (#Geometrical-/-Cross-Section-Properties)
 
-[Set Mechanical Properties of ```FrameElement2Node```] (##Mechanical-Material-Properties)
+[Set Mechanical Properties of ```FrameElement2Node```] (#Mechanical-Material-Properties)
 
-[Set Partial End Release of ```FrameElement2Node```](##Partial-End-Release)
+[Set Partial End Release of ```FrameElement2Node```](#Partial-End-Release)
 
-[Set Loads of ```FrameElement2Node```](##Loads)
+[Set Loads of ```FrameElement2Node```](#Loads)
 
 # General Technical Information
 The ```FrameElement2Node``` object is a Frame element in 3D system with arbitrary section and with two nodes (one at start and one at end).
