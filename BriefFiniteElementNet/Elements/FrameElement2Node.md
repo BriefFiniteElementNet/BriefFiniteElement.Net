@@ -27,6 +27,7 @@ There are three mechanical properties for ```FrameElement2Node```:
 - Type: ```double```
 - Value: [Shear Modulus](https://en.wikipedia.org/wiki/Shear_modulus)
 - Unit: Pascal
+
 ## Partial End Release
 Partial End Release is about how the connection of ```FrameElement2Node``` is to nodes. ```FrameElement2Node``` have two properties for Partial End Release:
 - ```FrameElement2Node.HingedAtStart```: if set to ```true``` then connection at start node is assumed hinged
