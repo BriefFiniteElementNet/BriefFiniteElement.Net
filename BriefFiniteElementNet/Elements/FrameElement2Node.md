@@ -1,6 +1,6 @@
 ###Table of Contents:
 
-[Set Geometrical - Cross Section Properties of ```FrameElement2Node```] (#Geometrical-/-Cross-Section-Properties)
+[Set Geometrical - Cross Section Properties of ```FrameElement2Node```] (#geometrical--cross-section-properties)
 
 [Set Mechanical Properties of ```FrameElement2Node```] (#Mechanical-Material-Properties)
 
