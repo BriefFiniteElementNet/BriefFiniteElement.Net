@@ -4,9 +4,9 @@
 
 [Set Mechanical Properties of ```FrameElement2Node```] (#Mechanical-Material-Properties)
 
-[Set Partial End Release of ```FrameElement2Node```](#Partial-End-Release)
+[Set Partial End Release of ```FrameElement2Node```](#partial-end-release)
 
-[Set Loads of ```FrameElement2Node```](#Loads)
+[Set Loads of ```FrameElement2Node```](#loads)
 
 # General Technical Information
 The ```FrameElement2Node``` object is a Frame element in 3D system with arbitrary section and with two nodes (one at start and one at end).
@@ -15,6 +15,7 @@ Theoretically a 3D Frame Element is combination of a truss element (carries axia
 There are two ways to specify the geometrical properties for section of frame element:
 - Specifiy ```A, Ay, Az, Iy, Iz, J``` properties one by one on a FrameElement2Node instance
 - Specifiy ```Geometry``` property on a FrameElement2Node instance and set ```UseOverridedProperties``` to false to let the element know that it should not use ```A, Ay, Az, Iy, Iz, J``` and should calculate these from Geometry which is a polygon
+
 ## Mechanical / Material Properties
 There are three mechanical properties for ```FrameElement2Node```:
 ```FrameElement2Node.E``` : 
