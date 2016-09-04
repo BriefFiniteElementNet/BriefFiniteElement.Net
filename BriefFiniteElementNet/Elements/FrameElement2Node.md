@@ -2,7 +2,7 @@
 
 [Set Geometrical - Cross Section Properties of ```FrameElement2Node```] (#geometrical--cross-section-properties)
 
-[Set Mechanical Properties of ```FrameElement2Node```] (#Mechanical-Material-Properties)
+[Set Mechanical Properties of ```FrameElement2Node```] (#mechanical--material-properties)
 
 [Set Partial End Release of ```FrameElement2Node```](#partial-end-release)
 
