@@ -115,7 +115,7 @@ namespace BriefFiniteElementNet
             info.AddValue("_appliedLoadCases", _appliedLoadCases);
             info.AddValue("nodeNumbers", nodeNumbers);
 
-            info.AddValue("_hingedConnections", _hingedConnections);
+            //info.AddValue("_hingedConnections", _hingedConnections);
 
             if (_centralNode != null)
                 _centralNodeNumber = _centralNode.Index;
@@ -133,7 +133,7 @@ namespace BriefFiniteElementNet
             _appliedLoadCases = info.GetValue<LoadCaseCollection>("_appliedLoadCases");
 
             _centralNodeNumber = info.GetValue<int?>("_centralNodeNumber");
-            _hingedConnections = info.GetBoolean("_hingedConnections");
+            //_hingedConnections = info.GetBoolean("_hingedConnections");
 
             this._nodes = new NodeList();
         }
