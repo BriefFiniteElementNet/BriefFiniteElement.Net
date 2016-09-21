@@ -17,8 +17,8 @@ Model
 
 <LoadSet Name = "CaseName" Type = "CaseType" />
 
-<NodalLoad Node = "" Force = "0,0,0" Moment = "0,0,0" />
-<ElementConsentratedLoad Element = "" Force = "0,0,0" Moment = "0,0,0" Location = "" />
-<ElementUniformLoad Element = "" Magnitude = "" Direction = "" System = "" />
+<NodalLoad Node = "" Force = "0,0,0" Moment = "0,0,0" LoadCase = "CaseName" LoadType = "LoadType"/>
+<ElementConsentratedLoad Element = "" Force = "0,0,0" Moment = "0,0,0" Location = "" LoadCase = "CaseName" LoadType = "LoadType"/>
+<ElementUniformLoad Element = "" Magnitude = "" Direction = "" System = "" LoadCase = "CaseName" LoadType = "LoadType"/>
 
 </Model>

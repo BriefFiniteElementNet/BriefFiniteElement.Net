@@ -189,8 +189,6 @@ namespace BriefFiniteElementNet.Elements
         /// <returns>The B matrix at specified <see cref="location"/></returns>
         public abstract Matrix ComputeBMatrix(params double[] location);
 
-
-
         /// <summary>
         /// Gets the constitutive matrix in local coordination system at specified <see cref="location" />.
         /// </summary>
@@ -208,7 +206,6 @@ namespace BriefFiniteElementNet.Elements
         /// The N matrix at specified <see cref="location" />
         /// </returns>
         public abstract Matrix ComputeNMatrixAt(params double[] location);
-
 
         /// <summary>
         /// Computes the J matrix at specified <see cref="location"/>.

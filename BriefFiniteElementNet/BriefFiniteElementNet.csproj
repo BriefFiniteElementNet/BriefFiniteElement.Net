@@ -55,14 +55,16 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="CalcUtil.cs" />
     <Compile Include="CustomGaussianIntegrator.cs" />
+    <Compile Include="FlatshellInternalForceUtil.cs" />
     <Compile Include="FlatShellStressTensor.cs" />
     <Compile Include="FluentElementPermuteManager.cs" />
-    <Compile Include="HingeLink.cs" />
+    <Compile Include="Elements\HingeLink.cs" />
     <Compile Include="IntArrayCompairer.cs" />
     <Compile Include="Integration\FunctionMatrixFunction.cs" />
     <Compile Include="Integration\GaussianIntegrator.cs" />
     <Compile Include="Integration\GaussPoints.cs" />
     <Compile Include="Integration\IMatrixFunction.cs" />
+    <Compile Include="Geometry\LineSegment.cs" />
     <Compile Include="LoadCaseCollection.cs" />
     <Compile Include="LoadTypeCollection.cs" />
     <Compile Include="MassFormulation.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="NotPositiveDefiniteException.cs" />
     <Compile Include="PermutationGenerator.cs" />
     <Compile Include="PermutationMatrixAssembler.cs" />
+    <Compile Include="Geometry\Plane.cs" />
     <Compile Include="PointYz.cs" />
     <Compile Include="PolygonYz.cs" />
     <Compile Include="Elements\FrameElement2Node.cs" />
@@ -174,11 +177,11 @@
     <Compile Include="StressTensor3D.cs" />
     <Compile Include="StructureGenerator.cs" />
     <Compile Include="StructurePart.cs" />
-    <Compile Include="StructurePartCollection.cs" />
     <Compile Include="Elements\Tetrahedral.cs" />
     <Compile Include="Trace.cs" />
     <Compile Include="TraceUtil.cs" />
     <Compile Include="Elements\TrussElement2Node.cs" />
+    <Compile Include="Elements\TriangleFlatShellExtensions.cs" />
     <Compile Include="UniformLoad1D.cs" />
     <Compile Include="UniformBodyLoad3D.cs" />
     <Compile Include="UniformLoadForPlanarElements.cs" />
@@ -195,9 +198,11 @@
     <None Include="Elements\Tetrahedral.md" />
     <None Include="Elements\TriangleFlatShell.md" />
     <None Include="Elements\FrameElement2Node.md" />
-    <None Include="HingeLink.md" />
+    <None Include="Elements\TriangleFlatShellExtensions.md" />
+    <None Include="Elements\HingeLink.md" />
     <None Include="Integration\GaussianIntegrator.md" />
     <None Include="RigidElement.md" />
+    <None Include="Todo.md" />
     <None Include="UniformLoad1D.md" />
   </ItemGroup>
   <ItemGroup>

@@ -4,9 +4,13 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using BriefFiniteElementNet.Geometry;
 
 namespace BriefFiniteElementNet.Elements
 {
+    /// <summary>
+    /// Represents a triangle flat shell which internally consists of a membrane (CST) and plate bending (dkt) element.
+    /// </summary>
     [Serializable]
     public class TriangleFlatShell : Element2D
     {
@@ -138,6 +142,7 @@ namespace BriefFiniteElementNet.Elements
         }
 
         #region stiffness
+
         public override Matrix GetGlobalStifnessMatrix()
         {
             var kl = new Matrix(18,18);
@@ -244,6 +249,7 @@ namespace BriefFiniteElementNet.Elements
 
             return kle;
         }
+
         #endregion
 
         public Matrix GetTransformationMatrix()
@@ -257,28 +263,30 @@ namespace BriefFiniteElementNet.Elements
         /// Gets the internal force at defined location.
         /// tensor is in local coordinate system. 
         /// </summary>
-        /// <param name="xi">The xi.</param>
-        /// <param name="eta">The eta.</param>
-        /// <param name="combination">The locad combination.</param>
+        /// <param name="localX">The X in local coordinate system (see remarks).</param>
+        /// <param name="localY">The Y in local coordinate system (see remarks).</param>
+        /// <param name="combination">The load combination.</param>
         /// <returns>Stress tensor of flat shell, in local coordination system</returns>
         /// <remarks>
         /// for more info about local coordinate of flat shell see page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara freely available on the web
         /// </remarks>
-        public FlatShellStressTensor GetInternalForce(double xi, double eta, LoadCombination combination)
+        public FlatShellStressTensor GetInternalForce(double localX, double localY, LoadCombination combination)
         {
             var buf = new FlatShellStressTensor();
 
             if (_behaviour == FlatShellBehaviour.Membrane || _behaviour == FlatShellBehaviour.ThinShell)
-                buf.MembraneTensor = GetMembraneInternalForce(xi, eta, combination); ;
+                buf.MembraneTensor = GetMembraneInternalForce(combination);
 
             if (_behaviour == FlatShellBehaviour.ThinPlate || _behaviour == FlatShellBehaviour.ThinShell)
-                buf.BendingTensor = GetBendingInternalForce(xi, eta, combination);
+                buf.BendingTensor = GetBendingInternalForce(localX, localY, combination);
 
             return buf;
         }
 
-        private MembraneStressTensor GetMembraneInternalForce(double xi, double eta, LoadCombination combination)
+        private MembraneStressTensor GetMembraneInternalForce( LoadCombination combination)
         {
+            //Note: membrane internal force is constant
+
             //step 1 : get transformation matrix
             //step 2 : convert globals points to locals
             //step 3 : convert global displacements to locals
@@ -309,8 +317,7 @@ namespace BriefFiniteElementNet.Elements
 
             var dbCst = CstElement.GetDMatrix(_elasticModulus,_poissonRatio,_formulationType);
 
-            var bCst = CstElement.GetBMatrix(xi, eta,
-                lp.Select(i => i.X).ToArray(),
+            var bCst = CstElement.GetBMatrix(lp.Select(i => i.X).ToArray(),
                 lp.Select(i => i.Y).ToArray());
 
             var sCst = dbCst* bCst * uCst; 
@@ -324,7 +331,7 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
-        private PlateBendingStressTensor GetBendingInternalForce(double xi, double eta, LoadCombination cmb)
+        private PlateBendingStressTensor GetBendingInternalForce(double localX, double localY, LoadCombination cmb)
         {
             //step 1 : get transformation matrix
             //step 2 : convert globals points to locals
@@ -359,7 +366,7 @@ namespace BriefFiniteElementNet.Elements
 
 
 
-            var b = DktElement.GetBMatrix(xi, eta,
+            var b = DktElement.GetBMatrix(localX, localY,
                 lp.Select(i => i.X).ToArray(),
                 lp.Select(i => i.Y).ToArray());
 
@@ -429,7 +436,7 @@ namespace BriefFiniteElementNet.Elements
         /// Gets node coordinates in local coordination system.
         /// Z component of return values should be ignored.
         /// </summary>
-        private Point[] GetLocalPoints()
+        internal Point[] GetLocalPoints()
         {
             var t = GetTransformationMatrix().Transpose(); //transpose of t
 
@@ -444,6 +451,8 @@ namespace BriefFiniteElementNet.Elements
 
             return new[] { p0, p1, p2 };
         }
+
+        
 
         ///<inheritdoc/>
         public override Matrix ComputeBMatrix(params double[] location)

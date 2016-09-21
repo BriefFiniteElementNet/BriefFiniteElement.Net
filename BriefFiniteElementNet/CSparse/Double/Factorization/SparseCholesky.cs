@@ -7,6 +7,8 @@
 
 using System;
 using System.Collections.Generic;
+//using System.ComponentModel;
+using System.Net;
 using BriefFiniteElementNet.CSparse.Ordering;
 using BriefFiniteElementNet.CSparse.Storage;
 
@@ -220,6 +222,8 @@ namespace BriefFiniteElementNet.CSparse.Double.Factorization
 
         public int Progress;
 
+        public event System.ComponentModel.ProgressChangedEventHandler ProgressChanged;
+
         /// <summary>
         /// Compute the Numeric Cholesky factorization, L = chol (A, [pinv parent cp]).
         /// </summary>
@@ -254,7 +258,7 @@ namespace BriefFiniteElementNet.CSparse.Double.Factorization
 
             //var lst = new List<int>();
 
-            var percent = 0;
+            var lastPercent = 0;
 
             for (k = 0; k < n; k++)
             {
@@ -262,11 +266,12 @@ namespace BriefFiniteElementNet.CSparse.Double.Factorization
             }
             for (k = 0; k < n; k++) // compute L(k,:) for L*L' = C
             {
-                if (100*k/n != percent)
+                if (100L*k/n != lastPercent)
                 {
-                    Progress = percent = (100*k)/n;
-
-                    //Console.WriteLine("{0}% solve", percent);
+                    if (ProgressChanged != null)
+                        ProgressChanged(this,
+                            new System.ComponentModel.ProgressChangedEventArgs(lastPercent = (int) ((100L*k)/n),
+                                userState: null)); //not sure what userState should be :)
                 }
 
                 // Find nonzero pattern of L(k,:)

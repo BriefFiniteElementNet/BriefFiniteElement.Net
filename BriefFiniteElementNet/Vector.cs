@@ -412,6 +412,17 @@ namespace BriefFiniteElementNet
             return new Vector(v1.y*v2.z - v1.z*v2.y, v1.z*v2.x - v2.z*v1.x, v1.x*v2.y - v1.y*v2.x);
         }
 
+        /// <summary>
+        /// Calculates the dot product of two vectors
+        /// </summary>
+        /// <param name="v1">V1</param>
+        /// <param name="v2">V2</param>
+        /// <returns>V1 . V2</returns>
+        public static double Dot(Vector v1, Vector v2)
+        {
+            return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
+        }
+
         #region Serialization stuff
 
         /// <summary>

@@ -358,13 +358,48 @@ namespace BriefFiniteElementNet.Elements
 
             var buf2 = new Matrix(new double[][]
             {
-                new double[] {y23, 0, y31, 0, y12, 0},
-                new double[] {0, x32, 0, x13, 0, x21},
-                new double[] {x32, y23, x13, y31, x21, y12},
+                new [] {y23, 0, y31, 0, y12, 0},
+                new [] {0, x32, 0, x13, 0, x21},
+                new [] {x32, y23, x13, y31, x21, y12},
             });
 
 
             buf2.MultiplyByConstant(1/(2*a));
+
+            return buf2;
+        }
+
+        /// <summary>
+        /// Gets the b matrix.
+        /// </summary>
+        /// <param name="x">The x.</param>
+        /// <param name="y">The y.</param>
+        /// <returns></returns>
+        internal static Matrix GetBMatrix(double[] x, double[] y)
+        {
+            var x32 = x[2] - x[1];
+            var x13 = x[0] - x[2];
+            var x31 = -x13;
+            var x21 = x[1] - x[0];
+            var x12 = -x21;
+
+            var y23 = y[1] - y[2];
+            var y31 = y[2] - y[0];
+            var y12 = y[0] - y[1];
+
+            var a = 0.5 * Math.Abs(x31 * y12 - x12 * y31);
+
+            //eq 3.24 page 29 of thesis pdf
+
+            var buf2 = new Matrix(new double[][]
+            {
+                new [] {y23, 0, y31, 0, y12, 0},
+                new [] {0, x32, 0, x13, 0, x21},
+                new [] {x32, y23, x13, y31, x21, y12},
+            });
+
+
+            buf2.MultiplyByConstant(1 / (2 * a));
 
             return buf2;
         }

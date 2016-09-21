@@ -55,7 +55,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SparseMatrixMultiplyValidation.cs" />
     <Compile Include="Tet4Checker.cs" />
-    <Compile Include="TriangleFlatshellElementChecker.cs" />
     <Compile Include="UnitConverter.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -89,6 +88,9 @@
     <Content Include="Data\Tet4-78knv\Nodes-Reaction-Forces.txt" />
     <Content Include="Data\Tet4-78knv\tet4-78.jpg" />
     <Content Include="Data\Tet4-78knv\tet4-78k.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\FlatShell\IBeamTorsion\Intro.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

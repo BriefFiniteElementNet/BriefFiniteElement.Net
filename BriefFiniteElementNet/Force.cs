@@ -15,6 +15,11 @@ namespace BriefFiniteElementNet
     {
         #region Members
 
+        /// <summary>
+        /// A force with zero components
+        /// </summary>
+        public static Force Zero = new Force(0, 0, 0, 0, 0, 0);
+
         private double fx;
         private double fy;
         private double fz;
@@ -284,7 +289,33 @@ namespace BriefFiniteElementNet
             return new Force(- f.fx, - f.fy, - f.fz, - f.mx, - f.my, - f.mz);
         }
 
+
+
         #endregion
 
+        public bool Equals(Force other)
+        {
+            return fx.Equals(other.fx) && fy.Equals(other.fy) && fz.Equals(other.fz) && mx.Equals(other.mx) && my.Equals(other.my) && mz.Equals(other.mz);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            return obj is Force && Equals((Force) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = fx.GetHashCode();
+                hashCode = (hashCode*397) ^ fy.GetHashCode();
+                hashCode = (hashCode*397) ^ fz.GetHashCode();
+                hashCode = (hashCode*397) ^ mx.GetHashCode();
+                hashCode = (hashCode*397) ^ my.GetHashCode();
+                hashCode = (hashCode*397) ^ mz.GetHashCode();
+                return hashCode;
+            }
+        }
     }
 }

@@ -28,6 +28,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Struc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.TestConsole", "BriefFiniteElementNet.TestConsole\BriefFiniteElementNet.TestConsole.csproj", "{1DD7D04E-0DFB-49BD-AAA2-30128005ACE7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.SerializationObsolete", "BriefFiniteElementNet.SerializationObsolete\BriefFiniteElementNet.SerializationObsolete.csproj", "{D3F1B5E0-6FF4-4458-BE8E-F1534A6E743C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -70,6 +72,10 @@ Global
 		{1DD7D04E-0DFB-49BD-AAA2-30128005ACE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DD7D04E-0DFB-49BD-AAA2-30128005ACE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DD7D04E-0DFB-49BD-AAA2-30128005ACE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3F1B5E0-6FF4-4458-BE8E-F1534A6E743C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3F1B5E0-6FF4-4458-BE8E-F1534A6E743C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3F1B5E0-6FF4-4458-BE8E-F1534A6E743C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3F1B5E0-6FF4-4458-BE8E-F1534A6E743C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -14,9 +14,9 @@ namespace BriefFiniteElementNet.TestConsole
         [STAThread]
         static void Main(string[] args)
         {
-            //FlatShellElementChecker.Test1();
+            Test3();
 
-            SparseMatrixMultiplyValidation.Test1();
+            //SparseMatrixMultiplyValidation.Test1();
 
             Console.ReadKey();
         }
@@ -33,5 +33,20 @@ namespace BriefFiniteElementNet.TestConsole
 
         }
 
+        private static void Test2()
+        {
+            var model = StructureGenerator.Generate3DFrameElementGrid(5, 5, 5);
+            //StructureGenerator.AddRandomiseLoading(model, LoadCase.DefaultLoadCase);
+
+            //var wrapped = SerializationObsolete.ObjectWrapper.Wrap(model);
+
+            var data = DataContractSerializerHelper.SerializeXml(model);
+
+        }
+
+        private static void Test3()
+        {
+            FlatShellElementChecker.ShowSapResults();
+        }
     }
 }

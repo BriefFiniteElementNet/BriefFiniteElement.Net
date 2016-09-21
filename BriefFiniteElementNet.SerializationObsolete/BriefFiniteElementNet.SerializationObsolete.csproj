@@ -1,17 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{1DD7D04E-0DFB-49BD-AAA2-30128005ACE7}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{D3F1B5E0-6FF4-4458-BE8E-F1534A6E743C}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BriefFiniteElementNet.TestConsole</RootNamespace>
-    <AssemblyName>BriefFiniteElementNet.TestConsole</AssemblyName>
+    <RootNamespace>BriefFiniteElementNet.SerializationObsolete</RootNamespace>
+    <AssemblyName>BriefFiniteElementNet.SerializationObsolete</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,37 +31,26 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="ObjectWrapper.cs" />
+    <Compile Include="ObjectWriter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="XmlSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BriefFiniteElementNet.SerializationObsolete\BriefFiniteElementNet.SerializationObsolete.csproj">
-      <Project>{d3f1b5e0-6ff4-4458-be8e-f1534a6e743c}</Project>
-      <Name>BriefFiniteElementNet.SerializationObsolete</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BriefFiniteElementNet.Validation\BriefFiniteElementNet.Validation.csproj">
-      <Project>{7a20ce01-552e-457a-a9c3-18bed244d897}</Project>
-      <Name>BriefFiniteElementNet.Validation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj">
-      <Project>{7cda20d4-9bc8-4bc3-9f22-cb86cd4dc3e1}</Project>
-      <Name>BriefFiniteElementNet</Name>
-    </ProjectReference>
+    <None Include="Readme.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
