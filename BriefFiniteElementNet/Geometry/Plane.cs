@@ -1,4 +1,6 @@
-﻿namespace BriefFiniteElementNet.Geometry
+﻿using System;
+
+namespace BriefFiniteElementNet.Geometry
 {
     /// <summary>
     /// Represents a flat plane in 3D space
@@ -68,6 +70,18 @@
         /// The YZ plane with X = 0
         /// </summary>
         public static Plane YZPlane = FromPointAndNormal(Vector.I, Point.Origins);
+
+        public double CalculateDistance(Point p)
+        {
+            var a = this.Normal.X;
+            var b = this.Normal.Y;
+            var c = this.Normal.Z;
+            var d = -a*this.P.X - b*this.P.Y - c*this.P.Z;
+
+            var buf = (a*P.X + b*P.Y + c*P.Z + d)/Math.Sqrt(a*a + b*b + c*c);
+
+            return buf;
+        }
 
     }
 }

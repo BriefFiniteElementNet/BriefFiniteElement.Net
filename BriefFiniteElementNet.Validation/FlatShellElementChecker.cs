@@ -11,7 +11,7 @@ namespace BriefFiniteElementNet.Validation
     {
         public static void ShowSapResults()
         {
-            //Test3();
+            Test3();
             Test6_2();
             Test5();
         }
