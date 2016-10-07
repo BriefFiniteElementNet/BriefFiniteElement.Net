@@ -71,6 +71,11 @@ namespace BriefFiniteElementNet.Geometry
         /// </summary>
         public static Plane YZPlane = FromPointAndNormal(Vector.I, Point.Origins);
 
+        /// <summary>
+        /// Calculates the distance of defined point with this Plane.
+        /// </summary>
+        /// <param name="p">The target point.</param>
+        /// <returns>Distance</returns>
         public double CalculateDistance(Point p)
         {
             var a = this.Normal.X;

@@ -68,7 +68,7 @@ namespace BriefFiniteElementNet
         /// Gets or sets the ay.
         /// </summary>
         /// <value>
-        /// To be documented
+        /// shear area of element, in local y direction, only used when shear deformation should be considered
         /// </value>
         public double Ay
         {
@@ -80,7 +80,7 @@ namespace BriefFiniteElementNet
         /// Gets or sets the az.
         /// </summary>
         /// <value>
-        /// To be documented
+        /// shear area of element, in local z direction, only used when shear deformation should be considered
         /// </value>
         public double Az
         {
@@ -256,6 +256,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// The mass density of member in kg/m^3.
         /// </value>
+        [Obsolete]
         public double MassDensity
         {
             get { return _massDensity; }

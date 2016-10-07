@@ -363,6 +363,15 @@ namespace BriefFiniteElementNet
             for (int i = 0; i < nodes.Count; i++)
                 nodes[i].Index = i;
 
+            foreach (var elm in Elements)
+            {
+                foreach (var node in elm.Nodes)
+                {
+                    if (!this.nodes.Contains(node))
+                        throw new Exception("Node not belong to Model!");
+                }
+            }
+
             info.AddValue("elements", elements);
             info.AddValue("nodes", nodes);
             info.AddValue("rigidElements", rigidElements);

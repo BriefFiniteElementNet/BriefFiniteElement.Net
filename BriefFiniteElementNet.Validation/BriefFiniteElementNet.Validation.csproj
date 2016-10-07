@@ -43,6 +43,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Case_01\Readme.md" />
     <Compile Include="CustomMeshBuilder.cs" />
     <Compile Include="FlatShellElementChecker.cs" />
     <Compile Include="ElementEquibiliriumChecker.cs" />
@@ -56,6 +57,7 @@
     <Compile Include="SparseMatrixMultiplyValidation.cs" />
     <Compile Include="Tet4Checker.cs" />
     <Compile Include="UnitConverter.cs" />
+    <None Include="Template\Readme.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj">

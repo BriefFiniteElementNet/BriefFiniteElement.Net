@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Elements\BarElementBehaviours.cs" />
     <Compile Include="CheckingUtil.cs" />
     <Compile Include="ConsoleTraceListener.cs" />
     <Compile Include="CSparse\Double\Factorization\SparseLDL.cs" />
@@ -46,6 +47,11 @@
     <Compile Include="DoF.cs" />
     <Compile Include="DofMap.cs" />
     <Compile Include="DofMappingManager.cs" />
+    <Compile Include="Elements\BarElement.cs" />
+    <Compile Include="Elements\BarElementBehaviour.cs" />
+    <Compile Include="Elements\BarElementEndConnection.cs" />
+    <Compile Include="Elements\BaseBarElemenetCrossSection.cs" />
+    <Compile Include="Elements\BaseBarElementMaterial.cs" />
     <Compile Include="Elements\ConcentratedMass.cs" />
     <Compile Include="Elements\CstElement.cs" />
     <Compile Include="Elements\DktElement.cs" />

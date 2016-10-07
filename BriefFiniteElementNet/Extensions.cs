@@ -303,6 +303,12 @@ namespace BriefFiniteElementNet
             return new Force(f,m);
         }
 
+        public static Vector TransformLocalToGlobal(this FrameElement2Node elm, Vector vec)
+        {
+            var buf = elm.TransformLocalToGlobal(vec);
+
+            return buf;
+        }
 
         /// <summary>
         /// Transforms the force in global coordination system into the local coordination system.
@@ -318,6 +324,12 @@ namespace BriefFiniteElementNet
             return new Force(f, m);
         }
 
+        public static Vector TransformGlobalToLocal(this FrameElement2Node elm, Vector vec)
+        {
+            var f = elm.TransformGlobalToLocal(vec);
+
+            return f;
+        }
 
         /// <summary>
         /// Clones the specified model.

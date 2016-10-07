@@ -683,11 +683,6 @@ namespace BriefFiniteElementNet.Validation
                     },
                 };
 
-                //stresses
-                var cElms = model.Elements.Cast<TriangleFlatShell>().Where(i => i.Nodes.Contains(C)).ToArray();
-                var DElms = model.Elements.Cast<TriangleFlatShell>().Where(i => i.Nodes.Contains(D)).ToArray();
-                var EElms = model.Elements.Cast<TriangleFlatShell>().Where(i => i.Nodes.Contains(E)).ToArray();
-
                 var globTensor = new Func<TriangleFlatShell, MembraneStressTensor>(elm =>
                 {
                     var tns = elm.GetInternalForce(0, 0, LoadCombination.DefaultLoadCombination);
