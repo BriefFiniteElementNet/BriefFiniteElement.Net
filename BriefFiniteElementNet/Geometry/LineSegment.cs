@@ -33,7 +33,13 @@ namespace BriefFiniteElementNet.Geometry
             return nv < thre;
         }
 
-
+        public double Length
+        {
+            get
+            {
+                return (P2 - P1).Length;
+            }
+        }
         
     }
 }

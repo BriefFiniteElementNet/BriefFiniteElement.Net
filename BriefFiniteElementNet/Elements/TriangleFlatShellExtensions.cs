@@ -9,6 +9,7 @@ namespace BriefFiniteElementNet.Elements
 {
     public static class TriangleFlatShellExtensions
     {
+        [Obsolete]
         /// <summary>
         /// Gets the N points, equally spaced and lying of intersection line between current triangular flat shell and defined <see cref="plane" />.
         /// </summary>
@@ -97,6 +98,7 @@ namespace BriefFiniteElementNet.Elements
             return buff.ToArray();
         }
 
+        [Obsolete]
         public static FlatShellStressTensor[] GeTensorsAtIntersection(this TriangleFlatShell element, Plane plane, int n)
         {
             var buf = new List<FlatShellStressTensor>();
@@ -119,6 +121,8 @@ namespace BriefFiniteElementNet.Elements
             return tensors;
         }
 
+
+        [Obsolete]
         public static Tuple<Force,Point> GetTotalForce(this TriangleFlatShell element, Plane plane, int n)
         {
             //step 1: find intersection points
@@ -183,6 +187,101 @@ namespace BriefFiniteElementNet.Elements
             //return bufFrc;
         }
 
+
+        /// <summary>
+        /// Determines whether the defined plane does intersect with defined triangle shell element or not.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="plane">The plane.</param>
+        /// <returns>true, if intersects, false otherwise</returns>
+        public static bool DoesIntersects(this TriangleFlatShell element, Plane plane)
+        {
+            //http://geomalgorithms.com/a06-_intersect-2.html section "Intersection of a Triangle with a Plane"
+
+            //http://stackoverflow.com/questions/15688232/check-which-side-of-a-plane-points-are-on
+
+            //if this intersects with plane, then points must not be in same side of plane
+
+            var d = -Vector.Dot(plane.Normal, plane.P);
+
+            var ps = element.Nodes.Select(i => i.Location).ToArray();
+
+            var signs =
+                ps.Select(i => Vector.Dot(i, plane.Normal) + d).Select(i => i < 0.0 ? -1 : (i > 0 ? 1 : 0)).ToArray();
+
+            if (signs.Any(i => i.Equals(0)))
+                return false;
+
+            if (signs.Distinct().Count() == 1)
+                //all points on same side of plane
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
+        /// Gets the intersection of triangle and plane as a line segment
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="plane">The plane.</param>
+        /// <returns>intersection</returns>
+        public static LineSegment GetIntersection(this TriangleFlatShell element, Plane plane)
+        {
+            if (!DoesIntersects(element, plane))
+                throw new InvalidOperationException();
+
+            var points = GetIntersectionPoints(element, plane, 5);
+
+            var buf = new LineSegment();
+
+            buf.P1 = points.First();
+            buf.P2 = points.Last();
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Integrates the shear force along intersection of element with defined plane.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="plane">The plane.</param>
+        /// <returns>Integrated force</returns>
+        public static Force IntegrateShearForce(this TriangleFlatShell element, Plane plane,LoadCombination cmb)
+        {
+            //step 1: does intersect?
+            //step 2: get a tensor (no matter where, this is constant stress)
+            //step 3: find rotation amount for tensors
+            //step 4: rotate tensors
+            //step 5: integrate forces
+
+            if (!DoesIntersects(element, plane))
+                return Force.Zero;
+
+            var intersection = GetIntersection(element, plane);
+
+            //step 2
+            var tensor = element.GetInternalForce(0, 0, cmb);
+
+            //step 3
+            var t = element.GetTransformationMatrix().Transpose(); //transpose of t
+            var nLocal = (Vector)(t * plane.Normal.ToMatrix()).ToPoint();//project of N to local element coord system
+            var theta = Math.Atan2(nLocal.Y, nLocal.X) - Math.PI / 2;
+
+            //step 4
+            var rotatedTensor = MembraneStressTensor.Rotate(tensor.MembraneTensor, theta);
+
+            // shear direction
+            var shearLocalDirection = new Vector(Math.Cos(theta), Math.Sin(theta), 0);//direction of shear force in local element coord system, which is vector I rotated by amount theta
+            var shearGlobalDirection = (Vector)(t.Transpose() * shearLocalDirection.ToMatrix()).ToPoint();
+
+            var fShearAmount = rotatedTensor.Txy * element.Thickness * intersection.Length;//shear force
+
+            var shearForce = fShearAmount * shearGlobalDirection.GetUnit();
+
+            return new Force(shearForce, Vector.Zero);
+        }
+
+        [Obsolete]
         public static Force IntegrateForceOverIntersection(Model mdl, Plane pl)
         {
             var buf = new Force();
@@ -204,6 +303,7 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
+        [Obsolete]
         public class Tuple<T1,T2>
         {
             public T1 Item1;
