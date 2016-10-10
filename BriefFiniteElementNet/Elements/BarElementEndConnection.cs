@@ -35,5 +35,28 @@ namespace BriefFiniteElementNet.Elements
         /// The rz connection constrain
         /// </summary>
         public DofConstraint Rz;
+
+        /// <summary>
+        /// Gets the fixed connection.
+        /// </summary>
+        /// <value>
+        /// A totally fixed connection.
+        /// </value>
+        public static BarElementEndConnection Fixed
+        {
+            get
+            {
+                return new BarElementEndConnection()
+                {
+                    Dx = DofConstraint.Fixed,
+                    Dy = DofConstraint.Fixed,
+                    Dz = DofConstraint.Fixed,
+                    Rx = DofConstraint.Fixed,
+                    Ry = DofConstraint.Fixed,
+                    Rz = DofConstraint.Fixed,
+                };
+            }
+        }
+
     }
 }

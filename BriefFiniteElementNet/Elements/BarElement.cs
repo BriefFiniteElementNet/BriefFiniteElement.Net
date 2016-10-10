@@ -15,6 +15,7 @@ namespace BriefFiniteElementNet.Elements
         private BarElementEndConnection _startConnection;
         private BarElementEndConnection _endtConnection;
         private BarElementBehaviour _behavior;
+        private BaseBarElemenetCrossSection _section;
 
 
         /// <summary>
@@ -91,7 +92,7 @@ namespace BriefFiniteElementNet.Elements
         /// Gets or sets the web rotation of this member in Degree
         /// </summary>
         /// <value>
-        /// The web rotation in degree.
+        /// The web rotation in degree. It does rotate the local coordination system of element.
         /// </value>
         public double WebRotation
         {
@@ -103,11 +104,91 @@ namespace BriefFiniteElementNet.Elements
 
         public override Matrix ComputeBMatrix(params double[] location)
         {
-            throw new NotImplementedException();
+            var L = (EndNode.Location - StartNode.Location).Length;
+
+            var L2 = L * L;
+
+            //location is xi varies from -1 to 1
+            var xi = location[0];
+
+            if (xi < -1 || xi > 1)
+                throw new ArgumentOutOfRangeException(nameof(location));
+
+            var buf = new Matrix(4, 12);
+
+            
+            if ((this._behavior & BarElementBehaviour.BeamY) != 0)
+            {
+                //BeamY is in behaviors, should use beam with Iz
+
+                var arr = new double[] { 0, (6 * xi) / L2, 0, 0,
+                0, (3 * xi) / L - 1 / L, 0, -(6 * xi) / L2,
+                0, 0, 0, (3 * xi) / L + 1 / L};
+
+                buf.FillRow(0, arr);
+            }
+
+            if ((this._behavior & BarElementBehaviour.BeamYWithShearDefomation) != 0)
+            {
+                throw new NotImplementedException();
+            }
+
+            if ((this._behavior & BarElementBehaviour.BeamZ) != 0)
+            {
+                //BeamZ in behaviours, should use beam with Iy
+
+                var arr = new double[] {  0, 0, (6 * xi) / L2, 0,
+                (3 * xi) / L - 1 / L, 0, 0, 0,
+                -(6 * xi) / L2, 0, (3 * xi) / L + 1 / L, 0};
+
+                buf.FillRow(1, arr);
+            }
+
+            if ((this._behavior & BarElementBehaviour.BeamZWithShearDefomation) != 0)
+            {
+                throw new NotImplementedException();
+            }
+
+            if ((this._behavior & BarElementBehaviour.Truss) != 0)
+            {
+                var arr = new double[] {  1 / L, 0, 0, 0,
+                0, 0, -1 / L, 0,
+                0, 0, 0, 0,};
+
+                buf.FillRow(2, arr);
+            }
+
+            if ((this._behavior & BarElementBehaviour.Shaft) != 0)
+            {
+                var arr = new double[] {   0, 0, 0, 1 / L,
+                0, 0, 0, 0,
+                0, -1 / L, 0, 0};
+
+                buf.FillRow(3, arr);
+            }
+
+
+            {// take the end connections into account
+                //b is 4 X 12, each row for one DoF
+
+                var d1 = _startConnection;
+                var d2 = _endtConnection;
+
+                var arr = new DofConstraint[] {
+                    d1.Dx, d1.Dy, d1.Dz, d1.Rx, d1.Ry, d1.Rz ,
+                    d2.Dx, d2.Dy, d2.Dz, d2.Rx, d2.Ry, d2.Rz };
+
+                for (var i = 0; i < 12; i++)
+                    if (arr[i] == DofConstraint.Released)
+                        buf.SetColumn(i, 0.0, 0.0, 0.0, 0.0);
+            }
+
+            return buf;
         }
 
         public override Matrix ComputeDMatrixAt(params double[] location)
         {
+            
             throw new NotImplementedException();
         }
 

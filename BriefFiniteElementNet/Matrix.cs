@@ -1267,6 +1267,29 @@ namespace BriefFiniteElementNet
             this.rowCount--;
         }
 
+        public void FillRow(int rowNum,params double[] values)
+        {
+            if (values.Length != this.columnCount)
+                throw new Exception();
+
+            for(var j=0;j<this.columnCount;j++)
+            {
+                this[rowNum, j] = values[j];
+            }
+        }
+
+
+        public void FillColumn(int colNum, params double[] values)
+        {
+            if (values.Length != this.rowCount)
+                throw new Exception();
+
+            for (var j = 0; j < this.rowCount; j++)
+            {
+                this[j, colNum] = values[j];
+            }
+        }
+
         public void RemoveColumn(int n)
         {
             var l = this.rowCount*(this.columnCount - 1);

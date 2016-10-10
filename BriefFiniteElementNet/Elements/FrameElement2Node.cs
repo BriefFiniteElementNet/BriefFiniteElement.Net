@@ -1078,7 +1078,25 @@ namespace BriefFiniteElementNet
 
             var buf = new Matrix(4, 12);
 
-            buf.FillMatrixRowise(0, 0, (6 * xi) / L2, 0, (3 * xi) / L - 1 / L, 0, 0, 0, -(6 * xi) / L2, 0, (3 * xi) / L + 1 / L, 0, 0, (6 * xi) / L2, 0, 0, 0, (3 * xi) / L - 1 / L, 0, -(6 * xi) / L2, 0, 0, 0, (3 * xi) / L + 1 / L, 1 / L, 0, 0, 0, 0, 0, -1 / L, 0, 0, 0, 0, 0, 0, 0, 0, 1 / L, 0, 0, 0, 0, 0, -1 / L, 0, 0);
+            buf.FillMatrixRowise(
+                0, 0, (6 * xi) / L2, 0,
+                (3 * xi) / L - 1 / L, 0, 0, 0,
+                -(6 * xi) / L2, 0, (3 * xi) / L + 1 / L, 0,
+
+
+                0, (6 * xi) / L2, 0, 0,
+                0, (3 * xi) / L - 1 / L, 0, -(6 * xi) / L2,
+                0, 0, 0, (3 * xi) / L + 1 / L,
+
+
+                1 / L, 0, 0, 0,
+                0, 0, -1 / L, 0,
+                0, 0, 0, 0,
+
+
+                0, 0, 0, 1 / L,
+                0, 0, 0, 0,
+                0, -1 / L, 0, 0);
 
             return buf;
         }

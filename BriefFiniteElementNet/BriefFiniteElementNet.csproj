@@ -55,6 +55,7 @@
     <Compile Include="Elements\ConcentratedMass.cs" />
     <Compile Include="Elements\CstElement.cs" />
     <Compile Include="Elements\DktElement.cs" />
+    <Compile Include="Elements\ParametricBarElementCrossSection.cs" />
     <Compile Include="Elements\SdofMass.cs" />
     <Compile Include="Elements\Spring1D.cs" />
     <Compile Include="Elements\TriangleFlatShell.cs" />
@@ -199,11 +200,11 @@
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
     <None Include="Documents\SupportReactions.mkd" />
+    <None Include="Elements\FrameElement2Node.md" />
     <None Include="Elements\SdofMass.md" />
     <None Include="Elements\Spring1D.md" />
     <None Include="Elements\Tetrahedral.md" />
     <None Include="Elements\TriangleFlatShell.md" />
-    <None Include="Elements\FrameElement2Node.md" />
     <None Include="Elements\TriangleFlatShellExtensions.md" />
     <None Include="Elements\HingeLink.md" />
     <None Include="Integration\GaussianIntegrator.md" />
