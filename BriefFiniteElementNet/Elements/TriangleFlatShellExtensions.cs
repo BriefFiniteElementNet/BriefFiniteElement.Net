@@ -281,6 +281,47 @@ namespace BriefFiniteElementNet.Elements
             return new Force(shearForce, Vector.Zero);
         }
 
+        /// <summary>
+        /// Integrates the shear force along intersection of element with defined plane.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="plane">The plane.</param>
+        /// <returns>Integrated force</returns>
+        public static Force IntegrateNormalForce(this TriangleFlatShell element, Plane plane, LoadCombination cmb)
+        {
+            //step 1: does intersect?
+            //step 2: get a tensor (no matter where, this is constant stress)
+            //step 3: find rotation amount for tensors
+            //step 4: rotate tensors
+            //step 5: integrate forces
+
+            if (!DoesIntersects(element, plane))
+                return Force.Zero;
+
+            var intersection = GetIntersection(element, plane);
+
+            //step 2
+            var tensor = element.GetInternalForce(0, 0, cmb);
+
+            //step 3
+            var t = element.GetTransformationMatrix().Transpose(); //transpose of t
+            var nLocal = (Vector)(t * plane.Normal.ToMatrix()).ToPoint();//project of N to local element coord system
+            var theta = Math.Atan2(nLocal.Y, nLocal.X) - Math.PI / 2;
+
+            //step 4
+            var rotatedTensor = MembraneStressTensor.Rotate(tensor.MembraneTensor, theta);
+
+            // shear direction
+            var shearLocalDirection = new Vector(Math.Cos(theta), Math.Sin(theta), 0);//direction of shear force in local element coord system, which is vector I rotated by amount theta
+            var shearGlobalDirection = (Vector)(t.Transpose() * shearLocalDirection.ToMatrix()).ToPoint();
+
+            var fShearAmount = rotatedTensor.Txy * element.Thickness * intersection.Length;//shear force
+
+            var shearForce = fShearAmount * shearGlobalDirection.GetUnit();
+
+            return new Force(shearForce, Vector.Zero);
+        }
+
         [Obsolete]
         public static Force IntegrateForceOverIntersection(Model mdl, Plane pl)
         {

@@ -18,41 +18,41 @@ namespace BriefFiniteElementNet.Elements
         /// <summary>
         /// The Beam in local Y direction
         /// </summary>
-        public static BarElementBehaviour BeamY = BarElementBehaviour.BeamY;
+        public static BarElementBehaviour BeamY = BarElementBehaviour.BeamYEulerBernoulli;
 
         /// <summary>
         /// The Beam in local Y direction, considering shear deformations
         /// </summary>
-        public static BarElementBehaviour BeamYWithShearDeformation = BarElementBehaviour.BeamYWithShearDefomation;
+        public static BarElementBehaviour BeamYWithShearDeformation = BarElementBehaviour.BeamYTimoshenko;
 
         /// <summary>
         /// The Beam in local Z direction
         /// </summary>
-        public static BarElementBehaviour BeamZ = BarElementBehaviour.BeamZ;
+        public static BarElementBehaviour BeamZ = BarElementBehaviour.BeamZEulerBernoulli;
 
         /// <summary>
         /// The Beam in local Z direction, considering shear deformations
         /// </summary>
-        public static BarElementBehaviour BeamZWithShearDefomation = BarElementBehaviour.BeamZWithShearDefomation;
+        public static BarElementBehaviour BeamZWithShearDefomation = BarElementBehaviour.BeamZTimoshenko;
 
         /// <summary>
         /// The full beam: beam in both local Y and Z direction
         /// </summary>
-        public static BarElementBehaviour FullBeam = BarElementBehaviour.BeamY & BarElementBehaviour.BeamZ;
+        public static BarElementBehaviour FullBeam = BarElementBehaviour.BeamYEulerBernoulli & BarElementBehaviour.BeamZEulerBernoulli;
 
         /// <summary>
         /// The full beam considering shear deformation: beam in both local Y and Z direction considering shear deformations
         /// </summary>
-        public static BarElementBehaviour FullBeamWithShearDefomation = BarElementBehaviour.BeamYWithShearDefomation & BarElementBehaviour.BeamZWithShearDefomation;
+        public static BarElementBehaviour FullBeamWithShearDefomation = BarElementBehaviour.BeamYTimoshenko & BarElementBehaviour.BeamZTimoshenko;
 
         /// <summary>
         /// The full frame: truss + shaft + beam in both local Y and Z direction
         /// </summary>
-        public static BarElementBehaviour FullFrame = BarElementBehaviour.Truss & BarElementBehaviour.BeamY & BarElementBehaviour.BeamZ & BarElementBehaviour.Shaft;
+        public static BarElementBehaviour FullFrame = BarElementBehaviour.Truss & BarElementBehaviour.BeamYEulerBernoulli & BarElementBehaviour.BeamZEulerBernoulli & BarElementBehaviour.Shaft;
 
         /// <summary>
         /// The full frame considering shear deformation: truss + shaft + beam in both local Y and Z direction considering shear deformations
         /// </summary>
-        public static BarElementBehaviour FullFrameWithShearDeformation = BarElementBehaviour.Truss & BarElementBehaviour.BeamYWithShearDefomation & BarElementBehaviour.BeamZWithShearDefomation & BarElementBehaviour.Shaft;
+        public static BarElementBehaviour FullFrameWithShearDeformation = BarElementBehaviour.Truss & BarElementBehaviour.BeamYTimoshenko & BarElementBehaviour.BeamZTimoshenko & BarElementBehaviour.Shaft;
     }
 }

@@ -107,6 +107,8 @@ namespace BriefFiniteElementNet.Elements
             var L = (EndNode.Location - StartNode.Location).Length;
 
             var L2 = L * L;
+            var L3 = L2 * L;
+
 
             //location is xi varies from -1 to 1
             var xi = location[0];
@@ -117,7 +119,7 @@ namespace BriefFiniteElementNet.Elements
             var buf = new Matrix(4, 12);
 
             
-            if ((this._behavior & BarElementBehaviour.BeamY) != 0)
+            if ((this._behavior & BarElementBehaviour.BeamYEulerBernoulli) != 0)
             {
                 //BeamY is in behaviors, should use beam with Iz
 
@@ -128,12 +130,35 @@ namespace BriefFiniteElementNet.Elements
                 buf.FillRow(0, arr);
             }
 
-            if ((this._behavior & BarElementBehaviour.BeamYWithShearDefomation) != 0)
+            if ((this._behavior & BarElementBehaviour.BeamYTimoshenko) != 0)
             {
                 throw new NotImplementedException();
+
+                double c;
+
+                {
+                    var e = 1.0;
+                    var g = 1.0;
+                    var i = 1.0;
+                    var k = 1.0;
+
+                    var a = e*i/L3;
+                    var b = k*g*a*L;//6.20 ref[4]
+
+                    c = 6*a*L/(12*a*L2 + b);
+                }
+
+                var arr = new double[]
+                {
+                    0, -12*c*L*xi + 6*xi, 0, 0,
+                    0, - 6*c*L*xi + L*(3*xi - 1), 0, 12*c*L*xi - 6*xi,
+                    0, 0, 0, 6*c*L*xi + L*(3*xi + 1)
+                };
+
+                buf.FillRow(0, arr);
             }
 
-            if ((this._behavior & BarElementBehaviour.BeamZ) != 0)
+            if ((this._behavior & BarElementBehaviour.BeamZEulerBernoulli) != 0)
             {
                 //BeamZ in behaviours, should use beam with Iy
 
@@ -144,9 +169,32 @@ namespace BriefFiniteElementNet.Elements
                 buf.FillRow(1, arr);
             }
 
-            if ((this._behavior & BarElementBehaviour.BeamZWithShearDefomation) != 0)
+            if ((this._behavior & BarElementBehaviour.BeamZTimoshenko) != 0)
             {
                 throw new NotImplementedException();
+
+                double c;
+
+                {
+                    var e = 1.0;
+                    var g = 1.0;
+                    var i = 1.0;
+                    var k = 1.0;
+
+                    var a = e * i / L3;
+                    var b = k * g * a * L;//6.20 ref[4]
+
+                    c = 6 * a * L / (12 * a * L2 + b);
+                }
+
+                var arr = new double[]
+                {
+                    0, 0, -12*c*L*xi + 6*xi, 0,
+                    -6*c*L*xi + L*(3*xi - 1), 0, 12*c*L*xi - 6*xi, 0, 0, 0,
+                    6*c*L*xi + L*(3*xi + 1), 0
+                };
+
+                buf.FillRow(1, arr);
             }
 
             if ((this._behavior & BarElementBehaviour.Truss) != 0)
@@ -188,13 +236,27 @@ namespace BriefFiniteElementNet.Elements
 
         public override Matrix ComputeDMatrixAt(params double[] location)
         {
-            
-            throw new NotImplementedException();
+            double e = 0.0, g = 0;//mechanical
+            double iz = 0, iy = 0, j = 0, a = 0;//geometrical
+
+            var buf = new Matrix(4, 4);
+
+            buf[0, 0] = e * iz;
+            buf[1, 1] = e * iy;
+            buf[2, 2] = e * a;
+            buf[3, 3] = e * j;
+
+            return buf;
         }
 
         public override Matrix ComputeJMatrixAt(params double[] location)
         {
-            throw new NotImplementedException();
+            // J =  ∂x / ∂ξ
+            var L = (EndNode.Location - StartNode.Location).Length;
+
+            var buf =new Matrix(1,1);
+            buf[0, 0] = L/2;/// J =  ∂x / ∂ξ
+            return buf;
         }
 
         public override Matrix ComputeNMatrixAt(params double[] location)

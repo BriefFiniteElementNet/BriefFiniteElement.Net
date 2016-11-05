@@ -1,4 +1,7 @@
-﻿# ComputeB() & GetD()
+﻿# Use ElementHelper instead of element itself for calculations
+Use another class named ElementHelper for internal calculations of say B or D matrix for each type separately (like truss, beam, shaft, ...)
+
+# ComputeB() & GetD()
 Implement Element.ComputeB() and Element.GetD() for frame, shell and other elements to help to implement mass and damp matrices.
 Create visualizer for showing deformed shape and coloring based on internal stress/force.
 XML or any other plane text serialization for ISerializable s
@@ -51,3 +54,6 @@ Only these elements need to be:
 BarElement, TriangleElement, TetrahedronElement, Spring.
 
 # Change the FrameElement2Node architecture
+
+
+# Element.GetEquivalentNodalLoads be moved to Load.GetEquivalentNodalLoads

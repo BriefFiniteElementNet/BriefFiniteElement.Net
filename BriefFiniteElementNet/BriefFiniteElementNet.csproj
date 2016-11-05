@@ -58,6 +58,8 @@
     <Compile Include="Elements\ParametricBarElementCrossSection.cs" />
     <Compile Include="Elements\SdofMass.cs" />
     <Compile Include="Elements\Spring1D.cs" />
+    <Compile Include="Elements\TriangleElement.cs" />
+    <Compile Include="Elements\TriangleElementBehaviour.cs" />
     <Compile Include="Elements\TriangleFlatShell.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="CalcUtil.cs" />
@@ -200,6 +202,7 @@
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />
     <None Include="Documents\SupportReactions.mkd" />
+    <None Include="Elements\BarElement.md" />
     <None Include="Elements\FrameElement2Node.md" />
     <None Include="Elements\SdofMass.md" />
     <None Include="Elements\Spring1D.md" />

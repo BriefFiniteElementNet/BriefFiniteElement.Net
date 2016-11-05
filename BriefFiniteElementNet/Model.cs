@@ -340,13 +340,24 @@ namespace BriefFiniteElementNet
             lastResult = new StaticLinearAnalysisResult();
             lastResult.Parent = this;
             lastResult.SolverGenerator = config.SolverGenerator;
-            
+
+            ReIndexNodes();
+
             foreach (var loadCase in config.LoadCases)
             {
                 lastResult.AddAnalysisResultIfNotExists(loadCase);
             }
         }
 
+
+        /// <summary>
+        /// Re-indexes the nodes incrementally.
+        /// </summary>
+        public void ReIndexNodes()
+        {
+            for (int i = 0; i < this.Nodes.Count; i++)
+                this.Nodes[i].Index = i;
+        }
         #endregion
 
         #region Serialization stuff

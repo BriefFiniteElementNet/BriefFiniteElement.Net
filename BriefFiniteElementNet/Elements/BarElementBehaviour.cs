@@ -6,7 +6,7 @@ using System.Text;
 namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
-    /// Represents the possible behavior of Bar Element
+    /// Represents the possible behaviors of Bar Element
     /// </summary>
     [Flags]
     public enum BarElementBehaviour
@@ -16,25 +16,28 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         Truss = 1,
         /// <summary>
-        /// The beam in local Y direction behavior
+        /// The beam in local Y direction behavior, following Euler-Bernoulli theory
         /// </summary>
-        BeamY = 2,
+        BeamYEulerBernoulli = 2,
         /// <summary>
-        /// The beam in local Y direction behavior considering shear deformations
+        /// The beam in local Y direction behavior, following Timoshenko theory
         /// </summary>
-        BeamYWithShearDefomation = 4,
+        BeamYTimoshenko = 4,
         /// <summary>
-        /// The beam in local Z direction behavior
+        /// The beam in local Y direction behavior, following Euler-Bernoulli theory
         /// </summary>
-        BeamZ = 8,
+        BeamZEulerBernoulli = 8,
         /// <summary>
-        /// The beam in local Z direction behavior considering shear deformations
+        /// The beam in local Z direction behavior, following Timoshenko theory
         /// </summary>
-        BeamZWithShearDefomation = 16,
+        BeamZTimoshenko = 16,
         /// <summary>
-        /// The shaft (only torsion)
+        /// The shaft (only torsion), normal
         /// </summary>
         Shaft = 32,
-
+        /// <summary>
+        /// The shaft (only torsion), following timoshenko theory for thick bars
+        /// </summary>
+        ThickShaft = 64,
     }
 }
