@@ -39,6 +39,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ElementHelpers\BeamDirection.cs" />
+    <Compile Include="ElementHelpers\ShaftHelper.cs" />
+    <Compile Include="ElementHelpers\TimoshenkoBeamHelper.cs" />
+    <Compile Include="ElementHelpers\EulerBernoulliBeamHelper.cs" />
+    <Compile Include="ElementHelpers\IElementHelper.cs" />
+    <Compile Include="ElementHelpers\TrussElementHelper.cs" />
+    <Compile Include="Elements\BarCrossSectionGeometricProperties.cs" />
+    <Compile Include="Elements\BarCrossSectionMechanicalProperties.cs" />
     <Compile Include="Elements\BarElementBehaviours.cs" />
     <Compile Include="CheckingUtil.cs" />
     <Compile Include="ConsoleTraceListener.cs" />
@@ -50,7 +58,7 @@
     <Compile Include="Elements\BarElement.cs" />
     <Compile Include="Elements\BarElementBehaviour.cs" />
     <Compile Include="Elements\BarElementEndConnection.cs" />
-    <Compile Include="Elements\BaseBarElemenetCrossSection.cs" />
+    <Compile Include="Elements\BaseBarElementCrossSection.cs" />
     <Compile Include="Elements\BaseBarElementMaterial.cs" />
     <Compile Include="Elements\ConcentratedMass.cs" />
     <Compile Include="Elements\CstElement.cs" />

@@ -15,7 +15,8 @@ namespace BriefFiniteElementNet.Elements
         private BarElementEndConnection _startConnection;
         private BarElementEndConnection _endtConnection;
         private BarElementBehaviour _behavior;
-        private BaseBarElemenetCrossSection _section;
+        private BaseBarElementCrossSection _section;
+        private BaseBarElementMaterial _matterial;
 
 
         /// <summary>
@@ -98,6 +99,30 @@ namespace BriefFiniteElementNet.Elements
         {
             get { return _webRotation; }
             set { _webRotation = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the cross section of bar element.
+        /// </summary>
+        /// <value>
+        /// The section.
+        /// </value>
+        public BaseBarElementCrossSection Section
+        {
+            get { return _section; }
+            set { _section = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the material of bar element.
+        /// </summary>
+        /// <value>
+        /// The material.
+        /// </value>
+        public BaseBarElementMaterial Material
+        {
+            get { return _matterial; }
+            set { _matterial = value; }
         }
 
         #endregion

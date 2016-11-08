@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Elements
 {
-    public class ParametricBarElementCrossSection : BaseBarElemenetCrossSection
+    public class ParametricBarElementCrossSection : BaseBarElementCrossSection
     {
         public override void GetCrossSectionPropertiesAt(double x, out double A, out double Iy)
         {

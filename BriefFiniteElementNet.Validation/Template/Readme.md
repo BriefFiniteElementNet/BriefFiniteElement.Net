@@ -7,7 +7,7 @@ Readme.md file pattern inside each folder:
 - Model Definition (details about model definition)
 - Some visualization would be good!
 - Result (Result of validation for this case)
-
+- References (if example is taken from a reference)
 
 Images are in same folder for each case
 Codes are in same folder for each case
