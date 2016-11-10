@@ -289,7 +289,15 @@ namespace BriefFiniteElementNet
             return new Force(- f.fx, - f.fy, - f.fz, - f.mx, - f.my, - f.mz);
         }
 
+        public static bool operator ==(Force f1, Force f2)
+        {
+            return f1.Equals(f2);
+        }
 
+        public static bool operator !=(Force f1, Force f2)
+        {
+            return !f1.Equals(f2);
+        }
 
         #endregion
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BriefFiniteElementNet.ElementHelpers;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -307,6 +308,64 @@ namespace BriefFiniteElementNet.Elements
         public override Matrix GetGlobalStifnessMatrix()
         {
             throw new NotImplementedException();
+        }
+
+        private Matrix GetTransformationMatrix()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Matrix GetLocalStifnessMatrix()
+        {
+            var helpers = new List<IElementHelper>();
+
+            if ((this._behavior & BarElementBehaviour.BeamYEulerBernoulli) != 0)
+            {
+                helpers.Add(new EulerBernoulliBeamHelper(BeamDirection.Y));
+            }
+
+            if ((this._behavior & BarElementBehaviour.BeamYTimoshenko) != 0)
+            {
+                helpers.Add(new TimoshenkoBeamHelper(BeamDirection.Y));
+            }
+
+            if ((this._behavior & BarElementBehaviour.BeamZEulerBernoulli) != 0)
+            {
+                helpers.Add(new EulerBernoulliBeamHelper(BeamDirection.Z));
+            }
+
+            if ((this._behavior & BarElementBehaviour.BeamZTimoshenko) != 0)
+            {
+                helpers.Add(new TimoshenkoBeamHelper(BeamDirection.Z));
+            }
+
+            if ((this._behavior & BarElementBehaviour.Truss) != 0)
+            {
+                helpers.Add(new TrussHelper());
+            }
+
+            if ((this._behavior & BarElementBehaviour.Shaft) != 0)
+            {
+                helpers.Add(new ShaftHelper());
+            }
+
+            var buf = new Matrix(12, 12);
+
+            var transMatrix = GetTransformationMatrix();
+
+            for (var i = 0; i < helpers.Count; i++)
+            {
+                var helper = helpers[i];
+
+                var ki = helper.GetKMatrix(this, transMatrix);
+                var dofs = helper.GetDofOrder(this);
+
+                //TODO: substitude ki into buf
+                
+                throw new NotImplementedException();
+            }
+
+            return buf;
         }
     }
 }

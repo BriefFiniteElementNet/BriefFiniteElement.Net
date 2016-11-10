@@ -335,18 +335,12 @@ namespace BriefFiniteElementNet
         {
             get
             {
-                MatrixException.ThrowIf(row >= this.RowCount || column >= this.ColumnCount,
-                    "Invalid column or row specified");
-
-                return this.CoreArray[column*this.rowCount + row];
+                return GetMember(row, column);
             }
 
             set
             {
-                MatrixException.ThrowIf(row >= this.RowCount || column >= this.ColumnCount,
-                    "Invalid column or row specified");
-
-                this.CoreArray[column*this.rowCount + row] = value;
+                SetMember(row, column, value);
             }
         }
 
@@ -404,6 +398,39 @@ namespace BriefFiniteElementNet
 
         #region Dynamic Functions
 
+        /// <summary>
+        /// Sets the member at defined row and column to defined value.
+        /// </summary>
+        /// <param name="row">The row.</param>
+        /// <param name="column">The column.</param>
+        /// <param name="value">The value.</param>
+        public void SetMember(int row, int column, double value)
+        {
+            MatrixException.ThrowIf(row >= this.RowCount || column >= this.ColumnCount,
+                   "Invalid column or row specified");
+
+            this.CoreArray[column * this.rowCount + row] = value;
+        }
+
+        /// <summary>
+        /// Gets the member at defined row and column.
+        /// </summary>
+        /// <param name="row">The row.</param>
+        /// <param name="column">The column.</param>
+        /// <returns></returns>
+        public double GetMember(int row, int column)
+        {
+            MatrixException.ThrowIf(row >= this.RowCount || column >= this.ColumnCount,
+                   "Invalid column or row specified");
+
+            return this.CoreArray[column * this.rowCount + row];
+        }
+
+        /// <summary>
+        /// Substitutes the defined row with defined values.
+        /// </summary>
+        /// <param name="i">The i.</param>
+        /// <param name="values">The values.</param>
         public void SetRow(int i, params double[] values)
         {
             if (values.Count() != this.ColumnCount)
@@ -415,6 +442,11 @@ namespace BriefFiniteElementNet
             }
         }
 
+        /// <summary>
+        /// Substitutes the defined column with defined values.
+        /// </summary>
+        /// <param name="j">The j.</param>
+        /// <param name="values">The values.</param>
         public void SetColumn(int j, params double[] values)
         {
             if (values.Count() != this.RowCount)

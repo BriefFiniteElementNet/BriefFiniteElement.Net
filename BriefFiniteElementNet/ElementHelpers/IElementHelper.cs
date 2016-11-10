@@ -55,9 +55,8 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// </summary>
         /// <param name="targetElement">The target element.</param>
         /// <param name="transformMatrix">The transform matrix.</param>
-        /// <param name="isoCoords">The iso coordinations.</param>
         /// <returns></returns>
-        Matrix GetKMatrix(Element targetElement, Matrix transformMatrix, params double[] isoCoords);
+        Matrix GetKMatrix(Element targetElement, Matrix transformMatrix);
 
         /// <summary>
         /// Gets the DoF order of returned values.

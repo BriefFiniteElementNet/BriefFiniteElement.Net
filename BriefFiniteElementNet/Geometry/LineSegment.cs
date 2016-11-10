@@ -7,6 +7,14 @@ namespace BriefFiniteElementNet.Geometry
     /// </summary>
     public struct LineSegment
     {
+       
+
+        public LineSegment(Point p1, Point p2)
+        {
+            P1 = p1;
+            P2 = p2;
+        }
+
         /// <summary>
         /// The p1, starting point
         /// </summary>

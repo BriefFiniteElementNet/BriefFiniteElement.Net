@@ -36,7 +36,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetKMatrix(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetKMatrix(Element targetElement, Matrix transformMatrix)
         {
             throw new NotImplementedException();
         }

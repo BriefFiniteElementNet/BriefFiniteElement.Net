@@ -37,7 +37,7 @@ namespace BriefFiniteElementNet.Integration
         /// <summary>
         /// The Gaussian point count for integrating in η dimension.
         /// </summary>
-        public int NuPointCount;
+        public int EtaPointCount;
 
         /// <summary>
         /// The Gaussian point count for integrating in γ dimension.
@@ -101,7 +101,7 @@ namespace BriefFiniteElementNet.Integration
         /// <returns>The I</returns>
         public Matrix Integrate()
         {
-            if (XiPointCount < 1 || NuPointCount < 1 || GammaPointCount < 1)
+            if (XiPointCount < 1 || EtaPointCount < 1 || GammaPointCount < 1)
                 throw new NotSupportedException();
 
             double a1 = A1, a2 = A2;
@@ -115,8 +115,8 @@ namespace BriefFiniteElementNet.Integration
             var vk = GaussPoints.GetGaussianValues(GammaPointCount);
             var wk = GaussPoints.GetGaussianWeights(GammaPointCount);
 
-            var vj = GaussPoints.GetGaussianValues(NuPointCount);
-            var wj = GaussPoints.GetGaussianWeights(NuPointCount);
+            var vj = GaussPoints.GetGaussianValues(EtaPointCount);
+            var wj = GaussPoints.GetGaussianWeights(EtaPointCount);
 
             var vi = GaussPoints.GetGaussianValues(XiPointCount);
             var wi = GaussPoints.GetGaussianWeights(XiPointCount);
@@ -128,7 +128,7 @@ namespace BriefFiniteElementNet.Integration
                 var gammaK = (a2 - a1)/2*vk[k] + (a2 + a1)/2;
                 Matrix phi = null;// = new Matrix(H, W);
 
-                for (var j = 0; j < NuPointCount; j++)
+                for (var j = 0; j < EtaPointCount; j++)
                 {
                     var noj = (f2(gammaK) - f1(gammaK))/2*vj[j] + (f2(gammaK) + f1(gammaK))/2;
                     Matrix beta = null;//= new Matrix(H, W); 
@@ -161,6 +161,29 @@ namespace BriefFiniteElementNet.Integration
             }
 
             return I;
+        }
+
+
+        public static GaussianIntegrator CreateFor1DProblem(Func<double, double> function, double x0, double x1,
+            int sampling)
+        {
+            var buf = new GaussianIntegrator();
+
+            buf.A1 = x0;
+            buf.A2 = x1;
+
+            buf.F1 = gama => 0;
+            buf.F2 = gama => 1;
+
+            buf.G1 = (eta, gama) => 0;
+            buf.G2 = (eta, gama) => 1;
+
+            buf.GammaPointCount = sampling;
+            buf.XiPointCount = buf.EtaPointCount = 1;
+
+            buf.H = new FunctionMatrixFunction((xi, eta, gama) => new Matrix(new[] {function(gama)}));
+
+            return buf;
         }
     }
 }

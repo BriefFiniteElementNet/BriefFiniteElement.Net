@@ -88,5 +88,27 @@ namespace BriefFiniteElementNet.Geometry
             return buf;
         }
 
+        /// <summary>
+        /// Gets the side sign (two points with same side sign are in same side of plan, with different signs are on different sides of plane)
+        /// </summary>
+        /// <param name="plane">The plane.</param>
+        /// <param name="point">The point.</param>
+        /// <returns>-1, 0 (point exactly on plane), 1</returns>
+        public int GetSideSign( Point point)
+        {
+            var plane = this;
+            var d = -Vector.Dot(plane.Normal, plane.P);
+
+            var tmp = Vector.Dot(point, plane.Normal) + d;
+
+            if (tmp > 0)
+                return 1;
+
+            if (tmp < 0)
+                return -1;
+
+            return -1;
+        }
+
     }
 }

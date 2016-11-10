@@ -237,7 +237,7 @@ namespace BriefFiniteElementNet.Elements
             intg.G2 = ((nu, gama) => 1 - nu);
             intg.G1 = ((nu, gama) => 0);
 
-            intg.XiPointCount = intg.NuPointCount = 3;
+            intg.XiPointCount = intg.EtaPointCount = 3;
             intg.GammaPointCount = 1;
 
             intg.H = new FunctionMatrixFunction((xi, nu, gamma) =>
@@ -467,7 +467,7 @@ namespace BriefFiniteElementNet.Elements
             intg.G2 = ((eta, gama) => 1 - eta);
             intg.G1 = ((eta, gama) => 0);
 
-            intg.XiPointCount = intg.NuPointCount = 3;
+            intg.XiPointCount = intg.EtaPointCount = 3;
             intg.GammaPointCount = 1;
 
             intg.H = new FunctionMatrixFunction((xi, eta, gamma) =>

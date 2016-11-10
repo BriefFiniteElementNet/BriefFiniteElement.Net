@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 using BriefFiniteElementNet.CSparse.Double;
+using BriefFiniteElementNet.Geometry;
 
 namespace BriefFiniteElementNet
 {
@@ -41,8 +42,17 @@ namespace BriefFiniteElementNet
             return new Point(pt[0, 0], pt[1, 0], pt[2, 0]);
         }
 
+        public static Vector ToVector(this Matrix pt)
+        {
+            if (pt.RowCount != 3 || pt.ColumnCount != 1)
+                throw new Exception();
+
+            return new Vector(pt[0, 0], pt[1, 0], pt[2, 0]);
+        }
+
         public delegate double FunctionDelegate(double d);
 
+        [Obsolete("Use GaussianIntegrator instead")]
         public static double GaussianIntegrate(this Func<double, double> f, double start, double end, int samples)
         {
             var baa = (end + start) / 2;
@@ -165,7 +175,6 @@ namespace BriefFiniteElementNet
             return bma * buff;
         }
 
-
         public static double Max(this double[] array)
         {
             if (array.Length == 0)
@@ -181,7 +190,6 @@ namespace BriefFiniteElementNet
 
             return max;
         }
-
 
         /// <summary>
         /// Simplify the accessing to <see cref="SerializationInfo.GetValue"/> and then casting the returned type.
@@ -218,7 +226,6 @@ namespace BriefFiniteElementNet
             return frc;
         }
 
-
         public static Force Move(this Force frc, Vector r)
         {
             var addMoment = Vector.Cross(r, frc.Forces);
@@ -227,7 +234,6 @@ namespace BriefFiniteElementNet
 
             return frc;
         }
-
         
         public static int IndexOfReference<T>(this IEnumerable<T> arr, T obj)
         {
@@ -349,7 +355,6 @@ namespace BriefFiniteElementNet
             return clone;
         }
 
-
         /// <summary>
         /// Returns the first occurrence of <see cref="value"/> in the <see cref="arr"/>.
         /// </summary>
@@ -371,7 +376,6 @@ namespace BriefFiniteElementNet
 
             return -1;
         }
-
 
         /// <summary>
         /// Assembles the <see cref="submatrix"/> inside the <see cref="main"/> matrix.
@@ -395,7 +399,6 @@ namespace BriefFiniteElementNet
 
         }
 
-
         /// <summary>
         /// Multiplies the <see cref="matrix"/> by a constant value.
         /// </summary>
@@ -408,7 +411,6 @@ namespace BriefFiniteElementNet
                 matrix.CoreArray[i] *= constant;
             }
         }
-
 
         /// <summary>
         /// Gets the sum of external loads (both from external sources and supports) which are applying to the node.
@@ -471,6 +473,60 @@ namespace BriefFiniteElementNet
             }
 
             return buf;
+        }
+
+        public static bool AreAllSame<T>(this IEnumerable<T> objs)
+        {
+            var objects = objs.ToArray();
+
+            if (objects.Length == 0)
+                return true;
+
+            var fst = objects[0];
+
+            if (fst == null)
+                return objects.All(i => ReferenceEquals(i, null));
+
+
+            for (var i = 1; i < objects.Length; i++)
+                if (!fst.Equals(objects[i]))
+                    return false;
+
+            return true;
+        }
+
+        public static bool GetIntersectionPoint(this Plane plane, LineSegment segment,out Point result)
+        {
+            if (new[] {segment.P1, segment.P2}.Select(i => plane.GetSideSign(i)).AreAllSame())
+            {
+                result = default(Point);
+                return false;
+            }
+
+
+            var p1 = segment.P1;
+            var p2 = segment.P2;
+
+            var l = p2 - p1;
+            var l0 = p1;
+
+            var N = plane.Normal;
+            var p0 = plane.P;
+
+            var D = (p0 - l0).Dot(N) / (l).Dot(N);
+
+            if (double.IsInfinity(D) || double.IsNaN(D) || double.IsNegativeInfinity(D) || double.IsPositiveInfinity(D) ||
+                D == double.MinValue || D == double.MaxValue)
+            {
+                result = default(Point);
+                return false;
+            }
+
+            var p = D * l + l0;//intersection point
+
+            result = p;
+
+            return true;
         }
     }
 }

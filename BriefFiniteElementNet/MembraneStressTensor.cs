@@ -7,6 +7,17 @@ namespace BriefFiniteElementNet
 {
     public class MembraneStressTensor
     {
+        public MembraneStressTensor()
+        {
+        }
+
+        public MembraneStressTensor(double sx, double sy, double txy)
+        {
+            Sx = sx;
+            Sy = sy;
+            Txy = txy;
+        }
+
         public double Sx, Sy, Txy; //σx, σy, τxy
 
         public static MembraneStressTensor operator +(MembraneStressTensor left, MembraneStressTensor right)

@@ -9,7 +9,7 @@ namespace BriefFiniteElementNet.ElementHelpers
     /// <summary>
     /// Represents an element helper for truss element.
     /// </summary>
-    public class TrussElementHelper : IElementHelper
+    public class TrussHelper : IElementHelper
     {
         /// <inheritdoc/>
         public Matrix GetBMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
@@ -38,12 +38,12 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var xi = isoCoords[0];
 
-            var sec = elm.Section.GetCrossSectionPropertiesAt(xi);
+            var geo = elm.Section.GetCrossSectionPropertiesAt(xi);
             var mech = elm.Material.GetMaterialPropertiesAt(xi);
 
             var buf = new Matrix(1, 1);
 
-            buf.FillRow(0, sec.A);
+            buf.FillRow(0, geo.A*mech.E);
 
             return buf;
         }
@@ -51,8 +51,6 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix GetNMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
         {
-            
-
             throw new NotImplementedException();
         }
 
@@ -63,7 +61,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetKMatrix(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetKMatrix(Element targetElement, Matrix transformMatrix)
         {
             throw new NotImplementedException();
         }

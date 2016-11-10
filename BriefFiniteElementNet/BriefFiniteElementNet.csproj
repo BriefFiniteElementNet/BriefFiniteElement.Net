@@ -40,11 +40,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ElementHelpers\BeamDirection.cs" />
+    <Compile Include="ElementHelpers\CstHelper.cs" />
+    <Compile Include="ElementHelpers\DktHelper.cs" />
     <Compile Include="ElementHelpers\ShaftHelper.cs" />
+    <Compile Include="ElementHelpers\TetrahedronHelper.cs" />
     <Compile Include="ElementHelpers\TimoshenkoBeamHelper.cs" />
     <Compile Include="ElementHelpers\EulerBernoulliBeamHelper.cs" />
     <Compile Include="ElementHelpers\IElementHelper.cs" />
-    <Compile Include="ElementHelpers\TrussElementHelper.cs" />
+    <Compile Include="ElementHelpers\TrussHelper.cs" />
     <Compile Include="Elements\BarCrossSectionGeometricProperties.cs" />
     <Compile Include="Elements\BarCrossSectionMechanicalProperties.cs" />
     <Compile Include="Elements\BarElementBehaviours.cs" />

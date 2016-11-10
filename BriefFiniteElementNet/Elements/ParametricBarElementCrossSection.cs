@@ -7,7 +7,7 @@ namespace BriefFiniteElementNet.Elements
 {
     public class ParametricBarElementCrossSection : BaseBarElementCrossSection
     {
-        public override void GetCrossSectionPropertiesAt(double x, out double A, out double Iy)
+        public override BarCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double x)
         {
             throw new NotImplementedException();
         }

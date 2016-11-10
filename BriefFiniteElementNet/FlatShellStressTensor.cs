@@ -7,6 +7,12 @@ namespace BriefFiniteElementNet
 {
     public struct FlatShellStressTensor
     {
+        public FlatShellStressTensor(MembraneStressTensor membraneTensor, PlateBendingStressTensor bendingTensor)
+        {
+            MembraneTensor = membraneTensor;
+            BendingTensor = bendingTensor;
+        }
+
         public MembraneStressTensor MembraneTensor;
 
         public PlateBendingStressTensor BendingTensor;
