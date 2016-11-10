@@ -38,21 +38,21 @@ namespace BriefFiniteElementNet.Elements
         /// <summary>
         /// The full beam: beam in both local Y and Z direction
         /// </summary>
-        public static BarElementBehaviour FullBeam = BarElementBehaviour.BeamYEulerBernoulli & BarElementBehaviour.BeamZEulerBernoulli;
+        public static BarElementBehaviour FullBeam = BarElementBehaviour.BeamYEulerBernoulli | BarElementBehaviour.BeamZEulerBernoulli;
 
         /// <summary>
         /// The full beam considering shear deformation: beam in both local Y and Z direction considering shear deformations
         /// </summary>
-        public static BarElementBehaviour FullBeamWithShearDefomation = BarElementBehaviour.BeamYTimoshenko & BarElementBehaviour.BeamZTimoshenko;
+        public static BarElementBehaviour FullBeamWithShearDefomation = BarElementBehaviour.BeamYTimoshenko | BarElementBehaviour.BeamZTimoshenko;
 
         /// <summary>
         /// The full frame: truss + shaft + beam in both local Y and Z direction
         /// </summary>
-        public static BarElementBehaviour FullFrame = BarElementBehaviour.Truss & BarElementBehaviour.BeamYEulerBernoulli & BarElementBehaviour.BeamZEulerBernoulli & BarElementBehaviour.Shaft;
+        public static BarElementBehaviour FullFrame = BarElementBehaviour.Truss | BarElementBehaviour.BeamYEulerBernoulli | BarElementBehaviour.BeamZEulerBernoulli | BarElementBehaviour.Shaft;
 
         /// <summary>
         /// The full frame considering shear deformation: truss + shaft + beam in both local Y and Z direction considering shear deformations
         /// </summary>
-        public static BarElementBehaviour FullFrameWithShearDeformation = BarElementBehaviour.Truss & BarElementBehaviour.BeamYTimoshenko & BarElementBehaviour.BeamZTimoshenko & BarElementBehaviour.Shaft;
+        public static BarElementBehaviour FullFrameWithShearDeformation = BarElementBehaviour.Truss | BarElementBehaviour.BeamYTimoshenko | BarElementBehaviour.BeamZTimoshenko | BarElementBehaviour.Shaft;
     }
 }

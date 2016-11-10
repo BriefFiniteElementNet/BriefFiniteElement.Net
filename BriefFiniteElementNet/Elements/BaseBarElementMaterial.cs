@@ -19,9 +19,9 @@ namespace BriefFiniteElementNet.Elements
 
 
         /// <summary>
-        /// Gets the list of points that integration should be sampled there.
+        /// Gets the number of Gaussian points that integration should be sampled there.
         /// </summary>
-        /// <returns>the list of points, all in [0,1] range</returns>
-        public abstract double[] GetIntegrationPoints();
+        /// <returns>the number of Gaussian integration points needed</returns>
+        public abstract int GetGaussianIntegrationPoints();
     }
 }

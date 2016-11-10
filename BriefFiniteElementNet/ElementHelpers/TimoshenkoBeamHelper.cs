@@ -47,7 +47,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetKMatrix(Element targetElement, Matrix transformMatrix)
+        public Matrix GetOverridedLocalKMatrix(Element targetElement, Matrix transformMatrix)
         {
             throw new NotImplementedException();
         }
@@ -57,5 +57,26 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             throw new NotImplementedException();
         }
+
+        /// <inheritdoc/>
+        public Matrix GetInternalForceAt(Element targetElement, Matrix transformMatrix, Displacement[] globalDisplacements,
+            params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public bool DoesOverrideKMatrixCalculation(Element targetElement, Matrix transformMatrix)
+        {
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public int GetGaussianIntegrationPointCount(Element targetElement, Matrix transformMatrix)
+        {
+            throw new NotImplementedException();
+        }
+
+
     }
 }

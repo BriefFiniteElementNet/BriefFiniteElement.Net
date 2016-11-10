@@ -56,7 +56,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="targetElement">The target element.</param>
         /// <param name="transformMatrix">The transform matrix.</param>
         /// <returns></returns>
-        Matrix GetKMatrix(Element targetElement, Matrix transformMatrix);
+        Matrix GetOverridedLocalKMatrix(Element targetElement, Matrix transformMatrix);
 
         /// <summary>
         /// Gets the DoF order of returned values.
@@ -64,5 +64,35 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="targetElement">The target element.</param>
         /// <returns></returns>
         FluentElementPermuteManager.ElementLocalDof[] GetDofOrder(Element targetElement);
+
+
+        /// <summary>
+        /// Gets the internal force at defined location.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <param name="globalDisplacements">The global displacements on nodes.</param>
+        /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
+        /// <returns>Internal force at defined iso coords</returns>
+        Matrix GetInternalForceAt(Element targetElement, Matrix transformMatrix,
+            Displacement[] globalDisplacements,
+            params double[] isoCoords);
+
+        /// <summary>
+        /// Determines wether this helper does override the usual K matrix calculation - which is int(Bt.D.B).
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <returns></returns>
+        bool DoesOverrideKMatrixCalculation(Element targetElement, Matrix transformMatrix);
+
+        /// <summary>
+        /// Gets the Gaussian integration point count for integrating the stiffness matrix.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <returns>Gaussian sampling point count</returns>
+        int GetGaussianIntegrationPointCount(Element targetElement, Matrix transformMatrix);
+
     }
 }

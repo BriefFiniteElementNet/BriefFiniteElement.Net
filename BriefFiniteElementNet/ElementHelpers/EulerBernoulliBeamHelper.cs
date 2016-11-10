@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.Integration;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
@@ -41,9 +42,14 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var L2 = L*L;
 
-            var buf = new Matrix(4, 1);
+            var buf = new Matrix(1, 4);
 
-            var arr = new double[] {(6*xi)/L2, (3*xi)/L - 1/L, -(6*xi)/L2, (3*xi)/L + 1/L};
+            double[] arr;
+
+            if (_direction == BeamDirection.Z)
+                arr = new double[] {-(6*xi)/L2, (3*xi)/L - 1/L, +(6*xi)/L2, (3*xi)/L + 1/L};
+            else
+                arr = new double[] {(6*xi)/L2, (3*xi)/L - 1/L, -(6*xi)/L2, (3*xi)/L + 1/L};
 
             buf.FillRow(0, arr);
 
@@ -86,13 +92,29 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix GetJMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
         {
+            var bar = targetElement as BarElement;
+
+            if (bar == null)
+                throw new Exception();
+
+            var buf = new Matrix(1, 1);
+
+            buf[0, 0] = (bar.EndNode.Location - bar.StartNode.Location).Length/2;
+
+            return buf;
+        }
+
+        public Matrix GetInternalForceAt(Element targetElement, Matrix transformMatrix, Displacement[] globalDisplacements,
+            params double[] isoCoords)
+        {
+
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Matrix GetKMatrix(Element targetElement, Matrix transformMatrix)
+        public Matrix GetOverridedLocalKMatrix(Element targetElement, Matrix transformMatrix)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         /// <inheritdoc/>
@@ -101,10 +123,22 @@ namespace BriefFiniteElementNet.ElementHelpers
             return new FluentElementPermuteManager.ElementLocalDof[]
             {
                 new FluentElementPermuteManager.ElementLocalDof(0, _direction == BeamDirection.Y ? DoF.Dy : DoF.Dz),
-                new FluentElementPermuteManager.ElementLocalDof(0, _direction == BeamDirection.Y ? DoF.Dz : DoF.Dy),
+                new FluentElementPermuteManager.ElementLocalDof(0, _direction == BeamDirection.Y ? DoF.Rz : DoF.Ry),
                 new FluentElementPermuteManager.ElementLocalDof(1, _direction == BeamDirection.Y ? DoF.Dy : DoF.Dz),
-                new FluentElementPermuteManager.ElementLocalDof(1, _direction == BeamDirection.Y ? DoF.Dz : DoF.Dy),
+                new FluentElementPermuteManager.ElementLocalDof(1, _direction == BeamDirection.Y ? DoF.Rz : DoF.Ry),
             };
+        }
+
+        /// <inheritdoc/>
+        public bool DoesOverrideKMatrixCalculation(Element targetElement, Matrix transformMatrix)
+        {
+            return false;
+        }
+
+        /// <inheritdoc/>
+        public int GetGaussianIntegrationPointCount(Element targetElement, Matrix transformMatrix)
+        {
+            return 1;
         }
     }
 }

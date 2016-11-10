@@ -15,9 +15,9 @@ namespace BriefFiniteElementNet.Integration
         /// Gets three parameters ξ, η and γ. then computes output matrix.
         /// </summary>
         /// <param name="xi">The ξ.</param>
-        /// <param name="nu">The η.</param>
+        /// <param name="eta">The η.</param>
         /// <param name="gamma">The γ.</param>
         /// <returns>result matrix</returns>
-        Matrix GetMatrix(double xi, double nu, double gamma);
+        Matrix GetMatrix(double xi, double eta, double gamma);
     }
 }

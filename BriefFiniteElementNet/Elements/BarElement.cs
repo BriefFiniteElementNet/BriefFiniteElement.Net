@@ -3,12 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.ElementHelpers;
+using BriefFiniteElementNet.Integration;
 
 namespace BriefFiniteElementNet.Elements
 {
     [Obsolete("not fully implemented yet")]
     public class BarElement : Element
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BarElement"/> class.
+        /// </summary>
+        /// <param name="n1">The n1.</param>
+        /// <param name="n2">The n2.</param>
+        public BarElement(Node n1, Node n2) : base(2)
+        {
+            StartNode = n1;
+            EndNode = n2;
+        }
+
         #region Field & Properties
 
         private double _webRotation;
@@ -124,6 +136,18 @@ namespace BriefFiniteElementNet.Elements
         {
             get { return _matterial; }
             set { _matterial = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the behavior of bar element.
+        /// </summary>
+        /// <value>
+        /// The behaviors of bar element.
+        /// </value>
+        public BarElementBehaviour Behavior
+        {
+            get { return _behavior; }
+            set { _behavior = value; }
         }
 
         #endregion
@@ -307,12 +331,85 @@ namespace BriefFiniteElementNet.Elements
 
         public override Matrix GetGlobalStifnessMatrix()
         {
+            var local = GetLocalStifnessMatrix();
+
             throw new NotImplementedException();
         }
 
         private Matrix GetTransformationMatrix()
         {
-            throw new NotImplementedException();
+            var cxx = 0.0;
+            var cxy = 0.0;
+            var cxz = 0.0;
+
+            var cyx = 0.0;
+            var cyy = 0.0;
+            var cyz = 0.0;
+
+            var czx = 0.0;
+            var czy = 0.0;
+            var czz = 0.0;
+
+
+            var teta = _webRotation;
+
+            var s = Math.Sin(teta * Math.PI / 180.0);
+            var c = Math.Cos(teta * Math.PI / 180.0);
+
+            var v = this.EndNode.Location - this.StartNode.Location;
+
+
+            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
+            {
+                if (v.Z > 0)
+                {
+                    czx = 1;
+                    cyy = 1;
+                    cxz = -1;
+                }
+                else
+                {
+                    czx = -1;
+                    cyy = 1;
+                    cxz = 1;
+                }
+            }
+            else
+            {
+                var l = v.Length;
+                cxx = v.X / l;
+                cyx = v.Y / l;
+                czx = v.Z / l;
+                var d = Math.Sqrt(cxx * cxx + cyx * cyx);
+                cxy = -cyx / d;
+                cyy = cxx / d;
+                cxz = -cxx * czx / d;
+                cyz = -cyx * czx / d;
+                czz = d;
+            }
+
+            var pars = new double[9];
+
+            pars[0] = cxx;
+            pars[1] = cxy * c + cxz * s;
+            pars[2] = -cxy * s + cxz * c;
+
+            pars[3] = cyx;
+            pars[4] = cyy * c + cyz * s;
+            pars[5] = -cyy * s + cyz * c;
+
+            pars[6] = czx;
+            pars[7] = czy * c + czz * s;
+            pars[8] = -czy * s + czz * c;
+
+
+            var buf = new Matrix(3, 3);
+
+            buf.FillColumn(0, pars[0], pars[1], pars[2]);
+            buf.FillColumn(1, pars[3], pars[4], pars[5]);
+            buf.FillColumn(2, pars[6], pars[7], pars[8]);
+
+            return buf;
         }
 
         public Matrix GetLocalStifnessMatrix()
@@ -357,15 +454,71 @@ namespace BriefFiniteElementNet.Elements
             {
                 var helper = helpers[i];
 
-                var ki = helper.GetKMatrix(this, transMatrix);
+                var ki = ComputeK(helper, transMatrix);
+
                 var dofs = helper.GetDofOrder(this);
 
-                //TODO: substitude ki into buf
+
+                for (var ii = 0; ii < dofs.Length; ii++)
+                {
+                    var bi = dofs[ii].NodeIndex*6 + (int)dofs[ii].Dof;
+
+                    for (var jj = 0; jj < dofs.Length; jj++)
+                    {
+                        var bj = dofs[jj].NodeIndex*6 + (int)dofs[jj].Dof;
+
+                        buf[bi, bj] += ki[ii, jj];
+                    }
+                }
+
                 
-                throw new NotImplementedException();
             }
 
             return buf;
+        }
+
+        public Matrix ComputeK(IElementHelper helper,Matrix transfrmationMatrix)
+        {
+            var trans = GetTransformationMatrix();
+
+            if (helper.DoesOverrideKMatrixCalculation(this, trans))
+                return helper.GetOverridedLocalKMatrix(this, trans);
+
+            var bar = this;
+
+            var n1 = bar.Material.GetGaussianIntegrationPoints();
+            var n2 = bar.Section.GetGaussianIntegrationPoints();
+            var n3 = helper.GetGaussianIntegrationPointCount(this, trans);
+
+            var intg = new GaussianIntegrator();
+
+            intg.A1 = 0;
+            intg.A2 = 1;
+            intg.GammaPointCount = 1;
+
+            intg.F1 = (gama => 0);
+            intg.F2 = (gama => 1);
+            intg.EtaPointCount = 1;
+
+            intg.G1 = (eta, gamma) => -1;
+            intg.G2 = (eta, gamma) => +1;
+            intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
+            {
+                var b = helper.GetBMatrixAt(this, trans, xi);
+                var d = helper.GetDMatrixAt(this, trans, xi);
+                var j = helper.GetJMatrixAt(this, trans, xi);
+
+                var buf_ = b.Transpose() * d * b;
+                buf_.MultiplyByConstant(j.Determinant());
+
+                return buf_;
+            });
+
+            intg.XiPointCount = (new int[] {n1, n2, n3}).Max() + 1;
+
+            var res = intg.Integrate();
+
+            return res;
         }
     }
 }
