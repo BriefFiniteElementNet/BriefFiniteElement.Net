@@ -22,13 +22,40 @@ namespace BriefFiniteElementNet.ElementHelpers
         Matrix GetBMatrixAt(Element targetElement,Matrix transformMatrix, params double[] isoCoords);
 
         /// <summary>
-        /// Gets the D matrix at defined isometric coordinates in local coordination system.
+        /// Gets the D matrix (Elastic modulus etc) at defined isometric coordinates in local coordination system.
         /// </summary>
+        /// <remarks>
+        /// This will be used for creating Stiffness matrix
+        /// </remarks>
         /// <param name="targetElement">The target element.</param>
         /// <param name="transformMatrix">The transform matrix (local-global coordinates).</param>
         /// <param name="isoCoords">The isometric coordinations.</param>
         /// <returns>1x1, 2x2 or 3x3 matrix</returns>
         Matrix GetDMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords);
+
+        /// <summary>
+        /// Gets the Rho matrix (mass property of material) at defined isometric coordinates in local coordination system.
+        /// </summary>
+        /// <remarks>
+        /// This will be used for creating Mass matrix
+        /// </remarks>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="transformMatrix">The transform matrix (local-global coordinates).</param>
+        /// <param name="isoCoords">The isometric coordinations.</param>
+        /// <returns>1x1, 2x2 or 3x3 matrix</returns>
+        Matrix GetRhoMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords);
+
+        /// <summary>
+        /// Gets the μ matrix (damp property of material) at defined isometric coordinates in local coordination system.
+        /// </summary>
+        /// <remarks>
+        /// This will be used for creating Mass matrix
+        /// </remarks>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="transformMatrix">The transform matrix (local-global coordinates).</param>
+        /// <param name="isoCoords">The isometric coordinations.</param>
+        /// <returns>1x1, 2x2 or 3x3 matrix</returns>
+        Matrix GetMuMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords);
 
         /// <summary>
         /// Gets the N matrix at defined isometric coordinates.

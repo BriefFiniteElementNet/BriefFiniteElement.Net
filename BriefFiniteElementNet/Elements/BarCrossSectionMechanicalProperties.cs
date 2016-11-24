@@ -12,6 +12,8 @@ namespace BriefFiniteElementNet.Elements
     {
         private double e;
         private double g;
+        private double rho;
+        private double mu;
 
         /// <summary>
         /// Gets or sets the Elastic modulus in [Pas] dimension.
@@ -35,6 +37,36 @@ namespace BriefFiniteElementNet.Elements
         {
             get { return g; }
             set { g = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the density of material in [kg/m^3].
+        /// </summary>
+        /// <remarks>
+        /// This is mass property of material
+        /// </remarks>
+        /// <value>
+        /// The density.
+        /// </value>
+        public double Density
+        {
+            get { return rho; }
+            set { rho = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the μ in TODO dimension.
+        /// </summary>
+        /// <remarks>
+        /// This is damping property of material
+        /// </remarks>
+        /// <value>
+        /// The mu.
+        /// </value>
+        public double Mu
+        {
+            get { return mu; }
+            set { mu = value; }
         }
     }
 }

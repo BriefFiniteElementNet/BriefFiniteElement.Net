@@ -49,6 +49,16 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
+        public Matrix GetRhoMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Matrix GetMuMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc/>
         public Matrix GetNMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
         {
