@@ -482,6 +482,72 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
+
+        public Matrix GetLocalMassMatrix()
+        {
+            var helpers = new List<IElementHelper>();
+
+            if ((this._behavior & BarElementBehaviour.BeamYEulerBernoulli) != 0)
+            {
+                helpers.Add(new EulerBernoulliBeamHelper(BeamDirection.Y));
+            }
+
+            if ((this._behavior & BarElementBehaviour.BeamYTimoshenko) != 0)
+            {
+                helpers.Add(new TimoshenkoBeamHelper(BeamDirection.Y));
+            }
+
+            if ((this._behavior & BarElementBehaviour.BeamZEulerBernoulli) != 0)
+            {
+                helpers.Add(new EulerBernoulliBeamHelper(BeamDirection.Z));
+            }
+
+            if ((this._behavior & BarElementBehaviour.BeamZTimoshenko) != 0)
+            {
+                helpers.Add(new TimoshenkoBeamHelper(BeamDirection.Z));
+            }
+
+            if ((this._behavior & BarElementBehaviour.Truss) != 0)
+            {
+                helpers.Add(new TrussHelper());
+            }
+
+            if ((this._behavior & BarElementBehaviour.Shaft) != 0)
+            {
+                helpers.Add(new ShaftHelper());
+            }
+
+            var buf = new Matrix(12, 12);
+
+            var transMatrix = GetTransformationMatrix();
+
+            for (var i = 0; i < helpers.Count; i++)
+            {
+                var helper = helpers[i];
+
+                var ki = helper.CalcLocalMMatrix(this, transMatrix);// ComputeK(helper, transMatrix);
+
+                var dofs = helper.GetDofOrder(this);
+
+
+                for (var ii = 0; ii < dofs.Length; ii++)
+                {
+                    var bi = dofs[ii].NodeIndex * 6 + (int)dofs[ii].Dof;
+
+                    for (var jj = 0; jj < dofs.Length; jj++)
+                    {
+                        var bj = dofs[jj].NodeIndex * 6 + (int)dofs[jj].Dof;
+
+                        buf[bi, bj] += ki[ii, jj];
+                    }
+                }
+
+
+            }
+
+            return buf;
+        }
+
         [Obsolete]
         public Matrix ComputeK(IElementHelper helper,Matrix transfrmationMatrix)
         {
@@ -492,9 +558,9 @@ namespace BriefFiniteElementNet.Elements
 
             var bar = this;
 
-            var n1 = bar.Material.GetGaussianIntegrationPoints();
-            var n2 = bar.Section.GetGaussianIntegrationPoints();
-            var n3 = helper.GetGaussianIntegrationPointCount(this, trans);
+            var n1 = bar.Material.GetMaxFunctionOrder();
+            var n2 = bar.Section.GetMaxFunctionOrder();
+            var n3 = helper.GetNMaxOrder(this, trans);
 
             var intg = new GaussianIntegrator();
 

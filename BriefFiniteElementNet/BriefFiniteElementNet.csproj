@@ -43,7 +43,7 @@
     <Compile Include="ElementHelpers\BeamDirection.cs" />
     <Compile Include="ElementHelpers\CstHelper.cs" />
     <Compile Include="ElementHelpers\DktHelper.cs" />
-    <Compile Include="ElementHelpers\Extensions.cs" />
+    <Compile Include="ElementHelpers\ElementHelperExtensions.cs" />
     <Compile Include="ElementHelpers\ShaftHelper.cs" />
     <Compile Include="ElementHelpers\TetrahedronHelper.cs" />
     <Compile Include="ElementHelpers\TimoshenkoBeamHelper.cs" />

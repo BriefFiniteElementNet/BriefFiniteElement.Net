@@ -116,9 +116,9 @@ namespace BriefFiniteElementNet.Sections
             return buf;
         }
 
-        public override int GetGaussianIntegrationPoints()
+        public override int GetMaxFunctionOrder()
         {
-            return 1;
+            return 0;
         }
     }
 }

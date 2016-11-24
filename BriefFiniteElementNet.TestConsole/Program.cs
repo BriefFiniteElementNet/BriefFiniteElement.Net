@@ -48,13 +48,14 @@ namespace BriefFiniteElementNet.TestConsole
 
         private static void Test3()
         {
-            var iy = 0.01;
+            var iy = 0.03;
             var iz = 0.02;
-            var a = 0.03;
+            var a = 0.01;
             var j = 0.05;
 
-            var e = 100;
-            var g = 121;
+            var e = 7;
+            var g = 11;
+            var rho = 13;
 
             var model = new Model();
 
@@ -65,19 +66,31 @@ namespace BriefFiniteElementNet.TestConsole
 
             barElement.Behavior = BarElementBehaviours.FullFrame;
 
-            var frameElement = new FrameElement2Node(model.Nodes[0], model.Nodes[1]) {Iy = iy, Iz = iz, A = a, J = j, E = e, G = g};
+            var frameElement = new FrameElement2Node(model.Nodes[0], model.Nodes[1])
+            {
+                Iy = iy,
+                Iz = iz,
+                A = a,
+                J = j,
+                E = e,
+                G = g,
+                MassDensity = rho
+            };
 
 
-            barElement.Material = new UniformBarElementMaterial(e, g);
+            barElement.Material = new UniformBarElementMaterial(e, g, rho);
             barElement.Section = new UniformParametricBarElementCrossSection() {Iy = iy, Iz = iz, A = a,J=j};
 
-            var frameK = frameElement.GetLocalStiffnessMatrix();
+            frameElement.MassFormulationType = MassFormulation.Consistent;
 
-            var barK = barElement.GetLocalStifnessMatrix();
+            var frameM = frameElement.GetLocalMassMatrix();
+            MathUtil.FillLowerTriangleFromUpperTriangle(frameM);
 
-            var t = 1 - 1e-6;
+            var barM = barElement.GetLocalMassMatrix();
 
-            var d = (barK - t*frameK);//
+            var t = 1;//- 1e-10;
+
+            var d = (frameM - t* barM);//
             var dMax = d.CoreArray.Max(i => Math.Abs(i));
 
             model.Nodes[0].Constraints = Constraint.Fixed;

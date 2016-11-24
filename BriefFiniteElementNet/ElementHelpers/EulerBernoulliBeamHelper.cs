@@ -84,6 +84,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
+        /// <inheritdoc/>
         public Matrix GetRhoMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
         {
             var elm = targetElement as BarElement;
@@ -98,21 +99,29 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var buf = new Matrix(1, 1);
 
-            var ei = 0.0;
-
-            if (_direction == BeamDirection.Y)
-                ei = geo.Iz * mech.E;
-            else
-                ei = geo.Iy * mech.E;
-
-            buf[0, 0] = ei;
+            buf[0, 0] = geo.A*mech.Density;
 
             return buf;
         }
 
+        /// <inheritdoc/>
         public Matrix GetMuMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var elm = targetElement as BarElement;
+
+            if (elm == null)
+                throw new Exception();
+
+            var xi = isoCoords[0];
+
+            var geo = elm.Section.GetCrossSectionPropertiesAt(xi);
+            var mech = elm.Material.GetMaterialPropertiesAt(xi);
+
+            var buf = new Matrix(1, 1);
+
+            buf[0, 0] = geo.A * mech.Mu;
+
+            return buf;
         }
 
         /// <inheritdoc/>
@@ -142,9 +151,9 @@ namespace BriefFiniteElementNet.ElementHelpers
             double[] arr;
 
             if (_direction == BeamDirection.Z)
-                arr = new double[] {n1, m1, n2, m2};
+                arr = new double[] {n1, -m1, n2, -m2};
             else
-                arr = new double[] {-n1, m1, -n2, m2};
+                arr = new double[] {n1, m1, n2, m2};
 
             buf.FillRow(0, arr);
 
@@ -176,101 +185,24 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix CalcLocalKMatrix(Element targetElement, Matrix transformMatrix)
         {
-            var elm = targetElement as BarElement;
-
-            if (elm == null)
-                throw new Exception();
-
-            var trans = elm.GetTransformationMatrix();
-
-            var bar = elm;
-
-            var n1 = bar.Material.GetGaussianIntegrationPoints();
-            var n2 = bar.Section.GetGaussianIntegrationPoints();
-            var n3 = this.GetGaussianIntegrationPointCount(elm, trans);
-
-            var intg = new GaussianIntegrator();
-
-            intg.A1 = 0;
-            intg.A2 = 1;
-            intg.GammaPointCount = 1;
-
-            intg.F1 = (gama => 0);
-            intg.F2 = (gama => 1);
-            intg.EtaPointCount = 1;
-
-            intg.G1 = (eta, gamma) => -1;
-            intg.G2 = (eta, gamma) => +1;
-            intg.XiPointCount = (new int[] { n1, n2, n3 }).Max() + 1;
-
-            intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
-            {
-                var b = this.GetBMatrixAt(elm, trans, xi);
-                var d = this.GetDMatrixAt(elm, trans, xi);
-                var j = this.GetJMatrixAt(elm, trans, xi);
-
-                var buf_ = b.Transpose() * d * b;
-                buf_.MultiplyByConstant(j.Determinant());
-
-                return buf_;
-            });
-
-            var res = intg.Integrate();
-
-            return res;
+            return ElementHelperExtensions.CalcLocalKMatrix_Bar(this, targetElement,
+                transformMatrix);
         }
 
         /// <inheritdoc/>
         public Matrix CalcLocalMMatrix(Element targetElement, Matrix transformMatrix)
         {
-            var elm = targetElement as BarElement;
+            var buf = ElementHelperExtensions.CalcLocalMMatrix_Bar(this, targetElement,
+                transformMatrix);
 
-            if (elm == null)
-                throw new Exception();
-
-            var trans = elm.GetTransformationMatrix();
-
-            var bar = elm;
-
-            var n1 = bar.Material.GetGaussianIntegrationPoints();
-            var n2 = bar.Section.GetGaussianIntegrationPoints();
-            var n3 = this.GetGaussianIntegrationPointCount(elm, trans);
-
-            var intg = new GaussianIntegrator();
-
-            intg.A1 = 0;
-            intg.A2 = 1;
-            intg.GammaPointCount = 1;
-
-            intg.F1 = (gama => 0);
-            intg.F2 = (gama => 1);
-            intg.EtaPointCount = 1;
-
-            intg.G1 = (eta, gamma) => -1;
-            intg.G2 = (eta, gamma) => +1;
-            intg.XiPointCount = (new int[] { n1, n2, n3 }).Max() + 1;
-
-            intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
-            {
-                var n = this.GetBMatrixAt(elm, trans, xi);
-                var rho = this.GetDMatrixAt(elm, trans, xi);
-                var j = this.GetJMatrixAt(elm, trans, xi);
-
-                var buf_ = n.Transpose() * rho * n;
-                buf_.MultiplyByConstant(j.Determinant());
-
-                return buf_;
-            });
-
-            var res = intg.Integrate();
-
-            return res;
+            return buf;
         }
 
         /// <inheritdoc/>
         public Matrix CalcLocalCMatrix(Element targetElement, Matrix transformMatrix)
         {
-            throw new NotImplementedException();
+            return ElementHelperExtensions.CalcLocalCMatrix_Bar(this, targetElement,
+                 transformMatrix);
         }
 
 
@@ -293,9 +225,19 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public int GetGaussianIntegrationPointCount(Element targetElement, Matrix transformMatrix)
+        public int GetNMaxOrder(Element targetElement, Matrix transformMatrix)
+        {
+            return 3;
+        }
+
+        public int GetBMaxOrder(Element targetElement, Matrix transformMatrix)
         {
             return 1;
+        }
+
+        public int GetDetJOrder(Element targetElement, Matrix transformMatrix)
+        {
+            return 0;
         }
 
         /// <inheritdoc/>

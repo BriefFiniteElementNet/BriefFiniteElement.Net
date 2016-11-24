@@ -16,10 +16,16 @@ namespace BriefFiniteElementNet.Sections
         public abstract BarCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double x);
 
         /// <summary>
-        /// Gets the number of Gaussian points that integration should be sampled there.
+        /// Gets the maximum order (degree) of members of material regarding xi.
         /// </summary>
+        /// <remarks>
+        /// Will use for determining Gaussian sampling count.
+        /// </remarks>
+        /// <example>
+        /// for example if Iy is a*xi^2 + b*xi + c and A is d*xi + e, then max order will be 2.
+        /// </example>
         /// <returns>the number of Gaussian integration points needed</returns>
-        public abstract int GetGaussianIntegrationPoints();
+        public abstract int GetMaxFunctionOrder();
 
     }
 }

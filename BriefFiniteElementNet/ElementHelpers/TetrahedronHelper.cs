@@ -78,7 +78,17 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public int GetGaussianIntegrationPointCount(Element targetElement, Matrix transformMatrix)
+        public int GetNMaxOrder(Element targetElement, Matrix transformMatrix)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetBMaxOrder(Element targetElement, Matrix transformMatrix)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetDetJOrder(Element targetElement, Matrix transformMatrix)
         {
             throw new NotImplementedException();
         }

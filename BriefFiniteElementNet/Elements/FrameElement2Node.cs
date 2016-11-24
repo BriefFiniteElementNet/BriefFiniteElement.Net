@@ -905,7 +905,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        private Matrix GetLocalMassMatrix()
+        public Matrix GetLocalMassMatrix()
         {
             var m = new Matrix(12, 12);
 

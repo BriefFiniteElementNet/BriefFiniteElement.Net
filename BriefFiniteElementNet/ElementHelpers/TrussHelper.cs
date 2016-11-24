@@ -49,20 +49,71 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
+        /// <inheritdoc/>
         public Matrix GetRhoMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var elm = targetElement as BarElement;
+
+            if (elm == null)
+                throw new Exception();
+
+            var xi = isoCoords[0];
+
+            var geo = elm.Section.GetCrossSectionPropertiesAt(xi);
+            var mech = elm.Material.GetMaterialPropertiesAt(xi);
+
+            var buf = new Matrix(1, 1);
+
+            buf[0, 0] = geo.A * mech.Density;
+
+            return buf;
         }
 
+        /// <inheritdoc/>
         public Matrix GetMuMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var elm = targetElement as BarElement;
+
+            if (elm == null)
+                throw new Exception();
+
+            var xi = isoCoords[0];
+
+            var geo = elm.Section.GetCrossSectionPropertiesAt(xi);
+            var mech = elm.Material.GetMaterialPropertiesAt(xi);
+
+            var buf = new Matrix(1, 1);
+
+            buf[0, 0] = geo.A * mech.Mu;
+
+            return buf;
         }
 
         /// <inheritdoc/>
         public Matrix GetNMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var xi = isoCoords[0];
+
+            if (xi < -1 || xi > 1)
+                throw new ArgumentOutOfRangeException(nameof(isoCoords));
+
+            var bar = targetElement as BarElement;
+
+            if (bar == null)
+                throw new Exception();
+
+            var n1 = 1 / 2.0 - xi / 2;
+            var n2 = 1 / 2.0 + xi / 2;
+
+            var buf = new Matrix(1, 2);
+
+            double[] arr;
+
+            arr = new double[] { n1, n2 };
+            
+            buf.FillRow(0, arr);
+
+            return buf;
         }
 
         /// <inheritdoc/>
@@ -83,17 +134,24 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix CalcLocalKMatrix(Element targetElement, Matrix transformMatrix)
         {
-            return this.CalcLocalKMatrix_Bar(targetElement, transformMatrix);
+            return ElementHelperExtensions.CalcLocalKMatrix_Bar(this, targetElement,
+                transformMatrix);
         }
 
+        /// <inheritdoc/>
         public Matrix CalcLocalMMatrix(Element targetElement, Matrix transformMatrix)
         {
-            throw new NotImplementedException();
+            var buf = ElementHelperExtensions.CalcLocalMMatrix_Bar(this, targetElement,
+                transformMatrix);
+
+            return buf;
         }
 
+        /// <inheritdoc/>
         public Matrix CalcLocalCMatrix(Element targetElement, Matrix transformMatrix)
         {
-            throw new NotImplementedException();
+            return ElementHelperExtensions.CalcLocalCMatrix_Bar(this, targetElement,
+                 transformMatrix);
         }
 
         /// <inheritdoc/>
@@ -120,9 +178,19 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public int GetGaussianIntegrationPointCount(Element targetElement, Matrix transformMatrix)
+        public int GetNMaxOrder(Element targetElement, Matrix transformMatrix)
         {
             return 1;
+        }
+
+        public int GetBMaxOrder(Element targetElement, Matrix transformMatrix)
+        {
+            return 0;
+        }
+
+        public int GetDetJOrder(Element targetElement, Matrix transformMatrix)
+        {
+            return 0;
         }
 
         /// <inheritdoc/>

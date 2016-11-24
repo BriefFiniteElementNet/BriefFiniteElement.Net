@@ -11,7 +11,7 @@ namespace BriefFiniteElementNet.Elements
     /// </summary>
     public class UniformBarElementMaterial:BaseBarElementMaterial
     {
-        private double e, g;
+        private double e, g, rho, mu;
 
         /// <summary>
         /// Gets or sets the elastic module of section.
@@ -37,19 +37,55 @@ namespace BriefFiniteElementNet.Elements
             set { g = value; }
         }
 
+
+        /// <summary>
+        /// Gets or sets the mass density of material.
+        /// </summary>
+        /// <value>
+        /// The rho.
+        /// </value>
+        public double Rho
+        {
+            get { return rho; }
+            set { rho = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the damp density of material.
+        /// </summary>
+        /// <value>
+        /// The mu.
+        /// </value>
+        public double Mu
+        {
+            get { return mu; }
+            set { mu = value; }
+        }
+
         public override BarCrossSectionMechanicalProperties GetMaterialPropertiesAt(double x)
         {
             var buf = new BarCrossSectionMechanicalProperties();
 
             buf.E = this.e;
             buf.G = this.g;
+            buf.Density = this.rho;
+            buf.Mu = this.mu;
 
             return buf;
         }
 
-        public override int GetGaussianIntegrationPoints()
+        public override int GetMaxFunctionOrder()
         {
-            return 1;
+            return 0;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UniformBarElementMaterial"/> class.
+        /// </summary>
+        /// <param name="e">The e.</param>
+        public UniformBarElementMaterial(double e)
+        {
+            this.e = e;
         }
 
         /// <summary>
@@ -66,8 +102,38 @@ namespace BriefFiniteElementNet.Elements
         /// <summary>
         /// Initializes a new instance of the <see cref="UniformBarElementMaterial"/> class.
         /// </summary>
+        /// <param name="e">The e.</param>
+        /// <param name="g">The g.</param>
+        /// <param name="rho">The rho.</param>
+        public UniformBarElementMaterial(double e, double g, double rho)
+        {
+            this.e = e;
+            this.g = g;
+            this.rho = rho;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UniformBarElementMaterial"/> class.
+        /// </summary>
+        /// <param name="e">The e.</param>
+        /// <param name="g">The g.</param>
+        /// <param name="rho">The rho.</param>
+        /// <param name="mu">The mu.</param>
+        public UniformBarElementMaterial(double e, double g, double rho, double mu)
+        {
+            this.e = e;
+            this.g = g;
+            this.rho = rho;
+            this.mu = mu;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UniformBarElementMaterial"/> class.
+        /// </summary>
         public UniformBarElementMaterial()
         {
         }
+
+
     }
 }

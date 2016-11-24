@@ -143,14 +143,36 @@ namespace BriefFiniteElementNet.ElementHelpers
         bool DoesOverrideKMatrixCalculation(Element targetElement, Matrix transformMatrix);
 
         /// <summary>
-        /// Gets the Gaussian integration point count for integrating the stiffness matrix.
+        /// Gets the maximum degree of shape function members.
         /// </summary>
+        /// <remarks>
+        /// Will use for determining Gaussian sampling count
+        /// </remarks>
         /// <param name="targetElement">The target element.</param>
         /// <param name="transformMatrix">The transform matrix.</param>
         /// <returns>Gaussian sampling point count</returns>
-        [Obsolete("")]
-        int GetGaussianIntegrationPointCount(Element targetElement, Matrix transformMatrix);
+        int GetNMaxOrder(Element targetElement, Matrix transformMatrix);
 
-       
+        /// <summary>
+        /// Gets the maximum degree of B matrix members.
+        /// </summary>
+        /// <remarks>
+        /// Will use for determining Gaussian sampling count
+        /// </remarks>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <returns>Gaussian sampling point count</returns>
+        int GetBMaxOrder(Element targetElement, Matrix transformMatrix);
+
+        /// <summary>
+        /// Gets the degree of Det(J).
+        /// </summary>
+        /// <remarks>
+        /// Will use for determining Gaussian sampling count
+        /// </remarks>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <returns>Gaussian sampling point count</returns>
+        int GetDetJOrder(Element targetElement, Matrix transformMatrix);
     }
 }
