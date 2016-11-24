@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.Sections;
 using BriefFiniteElementNet.Validation;
 
 namespace BriefFiniteElementNet.TestConsole
@@ -53,26 +54,31 @@ namespace BriefFiniteElementNet.TestConsole
             var j = 0.05;
 
             var e = 100;
-            var g = 50;
+            var g = 121;
 
             var model = new Model();
 
             model.Nodes.Add(new Node(0, 0, 0));
             model.Nodes.Add(new Node(1, 0, 0));
 
-            var elm = new BarElement(model.Nodes[0], model.Nodes[1]);
-            var elm2 = new FrameElement2Node(model.Nodes[0], model.Nodes[1]) {Iy = iy, Iz = iz, A = a, J = j, E = e, G = g};
+            var barElement = new BarElement(model.Nodes[0], model.Nodes[1]);
 
-            elm.Behavior = BarElementBehaviours.FullFrame;
+            barElement.Behavior = BarElementBehaviours.FullFrame;
 
-            elm.Material = new UniformBarElementMaterial(e, g);
-            elm.Section = new ParametricBarElementCrossSection() {Iy = iy, Iz = iz, A = a,J=j};
+            var frameElement = new FrameElement2Node(model.Nodes[0], model.Nodes[1]) {Iy = iy, Iz = iz, A = a, J = j, E = e, G = g};
 
-            var e1 = elm2.GetLocalStiffnessMatrix();
 
-            var e2 = elm.GetLocalStifnessMatrix();
+            barElement.Material = new UniformBarElementMaterial(e, g);
+            barElement.Section = new UniformParametricBarElementCrossSection() {Iy = iy, Iz = iz, A = a,J=j};
 
-            var d = (e2 - e1).CoreArray.Max(i => Math.Abs(i));
+            var frameK = frameElement.GetLocalStiffnessMatrix();
+
+            var barK = barElement.GetLocalStifnessMatrix();
+
+            var t = 1 - 1e-6;
+
+            var d = (barK - t*frameK);//
+            var dMax = d.CoreArray.Max(i => Math.Abs(i));
 
             model.Nodes[0].Constraints = Constraint.Fixed;
 

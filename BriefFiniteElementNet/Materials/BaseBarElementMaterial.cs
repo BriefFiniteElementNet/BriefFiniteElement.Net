@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using BriefFiniteElementNet.Elements;
 
-namespace BriefFiniteElementNet.Elements
+namespace BriefFiniteElementNet.Materials
 {
     /// <summary>
     /// Represents a base class for BarElement's materials
@@ -13,7 +10,7 @@ namespace BriefFiniteElementNet.Elements
         /// <summary>
         /// Gets the material properties at defined length.
         /// </summary>
-        /// <param name="x">The location, in [-1,1] range. -1 for beginning of element, 1 for end of element</param>
+        /// <param name="x">The location, in [-1,1] range. -1 for beginning of element (begin node), 1 for end of element (end node)</param>
         /// <returns>the mechanical properties of element</returns>
         public abstract BarCrossSectionMechanicalProperties GetMaterialPropertiesAt(double x);
 

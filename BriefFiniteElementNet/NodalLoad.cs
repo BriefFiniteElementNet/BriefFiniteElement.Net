@@ -8,11 +8,18 @@ using System.Text;
 namespace BriefFiniteElementNet
 {
     /// <summary>
-    /// Represents a genral load that can apply to a node (include 3 force and 3 moments)
+    /// Represents a general load that can apply to a node (include 3 force and 3 moments)
     /// </summary>
     [Serializable]
-    public struct NodalLoad : ISerializable
+    public class NodalLoad : ISerializable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NodalLoad"/> class.
+        /// </summary>
+        public NodalLoad()
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NodalLoad"/> struct with <see cref="LoadCase.DefaultLoadCase"/> as <see cref="NodalLoad.Case"/>.
         /// </summary>

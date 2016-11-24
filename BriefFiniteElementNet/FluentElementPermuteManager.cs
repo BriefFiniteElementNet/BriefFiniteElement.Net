@@ -77,9 +77,34 @@ namespace BriefFiniteElementNet
                 return buf.ToArray();
             }
 
-           
+            public bool Equals(ElementLocalDof other)
+            {
+                return NodeIndex == other.NodeIndex && Dof == other.Dof;
+            }
 
-            
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                return obj is ElementLocalDof && Equals((ElementLocalDof) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return (NodeIndex*397) ^ (int) Dof;
+                }
+            }
+
+            public static bool operator ==(ElementLocalDof left, ElementLocalDof right)
+            {
+                return left.Equals(right);
+            }
+
+            public static bool operator !=(ElementLocalDof left, ElementLocalDof right)
+            {
+                return !left.Equals(right);
+            }
         }
     }
 }

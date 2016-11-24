@@ -33,7 +33,17 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetOverridedLocalKMatrix(Element targetElement, Matrix transformMatrix)
+        public Matrix CalcLocalKMatrix(Element targetElement, Matrix transformMatrix)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Matrix CalcLocalMMatrix(Element targetElement, Matrix transformMatrix)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Matrix CalcLocalCMatrix(Element targetElement, Matrix transformMatrix)
         {
             throw new NotImplementedException();
         }
@@ -45,7 +55,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetInternalForceAt(Element targetElement, Matrix transformMatrix, Displacement[] globalDisplacements,
+        public Matrix GetLocalInternalForceAt(Element targetElement, Matrix transformMatrix, Displacement[] globalDisplacements,
             params double[] isoCoords)
         {
             throw new NotImplementedException();
@@ -59,6 +69,13 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         /// <inheritdoc/>
         public int GetGaussianIntegrationPointCount(Element targetElement, Matrix transformMatrix)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Displacement GetLocalDisplacementAt(Element targetElement, Matrix transformMatrix, Displacement[] localDisplacements,
+            params double[] isoCoords)
         {
             throw new NotImplementedException();
         }

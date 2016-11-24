@@ -93,7 +93,10 @@
     <Content Include="Data\Tet4-78knv\tet4-78k.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Data\FlatShell\IBeamTorsion\Intro.md" />
+    <None Include="Data\FlatShell - triangle\IBeamTorsion\Intro.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\FlatShell - quadrilateral\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

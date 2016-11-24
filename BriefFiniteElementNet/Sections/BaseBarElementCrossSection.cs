@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Runtime.Serialization;
+using BriefFiniteElementNet.Elements;
 
-namespace BriefFiniteElementNet.Elements
+namespace BriefFiniteElementNet.Sections
 {
     /// <summary>
     /// Represents a base class for cross sections for bar element.
@@ -22,5 +20,6 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         /// <returns>the number of Gaussian integration points needed</returns>
         public abstract int GetGaussianIntegrationPoints();
+
     }
 }

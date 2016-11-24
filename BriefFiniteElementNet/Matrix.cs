@@ -1304,7 +1304,7 @@ namespace BriefFiniteElementNet
             if (values.Length != this.columnCount)
                 throw new Exception();
 
-            for(var j=0;j<this.columnCount;j++)
+            for (var j = 0; j < this.columnCount; j++)
             {
                 this[rowNum, j] = values[j];
             }

@@ -53,8 +53,15 @@ ref[2]: Matrix Structural Analysis (MSA) by HOSSEIN RAHAMI
 ref[3]: http://people.duke.edu/~hpgavin/cee541/StructuralElements.pdf
 ref[4]: https://ora.ox.ac.uk/objects/uuid:570ebfd5-ec3e-4a0a-a559-d1efddde9e20/datastreams/THESIS03
 ref[5]: https://ora.ox.ac.uk/objects/uuid:570ebfd5-ec3e-4a0a-a559-d1efddde9e20/datastreams/THESIS09
-
-
+ref[6]: Stochastic Structural Dynamics: Application of Finite Element Methods, Cho W. S. To, ISBN: 978-1-118-34235-0
+ref[7]: http://marketcode.ir/Code/ShowCode/140/ (needs registration - pdf)
 
 Damp Matrix
+===
 p.31 of ref[3]
+p.52 - eq.84_1 ref[7]
+
+Mass Matrix
+===
+p.9 of ref[6]
+p.52 - eq.84_1 ref[7]

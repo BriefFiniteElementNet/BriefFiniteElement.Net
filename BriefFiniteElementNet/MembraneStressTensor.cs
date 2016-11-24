@@ -18,7 +18,8 @@ namespace BriefFiniteElementNet
             Txy = txy;
         }
 
-        public double Sx, Sy, Txy; //σx, σy, τxy
+        public double Sx, Sy, Sz; //σx, σy, σz, τxy
+        public double Txy, Tyz, Tzx; //τxy, τyz, τzx
 
         public static MembraneStressTensor operator +(MembraneStressTensor left, MembraneStressTensor right)
         {
@@ -26,7 +27,26 @@ namespace BriefFiniteElementNet
 
             buf.Sx = left.Sx + right.Sx;
             buf.Sy = left.Sy + right.Sy;
+            buf.Sz = left.Sz + right.Sz;
+
             buf.Txy = left.Txy + right.Txy;
+            buf.Tyz = left.Tyz + right.Tyz;
+            buf.Tzx = left.Tzx + right.Tzx;
+
+            return buf;
+        }
+
+        public static MembraneStressTensor operator -(MembraneStressTensor left, MembraneStressTensor right)
+        {
+            var buf = new MembraneStressTensor();
+
+            buf.Sx = left.Sx - right.Sx;
+            buf.Sy = left.Sy - right.Sy;
+            buf.Sz = left.Sz - right.Sz;
+
+            buf.Txy = left.Txy - right.Txy;
+            buf.Tyz = left.Tyz - right.Tyz;
+            buf.Tzx = left.Tzx - right.Tzx;
 
             return buf;
         }
@@ -37,7 +57,11 @@ namespace BriefFiniteElementNet
 
             buf.Sx = t1.Sx * coef;
             buf.Sy = t1.Sy * coef;
+            buf.Sz = t1.Sz * coef;
+
             buf.Txy = t1.Txy * coef;
+            buf.Tyz = t1.Tyz * coef;
+            buf.Tzx = t1.Tzx * coef;
 
             return buf;
         }
@@ -86,6 +110,47 @@ namespace BriefFiniteElementNet
 
             return buf;
             throw new NotImplementedException();
+        }
+
+        public static MembraneStressTensor Transform(MembraneStressTensor tensor, Matrix transformationMatrix)
+        {
+            var tensorMatrix = ToMatrix(tensor);
+
+            var rtd = transformationMatrix.Transpose()*tensorMatrix*transformationMatrix;
+
+            var buf = FromMatrix(rtd);
+
+            return buf;
+        }
+
+        public static Matrix ToMatrix(MembraneStressTensor tensor)
+        {
+            var tens = new Matrix(3, 3);
+
+            tens[0, 0] = tensor.Sx;
+            tens[1, 1] = tensor.Sy;
+            tens[2, 2] = tensor.Sz;
+
+            tens[0, 1] = tens[1, 0] = tensor.Txy;
+            tens[0, 2] = tens[2, 0] = tensor.Tzx;
+            tens[1, 2] = tens[2, 1] = tensor.Tyz;
+
+            return tens;
+        }
+
+        public static MembraneStressTensor FromMatrix(Matrix mtx)
+        {
+            var buf = new MembraneStressTensor();
+
+            buf.Sx = mtx[0, 0];
+            buf.Sy = mtx[1, 1];
+            buf.Sz = mtx[2, 2];
+
+            buf.Txy = mtx[0, 1];
+            buf.Tyz = mtx[1, 2];
+            buf.Tzx = mtx[2, 0];
+
+            return buf;
         }
     }
 

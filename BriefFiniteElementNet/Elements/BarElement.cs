@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Integration;
+using BriefFiniteElementNet.Materials;
+using BriefFiniteElementNet.Sections;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -25,8 +28,8 @@ namespace BriefFiniteElementNet.Elements
 
         private double _webRotation;
         private bool _considerShearDeformation;
-        private BarElementEndConnection _startConnection;
-        private BarElementEndConnection _endtConnection;
+        private BarElementEndConnection _startConnection = BarElementEndConnection.Fixed;
+        private BarElementEndConnection _endtConnection = BarElementEndConnection.Fixed;
         private BarElementBehaviour _behavior;
         private BaseBarElementCrossSection _section;
         private BaseBarElementMaterial _matterial;
@@ -81,6 +84,7 @@ namespace BriefFiniteElementNet.Elements
         /// <remarks>
         /// If member is connected with a hing at its start (like simply supported beam) then <see cref="HingedAtStart"/> is set to true, otherwise false
         /// </remarks>
+        [Obsolete("not implemented, because this would complicate calculations, use two nodes approach instead.")]
         public BarElementEndConnection StartConnection
         {
             get { return _startConnection; }
@@ -96,6 +100,7 @@ namespace BriefFiniteElementNet.Elements
         /// <remarks>
         /// If member is connected with a hing at its end (like simply supported beam) then <see cref="HingedAtStart"/> is set to true, otherwise false
         /// </remarks>
+        [Obsolete("not implemented, because this would complicate calculations, use two nodes approach instead.")]
         public BarElementEndConnection EndConnection
         {
             get { return _endtConnection; }
@@ -106,7 +111,7 @@ namespace BriefFiniteElementNet.Elements
         /// Gets or sets the web rotation of this member in Degree
         /// </summary>
         /// <value>
-        /// The web rotation in degree. It does rotate the local coordination system of element.
+        /// The web rotation in degree. It does rotate the local coordination system of element. (TODO: in CW or CCW direction?)
         /// </value>
         public double WebRotation
         {
@@ -336,7 +341,7 @@ namespace BriefFiniteElementNet.Elements
             throw new NotImplementedException();
         }
 
-        private Matrix GetTransformationMatrix()
+        public Matrix GetTransformationMatrix()
         {
             var cxx = 0.0;
             var cxy = 0.0;
@@ -454,7 +459,7 @@ namespace BriefFiniteElementNet.Elements
             {
                 var helper = helpers[i];
 
-                var ki = ComputeK(helper, transMatrix);
+                var ki = helper.CalcLocalKMatrix(this, transMatrix);// ComputeK(helper, transMatrix);
 
                 var dofs = helper.GetDofOrder(this);
 
@@ -477,12 +482,13 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
+        [Obsolete]
         public Matrix ComputeK(IElementHelper helper,Matrix transfrmationMatrix)
         {
             var trans = GetTransformationMatrix();
 
             if (helper.DoesOverrideKMatrixCalculation(this, trans))
-                return helper.GetOverridedLocalKMatrix(this, trans);
+                return helper.CalcLocalKMatrix(this, trans);
 
             var bar = this;
 
@@ -502,6 +508,8 @@ namespace BriefFiniteElementNet.Elements
 
             intg.G1 = (eta, gamma) => -1;
             intg.G2 = (eta, gamma) => +1;
+            intg.XiPointCount = (new int[] { n1, n2, n3 }).Max() + 1;
+
             intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
             {
                 var b = helper.GetBMatrixAt(this, trans, xi);
@@ -514,11 +522,11 @@ namespace BriefFiniteElementNet.Elements
                 return buf_;
             });
 
-            intg.XiPointCount = (new int[] {n1, n2, n3}).Max() + 1;
-
             var res = intg.Integrate();
 
             return res;
         }
+
+
     }
 }

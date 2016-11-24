@@ -1,0 +1,17 @@
+syms t11 t12 t13 t21 t22 t23 t31 t32 t33
+syms k_i_j k_i1_j k_i2_j k_i_j1 k_i1_j1 k_i2_j1 k_i_j2 k_i1_j2 k_i2_j2
+
+K = [k_i_j, k_i1_j, k_i2_j; k_i_j1, k_i1_j1, k_i2_j1; k_i_j2, k_i1_j2, k_i2_j2;]
+T = [t11, t12, t13; t21, t22, t23; t31, t32, t33;]
+
+
+
+
+========================================= method 2
+syms t1 t2 t3 t4 t5 t6 t7 t8 t9
+syms k1 k2 k3 k4 k5 k6 k7 k8 k9
+
+K = [k1 k2 k3;k4 k5 k6;k7 k8 k9]
+T = [t1 t2 t3; t4 t5 t6; t7 t8 t9]
+
+kg = transpose(T) * K * T

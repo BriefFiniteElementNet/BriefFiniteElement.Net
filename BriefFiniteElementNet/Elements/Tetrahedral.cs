@@ -426,7 +426,7 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         /// <returns>The stress tensor in global coordination system</returns>
         /// <remarks>Stress in tetrahedral is constant</remarks>
-        public StressTensor3D GetInternalForce(LoadCombination cmb)
+        public CauchyStressTensor3D GetInternalForce(LoadCombination cmb)
         {
             int[] newOrder;
 
@@ -454,7 +454,7 @@ namespace BriefFiniteElementNet.Elements
 
             var buf = d*strain;
 
-            var tensor = new StressTensor3D();
+            var tensor = new CauchyStressTensor3D();
 
             tensor.S11 = buf[0, 0];
             tensor.S22 = buf[1, 0];

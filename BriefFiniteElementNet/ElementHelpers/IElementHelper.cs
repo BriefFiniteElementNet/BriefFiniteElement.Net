@@ -22,7 +22,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         Matrix GetBMatrixAt(Element targetElement,Matrix transformMatrix, params double[] isoCoords);
 
         /// <summary>
-        /// Gets the D matrix at defined isometric coordinates.
+        /// Gets the D matrix at defined isometric coordinates in local coordination system.
         /// </summary>
         /// <param name="targetElement">The target element.</param>
         /// <param name="transformMatrix">The transform matrix (local-global coordinates).</param>
@@ -35,7 +35,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// </summary>
         /// <param name="targetElement">The target element.</param>
         /// <param name="transformMatrix">The transform matrix (local-global coordinates).</param>
-        /// <param name="isoCoords">The isometric coordinations.</param>
+        /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
         /// <returns></returns>
         Matrix GetNMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords);
 
@@ -55,8 +55,25 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// </summary>
         /// <param name="targetElement">The target element.</param>
         /// <param name="transformMatrix">The transform matrix.</param>
-        /// <returns></returns>
-        Matrix GetOverridedLocalKMatrix(Element targetElement, Matrix transformMatrix);
+        /// <returns>Stiffness matrix</returns>
+        Matrix CalcLocalKMatrix(Element targetElement, Matrix transformMatrix);
+
+        /// <summary>
+        /// Gets the mass [M] matrix in local coordination system.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <returns>Mass matrix</returns>
+        Matrix CalcLocalMMatrix(Element targetElement, Matrix transformMatrix);
+
+        /// <summary>
+        /// Gets the damp [C] matrix in local coordination system.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <returns>Damp matrix</returns>
+        Matrix CalcLocalCMatrix(Element targetElement, Matrix transformMatrix);
+
 
         /// <summary>
         /// Gets the DoF order of returned values.
@@ -65,25 +82,37 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <returns></returns>
         FluentElementPermuteManager.ElementLocalDof[] GetDofOrder(Element targetElement);
 
-
         /// <summary>
-        /// Gets the internal force at defined location.
+        /// Gets the internal force at defined location in local coordination system.
         /// </summary>
         /// <param name="targetElement">The target element.</param>
         /// <param name="transformMatrix">The transform matrix.</param>
         /// <param name="globalDisplacements">The global displacements on nodes.</param>
         /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
-        /// <returns>Internal force at defined iso coords</returns>
-        Matrix GetInternalForceAt(Element targetElement, Matrix transformMatrix,
+        /// <returns>Internal force at defined iso coordination</returns>
+        Matrix GetLocalInternalForceAt(Element targetElement, Matrix transformMatrix,
             Displacement[] globalDisplacements,
             params double[] isoCoords);
 
         /// <summary>
-        /// Determines wether this helper does override the usual K matrix calculation - which is int(Bt.D.B).
+        /// Gets the displacement at specified location in local coordination system.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <param name="localDisplacements">The displacements in local coordination system (order is same with targetElement.Nodes).</param>
+        /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
+        /// <returns>
+        /// Displacement of element at defined <see cref="isoCoords" /> in element's local coordination system
+        /// </returns>
+        Displacement GetLocalDisplacementAt(Element targetElement, Matrix transformMatrix, Displacement[] localDisplacements, params double[] isoCoords);
+
+        /// <summary>
+        /// Determines whether this helper does override the usual K matrix calculation - which is int(Bt.D.B).
         /// </summary>
         /// <param name="targetElement">The target element.</param>
         /// <param name="transformMatrix">The transform matrix.</param>
         /// <returns></returns>
+        [Obsolete("Because integral intervals are different for different elements (e.g. triangle and quad)")]
         bool DoesOverrideKMatrixCalculation(Element targetElement, Matrix transformMatrix);
 
         /// <summary>
@@ -92,7 +121,9 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="targetElement">The target element.</param>
         /// <param name="transformMatrix">The transform matrix.</param>
         /// <returns>Gaussian sampling point count</returns>
+        [Obsolete("")]
         int GetGaussianIntegrationPointCount(Element targetElement, Matrix transformMatrix);
 
+       
     }
 }

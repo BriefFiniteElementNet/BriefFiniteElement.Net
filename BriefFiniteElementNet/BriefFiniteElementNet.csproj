@@ -39,9 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BendingStressTensor.cs" />
     <Compile Include="ElementHelpers\BeamDirection.cs" />
     <Compile Include="ElementHelpers\CstHelper.cs" />
     <Compile Include="ElementHelpers\DktHelper.cs" />
+    <Compile Include="ElementHelpers\Extensions.cs" />
     <Compile Include="ElementHelpers\ShaftHelper.cs" />
     <Compile Include="ElementHelpers\TetrahedronHelper.cs" />
     <Compile Include="ElementHelpers\TimoshenkoBeamHelper.cs" />
@@ -61,18 +63,18 @@
     <Compile Include="Elements\BarElement.cs" />
     <Compile Include="Elements\BarElementBehaviour.cs" />
     <Compile Include="Elements\BarElementEndConnection.cs" />
-    <Compile Include="Elements\BaseBarElementCrossSection.cs" />
-    <Compile Include="Elements\BaseBarElementMaterial.cs" />
+    <Compile Include="Sections\BaseBarElementCrossSection.cs" />
+    <Compile Include="Materials\BaseBarElementMaterial.cs" />
     <Compile Include="Elements\ConcentratedMass.cs" />
     <Compile Include="Elements\CstElement.cs" />
     <Compile Include="Elements\DktElement.cs" />
-    <Compile Include="Elements\ParametricBarElementCrossSection.cs" />
+    <Compile Include="Sections\UniformParametricBarElementCrossSection.cs" />
     <Compile Include="Elements\SdofMass.cs" />
     <Compile Include="Elements\Spring1D.cs" />
     <Compile Include="Elements\TriangleElement.cs" />
     <Compile Include="Elements\TriangleElementBehaviour.cs" />
     <Compile Include="Elements\TriangleFlatShell.cs" />
-    <Compile Include="Elements\UniformBarElementMaterial.cs" />
+    <Compile Include="Materials\UniformBarElementMaterial.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="CalcUtil.cs" />
     <Compile Include="CustomGaussianIntegrator.cs" />
@@ -195,7 +197,7 @@
     <Compile Include="Model.cs" />
     <Compile Include="ModelWarningChecker.cs" />
     <Compile Include="StrainTensor3D.cs" />
-    <Compile Include="StressTensor3D.cs" />
+    <Compile Include="CauchyStressTensor.cs" />
     <Compile Include="StructureGenerator.cs" />
     <Compile Include="StructurePart.cs" />
     <Compile Include="Elements\Tetrahedral.cs" />
@@ -216,7 +218,7 @@
     <None Include="Documents\SupportReactions.mkd" />
     <None Include="Elements\BarElement.md" />
     <None Include="Elements\FrameElement2Node.md" />
-    <None Include="Elements\IElementHelper.md" />
+    <None Include="ElementHelpers\IElementHelper.md" />
     <None Include="Elements\SdofMass.md" />
     <None Include="Elements\Spring1D.md" />
     <None Include="Elements\Tetrahedral.md" />

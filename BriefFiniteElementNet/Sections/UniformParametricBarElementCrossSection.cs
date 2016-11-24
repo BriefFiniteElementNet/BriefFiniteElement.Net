@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using BriefFiniteElementNet.Elements;
 
-namespace BriefFiniteElementNet.Elements
+namespace BriefFiniteElementNet.Sections
 {
-    public class ParametricBarElementCrossSection : BaseBarElementCrossSection
+    /// <summary>
+    /// Represents a uniform section for <see cref="BarElement"/> which defines section properties such 
+    /// as area or area moments using <see cref="double"/> properties.
+    /// </summary>
+    public class UniformParametricBarElementCrossSection : BaseBarElementCrossSection
     {
         private double _a;
         private double _ay;

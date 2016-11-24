@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BriefFiniteElementNet.Materials;
 
 namespace BriefFiniteElementNet.Elements
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class UniformBarElementMaterial:BaseBarElementMaterial
     {
         private double e, g;

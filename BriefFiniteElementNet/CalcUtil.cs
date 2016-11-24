@@ -14,8 +14,6 @@ namespace BriefFiniteElementNet
     /// </summary>
     public static class CalcUtil
     {
-
-
         public static CCS GetReducedFreeFreeStiffnessMatrix(this Model model)
         {
             return GetReducedFreeFreeStiffnessMatrix(model, LoadCase.DefaultLoadCase);
@@ -649,6 +647,65 @@ namespace BriefFiniteElementNet
 
             var cross = Vector.Cross(v1, v2);
             return cross.Length / 2;
+        }
+
+        public static void ApplyTransformMatrix(Matrix matrix, Matrix transform)
+        {
+            if (!transform.IsSquare() || !matrix.IsSquare())
+                throw new Exception();
+
+            if (transform.RowCount != 3 || matrix.RowCount%3 != 0)
+                throw new Exception();
+
+            var count = matrix.RowCount/3;
+
+            var t11 = transform[0, 0];
+            var t12 = transform[0, 1];
+            var t13 = transform[0, 2];
+
+            var t21 = transform[1, 0];
+            var t22 = transform[1, 1];
+            var t23 = transform[1, 2];
+
+            var t31 = transform[2, 0];
+            var t32 = transform[2, 1];
+            var t33 = transform[2, 2];
+
+
+            for (var ic = 0; ic < count; ic++)
+            {
+                for (var jc = 0; jc < count; jc++)
+                {
+                    var iStart = ic * 3;
+                    var jStart = jc * 3;
+
+
+                }
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public static double DegToRad(double degree)
+        {
+            return degree/180*Math.PI;
+        }
+
+        public static double RadToDeg(double rad)
+        {
+            return rad*180.0/Math.PI;
+        }
+
+        public static double[] GetAngleWithAxises(Vector vec)
+        {
+            var buf = new List<double>();
+
+            buf.Add(CalcUtil.RadToDeg(Math.Acos(vec.X / vec.Length)));
+            buf.Add(CalcUtil.RadToDeg(Math.Acos(vec.Y / vec.Length)));
+            buf.Add(CalcUtil.RadToDeg(Math.Acos(vec.Z / vec.Length)));
+
+
+            return buf.ToArray();
         }
     }
 }
