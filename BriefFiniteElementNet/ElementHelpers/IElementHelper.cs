@@ -22,7 +22,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         Matrix GetBMatrixAt(Element targetElement,Matrix transformMatrix, params double[] isoCoords);
 
         /// <summary>
-        /// Gets the D matrix (Elastic modulus etc) at defined isometric coordinates in local coordination system.
+        /// Gets the compliance D matrix at defined isometric coordinates in local coordination system.
         /// </summary>
         /// <remarks>
         /// This will be used for creating Stiffness matrix
@@ -132,15 +132,6 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// Displacement of element at defined <see cref="isoCoords" /> in element's local coordination system
         /// </returns>
         Displacement GetLocalDisplacementAt(Element targetElement, Matrix transformMatrix, Displacement[] localDisplacements, params double[] isoCoords);
-
-        /// <summary>
-        /// Determines whether this helper does override the usual K matrix calculation - which is int(Bt.D.B).
-        /// </summary>
-        /// <param name="targetElement">The target element.</param>
-        /// <param name="transformMatrix">The transform matrix.</param>
-        /// <returns></returns>
-        [Obsolete("Because integral intervals are different for different elements (e.g. triangle and quad)")]
-        bool DoesOverrideKMatrixCalculation(Element targetElement, Matrix transformMatrix);
 
         /// <summary>
         /// Gets the maximum degree of shape function members.

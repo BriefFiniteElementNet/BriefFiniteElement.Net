@@ -32,7 +32,7 @@ namespace BriefFiniteElementNet.Elements
         private BarElementEndConnection _endtConnection = BarElementEndConnection.Fixed;
         private BarElementBehaviour _behavior;
         private BaseBarElementCrossSection _section;
-        private BaseBarElementMaterial _matterial;
+        private BaseBarMaterial _matterial;
 
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace BriefFiniteElementNet.Elements
         /// <value>
         /// The material.
         /// </value>
-        public BaseBarElementMaterial Material
+        public BaseBarMaterial Material
         {
             get { return _matterial; }
             set { _matterial = value; }
@@ -551,46 +551,7 @@ namespace BriefFiniteElementNet.Elements
         [Obsolete]
         public Matrix ComputeK(IElementHelper helper,Matrix transfrmationMatrix)
         {
-            var trans = GetTransformationMatrix();
-
-            if (helper.DoesOverrideKMatrixCalculation(this, trans))
-                return helper.CalcLocalKMatrix(this, trans);
-
-            var bar = this;
-
-            var n1 = bar.Material.GetMaxFunctionOrder();
-            var n2 = bar.Section.GetMaxFunctionOrder();
-            var n3 = helper.GetNMaxOrder(this, trans);
-
-            var intg = new GaussianIntegrator();
-
-            intg.A1 = 0;
-            intg.A2 = 1;
-            intg.GammaPointCount = 1;
-
-            intg.F1 = (gama => 0);
-            intg.F2 = (gama => 1);
-            intg.EtaPointCount = 1;
-
-            intg.G1 = (eta, gamma) => -1;
-            intg.G2 = (eta, gamma) => +1;
-            intg.XiPointCount = (new int[] { n1, n2, n3 }).Max() + 1;
-
-            intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
-            {
-                var b = helper.GetBMatrixAt(this, trans, xi);
-                var d = helper.GetDMatrixAt(this, trans, xi);
-                var j = helper.GetJMatrixAt(this, trans, xi);
-
-                var buf_ = b.Transpose() * d * b;
-                buf_.MultiplyByConstant(j.Determinant());
-
-                return buf_;
-            });
-
-            var res = intg.Integrate();
-
-            return res;
+            throw new NotImplementedException();
         }
 
 

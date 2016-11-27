@@ -494,7 +494,7 @@ namespace BriefFiniteElementNet.Elements
         /// <param name="x">The x location of points, in local coordinate system.</param>
         /// <param name="y">The y location of points, in local coordinate system.</param>
         /// <returns>B matrix</returns>
-        internal static Matrix GetBMatrix(double xi, double eta, double[] x, double[] y)
+        public static Matrix GetBMatrix(double xi, double eta, double[] x, double[] y)
         {
             var x23 = x[1] - x[2];
             var x31 = x[2] - x[0];

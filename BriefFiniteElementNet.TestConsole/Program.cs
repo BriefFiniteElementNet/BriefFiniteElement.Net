@@ -5,7 +5,10 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Xml.Resolvers;
+using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
 using BriefFiniteElementNet.Validation;
 
@@ -16,7 +19,7 @@ namespace BriefFiniteElementNet.TestConsole
         [STAThread]
         static void Main(string[] args)
         {
-            Test3();
+            TestTriangle();
 
             //SparseMatrixMultiplyValidation.Test1();
 
@@ -46,7 +49,7 @@ namespace BriefFiniteElementNet.TestConsole
 
         }
 
-        private static void Test3()
+        private static void TestBar()
         {
             var iy = 0.03;
             var iz = 0.02;
@@ -60,7 +63,7 @@ namespace BriefFiniteElementNet.TestConsole
             var model = new Model();
 
             model.Nodes.Add(new Node(0, 0, 0));
-            model.Nodes.Add(new Node(1, 0, 0));
+            model.Nodes.Add(new Node(1, 2, 3));
 
             var barElement = new BarElement(model.Nodes[0], model.Nodes[1]);
 
@@ -78,7 +81,7 @@ namespace BriefFiniteElementNet.TestConsole
             };
 
 
-            barElement.Material = new UniformBarElementMaterial(e, g, rho);
+            barElement.Material = new UniformBarMaterial(e, g, rho);
             barElement.Section = new UniformParametricBarElementCrossSection() {Iy = iy, Iz = iz, A = a,J=j};
 
             frameElement.MassFormulationType = MassFormulation.Consistent;
@@ -96,6 +99,58 @@ namespace BriefFiniteElementNet.TestConsole
             model.Nodes[0].Constraints = Constraint.Fixed;
 
             model.Solve();
+        }
+
+        private static void TestTriangle()
+        {
+            var t = 0.01;
+            var e = 210e9;
+            var nu = 0.2;
+
+            var n1 = new Node(new Point(0, 0, 0));
+            var n2 = new Node(new Point(3, 5, 7));
+            var n3 = new Node(new Point(1, -5, 4));
+
+            var dkt = new TriangleFlatShell()
+            {
+                Behavior = FlatShellBehaviour.ThinPlate,
+                PoissonRatio = nu,
+                ElasticModulus = e,
+                Thickness=t
+            };
+
+
+            dkt.Nodes[0] = n1;
+            dkt.Nodes[1] = n2;
+            dkt.Nodes[2] = n3;
+
+            var tri = new TriangleElement();
+            tri.Behavior = FlatShellBehaviours.FullThinShell;
+            tri.Section = new UniformTriangleThickness() { T = t };
+            tri.Material = new UniformTriangleMaterial() {E = e, Nu = nu};
+
+            tri.Nodes[0] = n1;
+            tri.Nodes[1] = n2;
+            tri.Nodes[2] = n3;
+
+
+            var kTri = tri.GetLocalStifnessMatrix();
+            var kDkt = dkt.GetLocalPlateBendingStiffnessMatrix();
+
+            var d = kTri - kDkt;
+
+            var xi = 0.162598494;
+            var eta = 0.284984989;
+
+            var b1 = new DktHelper().GetBMatrixAt(tri, tri.GetTransformationMatrix(), xi, eta);
+            var lpts = dkt.GetLocalPoints();
+
+            var b2 = DktElement.GetBMatrix(xi, eta,
+                new[] {lpts[0].X, lpts[1].X, lpts[2].X},
+                new[] {lpts[0].Y, lpts[1].Y, lpts[2].Y});
+                // new DktHelper().GetBMatrixAt(tri, tri.GetTransformationMatrix(), xi, eta);
+
+            var db = b1 - b2;
         }
     }
 }

@@ -707,5 +707,83 @@ namespace BriefFiniteElementNet
 
             return buf.ToArray();
         }
+
+        /// <summary>
+        /// Transforms the specified vector using transform matrix.
+        /// </summary>
+        /// <param name="vector">The vector.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <returns>transformed vector</returns>
+        public static Vector Transform(this Vector vector, Matrix transformMatrix)
+        {
+            var buf = new Vector();
+
+            buf.X =
+                transformMatrix[0, 0] * vector.X +
+                transformMatrix[0, 1] * vector.Y +
+                transformMatrix[0, 2] * vector.Z;
+
+            buf.Y =
+                transformMatrix[1, 0] * vector.X +
+                transformMatrix[1, 1] * vector.Y +
+                transformMatrix[1, 2] * vector.Z;
+
+            buf.Z =
+                transformMatrix[2, 0] * vector.X +
+                transformMatrix[2, 1] * vector.Y +
+                transformMatrix[2, 2] * vector.Z;
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Transforms the specified point using transform matrix.
+        /// </summary>
+        /// <param name="point">The vector.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <returns>transformed vector</returns>
+        public static Point Transform(this Point point, Matrix transformMatrix)
+        {
+            return ((Vector) point).Transform(transformMatrix);
+        }
+
+        /// <summary>
+        /// Transforms back the specified vector using transform matrix.
+        /// </summary>
+        /// <param name="vector">The vector.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <returns>transformed vector</returns>
+        public static Vector TransformBack(this Vector vector, Matrix transformMatrix)
+        {
+            var buf = new Vector();
+
+            buf.X =
+                transformMatrix[0, 0] * vector.X +
+                transformMatrix[1, 0] * vector.Y +
+                transformMatrix[2, 0] * vector.Z;
+
+            buf.Y =
+                transformMatrix[0, 1] * vector.X +
+                transformMatrix[1, 1] * vector.Y +
+                transformMatrix[2, 1] * vector.Z;
+
+            buf.Z =
+                transformMatrix[0, 2] * vector.X +
+                transformMatrix[1, 2] * vector.Y +
+                transformMatrix[2, 2] * vector.Z;
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Transforms back the specified point using transform matrix.
+        /// </summary>
+        /// <param name="point">The vector.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <returns>transformed vector</returns>
+        public static Point TransformBack(this Point point, Matrix transformMatrix)
+        {
+            return ((Vector)point).TransformBack(transformMatrix);
+        }
     }
 }

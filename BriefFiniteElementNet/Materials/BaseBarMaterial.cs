@@ -5,7 +5,7 @@ namespace BriefFiniteElementNet.Materials
     /// <summary>
     /// Represents a base class for BarElement's materials
     /// </summary>
-    public abstract class BaseBarElementMaterial
+    public abstract class BaseBarMaterial
     {
         /// <summary>
         /// Gets the material properties at defined length.

@@ -22,7 +22,7 @@ namespace BriefFiniteElementNet.Elements
 
         private double _elasticModulus;
 
-        private FlatShellBehaviour _behaviour = FlatShellBehaviour.ThinShell;
+        private FlatShellBehaviour _behaviour = FlatShellBehaviours.FullThinShell;
 
         private bool _addDrillingDof = true;
 
@@ -147,15 +147,20 @@ namespace BriefFiniteElementNet.Elements
         {
             var kl = new Matrix(18,18);
 
+            if ((this._behaviour & FlatShellBehaviour.ThinPlate) != 0)
+                kl += GetLocalPlateBendingStiffnessMatrix();
+
+            if ((this._behaviour & FlatShellBehaviour.Membrane) != 0)
+                kl += GetLocalMembraneStiffnessMatrix();
+
+            /*
             if (_behaviour == FlatShellBehaviour.Membrane || _behaviour == FlatShellBehaviour.ThinShell)
                 kl += GetLocalMembraneStiffnessMatrix();
 
             if (_behaviour == FlatShellBehaviour.ThinPlate || _behaviour == FlatShellBehaviour.ThinShell)
                 kl += GetLocalPlateBendingStiffnessMatrix();
-            
-            //return buf;
-
-            if (this._addDrillingDof)
+            */
+            if ((this._behaviour & FlatShellBehaviour.DrillingDof) != 0)
             {
                 var dd = new int[] {3, 4, 9, 10, 15, 16};
 
@@ -210,7 +215,7 @@ namespace BriefFiniteElementNet.Elements
             return kle;
         }
 
-        private Matrix GetLocalPlateBendingStiffnessMatrix()
+        public Matrix GetLocalPlateBendingStiffnessMatrix()
         {
             //dkt
 
@@ -274,10 +279,10 @@ namespace BriefFiniteElementNet.Elements
         {
             var buf = new FlatShellStressTensor();
 
-            if (_behaviour == FlatShellBehaviour.Membrane || _behaviour == FlatShellBehaviour.ThinShell)
+            if ((this._behaviour & FlatShellBehaviour.ThinPlate) != 0)
                 buf.MembraneTensor = GetMembraneInternalForce(combination);
 
-            if (_behaviour == FlatShellBehaviour.ThinPlate || _behaviour == FlatShellBehaviour.ThinShell)
+            if ((this._behaviour & FlatShellBehaviour.Membrane) != 0)
                 buf.BendingTensor = GetBendingInternalForce(localX, localY, combination);
 
             return buf;
@@ -436,7 +441,7 @@ namespace BriefFiniteElementNet.Elements
         /// Gets node coordinates in local coordination system.
         /// Z component of return values should be ignored.
         /// </summary>
-        internal Point[] GetLocalPoints()
+        public Point[] GetLocalPoints()
         {
             var t = GetTransformationMatrix().Transpose(); //transpose of t
 
@@ -477,27 +482,5 @@ namespace BriefFiniteElementNet.Elements
         {
             throw new NotImplementedException();
         }
-    }
-
-
-    /// <summary>
-    /// Represents the behavior of shell element
-    /// </summary>
-    public enum FlatShellBehaviour
-    {
-        /// <summary>
-        /// The thin shell, based on discrete Kirchhoff theory, combination of Plate and Membrane
-        /// </summary>
-        ThinShell,
-
-        /// <summary>
-        /// The thin plate, based on discrete Kirchhoff theory, only bending behavior
-        /// </summary>
-        ThinPlate,
-
-        /// <summary>
-        /// The membrane, only in-plane forces, no moments. Only membrane behavior.
-        /// </summary>
-        Membrane
     }
 }

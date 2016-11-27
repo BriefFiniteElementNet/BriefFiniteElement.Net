@@ -9,7 +9,7 @@ namespace BriefFiniteElementNet.Elements
     /// <summary>
     /// 
     /// </summary>
-    public class UniformBarElementMaterial:BaseBarElementMaterial
+    public class UniformBarMaterial:BaseBarMaterial
     {
         private double e, g, rho, mu;
 
@@ -80,32 +80,32 @@ namespace BriefFiniteElementNet.Elements
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UniformBarElementMaterial"/> class.
+        /// Initializes a new instance of the <see cref="UniformBarMaterial"/> class.
         /// </summary>
         /// <param name="e">The e.</param>
-        public UniformBarElementMaterial(double e)
+        public UniformBarMaterial(double e)
         {
             this.e = e;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UniformBarElementMaterial"/> class.
+        /// Initializes a new instance of the <see cref="UniformBarMaterial"/> class.
         /// </summary>
         /// <param name="e">The e.</param>
         /// <param name="g">The g.</param>
-        public UniformBarElementMaterial(double e, double g)
+        public UniformBarMaterial(double e, double g)
         {
             this.e = e;
             this.g = g;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UniformBarElementMaterial"/> class.
+        /// Initializes a new instance of the <see cref="UniformBarMaterial"/> class.
         /// </summary>
         /// <param name="e">The e.</param>
         /// <param name="g">The g.</param>
         /// <param name="rho">The rho.</param>
-        public UniformBarElementMaterial(double e, double g, double rho)
+        public UniformBarMaterial(double e, double g, double rho)
         {
             this.e = e;
             this.g = g;
@@ -113,13 +113,13 @@ namespace BriefFiniteElementNet.Elements
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UniformBarElementMaterial"/> class.
+        /// Initializes a new instance of the <see cref="UniformBarMaterial"/> class.
         /// </summary>
         /// <param name="e">The e.</param>
         /// <param name="g">The g.</param>
         /// <param name="rho">The rho.</param>
         /// <param name="mu">The mu.</param>
-        public UniformBarElementMaterial(double e, double g, double rho, double mu)
+        public UniformBarMaterial(double e, double g, double rho, double mu)
         {
             this.e = e;
             this.g = g;
@@ -128,9 +128,9 @@ namespace BriefFiniteElementNet.Elements
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UniformBarElementMaterial"/> class.
+        /// Initializes a new instance of the <see cref="UniformBarMaterial"/> class.
         /// </summary>
-        public UniformBarElementMaterial()
+        public UniformBarMaterial()
         {
         }
 
