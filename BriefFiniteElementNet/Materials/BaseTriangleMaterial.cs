@@ -17,7 +17,7 @@ namespace BriefFiniteElementNet.Materials
         /// <param name="isoCoords">The location, in isoparametric coordination</param>
         /// <returns>the mechanical properties of element</returns>
         public abstract TriangleCoordinatedMechanicalProperties GetMaterialPropertiesAt
-            (params double[] isoCoords);
+            (TriangleElement targetElement, params double[] isoCoords);
 
 
         /// <summary>

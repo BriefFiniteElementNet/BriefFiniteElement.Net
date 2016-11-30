@@ -19,7 +19,7 @@ namespace BriefFiniteElementNet.TestConsole
         [STAThread]
         static void Main(string[] args)
         {
-            TestTriangle();
+            TestBar();
 
             //SparseMatrixMultiplyValidation.Test1();
 
@@ -63,7 +63,7 @@ namespace BriefFiniteElementNet.TestConsole
             var model = new Model();
 
             model.Nodes.Add(new Node(0, 0, 0));
-            model.Nodes.Add(new Node(1, 2, 3));
+            model.Nodes.Add(new Node(1, 0, 0));
 
             var barElement = new BarElement(model.Nodes[0], model.Nodes[1]);
 
@@ -86,10 +86,17 @@ namespace BriefFiniteElementNet.TestConsole
 
             frameElement.MassFormulationType = MassFormulation.Consistent;
 
-            var frameM = frameElement.GetLocalMassMatrix();
-            MathUtil.FillLowerTriangleFromUpperTriangle(frameM);
+            barElement.EndConnection = BarElementEndConnection.TotallyHinged;
+            //barElement.StartConnection = BarElementEndConnection.TotallyHinged;
 
-            var barM = barElement.GetLocalMassMatrix();
+            frameElement.HingedAtStart = true;
+            //frameElement.HingedAtEnd = true;
+
+
+            var frameM = frameElement.GetLocalStiffnessMatrix();
+            //MathUtil.FillLowerTriangleFromUpperTriangle(frameM);
+
+            var barM = barElement.GetLocalStifnessMatrix();
 
             var t = 1;//- 1e-10;
 

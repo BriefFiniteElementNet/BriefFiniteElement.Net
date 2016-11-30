@@ -26,6 +26,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             buf.FillRow(0, -1 / l, 1 / l);
 
+            ElementHelperExtensions.RemoveReleasedMembers_bar(this, targetElement, buf);
+
             return buf;
         }
 

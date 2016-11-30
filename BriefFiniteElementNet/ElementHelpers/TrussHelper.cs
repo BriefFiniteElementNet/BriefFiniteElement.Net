@@ -26,6 +26,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             buf.FillRow(0, -1 / l, 1 / l);
 
+            ElementHelperExtensions.RemoveReleasedMembers_bar(this, targetElement, buf);
+
             return buf;
         }
 
@@ -134,8 +136,10 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix CalcLocalKMatrix(Element targetElement, Matrix transformMatrix)
         {
-            return ElementHelperExtensions.CalcLocalKMatrix_Bar(this, targetElement,
+            var buf = ElementHelperExtensions.CalcLocalKMatrix_Bar(this, targetElement,
                 transformMatrix);
+
+            return buf;
         }
 
         /// <inheritdoc/>

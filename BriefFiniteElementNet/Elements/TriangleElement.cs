@@ -21,6 +21,8 @@ namespace BriefFiniteElementNet.Elements
 
         public FlatShellBehaviour _behavior;
 
+        public MembraneFormulation _formulation;
+
 
         public BaseTriangleMaterial Material
         {
@@ -38,6 +40,12 @@ namespace BriefFiniteElementNet.Elements
         {
             get { return _behavior; }
             set { _behavior = value; }
+        }
+
+        public MembraneFormulation Formulation
+        {
+            get { return _formulation; }
+            set { _formulation = value; }
         }
 
 

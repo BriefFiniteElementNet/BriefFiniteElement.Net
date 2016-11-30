@@ -27,7 +27,7 @@ namespace BriefFiniteElementNet.Elements
         #region Field & Properties
 
         private double _webRotation;
-        private bool _considerShearDeformation;
+        
         private BarElementEndConnection _startConnection = BarElementEndConnection.Fixed;
         private BarElementEndConnection _endtConnection = BarElementEndConnection.Fixed;
         private BarElementBehaviour _behavior;
@@ -35,21 +35,6 @@ namespace BriefFiniteElementNet.Elements
         private BaseBarMaterial _matterial;
 
 
-        /// <summary>
-        /// Gets or sets a value indicating whether [consider shear deformation].
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if [consider shear deformation]; otherwise, <c>false</c>.
-        /// </value>
-        /// <remarks>
-        /// There are some cases that shear deformation should be considered in analysis. In those cases <see cref="Ay"/> and <see cref="Az"/> are used for calculating stiffness matrix.
-        /// also in those cases, if <see cref="UseOverridedProperties"/> == true then Ay and Az will be calculated automatically regarding <see cref="Geometry"/> property.
-        /// </remarks>
-        public bool ConsiderShearDeformation
-        {
-            get { return _considerShearDeformation; }
-            set { _considerShearDeformation = value; }
-        }
 
         /// <summary>
         /// Gets or sets the start node.

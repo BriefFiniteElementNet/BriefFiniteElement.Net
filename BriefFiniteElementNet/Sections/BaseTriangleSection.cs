@@ -8,5 +8,7 @@ namespace BriefFiniteElementNet.Sections
     public abstract class BaseTriangleSection
     {
         public abstract double GetThicknessAt(params double[] isoCoords);
+
+        public abstract int GetMaxFunctionOrder();
     }
 }

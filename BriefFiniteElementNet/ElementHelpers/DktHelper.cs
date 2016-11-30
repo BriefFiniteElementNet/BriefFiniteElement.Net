@@ -149,7 +149,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (tri == null)
                 throw new Exception();
 
-            var mat = tri._material.GetMaterialPropertiesAt(isoCoords).Matterial;
+            var mat = tri._material.GetMaterialPropertiesAt(tri, isoCoords).Matterial;
             var t = tri.Section.GetThicknessAt(isoCoords);
 
             var d = new Matrix(3, 3);
@@ -242,40 +242,8 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix CalcLocalKMatrix(Element targetElement, Matrix transformMatrix)
         {
-            var intg = new BriefFiniteElementNet.Integration.GaussianIntegrator();
-
-            intg.A2 = 1;
-            intg.A1 = 0;
-
-            intg.F2 = (gama => 1);
-            intg.F1 = (gama => 0);
-
-            intg.G2 = ((eta, gama) => 1 - eta);
-            intg.G1 = ((eta, gama) => 0);
-
-            intg.XiPointCount = intg.EtaPointCount = 3;
-            intg.GammaPointCount = 1;
-
-            intg.H = new FunctionMatrixFunction((xi, eta, gamma) =>
-            {
-                var b = GetBMatrixAt(targetElement, transformMatrix, xi, eta);
-
-                var d = this.GetDMatrixAt(targetElement, transformMatrix, xi, eta);
-
-                var j = GetJMatrixAt(targetElement, transformMatrix, xi, eta);
-
-                var detJ = j.Determinant();
-
-                var ki = b.Transpose() * d * b;
-
-                ki.MultiplyByConstant(Math.Abs(j.Determinant()));
-
-                return ki;
-            });
-
-            var res = intg.Integrate();
-
-            return res;
+            return ElementHelperExtensions.CalcLocalKMatrix_Triangle(this, targetElement,
+                transformMatrix);
         }
 
         public Matrix CalcLocalMMatrix(Element targetElement, Matrix transformMatrix)
@@ -324,7 +292,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public int GetBMaxOrder(Element targetElement, Matrix transformMatrix)
         {
-            throw new NotImplementedException();
+            return 0;
         }
 
         public int GetDetJOrder(Element targetElement, Matrix transformMatrix)

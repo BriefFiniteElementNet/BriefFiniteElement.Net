@@ -13,5 +13,10 @@ namespace BriefFiniteElementNet.Sections
         {
             return T;
         }
+
+        public override int GetMaxFunctionOrder()
+        {
+            return 0;
+        }
     }
 }

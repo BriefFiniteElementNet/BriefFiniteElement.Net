@@ -10,7 +10,7 @@ namespace BriefFiniteElementNet.Materials
     {
         public double E, Nu;
 
-        public override TriangleCoordinatedMechanicalProperties GetMaterialPropertiesAt(params double[] isoCoords)
+        public override TriangleCoordinatedMechanicalProperties GetMaterialPropertiesAt(TriangleElement targetElement, params double[] isoCoords)
         {
             var buf = new TriangleCoordinatedMechanicalProperties();
             var mat = new OrthotropicMaterial();

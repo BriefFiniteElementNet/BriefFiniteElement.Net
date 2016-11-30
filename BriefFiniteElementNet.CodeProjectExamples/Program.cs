@@ -65,11 +65,13 @@ namespace BriefFiniteElementNet.CodeProjectExamples
 
             var rt = r1 + r2 + r3 + r4;//shows the Fz=1000 and Fx=Fy=Mx=My=Mz=0.0
 
-            e1.GetInternalForceAt(0.001);
+            Console.WriteLine("Total reactions SUM :" + rt.ToString());
         }
 
         private static void Example2()
         {
+            Console.WriteLine("Example 1: Simple 3D Frame with distributed loads");
+
             var model = new Model();
             
             var n1 = new Node(-10, 0, 0);
@@ -124,10 +126,10 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             e3.Loads.Add(lr);
 
             var wnd = WpfTraceListener.CreateModelTrace(model);
-            //model.c();
-            //wnd.ShowDialog();
+            new ModelWarningChecker().CheckModel(model);
+            wnd.ShowDialog();
+
             model.Solve();
-            //wnd.ShowDialog();
         }
 
 
