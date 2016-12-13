@@ -7,15 +7,15 @@ namespace BriefFiniteElementNet
 {
     public struct FlatShellStressTensor
     {
-        public FlatShellStressTensor(MembraneStressTensor membraneTensor, PlateBendingStressTensor bendingTensor)
+        public FlatShellStressTensor(CauchyStressTensor membraneTensor, BendingStressTensor bendingTensor)
         {
             MembraneTensor = membraneTensor;
             BendingTensor = bendingTensor;
         }
 
-        public MembraneStressTensor MembraneTensor;
+        public CauchyStressTensor MembraneTensor;
 
-        public PlateBendingStressTensor BendingTensor;
+        public BendingStressTensor BendingTensor;
 
         public static FlatShellStressTensor operator +(FlatShellStressTensor left, FlatShellStressTensor right)
         {
@@ -29,16 +29,37 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static FlatShellStressTensor Multiply(FlatShellStressTensor left, double coef)
+        public static FlatShellStressTensor Multiply(double coef, FlatShellStressTensor tensor)
         {
             var buf = new FlatShellStressTensor
             {
-                BendingTensor = PlateBendingStressTensor.Multiply(left.BendingTensor, coef),
-                MembraneTensor = MembraneStressTensor.Multiply(left.MembraneTensor, coef)
+                BendingTensor = coef*tensor.BendingTensor,
+                MembraneTensor = coef*tensor.MembraneTensor
             };
 
             return buf;
         }
 
+        public static FlatShellStressTensor Transform(FlatShellStressTensor tensor, Matrix transformationMatrix)
+        {
+            var buf = new FlatShellStressTensor
+            {
+                MembraneTensor = CauchyStressTensor.Transform(tensor.MembraneTensor, transformationMatrix),
+                BendingTensor = BendingStressTensor.Transform(tensor.BendingTensor, transformationMatrix)
+            };
+
+            return buf;
+        }
+
+        public static FlatShellStressTensor operator *(double coef, FlatShellStressTensor tensor)
+        {
+            var buf = new FlatShellStressTensor
+            {
+                BendingTensor = coef * tensor.BendingTensor,
+                MembraneTensor = coef * tensor.MembraneTensor
+            };
+
+            return buf;
+        }
     }
 }

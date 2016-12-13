@@ -338,6 +338,216 @@ namespace BriefFiniteElementNet.Controls
 
         #endregion
 
+        #region ShowNodalLoads Property and Property Change Routed event
+
+        public static readonly DependencyProperty ShowNodalLoadsProperty
+            = DependencyProperty.Register(
+                "ShowNodalLoads", typeof(bool), typeof(ModelVisualizerControl),
+                new PropertyMetadata(false, OnShowNodalLoadsChanged, ShowNodalLoadsCoerceValue));
+
+        public bool ShowNodalLoads
+        {
+            get { return (bool) GetValue(ShowNodalLoadsProperty); }
+            set { SetValue(ShowNodalLoadsProperty, value); }
+        }
+
+        public static readonly RoutedEvent ShowNodalLoadsChangedEvent
+            = EventManager.RegisterRoutedEvent(
+                "ShowNodalLoadsChanged",
+                RoutingStrategy.Direct,
+                typeof(RoutedPropertyChangedEventHandler<bool>),
+                typeof(ModelVisualizerControl));
+
+        private static object ShowNodalLoadsCoerceValue(DependencyObject d, object value)
+        {
+            var val = (bool) value;
+            var obj = (ModelVisualizerControl) d;
+
+
+            return value;
+        }
+
+        public event RoutedPropertyChangedEventHandler<bool> ShowNodalLoadsChanged
+        {
+            add { AddHandler(ShowNodalLoadsChangedEvent, value); }
+            remove { RemoveHandler(ShowNodalLoadsChangedEvent, value); }
+        }
+
+        private static void OnShowNodalLoadsChanged(
+            DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
+        {
+            var obj = d as ModelVisualizerControl;
+            var args = new RoutedPropertyChangedEventArgs<bool>(
+                (bool) e.OldValue,
+                (bool) e.NewValue);
+            args.RoutedEvent = ModelVisualizerControl.ShowNodalLoadsChangedEvent;
+            obj.RaiseEvent(args);
+
+            obj.UpdateUi();
+        }
+
+
+        #endregion
+
+        #region ShowNodalLoads_Force Property and Property Change Routed event
+
+        public static readonly DependencyProperty ShowNodalLoads_ForceProperty
+            = DependencyProperty.Register(
+                "ShowNodalLoads_Force", typeof(bool), typeof(ModelVisualizerControl),
+                new PropertyMetadata(false, OnShowNodalLoads_ForceChanged, ShowNodalLoads_ForceCoerceValue));
+
+        public bool ShowNodalLoads_Force
+        {
+            get { return (bool) GetValue(ShowNodalLoads_ForceProperty); }
+            set { SetValue(ShowNodalLoads_ForceProperty, value); }
+        }
+
+        public static readonly RoutedEvent ShowNodalLoads_ForceChangedEvent
+            = EventManager.RegisterRoutedEvent(
+                "ShowNodalLoads_ForceChanged",
+                RoutingStrategy.Direct,
+                typeof(RoutedPropertyChangedEventHandler<bool>),
+                typeof(ModelVisualizerControl));
+
+        private static object ShowNodalLoads_ForceCoerceValue(DependencyObject d, object value)
+        {
+            var val = (bool) value;
+            var obj = (ModelVisualizerControl) d;
+
+
+            return value;
+        }
+
+        public event RoutedPropertyChangedEventHandler<bool> ShowNodalLoads_ForceChanged
+        {
+            add { AddHandler(ShowNodalLoads_ForceChangedEvent, value); }
+            remove { RemoveHandler(ShowNodalLoads_ForceChangedEvent, value); }
+        }
+
+        private static void OnShowNodalLoads_ForceChanged(
+            DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
+        {
+            var obj = d as ModelVisualizerControl;
+            var args = new RoutedPropertyChangedEventArgs<bool>(
+                (bool) e.OldValue,
+                (bool) e.NewValue);
+            args.RoutedEvent = ModelVisualizerControl.ShowNodalLoads_ForceChangedEvent;
+            obj.RaiseEvent(args);
+
+            obj.UpdateUi();
+        }
+
+
+        #endregion
+
+        #region ShowNodalLoads_Moment Property and Property Change Routed event
+
+        public static readonly DependencyProperty ShowNodalLoads_MomentProperty
+            = DependencyProperty.Register(
+                "ShowNodalLoads_Moment", typeof(bool), typeof(ModelVisualizerControl),
+                new PropertyMetadata(false, OnShowNodalLoads_MomentChanged, ShowNodalLoads_MomentCoerceValue));
+
+        public bool ShowNodalLoads_Moment
+        {
+            get { return (bool) GetValue(ShowNodalLoads_MomentProperty); }
+            set { SetValue(ShowNodalLoads_MomentProperty, value); }
+        }
+
+        public static readonly RoutedEvent ShowNodalLoads_MomentChangedEvent
+            = EventManager.RegisterRoutedEvent(
+                "ShowNodalLoads_MomentChanged",
+                RoutingStrategy.Direct,
+                typeof(RoutedPropertyChangedEventHandler<bool>),
+                typeof(ModelVisualizerControl));
+
+        private static object ShowNodalLoads_MomentCoerceValue(DependencyObject d, object value)
+        {
+            var val = (bool) value;
+            var obj = (ModelVisualizerControl) d;
+
+
+            return value;
+        }
+
+        public event RoutedPropertyChangedEventHandler<bool> ShowNodalLoads_MomentChanged
+        {
+            add { AddHandler(ShowNodalLoads_MomentChangedEvent, value); }
+            remove { RemoveHandler(ShowNodalLoads_MomentChangedEvent, value); }
+        }
+
+        private static void OnShowNodalLoads_MomentChanged(
+            DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
+        {
+            var obj = d as ModelVisualizerControl;
+            var args = new RoutedPropertyChangedEventArgs<bool>(
+                (bool) e.OldValue,
+                (bool) e.NewValue);
+            args.RoutedEvent = ModelVisualizerControl.ShowNodalLoads_MomentChangedEvent;
+            obj.RaiseEvent(args);
+            
+            obj.UpdateUi();
+        }
+
+
+        #endregion
+
+        #region ShowConstraints Property and Property Change Routed event
+
+        public static readonly DependencyProperty ShowConstraintsProperty
+            = DependencyProperty.Register(
+                "ShowConstraints", typeof(bool), typeof(ModelVisualizerControl),
+                new PropertyMetadata(false, OnShowConstraintsChanged, ShowConstraintsCoerceValue));
+
+        public bool ShowConstraints
+        {
+            get { return (bool) GetValue(ShowConstraintsProperty); }
+            set { SetValue(ShowConstraintsProperty, value); }
+        }
+
+        public static readonly RoutedEvent ShowConstraintsChangedEvent
+            = EventManager.RegisterRoutedEvent(
+                "ShowConstraintsChanged",
+                RoutingStrategy.Direct,
+                typeof(RoutedPropertyChangedEventHandler<bool>),
+                typeof(ModelVisualizerControl));
+
+        private static object ShowConstraintsCoerceValue(DependencyObject d, object value)
+        {
+            var val = (bool) value;
+            var obj = (ModelVisualizerControl) d;
+
+
+            return value;
+        }
+
+        public event RoutedPropertyChangedEventHandler<bool> ShowConstraintsChanged
+        {
+            add { AddHandler(ShowConstraintsChangedEvent, value); }
+            remove { RemoveHandler(ShowConstraintsChangedEvent, value); }
+        }
+
+        private static void OnShowConstraintsChanged(
+            DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
+        {
+            var obj = d as ModelVisualizerControl;
+            var args = new RoutedPropertyChangedEventArgs<bool>(
+                (bool) e.OldValue,
+                (bool) e.NewValue);
+            args.RoutedEvent = ModelVisualizerControl.ShowConstraintsChangedEvent;
+            obj.RaiseEvent(args);
+
+            obj.UpdateUi();
+        }
+
+
+        #endregion
+
+
+
         /// <summary>
         /// Updates the UI.
         /// </summary>
@@ -460,25 +670,71 @@ namespace BriefFiniteElementNet.Controls
 
             #endregion
 
-            #region Adding rigid elements
+            #region Adding nodal nodes
 
-            if (ShowRigidElements)
-                foreach (var elm in ModelToVisualize.RigidElements)
+            if (ShowNodalLoads_Force)
+                foreach (var nde in ModelToVisualize.Nodes)
                 {
                     var builder = new MeshBuilder(false, false);
 
-                    AddRigidElement(builder, elm);
+                    foreach (var nodalLoad in nde.Loads)
+                    {
+                        AddNodalLoad_Force(builder, nde, nodalLoad);
+                    }
 
-                    var gradient = new LinearGradientBrush();
-                        //to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
+                    var mesh = builder.ToMesh(true);
 
-                    gradient.GradientStops.Add(new GradientStop(Colors.Blue, 0));
-                    gradient.GradientStops.Add(new GradientStop(Colors.Cyan, 0.2));
-                    gradient.GradientStops.Add(new GradientStop(Colors.Green, 0.4));
-                    gradient.GradientStops.Add(new GradientStop(Colors.Yellow, 0.6));
-                    gradient.GradientStops.Add(new GradientStop(Colors.Red, 0.8));
-                    gradient.GradientStops.Add(new GradientStop(Colors.White, 1));
+                    var material = MaterialHelper.CreateMaterial(Brushes.HotPink);
 
+                    var mygeometry = new GeometryModel3D(mesh, material) { BackMaterial = material };
+
+                    var modelElement = new ModelUIElement3D();
+                    modelElement.Model = mygeometry;
+
+                    BindMouseEvents(modelElement, nde);
+                    // var myModelVisual3D = new ModelVisual3D();
+                    //myModelVisual3D.Content = modelGroup;
+
+
+                    MainViewport.Children.Add(modelElement);
+                }
+
+            if (ShowNodalLoads_Moment)
+                foreach (var nde in ModelToVisualize.Nodes)
+                {
+                    var builder = new MeshBuilder(false, false);
+
+                    foreach (var nodalLoad in nde.Loads)
+                    {
+                        AddNodalLoad_Moment(builder, nde, nodalLoad);
+                    }
+
+                    var mesh = builder.ToMesh(true);
+
+                    var material = MaterialHelper.CreateMaterial(Brushes.HotPink);
+
+                    var mygeometry = new GeometryModel3D(mesh, material) { BackMaterial = material };
+
+                    var modelElement = new ModelUIElement3D();
+                    modelElement.Model = mygeometry;
+
+                    BindMouseEvents(modelElement, nde);
+                    // var myModelVisual3D = new ModelVisual3D();
+                    //myModelVisual3D.Content = modelGroup;
+
+
+                    MainViewport.Children.Add(modelElement);
+                }
+            #endregion
+
+            #region Adding node constraints
+
+            if (ShowConstraints)
+                foreach (var nde in ModelToVisualize.Nodes)
+                {
+                    var builder = new MeshBuilder(false, false);
+
+                    AddNodeConstraint(builder, nde);
 
                     var mesh = builder.ToMesh(true);
 
@@ -491,7 +747,7 @@ namespace BriefFiniteElementNet.Controls
                     var modelElement = new ModelUIElement3D();
                     modelElement.Model = mygeometry;
 
-                    BindMouseEvents(modelElement, elm);
+                    BindMouseEvents(modelElement, nde);
                     // var myModelVisual3D = new ModelVisual3D();
                     //myModelVisual3D.Content = modelGroup;
 
@@ -1207,6 +1463,103 @@ namespace BriefFiniteElementNet.Controls
                 ElementVisualThickness*2, 20, 20);
         }
 
+        private void AddNodalLoad_Force(MeshBuilder bldr, Node nde,NodalLoad load)
+        {
+            var nodeRadius = ElementVisualThickness;
+
+            var arrowLength = nodeRadius*10;
+
+            var arrowDia = arrowLength/5;
+
+            var loc = nde.Location;
+
+            if (load.Force.Fx != 0.0)
+            {
+                bldr.AddArrow(ToP3d(loc - Math.Sign(load.Force.Fx) * Vector.I*arrowLength), ToP3d(loc), arrowDia);
+            }
+
+            if (load.Force.Fy != 0.0)
+            {
+                bldr.AddArrow(ToP3d(loc - Math.Sign(load.Force.Fy) * Vector.J*arrowLength), ToP3d(loc), arrowDia);
+            }
+
+            if (load.Force.Fz != 0.0)
+            {
+                bldr.AddArrow(ToP3d(loc - Math.Sign(load.Force.Fz) * Vector.K*arrowLength), ToP3d(loc), arrowDia);
+            }
+        }
+
+        private void AddNodalLoad_Moment(MeshBuilder bldr, Node nde, NodalLoad load)
+        {
+            var nodeRadius = ElementVisualThickness;
+
+            var arrowLength = nodeRadius * 10;
+
+            var arrowDia = arrowLength / 5;
+
+            var loc = nde.Location;
+
+            if (load.Force.Mx != 0.0)
+            {
+                bldr.AddArrow(ToP3d(loc - Math.Sign(load.Force.Mx)* Vector.I * arrowLength), ToP3d(loc), arrowDia);
+            }
+
+            if (load.Force.My != 0.0)
+            {
+                bldr.AddArrow(ToP3d(loc - Math.Sign(load.Force.My) * Vector.J * arrowLength), ToP3d(loc), arrowDia);
+            }
+
+            if (load.Force.Mz != 0.0)
+            {
+                bldr.AddArrow(ToP3d(loc - Math.Sign(load.Force.Mz) * Vector.K * arrowLength), ToP3d(loc), arrowDia);
+            }
+        }
+
+
+        private void AddNodeConstraint(MeshBuilder bldr, Node nde)
+        {
+            var cns = nde.Constraints;
+
+            if (cns == Constraint.Released)
+                return;
+
+
+            var nodeRadius = ElementVisualThickness;
+
+            var arrowLength = nodeRadius * 10;
+
+            var arrowDia = arrowLength / 5;
+
+            var bh = nodeRadius * 4;
+            var bw = bh*1.3;
+
+            var loc = nde.Location;
+            var below = loc - Vector.K*(2*nodeRadius);
+
+
+
+            if (cns == Constraint.Fixed)
+            {
+                var boxCenter = ToP3d(below - Vector.K*bh/2);
+
+                bldr.AddBox(boxCenter, bw, bw/20, bh);
+                bldr.AddBox(boxCenter, bw/20, bw, bh);
+                return;
+            }
+
+            else
+            {
+                var boxCenter = ToP3d(below - Vector.K * bh / 2);
+
+                bldr.AddCylinder(ToP3d(below), boxCenter, bw, 30);
+            }
+        }
+
+        private static Point3D ToP3d(Point pt)
+        {
+            return new Point3D(pt.X, pt.Y, pt.Z);
+
+        }
         private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
             System.Diagnostics.Process.Start(@"https://helixtoolkit.codeplex.com/");
@@ -1215,6 +1568,17 @@ namespace BriefFiniteElementNet.Controls
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             MainViewport.ZoomExtents();
+        }
+
+        private void btnSolve_OnClick(object sender, RoutedEventArgs e)
+        {
+            ModelToVisualize.Solve();
+        }
+
+
+        private void btnInternalForce_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
     }
 }

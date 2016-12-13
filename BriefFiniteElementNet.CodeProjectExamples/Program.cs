@@ -132,6 +132,6 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             model.Solve();
         }
 
-
+        
     }
 }

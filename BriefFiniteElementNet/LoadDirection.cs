@@ -6,7 +6,7 @@ using System.Text;
 namespace BriefFiniteElementNet
 {
     /// <summary>
-    /// Represents an axis direction in cartesian coordination system
+    /// Represents an axis direction in Cartesian coordination system
     /// </summary>
     public enum LoadDirection
     {

@@ -101,7 +101,6 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <returns>Damp matrix</returns>
         Matrix CalcLocalCMatrix(Element targetElement, Matrix transformMatrix);
 
-
         /// <summary>
         /// Gets the DoF order of returned values.
         /// </summary>
@@ -165,5 +164,41 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="transformMatrix">The transform matrix.</param>
         /// <returns>Gaussian sampling point count</returns>
         int GetDetJOrder(Element targetElement, Matrix transformMatrix);
+
+        /// <summary>
+        /// Gets the equivalent nodal loads because of applying <see cref="load" /> on the <see cref="targetElement" />.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <param name="load">The load.</param>
+        /// <returns></returns>
+        Force GetEquivalentNodalLoads(Element targetElement, Matrix transformMatrix, Load load);
+
+        /// <summary>
+        /// Gets the internal force of element, only due to applying specified load.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <param name="load">The load.</param>
+        /// <param name="isoLocation">The iso location.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// This gives back internal force of element, if no nodal displacements there are, and only the <see cref="load"/> is applied to it.
+        /// </remarks>
+        FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Matrix transformMatrix, Load load, double[] isoLocation);
+
+
+        /// <summary>
+        /// Gets the displacement of element, only due to applying specified load.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <param name="load">The load.</param>
+        /// <param name="isoLocation">The iso location.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// This gives back the displacement of element, if no nodal displacements there are, and only the <see cref="load"/> is applied to it.
+        /// </remarks>
+        FlatShellStressTensor GetLoadDisplacementAt(Element targetElement, Matrix transformMatrix, Load load, double[] isoLocation);
     }
 }

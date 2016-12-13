@@ -93,9 +93,26 @@ namespace BriefFiniteElementNet.ElementHelpers
             throw new NotImplementedException();
         }
 
+        public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Matrix transformMatrix, Load load,
+            double[] isoLocation)
+        {
+            throw new NotImplementedException();
+        }
+
+        public FlatShellStressTensor GetLoadDisplacementAt(Element targetElement, Matrix transformMatrix, Load load,
+            double[] isoLocation)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <inheritdoc/>
         public Displacement GetLocalDisplacementAt(Element targetElement, Matrix transformMatrix, Displacement[] localDisplacements,
             params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Force GetEquivalentNodalLoads(Element targetElement, Matrix transformMatrix, Load load)
         {
             throw new NotImplementedException();
         }

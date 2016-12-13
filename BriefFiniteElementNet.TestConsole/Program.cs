@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Xml.Resolvers;
+using BriefFiniteElementNet.Controls;
 using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Materials;
@@ -19,7 +20,8 @@ namespace BriefFiniteElementNet.TestConsole
         [STAThread]
         static void Main(string[] args)
         {
-            TestBar();
+            TestVisualize();
+            //TestBar();
 
             //SparseMatrixMultiplyValidation.Test1();
 
@@ -158,6 +160,14 @@ namespace BriefFiniteElementNet.TestConsole
                 // new DktHelper().GetBMatrixAt(tri, tri.GetTransformationMatrix(), xi, eta);
 
             var db = b1 - b2;
+        }
+
+        private static void TestVisualize()
+        {
+            var model = StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
+            StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
+
+            ModelVisualizerControl.VisualizeInNewWindow(model);
         }
     }
 }

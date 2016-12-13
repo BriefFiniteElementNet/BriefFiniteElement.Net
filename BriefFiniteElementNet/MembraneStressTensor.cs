@@ -5,6 +5,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet
 {
+    [Obsolete("use CauchyStressTensor instead")]
     public class MembraneStressTensor
     {
         public MembraneStressTensor()
@@ -109,7 +110,6 @@ namespace BriefFiniteElementNet
             buf.Sy = c1 - c2;
 
             return buf;
-            throw new NotImplementedException();
         }
 
         public static MembraneStressTensor Transform(MembraneStressTensor tensor, Matrix transformationMatrix)
@@ -152,8 +152,25 @@ namespace BriefFiniteElementNet
 
             return buf;
         }
+
+
+
+        public static implicit operator CauchyStressTensor(MembraneStressTensor tens)
+        {
+            var mtx = ToMatrix(tens);
+
+            return CauchyStressTensor.FromMatrix(mtx);
+        }
+
+        public static implicit operator MembraneStressTensor(CauchyStressTensor tens)
+        {
+            var mtx = ToMatrix(tens);
+
+            return CauchyStressTensor.FromMatrix(mtx);
+        }
     }
 
+    [Obsolete("use BendingStressTensor instead")]
     public class PlateBendingStressTensor
     {
         public double Mx, My, Mxy; //fig 3, AN EXPLICIT FORMULATION FOR AN EFFICIENT TRIANGULAR PLATE-BENDING ELEMENT
@@ -176,6 +193,30 @@ namespace BriefFiniteElementNet
             buf.Mx = t1.Mx * coef;
             buf.My = t1.My * coef;
             buf.Mxy = t1.Mxy * coef;
+
+            return buf;
+        }
+
+
+
+        public static implicit operator PlateBendingStressTensor(BendingStressTensor tens)
+        {
+            var buf = new PlateBendingStressTensor();
+
+            buf.Mx = tens.M11;
+            buf.My = tens.M22;
+            buf.Mxy = tens.M12;
+
+            return buf;
+        }
+
+        public static implicit operator BendingStressTensor(PlateBendingStressTensor tens)
+        {
+            var buf = new BendingStressTensor();
+
+            buf.M11 = tens.Mx;
+            buf.M22 = tens.My;
+            buf.M12 = tens.Mxy;
 
             return buf;
         }
