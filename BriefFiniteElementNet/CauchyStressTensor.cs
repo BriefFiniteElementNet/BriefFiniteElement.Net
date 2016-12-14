@@ -62,9 +62,14 @@ namespace BriefFiniteElementNet
             tens[1, 1] = tensor.S22;
             tens[2, 2] = tensor.S33;
 
-            tens[0, 1] = tens[1, 0] = tensor.S12;
-            tens[0, 2] = tens[2, 0] = tensor.S31;
-            tens[1, 2] = tens[2, 1] = tensor.S23;
+            tens[0, 1] = tensor.S12;
+            tens[1, 0] = tensor.S21;
+
+            tens[0, 2] = tensor.S13;
+            tens[2, 0] = tensor.S31;
+
+            tens[1, 2] = tensor.S23;
+            tens[2, 1] = tensor.S32;
 
             return tens;
         }
@@ -78,8 +83,13 @@ namespace BriefFiniteElementNet
             buf.S33 = mtx[2, 2];
 
             buf.S12 = mtx[0, 1];
-            buf.S23 = mtx[1, 2];
+            buf.S21 = mtx[1, 0];
+
+            buf.S13 = mtx[0, 2];
             buf.S31 = mtx[2, 0];
+
+            buf.S23 = mtx[1, 2];
+            buf.S32 = mtx[2, 1];
 
             return buf;
         }
