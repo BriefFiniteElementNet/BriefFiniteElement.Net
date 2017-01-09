@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BriefFiniteElementNet.CSparse.Storage;
+using CSparse.Storage;
 
 namespace BriefFiniteElementNet
 {
@@ -108,7 +108,7 @@ namespace BriefFiniteElementNet
             }
 
 
-            return Converter.ToCompressedColumnStorage(buf);
+            return CSparse.Converter.ToCompressedColumnStorage(buf);
         }
 
         /// <summary>
@@ -194,7 +194,7 @@ namespace BriefFiniteElementNet
                 }
             }
 
-            var graph = Converter.ToCompressedColumnStorage(crd);
+            var graph = CSparse.Converter.ToCompressedColumnStorage(crd);
 
             var buf = CalcUtil.EnumerateGraphParts(graph);
 
@@ -267,7 +267,7 @@ namespace BriefFiniteElementNet
             }
 
 
-            return Converter.ToCompressedColumnStorage(buf).Transpose();
+            return CSparse.Converter.ToCompressedColumnStorage(buf).Transpose();
         }
 
         /// <summary>

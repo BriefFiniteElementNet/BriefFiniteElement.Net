@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BriefFiniteElementNet.CSparse.Storage;
+using CSparse.Storage;
 using BriefFiniteElementNet.Solver;
-using CCS = BriefFiniteElementNet.CSparse.Double.CompressedColumnStorage;
-using Coord = BriefFiniteElementNet.CSparse.Storage.CoordinateStorage<double>;
+using CSparse;
+using CCS = CSparse.Double.CompressedColumnStorage;
+using Coord = CSparse.Storage.CoordinateStorage<double>;
 
 namespace BriefFiniteElementNet
 {
@@ -501,10 +502,10 @@ namespace BriefFiniteElementNet
             if (r.ColumnCount != r.RowCount || r.RowCount != 6*m)
                 throw new InvalidOperationException();
 
-            var ff = new Coord(map.RMap2.Length, map.RMap2.Length);
-            var fs = new Coord(map.RMap2.Length, map.RMap3.Length);
-            var sf = new Coord(map.RMap3.Length, map.RMap2.Length);
-            var ss = new Coord(map.RMap3.Length, map.RMap3.Length);
+            var ff = new Coord(map.RMap2.Length, map.RMap2.Length,1);
+            var fs = new Coord(map.RMap2.Length, map.RMap3.Length,1);
+            var sf = new Coord(map.RMap3.Length, map.RMap2.Length,1);
+            var ss = new Coord(map.RMap3.Length, map.RMap3.Length,1);
 
             for (var i = 0; i < 6*m; i++)
             {
@@ -649,27 +650,36 @@ namespace BriefFiniteElementNet
             return cross.Length / 2;
         }
 
-        public static void ApplyTransformMatrix(Matrix matrix, Matrix transform)
+        /// <summary>
+        /// Applies the lambda matrix to transform from local to global.
+        /// </summary>
+        /// <param name="matrix">The matrix.</param>
+        /// <param name="lambda">The lambda matrix.</param>
+        /// <remarks>
+        /// This is used for higher performance applyment of matrix. Does exactly Tt * K * T transforming 
+        /// but faster
+        /// </remarks>
+        public static void ApplyTransformMatrix(Matrix matrix, Matrix lambda)
         {
-            if (!transform.IsSquare() || !matrix.IsSquare())
+            if (!lambda.IsSquare() || !matrix.IsSquare())
                 throw new Exception();
 
-            if (transform.RowCount != 3 || matrix.RowCount%3 != 0)
+            if (lambda.RowCount != 3 || matrix.RowCount%3 != 0)
                 throw new Exception();
 
             var count = matrix.RowCount/3;
 
-            var t11 = transform[0, 0];
-            var t12 = transform[0, 1];
-            var t13 = transform[0, 2];
+            var t11 = lambda[0, 0];
+            var t12 = lambda[0, 1];
+            var t13 = lambda[0, 2];
 
-            var t21 = transform[1, 0];
-            var t22 = transform[1, 1];
-            var t23 = transform[1, 2];
+            var t21 = lambda[1, 0];
+            var t22 = lambda[1, 1];
+            var t23 = lambda[1, 2];
 
-            var t31 = transform[2, 0];
-            var t32 = transform[2, 1];
-            var t33 = transform[2, 2];
+            var t31 = lambda[2, 0];
+            var t32 = lambda[2, 1];
+            var t33 = lambda[2, 2];
 
 
             for (var ic = 0; ic < count; ic++)

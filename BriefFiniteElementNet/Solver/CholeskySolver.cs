@@ -1,9 +1,11 @@
 ﻿
 using System;
-using BriefFiniteElementNet.CSparse;
-using BriefFiniteElementNet.CSparse.Double;
-using BriefFiniteElementNet.CSparse.Double.Factorization;
-using BriefFiniteElementNet.CSparse.Storage;
+using CSparse;
+using CSparse.Double;
+using CSparse.Double.Factorization;
+using CSparse.Factorization;
+using CSparse.Storage;
+
 
 namespace BriefFiniteElementNet.Solver
 {
@@ -58,7 +60,10 @@ namespace BriefFiniteElementNet.Solver
             var sp = new Stopwatch();
             sp.Start();
 
-            cholesky = new SparseCholesky(matrix, ColumnOrdering.MinimumDegreeAtPlusA);
+            cholesky =
+                SparseCholesky.Create(matrix, ColumnOrdering.MinimumDegreeAtPlusA);
+                
+
             IsInitialized = true;
 
             sp.Stop();

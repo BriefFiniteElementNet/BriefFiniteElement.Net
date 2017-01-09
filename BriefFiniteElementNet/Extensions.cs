@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
-using BriefFiniteElementNet.CSparse.Double;
+using CSparse.Double;
 using BriefFiniteElementNet.Geometry;
 
 namespace BriefFiniteElementNet

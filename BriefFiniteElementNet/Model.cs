@@ -10,10 +10,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Permissions;
 using System.Text;
 using System.Xml.Serialization;
-using BriefFiniteElementNet.CSparse;
-using BriefFiniteElementNet.CSparse.Double;
-using BriefFiniteElementNet.CSparse.Double.Factorization;
-using BriefFiniteElementNet.CSparse.Storage;
+using CSparse;
+using CSparse.Double;
+using CSparse.Double.Factorization;
+using CSparse.Storage;
 using BriefFiniteElementNet.Solver;
 
 namespace BriefFiniteElementNet

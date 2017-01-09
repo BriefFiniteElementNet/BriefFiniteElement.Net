@@ -1,6 +1,6 @@
 ﻿
-using BriefFiniteElementNet.CSparse.Double;
-using BriefFiniteElementNet.CSparse.Storage;
+using CSparse.Double;
+using CSparse.Storage;
 
 namespace BriefFiniteElementNet.Solver
 {

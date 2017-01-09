@@ -6,9 +6,9 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Security.Permissions;
 using System.Text;
-using BriefFiniteElementNet.CSparse.Double;
+using CSparse.Double;
 using BriefFiniteElementNet.Solver;
-using CCS = BriefFiniteElementNet.CSparse.Double.CompressedColumnStorage;
+using CCS = CSparse.Double.CompressedColumnStorage;
 
 namespace BriefFiniteElementNet
 {

@@ -6,7 +6,7 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using BriefFiniteElementNet.CSparse.Storage;
+using CSparse.Storage;
 
 namespace BriefFiniteElementNet.Solver
 {

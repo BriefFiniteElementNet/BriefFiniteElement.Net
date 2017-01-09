@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BriefFiniteElementNet.CSparse.Storage;
-using CCS = BriefFiniteElementNet.CSparse.Double.CompressedColumnStorage;
+using CSparse.Storage;
+using CCS = CSparse.Double.CompressedColumnStorage;
 
 namespace BriefFiniteElementNet
 {

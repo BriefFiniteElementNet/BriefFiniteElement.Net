@@ -65,3 +65,10 @@ Mass Matrix
 ===
 p.9 of ref[6]
 p.52 - eq.84_1 ref[7]
+
+Coordination stranformation
+===
+Lambda matrix:
+
+[xyz] are vector in element's local coordination system
+[XYZ] are vector in global coordination system

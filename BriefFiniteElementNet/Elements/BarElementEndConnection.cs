@@ -8,6 +8,7 @@ namespace BriefFiniteElementNet.Elements
     /// <summary>
     /// Represents the end connection type of bar element to either of its end nodes
     /// </summary>
+    [Obsolete("use two node approach for partial connection")]
     public struct BarElementEndConnection
     {
         /// <summary>

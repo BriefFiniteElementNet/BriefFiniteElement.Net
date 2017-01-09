@@ -4,8 +4,8 @@ using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
-using BriefFiniteElementNet.CSparse.Double;
 using BriefFiniteElementNet.Elements;
+using CSparse.Double;
 
 namespace BriefFiniteElementNet
 {

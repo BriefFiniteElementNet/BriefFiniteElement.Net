@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BriefFiniteElementNet.CSparse;
-using BriefFiniteElementNet.CSparse.Double;
+using CSparse;
+using CSparse.Double;
 
 namespace BriefFiniteElementNet
 {

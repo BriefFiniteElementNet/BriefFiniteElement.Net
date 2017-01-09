@@ -106,6 +106,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public static void RemoveReleasedMembers_bar(IElementHelper helper, Element targetElement,Matrix bMatrix)
         {
+            return;
+            /*
             var bar = targetElement as BarElement;
 
             var order = helper.GetDofOrder(targetElement);
@@ -144,6 +146,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 bMatrix[0, idx] = 0;
             }
+            */
         }
 
         public static Matrix CalcLocalCMatrix_Bar(IElementHelper helper, Element targetElement, Matrix transformMatrix)

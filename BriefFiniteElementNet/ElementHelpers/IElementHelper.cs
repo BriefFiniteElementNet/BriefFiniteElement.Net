@@ -172,7 +172,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="transformMatrix">The transform matrix.</param>
         /// <param name="load">The load.</param>
         /// <returns></returns>
-        Force GetEquivalentNodalLoads(Element targetElement, Matrix transformMatrix, Load load);
+        Force[] GetEquivalentNodalLoads(Element targetElement, Matrix transformMatrix, Load load);
 
         /// <summary>
         /// Gets the internal force of element, only due to applying specified load.

@@ -86,6 +86,11 @@ namespace BriefFiniteElementNet
             base.GetObjectData(info, context);
         }
 
+        public override Matrix GetLambdaMatrix()
+        {
+            throw new NotImplementedException();
+        }
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Element1D"/> class.

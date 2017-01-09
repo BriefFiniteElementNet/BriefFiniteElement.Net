@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using BriefFiniteElementNet.CSparse.Storage;
-using CCS = BriefFiniteElementNet.CSparse.Double.CompressedColumnStorage;
-using Coord = BriefFiniteElementNet.CSparse.Storage.CoordinateStorage<double>;
+using CSparse;
+using CSparse.Storage;
+using CCS = CSparse.Double.CompressedColumnStorage;
+using Coord = CSparse.Storage.CoordinateStorage<double>;
 
 namespace BriefFiniteElementNet
 {

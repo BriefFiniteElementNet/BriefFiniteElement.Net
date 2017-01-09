@@ -28,8 +28,8 @@ namespace BriefFiniteElementNet.Elements
 
         private double _webRotation;
         
-        private BarElementEndConnection _startConnection = BarElementEndConnection.Fixed;
-        private BarElementEndConnection _endtConnection = BarElementEndConnection.Fixed;
+        //private BarElementEndConnection _startConnection = BarElementEndConnection.Fixed;
+        //private BarElementEndConnection _endtConnection = BarElementEndConnection.Fixed;
         private BarElementBehaviour _behavior;
         private BaseBarElementCrossSection _section;
         private BaseBarMaterial _matterial;
@@ -59,7 +59,7 @@ namespace BriefFiniteElementNet.Elements
             get { return nodes[1]; }
             set { nodes[1] = value; }
         }
-
+        /*
         /// <summary>
         /// Gets or sets a value indicating whether member is hinged at start.
         /// </summary>
@@ -91,7 +91,7 @@ namespace BriefFiniteElementNet.Elements
             get { return _endtConnection; }
             set { _endtConnection = value; }
         }
-
+        */
         /// <summary>
         /// Gets or sets the web rotation of this member in Degree
         /// </summary>
@@ -256,20 +256,7 @@ namespace BriefFiniteElementNet.Elements
             }
 
 
-            {// take the end connections into account
-                //b is 4 X 12, each row for one DoF
-
-                var d1 = _startConnection;
-                var d2 = _endtConnection;
-
-                var arr = new DofConstraint[] {
-                    d1.Dx, d1.Dy, d1.Dz, d1.Rx, d1.Ry, d1.Rz ,
-                    d2.Dx, d2.Dy, d2.Dz, d2.Rx, d2.Ry, d2.Rz };
-
-                for (var i = 0; i < 12; i++)
-                    if (arr[i] == DofConstraint.Released)
-                        buf.SetColumn(i, 0.0, 0.0, 0.0, 0.0);
-            }
+            
 
             return buf;
         }
@@ -299,6 +286,80 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
+        public override Matrix GetLambdaMatrix()
+        {
+            var cxx = 0.0;
+            var cxy = 0.0;
+            var cxz = 0.0;
+
+            var cyx = 0.0;
+            var cyy = 0.0;
+            var cyz = 0.0;
+
+            var czx = 0.0;
+            var czy = 0.0;
+            var czz = 0.0;
+
+            var teta = _webRotation;
+
+            var s = Math.Sin(teta * Math.PI / 180.0);
+            var c = Math.Cos(teta * Math.PI / 180.0);
+
+            var v = this.EndNode.Location - this.StartNode.Location;
+
+            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
+            {
+                if (v.Z > 0)
+                {
+                    czx = 1;
+                    cyy = 1;
+                    cxz = -1;
+                }
+                else
+                {
+                    czx = -1;
+                    cyy = 1;
+                    cxz = 1;
+                }
+            }
+            else
+            {
+                var l = v.Length;
+                cxx = v.X / l;
+                cyx = v.Y / l;
+                czx = v.Z / l;
+                var d = Math.Sqrt(cxx * cxx + cyx * cyx);
+                cxy = -cyx / d;
+                cyy = cxx / d;
+                cxz = -cxx * czx / d;
+                cyz = -cyx * czx / d;
+                czz = d;
+            }
+
+            var pars = new double[9];
+
+            pars[0] = cxx;
+            pars[1] = cxy * c + cxz * s;
+            pars[2] = -cxy * s + cxz * c;
+
+            pars[3] = cyx;
+            pars[4] = cyy * c + cyz * s;
+            pars[5] = -cyy * s + cyz * c;
+
+            pars[6] = czx;
+            pars[7] = czy * c + czz * s;
+            pars[8] = -czy * s + czz * c;
+
+
+            var buf = new Matrix(3, 3);
+
+            buf.FillColumn(0, pars[0], pars[1], pars[2]);
+            buf.FillColumn(1, pars[3], pars[4], pars[5]);
+            buf.FillColumn(2, pars[6], pars[7], pars[8]);
+
+            return buf;
+        }
+
         public override Matrix ComputeNMatrixAt(params double[] location)
         {
             throw new NotImplementedException();
@@ -306,24 +367,55 @@ namespace BriefFiniteElementNet.Elements
 
         public override Force[] GetEquivalentNodalLoads(Load load)
         {
-            throw new NotImplementedException();
+            var helpers = GetElementHelpers();
+
+            var buf = new Force[nodes.Length];
+
+            var t = GetTransformationMatrix();
+
+            foreach (var helper in helpers)
+            {
+                var forces = helper.GetEquivalentNodalLoads(this, t, load);
+
+                for (var i = 0; i < buf.Length; i++)
+                {
+                    buf[i] = buf[i] + forces[i];
+                }
+            }
+
+            return buf;
         }
 
         public override Matrix GetGlobalDampingMatrix()
         {
-            throw new NotImplementedException();
+            var local = GetLocalDampMatrix();
+            var t = GetTransformationMatrix();
+
+            CalcUtil.ApplyTransformMatrix(local, t);
+
+            return local;
         }
 
         public override Matrix GetGlobalMassMatrix()
         {
-            throw new NotImplementedException();
+            var local = GetLocalMassMatrix();
+
+            var t = GetTransformationMatrix();
+
+            CalcUtil.ApplyTransformMatrix(local, t);
+
+            return local;
         }
 
         public override Matrix GetGlobalStifnessMatrix()
         {
             var local = GetLocalStifnessMatrix();
 
-            throw new NotImplementedException();
+            var t = GetTransformationMatrix();
+
+            CalcUtil.ApplyTransformMatrix(local, t);
+
+            return local;
         }
 
         public Matrix GetTransformationMatrix()
@@ -340,14 +432,12 @@ namespace BriefFiniteElementNet.Elements
             var czy = 0.0;
             var czz = 0.0;
 
-
             var teta = _webRotation;
 
             var s = Math.Sin(teta * Math.PI / 180.0);
             var c = Math.Cos(teta * Math.PI / 180.0);
 
             var v = this.EndNode.Location - this.StartNode.Location;
-
 
             if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
             {
@@ -404,37 +494,7 @@ namespace BriefFiniteElementNet.Elements
 
         public Matrix GetLocalStifnessMatrix()
         {
-            var helpers = new List<IElementHelper>();
-
-            if ((this._behavior & BarElementBehaviour.BeamYEulerBernoulli) != 0)
-            {
-                helpers.Add(new EulerBernoulliBeamHelper(BeamDirection.Y));
-            }
-
-            if ((this._behavior & BarElementBehaviour.BeamYTimoshenko) != 0)
-            {
-                helpers.Add(new TimoshenkoBeamHelper(BeamDirection.Y));
-            }
-
-            if ((this._behavior & BarElementBehaviour.BeamZEulerBernoulli) != 0)
-            {
-                helpers.Add(new EulerBernoulliBeamHelper(BeamDirection.Z));
-            }
-
-            if ((this._behavior & BarElementBehaviour.BeamZTimoshenko) != 0)
-            {
-                helpers.Add(new TimoshenkoBeamHelper(BeamDirection.Z));
-            }
-
-            if ((this._behavior & BarElementBehaviour.Truss) != 0)
-            {
-                helpers.Add(new TrussHelper());
-            }
-
-            if ((this._behavior & BarElementBehaviour.Shaft) != 0)
-            {
-                helpers.Add(new ShaftHelper());
-            }
+            var helpers = GetElementHelpers();
 
             var buf = new Matrix(12, 12);
 
@@ -460,15 +520,80 @@ namespace BriefFiniteElementNet.Elements
                         buf[bi, bj] += ki[ii, jj];
                     }
                 }
-
-                
             }
 
             return buf;
         }
 
+        public Matrix GetLocalDampMatrix()
+        {
+            var helpers = GetElementHelpers();
+
+            var buf = new Matrix(12, 12);
+
+            var transMatrix = GetTransformationMatrix();
+
+            for (var i = 0; i < helpers.Count; i++)
+            {
+                var helper = helpers[i];
+
+                var ki = helper.CalcLocalCMatrix(this, transMatrix);// ComputeK(helper, transMatrix);
+
+                var dofs = helper.GetDofOrder(this);
+
+                for (var ii = 0; ii < dofs.Length; ii++)
+                {
+                    var bi = dofs[ii].NodeIndex * 6 + (int)dofs[ii].Dof;
+
+                    for (var jj = 0; jj < dofs.Length; jj++)
+                    {
+                        var bj = dofs[jj].NodeIndex * 6 + (int)dofs[jj].Dof;
+
+                        buf[bi, bj] += ki[ii, jj];
+                    }
+                }
+            }
+
+            return buf;
+        }
 
         public Matrix GetLocalMassMatrix()
+        {
+            var helpers = GetElementHelpers();
+
+            var buf = new Matrix(12, 12);
+
+            var transMatrix = GetTransformationMatrix();
+
+            for (var i = 0; i < helpers.Count; i++)
+            {
+                var helper = helpers[i];
+
+                var ki = helper.CalcLocalMMatrix(this, transMatrix);// ComputeK(helper, transMatrix);
+
+                var dofs = helper.GetDofOrder(this);
+
+                for (var ii = 0; ii < dofs.Length; ii++)
+                {
+                    var bi = dofs[ii].NodeIndex * 6 + (int)dofs[ii].Dof;
+
+                    for (var jj = 0; jj < dofs.Length; jj++)
+                    {
+                        var bj = dofs[jj].NodeIndex * 6 + (int)dofs[jj].Dof;
+
+                        buf[bi, bj] += ki[ii, jj];
+                    }
+                }
+            }
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Gets the list of element helpers reagarding <see cref="Behavior"/>.
+        /// </summary>
+        /// <returns></returns>
+        private List<IElementHelper> GetElementHelpers()
         {
             var helpers = new List<IElementHelper>();
 
@@ -502,43 +627,10 @@ namespace BriefFiniteElementNet.Elements
                 helpers.Add(new ShaftHelper());
             }
 
-            var buf = new Matrix(12, 12);
-
-            var transMatrix = GetTransformationMatrix();
-
-            for (var i = 0; i < helpers.Count; i++)
-            {
-                var helper = helpers[i];
-
-                var ki = helper.CalcLocalMMatrix(this, transMatrix);// ComputeK(helper, transMatrix);
-
-                var dofs = helper.GetDofOrder(this);
-
-
-                for (var ii = 0; ii < dofs.Length; ii++)
-                {
-                    var bi = dofs[ii].NodeIndex * 6 + (int)dofs[ii].Dof;
-
-                    for (var jj = 0; jj < dofs.Length; jj++)
-                    {
-                        var bj = dofs[jj].NodeIndex * 6 + (int)dofs[jj].Dof;
-
-                        buf[bi, bj] += ki[ii, jj];
-                    }
-                }
-
-
-            }
-
-            return buf;
+            return helpers;
         }
 
-        [Obsolete]
-        public Matrix ComputeK(IElementHelper helper,Matrix transfrmationMatrix)
-        {
-            throw new NotImplementedException();
-        }
-
+        
 
     }
 }

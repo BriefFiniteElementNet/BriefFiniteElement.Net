@@ -128,5 +128,10 @@ namespace BriefFiniteElementNet.Elements
         {
             throw new NotImplementedException();
         }
+
+        public override Matrix GetLambdaMatrix()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -11,7 +11,7 @@ namespace BriefFiniteElementNet.Elements
     /// </summary>
     [Serializable]
     [CLSCompliant(true)]
-    [DebuggerDisplay("{ElementType}, Label: {Label}")]
+    [DebuggerDisplay("{this.GetType().Name}, Label: {Label}")]
     public abstract class Element : StructurePart
     {
         [Obsolete]
@@ -224,5 +224,15 @@ namespace BriefFiniteElementNet.Elements
         /// <returns>the Jacobian matrix</returns>
         [Obsolete]
         public abstract Matrix ComputeJMatrixAt(params double[] location);
+
+
+        /// <summary>
+        /// Gets the lambda matrix of element (for transforming between local and global axis).
+        /// </summary>
+        /// <remarks>
+        /// lambda * Local = Global
+        /// </remarks>
+        /// <returns></returns>
+        public abstract Matrix GetLambdaMatrix();
     }
 }

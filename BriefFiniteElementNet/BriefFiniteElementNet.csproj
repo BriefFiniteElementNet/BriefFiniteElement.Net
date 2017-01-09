@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BriefFiniteElementNet</RootNamespace>
     <AssemblyName>BriefFiniteElementNet</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,8 +35,13 @@
     <DocumentationFile>bin\Release\BriefFiniteElementNet.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CSparse, Version=3.1.9.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CSparse.3.1.9\lib\net40\CSparse.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -55,8 +61,6 @@
     <Compile Include="Elements\BarElementBehaviours.cs" />
     <Compile Include="CheckingUtil.cs" />
     <Compile Include="ConsoleTraceListener.cs" />
-    <Compile Include="CSparse\Double\Factorization\SparseLDL.cs" />
-    <Compile Include="CSparse\Tuple.cs" />
     <Compile Include="DoF.cs" />
     <Compile Include="DofMap.cs" />
     <Compile Include="DofMappingManager.cs" />
@@ -122,6 +126,7 @@
     <Compile Include="SolverFailException.cs" />
     <Compile Include="BuiltInSolverType.cs" />
     <Compile Include="Solver\CholeskySolver.cs" />
+    <Compile Include="Solver\Extensions.cs" />
     <Compile Include="Solver\IdentityPreconditioner.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -152,29 +157,6 @@
     <Compile Include="ConcentratedLoad1D.cs" />
     <Compile Include="Constraint.cs" />
     <Compile Include="CoordinationSystem.cs" />
-    <Compile Include="CSparse\ColumnOrdering.cs" />
-    <Compile Include="CSparse\Common.cs" />
-    <Compile Include="CSparse\Constants.cs" />
-    <Compile Include="CSparse\Double\CompressedColumnStorage.cs" />
-    <Compile Include="CSparse\Double\Factorization\SparseCholesky.cs" />
-    <Compile Include="CSparse\Double\Factorization\SparseLU.cs" />
-    <Compile Include="CSparse\Double\Factorization\SparseQR.cs" />
-    <Compile Include="CSparse\Double\Vector.cs" />
-    <Compile Include="CSparse\GraphHelper.cs" />
-    <Compile Include="CSparse\Helper.cs" />
-    <Compile Include="CSparse\ISparseFactorization.cs" />
-    <Compile Include="CSparse\MatrixNorm.cs" />
-    <Compile Include="CSparse\Ordering\AMD.cs" />
-    <Compile Include="CSparse\Ordering\DulmageMendelsohn.cs" />
-    <Compile Include="CSparse\Ordering\MaximumMatching.cs" />
-    <Compile Include="CSparse\Permutation.cs" />
-    <Compile Include="CSparse\Storage\CompressedColumnStorage.cs" />
-    <Compile Include="CSparse\Storage\Converter.cs" />
-    <Compile Include="CSparse\Storage\CoordinateStorage.cs" />
-    <Compile Include="CSparse\Storage\ISparseMatrixStorage.cs" />
-    <Compile Include="CSparse\Storage\SparseMatrixStorage.cs" />
-    <Compile Include="CSparse\Storage\SymbolicColumnStorage.cs" />
-    <Compile Include="CSparse\SymbolicFactorization.cs" />
     <Compile Include="CustomLinearLoad1D.cs" />
     <Compile Include="LoadDirection.cs" />
     <Compile Include="Displacement.cs" />
@@ -223,6 +205,7 @@
     <Compile Include="ZoneDevidedMatrix.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CalcUtil.md" />
     <None Include="ClassDiagram1.cd" />
     <None Include="Documents\SupportReactions.mkd" />
     <None Include="Elements\BarElement.md" />
@@ -231,17 +214,17 @@
     <None Include="Elements\SdofMass.md" />
     <None Include="Elements\Spring1D.md" />
     <None Include="Elements\Tetrahedral.md" />
+    <None Include="Elements\Transformations.md" />
     <None Include="Elements\TriangleFlatShell.md" />
     <None Include="Elements\TriangleFlatShellExtensions.md" />
     <None Include="Elements\HingeLink.md" />
     <None Include="Integration\GaussianIntegrator.md" />
+    <None Include="packages.config" />
     <None Include="RigidElement.md" />
     <None Include="Todo.md" />
     <None Include="UniformLoad1D.md" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CSparse\IO\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="checksum" />
   </ItemGroup>

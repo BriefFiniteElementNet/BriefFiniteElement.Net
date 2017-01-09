@@ -88,7 +88,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             frameElement.MassFormulationType = MassFormulation.Consistent;
 
-            barElement.EndConnection = BarElementEndConnection.TotallyHinged;
+            //barElement.EndConnection = BarElementEndConnection.TotallyHinged;
             //barElement.StartConnection = BarElementEndConnection.TotallyHinged;
 
             frameElement.HingedAtStart = true;

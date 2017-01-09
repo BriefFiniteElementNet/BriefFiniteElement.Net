@@ -8,9 +8,9 @@
 namespace BriefFiniteElementNet.Solver
 {
     using System;
-    using BriefFiniteElementNet.CSparse.Storage;
+    using CSparse.Storage;
 
-    using Vector = BriefFiniteElementNet.CSparse.Double.Vector;
+    using Vector = CSparse.Double.Vector;
 
     /// <summary>
     /// Preconditioned conjugate gradient (Orthomin) functions

@@ -27,6 +27,11 @@ namespace BriefFiniteElementNet
             base.GetObjectData(info, context);
         }
 
+        public override Matrix GetLambdaMatrix()
+        {
+            throw new NotImplementedException();
+        }
+
         protected Element2D(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

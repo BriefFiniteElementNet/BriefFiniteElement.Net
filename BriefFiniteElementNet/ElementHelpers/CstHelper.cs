@@ -256,7 +256,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
 
-        public Force GetEquivalentNodalLoads(Element targetElement, Matrix transformMatrix, Load load)
+        public Force[] GetEquivalentNodalLoads(Element targetElement, Matrix transformMatrix, Load load)
         {
             throw new NotImplementedException();
         }

@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
 using System.Text;
-using BriefFiniteElementNet.CSparse.Double;
-using BriefFiniteElementNet.CSparse.Storage;
-using CCS = BriefFiniteElementNet.CSparse.Double.CompressedColumnStorage;
+using CSparse;
+using CSparse.Double;
+using CSparse.Storage;
+using CCS = CSparse.Double.CompressedColumnStorage;
 
 namespace BriefFiniteElementNet
 {
