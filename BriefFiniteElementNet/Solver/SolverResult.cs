@@ -1,9 +1,12 @@
 ﻿
+using System;
+
 namespace BriefFiniteElementNet.Solver
 {
     /// <summary>
     /// Result of an iterative solver.
     /// </summary>
+    [Obsolete]
     public enum SolverResult
     {
         /// <summary>

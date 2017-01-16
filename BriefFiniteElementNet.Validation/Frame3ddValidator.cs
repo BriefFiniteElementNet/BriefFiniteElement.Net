@@ -91,8 +91,8 @@ and place frame3dd.exe beside this application.");
             //Process.Start(@"C:\Program Files (x86)\Notepad++\notepad++.exe", output);
             var cfg = new SolverConfiguration();
             cfg.LoadCases = allCases;
-            cfg.SolverGenerator = i => new CholeskySolver(i);
-
+            //cfg.SolverGenerator = i => new CholeskySolver(i);
+            cfg.SolverFactory = new CholeskySolverFactory();
             model.Solve(cfg);
 
             var disps = model.Nodes.Select(i => i.GetNodalDisplacement(cmb)).ToArray();

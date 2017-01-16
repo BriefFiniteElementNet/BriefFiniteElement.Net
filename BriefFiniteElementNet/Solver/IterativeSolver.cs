@@ -24,7 +24,7 @@ namespace BriefFiniteElementNet.Solver
             }
         }
 
-        public abstract SolverResult Solve(double[] input, double[] result,out string message);
+        public abstract void Solve(double[] input, double[] result);
 
         /// <summary>
         /// Number of iterations.

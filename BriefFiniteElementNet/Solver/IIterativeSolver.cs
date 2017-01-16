@@ -1,4 +1,6 @@
 ﻿
+using BriefFiniteElementNet.Common;
+
 namespace BriefFiniteElementNet.Solver
 {
     using System;

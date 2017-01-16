@@ -1,5 +1,6 @@
 ﻿
 using System;
+using BriefFiniteElementNet.Common;
 using CSparse;
 using CSparse.Double;
 using CSparse.Double.Factorization;
@@ -75,27 +76,14 @@ namespace BriefFiniteElementNet.Solver
         }
 
         /// <inheritdoc />
-        public SolverResult Solve( double[] input, double[] result,out string message)
+        public void Solve(double[] input, double[] result)
         {
-            message = string.Empty;
-
-            try
+            if (!IsInitialized)
             {
-                if (!IsInitialized)
-                {
-                    Initialize();
-                }
-
-                cholesky.Solve(input, result);
+                Initialize();
             }
-            catch (Exception ex)
-            {
-                message = ex.Message;
-                return SolverResult.Failure;
-            }
-            
 
-            return SolverResult.Success;
+            cholesky.Solve(input, result);
         }
     }
 }

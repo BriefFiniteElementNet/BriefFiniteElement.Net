@@ -7,7 +7,8 @@ using System.Management;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
-using BriefFiniteElementNet.CSparse.Double;
+using BriefFiniteElementNet.Common;
+using CSparse.Double;
 using BriefFiniteElementNet.Solver;
 
 namespace BriefFiniteElementNet.BenchmarkApplication
@@ -155,20 +156,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
                 return value.ToString();
         }
 
-        private static ISolver CreateInternalSolver(BuiltInSolverType type, CompressedColumnStorage ccs)
-        {
-            switch (type)
-            {
-                case BuiltInSolverType.CholeskyDecomposition:
-                    return new CholeskySolver(ccs);
-                    break;
-                case BuiltInSolverType.ConjugateGradient:
-                    return new PCG(new SSOR()) {A = ccs};
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("type");
-            }
-        }
+      
 
         /// <summary>
         /// Gets the count of free DoFs of <see cref="model"/>.

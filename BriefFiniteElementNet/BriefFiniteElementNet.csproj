@@ -126,6 +126,8 @@
     <Compile Include="SolverFailException.cs" />
     <Compile Include="BuiltInSolverType.cs" />
     <Compile Include="Solver\CholeskySolver.cs" />
+    <Compile Include="Solver\CholeskySolverFactory.cs" />
+    <Compile Include="Solver\ConjugateGradientFactory.cs" />
     <Compile Include="Solver\Extensions.cs" />
     <Compile Include="Solver\IdentityPreconditioner.cs">
       <SubType>Code</SubType>
@@ -134,9 +136,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Solver\IPreconditioner.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Solver\ISolver.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Solver\IterativeSolver.cs">
@@ -224,7 +223,12 @@
     <None Include="Todo.md" />
     <None Include="UniformLoad1D.md" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj">
+      <Project>{82c63c6b-651a-4308-8b89-b4c643f3a7c2}</Project>
+      <Name>BriefFiniteElementNet.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="checksum" />
   </ItemGroup>

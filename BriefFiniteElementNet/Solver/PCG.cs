@@ -38,7 +38,7 @@ namespace BriefFiniteElementNet.Solver
         }
 
         /// <inheritdoc />
-        public override SolverResult Solve( double[] input, double[] result,out string message)
+        public override void Solve(double[] input, double[] result)
         {
 
             var M = this.Preconditioner;
@@ -133,8 +133,8 @@ namespace BriefFiniteElementNet.Solver
             {
                 // Set x equal to zero and return
                 Vector.Copy(input, result);
-                message = "";
-                return SolverResult.Success;
+                //message = "";
+                //return SolverResult.Success;
                 // In this case, for the original parcsr pcg, the code would take special
                 // action to force iterations even though the exact value was known.
             }
@@ -281,8 +281,10 @@ namespace BriefFiniteElementNet.Solver
                 if ((gamma < 1.0e-292) && ((-gamma) < 1.0e-292))
                 {
                     // ierr = 1, hypre_error(HYPRE_ERROR_CONV)
-                    message = "method did not converge as expected";
-                    return SolverResult.Failure;
+                    //message = "method did not converge as expected";
+                    //return SolverResult.Failure;
+
+                    throw new Exception("Numeric Solver: PCG method did not converge as expected");
                 }
                 // ... gamma should be >=0.  IEEE subnormal numbers are < 2**(-1022)=2.2e-308
                 // (and >= 2**(-1074)=4.9e-324).  So a gamma this small means we're getting
@@ -305,8 +307,9 @@ namespace BriefFiniteElementNet.Solver
                         // and we're just calculating garbage - time to bail out before the
                         // next step, which will be a divide by zero (or close to it).
                         // ierr = 1, hypre_error(HYPRE_ERROR_CONV)
-                        message = "method did not converge as expected";
-                        return SolverResult.Failure;
+                        throw new Exception("Numeric Solver: PCG method did not converge as expected");
+                        //message = "method did not converge as expected";
+                        //return SolverResult.Failure;
                     }
                     cf_ave_1 = Math.Pow(i_prod / i_prod_0, 1.0 / (2.0 * i));
 
@@ -340,11 +343,10 @@ namespace BriefFiniteElementNet.Solver
             else // actually, we'll never get here...
                 rel_residual_norm = 0.0;
 
-            message = (numIterations < max_iter)
-                ? ""
-                : string.Format("Max number of {0} iterations exceed", numIterations);
+            if (numIterations > max_iter)
+                throw new Exception("Numeric Solver: Max number of {0} iterations exceed");
 
-            return (numIterations < max_iter) ? SolverResult.Success : SolverResult.Failure;
+            //return (numIterations < max_iter) ? SolverResult.Success : SolverResult.Failure;
         }
     }
 }

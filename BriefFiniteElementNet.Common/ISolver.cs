@@ -1,19 +1,12 @@
-﻿
-using CSparse.Double;
-using CSparse.Storage;
+﻿using CSparse.Double;
 
-namespace BriefFiniteElementNet.Solver
+namespace BriefFiniteElementNet.Common
 {
-    using System;
-
     /// <summary>
     /// Represents an interface for a solver to solve A*x = b.
-    /// 
     /// </summary>
     public interface ISolver 
     {
-        //Model Target { get; }
-
         /// <summary>
         /// Gets or sets A in A*x=b.
         /// </summary>
@@ -30,13 +23,22 @@ namespace BriefFiniteElementNet.Solver
         /// <summary>
         /// Gets the type of the solver.
         /// </summary>
-        BuiltInSolverType SolverType { get; }
+        //BuiltInSolverType SolverType { get; }
 
         /// <summary>
         /// Initializes the solver regarding <see cref="A" /> matrix.
         /// </summary>
         void Initialize();
 
+        /// <summary>
+        /// Solves a the system of A*x=b and store the x in <see cref="x" />.
+        /// </summary>
+        /// <param name="b">Right hand side vector.</param>
+        /// <param name="x">Solution vector.</param>
+        /// 
+        void Solve(double[] b, double[] x);
+
+        /*
         /// <summary>
         /// Solves a the system of A*x=b and store the x in <see cref="result" />.
         /// </summary>
@@ -46,6 +48,7 @@ namespace BriefFiniteElementNet.Solver
         /// <returns>
         /// Solver result.
         /// </returns>
-        SolverResult Solve( double[] input, double[] result,out string message);
+        SolverResult Solve(double[] input, double[] result, out string message);
+        */
     }
 }

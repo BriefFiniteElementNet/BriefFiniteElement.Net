@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Security.Permissions;
 using System.Text;
+using BriefFiniteElementNet.Common;
 using CSparse.Double;
 using BriefFiniteElementNet.Solver;
 using CCS = CSparse.Double.CompressedColumnStorage;
@@ -33,8 +34,8 @@ namespace BriefFiniteElementNet
 
         private Model parent;
 
-        private Dictionary<LoadCase, double[]> displacements = new Dictionary<LoadCase, double[]>();
-        private Dictionary<LoadCase, double[]> forces = new Dictionary<LoadCase, double[]>();
+        private Dictionary<LoadCase, double[]> _displacements = new Dictionary<LoadCase, double[]>();
+        private Dictionary<LoadCase, double[]> _forces = new Dictionary<LoadCase, double[]>();
         private Dictionary<LoadCase, double[]> elementForces = new Dictionary<LoadCase, double[]>();
         private Dictionary<LoadCase, double[]> concentratedForces = new Dictionary<LoadCase, double[]>();
         private Dictionary<LoadCase, double[]> supportReactions = new Dictionary<LoadCase, double[]>();
@@ -89,8 +90,8 @@ namespace BriefFiniteElementNet
         /// </remarks>
         public Dictionary<LoadCase, double[]> Displacements
         {
-            get { return displacements; }
-            internal set { displacements = value; }
+            get { return _displacements; }
+            internal set { _displacements = value; }
         }
 
         /// <summary>
@@ -105,8 +106,8 @@ namespace BriefFiniteElementNet
         /// </remarks>
         public Dictionary<LoadCase, double[]> Forces
         {
-            get { return forces; }
-            internal set { forces = value; }
+            get { return _forces; }
+            internal set { _forces = value; }
         }
 
         /// <summary>
@@ -152,20 +153,7 @@ namespace BriefFiniteElementNet
             set { parent = value; }
         }
 
-        private BuiltInSolverType _solverType;
 
-        /// <summary>
-        /// Gets or sets the type of the solver who should be used.
-        /// </summary>
-        /// <value>
-        /// The type of the solver.
-        /// </value>
-        [Obsolete]
-        public BuiltInSolverType SolverType
-        {
-            get { return _solverType; }
-            set { _solverType = value; }
-        }
 
         /// <summary>
         /// Gets or sets the solver generator.
@@ -173,9 +161,10 @@ namespace BriefFiniteElementNet
         /// <value>
         /// The solver generator which generates an <see cref="ISolver"/> for every <see cref="CompressedColumnStorage"/>.
         /// </value>
+        [Obsolete("use SolverFactory instead")]
         public Func<CompressedColumnStorage, ISolver> SolverGenerator { get; set; }
 
-        
+        public ISolverFactory SolverFactory { get; set; }
 
         #endregion
 
@@ -188,8 +177,8 @@ namespace BriefFiniteElementNet
         /// <remarks>If current instance do not contains the results related to <see cref="cse"/>, then this method will add result related to <see cref="cse"/> using <see cref="StaticLinearAnalysisResult.AddAnalResult"/> method</remarks>
         public void AddAnalysisResultIfNotExists(LoadCase cse)
         {
-            var f1 = displacements.ContainsKey(cse);
-            var f2 = forces.ContainsKey(cse);
+            var f1 = _displacements.ContainsKey(cse);
+            var f2 = _forces.ContainsKey(cse);
 
             if (f1 != f2)
                 throw new Exception("!");
@@ -541,7 +530,10 @@ namespace BriefFiniteElementNet
             }
             else
             {
-                solver = SolverGenerator(krd.ReleasedReleasedPart);
+                solver =
+                    //SolverGenerator(krd.ReleasedReleasedPart);
+                    SolverFactory.CreateSolver(krd.ReleasedReleasedPart);
+
                 Solvers[map.MasterMap] = solver;
             }
 
@@ -567,10 +559,11 @@ namespace BriefFiniteElementNet
 
             string msg;
 
-            var res = solver.Solve(ff_r, urf, out msg);
+            //var res = 
+            solver.Solve(ff_r, urf);
 
-            if (res != SolverResult.Success)
-                throw new BriefFiniteElementNetException(msg);
+            //if (res != SolverResult.Success)
+            //   throw new BriefFiniteElementNetException(msg);
 
             var frs = CalcUtil.Add(krd.FixedReleasedPart.Multiply(urf), krd.FixedFixedPart.Multiply(us_r));
 
@@ -599,8 +592,8 @@ namespace BriefFiniteElementNet
                     ut2[i] = ut[i];
             }
 
-            forces[loadCase] = ft;
-            displacements[loadCase] = ut2;
+            _forces[loadCase] = ft;
+            _displacements[loadCase] = ut2;
         }
 
         /// <summary>
@@ -667,7 +660,10 @@ namespace BriefFiniteElementNet
             }
             else
             {
-                solver = SolverGenerator(krd.ReleasedReleasedPart);
+                solver =
+                    //SolverGenerator(krd.ReleasedReleasedPart);
+                    SolverFactory.CreateSolver(krd.ReleasedReleasedPart);
+
                 Solvers[map.MasterMap] = solver;
             }
 
@@ -683,10 +679,10 @@ namespace BriefFiniteElementNet
             var input = ffr.Minus(krd.ReleasedFixedPart.Multiply(usr));
 
 
-            var res2 = solver.Solve(input, ufr, out message);
+            solver.Solve(input, ufr);
 
-            if (res2 != SolverResult.Success)
-                throw new BriefFiniteElementNetException(message);
+            //if (res2 != SolverResult.Success)
+            //    throw new BriefFiniteElementNetException(message);
 
             var fpsr = krd.FixedReleasedPart.Multiply(ufr).Plus(krd.FixedFixedPart.Multiply(usr));
 
@@ -732,8 +728,8 @@ namespace BriefFiniteElementNet
 
             var ut = pu.Multiply(ur);
 
-            forces[loadCase] = ft;
-            displacements[loadCase] = ut;
+            _forces[loadCase] = ft;
+            _displacements[loadCase] = ut;
         }
 
         /// <summary>
@@ -803,27 +799,6 @@ namespace BriefFiniteElementNet
                 if (Math.Abs(cr.Values[i] - cs.Values[i]) > 1e-5)
                     throw new Exception();
             }
-        }
-
-        [Obsolete]
-        private ISolver CreateSolver(CCS a)
-        {
-            ISolver buf;
-
-            switch (parent.LastResult.SolverType)
-            {
-                case BuiltInSolverType.CholeskyDecomposition:
-                    buf = new CholeskySolver(a);
-                    break;
-                case BuiltInSolverType.ConjugateGradient:
-                    buf = new PCG(new SSOR());
-                    buf.A = a;
-                    break;
-                default:
-                    throw new NotImplementedException();
-            }
-
-            return buf;
         }
 
         /// <summary>

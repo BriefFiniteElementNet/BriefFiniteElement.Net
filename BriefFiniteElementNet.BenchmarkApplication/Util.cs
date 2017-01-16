@@ -4,7 +4,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using BriefFiniteElementNet.CSparse.Double;
+using BriefFiniteElementNet.Common;
+using CSparse.Double;
 using BriefFiniteElementNet.Solver;
 
 namespace BriefFiniteElementNet.BenchmarkApplication
@@ -23,24 +24,6 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
             return buf;
         }
-
-
-        public static ISolver CreateInternalSolver(BuiltInSolverType type, CompressedColumnStorage ccs)
-        {
-            switch (type)
-            {
-                case BuiltInSolverType.CholeskyDecomposition:
-                    return new CholeskySolver(ccs);
-                    break;
-                case BuiltInSolverType.ConjugateGradient:
-                    return new PCG(new SSOR()) { A = ccs };
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException("type");
-            }
-        }
-
-    
 
         public static string GetEnumDescription(Enum value)
         {

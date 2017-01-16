@@ -45,7 +45,8 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
             var conf = new SolverConfiguration()
             {
-                SolverGenerator = i => Util.CreateInternalSolver(type, i)
+                //SolverGenerator = i => CalcUtil.CreateBuiltInSolver(type, i),
+                SolverFactory = CalcUtil.CreateBuiltInSolverFactory(type)
             };
 
             GC.Collect();

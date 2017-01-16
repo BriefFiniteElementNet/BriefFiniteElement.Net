@@ -10,6 +10,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Permissions;
 using System.Text;
 using System.Xml.Serialization;
+using BriefFiniteElementNet.Common;
 using CSparse;
 using CSparse.Double;
 using CSparse.Double.Factorization;
@@ -264,46 +265,28 @@ namespace BriefFiniteElementNet
         /// <param name="solverType">The solver type.</param>
         public void Solve(BuiltInSolverType solverType)
         {
-            var gen = new Func<CompressedColumnStorage, ISolver>(i =>
-            {
-                var sl = CalcUtil.CreateBuiltInSolver(solverType);
-                sl.A = i;
-                return sl;
-            });
-
-            Solve(gen);
+            Solve(CalcUtil.CreateBuiltInSolverFactory(solverType));
         }
-
-        /*
-        /// <summary>
-        /// Solves the instance with specified <see cref="solver" /> and assuming linear behavior (both geometric and material) and for default load case.
-        /// </summary>
-        /// <remarks>
-        /// This is not possible to use this, </remarks>
-        /// <param name="solver">The solver.</param>
-        [Obsolete("use Solve(Func<CompressedColumnStorage, ISolver> solverGenerator) instead")]
-        public void Solve(ISolver solver)
-        {
-            PrecheckForErrors();
-
-            var cfg = new SolverConfiguration();
-
-            cfg.CustomSolver = solver;
-
-            cfg.LoadCases = new List<LoadCase>() { LoadCase.DefaultLoadCase };
-
-            Solve(cfg);
-        }*/
 
         /// <summary>
         /// Solves the model using specified solver generator.
         /// </summary>
         /// <param name="solverGenerator">The solver generator.</param>
+        [Obsolete]
         public void Solve(Func<CompressedColumnStorage, ISolver> solverGenerator)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Solves the model using specified solver factory.
+        /// </summary>
+        /// <param name="factory">The factory.</param>
+        public void Solve(ISolverFactory factory)
         {
             var cfg = new SolverConfiguration();
 
-            cfg.SolverGenerator = solverGenerator;
+            cfg.SolverFactory = factory;
 
             cfg.LoadCases = new List<LoadCase>() { LoadCase.DefaultLoadCase };
 
@@ -318,12 +301,7 @@ namespace BriefFiniteElementNet
         {
             var cfg = new SolverConfiguration();
 
-            cfg.SolverGenerator = i =>
-            {
-                var sl = CalcUtil.CreateBuiltInSolver(BuiltInSolverType.CholeskyDecomposition);
-                sl.A = i;
-                return sl;
-            };
+            cfg.SolverFactory = new CholeskySolverFactory();//if not defined, Cholesky by default
 
             cfg.LoadCases = new List<LoadCase>(cases);
 
@@ -339,7 +317,8 @@ namespace BriefFiniteElementNet
             //new version
             lastResult = new StaticLinearAnalysisResult();
             lastResult.Parent = this;
-            lastResult.SolverGenerator = config.SolverGenerator;
+            
+            lastResult.SolverFactory = config.SolverFactory;
 
             ReIndexNodes();
 

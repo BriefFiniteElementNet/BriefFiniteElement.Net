@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BriefFiniteElementNet.Common;
 using CSparse.Storage;
 using BriefFiniteElementNet.Solver;
 using CSparse;
@@ -124,15 +125,31 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="type">The solver type.</param>
         /// <returns></returns>
-        public static ISolver CreateBuiltInSolver(BuiltInSolverType type)
+        public static ISolver CreateBuiltInSolver(BuiltInSolverType type,CCS A)
         {
             switch (type)
             {
                 case BuiltInSolverType.CholeskyDecomposition:
-                    return new CholeskySolver();
+                    return new CholeskySolverFactory().CreateSolver(A);
                     break;
                 case BuiltInSolverType.ConjugateGradient:
-                    return new PCG(new SSOR());
+                    return new ConjugateGradientFactory().CreateSolver(A);// PCG(new SSOR());
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("type");
+            }
+        }
+
+
+        public static ISolverFactory CreateBuiltInSolverFactory(BuiltInSolverType type)
+        {
+            switch (type)
+            {
+                case BuiltInSolverType.CholeskyDecomposition:
+                    return new CholeskySolverFactory();
+                    break;
+                case BuiltInSolverType.ConjugateGradient:
+                    return new ConjugateGradientFactory();// PCG(new SSOR());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException("type");
