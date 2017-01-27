@@ -195,6 +195,7 @@
     <Compile Include="TraceUtil.cs" />
     <Compile Include="Elements\TrussElement2Node.cs" />
     <Compile Include="Elements\TriangleFlatShellExtensions.cs" />
+    <Compile Include="LocalGlobalTransformManager.cs" />
     <Compile Include="UniformLoad1D.cs" />
     <Compile Include="UniformBodyLoad3D.cs" />
     <Compile Include="UniformLoadForPlanarElements.cs" />
@@ -213,7 +214,7 @@
     <None Include="Elements\SdofMass.md" />
     <None Include="Elements\Spring1D.md" />
     <None Include="Elements\Tetrahedral.md" />
-    <None Include="Elements\Transformations.md" />
+    <None Include="Transformations.md" />
     <None Include="Elements\TriangleFlatShell.md" />
     <None Include="Elements\TriangleFlatShellExtensions.md" />
     <None Include="Elements\HingeLink.md" />
