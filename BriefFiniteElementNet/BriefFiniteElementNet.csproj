@@ -214,7 +214,7 @@
     <None Include="Elements\SdofMass.md" />
     <None Include="Elements\Spring1D.md" />
     <None Include="Elements\Tetrahedral.md" />
-    <None Include="Transformations.md" />
+    <None Include="LocalGlobalTransformManager.md" />
     <None Include="Elements\TriangleFlatShell.md" />
     <None Include="Elements\TriangleFlatShellExtensions.md" />
     <None Include="Elements\HingeLink.md" />
