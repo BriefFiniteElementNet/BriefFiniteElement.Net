@@ -15,6 +15,12 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
+        public Matrix GetB_iMatrixAt(Element targetElement, Matrix transformMatrix, int i, params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
         public Matrix GetDMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
         {
             throw new NotImplementedException();

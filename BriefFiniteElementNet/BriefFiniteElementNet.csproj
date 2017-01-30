@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BendingStressTensor.cs" />
+    <Compile Include="CalculationCache.cs" />
     <Compile Include="ElementHelpers\BeamDirection.cs" />
     <Compile Include="ElementHelpers\CstHelper.cs" />
     <Compile Include="ElementHelpers\DktHelper.cs" />
@@ -205,6 +206,7 @@
     <Compile Include="ZoneDevidedMatrix.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CalculationCache.md" />
     <None Include="CalcUtil.md" />
     <None Include="ClassDiagram1.cd" />
     <None Include="Documents\SupportReactions.mkd" />

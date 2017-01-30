@@ -667,6 +667,7 @@ namespace BriefFiniteElementNet
             return cross.Length / 2;
         }
 
+
         /// <summary>
         /// Applies the lambda matrix to transform from local to global.
         /// </summary>
@@ -676,6 +677,7 @@ namespace BriefFiniteElementNet
         /// This is used for higher performance applyment of matrix. Does exactly Tt * K * T transforming 
         /// but faster
         /// </remarks>
+        [Obsolete("Use LocalGlobalTransformManager instead")]
         public static void ApplyTransformMatrix(Matrix matrix, Matrix lambda)
         {
             if (!lambda.IsSquare() || !matrix.IsSquare())

@@ -26,7 +26,25 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             buf.FillRow(0, -1 / l, 1 / l);
 
-            ElementHelperExtensions.RemoveReleasedMembers_bar(this, targetElement, buf);
+            return buf;
+        }
+
+        /// <inheritdoc/>
+        public Matrix GetB_iMatrixAt(Element targetElement, Matrix transformMatrix, int i, params double[] isoCoords)
+        {
+            if (i != 0)
+                throw new Exception();
+
+            var elm = targetElement as BarElement;
+
+            if (elm == null)
+                throw new Exception();
+
+            var l = (elm.EndNode.Location - elm.StartNode.Location).Length;
+
+            var buf = new Matrix(1, 2);
+
+            buf.FillRow(0, -1 / l, 1 / l);
 
             return buf;
         }

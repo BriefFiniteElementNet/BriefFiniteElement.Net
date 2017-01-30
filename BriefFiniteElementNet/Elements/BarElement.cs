@@ -59,6 +59,7 @@ namespace BriefFiniteElementNet.Elements
             get { return nodes[1]; }
             set { nodes[1] = value; }
         }
+
         /*
         /// <summary>
         /// Gets or sets a value indicating whether member is hinged at start.
@@ -92,6 +93,7 @@ namespace BriefFiniteElementNet.Elements
             set { _endtConnection = value; }
         }
         */
+
         /// <summary>
         /// Gets or sets the web rotation of this member in Degree
         /// </summary>
@@ -413,7 +415,9 @@ namespace BriefFiniteElementNet.Elements
 
             var t = GetTransformationMatrix();
 
-            CalcUtil.ApplyTransformMatrix(local, t);
+            var mgr = LocalGlobalTransformManager.MakeFromTransformationMatrix(t);
+
+            var buf = mgr.TransformLocalToGlobal(local);
 
             return local;
         }
@@ -629,8 +633,6 @@ namespace BriefFiniteElementNet.Elements
 
             return helpers;
         }
-
-        
 
     }
 }

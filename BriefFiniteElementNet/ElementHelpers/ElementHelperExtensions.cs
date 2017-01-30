@@ -23,7 +23,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             var nj = helper.GetDetJOrder(targetElement, transformMatrix);
 
             var ng = (2*nb + nd + nj)/2 + 1;
-            ;
             var intg = new GaussianIntegrator();
 
             intg.A1 = 0;
@@ -104,6 +103,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             return res;
         }
 
+        [Obsolete("Use two node approach")]
         public static void RemoveReleasedMembers_bar(IElementHelper helper, Element targetElement,Matrix bMatrix)
         {
             return;

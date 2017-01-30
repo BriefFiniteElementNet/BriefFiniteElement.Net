@@ -8,6 +8,8 @@ namespace BriefFiniteElementNet.Sections
     /// </summary>
     public class UniformParametricBarElementCrossSection : BaseBarElementCrossSection
     {
+
+
         private double _a;
         private double _ay;
         private double _az;

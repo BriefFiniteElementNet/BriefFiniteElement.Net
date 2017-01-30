@@ -54,7 +54,53 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             buf.FillRow(0, arr);
 
-            ElementHelperExtensions.RemoveReleasedMembers_bar(this, targetElement, buf);
+            return buf;
+        }
+
+        /// <inheritdoc/>
+        public Matrix GetB_iMatrixAt(Element targetElement, Matrix transformMatrix, int i, params double[] isoCoords)
+        {
+            var elm = targetElement as BarElement;
+
+            if (elm == null)
+                throw new Exception();
+
+            var xi = isoCoords[0];
+
+            if (xi < -1 || xi > 1)
+                throw new ArgumentOutOfRangeException(nameof(isoCoords));
+
+            var L = (elm.EndNode.Location - elm.StartNode.Location).Length;
+
+            var L2 = L * L;
+
+            double bufVal;
+
+            switch(i)
+            {
+                case 0:
+                    bufVal = _direction == BeamDirection.Z ? -(6 * xi) / L2 : -(6 * xi) / L2;
+                    break;
+
+                case 1:
+                    bufVal = (3 * xi) / L - 1 / L;
+                    break;
+
+                case 2:
+                    bufVal = _direction == BeamDirection.Z ? +(6 * xi) / L2 : -(6 * xi) / L2;
+                    break;
+
+                case 3:
+                    bufVal = (3 * xi) / L + 1 / L;
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            var buf = new Matrix(1, 1);
+
+            buf.SetMember(0, 0, bufVal);
 
             return buf;
         }

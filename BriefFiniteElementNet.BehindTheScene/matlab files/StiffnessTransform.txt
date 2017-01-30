@@ -1,11 +1,17 @@
-syms t11 t12 t13 t21 t22 t23 t31 t32 t33
+syms t_11 t_12 t_13 t_21 t_22 t_23 t_31 t_32 t_33
 syms k_i_j k_i1_j k_i2_j k_i_j1 k_i1_j1 k_i2_j1 k_i_j2 k_i1_j2 k_i2_j2
 
-K = [k_i_j, k_i1_j, k_i2_j; k_i_j1, k_i1_j1, k_i2_j1; k_i_j2, k_i1_j2, k_i2_j2;]
-T = [t11, t12, t13; t21, t22, t23; t31, t32, t33;]
+K = transpose([k_i_j, k_i1_j, k_i2_j; k_i_j1, k_i1_j1, k_i2_j1; k_i_j2, k_i1_j2, k_i2_j2;])
+T = [t_11, t_12, t_13; t_21, t_22, t_23; t_31, t_32, t_33;]
 
+kg = transpose(T) * K * T
 
-
+for i = 1:3
+ for j = 1:3
+  disp (kg(i,j));
+  fprintf(' \n');
+ endfor
+endfor
 
 ========================================= method 2
 syms t1 t2 t3 t4 t5 t6 t7 t8 t9

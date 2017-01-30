@@ -20,13 +20,15 @@ namespace BriefFiniteElementNet.TestConsole
         [STAThread]
         static void Main(string[] args)
         {
-            TestVisualize();
+            Console.WriteLine(typeof(string[]).BaseType);
+            TestTransformation();
             //TestBar();
 
             //SparseMatrixMultiplyValidation.Test1();
 
             Console.ReadKey();
         }
+
 
         private void Test1()
         {
@@ -168,6 +170,11 @@ namespace BriefFiniteElementNet.TestConsole
             StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
 
             ModelVisualizerControl.VisualizeInNewWindow(model);
+        }
+
+        private static void TestTransformation()
+        {
+            MatrixTransformValidator.Validate();
         }
     }
 }
