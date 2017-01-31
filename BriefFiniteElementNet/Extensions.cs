@@ -522,7 +522,7 @@ namespace BriefFiniteElementNet
                 return false;
             }
 
-            var p = D * l + l0;//intersection point
+            var p = l0 + D * l ;//intersection point
 
             result = p;
 

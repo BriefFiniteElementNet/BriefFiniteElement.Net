@@ -22,14 +22,17 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             #region inits
 
-            var p1g = tri.Nodes[0].Location;
-            var p2g = tri.Nodes[1].Location;
-            var p3g = tri.Nodes[2].Location;
+            var mgr = LocalGlobalTransformManager.MakeFromTransformationMatrix(transformMatrix);
 
-            var p1l = p1g.TransformBack(transformMatrix);
-            var p2l = p2g.TransformBack(transformMatrix);
-            var p3l = p3g.TransformBack(transformMatrix);
+            var p1l = mgr.TransformGlobalToLocal(tri.Nodes[0].Location);
+            var p2l = mgr.TransformGlobalToLocal(tri.Nodes[1].Location);
+            var p3l = mgr.TransformGlobalToLocal(tri.Nodes[2].Location);
 
+            var p23 = p2l - p3l;
+            var p31 = p3l - p1l;
+            var p12 = p1l - p2l;
+
+            /*
             var x1 = p1l.X;
             var x2 = p2l.X;
             var x3 = p3l.X;
@@ -37,14 +40,15 @@ namespace BriefFiniteElementNet.ElementHelpers
             var y1 = p1l.Y;
             var y2 = p2l.Y;
             var y3 = p3l.Y;
+            */
 
-            var x23 = x2 - x3;
-            var x31 = x3 - x1;
-            var x12 = x1 - x2;
+            var x23 = p23.X;
+            var x31 = p31.X;
+            var x12 = p12.X;
 
-            var y23 = y2 - y3;
-            var y31 = y3 - y1;
-            var y12 = y1 - y2;
+            var y23 = p23.Y;
+            var y31 = p31.Y;
+            var y12 = p12.Y;
 
             var a = 0.5*Math.Abs(x31*y12 - x12*y31);
 

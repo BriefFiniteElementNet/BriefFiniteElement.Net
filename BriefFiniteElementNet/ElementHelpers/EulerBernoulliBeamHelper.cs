@@ -226,6 +226,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
+        /// <inheritdoc/>
         public Matrix GetLocalInternalForceAt(Element targetElement, Matrix transformMatrix, Displacement[] globalDisplacements,
             params double[] isoCoords)
         {

@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet.TestConsole
         static void Main(string[] args)
         {
             Console.WriteLine(typeof(string[]).BaseType);
-            TestTransformation();
+            TestBtDB();
             //TestBar();
 
             //SparseMatrixMultiplyValidation.Test1();
@@ -175,6 +175,43 @@ namespace BriefFiniteElementNet.TestConsole
         private static void TestTransformation()
         {
             MatrixTransformValidator.Validate();
+        }
+
+        private static void TestTransposeMultiply()
+        {
+            var d1 = 15;
+            var d2 = 30;
+
+            var m1 = Matrix.RandomMatrix(d1, d2);
+            var m2 = Matrix.RandomMatrix(d1, d1);
+
+            var res1 = m1.Transpose() * m2;
+
+            var res2 = new Matrix(res1.RowCount, res1.ColumnCount);
+
+            Matrix.TransposeMultiply(m1, m2, res2);
+
+            var d = (res1 - res2).Max(ii => Math.Abs(ii));
+
+        }
+
+
+        private static void TestBtDB()
+        {
+            var d1 = 3;
+            var d2 = 16;
+
+            var B = Matrix.RandomMatrix(d1, d2);
+            var D = Matrix.RandomMatrix(d1, d1);
+
+            var res1 = B.Transpose() * D * B;
+
+            var res2 = new Matrix(res1.RowCount, res1.ColumnCount);
+
+            CalcUtil.Bt_D_B(B, D, 4, res2);
+
+            var d = (res1 - res2).Max(ii => Math.Abs(ii));
+
         }
     }
 }

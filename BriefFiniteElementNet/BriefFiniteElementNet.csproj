@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayPool.cs" />
     <Compile Include="BendingStressTensor.cs" />
     <Compile Include="CalculationCache.cs" />
     <Compile Include="ElementHelpers\BeamDirection.cs" />
@@ -231,9 +232,6 @@
       <Project>{82c63c6b-651a-4308-8b89-b4c643f3a7c2}</Project>
       <Name>BriefFiniteElementNet.Common</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="checksum" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -773,7 +773,7 @@ namespace BriefFiniteElementNet
         /// <returns>transformed vector</returns>
         public static Point Transform(this Point point, Matrix transformMatrix)
         {
-            return ((Vector) point).Transform(transformMatrix);
+            return (Point)((Vector) point).Transform(transformMatrix);
         }
 
         /// <summary>
@@ -812,7 +812,73 @@ namespace BriefFiniteElementNet
         /// <returns>transformed vector</returns>
         public static Point TransformBack(this Point point, Matrix transformMatrix)
         {
-            return ((Vector)point).TransformBack(transformMatrix);
+            return (Point)((Vector)point).TransformBack(transformMatrix);
+        }
+
+        /// <summary>
+        /// cacluates the A = B' D B.
+        /// </summary>
+        /// <param name="B">The B.</param>
+        /// <param name="D">The D.</param>
+        /// <param name="bi_ColCount">The column count of B[i].</param>
+        /// <param name="result">The result.</param>
+        public static void Bt_D_B(Matrix B, Matrix D, Matrix result)
+        {
+            var dd = B.RowCount;//dim of b
+            var dOut = B.ColumnCount;// dim of out
+
+            if (!D.IsSquare() || D.RowCount != dd)
+                throw new Exception();
+
+            var buf = result;
+
+            if (buf.RowCount != dOut || buf.ColumnCount != dOut)
+                throw new Exception();
+
+            var bi_ColCount = 0;
+
+
+
+            var bi = MatrixPool.Allocate(dd, bi_ColCount);
+            var bj = MatrixPool.Allocate(dd, bi_ColCount);
+
+            Matrix bi_d = MatrixPool.Allocate(dd, dOut / dd);//b[i]' * d
+            Matrix bi_d_bj = MatrixPool.Allocate(dd, dOut / dd);//b[i]' * d * b[j]
+
+            var cnt = dOut / dd;
+
+            for (var i = 0; i < cnt; i++)
+            {
+                FillBi(B, i, bi);
+
+                Matrix.TransposeMultiply(bi, D, bi_d);
+
+                for (var j = 0; j < cnt; j++)
+                {
+                    FillBi(B, j, bj);
+
+                    Matrix.Multiply(bi_d, bj, bi_d_bj);
+                    //insert into buf
+
+                    for (var ii = 0; ii < bi_d_bj.RowCount; ii++)
+                        for (var jj = 0; jj < bi_d_bj.ColumnCount; jj++)
+                        {
+                            buf.AssembleInside(bi_d_bj, i * dd, j * dd);
+                        }
+                }
+            }
+
+            MatrixPool.Free(bi, bj, bi_d);
+        }
+
+
+        private static void FillBi(Matrix B,int i,Matrix bi)
+        {
+            var c = bi.ColumnCount;
+            for (var ii = 0; ii < bi.RowCount; ii++)
+                for (var j = 0; j < bi.RowCount; j++)
+                    bi[ii, j] = B[c * i + ii, j];
+
         }
     }
 }

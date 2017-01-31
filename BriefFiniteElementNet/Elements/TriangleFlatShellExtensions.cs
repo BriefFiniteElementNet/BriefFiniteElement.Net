@@ -33,12 +33,12 @@ namespace BriefFiniteElementNet.Elements
 
             //if this intersects with plane, then points must not be in same side of plane
 
-            var d = -Vector.Dot(plane.Normal, plane.P);
+            var d = -Vector.Dot(plane.Normal, (Vector)plane.P);
 
             var ps = element.Nodes.Select(i => i.Location).ToArray();
 
             var signs =
-                ps.Select(i => Vector.Dot(i, plane.Normal) + d).Select(i => i < 0.0 ? -1 : (i > 0 ? 1 : 0)).ToArray();
+                ps.Select(i => Vector.Dot((Vector)i, plane.Normal) + d).Select(i => i < 0.0 ? -1 : (i > 0 ? 1 : 0)).ToArray();
 
 
             if (signs.Any(i => i.Equals(0)))
@@ -72,7 +72,7 @@ namespace BriefFiniteElementNet.Elements
 
                             var D = (p0 - l0).Dot(N) / (l).Dot(N);
 
-                            var p = D * l + l0;//intersection point
+                            var p = l0 + D * l;//intersection point
 
                             buf.Add(p);
                         }
@@ -177,7 +177,7 @@ namespace BriefFiniteElementNet.Elements
             var totForce = shearForce + compForce;
 
             var bufFrc = new Force(totForce, Vector.Zero);
-            var loc = globalPoints.Aggregate((i, j) => i + j);
+            var loc = globalPoints.Aggregate((i, j) => (Point)((Vector)i + (Vector)j));
 
             loc.X /= globalPoints.Length;
             loc.Y /= globalPoints.Length;
@@ -202,12 +202,12 @@ namespace BriefFiniteElementNet.Elements
 
             //if this intersects with plane, then points must not be in same side of plane
 
-            var d = -Vector.Dot(plane.Normal, plane.P);
+            var d = -Vector.Dot(plane.Normal, (Vector)plane.P);
 
             var ps = element.Nodes.Select(i => i.Location).ToArray();
 
             var signs =
-                ps.Select(i => Vector.Dot(i, plane.Normal) + d).Select(i => i < 0.0 ? -1 : (i > 0 ? 1 : 0)).ToArray();
+                ps.Select(i => Vector.Dot((Vector)i, plane.Normal) + d).Select(i => i < 0.0 ? -1 : (i > 0 ? 1 : 0)).ToArray();
 
             if (signs.Any(i => i.Equals(0)))
                 return false;

@@ -491,7 +491,7 @@ namespace BriefFiniteElementNet.Controls
 
                     var localPoint = new Vector(x, y, z);
 
-                    diagramPoints[i] = localPoint;
+                    diagramPoints[i] = (Point)localPoint;
                 }
 
                 buf.Add(diagramPoints);
@@ -634,7 +634,7 @@ namespace BriefFiniteElementNet.Controls
             {
                 var x = delta * i;
                 var localPoint = localPoints[i];//new Vector(x, y*scale, z*scale);
-                var globalPoint = st+elm.TransformLocalToGlobal(localPoint);
+                var globalPoint = st + elm.TransformLocalToGlobal((Vector)localPoint);
 
                 var globalBase = st+elm.TransformLocalToGlobal(new Vector(x, 0, 0));
 

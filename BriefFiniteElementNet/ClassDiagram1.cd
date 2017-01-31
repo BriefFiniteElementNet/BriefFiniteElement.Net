@@ -3,7 +3,7 @@
   <Class Name="BriefFiniteElementNet.StaticLinearAnalysisResult" Collapsed="true">
     <Position X="18" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IggECAkCAIQAAApgAACAQAAIAAQQABCABBAAgiAIJEg=</HashCode>
+      <HashCode>AgAECAkCAIQAAAhgAAAAQCAIAAQwABAABBAAgiAIJUg=</HashCode>
       <FileName>StaticLinearAnalysisResult.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -27,28 +27,28 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AQBgBAAAEAQAAAAAABAAAEAgAAAEAEEAAIhCAAAAIAQ=</HashCode>
+      <HashCode>AQBgBAAAEAQAEAAAABAAAEAgAAAEAEEAAIhCAAAAIAQ=</HashCode>
       <FileName>Elements\Element.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.Element1D" Collapsed="true">
     <Position X="4.25" Y="8.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAABAAAAAgAAAAAAAKAAAACgAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAEAAAABAAAAAgAAAAAAAKAAAACgAAAAA=</HashCode>
       <FileName>Elements\Element1D.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.Element2D" Collapsed="true">
     <Position X="7.5" Y="8.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Elements\Element2D.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.Element3D" Collapsed="true">
     <Position X="9.75" Y="8.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Elements\Element3D.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -129,7 +129,7 @@
   <Class Name="BriefFiniteElementNet.Model" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="18" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CCAgyIAAAAAAABAAAIgQAAAoAACAAnAAAAIAAAAgIAA=</HashCode>
+      <HashCode>CCAgyIAAAAAAABAAAIgQAAAoAACAAnEAAAIAAAAgIAA=</HashCode>
       <FileName>Model.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -181,7 +181,7 @@
   <Class Name="BriefFiniteElementNet.SolverConfiguration" Collapsed="true">
     <Position X="16.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAACAAAAAAAAAAAAAAAAAAIAAAAAQAAAAEAAAAA=</HashCode>
+      <HashCode>AAAAAAACAAAAAAAAAAAAAAAAAAIAAAAAQAAAAEAAAQA=</HashCode>
       <FileName>SolverConfiguration.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -244,7 +244,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAQAgAAAAAAEAIA4BECAQAgAQAAAIBACAAEQAgIEAI=</HashCode>
+      <HashCode>AAAQAgAAAAAAEAIA4BECAQAgAQAAAIBACAAEQAgIEiI=</HashCode>
       <FileName>Force.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />

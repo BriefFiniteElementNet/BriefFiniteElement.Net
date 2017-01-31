@@ -16,6 +16,8 @@ namespace BriefFiniteElementNet
     [Serializable]
     public class Matrix : ISerializable, IEnumerable<double>
     {
+       
+
         public static Matrix Repeat(Matrix mtx, int ni, int nj)
         {
             var r = mtx.rowCount;
@@ -31,7 +33,6 @@ namespace BriefFiniteElementNet
 
             return buf;
         }
-
 
         public static Matrix DiagonallyRepeat(Matrix mtx, int n)
         {
@@ -319,6 +320,20 @@ namespace BriefFiniteElementNet
             this.CoreArray = (double[]) vals.Clone();
         }
 
+        public Matrix(int rows, int cols, double[] coreArray)
+        {
+            rowCount = rows;
+            columnCount = cols;
+
+            if (rowCount <= 0)
+                throw new ArgumentException("rows");
+
+            if (columnCount <= 0)
+                throw new ArgumentException("cols");
+
+            this.CoreArray = coreArray;
+        }
+
         #endregion
 
         /// <summary>
@@ -362,6 +377,72 @@ namespace BriefFiniteElementNet
 
 
             return res;
+        }
+
+        public static void Multiply(Matrix m1, Matrix m2, Matrix result)
+        {
+            if (m1.ColumnCount != m2.RowCount)
+                throw new InvalidOperationException("No consistent dimensions");
+
+            var res = result;
+
+            if (res.rowCount != m1.rowCount || res.ColumnCount != m2.columnCount)
+            {
+                throw new Exception("result dimension mismatch");
+            }
+
+            for (var i = 0; i < m1.rowCount; i++)
+                for (var j = 0; j < m2.columnCount; j++)
+                {
+                    var t = 0.0;
+
+                    for (var k = 0; k < m1.columnCount; k++)
+                    {
+                        t += m1[i, k] * m2[k, j];
+                    }
+
+                    res[i, j] = t;
+                }
+                    
+        }
+
+
+        /// <summary>
+        /// calculates the m1.transpose * m2 and stores the value into result.
+        /// </summary>
+        /// <param name="m1">The m1.</param>
+        /// <param name="m2">The m2.</param>
+        /// <param name="result">The result.</param>
+        /// <returns></returns>
+        public static void TransposeMultiply(Matrix m1, Matrix m2, Matrix result)
+        {
+            if (m1.rowCount != m2.RowCount)
+                throw new InvalidOperationException("No consistent dimensions");
+
+            var res = result;
+
+            if (res.rowCount != m1.columnCount || res.ColumnCount != m2.columnCount)
+            {
+                throw new Exception("result dimension mismatch");
+            }
+
+            var a = m1;
+            var b = m2;
+
+            var vecLength = a.rowCount;
+
+            for (var i = 0; i < a.columnCount; i++)
+                for (var j = 0; j < b.columnCount; j++)
+                {
+                    var t = 0.0;
+
+                    for (var k = 0; k < vecLength; k++)
+                    {
+                        t += a[k, i] * b[k, j];
+                    }
+
+                    res[i, j] = t;
+                }
         }
 
         /// <summary>

@@ -1,23 +1,25 @@
-syms t_11 t_12 t_13 t_21 t_22 t_23 t_31 t_32 t_33
-syms k_i_j k_i1_j k_i2_j k_i_j1 k_i1_j1 k_i2_j1 k_i_j2 k_i1_j2 k_i2_j2
+syms a_11 a_12 a_13 a_21 a_22 a_23 a_31 a_32 a_33
+syms b_i_j b_i1_j b_i2_j b_i_j1 b_i1_j1 b_i2_j1 b_i_j2 b_i1_j2 b_i2_j2
 
-K = transpose([k_i_j, k_i1_j, k_i2_j; k_i_j1, k_i1_j1, k_i2_j1; k_i_j2, k_i1_j2, k_i2_j2;])
-T = [t_11, t_12, t_13; t_21, t_22, t_23; t_31, t_32, t_33;]
+B = transpose([b_i_j, b_i1_j, b_i2_j; b_i_j1, b_i1_j1, b_i2_j1; b_i_j2, b_i1_j2, b_i2_j2;])
 
-kg = transpose(T) * K * T
+A = [a_11, a_12, a_13; a_21, a_22, a_23; a_31, a_32, a_33;]
 
+at_b_a = transpose(A) * B * A;
+a_b_at = A * B * transpose(A);
+
+fprintf('At B A:\n');
 for i = 1:3
  for j = 1:3
-  disp (kg(i,j));
+  disp (at_b_a(i,j));
   fprintf(' \n');
  endfor
 endfor
 
-========================================= method 2
-syms t1 t2 t3 t4 t5 t6 t7 t8 t9
-syms k1 k2 k3 k4 k5 k6 k7 k8 k9
-
-K = [k1 k2 k3;k4 k5 k6;k7 k8 k9]
-T = [t1 t2 t3; t4 t5 t6; t7 t8 t9]
-
-kg = transpose(T) * K * T
+fprintf('A B At\n');
+for i = 1:3
+ for j = 1:3
+  disp (a_b_at(i,j));
+  fprintf(' \n');
+ endfor
+endfor

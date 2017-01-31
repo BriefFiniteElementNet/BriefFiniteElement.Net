@@ -11,40 +11,36 @@ namespace BriefFiniteElementNet.Validation
     {
         public static void Validate()
         {
-            var elm = new BarElement(new Node(0, 0, 0), new Node(3, 5, 7));
+            var dim = 42;
 
-            elm.Behavior = BarElementBehaviours.FullFrame;
-            elm.Material = new UniformBarMaterial(100, 100, 0.25);
-            elm.Section = new UniformParametricBarElementCrossSection() { A = 1, Iy = 2, Iz = 3, J = 4 };
+            var B = Matrix.RandomMatrix(dim, dim);// elm.GetLocalStifnessMatrix();
 
-            var dim = 120;
+            var A = Matrix.RandomMatrix(3, 3);
 
             var sp = System.Diagnostics.Stopwatch.StartNew();
 
-
-            var kl = Matrix.RandomMatrix(dim, dim);// elm.GetLocalStifnessMatrix();
-
-            var t = elm.GetTransformationMatrix();
-
-            var mgr = LocalGlobalTransformManager.MakeFromTransformationMatrix(t);
-
             sp.Restart();
 
-            var g = mgr.TransformLocalToGlobal(kl);
+            var at_b_a_mgr = LocalGlobalTransformManager.At_B_A(A, B);
+            var a_b_at_mgr = LocalGlobalTransformManager.A_B_At(A, B);
+
             sp.Stop();
 
-            System.Console.WriteLine("TransformManager took {0} ms", sp.ElapsedMilliseconds);
+            System.Console.WriteLine("Optimised took {0} ms", sp.ElapsedMilliseconds);
 
-            var t_a = Matrix.DiagonallyRepeat(t, dim / 3);
+            var AA = Matrix.DiagonallyRepeat(A, dim / 3);
 
             sp.Restart();
-            var g2 = t_a.Transpose() * kl * t_a;
-            System.Console.WriteLine("Usual took {0} ms", sp.ElapsedMilliseconds);
+            var at_b_a_dir = AA.Transpose() * B * AA;
+            var a_b_at_dir = AA * B * AA.Transpose();
 
+            System.Console.WriteLine("Non optimised took {0} ms", sp.ElapsedMilliseconds);
 
-            var d = (g2 - g).ToArray().Max(i => Math.Abs(i));
+            var d1 = (at_b_a_mgr - at_b_a_dir).ToArray().Max(i => Math.Abs(i));
+            var d2 = (a_b_at_mgr - a_b_at_dir).ToArray().Max(i => Math.Abs(i));
 
-            System.Console.WriteLine("ERR = {0} for {1}x{1} matrix", d, dim);
+            System.Console.WriteLine("ERR = {0} for {1}x{1} matrix", d1, dim);
+            System.Console.WriteLine("ERR = {0} for {1}x{1} matrix", d2, dim);
         }
     }
 }

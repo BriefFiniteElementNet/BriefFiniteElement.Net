@@ -303,7 +303,7 @@ namespace BriefFiniteElementNet.Elements
 
             var lp = GetLocalPoints();
 
-            var g2l = new Func<Vector, Vector>(glob => (trans.Transpose() * glob.ToMatrix()).ToPoint());
+            var g2l = new Func<Vector, Vector>(glob => (trans.Transpose() * glob.ToMatrix()).ToVector());
             //var l2g = new Func<Vector, Vector>(local => (trans*local.ToMatrix()).ToPoint());
 
 
@@ -349,7 +349,7 @@ namespace BriefFiniteElementNet.Elements
 
             var lp = GetLocalPoints();
 
-            var g2l = new Func<Vector, Vector>(glob => (trans.Transpose()*glob.ToMatrix()).ToPoint());
+            var g2l = new Func<Vector, Vector>(glob => (trans.Transpose()*glob.ToMatrix()).ToVector());
             //var l2g = new Func<Vector, Vector>(local => (trans*local.ToMatrix()).ToPoint());
 
 
@@ -415,7 +415,7 @@ namespace BriefFiniteElementNet.Elements
                 if (ul.CoordinationSystem == CoordinationSystem.Local)
                 {
                     var trans = GetTransformationMatrix();
-                    u = (trans*u.ToMatrix()).ToPoint(); //local to global
+                    u = (trans*u.ToMatrix()).ToVector(); //local to global
                 }
 
                 if (_behaviour == FlatShellBehaviour.Membrane)

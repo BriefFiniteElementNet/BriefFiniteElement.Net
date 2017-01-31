@@ -461,7 +461,7 @@ namespace BriefFiniteElementNet
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static implicit operator Point(Vector v)
+        public static explicit operator Point(Vector v)
         {
             return new Point(v.x, v.y, v.z);
         }
@@ -473,7 +473,7 @@ namespace BriefFiniteElementNet
         /// <returns>
         /// The result of the conversion.
         /// </returns>
-        public static implicit operator Vector(Point v)
+        public static explicit operator Vector(Point v)
         {
             return new Vector(v.X, v.Y, v.Z);
         }

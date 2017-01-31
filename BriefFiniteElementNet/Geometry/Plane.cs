@@ -97,9 +97,9 @@ namespace BriefFiniteElementNet.Geometry
         public int GetSideSign( Point point)
         {
             var plane = this;
-            var d = -Vector.Dot(plane.Normal, plane.P);
+            var d = -Vector.Dot(plane.Normal, (Vector)plane.P);
 
-            var tmp = Vector.Dot(point, plane.Normal) + d;
+            var tmp = Vector.Dot((Vector)point, plane.Normal) + d;
 
             if (tmp > 0)
                 return 1;

@@ -1,4 +1,6 @@
-﻿This standard is used in naming matrices about transformation of local to global coords in BFE:
+﻿
+
+This standard is used in naming matrices about transformation of local to global coords in BFE:
 
 There are two matrices named Transformation (T) and Lambda (λ) as this:
 
@@ -26,6 +28,23 @@ Note that:
 
 
 purpose of making this class is to achieve simpler managmenet of transformation of vectors, points ans matrixes such as stiffness, mass and damp matrix.
+
+Transforming vector and points
+===
+as shown above
+
+Transforming matrices
+===
+Local to Global using λ:
+λ K λ'
+
+Local to Global using T:
+T' K T
+
+Global to Local using λ:
+
+Global to Local using T:
+
 
 Improving Performance of Transforming matrices
 ====
@@ -57,8 +76,8 @@ We did formed the T_a matrix, and then do the ```T_a' * A * T_a```, other way th
 T_a' * A * T_a = A = [T'*a11*T,T'*a12*T,T'*a13*T,T'*a14*T;T'*a21*T,T'*a22*T,T'*a23*T,T'*a24*T;T'*a31*T,T'*a32*T,T'*a33*T,T'*a34*T;T'*a41*T,T'*a42*T,T'*a43*T,T'*a44*T]
 
 for our example that is 12x12, it will cost 16 times of multiplying three 3x3 matrixes, each multiplication need ```3x3x3``` times of multiply operation, and ```3x3x2`` of summation. 
-in total it will be ```16x3x3x3 = 432``` times multiply operation and ```16x3x3x2 =288``` times plus operator which is somewhere about 18% to 25% of original method. 
-this method of multiplication is used here with hope that it gives better performance to hand.
+in total it will be ```16x3x3x3 = 432``` times multiply operation and ```16x3x3x2 =288``` times plus operator which is somewhere about 18% to 25% of original method on the paper. 
+In reality for large matrices (say 30x30) this type
 
 
 Ref:
