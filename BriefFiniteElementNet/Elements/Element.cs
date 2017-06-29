@@ -74,9 +74,9 @@ namespace BriefFiniteElementNet.Elements
 
 
         /// <summary>
-        /// Gets the consistent mass matrix of member in global coordination system.
+        /// Gets the mass matrix of element in global coordination system.
         /// </summary>
-        /// <returns>The consistent mass matrix</returns>
+        /// <returns>The mass matrix</returns>
         /// <remarks>
         /// The number of DoFs is in element local regrading order in <see cref="Element.Nodes"/>!</remarks>
         public abstract Matrix GetGlobalMassMatrix();
@@ -225,14 +225,63 @@ namespace BriefFiniteElementNet.Elements
         [Obsolete]
         public abstract Matrix ComputeJMatrixAt(params double[] location);
 
-
         /// <summary>
         /// Gets the lambda matrix of element (for transforming between local and global axis).
+        /// For more info see TransformManagerL2G.md file
         /// </summary>
         /// <remarks>
         /// lambda * Local = Global
         /// </remarks>
         /// <returns></returns>
         public abstract Matrix GetLambdaMatrix();
+
+        /// <summary>
+        /// Gets the local to global (and vice versa) transformation manager for this element.
+        /// </summary>
+        /// <returns>the trasformation manager related to this element</returns>
+        public TransformManagerL2G GetTransformationManager()
+        {
+            if (this.lastNodalLocations == null)
+                lastNodalLocations = new Point[this.nodes.Length];
+
+            var flag = true;
+
+            for (var i = 0; i < this.nodes.Length; i++)
+            {
+                if (lastNodalLocations[i] != nodes[i].Location)
+                {
+                    flag = false;
+                    break;
+                }
+            }
+
+            if (flag)
+                return TransformManagerL2G.MakeFromLambdaMatrix(lastLambdaMatrix);
+            else
+            {
+                for (var i = 0; i < this.nodes.Length; i++)
+                    lastNodalLocations[i] = nodes[i].Location;
+
+                return TransformManagerL2G.MakeFromLambdaMatrix(lastLambdaMatrix = GetLambdaMatrix());
+            }
+        }
+        
+
+        private Point[] lastNodalLocations;
+        private Matrix lastLambdaMatrix = Matrix.Eye(3);
+
+
+        public override void ReAssignNodeReferences(Model parent)
+        {
+            var elm = this;
+
+            for (int i = 0; i < elm.nodeNumbers.Length; i++)
+            {
+                var idx = elm.nodeNumbers[i];
+                elm.nodes[i] = idx == -1 ? null : parent.Nodes[idx];
+            }
+
+            base.ReAssignNodeReferences(parent);
+        }
     }
 }

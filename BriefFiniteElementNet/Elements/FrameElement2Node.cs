@@ -344,9 +344,6 @@ namespace BriefFiniteElementNet
                 ay = props[4],
                 az = props[5];
 
-
-            
-
             var l = (this.EndNode.Location - this.StartNode.Location).Length;
             var l2 = l*l;
 
@@ -1143,7 +1140,5 @@ namespace BriefFiniteElementNet
 
             return new Matrix(new double[] {v/2});
         }
-
-        
     }
 }

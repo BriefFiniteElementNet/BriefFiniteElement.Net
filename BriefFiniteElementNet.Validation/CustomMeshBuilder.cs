@@ -93,6 +93,26 @@ namespace BriefFiniteElementNet.Validation
             }
         }
 
+
+        public void Q4Mesh(Action<Point, Point, Point,Point> act)
+        {
+            for (var i = 0; i < Grid.Count - 1; i++)
+            {
+                var l1 = Grid[i];
+                var l2 = Grid[i + 1];
+
+                for (int j = 0; j < l1.Count - 1; j++)
+                {
+                    var p1 = l1[j];
+                    var p2 = l1[j + 1];
+                    var p3 = l2[j];
+                    var p4 = l2[j + 1];
+
+                    //act(p4, p3, p2, p1);
+                    act(p1, p2, p3, p4);
+                }
+            }
+        }
         public void FrameMeshEdges(Action<Point, Point> act)
         {
             for (var i = 0; i < Grid.Count - 1; i++)
@@ -118,5 +138,7 @@ namespace BriefFiniteElementNet.Validation
                 }
             }
         }
+
+
     }
 }

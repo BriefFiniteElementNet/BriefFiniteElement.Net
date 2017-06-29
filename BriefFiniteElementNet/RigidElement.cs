@@ -109,7 +109,7 @@ namespace BriefFiniteElementNet
             this.nodeNumbers = new int[this._nodes.Count];
 
             for (var i = 0; i < _nodes.Count; i++)
-                nodeNumbers[i] = _nodes[i].Index;
+                nodeNumbers[i] = _nodes[i] == null ? -1 : _nodes[i].Index;
 
             info.AddValue("_useForAllLoads", _useForAllLoads);
             info.AddValue("_appliedLoadCases", _appliedLoadCases);
@@ -117,10 +117,12 @@ namespace BriefFiniteElementNet
 
             //info.AddValue("_hingedConnections", _hingedConnections);
 
-            if (_centralNode != null)
-                _centralNodeNumber = _centralNode.Index;
+            //if (_centralNode != null)
+            //    _centralNodeNumber = _centralNode.Index;
+            //else
+            //    _centralNodeNumber = -1;
 
-            info.AddValue("_centralNodeNumber", _centralNodeNumber);
+            //info.AddValue("_centralNodeNumber", _centralNodeNumber);
 
             base.GetObjectData(info, context);
         }
@@ -132,7 +134,7 @@ namespace BriefFiniteElementNet
             _useForAllLoads = info.GetBoolean("_useForAllLoads");
             _appliedLoadCases = info.GetValue<LoadCaseCollection>("_appliedLoadCases");
 
-            _centralNodeNumber = info.GetValue<int?>("_centralNodeNumber");
+            //_centralNodeNumber = info.GetValue<int>("_centralNodeNumber");
             //_hingedConnections = info.GetBoolean("_hingedConnections");
 
             this._nodes = new NodeList();
@@ -162,8 +164,10 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// The central node number. used for 
         /// </summary>
-        internal int? _centralNodeNumber;
+        [Obsolete("Not used in calculation anymore")]
+        internal int _centralNodeNumber;
 
+        [Obsolete("Not used in calculation anymore")]
         [NonSerialized] private Node _centralNode;
 
         /// <summary>
@@ -172,10 +176,32 @@ namespace BriefFiniteElementNet
         /// <value>
         /// The central node, if is set, then it will be used as master node.
         /// </value>
+        [Obsolete("Not used in calculation anymore")]
         public Node CentralNode
         {
             get { return _centralNode; }
             set { _centralNode = value; }
+        }
+
+
+        public override void ReAssignNodeReferences(Model parent)
+        {
+            var relm = this;
+
+            for (int i = 0; i < relm.nodeNumbers.Length; i++)
+            {
+                var idx = relm.nodeNumbers[i];
+
+                relm.Nodes.Add(idx == -1 ? null : parent.Nodes[idx]);
+            }
+
+            {
+                //var idx = relm._centralNodeNumber;
+
+                //relm.CentralNode = relm._centralNodeNumber == -1 ? null : parent.Nodes[relm._centralNodeNumber];
+            }
+
+            base.ReAssignNodeReferences(parent);
         }
     }
 }

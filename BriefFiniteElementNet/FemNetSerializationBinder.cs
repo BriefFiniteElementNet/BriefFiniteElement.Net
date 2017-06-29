@@ -20,6 +20,9 @@ namespace BriefFiniteElementNet
         /// <exception cref="System.NotImplementedException"></exception>
         public override Type BindToType(string assemblyName, string typeName)
         {
+            if (assemblyName.Contains("FAB"))
+                Guid.NewGuid();
+
             return Type.GetType(typeName);
         }
     }

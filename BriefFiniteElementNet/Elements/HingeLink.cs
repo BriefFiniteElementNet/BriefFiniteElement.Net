@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using CSparse.Double;
 
-namespace BriefFiniteElementNet
+namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
     /// Represents a hinge link between two nodes.
@@ -12,7 +13,7 @@ namespace BriefFiniteElementNet
     /// </summary>
     [Serializable]
     [Obsolete("use spring1d at the moment")]
-    public class HingeLink: StructurePart
+    public class HingeLink: MpcElement
     {
         public HingeLink(SerializationInfo info, StreamingContext context) : base(info, context)
         {
@@ -24,6 +25,10 @@ namespace BriefFiniteElementNet
 
         public Node Node1;
         public Node Node2;
-        
+
+        public override CompressedColumnStorage GetExtraEquations()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents a cache for caching values from complicated calculation and reusing them
     /// </summary>
+    [Obsolete("No use")]
     public static class CalculationCache
     {
         private static ConcurrentDictionary<DictionaryKey, object> Dict;

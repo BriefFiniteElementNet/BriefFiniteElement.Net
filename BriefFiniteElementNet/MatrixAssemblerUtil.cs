@@ -21,6 +21,8 @@ namespace BriefFiniteElementNet
         /// <returns>Assembled stiffness matrix</returns>
         public static CCS AssembleFullStiffnessMatrix(Model model)
         {
+            model.ReIndexNodes();
+
             var elements = model.Elements.ToArray();
 
             var maxNodePerElement = elements.Any() ? elements.Select(i => i.Nodes.Length).Max() : 1;
@@ -61,7 +63,6 @@ namespace BriefFiniteElementNet
 
             return stiffness;
         }
-
 
         /// <summary>
         /// Assembles the mass matrix of defined model and return it back.

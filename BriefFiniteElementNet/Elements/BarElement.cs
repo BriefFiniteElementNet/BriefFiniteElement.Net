@@ -10,6 +10,9 @@ using BriefFiniteElementNet.Sections;
 
 namespace BriefFiniteElementNet.Elements
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Obsolete("not fully implemented yet")]
     public class BarElement : Element
     {
@@ -40,7 +43,7 @@ namespace BriefFiniteElementNet.Elements
         /// Gets or sets the start node.
         /// </summary>
         /// <value>
-        /// The start node of <see cref="FrameElement2Node"/>.
+        /// The start node of <see cref="BarElement"/>.
         /// </value>
         public Node StartNode
         {
@@ -52,7 +55,7 @@ namespace BriefFiniteElementNet.Elements
         /// Gets or sets the end node.
         /// </summary>
         /// <value>
-        /// The end node of <see cref="FrameElement2Node"/>.
+        /// The end node of <see cref="BarElement"/>.
         /// </value>
         public Node EndNode
         {
@@ -100,6 +103,12 @@ namespace BriefFiniteElementNet.Elements
         /// <value>
         /// The web rotation in degree. It does rotate the local coordination system of element. (TODO: in CW or CCW direction?)
         /// </value>
+        /// <example>
+        /// <code>
+        /// var bar = new BarElement();
+        /// bar.WebRotation = 10;//sets web rotation to 10 degrees
+        /// </code>
+        /// </example>
         public double WebRotation
         {
             get { return _webRotation; }
@@ -110,8 +119,14 @@ namespace BriefFiniteElementNet.Elements
         /// Gets or sets the cross section of bar element.
         /// </summary>
         /// <value>
-        /// The section.
+        /// The cross section.
         /// </value>
+        /// <example>
+        /// <code>
+        /// var bar = new BarElement();
+        /// bar.Section = new UniformParametricBarElementCrossSection(1,1,1,1,1);//sets section
+        /// </code>
+        /// </example>
         public BaseBarElementCrossSection Section
         {
             get { return _section; }
@@ -124,6 +139,12 @@ namespace BriefFiniteElementNet.Elements
         /// <value>
         /// The material.
         /// </value>
+        /// <example>
+        /// <code>
+        /// var bar = new BarElement();
+        /// bar.Section = new UniformBarMaterial(1,1);//sets material
+        /// </code>
+        /// </example>
         public BaseBarMaterial Material
         {
             get { return _matterial; }
@@ -136,6 +157,12 @@ namespace BriefFiniteElementNet.Elements
         /// <value>
         /// The behaviors of bar element.
         /// </value>
+        /// <example>
+        /// <code>
+        /// var bar = new BarElement();
+        /// bar.Behavior = BarElementBehaviours.FullFrame
+        /// </code>
+        /// </example>
         public BarElementBehaviour Behavior
         {
             get { return _behavior; }
@@ -377,7 +404,7 @@ namespace BriefFiniteElementNet.Elements
 
             foreach (var helper in helpers)
             {
-                var forces = helper.GetEquivalentNodalLoads(this, t, load);
+                var forces = helper.GetEquivalentNodalLoads(this, load);
 
                 for (var i = 0; i < buf.Length; i++)
                 {
@@ -415,7 +442,7 @@ namespace BriefFiniteElementNet.Elements
 
             var t = GetTransformationMatrix();
 
-            var mgr = LocalGlobalTransformManager.MakeFromTransformationMatrix(t);
+            var mgr = TransformManagerL2G.MakeFromTransformationMatrix(t);
 
             var buf = mgr.TransformLocalToGlobal(local);
 
@@ -496,6 +523,11 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
+
+        /// <summary>
+        /// Gets the stifness matrix in local coordination system.
+        /// </summary>
+        /// <returns>stiffness matrix</returns>
         public Matrix GetLocalStifnessMatrix()
         {
             var helpers = GetElementHelpers();
@@ -508,7 +540,7 @@ namespace BriefFiniteElementNet.Elements
             {
                 var helper = helpers[i];
 
-                var ki = helper.CalcLocalKMatrix(this, transMatrix);// ComputeK(helper, transMatrix);
+                var ki = helper.CalcLocalKMatrix(this);// ComputeK(helper, transMatrix);
 
                 var dofs = helper.GetDofOrder(this);
 
@@ -529,6 +561,10 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
+        /// <summary>
+        /// Gets the  damp matrix in local coordination system.
+        /// </summary>
+        /// <returns>damp matrix</returns>
         public Matrix GetLocalDampMatrix()
         {
             var helpers = GetElementHelpers();
@@ -541,7 +577,7 @@ namespace BriefFiniteElementNet.Elements
             {
                 var helper = helpers[i];
 
-                var ki = helper.CalcLocalCMatrix(this, transMatrix);// ComputeK(helper, transMatrix);
+                var ki = helper.CalcLocalCMatrix(this);// ComputeK(helper, transMatrix);
 
                 var dofs = helper.GetDofOrder(this);
 
@@ -561,6 +597,10 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
+        /// <summary>
+        /// Gets the mass matrix in local coordination system.
+        /// </summary>
+        /// <returns>mass matrix</returns>
         public Matrix GetLocalMassMatrix()
         {
             var helpers = GetElementHelpers();
@@ -573,7 +613,7 @@ namespace BriefFiniteElementNet.Elements
             {
                 var helper = helpers[i];
 
-                var ki = helper.CalcLocalMMatrix(this, transMatrix);// ComputeK(helper, transMatrix);
+                var ki = helper.CalcLocalMMatrix(this);// ComputeK(helper, transMatrix);
 
                 var dofs = helper.GetDofOrder(this);
 
@@ -633,6 +673,5 @@ namespace BriefFiniteElementNet.Elements
 
             return helpers;
         }
-
     }
 }

@@ -22,7 +22,7 @@ namespace BriefFiniteElementNet.Elements
         /// <summary>
         /// The drilling dof
         /// </summary>
-        DrillingDof = 3
+        DrillingDof = 4
 
     }
 

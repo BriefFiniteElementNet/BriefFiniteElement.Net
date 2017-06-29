@@ -7,10 +7,13 @@ using BriefFiniteElementNet.Integration;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
+    /// <summary>
+    /// Represents a calculation helper for DKT element (Discrete Kirchhoff Triangle)
+    /// </summary>
     public class DktHelper:IElementHelper
     {
         /// <inheritdoc/>
-        public Matrix GetBMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var tri = targetElement as TriangleElement;
 
@@ -22,7 +25,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             #region inits
 
-            var mgr = LocalGlobalTransformManager.MakeFromTransformationMatrix(transformMatrix);
+            var mgr = targetElement.GetTransformationManager();//TransformManagerL2G.MakeFromTransformationMatrix(transformMatrix);
 
             var p1l = mgr.TransformGlobalToLocal(tri.Nodes[0].Location);
             var p2l = mgr.TransformGlobalToLocal(tri.Nodes[1].Location);
@@ -31,16 +34,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             var p23 = p2l - p3l;
             var p31 = p3l - p1l;
             var p12 = p1l - p2l;
-
-            /*
-            var x1 = p1l.X;
-            var x2 = p2l.X;
-            var x3 = p3l.X;
-
-            var y1 = p1l.Y;
-            var y2 = p2l.Y;
-            var y3 = p3l.Y;
-            */
 
             var x23 = p23.X;
             var x31 = p31.X;
@@ -128,10 +121,10 @@ namespace BriefFiniteElementNet.ElementHelpers
                 -1 + r5*(1 - 2*eta) + xi*(r4 - r5),
                 -q5*(1 - 2*eta) - xi*(q4 - q5)
             };
-            
+
             #endregion
 
-            var buf = new Matrix(3, 9);
+            var buf = MatrixPool.Allocate(3, 9);
 
             for (var i = 0; i < 9; i++)
             {
@@ -145,13 +138,13 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
-        public Matrix GetB_iMatrixAt(Element targetElement, Matrix transformMatrix, int i, params double[] isoCoords)
+        public Matrix GetB_iMatrixAt(Element targetElement, int i, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Matrix GetDMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var tri = targetElement as TriangleElement;
 
@@ -161,7 +154,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var mat = tri._material.GetMaterialPropertiesAt(tri, isoCoords).Matterial;
             var t = tri.Section.GetThicknessAt(isoCoords);
 
-            var d = new Matrix(3, 3);
+            var d = MatrixPool.Allocate(3, 3);
 
             {
                 var cf = t*t*t/12;
@@ -182,25 +175,27 @@ namespace BriefFiniteElementNet.ElementHelpers
             return d;
         }
 
-        public Matrix GetRhoMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
 
-        public Matrix GetMuMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Matrix GetNMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetMuMatrixAt(Element targetElement, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Matrix GetJMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
         {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public Matrix GetJMatrixAt(Element targetElement, params double[] isoCoords)
+        {
+            var tmgr = targetElement.GetTransformationManager();
+
             var tri = targetElement as TriangleElement;
 
             if (tri == null)
@@ -209,35 +204,26 @@ namespace BriefFiniteElementNet.ElementHelpers
             var xi = isoCoords[0];
             var eta = isoCoords[1];
 
-            var p1g = tri.Nodes[0].Location;
-            var p2g = tri.Nodes[1].Location;
-            var p3g = tri.Nodes[2].Location;
+            var mgr = tmgr;
 
-            var p1l = p1g.TransformBack(transformMatrix);
-            var p2l = p2g.TransformBack(transformMatrix);
-            var p3l = p3g.TransformBack(transformMatrix);
+            var p1l = mgr.TransformGlobalToLocal(tri.Nodes[0].Location);
+            var p2l = mgr.TransformGlobalToLocal(tri.Nodes[1].Location);
+            var p3l = mgr.TransformGlobalToLocal(tri.Nodes[2].Location);
 
-            var x1 = p1l.X;
-            var x2 = p2l.X;
-            var x3 = p3l.X;
+            var p23 = p2l - p3l;
+            var p31 = p3l - p1l;
+            var p12 = p1l - p2l;
 
-            var y1 = p1l.Y;
-            var y2 = p2l.Y;
-            var y3 = p3l.Y;
 
-            var buf = new Matrix(2, 2);
+            var x23 = p23.X;
+            var x31 = p31.X;
+            var x12 = p12.X;
 
-            var x12 = x1 - x2;
-            var x31 = x3 - x1;
-            var y31 = y3 - y1;
+            var y23 = p23.Y;
+            var y31 = p31.Y;
+            var y12 = p12.Y;
 
-            var y23 = y2 - y3;
-
-            var y13 = y1 - y3;
-            var y12 = y1 - y2;
-            var X12 = x1 - x2;
-
-            var x23 = x2 - x3;
+            var buf = MatrixPool.Allocate(2, 2);
 
             buf[0, 0] = x31;
             buf[1, 1] = y12;
@@ -249,18 +235,17 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix CalcLocalKMatrix(Element targetElement, Matrix transformMatrix)
+        public Matrix CalcLocalKMatrix(Element targetElement)
         {
-            return ElementHelperExtensions.CalcLocalKMatrix_Triangle(this, targetElement,
-                transformMatrix);
+            return ElementHelperExtensions.CalcLocalKMatrix_Triangle(this, targetElement);
         }
 
-        public Matrix CalcLocalMMatrix(Element targetElement, Matrix transformMatrix)
+        public Matrix CalcLocalMMatrix(Element targetElement)
         {
             throw new NotImplementedException();
         }
 
-        public Matrix CalcLocalCMatrix(Element targetElement, Matrix transformMatrix)
+        public Matrix CalcLocalCMatrix(Element targetElement)
         {
             throw new NotImplementedException();
         }
@@ -287,48 +272,44 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetLocalInternalForceAt(Element targetElement, Matrix transformMatrix, Displacement[] globalDisplacements,
-            params double[] isoCoords)
+        public Matrix GetLocalInternalForceAt(Element targetElement, Displacement[] globalDisplacements, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public int GetNMaxOrder(Element targetElement, Matrix transformMatrix)
+        public int GetNMaxOrder(Element targetElement)
         {
             throw new NotImplementedException();
         }
 
-        public int GetBMaxOrder(Element targetElement, Matrix transformMatrix)
+        public int GetBMaxOrder(Element targetElement)
         {
             return 0;
         }
 
-        public int GetDetJOrder(Element targetElement, Matrix transformMatrix)
+        public int GetDetJOrder(Element targetElement)
+        {
+            return 0;
+        }
+
+        public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
-        public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Matrix transformMatrix, Load load,
-            double[] isoLocation)
-        {
-            throw new NotImplementedException();
-        }
-
-        public FlatShellStressTensor GetLoadDisplacementAt(Element targetElement, Matrix transformMatrix, Load load,
-            double[] isoLocation)
+        public FlatShellStressTensor GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Displacement GetLocalDisplacementAt(Element targetElement, Matrix transformMatrix, Displacement[] localDisplacements,
-            params double[] isoCoords)
+        public Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
 
-        public Force[] GetEquivalentNodalLoads(Element targetElement, Matrix transformMatrix, Load load)
+        public Force[] GetEquivalentNodalLoads(Element targetElement, Load load)
         {
             throw new NotImplementedException();
         }

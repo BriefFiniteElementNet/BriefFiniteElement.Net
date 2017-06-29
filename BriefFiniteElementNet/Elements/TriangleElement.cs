@@ -15,6 +15,7 @@ namespace BriefFiniteElementNet.Elements
         {
         }
 
+
         public BaseTriangleMaterial _material;
 
         public BaseTriangleSection _section;
@@ -22,6 +23,7 @@ namespace BriefFiniteElementNet.Elements
         public FlatShellBehaviour _behavior;
 
         public MembraneFormulation _formulation;
+
 
 
         public BaseTriangleMaterial Material
@@ -42,11 +44,12 @@ namespace BriefFiniteElementNet.Elements
             set { _behavior = value; }
         }
 
-        public MembraneFormulation Formulation
+        public MembraneFormulation MembraneFormulation
         {
             get { return _formulation; }
             set { _formulation = value; }
         }
+
 
 
         public override Matrix ComputeBMatrix(params double[] location)
@@ -64,11 +67,6 @@ namespace BriefFiniteElementNet.Elements
             throw new NotImplementedException();
         }
 
-        public override Matrix GetLambdaMatrix()
-        {
-            throw new NotImplementedException();
-        }
-
         public override Matrix ComputeNMatrixAt(params double[] location)
         {
             throw new NotImplementedException();
@@ -81,20 +79,36 @@ namespace BriefFiniteElementNet.Elements
 
         public override Matrix GetGlobalDampingMatrix()
         {
-            throw new NotImplementedException();
+            var local = GetLocalDampMatrix();
+            var tr = GetTransformationManager();
+
+            var buf = tr.TransformLocalToGlobal(local);
+
+            return buf;
         }
 
         public override Matrix GetGlobalMassMatrix()
         {
-            throw new NotImplementedException();
+            var local = GetLocalMassMatrix();
+            var tr = GetTransformationManager();
+
+            var buf = tr.TransformLocalToGlobal(local);
+
+            return buf;
         }
 
         public override Matrix GetGlobalStifnessMatrix()
         {
-            throw new NotImplementedException();
+            var local = GetLocalStifnessMatrix();
+            var tr = GetTransformationManager();
+
+            var buf = tr.TransformLocalToGlobal(local);
+
+            return buf;
         }
 
-        public Matrix GetTransformationMatrix()
+        /// <inheritdoc /> 
+        public override Matrix GetLambdaMatrix()
         {
             var p1 = nodes[0].Location;
             var p2 = nodes[1].Location;
@@ -113,19 +127,20 @@ namespace BriefFiniteElementNet.Elements
             var vz = Vector.Cross(vx, vr);//eq. 5.6
             var vy = Vector.Cross(vz, vx);//eq. 5.7
 
-            var lamX = vx.GetUnit();//Lambda_x
-            var lamY = vy.GetUnit();//Lambda_x
-            var lamZ = vz.GetUnit();//Lambda_x
+            var lamX = vx.GetUnit();//Lambda_X
+            var lamY = vy.GetUnit();//Lambda_Y
+            var lamZ = vz.GetUnit();//Lambda_Z
 
             var lambda = new Matrix(new[]
             {
                 new[] {lamX.X, lamY.X, lamZ.X},
                 new[] {lamX.Y, lamY.Y, lamZ.Y},
                 new[] {lamX.Z, lamY.Z, lamZ.Z}
-            });//eq. 5.13
+            });
 
             return lambda;
         }
+
 
         public Matrix GetLocalStifnessMatrix()
         {
@@ -138,13 +153,11 @@ namespace BriefFiniteElementNet.Elements
             
             var buf = new Matrix(18, 18);
 
-            var transMatrix = GetTransformationMatrix();
-
             for (var i = 0; i < helpers.Count; i++)
             {
                 var helper = helpers[i];
 
-                var ki = helper.CalcLocalKMatrix(this, transMatrix);// ComputeK(helper, transMatrix);
+                var ki = helper.CalcLocalKMatrix(this);// ComputeK(helper, transMatrix);
 
                 var dofs = helper.GetDofOrder(this);
 
@@ -159,13 +172,79 @@ namespace BriefFiniteElementNet.Elements
                         buf[bi, bj] += ki[ii, jj];
                     }
                 }
-
-
             }
 
             return buf;
+        }
 
-            throw new NotImplementedException();
+        public Matrix GetLocalMassMatrix()
+        {
+            var helpers = new List<IElementHelper>();
+
+            if ((this._behavior & FlatShellBehaviour.ThinPlate) != 0)
+            {
+                helpers.Add(new DktHelper());
+            }
+
+            var buf = new Matrix(18, 18);
+
+            for (var i = 0; i < helpers.Count; i++)
+            {
+                var helper = helpers[i];
+
+                var ki = helper.CalcLocalMMatrix(this);// ComputeK(helper, transMatrix);
+
+                var dofs = helper.GetDofOrder(this);
+
+                for (var ii = 0; ii < dofs.Length; ii++)
+                {
+                    var bi = dofs[ii].NodeIndex * 6 + (int)dofs[ii].Dof;
+
+                    for (var jj = 0; jj < dofs.Length; jj++)
+                    {
+                        var bj = dofs[jj].NodeIndex * 6 + (int)dofs[jj].Dof;
+
+                        buf[bi, bj] += ki[ii, jj];
+                    }
+                }
+            }
+
+            return buf;
+        }
+
+        public Matrix GetLocalDampMatrix()
+        {
+            var helpers = new List<IElementHelper>();
+
+            if ((this._behavior & FlatShellBehaviour.ThinPlate) != 0)
+            {
+                helpers.Add(new DktHelper());
+            }
+
+            var buf = new Matrix(18, 18);
+
+            for (var i = 0; i < helpers.Count; i++)
+            {
+                var helper = helpers[i];
+
+                var ki = helper.CalcLocalCMatrix(this);// ComputeK(helper, transMatrix);
+
+                var dofs = helper.GetDofOrder(this);
+
+                for (var ii = 0; ii < dofs.Length; ii++)
+                {
+                    var bi = dofs[ii].NodeIndex * 6 + (int)dofs[ii].Dof;
+
+                    for (var jj = 0; jj < dofs.Length; jj++)
+                    {
+                        var bj = dofs[jj].NodeIndex * 6 + (int)dofs[jj].Dof;
+
+                        buf[bi, bj] += ki[ii, jj];
+                    }
+                }
+            }
+
+            return buf;
         }
     }
 }

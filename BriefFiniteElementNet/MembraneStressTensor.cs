@@ -138,6 +138,21 @@ namespace BriefFiniteElementNet
             return tens;
         }
 
+        public static Matrix ToMatrix(CauchyStressTensor tensor)
+        {
+            var tens = new Matrix(3, 3);
+
+            tens[0, 0] = tensor.S11;
+            tens[1, 1] = tensor.S22;
+            tens[2, 2] = tensor.S33;
+
+            tens[0, 1] = tens[1, 0] = tensor.S12;
+            tens[0, 2] = tens[2, 0] = tensor.S31;
+            tens[1, 2] = tens[2, 1] = tensor.S23;
+
+            return tens;
+        }
+
         public static MembraneStressTensor FromMatrix(Matrix mtx)
         {
             var buf = new MembraneStressTensor();
@@ -164,9 +179,17 @@ namespace BriefFiniteElementNet
 
         public static implicit operator MembraneStressTensor(CauchyStressTensor tens)
         {
-            var mtx = ToMatrix(tens);
+            var buf = new MembraneStressTensor();
 
-            return CauchyStressTensor.FromMatrix(mtx);
+            buf.Sx = tens.S11;
+            buf.Sy = tens.S22;
+            buf.Sz = tens.S33;
+
+            buf.Txy = tens.S12;
+            buf.Tyz = tens.S23;
+            buf.Tzx = tens.S31;
+
+            return buf;
         }
     }
 

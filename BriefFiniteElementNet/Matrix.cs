@@ -16,8 +16,6 @@ namespace BriefFiniteElementNet
     [Serializable]
     public class Matrix : ISerializable, IEnumerable<double>
     {
-       
-
         public static Matrix Repeat(Matrix mtx, int ni, int nj)
         {
             var r = mtx.rowCount;
@@ -379,6 +377,21 @@ namespace BriefFiniteElementNet
             return res;
         }
 
+
+        /// <summary>
+        /// Adds the specified matrix to current matrix.
+        /// </summary>
+        /// <param name="that">The that.</param>
+        /// <exception cref="System.InvalidOperationException">No consistent dimensions</exception>
+        public void Add(Matrix that)
+        {
+            if (this.ColumnCount != that.ColumnCount || this.RowCount != that.RowCount)
+                throw new InvalidOperationException("No consistent dimensions");
+
+            for (var i = 0; i < this.coreArray.Length; i++)
+                this.coreArray[i] += that.coreArray[i];
+        }
+
         public static void Multiply(Matrix m1, Matrix m2, Matrix result)
         {
             if (m1.ColumnCount != m2.RowCount)
@@ -429,6 +442,10 @@ namespace BriefFiniteElementNet
             var a = m1;
             var b = m2;
 
+
+            var a_arr = a.coreArray;
+            var b_arr = b.coreArray;
+
             var vecLength = a.rowCount;
 
             for (var i = 0; i < a.columnCount; i++)
@@ -436,13 +453,15 @@ namespace BriefFiniteElementNet
                 {
                     var t = 0.0;
 
+                    var a_st = i * a.rowCount;
+                    var b_st = j * b.rowCount;
+
                     for (var k = 0; k < vecLength; k++)
-                    {
-                        t += a[k, i] * b[k, j];
-                    }
+                        t += a_arr[a_st + k] * b_arr[b_st + k];
 
                     res[i, j] = t;
                 }
+
         }
 
         /// <summary>
@@ -514,6 +533,7 @@ namespace BriefFiniteElementNet
         /// <param name="values">The values.</param>
         public void SetRow(int i, params double[] values)
         {
+            
             if (values.Count() != this.ColumnCount)
                 throw new ArgumentOutOfRangeException("values");
 
@@ -522,6 +542,24 @@ namespace BriefFiniteElementNet
                 this.CoreArray[j*this.RowCount + i] = values[j];
             }
         }
+
+        ~Matrix()
+        {
+            if (UsePool)
+                MatrixPool.Free(this);
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether pool is used for this object or not.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [use pool]; otherwise, <c>false</c>.
+        /// </value>
+        /// <remarks>
+        /// If pool used for this object, on distruction corearray will return to pool
+        /// </remarks>
+        public bool UsePool { get; set; }
+        
 
         /// <summary>
         /// Substitutes the defined column with defined values.
@@ -569,6 +607,24 @@ namespace BriefFiniteElementNet
 
             buf.CoreArray = newMatrix;
             return buf;
+        }
+
+        public static void CopyTo(Matrix source, Matrix destination)
+        {
+            if (source.rowCount != destination.rowCount || source.columnCount != destination.columnCount)
+                throw new NotImplementedException();
+
+            Array.Copy(source.coreArray, destination.coreArray, destination.coreArray.Length);
+        }
+
+        public static void TransposeCopyTo(Matrix source, Matrix destination)
+        {
+            if (source.rowCount != destination.columnCount || source.rowCount != destination.columnCount)
+                throw new NotImplementedException();
+
+            for (var i = 0; i < source.RowCount; i++)
+                for (var j = 0; j < source.ColumnCount; j++)
+                    destination[j, i] = source[i, j];
         }
 
         #region Equality Members

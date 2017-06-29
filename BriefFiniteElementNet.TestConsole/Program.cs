@@ -20,11 +20,7 @@ namespace BriefFiniteElementNet.TestConsole
         [STAThread]
         static void Main(string[] args)
         {
-            Console.WriteLine(typeof(string[]).BaseType);
-            TestBtDB();
-            //TestBar();
-
-            //SparseMatrixMultiplyValidation.Test1();
+            TestSerialization();
 
             Console.ReadKey();
         }
@@ -40,6 +36,13 @@ namespace BriefFiniteElementNet.TestConsole
 
             new Frame3DDValidator(model).Validate();
 
+        }
+
+
+
+        private static void TestSerialization()
+        {
+            Validation.SerializationTest.Test1();
         }
 
         private static void Test2()
@@ -153,14 +156,18 @@ namespace BriefFiniteElementNet.TestConsole
             var xi = 0.162598494;
             var eta = 0.284984989;
 
-            var b1 = new DktHelper().GetBMatrixAt(tri, tri.GetTransformationMatrix(), xi, eta);
+            var b1 = new DktHelper().GetBMatrixAt(tri, xi, eta);
             var lpts = dkt.GetLocalPoints();
 
             var b2 = DktElement.GetBMatrix(xi, eta,
                 new[] {lpts[0].X, lpts[1].X, lpts[2].X},
                 new[] {lpts[0].Y, lpts[1].Y, lpts[2].Y});
-                // new DktHelper().GetBMatrixAt(tri, tri.GetTransformationMatrix(), xi, eta);
+            // new DktHelper().GetBMatrixAt(tri, tri.GetTransformationMatrix(), xi, eta);
 
+
+            tri.GetLocalStifnessMatrix();
+            //GC.Collect();
+            
             var db = b1 - b2;
         }
 
@@ -179,17 +186,25 @@ namespace BriefFiniteElementNet.TestConsole
 
         private static void TestTransposeMultiply()
         {
-            var d1 = 15;
-            var d2 = 30;
+            var d1 = 200;
+            var d2 = 200;
 
             var m1 = Matrix.RandomMatrix(d1, d2);
             var m2 = Matrix.RandomMatrix(d1, d1);
 
+            var sp = System.Diagnostics.Stopwatch.StartNew();
+
             var res1 = m1.Transpose() * m2;
+
+            Console.WriteLine("Usual took {0} Ms", sp.ElapsedMilliseconds);
 
             var res2 = new Matrix(res1.RowCount, res1.ColumnCount);
 
+            sp.Restart();
+
             Matrix.TransposeMultiply(m1, m2, res2);
+
+            Console.WriteLine("Optimal took {0} Ms", sp.ElapsedMilliseconds);
 
             var d = (res1 - res2).Max(ii => Math.Abs(ii));
 
@@ -198,20 +213,35 @@ namespace BriefFiniteElementNet.TestConsole
 
         private static void TestBtDB()
         {
-            var d1 = 3;
-            var d2 = 16;
+            var d1 = 36;
+            var d2 = 27*6;
 
             var B = Matrix.RandomMatrix(d1, d2);
             var D = Matrix.RandomMatrix(d1, d1);
 
-            var res1 = B.Transpose() * D * B;
+            var cnt = 1000;
+
+            var sp = System.Diagnostics.Stopwatch.StartNew();
+
+            Matrix res1 = null;
+
+            for(var i = 0;i < cnt;i++)
+            {
+                res1 = B.Transpose() * D * B;
+            }
+            
+            Console.WriteLine("Usual took {0} Ms", sp.ElapsedMilliseconds);
+
 
             var res2 = new Matrix(res1.RowCount, res1.ColumnCount);
+            sp.Restart();
 
-            CalcUtil.Bt_D_B(B, D, 4, res2);
+            for (var i = 0; i < cnt; i++)
+                CalcUtil.Bt_D_B(B, D, res2);
+            Console.WriteLine("Optimal took {0} Ms", sp.ElapsedMilliseconds);
 
             var d = (res1 - res2).Max(ii => Math.Abs(ii));
-
+            Console.WriteLine("Err: {0:g}", d);
         }
     }
 }

@@ -611,6 +611,87 @@ namespace BriefFiniteElementNet
             return true;
         }
 
+
+        /// <summary>
+        /// Does the specified <see cref="action"/> on all members of <see cref="matrix"/>
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <param name="action"></param>
+        internal static void EnumerateMembers(this CCS matrix,Action<int,int,double> action)
+        {
+            var n = matrix.ColumnCount;
+
+            for (int i = 0; i < n; i++)
+            {
+                var col = i;
+
+                var st = matrix.ColumnPointers[i];
+                var en = matrix.ColumnPointers[i + 1];
+
+                for (int j = st; j < en; j++)
+                {
+                    var row = matrix.RowIndices[j];
+
+                    var val = matrix.Values[j];
+
+                    action(row, col, val);
+                }
+            }
+        }
+
+
+        public static void MakeMatrixSymetric(this CCS mtx)
+        {
+            var n = mtx.ColumnCount;
+
+            if (n != mtx.RowCount)
+                throw new Exception();
+
+
+            for (int i = 0; i < n; i++)
+            {
+                var col = i;
+
+                var st = mtx.ColumnPointers[i];
+                var en = mtx.ColumnPointers[i + 1];
+
+                for (int j = st; j < en; j++)
+                {
+                    var row = mtx.RowIndices[j];
+
+
+
+                    var valRowCol = mtx.Values[j];
+
+                    var valColRow = mtx.At(col, row);
+
+                    if (valColRow == valRowCol)
+                        continue;
+
+
+                    var avg = (valRowCol + valColRow) / 2;
+
+                    SetMember(mtx, row, col, avg);
+                    SetMember(mtx, col, row, avg);
+                }
+            }
+
+
+        }
+
+
+        public static void SetMember(this CCS matrix, int row, int column, double value)
+        {
+            int index = matrix.ColumnPointers[column];
+            int length = matrix.ColumnPointers[column + 1] - index;
+            int pos = Array.BinarySearch(matrix.RowIndices, index, length, row);
+
+            if (pos < 0)
+                throw new Exception();
+
+            matrix.Values[pos] = value;
+        }
+
         /// <summary>
         /// Applies the release matrix to calculated local end forces.
         /// </summary>
@@ -677,7 +758,7 @@ namespace BriefFiniteElementNet
         /// This is used for higher performance applyment of matrix. Does exactly Tt * K * T transforming 
         /// but faster
         /// </remarks>
-        [Obsolete("Use LocalGlobalTransformManager instead")]
+        [Obsolete("Use TransformManagerL2G instead")]
         public static void ApplyTransformMatrix(Matrix matrix, Matrix lambda)
         {
             if (!lambda.IsSquare() || !matrix.IsSquare())
@@ -824,6 +905,11 @@ namespace BriefFiniteElementNet
         /// <param name="result">The result.</param>
         public static void Bt_D_B(Matrix B, Matrix D, Matrix result)
         {
+            //method 1 is divide B into smallers
+            //method 2 is: B' D B = (D' B)' B
+            // first find D' B which is possible high performancely and call it R1
+            // find R1' B which is possible high performancely too!
+
             var dd = B.RowCount;//dim of b
             var dOut = B.ColumnCount;// dim of out
 
@@ -835,42 +921,23 @@ namespace BriefFiniteElementNet
             if (buf.RowCount != dOut || buf.ColumnCount != dOut)
                 throw new Exception();
 
-            var bi_ColCount = 0;
+            var buf1 =
+                new Matrix(D.ColumnCount, B.ColumnCount);
+                //MatrixPool.Allocate(D.ColumnCount, B.ColumnCount);
 
+            Matrix.TransposeMultiply(D, B, buf1);
 
+            Matrix.TransposeMultiply(buf1, B, buf);
 
-            var bi = MatrixPool.Allocate(dd, bi_ColCount);
-            var bj = MatrixPool.Allocate(dd, bi_ColCount);
-
-            Matrix bi_d = MatrixPool.Allocate(dd, dOut / dd);//b[i]' * d
-            Matrix bi_d_bj = MatrixPool.Allocate(dd, dOut / dd);//b[i]' * d * b[j]
-
-            var cnt = dOut / dd;
-
-            for (var i = 0; i < cnt; i++)
-            {
-                FillBi(B, i, bi);
-
-                Matrix.TransposeMultiply(bi, D, bi_d);
-
-                for (var j = 0; j < cnt; j++)
-                {
-                    FillBi(B, j, bj);
-
-                    Matrix.Multiply(bi_d, bj, bi_d_bj);
-                    //insert into buf
-
-                    for (var ii = 0; ii < bi_d_bj.RowCount; ii++)
-                        for (var jj = 0; jj < bi_d_bj.ColumnCount; jj++)
-                        {
-                            buf.AssembleInside(bi_d_bj, i * dd, j * dd);
-                        }
-                }
-            }
-
-            MatrixPool.Free(bi, bj, bi_d);
+            //MatrixPool.Free(buf1);
         }
 
+
+        public static void MultiplyWithConstant(this CCS mtx,double coef)
+        {
+            for (var i = 0; i < mtx.Values.Length; i++)
+                mtx.Values[i] = mtx.Values[i] * coef;
+        }
 
         private static void FillBi(Matrix B,int i,Matrix bi)
         {
@@ -880,5 +947,172 @@ namespace BriefFiniteElementNet
                     bi[ii, j] = B[c * i + ii, j];
 
         }
+
+        public static void LabelNodesIncrementally(this Model model)
+        {
+            for (var i = 0; i < model.Nodes.Count; i++)
+            {
+                model.Nodes[i].Label = null;
+            }
+
+            for (var i = 0; i < model.Nodes.Count; i++)
+            {
+                model.Nodes[i].Label = "N" + i.ToString();
+            }
+        }
+
+        public static void LabelElementsIncrementally(this Model model)
+        {
+            for (var i = 0; i < model.Elements.Count; i++)
+            {
+                model.Elements[i].Label = null;
+            }
+
+            for (var i = 0; i < model.Elements.Count; i++)
+            {
+                model.Elements[i].Label = "E" + i.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Generates the permutation for delta for specified model in specified loadCase.
+        /// Note that delta permutation = P_delta in reduction process
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="loadCase">The load case.</param>
+        /// <returns>delta permutation</returns>
+        public static CCS GenerateP_Delta(Model target, LoadCase loadCase)
+        {
+            throw new NotImplementedException();
+
+            target.ReIndexNodes();
+
+            var buf = new CoordinateStorage<double>(target.Nodes.Count * 6, target.Nodes.Count * 6, 1);
+            
+
+            #region rigid elements
+            foreach (var elm in target.RigidElements)
+            {
+                var centralNode = elm.Nodes[0];
+                var masterIdx = centralNode.Index;
+
+                for(var i = 1;i<elm.Nodes.Count;i++)
+                {
+                    var slaveIdx = elm.Nodes[i].Index;
+
+                    var d = centralNode.Location - elm.Nodes[i].Location;
+
+                    //buf[0, 4] = -(buf[1, 3] = d.Z);
+                    //buf[2, 3] = -(buf[0, 5] = d.Y);
+                    //buf[1, 5] = -(buf[2, 4] = d.X);
+
+                    buf.At(6 * slaveIdx + 0, 6 * masterIdx + 0, 1);
+                    buf.At(6 * slaveIdx + 1, 6 * masterIdx + 1, 1);
+                    buf.At(6 * slaveIdx + 2, 6 * masterIdx + 2, 1);
+
+                    buf.At(6 * slaveIdx + 1, 6 * masterIdx + 3, d.Z);
+                    buf.At(6 * slaveIdx + 0, 6 * masterIdx + 4, -d.Z);
+                    
+                    buf.At(6 * slaveIdx + 0, 6 * masterIdx + 5, d.Y);
+                    buf.At(6 * slaveIdx + 2, 6 * masterIdx + 3, -d.Y);
+
+                    buf.At(6 * slaveIdx + 2, 6 * masterIdx + 4, d.X);
+                    buf.At(6 * slaveIdx + 1, 6 * masterIdx + 5, -d.X);
+                }
+                //add to buf
+            }
+            #endregion
+
+            throw new NotImplementedException();
+
+            return buf.ToCCs();
+        }
+
+        [Obsolete("Under development")]
+        public static CCS GenerateP_Delta_Mpc(Model target, LoadCase loadCase)
+        {
+            target.ReIndexNodes();
+
+            var n = target.Nodes.Count;
+
+            var buf = new CoordinateStorage<double>(n * 6, n * 6, 1);
+
+            var allEqsCrd = new CoordinateStorage<double>(n * 6, n * 6, 1);
+
+            var lastRow = 0;
+
+            #region step 1
+            //step 1: combine all eqs to one system
+            foreach (var mpcElm in target.MpcElements)
+            {
+                var extras = mpcElm.GetExtraEquations();
+
+                extras.EnumerateMembers((row, col, val) => allEqsCrd.At(row + lastRow, col, val));
+
+                lastRow += extras.RowCount;
+            }
+
+            var allEqs = allEqsCrd.ToCCs();
+            //var allEqsTr = allEqs.Transpose();
+            #endregion
+
+            #region step 2
+            //step 2: create adjacency matrix of variables
+            var adjCrd = new CoordinateStorage<double>(n * 6, n * 6, 1);
+            {
+                var matrix = allEqs;
+
+                var n2 = matrix.ColumnCount;
+
+                for (int i = 0; i < n2; i++)
+                {
+                    var col = i;
+
+                    var st = matrix.ColumnPointers[i];
+                    var en = matrix.ColumnPointers[i + 1];
+
+                    for (int j = st; j < en; j++)
+                    {
+                        var row = matrix.RowIndices[j];
+                        var val = matrix.Values[j];
+
+                        for (int k = st; k < en; j++)
+                        {
+                            adjCrd.At(matrix.RowIndices[j], matrix.RowIndices[k], 1);
+                            adjCrd.At(matrix.RowIndices[k], matrix.RowIndices[j], 1);
+                        }
+                    }
+                }
+            }
+
+            var variableAdj = adjCrd.ToCCs();
+            #endregion
+
+            #region step 3
+            var parts = EnumerateGraphParts(variableAdj);
+            
+            #endregion
+
+
+
+            throw new NotImplementedException();
+
+            return buf.ToCCs();
+        }
+        public static CCS GenerateP_Force(Model target, LoadCase loadCase)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static CCS GenerateS_r(Model target, LoadCase loadCase)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static CCS GenerateS_f(Model target, LoadCase loadCase)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

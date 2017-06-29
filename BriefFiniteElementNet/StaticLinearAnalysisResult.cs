@@ -690,8 +690,6 @@ namespace BriefFiniteElementNet
 
             var fx = supportReactions[loadCase] = new double[6*n];
 
-
-
             #region forming ft
 
 

@@ -55,10 +55,11 @@ namespace BriefFiniteElementNet
             get { return label; }
             set
             {
-                if(value!=null)
-                    if(parent!=null)
-                        if (!parent.IsValidLabel(value))
-                            throw new InvalidLabelException(string.Format("member with same label ({0}) exist in the structure",value));
+                if (label != value)
+                    if (value != null)
+                        if (parent != null)
+                            if (!parent.IsValidLabel(value))
+                                throw new InvalidLabelException(string.Format("member with same label ({0}) exist in the structure", value));
 
                 this.label = value;
             }
@@ -148,6 +149,15 @@ namespace BriefFiniteElementNet
         /// </summary>
         protected StructurePart()
         {
+        }
+
+        /// <summary>
+        /// Re assign s the node references. Used after deserialization
+        /// </summary>
+        /// <param name="parent">The parent.</param>
+        public virtual void ReAssignNodeReferences(Model parent)
+        {
+
         }
     }
 }

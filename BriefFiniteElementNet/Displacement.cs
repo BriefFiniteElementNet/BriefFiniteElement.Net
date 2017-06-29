@@ -307,12 +307,13 @@ namespace BriefFiniteElementNet
         public static Displacement operator *(Displacement d, double c)
         {
             return new
-                Displacement(c*d.dx,
-                    c*d.dy,
-                    c*d.dz,
-                    c*d.rx,
-                    c*d.ry,
-                    c*d.rz);
+                Displacement(
+                    c * d.dx,
+                    c * d.dy,
+                    c * d.dz,
+                    c * d.rx,
+                    c * d.ry,
+                    c * d.rz);
         }
 
         /// <summary>
@@ -325,7 +326,7 @@ namespace BriefFiniteElementNet
         public static Displacement operator -(Displacement d1)
         {
             return new
-                Displacement(- d1.dx, -d1.dy, -d1.dz, -d1.rx, -d1.ry, -d1.rz);
+                Displacement(-d1.dx, -d1.dy, -d1.dz, -d1.rx, -d1.ry, -d1.rz);
         }
         #endregion
 
@@ -390,6 +391,9 @@ namespace BriefFiniteElementNet
 
         #endregion
 
-        
+        public override string ToString()
+        {
+            return string.Format("Δx : {0:e2}, Δy : {1:e2}, Δz : {2:e2}, θx : {3:e2}, θy : {4:e2}, θz : {5:e2}", this.dx, this.dy, this.dz, this.rx, this.ry, this.rz);
+        }
     }
 }

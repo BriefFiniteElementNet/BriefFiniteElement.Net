@@ -21,8 +21,8 @@ namespace BriefFiniteElementNet.Validation
 
             sp.Restart();
 
-            var at_b_a_mgr = LocalGlobalTransformManager.At_B_A(A, B);
-            var a_b_at_mgr = LocalGlobalTransformManager.A_B_At(A, B);
+            var at_b_a_mgr = TransformManagerL2G.At_B_A(A, B);
+            var a_b_at_mgr = TransformManagerL2G.A_B_At(A, B);
 
             sp.Stop();
 

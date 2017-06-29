@@ -7,20 +7,37 @@ There are two matrices named Transformation (T) and Lambda (λ) as this:
 [xyz] = [λ]' * [XYZ]
 [XYZ] = [λ] * [xyz]
 
+[xyz] = [T] * [XYZ]
+[XYZ] = [T]' * [xyz]
+
 where
 	[xyz] is vector in LOCAL coordinates
 	[XYZ] is vector in GLOBAL coordinates
 
-Transformation matrix is takes as transopose of lambda:
+Transformation matrix is taken as transopose of lambda:
 [T] = [λ]'
 
 X     λ_Xx  λ_Xy  λ_Xz    x
 Y  =  λ_Yx  λ_Yy  λ_Yz    y
 Z     λ_Zx  λ_Zy  λ_Zz    z
 
-where λ_Ab is cosine of angle between A and b axis. 
-Actually λ_x = {λ_Xx λ_Yx λ_Zx} 
 
+      λ_Xx  λ_Xy  λ_Xz 
+λ  =  λ_Yx  λ_Yy  λ_Yz 
+      λ_Zx  λ_Zy  λ_Zz 
+
+
+      λ_Xx  λ_Yx  λ_Zx
+T  =  λ_Xy  λ_Yy  λ_Zy  =  λ'
+      λ_Xz  λ_Yz  λ_Zz
+
+
+Where λ_Ab is Cosine of angle between A and b axis.
+
+
+ λ_x = {λ_Xx λ_Yx λ_Zx} = Direction Cosine of i vector with respect to global system (i is unit vector in x direction).
+ λ_y = {λ_Xy λ_Yy λ_Zy} = Direction Cosine of j vector with respect to global system (j is unit vector in y direction).
+ λ_z = {λ_Xz λ_Yz λ_Zz} = Direction Cosine of k vector with respect to global system (k is unit vector in z direction).
 
 Note that:
 λ_Ab = λ_bA
@@ -84,3 +101,5 @@ Ref:
 http://www.wind.civil.aau.dk/lecture/7sem_finite_element/lecture_notes/Lecture_6_7.pdf P53 for transformation of 3d frame element
 
 http://www.oofem.org/resources/doc/elementlibmanual/html/elementlibmanualsu2.html section 2.2.2 Beam3d element, detailed info on transformation matrix of 3d beam
+
+ref[3]: http://www.starlino.com/dcm_tutorial.html

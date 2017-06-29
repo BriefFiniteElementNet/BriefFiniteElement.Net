@@ -54,6 +54,11 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+        /// <summary>
+        /// Converts the defined tensor into a 3x3 matrix.
+        /// </summary>
+        /// <param name="tensor">The tensor.</param>
+        /// <returns>generated matrix</returns>
         public static Matrix ToMatrix(CauchyStressTensor tensor)
         {
             var tens = new Matrix(3, 3);
@@ -74,30 +79,63 @@ namespace BriefFiniteElementNet
             return tens;
         }
 
-        public static CauchyStressTensor FromMatrix(Matrix mtx)
+        /// <summary>
+        /// Generates a tensor from defined matrix
+        /// </summary>
+        /// <param name="matrix">The matrix.</param>
+        /// <returns>generated tensor</returns>
+        public static CauchyStressTensor FromMatrix(Matrix matrix)
         {
             var buf = new CauchyStressTensor();
 
-            buf.S11 = mtx[0, 0];
-            buf.S22 = mtx[1, 1];
-            buf.S33 = mtx[2, 2];
+            buf.S11 = matrix[0, 0];
+            buf.S22 = matrix[1, 1];
+            buf.S33 = matrix[2, 2];
 
-            buf.S12 = mtx[0, 1];
-            buf.S21 = mtx[1, 0];
+            buf.S12 = matrix[0, 1];
+            buf.S21 = matrix[1, 0];
 
-            buf.S13 = mtx[0, 2];
-            buf.S31 = mtx[2, 0];
+            buf.S13 = matrix[0, 2];
+            buf.S31 = matrix[2, 0];
 
-            buf.S23 = mtx[1, 2];
-            buf.S32 = mtx[2, 1];
+            buf.S23 = matrix[1, 2];
+            buf.S32 = matrix[2, 1];
 
             return buf;
         }
 
+        /// <summary>
+        /// Mutiplies the specified tensor with specified coefficient.
+        /// </summary>
+        /// <param name="tensor">The left.</param>
+        /// <param name="coefficient">The coefficient.</param>
+        /// <returns><see cref="tensor"/> * <see cref="coefficient"/></returns>
+        public static CauchyStressTensor Multiply(CauchyStressTensor tensor, double coef)
+        {
+            var buf = new CauchyStressTensor();
 
-        #region math operators
+            buf.S11 = coef * tensor.S11;
+            buf.S22 = coef * tensor.S22;
+            buf.S33 = coef * tensor.S33;
 
-        public static CauchyStressTensor operator +(CauchyStressTensor left, CauchyStressTensor right)
+            buf.S12 = coef * tensor.S12;
+            buf.S23 = coef * tensor.S23;
+            buf.S31 = coef * tensor.S31;
+
+            buf.S21 = coef * tensor.S21;
+            buf.S32 = coef * tensor.S32;
+            buf.S13 = coef * tensor.S13;
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Adds the specified tensors and return the result.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns><see cref="left"/> + <see cref="right"/></returns>
+        public static CauchyStressTensor Add(CauchyStressTensor left, CauchyStressTensor right)
         {
             var buf = new CauchyStressTensor();
 
@@ -109,10 +147,20 @@ namespace BriefFiniteElementNet
             buf.S23 = left.S23 + right.S23;
             buf.S31 = left.S31 + right.S31;
 
+            buf.S21 = left.S21 + right.S21;
+            buf.S32 = left.S32 + right.S32;
+            buf.S13 = left.S13 + right.S13;
+
             return buf;
         }
 
-        public static CauchyStressTensor operator -(CauchyStressTensor left, CauchyStressTensor right)
+        /// <summary>
+        /// Subtract the specified tensors and return the result.
+        /// </summary>
+        /// <param name="left">The left.</param>
+        /// <param name="right">The right.</param>
+        /// <returns><see cref="left"/> - <see cref="right"/></returns>
+        public static CauchyStressTensor Subtract(CauchyStressTensor left, CauchyStressTensor right)
         {
             var buf = new CauchyStressTensor();
 
@@ -124,37 +172,34 @@ namespace BriefFiniteElementNet
             buf.S23 = left.S23 - right.S23;
             buf.S31 = left.S31 - right.S31;
 
+            buf.S21 = left.S21 - right.S21;
+            buf.S32 = left.S32 - right.S32;
+            buf.S13 = left.S13 - right.S13;
+
             return buf;
+        }
+
+
+        #region math operators
+
+        public static CauchyStressTensor operator +(CauchyStressTensor left, CauchyStressTensor right)
+        {
+            return Add(left, right);
+        }
+
+        public static CauchyStressTensor operator -(CauchyStressTensor left, CauchyStressTensor right)
+        {
+            return Subtract(left, right);
         }
 
         public static CauchyStressTensor operator -(CauchyStressTensor tensor)
         {
-            var buf = new CauchyStressTensor();
-
-            buf.S11 = -tensor.S11;
-            buf.S22 = -tensor.S22;
-            buf.S33 = -tensor.S33;
-
-            buf.S12 = -tensor.S12;
-            buf.S23 = -tensor.S23;
-            buf.S31 = -tensor.S31;
-
-            return buf;
+            return Multiply(tensor, -1);
         }
 
         public static CauchyStressTensor operator *(double coef, CauchyStressTensor tensor)
         {
-            var buf = new CauchyStressTensor();
-
-            buf.S11 = coef*tensor.S11;
-            buf.S22 = coef*tensor.S22;
-            buf.S33 = coef*tensor.S33;
-
-            buf.S12 = coef*tensor.S12;
-            buf.S23 = coef*tensor.S23;
-            buf.S31 = coef*tensor.S31;
-
-            return buf;
+            return Multiply(tensor, coef);
         }
 
         #endregion

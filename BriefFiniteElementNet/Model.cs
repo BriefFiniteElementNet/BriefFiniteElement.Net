@@ -44,7 +44,12 @@ namespace BriefFiniteElementNet
         private NodeCollection nodes;
         private ElementCollection elements;
         private StaticLinearAnalysisResult lastResult;
+        [Obsolete("use MpcElements instead")]
         private RigidElementCollection rigidElements;
+        [Obsolete("use MpcElements instead")]
+        private TelepathyLinkCollection telepathyLinks;
+        private MpcElementCollection mpcElements;
+
         private LoadCase settlementLoadCase;
 
 
@@ -57,6 +62,12 @@ namespace BriefFiniteElementNet
         public NodeCollection Nodes
         {
             get { return nodes; }
+            set
+            {
+                nodes = value;
+                if (value != null)
+                    value.Parent = this;
+            }
         }
 
         /// <summary>
@@ -68,6 +79,29 @@ namespace BriefFiniteElementNet
         public ElementCollection Elements
         {
             get { return elements; }
+            set
+            {
+                elements = value;
+                if (value != null)
+                    value.Parent = this;
+            }
+        }
+
+        /// <summary>
+        /// Gets the mpc elements.
+        /// </summary>
+        /// <value>
+        /// The elements.
+        /// </value>
+        public MpcElementCollection MpcElements
+        {
+            get { return mpcElements; }
+            set
+            {
+                mpcElements = value;
+                if (value != null)
+                    value.Parent = this;
+            }
         }
 
         /// <summary>
@@ -86,6 +120,7 @@ namespace BriefFiniteElementNet
         {
             get { return rigidElements; }
         }
+
 
         /// <summary>
         /// Gets or sets the settlement load case.
@@ -363,15 +398,22 @@ namespace BriefFiniteElementNet
             }
 
             info.AddValue("elements", elements);
+            info.AddValue("mpcElements", mpcElements);
             info.AddValue("nodes", nodes);
+
             info.AddValue("rigidElements", rigidElements);
+            info.AddValue("telepathyLinks", telepathyLinks);
             info.AddValue("settlementLoadCase", settlementLoadCase);
         }
 
         private Model(SerializationInfo info, StreamingContext context)
         {
             elements = info.GetValue<ElementCollection>("elements");
+            mpcElements = info.GetValue<MpcElementCollection>("mpcElements");
+
             rigidElements = info.GetValue<RigidElementCollection>("rigidElements");
+            telepathyLinks = info.GetValue<TelepathyLinkCollection>("telepathyLinks");
+
             nodes = info.GetValue<NodeCollection>("nodes");
             settlementLoadCase = info.GetValue<LoadCase>("settlementLoadCase");
         }
@@ -383,6 +425,8 @@ namespace BriefFiniteElementNet
 
             foreach (var elm in elements)
             {
+                //elm.ReAssignNodeReferences(this);
+
                 for (int i = 0; i < elm.nodeNumbers.Length; i++)
                 {
                     elm.Nodes[i] = this.nodes[elm.nodeNumbers[i]];
@@ -401,15 +445,16 @@ namespace BriefFiniteElementNet
 
             foreach (var relm in rigidElements)
             {
-                for (int i = 0; i < relm.nodeNumbers.Length; i++)
-                {
-                    relm.Nodes.Add(this.nodes[relm.nodeNumbers[i]]);
-                }
+                relm.ReAssignNodeReferences(this);
+            }
 
-                if(relm._centralNodeNumber.HasValue)
-                {
-                    relm.CentralNode = this.nodes[relm._centralNodeNumber.Value];
-                }
+            #endregion
+
+            #region TelepathyLink's nodes
+
+            foreach (var relm in telepathyLinks)
+            {
+                relm.ReAssignNodeReferences(this);
             }
 
             #endregion

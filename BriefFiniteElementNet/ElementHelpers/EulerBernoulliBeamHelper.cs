@@ -25,7 +25,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetBMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
             //TODO: Take end supports into consideration
 
@@ -58,7 +58,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetB_iMatrixAt(Element targetElement, Matrix transformMatrix, int i, params double[] isoCoords)
+        public Matrix GetB_iMatrixAt(Element targetElement, int i, params double[] isoCoords)
         {
             var elm = targetElement as BarElement;
 
@@ -106,7 +106,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetDMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var elm = targetElement as BarElement;
 
@@ -133,7 +133,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetRhoMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var elm = targetElement as BarElement;
 
@@ -153,7 +153,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetMuMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetMuMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var elm = targetElement as BarElement;
 
@@ -173,7 +173,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetNMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var xi = isoCoords[0];
 
@@ -212,7 +212,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetJMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetJMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var bar = targetElement as BarElement;
 
@@ -227,36 +227,32 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetLocalInternalForceAt(Element targetElement, Matrix transformMatrix, Displacement[] globalDisplacements,
-            params double[] isoCoords)
+        public Matrix GetLocalInternalForceAt(Element targetElement, Displacement[] globalDisplacements, params double[] isoCoords)
         {
 
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Matrix CalcLocalKMatrix(Element targetElement, Matrix transformMatrix)
+        public Matrix CalcLocalKMatrix(Element targetElement)
         {
-            var buf = ElementHelperExtensions.CalcLocalKMatrix_Bar(this, targetElement,
-                transformMatrix);
+            var buf = ElementHelperExtensions.CalcLocalKMatrix_Bar(this, targetElement);
 
             return buf;
         }
 
         /// <inheritdoc/>
-        public Matrix CalcLocalMMatrix(Element targetElement, Matrix transformMatrix)
+        public Matrix CalcLocalMMatrix(Element targetElement)
         {
-            var buf = ElementHelperExtensions.CalcLocalMMatrix_Bar(this, targetElement,
-                transformMatrix);
+            var buf = ElementHelperExtensions.CalcLocalMMatrix_Bar(this, targetElement);
 
             return buf;
         }
 
         /// <inheritdoc/>
-        public Matrix CalcLocalCMatrix(Element targetElement, Matrix transformMatrix)
+        public Matrix CalcLocalCMatrix(Element targetElement)
         {
-            return ElementHelperExtensions.CalcLocalCMatrix_Bar(this, targetElement,
-                 transformMatrix);
+            return ElementHelperExtensions.CalcLocalCMatrix_Bar(this, targetElement);
         }
 
 
@@ -279,41 +275,38 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public int GetNMaxOrder(Element targetElement, Matrix transformMatrix)
+        public int GetNMaxOrder(Element targetElement)
         {
             return 3;
         }
 
-        public int GetBMaxOrder(Element targetElement, Matrix transformMatrix)
+        public int GetBMaxOrder(Element targetElement)
         {
             return 1;
         }
 
-        public int GetDetJOrder(Element targetElement, Matrix transformMatrix)
+        public int GetDetJOrder(Element targetElement)
         {
             return 0;
         }
 
-        public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Matrix transformMatrix, Load load,
-            double[] isoLocation)
+        public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
-        public FlatShellStressTensor GetLoadDisplacementAt(Element targetElement, Matrix transformMatrix, Load load,
-            double[] isoLocation)
+        public FlatShellStressTensor GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Displacement GetLocalDisplacementAt(Element targetElement, Matrix transformMatrix, Displacement[] localDisplacements,
-            params double[] isoCoords)
+        public Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
 
-        public Force[] GetEquivalentNodalLoads(Element targetElement, Matrix transformMatrix, Load load)
+        public Force[] GetEquivalentNodalLoads(Element targetElement, Load load)
         {
             throw new NotImplementedException();
         }

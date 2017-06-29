@@ -41,8 +41,15 @@ namespace BriefFiniteElementNet
             if (!_pool.TryGetValue(array.Length, out candidates))
                 _pool.Add(array.Length, candidates = new Stack<T[]>());
 
-            candidates.Push(array);
+            if (candidates.Count < MaxQLength)
+                if (!candidates.Contains(array))
+                {
+                    candidates.Push(array);
+                    Console.WriteLine("Freeing");
+                }
         }
+
+        private readonly int MaxQLength = 20;
     }
 
     public class ConcurrentArrayPool<T> : ArrayPool<T>
@@ -85,6 +92,8 @@ namespace BriefFiniteElementNet
 
             var buf = new Matrix(rows, columns, arr);
 
+            buf.UsePool = true;
+
             return buf;
         }
 
@@ -92,6 +101,9 @@ namespace BriefFiniteElementNet
         {
             foreach(var mtx in matrices)
             {
+                if (mtx.CoreArray == null)
+                    continue;
+
                 Pool.Free(mtx.CoreArray);
                 mtx.CoreArray = null;
             }

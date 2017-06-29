@@ -6,23 +6,18 @@ using System.Text;
 namespace BriefFiniteElementNet
 {
     /// <summary>
-    /// Represents a class for managing the linear coordination transformation from local to global and vice versa.
+    /// Represents a class for managing the linear coordination transformation between local to global and vice versa.
     /// </summary>
-    /// <remarks>
-    /// Planned to be used for transforming local to global
-    /// means <see cref="TransformLocalToGlobal(BriefFiniteElementNet.Vector)"/> will transform from local to global, and <see cref="TransformGlobalToLocal"/> converts from global to local.
-    /// </remarks>
-    public class LocalGlobalTransformManager
+    public class TransformManagerL2G
     {
-
         /// <summary>
-        /// Makes a new <see cref="LocalGlobalTransformManager"/> from a transformation matrix.
+        /// Makes a new <see cref="TransformManagerL2G"/> from a transformation matrix.
         /// </summary>
         /// <param name="transformMatrix">The T Matrix.</param>
-        /// <returns>new LocalGlobalTransformManager</returns>
-        public static LocalGlobalTransformManager MakeFromTransformationMatrix(Matrix transformMatrix)
+        /// <returns>new TransformManagerL2G</returns>
+        public static TransformManagerL2G MakeFromTransformationMatrix(Matrix transformMatrix)
         {
-            var buf = new LocalGlobalTransformManager();
+            var buf = new TransformManagerL2G();
             buf.TransformMatrix = transformMatrix;
 
             buf.VeryMagicNumber = 2;
@@ -31,19 +26,20 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Makes a new <see cref="LocalGlobalTransformManager"/> from a lambda matrix.
+        /// Makes a new <see cref="TransformManagerL2G"/> from a lambda matrix.
         /// </summary>
         /// <param name="lambdaMatrix">The λ Matrix.</param>
-        /// <returns>new LocalGlobalTransformManager</returns>
-        public static LocalGlobalTransformManager MakeFromLambdaMatrix(Matrix lambdaMatrix)
+        /// <returns>new TransformManagerL2G</returns>
+        public static TransformManagerL2G MakeFromLambdaMatrix(Matrix lambdaMatrix)
         {
-            var buf = new LocalGlobalTransformManager();
+            var buf = new TransformManagerL2G();
             buf.LambdaMatrix = lambdaMatrix;
 
             buf.VeryMagicNumber = 1;
 
             return buf;
         }
+
 
         /// <summary>
         /// The transform
@@ -63,7 +59,7 @@ namespace BriefFiniteElementNet
         private int VeryMagicNumber;
 
 
-
+        #region Local To Global
 
         /// <summary>
         /// Transforms the specified vector.
@@ -104,7 +100,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="matrix">The matrix.</param>
         /// <remarks><see cref="matrix"/> should be square, and its dimension should be a multiply of 3</remarks>
-        /// <returns>Transformed point (point in new coordination system : global)</returns>
+        /// <returns>Transformed matrix (matrix in new coordination system : global)</returns>
         public Matrix TransformLocalToGlobal(Matrix matrix)
         {
             if (VeryMagicNumber == 1)
@@ -116,8 +112,70 @@ namespace BriefFiniteElementNet
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Transforms the defined stress tensor from local system to global system.
+        /// </summary>
+        /// <param name="tensor">The tensor.</param>
+        /// <returns>
+        /// Transformed tensor (point in new coordination system : global)
+        /// </returns>
+        public CauchyStressTensor TransformLocalToGlobal(CauchyStressTensor tensor)
+        {
+            var matrix = CauchyStressTensor.ToMatrix(tensor);
+
+            Matrix buf = null;
+
+            if (VeryMagicNumber == 1)
+                buf= A_B_At(LambdaMatrix, matrix);
+
+            if (VeryMagicNumber == 2)
+                buf= At_B_A(TransformMatrix, matrix);
+
+            return CauchyStressTensor.FromMatrix(buf);
+        }
 
 
+        /// <summary>
+        /// Transforms the defined stress tensor from local system to global system.
+        /// </summary>
+        /// <param name="tensor">The tensor.</param>
+        /// <returns>
+        /// Transformed tensor (point in new coordination system : global)
+        /// </returns>
+        public BendingStressTensor TransformLocalToGlobal(BendingStressTensor tensor)
+        {
+            var matrix = BendingStressTensor.ToMatrix(tensor);
+
+            Matrix buf = null;
+
+            if (VeryMagicNumber == 1)
+                buf = A_B_At(LambdaMatrix, matrix);
+
+            if (VeryMagicNumber == 2)
+                buf = At_B_A(TransformMatrix, matrix);
+
+            return BendingStressTensor.FromMatrix(buf);
+        }
+
+        /// <summary>
+        /// Transforms the defined stress tensor from local system to global system.
+        /// </summary>
+        /// <param name="tensor">The tensor.</param>
+        /// <returns>
+        /// Transformed tensor (point in new coordination system : global)
+        /// </returns>
+        public FlatShellStressTensor TransformLocalToGlobal(FlatShellStressTensor tensor)
+        {
+            var buf = new FlatShellStressTensor(
+                TransformLocalToGlobal(tensor.MembraneTensor),
+                TransformLocalToGlobal(tensor.BendingTensor));
+
+            return buf;
+        }
+
+        #endregion
+
+        #region Global To Local
 
         /// <summary>
         /// Transforms back the specified vector.
@@ -170,10 +228,60 @@ namespace BriefFiniteElementNet
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Transforms the defined stress tensor from global system to local system.
+        /// </summary>
+        /// <param name="tensor">The tensor.</param>
+        /// <returns>tensor in local coordination system</returns>
+        public CauchyStressTensor TransformGlobalToLocal(CauchyStressTensor tensor)
+        {
+            var matrix = CauchyStressTensor.ToMatrix(tensor);
 
+            Matrix buf = null;
 
+            if (VeryMagicNumber == 1)
+                buf= At_B_A(LambdaMatrix, matrix);
 
+            if (VeryMagicNumber == 2)
+                buf= A_B_At(TransformMatrix, matrix);
 
+            return CauchyStressTensor.FromMatrix(buf);
+        }
+
+        /// <summary>
+        /// Transforms the defined stress tensor from global system to local system.
+        /// </summary>
+        /// <param name="tensor">The tensor.</param>
+        /// <returns>tensor in local coordination system</returns>
+        public BendingStressTensor TransformGlobalToLocal(BendingStressTensor tensor)
+        {
+            var matrix = BendingStressTensor.ToMatrix(tensor);
+
+            Matrix buf = null;
+
+            if (VeryMagicNumber == 1)
+                buf = At_B_A(LambdaMatrix, matrix);
+
+            if (VeryMagicNumber == 2)
+                buf = A_B_At(TransformMatrix, matrix);
+
+            return BendingStressTensor.FromMatrix(buf);
+        }
+
+        /// <summary>
+        /// Transforms the defined stress tensor from global system to local system.
+        /// </summary>
+        /// <param name="tensor">The tensor.</param>
+        /// <returns>tensor in local coordination system</returns>
+        public FlatShellStressTensor TransformGlobalToLocal(FlatShellStressTensor tensor)
+        {
+            var buf = new FlatShellStressTensor(
+                TransformGlobalToLocal(tensor.MembraneTensor),
+                TransformGlobalToLocal(tensor.BendingTensor));
+
+            return buf;
+        }
+        #endregion
 
 
         /// <summary>

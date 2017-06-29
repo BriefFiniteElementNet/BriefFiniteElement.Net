@@ -9,57 +9,57 @@ namespace BriefFiniteElementNet.ElementHelpers
     public class TetrahedronHelper : IElementHelper
     {
         /// <inheritdoc/>
-        public Matrix GetBMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Matrix GetB_iMatrixAt(Element targetElement, Matrix transformMatrix, int i, params double[] isoCoords)
+        public Matrix GetB_iMatrixAt(Element targetElement, int i, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Matrix GetDMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
 
-        public Matrix GetRhoMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
 
-        public Matrix GetMuMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public Matrix GetNMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetMuMatrixAt(Element targetElement, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Matrix GetJMatrixAt(Element targetElement, Matrix transformMatrix, params double[] isoCoords)
+        public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Matrix CalcLocalKMatrix(Element targetElement, Matrix transformMatrix)
+        public Matrix GetJMatrixAt(Element targetElement, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
 
-        public Matrix CalcLocalMMatrix(Element targetElement, Matrix transformMatrix)
+        /// <inheritdoc/>
+        public Matrix CalcLocalKMatrix(Element targetElement)
         {
             throw new NotImplementedException();
         }
 
-        public Matrix CalcLocalCMatrix(Element targetElement, Matrix transformMatrix)
+        public Matrix CalcLocalMMatrix(Element targetElement)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Matrix CalcLocalCMatrix(Element targetElement)
         {
             throw new NotImplementedException();
         }
@@ -71,8 +71,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetLocalInternalForceAt(Element targetElement, Matrix transformMatrix, Displacement[] globalDisplacements,
-            params double[] isoCoords)
+        public Matrix GetLocalInternalForceAt(Element targetElement, Displacement[] globalDisplacements, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
@@ -84,41 +83,38 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public int GetNMaxOrder(Element targetElement, Matrix transformMatrix)
+        public int GetNMaxOrder(Element targetElement)
         {
             throw new NotImplementedException();
         }
 
-        public int GetBMaxOrder(Element targetElement, Matrix transformMatrix)
+        public int GetBMaxOrder(Element targetElement)
         {
             throw new NotImplementedException();
         }
 
-        public int GetDetJOrder(Element targetElement, Matrix transformMatrix)
+        public int GetDetJOrder(Element targetElement)
         {
             throw new NotImplementedException();
         }
 
-        public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Matrix transformMatrix, Load load,
-            double[] isoLocation)
+        public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
-        public FlatShellStressTensor GetLoadDisplacementAt(Element targetElement, Matrix transformMatrix, Load load,
-            double[] isoLocation)
+        public FlatShellStressTensor GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Displacement GetLocalDisplacementAt(Element targetElement, Matrix transformMatrix, Displacement[] localDisplacements,
-            params double[] isoCoords)
+        public Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
 
-        public Force[] GetEquivalentNodalLoads(Element targetElement, Matrix transformMatrix, Load load)
+        public Force[] GetEquivalentNodalLoads(Element targetElement, Load load)
         {
             throw new NotImplementedException();
         }
