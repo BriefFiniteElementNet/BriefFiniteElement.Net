@@ -639,6 +639,32 @@ namespace BriefFiniteElementNet
             }
         }
 
+        internal static void EnumerateColumns(this CCS matrix, Action<int, Dictionary<int,double>> action)
+        {
+            var n = matrix.ColumnCount;
+
+            for (int i = 0; i < n; i++)
+            {
+                var col = i;
+
+                var st = matrix.ColumnPointers[i];
+                var en = matrix.ColumnPointers[i + 1];
+
+                var dic = new Dictionary<int, double>();
+
+                for (int j = st; j < en; j++)
+                {
+                    var row = matrix.RowIndices[j];
+
+                    var val = matrix.Values[j];
+                    dic[row] = val;
+                }
+
+
+                action(col, dic);
+            }
+
+        }
 
         public static void MakeMatrixSymetric(this CCS mtx)
         {
@@ -1014,9 +1040,9 @@ namespace BriefFiniteElementNet
                     buf.At(6 * slaveIdx + 0, 6 * masterIdx + 4, -d.Z);
                     
                     buf.At(6 * slaveIdx + 0, 6 * masterIdx + 5, d.Y);
-                    buf.At(6 * slaveIdx + 2, 6 * masterIdx + 3, -d.Y);
+                    buf.At(6 * slaveIdx + 2, 6 * masterIdx + 3, -d.Y);//
 
-                    buf.At(6 * slaveIdx + 2, 6 * masterIdx + 4, d.X);
+                    buf.At(6 * slaveIdx + 2, 6 * masterIdx + 4, d.X);//
                     buf.At(6 * slaveIdx + 1, 6 * masterIdx + 5, -d.X);
                 }
                 //add to buf
@@ -1037,68 +1063,124 @@ namespace BriefFiniteElementNet
 
             var buf = new CoordinateStorage<double>(n * 6, n * 6, 1);
 
-            var allEqsCrd = new CoordinateStorage<double>(n * 6, n * 6, 1);
+            
 
             var lastRow = 0;
 
             #region step 1
             //step 1: combine all eqs to one system
+
+            var filledCols = new bool[6 * n];
+            
+
+            var extraEqCount = 0;
+
+            foreach (var mpcElm in target.MpcElements)
+                if(mpcElm.AppliesForLoadCase(loadCase))
+                    extraEqCount += mpcElm.GetExtraEquationsCount();
+
+            var filledRows = new bool[extraEqCount];
+
+            var allEqsCrd = new CoordinateStorage<double>(extraEqCount, n * 6, 1);
+
+
             foreach (var mpcElm in target.MpcElements)
             {
-                var extras = mpcElm.GetExtraEquations();
+                if (mpcElm.AppliesForLoadCase(loadCase))
+                {
+                    var extras = mpcElm.GetExtraEquations();
 
-                extras.EnumerateMembers((row, col, val) => allEqsCrd.At(row + lastRow, col, val));
+                    extras.EnumerateMembers((row, col, val) =>
+                    {
+                        allEqsCrd.At(row + lastRow, col, val);
+                        filledCols[col] = true;
+                        filledRows[row] = true;
+                    });
 
-                lastRow += extras.RowCount;
+                    lastRow += extras.RowCount;
+                }
+
             }
 
+            var nonFilledCols = filledCols.Count(i => !i);
+            var nonFilledRows = filledRows.Count(i => !i);
+
+
+
             var allEqs = allEqsCrd.ToCCs();
-            //var allEqsTr = allEqs.Transpose();
+
             #endregion
 
             #region step 2
             //step 2: create adjacency matrix of variables
-            var adjCrd = new CoordinateStorage<double>(n * 6, n * 6, 1);
-            {
-                var matrix = allEqs;
 
-                var n2 = matrix.ColumnCount;
+            //step 2-1: find nonzero pattern
+            var allEqsNonzeroPattern = allEqs.Clone();
 
-                for (int i = 0; i < n2; i++)
-                {
-                    var col = i;
+            for (var i = 0; i < allEqsNonzeroPattern.Values.Length; i++)
+                allEqsNonzeroPattern.Values[i] = 1;
 
-                    var st = matrix.ColumnPointers[i];
-                    var en = matrix.ColumnPointers[i + 1];
+            //https://math.stackexchange.com/questions/2340450/extract-independent-sub-systems-from-a-bigger-linear-eq-system
+            var tmp = allEqsNonzeroPattern.Transpose();
 
-                    for (int j = st; j < en; j++)
-                    {
-                        var row = matrix.RowIndices[j];
-                        var val = matrix.Values[j];
-
-                        for (int k = st; k < en; j++)
-                        {
-                            adjCrd.At(matrix.RowIndices[j], matrix.RowIndices[k], 1);
-                            adjCrd.At(matrix.RowIndices[k], matrix.RowIndices[j], 1);
-                        }
-                    }
-                }
-            }
-
-            var variableAdj = adjCrd.ToCCs();
+            var variableAdj = tmp.Multiply(allEqsNonzeroPattern);
             #endregion
 
             #region step 3
+            //extract parts
             var parts = EnumerateGraphParts(variableAdj);
-            
+
             #endregion
 
+            #region step 4
+            {
 
+                allEqs.EnumerateColumns((colNum, vals) =>
+                {
+                    if (vals.Count == 0)
+                    Console.WriteLine("Col {0} have {1} nonzeros", colNum, vals.Count);
+                });
+
+                var order = ColumnOrdering.MinimumDegreeAtPlusA;
+
+                // Partial pivoting tolerance (0.0 to 1.0)
+                double tolerance = 1.0;
+
+                var lu = CSparse.Double.Factorization.SparseLU.Create(allEqs, order, tolerance);
+
+            }
+
+            #endregion
 
             throw new NotImplementedException();
 
             return buf.ToCCs();
         }
+
+        public static int EmptyRowCount(this CCS matrix)
+        {
+            var buf = new bool[matrix.RowCount];
+
+            matrix.EnumerateMembers((row, col, val) =>
+            {
+                buf[row] = true;
+            });
+
+            return buf.Count(ii => !ii);
+        }
+
+        public static int EmptyColumnCount(this CCS matrix)
+        {
+            var buf = new bool[matrix.RowCount];
+
+            matrix.EnumerateMembers((row, col, val) =>
+            {
+                buf[col] = true;
+            });
+
+            return buf.Count(ii => !ii);
+        }
+
         public static CCS GenerateP_Force(Model target, LoadCase loadCase)
         {
             throw new NotImplementedException();

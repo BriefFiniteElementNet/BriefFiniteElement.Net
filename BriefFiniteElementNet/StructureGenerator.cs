@@ -51,6 +51,19 @@ namespace BriefFiniteElementNet
                 nde.Constraints = rnd.GetRandomConstraint();
         }
 
+
+        public static void AddRandomDisplacements(Model mdl,double max)
+        {
+
+
+            foreach (var nde in mdl.Nodes)
+            {
+                var disp = rnd.GetRandomDisplacement(0, max);
+
+                nde.Location = nde.Location + disp.Displacements;
+            }
+        }
+
         public static Model GenerateRandomStructure(int nodeCount)
         {
             var rnd = new Random();

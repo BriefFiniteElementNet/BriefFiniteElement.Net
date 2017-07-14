@@ -34,6 +34,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Commo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.XamlSerialization", "BriefFiniteElementNet.XamlSerialization\BriefFiniteElementNet.XamlSerialization.csproj", "{174C7845-8A05-4E08-A0BC-1211FAF8EF20}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.XmlSerialization", "BriefFiniteElementNet.XmlSerialization\BriefFiniteElementNet.XmlSerialization.csproj", "{6CA2E33B-7E4F-43A5-9C1B-4ECE819DD7A7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExtendedXmlSerializer", "ExtendedXmlSerializer\ExtendedXmlSerializer.csproj", "{522535D2-C7B6-4E7E-B2C9-60AB15FB294E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,6 +92,14 @@ Global
 		{174C7845-8A05-4E08-A0BC-1211FAF8EF20}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{174C7845-8A05-4E08-A0BC-1211FAF8EF20}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{174C7845-8A05-4E08-A0BC-1211FAF8EF20}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6CA2E33B-7E4F-43A5-9C1B-4ECE819DD7A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6CA2E33B-7E4F-43A5-9C1B-4ECE819DD7A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6CA2E33B-7E4F-43A5-9C1B-4ECE819DD7A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6CA2E33B-7E4F-43A5-9C1B-4ECE819DD7A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{522535D2-C7B6-4E7E-B2C9-60AB15FB294E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{522535D2-C7B6-4E7E-B2C9-60AB15FB294E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{522535D2-C7B6-4E7E-B2C9-60AB15FB294E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{522535D2-C7B6-4E7E-B2C9-60AB15FB294E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

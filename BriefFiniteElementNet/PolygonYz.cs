@@ -16,7 +16,7 @@ namespace BriefFiniteElementNet
     /// Points are not editable.
     /// </summary>
     [Serializable]
-    public sealed class PolygonYz : IEnumerable<PointYZ>,ISerializable
+    public sealed class PolygonYz : IEnumerable<PointYZ>,ISerializable,ICollection<PointYZ>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PolygonYz"/> class.
@@ -52,6 +52,14 @@ namespace BriefFiniteElementNet
         }
 
         private List<PointYZ> points;
+
+        public bool IsReadOnly
+        {
+            get
+            {
+                return false; 
+            }
+        }
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
@@ -197,6 +205,31 @@ namespace BriefFiniteElementNet
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("points", points);
+        }
+
+        public void Add(PointYZ item)
+        {
+            points.Add(item);
+        }
+
+        public void Clear()
+        {
+            points.Clear();
+        }
+
+        public bool Contains(PointYZ item)
+        {
+            return points.Contains(item);
+        }
+
+        public void CopyTo(PointYZ[] array, int arrayIndex)
+        {
+            points.CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(PointYZ item)
+        {
+            return points.Remove(item);
         }
 
 

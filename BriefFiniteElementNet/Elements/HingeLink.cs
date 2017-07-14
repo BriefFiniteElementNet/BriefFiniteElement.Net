@@ -30,5 +30,10 @@ namespace BriefFiniteElementNet.Elements
         {
             throw new NotImplementedException();
         }
+
+        public override int GetExtraEquationsCount()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

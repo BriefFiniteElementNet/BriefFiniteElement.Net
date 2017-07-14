@@ -98,6 +98,11 @@ namespace BriefFiniteElementNet.Elements
             throw new NotImplementedException();
         }
 
+        public override int GetExtraEquationsCount()
+        {
+            throw new NotImplementedException();
+        }
+
         private TelepathyLink(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _connectDx = info.GetBoolean("_connectDx");

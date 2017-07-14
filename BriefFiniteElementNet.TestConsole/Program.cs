@@ -20,7 +20,7 @@ namespace BriefFiniteElementNet.TestConsole
         [STAThread]
         static void Main(string[] args)
         {
-            TestSerialization();
+            TestXmlSerialization();
 
             Console.ReadKey();
         }
@@ -43,6 +43,11 @@ namespace BriefFiniteElementNet.TestConsole
         private static void TestSerialization()
         {
             Validation.SerializationTest.Test1();
+        }
+
+        private static void TestXmlSerialization()
+        {
+            BriefFiniteElementNet.XmlSerialization.Tester.Test();
         }
 
         private static void Test2()
@@ -210,6 +215,39 @@ namespace BriefFiniteElementNet.TestConsole
 
         }
 
+        private static void Test_P_Delta_matrix()
+        {
+            var model = StructureGenerator.Generate3DFrameElementGrid(5, 5, 10);
+
+
+            var zs = model.Nodes.Where(i => i.Constraints != Constraint.Fixed)
+                .Select(i => i.Location.Z).Distinct().ToList();
+
+            foreach(var z in zs)
+            {
+                var relm = new RigidElement_MPC();
+
+                relm.Nodes.AddRange(model.Nodes.Where(i => i.Location.Z == z));
+
+                model.MpcElements.Add(relm);
+
+                relm.UseForAllLoads = true;
+
+            }
+
+            StructureGenerator.AddRandomDisplacements(model, 0.1);
+
+
+            model.Clone();
+
+            #region
+
+            #endregion
+
+            CalcUtil.GenerateP_Delta_Mpc(model, LoadCase.DefaultLoadCase);
+
+
+        }
 
         private static void TestBtDB()
         {

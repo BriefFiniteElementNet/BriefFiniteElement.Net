@@ -16,7 +16,19 @@ namespace BriefFiniteElementNet.Elements
     /// </summary>
     public abstract class MpcElement: StructurePart
     {
+        public bool AppliesForLoadCase(LoadCase lc)
+        {
+            if (_useForAllLoads)
+                return true;
 
+            if (AppliedLoadCases.Contains(lc))
+                return true;
+
+            if (_appliedLoadTypes.Contains(lc.LoadType))
+                return true;
+
+            return false;
+        }
 
         /// <summary>
         /// Populates a <see cref="T:System.Runtime.Serialization.SerializationInfo" /> with the data needed to serialize the target object.
@@ -55,6 +67,13 @@ namespace BriefFiniteElementNet.Elements
         }
 
         protected NodeList _nodes;
+
+        public NodeList Nodes
+        {
+            get { return _nodes; }
+            set { _nodes = value; }
+        }
+
 
         /// <summary>
         /// Gets the nodes.
@@ -133,5 +152,11 @@ namespace BriefFiniteElementNet.Elements
         }
 
         public abstract CCS GetExtraEquations();
+
+        /// <summary>
+        /// Gets the count of equations returned by <see cref="MpcElement.GetExtraEquations()"/>. (number of rows of it)
+        /// </summary>
+        /// <returns></returns>
+        public abstract int GetExtraEquationsCount();
     }
 }

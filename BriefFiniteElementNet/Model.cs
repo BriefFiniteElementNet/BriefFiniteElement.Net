@@ -35,6 +35,7 @@ namespace BriefFiniteElementNet
             this.nodes = new NodeCollection(this);
             this.elements = new ElementCollection(this);
             this.rigidElements = new RigidElementCollection(this);
+            this.mpcElements = new MpcElementCollection(this);
         }
 
         #endregion
@@ -452,7 +453,8 @@ namespace BriefFiniteElementNet
 
             #region TelepathyLink's nodes
 
-            foreach (var relm in telepathyLinks)
+
+            foreach (var relm in mpcElements)
             {
                 relm.ReAssignNodeReferences(this);
             }

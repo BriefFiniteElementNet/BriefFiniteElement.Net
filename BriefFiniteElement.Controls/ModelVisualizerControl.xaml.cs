@@ -578,7 +578,7 @@ namespace BriefFiniteElementNet.Controls
                 {
                     var builder = new MeshBuilder(false, false);
 
-                    if(elm is FrameElement2Node)
+                    if (elm is FrameElement2Node)
                         AddFrameElement(builder, elm as FrameElement2Node);
                     else if (elm is ConcentratedMass)
                         AddMassElement(builder, elm as ConcentratedMass);
@@ -599,6 +599,48 @@ namespace BriefFiniteElementNet.Controls
                     else if (elm is Spring1D)
                         AddSpringElement(builder, elm as Spring1D);
 
+                    var gradient = new LinearGradientBrush();
+                    //TODO: to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
+
+
+                    gradient.GradientStops.Add(new GradientStop(Colors.Blue, 0));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Cyan, 0.2));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Green, 0.4));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Yellow, 0.6));
+                    gradient.GradientStops.Add(new GradientStop(Colors.Red, 0.8));
+                    gradient.GradientStops.Add(new GradientStop(Colors.White, 1));
+
+
+                    var mesh = builder.ToMesh(true);
+
+                    var material = MaterialHelper.CreateMaterial(gradient, null, null, 1, 0);
+
+                    var mygeometry = new GeometryModel3D(mesh, material) { BackMaterial = material };
+
+                    var modelElement = new ModelUIElement3D();
+                    modelElement.Model = mygeometry;
+
+
+                    BindMouseEvents(modelElement, elm);
+                    // var myModelVisual3D = new ModelVisual3D();
+                    //myModelVisual3D.Content = modelGroup;
+
+
+                    MainViewport.Children.Add(modelElement);
+                }
+
+            #endregion
+
+            #region Adding mpc elements
+
+
+            if (ShowRigidElements)
+                foreach (var elm in ModelToVisualize.MpcElements)
+                {
+                    var builder = new MeshBuilder(false, false);
+
+                    AddMpcElement(builder, elm);
+                    
                     var gradient = new LinearGradientBrush();
                         //TODO: to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
 
@@ -756,6 +798,8 @@ namespace BriefFiniteElementNet.Controls
                 }
 
             #endregion
+
+            
 
             if (sb.Length != 0)
                 MessageBox.Show(sb.ToString());
@@ -1000,6 +1044,128 @@ namespace BriefFiniteElementNet.Controls
                 args.Handled = true;
 
                 PropertyHelper.BrowseObjectProperties(sender);
+            };
+
+            /**/
+        }
+
+        private void BindMouseEvents(ModelUIElement3D model, MpcElement elm)
+        {
+            var tagGuid = @"642E0B05-0BFE-4091-81E7-48687CEA310E";
+
+            Material oldfrontm = null;
+            Material oldbackm = null;
+
+            /**/
+
+            #region MouseEnter
+
+            model.MouseEnter += (sender, e) =>
+            {
+                var tb = MainCanvas.Children
+                    .Cast<UIElement>()
+                    .Where(i => i is Border)
+                    .Cast<Border>()
+                    .FirstOrDefault(i => tagGuid.Equals(i.Tag));
+
+                if (tb == null)
+                {
+                    MainCanvas.Children.Add(tb = new Border() { Tag = tagGuid });
+
+                    tb.MouseMove += (o, args) => { args.Handled = false; };
+                    tb.PreviewMouseMove += (o, args) => { args.Handled = false; };
+                    tb.Child = new TextBlock();
+                    StyleTexblock(tb);
+                }
+
+
+                var tx = tb.Child as TextBlock;
+
+                if (tx != null)
+                    tx.Text = "MPC Element";
+                var geo = model.Model as GeometryModel3D;
+
+                if (geo != null)
+                {
+                    oldfrontm = geo.Material;
+                    oldbackm = geo.BackMaterial;
+
+                    geo.Material = geo.BackMaterial = MaterialHelper.CreateMaterial(Brushes.Aqua);
+                }
+            };
+
+            #endregion
+
+            #region MouseMove
+
+            model.MouseMove += (sender, e) =>
+            {
+                Border tb = null;
+
+                foreach (var child in MainCanvas.Children)
+                {
+                    if (child is Border)
+                    {
+                        if (tagGuid.Equals((child as Border).Tag))
+                        {
+                            tb = child as Border;
+                            break;
+                        }
+                    }
+                }
+
+                if (tb == null)
+                    return;
+
+                tb.Visibility = Visibility.Visible;
+
+                var mousePos = e.GetPosition(MainCanvas);
+
+                Canvas.SetLeft(tb, mousePos.X - tb.ActualWidth - 10);
+                Canvas.SetTop(tb, mousePos.Y - tb.ActualHeight - 10);
+            };
+
+            #endregion
+
+            #region MouseLeave
+
+            model.MouseLeave += (sender, args) =>
+            {
+                Border tb = null;
+
+                foreach (var child in MainCanvas.Children)
+                {
+                    if (child is Border)
+                    {
+                        if (tagGuid.Equals((child as Border).Tag))
+                        {
+                            tb = child as Border;
+                            break;
+                        }
+                    }
+                }
+
+                if (tb == null)
+                    return;
+
+                tb.Visibility = Visibility.Collapsed;
+
+                var geo = model.Model as GeometryModel3D;
+
+                if (geo != null)
+                {
+                    geo.Material = oldfrontm;
+                    geo.BackMaterial = oldbackm;
+                }
+            };
+
+            #endregion
+
+            model.MouseDown += (sender, args) =>
+            {
+                args.Handled = true;
+
+                PropertyHelper.BrowseObjectProperties(elm);
             };
 
             /**/
@@ -1461,6 +1627,55 @@ namespace BriefFiniteElementNet.Controls
         {
             bldr.AddSphere(new Point3D(nde.Location.X, nde.Location.Y, nde.Location.Z),
                 ElementVisualThickness*2, 20, 20);
+        }
+
+        private void AddMpcElement(MeshBuilder bldr, MpcElement elm)
+        {
+            PolygonYz section = null;
+
+            if (elm.Nodes.Count(i => !ReferenceEquals(i, null)) < 2)
+                return;
+
+            var r = ElementVisualThickness / 2;
+
+            var cnt = (Node)null;
+
+            if (cnt == null)
+            {
+                cnt = elm.Nodes.First(i => !ReferenceEquals(i, null));
+
+                /*
+                for (int i = 0; i < elm.Nodes.Count; i++)
+                {
+                    for (int j = 0; j < elm.Nodes.Count; j++)
+                    {
+                        if(i==j)
+                            continue;
+
+                        var st = elm.Nodes[i].Location.ToPoint3D();
+                        var en = elm.Nodes[j].Location.ToPoint3D();
+
+                        bldr.AddPipe(st, en, ElementVisualThickness / 2, ElementVisualThickness / 1.9, 4);
+                    }
+                }
+                */
+            }
+            //else
+            {
+                for (var i = 0; i < elm.Nodes.Count; i++)
+                {
+                    if (ReferenceEquals(elm.Nodes[i], null))
+                        continue;
+
+                    if (ReferenceEquals(elm.Nodes[i], cnt))
+                        continue;
+
+                    var st = elm.Nodes[i].Location.ToPoint3D();
+                    var en = cnt.Location.ToPoint3D();
+
+                    bldr.AddPipe(st, en, ElementVisualThickness / 2, ElementVisualThickness / 1.9, 4);
+                }
+            }
         }
 
         private void AddNodalLoad_Force(MeshBuilder bldr, Node nde,NodalLoad load)

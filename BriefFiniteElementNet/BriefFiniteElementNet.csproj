@@ -75,6 +75,7 @@
     <Compile Include="Elements\TriangleCoordinatedMechanicalProperties.cs" />
     <Compile Include="Elements\TriangleCoordinatedGeometricProperties.cs" />
     <Compile Include="Elements\OrthotropicMaterial.cs" />
+    <Compile Include="IRrefFinder.cs" />
     <Compile Include="Materials\BaseTriangleMaterial.cs" />
     <Compile Include="Materials\UniformTriangleMaterial.cs" />
     <Compile Include="Elements\MpcElement.cs" />
@@ -219,6 +220,7 @@
     <None Include="Elements\BarElement.md" />
     <None Include="Elements\FrameElement2Node.md" />
     <None Include="ElementHelpers\IElementHelper.md" />
+    <None Include="Elements\RigidElement.md" />
     <None Include="Elements\SdofMass.md" />
     <None Include="Elements\Spring1D.md" />
     <None Include="Elements\TelepathyLink.md" />
@@ -238,6 +240,9 @@
       <Project>{82c63c6b-651a-4308-8b89-b4c643f3a7c2}</Project>
       <Name>BriefFiniteElementNet.Common</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Math\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
