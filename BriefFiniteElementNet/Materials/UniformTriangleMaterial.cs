@@ -6,6 +6,7 @@ using BriefFiniteElementNet.Elements;
 
 namespace BriefFiniteElementNet.Materials
 {
+    [Obsolete("Use BaseMaterial instead")]
     public class UniformTriangleMaterial : BaseTriangleMaterial
     {
         public double E, Nu;
@@ -13,13 +14,14 @@ namespace BriefFiniteElementNet.Materials
         public override TriangleCoordinatedMechanicalProperties GetMaterialPropertiesAt(TriangleElement targetElement, params double[] isoCoords)
         {
             var buf = new TriangleCoordinatedMechanicalProperties();
-            var mat = new OrthotropicMaterial();
+            var mat = new AnisotropicMaterialInfo();
 
             mat.Ex = mat.Ey = mat.Ez = this.E;
 
-            mat.nu_xy = mat.nu_yx =
-                mat.nu_yz = mat.nu_zy =
-                    mat.nu_xz = mat.nu_zx = this.Nu;
+            mat.NuXy = mat.NuYx =
+                mat.NuYz = mat.NuZy =
+                    mat.NuXz = mat.NuZx =
+                        this.Nu;
 
             buf.Matterial = mat;
 

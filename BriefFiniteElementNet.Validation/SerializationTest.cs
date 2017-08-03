@@ -11,7 +11,7 @@ namespace BriefFiniteElementNet.Validation
         {
             var model = StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
 
-            BriefFiniteElementNet.XamlSerialization.XamlSerializer.Serialize(model);
+            //BriefFiniteElementNet.XamlSerialization.XamlSerializer.Serialize(model);
         }
     }
 }

@@ -6,9 +6,9 @@ using System.Text;
 namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
-    /// Represents a base class that represents geometrical of a specific location of cross section.
+    /// Represents a class that represents cross section geometrical properties at specific location of length of 1D elements.
     /// </summary>
-    public class BarCrossSectionGeometricProperties
+    public class _1DCrossSectionGeometricProperties
     {
         private double _a;
         private double _ay;

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Sections
 {
-    public class UniformTriangleThickness : BaseTriangleSection
+    public class UniformParametric2DSection : Base2DSection
     {
         public double T;
 
@@ -14,9 +14,9 @@ namespace BriefFiniteElementNet.Sections
             return T;
         }
 
-        public override int GetMaxFunctionOrder()
+        public override int[] GetMaxFunctionOrder()
         {
-            return 0;
+            return new[] {0, 0, 0};
         }
     }
 }

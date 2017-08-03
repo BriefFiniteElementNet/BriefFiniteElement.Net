@@ -45,7 +45,7 @@ namespace BriefFiniteElementNet
                 if (!candidates.Contains(array))
                 {
                     candidates.Push(array);
-                    Console.WriteLine("Freeing");
+                    //Console.WriteLine("Freeing");
                 }
         }
 

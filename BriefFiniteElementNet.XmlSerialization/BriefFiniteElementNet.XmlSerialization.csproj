@@ -50,10 +50,6 @@
       <Project>{7cda20d4-9bc8-4bc3-9f22-cb86cd4dc3e1}</Project>
       <Name>BriefFiniteElementNet</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ExtendedXmlSerializer\ExtendedXmlSerializer.csproj">
-      <Project>{522535d2-c7b6-4e7e-b2c9-60ab15fb294e}</Project>
-      <Name>ExtendedXmlSerializer</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

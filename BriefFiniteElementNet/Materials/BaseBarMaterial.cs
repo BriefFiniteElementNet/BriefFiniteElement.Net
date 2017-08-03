@@ -1,10 +1,12 @@
-﻿using BriefFiniteElementNet.Elements;
+﻿using System;
+using BriefFiniteElementNet.Elements;
 
 namespace BriefFiniteElementNet.Materials
 {
     /// <summary>
     /// Represents a base class for BarElement's materials
     /// </summary>
+    [Obsolete("Use BaseMaterial instead")]
     public abstract class BaseBarMaterial
     {
         /// <summary>

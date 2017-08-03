@@ -16,18 +16,28 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (elm == null)
                 throw new Exception();
 
-            var trans = elm.GetTransformationMatrix();
-
             var nb = helper.GetBMaxOrder(targetElement);
-            var nd = elm.Material.GetMaxFunctionOrder() + elm.Section.GetMaxFunctionOrder();
+            var nd = elm.Material.GetMaxFunctionOrder();
+            var nt = elm.Section.GetMaxFunctionOrder();
             var nj = helper.GetDetJOrder(targetElement);
 
-            var ng = (2*nb + nd + nj)/2 + 1;
+
+            var sum = new int[3];
+
+            foreach (var i in new int[][] { nb, nd, nb, nt, nj })
+                for (int j = 0; j < 3; j++)
+                    sum[j] += i[j];
+
+            var nXi = sum[0] / 2 + 1;
+            var nEta = sum[1] / 2 + 1;
+            var nGama = sum[2] / 2 + 1;
+
+
+            //var ng = (2*nb + nd + nj)/2 + 1;
             var intg = new GaussianIntegrator();
 
             intg.A1 = 0;
             intg.A2 = 1;
-            intg.GammaPointCount = 1;
 
             intg.F1 = (gama => 0);
             intg.F2 = (gama => 1);
@@ -36,7 +46,9 @@ namespace BriefFiniteElementNet.ElementHelpers
             intg.G1 = (eta, gamma) => -1;
             intg.G2 = (eta, gamma) => +1;
 
-            intg.XiPointCount = ng;
+            intg.GammaPointCount = nGama;
+            intg.XiPointCount = nXi;
+            intg.EtaPointCount = nEta;
 
             intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
             {
@@ -45,7 +57,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 var j = helper.GetJMatrixAt(elm, xi);
 
                 var buf_ = b.Transpose() * d * b;
-                buf_.MultiplyByConstant(j.Determinant());
+                buf_.MultiplyByConstant(Math.Abs(j.Determinant()));
 
                 return buf_;
             });
@@ -62,29 +74,41 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (elm == null)
                 throw new Exception();
 
-            var trans = elm.GetTransformationMatrix();
-
             var nn = helper.GetNMaxOrder(targetElement);
-            
-            var nRho = elm.Material.GetMaxFunctionOrder() + elm.Section.GetMaxFunctionOrder();
-
+            var nd = elm.Material.GetMaxFunctionOrder();
+            var nt = elm.Section.GetMaxFunctionOrder();
             var nj = helper.GetDetJOrder(targetElement);
 
-            var ng = (2*nn + nRho + nj)/2 + 1;
+            var sum = new int[3];
+
+            foreach (var i in new int[][] { nn, nd,  nt, nn, nj })
+                for (int j = 0; j < 3; j++)
+                    sum[j] += i[j];
+
+            var nXi = sum[0] / 2 + 1;
+            var nEta = sum[1] / 2 + 1;
+            var nGama = sum[2] / 2 + 1;
+
+
+            //var nRho = elm.Material.GetMaxFunctionOrder().Max() + elm.Section.GetMaxFunctionOrder();
+
+            //var ng = (2*nn + nRho + nj)/2 + 1;
 
             var intg = new GaussianIntegrator();
 
+            intg.GammaPointCount = nGama;
+            intg.XiPointCount = nXi;
+            intg.EtaPointCount = nEta;
+
             intg.A1 = 0;
             intg.A2 = 1;
-            intg.GammaPointCount = 1;
 
             intg.F1 = (gama => 0);
             intg.F2 = (gama => 1);
-            intg.EtaPointCount = 1;
 
             intg.G1 = (eta, gamma) => -1;
             intg.G2 = (eta, gamma) => +1;
-            intg.XiPointCount = ng;
+            //intg.XiPointCount = ng;
 
             intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
             {
@@ -156,21 +180,32 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (elm == null)
                 throw new Exception();
 
-            var trans = elm.GetTransformationMatrix();
-
             var nn = helper.GetNMaxOrder(targetElement);
-
-            var nRho = elm.Material.GetMaxFunctionOrder() + elm.Section.GetMaxFunctionOrder();
-
+            var nd = elm.Material.GetMaxFunctionOrder();
+            var nt = elm.Section.GetMaxFunctionOrder();
             var nj = helper.GetDetJOrder(targetElement);
 
-            var ng = (2 * nn + nRho + nj) / 2 + 1;
+            var sum = new int[3];
+
+            foreach (var i in new int[][] { nn, nd, nt, nn, nj })
+                for (int j = 0; j < 3; j++)
+                    sum[j] += i[j];
+
+            var nXi = sum[0] / 2 + 1;
+            var nEta = sum[1] / 2 + 1;
+            var nGama = sum[2] / 2 + 1;
+
+            //var nRho = elm.Material.GetMaxFunctionOrder().Max() + elm.Section.GetMaxFunctionOrder();
+            //var ng = (2 * nn + nRho + nj) / 2 + 1;
 
             var intg = new GaussianIntegrator();
 
+            intg.GammaPointCount = nGama;
+            intg.XiPointCount = nXi;
+            intg.EtaPointCount = nEta;
+
             intg.A1 = 0;
             intg.A2 = 1;
-            intg.GammaPointCount = 1;
 
             intg.F1 = (gama => 0);
             intg.F2 = (gama => 1);
@@ -178,7 +213,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             intg.G1 = (eta, gamma) => -1;
             intg.G2 = (eta, gamma) => +1;
-            intg.XiPointCount = ng;
+            //intg.XiPointCount = ng;
 
             intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
             {
@@ -206,14 +241,37 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var trans = tri.GetLambdaMatrix().Transpose();
 
-            var nb = helper.GetBMaxOrder(targetElement);
+            //var nb = helper.GetBMaxOrder(targetElement);
+            //var nd = tri.Material.GetMaxFunctionOrder();
+            //var nt = tri.Section.GetMaxFunctionOrder().Max();
+            //var nj = helper.GetDetJOrder(targetElement);
+
+
+            var nn = helper.GetNMaxOrder(targetElement);
             var nd = tri.Material.GetMaxFunctionOrder();
             var nt = tri.Section.GetMaxFunctionOrder();
             var nj = helper.GetDetJOrder(targetElement);
 
-            var ng = (nb + nd + nt + nj)/2 + 1;
+            var sum = new int[3];
+
+            foreach (var i in new int[][] { nn, nd, nt, nn, nj })
+                for (int j = 0; j < 3; j++)
+                    sum[j] += i[j];
+
+            var nXi = sum[0] / 2 + 1;
+            var nEta = sum[1] / 2 + 1;
+            var nGama = sum[2] / 2 + 1;
+
+
+
+
+            //var ng = (nb + nd + nt + nj)/2 + 1;
 
             var intg = new GaussianIntegrator();
+
+            intg.GammaPointCount = nGama;
+            intg.XiPointCount = nXi;
+            intg.EtaPointCount = nEta;
 
             intg.A2 = 1;
             intg.A1 = 0;
@@ -224,8 +282,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             intg.G2 = ((eta, gama) => 1 - eta);
             intg.G1 = ((eta, gama) => 0);
 
-            intg.GammaPointCount = 1;
-            intg.XiPointCount = intg.EtaPointCount = ng;
+            //intg.GammaPointCount = 1;
+            //intg.XiPointCount = intg.EtaPointCount = ng;
 
             intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
             {
@@ -247,5 +305,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             return res;
         }
+
+        
     }
 }

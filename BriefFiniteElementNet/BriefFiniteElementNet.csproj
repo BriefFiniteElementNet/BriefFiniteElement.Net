@@ -58,7 +58,7 @@
     <Compile Include="ElementHelpers\EulerBernoulliBeamHelper.cs" />
     <Compile Include="ElementHelpers\IElementHelper.cs" />
     <Compile Include="ElementHelpers\TrussHelper.cs" />
-    <Compile Include="Elements\BarCrossSectionGeometricProperties.cs" />
+    <Compile Include="Elements\_1DCrossSectionGeometricProperties.cs" />
     <Compile Include="Elements\BarCrossSectionMechanicalProperties.cs" />
     <Compile Include="Elements\BarElementBehaviours.cs" />
     <Compile Include="CheckingUtil.cs" />
@@ -74,20 +74,27 @@
     <Compile Include="Elements\TelepathyLink.cs" />
     <Compile Include="Elements\TriangleCoordinatedMechanicalProperties.cs" />
     <Compile Include="Elements\TriangleCoordinatedGeometricProperties.cs" />
-    <Compile Include="Elements\OrthotropicMaterial.cs" />
-    <Compile Include="IRrefFinder.cs" />
+    <Compile Include="Elements\AnisotropicMaterialInfo.cs" />
+    <Compile Include="Loads\UniformLoad.cs" />
+    <Compile Include="Materials\BaseMaterial.cs" />
+    <Compile Include="Materials\UniformIsotropicMaterial.cs" />
+    <Compile Include="Materials\UniformAnisotropicMaterial.cs" />
+    <Compile Include="Mathh\DenseIrrefFinder.cs" />
+    <Compile Include="Mathh\IRrefFinder.cs" />
     <Compile Include="Materials\BaseTriangleMaterial.cs" />
     <Compile Include="Materials\UniformTriangleMaterial.cs" />
     <Compile Include="Elements\MpcElement.cs" />
+    <Compile Include="Mathh\LinkedListIrrefFinder.cs" />
     <Compile Include="MpcElementCollection.cs" />
     <Compile Include="PlateBendingStressTensor.cs" />
-    <Compile Include="Sections\BaseBarElementCrossSection.cs" />
+    <Compile Include="ReflectionUtils.cs" />
+    <Compile Include="Sections\Base1DSection.cs" />
     <Compile Include="Materials\BaseBarMaterial.cs" />
     <Compile Include="Elements\ConcentratedMass.cs" />
     <Compile Include="Elements\CstElement.cs" />
     <Compile Include="Elements\DktElement.cs" />
-    <Compile Include="Sections\BaseTriangleSection.cs" />
-    <Compile Include="Sections\UniformParametricBarElementCrossSection.cs" />
+    <Compile Include="Sections\Base2DSection.cs" />
+    <Compile Include="Sections\UniformParametric1DSection.cs" />
     <Compile Include="Elements\SdofMass.cs" />
     <Compile Include="Elements\Spring1D.cs" />
     <Compile Include="Elements\TriangleElement.cs" />
@@ -127,7 +134,7 @@
     <Compile Include="RigidElementCollection.cs" />
     <Compile Include="SectionGenerator.cs" />
     <Compile Include="FemNetSerializationBinder.cs" />
-    <Compile Include="Sections\UniformTriangleThickness.cs" />
+    <Compile Include="Sections\UniformParametric2DSection.cs" />
     <Compile Include="SimplePermuteManager.cs" />
     <Compile Include="SolverConfiguration.cs" />
     <Compile Include="SolverFailException.cs" />
@@ -199,6 +206,7 @@
     <Compile Include="StructureGenerator.cs" />
     <Compile Include="StructurePart.cs" />
     <Compile Include="Elements\Tetrahedral.cs" />
+    <Compile Include="ThrowUtil.cs" />
     <Compile Include="Trace.cs" />
     <Compile Include="TraceUtil.cs" />
     <Compile Include="Elements\TrussElement2Node.cs" />
@@ -225,6 +233,7 @@
     <None Include="Elements\Spring1D.md" />
     <None Include="Elements\TelepathyLink.md" />
     <None Include="Elements\Tetrahedral.md" />
+    <None Include="Mathh\IRrefFinder.md" />
     <None Include="TransformManagerL2G.md" />
     <None Include="Elements\TriangleFlatShell.md" />
     <None Include="Elements\TriangleFlatShellExtensions.md" />
@@ -241,9 +250,7 @@
       <Name>BriefFiniteElementNet.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Math\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

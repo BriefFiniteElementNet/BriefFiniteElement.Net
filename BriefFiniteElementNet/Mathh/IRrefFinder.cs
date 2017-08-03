@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CCS = CSparse.Storage.CompressedColumnStorage<double>;
 
-namespace BriefFiniteElementNet
+namespace BriefFiniteElementNet.Mathh
 {
     /// <summary>
     /// Represents an interface for finders of RREF (Reduced Row Echelon Form)
@@ -15,6 +16,6 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="a">the matrix</param>
         /// <returns>RREF form</returns>
-        CSparse.Double.CompressedColumnStorage CalculateRref(CSparse.Double.CompressedColumnStorage a);
+        CSparse.Double.CompressedColumnStorage CalculateRref(CCS a);
     }
 }

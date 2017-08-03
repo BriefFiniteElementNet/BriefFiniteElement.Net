@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Elements;
 
 namespace BriefFiniteElementNet
@@ -23,9 +24,11 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// Initializes a new instance of the <see cref="Element1D"/> class.
         /// </summary>
+        [Obsolete("use Element1D(int)")]
         protected Element1D():base()
         {
         }
+        
 
         protected double e;
         protected double g;
@@ -87,6 +90,11 @@ namespace BriefFiniteElementNet
         }
 
         public override Matrix GetLambdaMatrix()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IElementHelper[] GetHelpers()
         {
             throw new NotImplementedException();
         }

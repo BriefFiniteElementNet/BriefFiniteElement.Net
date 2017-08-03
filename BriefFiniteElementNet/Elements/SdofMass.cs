@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Security.Permissions;
+using BriefFiniteElementNet.ElementHelpers;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -130,6 +131,11 @@ namespace BriefFiniteElementNet.Elements
         }
 
         public override Matrix GetLambdaMatrix()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IElementHelper[] GetHelpers()
         {
             throw new NotImplementedException();
         }

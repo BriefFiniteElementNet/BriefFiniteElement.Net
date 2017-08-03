@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using BriefFiniteElementNet.ElementHelpers;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -270,6 +271,8 @@ namespace BriefFiniteElementNet.Elements
         private Point[] lastNodalLocations;
         private Matrix lastLambdaMatrix = Matrix.Eye(3);
 
+        public abstract IElementHelper[] GetHelpers();
+
 
         public override void ReAssignNodeReferences(Model parent)
         {
@@ -283,5 +286,8 @@ namespace BriefFiniteElementNet.Elements
 
             base.ReAssignNodeReferences(parent);
         }
+
+
+
     }
 }

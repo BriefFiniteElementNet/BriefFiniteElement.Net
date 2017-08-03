@@ -6,6 +6,7 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Security.Permissions;
 using System.Text;
+using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Integration;
 
 namespace BriefFiniteElementNet.Elements
@@ -826,6 +827,11 @@ namespace BriefFiniteElementNet.Elements
         }
 
         public override Matrix GetLambdaMatrix()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IElementHelper[] GetHelpers()
         {
             throw new NotImplementedException();
         }

@@ -12,6 +12,8 @@ namespace BriefFiniteElementNet.ElementHelpers
     /// </summary>
     public class DktHelper:IElementHelper
     {
+        public Element TargetElement { get; set; }
+
         /// <inheritdoc/>
         public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
@@ -151,7 +153,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (tri == null)
                 throw new Exception();
 
-            var mat = tri._material.GetMaterialPropertiesAt(tri, isoCoords).Matterial;
+            var mat = tri._material.GetMaterialPropertiesAt(isoCoords);
             var t = tri.Section.GetThicknessAt(isoCoords);
 
             var d = MatrixPool.Allocate(3, 3);
@@ -163,7 +165,6 @@ namespace BriefFiniteElementNet.ElementHelpers
                 d[1, 1] = mat.Ey / (1 - mat.NuXy * mat.NuYx);
                 d[0, 1] = d[1, 0] =
                     mat.Ex*mat.NuYx/(1 - mat.NuXy*mat.NuYx);
-                //or mat.Ey * mat.NuXy / (1 - mat.NuXy * mat.NuYx);
 
                 d[2, 2] = mat.Ex/(2*(1 + mat.NuXy));
 
@@ -278,19 +279,19 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public int GetNMaxOrder(Element targetElement)
+        public int[] GetNMaxOrder(Element targetElement)
         {
             throw new NotImplementedException();
         }
 
-        public int GetBMaxOrder(Element targetElement)
+        public int[] GetBMaxOrder(Element targetElement)
         {
-            return 0;
+            return new int[] { 2, 2, 0 };
         }
 
-        public int GetDetJOrder(Element targetElement)
+        public int[] GetDetJOrder(Element targetElement)
         {
-            return 0;
+            return new int[] { 0, 0, 0 };
         }
 
         public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation)

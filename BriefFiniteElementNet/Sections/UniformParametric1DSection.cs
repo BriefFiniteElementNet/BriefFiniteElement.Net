@@ -6,10 +6,8 @@ namespace BriefFiniteElementNet.Sections
     /// Represents a uniform section for <see cref="BarElement"/> which defines section properties such 
     /// as area or area moments using <see cref="double"/> properties.
     /// </summary>
-    public class UniformParametricBarElementCrossSection : BaseBarElementCrossSection
+    public class UniformParametric1DSection : Base1DSection
     {
-
-
         private double _a;
         private double _ay;
         private double _az;
@@ -104,9 +102,9 @@ namespace BriefFiniteElementNet.Sections
             set { _j = value; }
         }
 
-        public override BarCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double x)
+        public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double x)
         {
-            var buf = new BarCrossSectionGeometricProperties();
+            var buf = new _1DCrossSectionGeometricProperties();
 
             buf.A = this._a;
             buf.Ay = this._ay;
@@ -118,9 +116,9 @@ namespace BriefFiniteElementNet.Sections
             return buf;
         }
 
-        public override int GetMaxFunctionOrder()
+        public override int[] GetMaxFunctionOrder()
         {
-            return 0;
+            return new int[] {0, 0, 0};
         }
     }
 }

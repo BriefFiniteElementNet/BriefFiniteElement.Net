@@ -5,10 +5,10 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Sections
 {
-    public abstract class BaseTriangleSection
+    public abstract class Base2DSection
     {
         public abstract double GetThicknessAt(params double[] isoCoords);
 
-        public abstract int GetMaxFunctionOrder();
+        public abstract int[] GetMaxFunctionOrder();
     }
 }

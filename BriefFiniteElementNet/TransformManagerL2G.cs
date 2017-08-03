@@ -79,6 +79,19 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public Displacement TransformLocalToGlobal(Displacement vector)
+        {
+            var disp = TransformLocalToGlobal(vector.Displacements);
+            var rot = TransformLocalToGlobal(vector.Rotations);
+
+            return new Displacement(disp, rot);
+        }
+
+        /// <summary>
         /// Transforms the specified point.
         /// </summary>
         /// <param name="point">The point.</param>
@@ -94,6 +107,23 @@ namespace BriefFiniteElementNet
 
             return new Point(buf[0], buf[1], buf[2]);
         }
+
+
+        /// <summary>
+        /// Transforms the specified point.
+        /// </summary>
+        /// <param name="points">The point.</param>
+        /// <returns>Transformed point (point in new coordination system : global)</returns>
+        public Point[] TransformLocalToGlobal(IEnumerable<Point> points)
+        {
+            var buf = new List<Point>();
+
+            foreach (var point in points)
+                buf.Add(TransformLocalToGlobal(point));
+
+            return buf.ToArray();
+        }
+
 
         /// <summary>
         /// Transforms the defined square matrix from local system to global system.
@@ -195,6 +225,19 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
+        /// Transforms back the specified displacement.
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public Displacement TransformGlobalToLocal(Displacement vector)
+        {
+            var disp = TransformGlobalToLocal(vector.Displacements);
+            var rot = TransformGlobalToLocal(vector.Rotations);
+
+            return new Displacement(disp, rot);
+        }
+
+        /// <summary>
         /// Transforms back the specified point.
         /// </summary>
         /// <param name="point">The vector.</param>
@@ -210,6 +253,23 @@ namespace BriefFiniteElementNet
 
             return new Point(buf[0], buf[1], buf[2]);
         }
+
+
+        /// <summary>
+        /// Transforms back the specified point.
+        /// </summary>
+        /// <param name="points">The vector.</param>
+        /// <returns>Back transformed point (point in original coordination system : local)</returns>
+        public Point[] TransformGlobalToLocal(IEnumerable<Point> points)
+        {
+            var buf = new List<Point>();
+
+            foreach (var point in points)
+                buf.Add(TransformGlobalToLocal(point));
+
+            return buf.ToArray();
+        }
+
 
         /// <summary>
         /// Transforms the defined square matrix from global system to local system.

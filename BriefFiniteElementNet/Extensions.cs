@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml;
 using CSparse.Double;
 using BriefFiniteElementNet.Geometry;
+using CSparse.Storage;
 
 namespace BriefFiniteElementNet
 {
@@ -271,6 +272,27 @@ namespace BriefFiniteElementNet
 
                 var st = csr.ColumnPointers[i];
                 var en = csr.ColumnPointers[i+1];
+
+                for (int j = st; j < en; j++)
+                {
+                    var row = csr.RowIndices[j];
+                    buf[row, col] = csr.Values[j];
+                }
+            }
+
+            return buf;
+        }
+
+        public static Matrix ToDenseMatrix(this CompressedColumnStorage<double> csr)
+        {
+            var buf = new Matrix(csr.RowCount, csr.ColumnCount);
+
+            for (int i = 0; i < csr.ColumnPointers.Length - 1; i++)
+            {
+                var col = i;
+
+                var st = csr.ColumnPointers[i];
+                var en = csr.ColumnPointers[i + 1];
 
                 for (int j = st; j < en; j++)
                 {

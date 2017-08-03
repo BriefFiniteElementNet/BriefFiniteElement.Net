@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
@@ -10,8 +11,12 @@ using BriefFiniteElementNet.Controls;
 using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Materials;
+using BriefFiniteElementNet.Mathh;
 using BriefFiniteElementNet.Sections;
 using BriefFiniteElementNet.Validation;
+using CSparse;
+using CSparse.Double.Factorization;
+using CSparse.Storage;
 
 namespace BriefFiniteElementNet.TestConsole
 {
@@ -20,8 +25,10 @@ namespace BriefFiniteElementNet.TestConsole
         [STAThread]
         static void Main(string[] args)
         {
-            TestXmlSerialization();
+            //Test_P_Delta_matrix();
+            BarElementTester.TestBarStiffness();
 
+            //QrTest();
             Console.ReadKey();
         }
 
@@ -47,7 +54,7 @@ namespace BriefFiniteElementNet.TestConsole
 
         private static void TestXmlSerialization()
         {
-            BriefFiniteElementNet.XmlSerialization.Tester.Test();
+            //BriefFiniteElementNet.XmlSerialization.Tester.Test();
         }
 
         private static void Test2()
@@ -93,8 +100,8 @@ namespace BriefFiniteElementNet.TestConsole
             };
 
 
-            barElement.Material = new UniformBarMaterial(e, g, rho);
-            barElement.Section = new UniformParametricBarElementCrossSection() {Iy = iy, Iz = iz, A = a,J=j};
+            //barElement.Material = new UniformBarMaterial(e, g, rho);
+            barElement.Section = new UniformParametric1DSection() {Iy = iy, Iz = iz, A = a,J=j};
 
             frameElement.MassFormulationType = MassFormulation.Consistent;
 
@@ -145,8 +152,8 @@ namespace BriefFiniteElementNet.TestConsole
 
             var tri = new TriangleElement();
             tri.Behavior = FlatShellBehaviours.FullThinShell;
-            tri.Section = new UniformTriangleThickness() { T = t };
-            tri.Material = new UniformTriangleMaterial() {E = e, Nu = nu};
+            tri.Section = new UniformParametric2DSection() { T = t };
+            tri.Material = new UniformIsotropicMaterial(e, nu);// {E = e, Nu = nu};
 
             tri.Nodes[0] = n1;
             tri.Nodes[1] = n2;
@@ -215,9 +222,42 @@ namespace BriefFiniteElementNet.TestConsole
 
         }
 
+        private static void QrTest()
+        {
+            var coord = new CoordinateStorage<double>(7, 7, 1);
+
+            coord.At(0, 2, 1);
+            coord.At(0, 3, 1);
+            coord.At(0, 4, 3);
+            coord.At(0, 6, 2);
+
+            coord.At(1, 2, 2);
+            coord.At(1, 3, 6);
+            coord.At(1, 4, 1);
+            coord.At(1, 6, 5);
+
+            coord.At(2, 2, 3);
+            coord.At(2, 3, 7);
+            coord.At(2, 4, 4);
+            coord.At(2, 6, 7);
+
+            var ccs = coord.ToCCs();
+
+            var qr = SparseQR.Create(ccs, ColumnOrdering.Natural);
+
+            //var r = GetFactorR(qr, "R").ToDenseMatrix();
+            //var q = GetFactorR(qr, "Q").ToDenseMatrix();
+
+            
+            //var t = (q * r.Transpose());
+            
+        }
+
+        
+
         private static void Test_P_Delta_matrix()
         {
-            var model = StructureGenerator.Generate3DFrameElementGrid(5, 5, 10);
+            var model = StructureGenerator.Generate3DFrameElementGrid(10, 10, 10);
 
 
             var zs = model.Nodes.Where(i => i.Constraints != Constraint.Fixed)
@@ -244,7 +284,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             #endregion
 
-            CalcUtil.GenerateP_Delta_Mpc(model, LoadCase.DefaultLoadCase);
+            CalcUtil.GenerateP_Delta_Mpc(model, LoadCase.DefaultLoadCase,new DenseIrrefFinder());
 
 
         }

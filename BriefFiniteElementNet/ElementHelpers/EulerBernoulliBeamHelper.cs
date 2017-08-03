@@ -24,6 +24,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             _direction = direction;
         }
 
+        public Element TargetElement { get; set; }
+
         /// <inheritdoc/>
         public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
@@ -123,9 +125,9 @@ namespace BriefFiniteElementNet.ElementHelpers
             var ei = 0.0;
 
             if (_direction == BeamDirection.Y)
-                ei = geo.Iz*mech.E;
+                ei = geo.Iz*mech.Ex;
             else
-                ei = geo.Iy * mech.E;
+                ei = geo.Iy * mech.Ex;
 
             buf[0, 0] = ei;
 
@@ -147,7 +149,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var buf = new Matrix(1, 1);
 
-            buf[0, 0] = geo.A*mech.Density;
+            buf[0, 0] = geo.A*mech.Rho;
 
             return buf;
         }
@@ -275,19 +277,19 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public int GetNMaxOrder(Element targetElement)
+        public int[] GetNMaxOrder(Element targetElement)
         {
-            return 3;
+            return new int[] {3, 0, 0};
         }
 
-        public int GetBMaxOrder(Element targetElement)
+        public int[] GetBMaxOrder(Element targetElement)
         {
-            return 1;
+            return new[] {1,0,0};
         }
 
-        public int GetDetJOrder(Element targetElement)
+        public int[] GetDetJOrder(Element targetElement)
         {
-            return 0;
+            return new int[] {0, 0, 0};
         }
 
         public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation)

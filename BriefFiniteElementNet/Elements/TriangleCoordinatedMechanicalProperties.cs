@@ -10,9 +10,9 @@ namespace BriefFiniteElementNet.Elements
     /// </summary>
     public class TriangleCoordinatedMechanicalProperties
     {
-        private OrthotropicMaterial mat;
+        private AnisotropicMaterialInfo mat;
 
-        public OrthotropicMaterial Matterial
+        public AnisotropicMaterialInfo Matterial
         {
             get { return mat; }
             set { mat = value; }

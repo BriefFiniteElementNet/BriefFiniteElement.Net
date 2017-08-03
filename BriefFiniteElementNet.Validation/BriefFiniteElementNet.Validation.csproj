@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Case_01\Readme.md" />
+    <Compile Include="BarElementTester.cs" />
     <Compile Include="CustomMeshBuilder.cs" />
     <Compile Include="FlatShellElementChecker.cs" />
     <Compile Include="ElementEquibiliriumChecker.cs" />
@@ -72,10 +73,6 @@
     <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj">
       <Project>{82c63c6b-651a-4308-8b89-b4c643f3a7c2}</Project>
       <Name>BriefFiniteElementNet.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BriefFiniteElementNet.XamlSerialization\BriefFiniteElementNet.XamlSerialization.csproj">
-      <Project>{174c7845-8a05-4e08-a0bc-1211faf8ef20}</Project>
-      <Name>BriefFiniteElementNet.XamlSerialization</Name>
     </ProjectReference>
     <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj">
       <Project>{7cda20d4-9bc8-4bc3-9f22-cb86cd4dc3e1}</Project>

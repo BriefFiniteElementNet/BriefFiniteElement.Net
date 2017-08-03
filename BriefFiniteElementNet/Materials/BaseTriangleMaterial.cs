@@ -9,6 +9,7 @@ namespace BriefFiniteElementNet.Materials
     /// <summary>
     /// Represents a base class for TriangleElement's materials
     /// </summary>
+    [Obsolete("Use BaseMaterial instead")]
     public abstract class BaseTriangleMaterial
     {
         /// <summary>

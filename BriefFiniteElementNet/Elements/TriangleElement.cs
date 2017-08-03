@@ -16,9 +16,9 @@ namespace BriefFiniteElementNet.Elements
         }
 
 
-        public BaseTriangleMaterial _material;
+        public BaseMaterial _material;
 
-        public BaseTriangleSection _section;
+        public Base2DSection _section;
 
         public FlatShellBehaviour _behavior;
 
@@ -26,13 +26,13 @@ namespace BriefFiniteElementNet.Elements
 
 
 
-        public BaseTriangleMaterial Material
+        public BaseMaterial Material
         {
             get { return _material; }
             set { _material = value; }
         }
 
-        public BaseTriangleSection Section
+        public Base2DSection Section
         {
             get { return _section; }
             set { _section = value; }
@@ -139,6 +139,11 @@ namespace BriefFiniteElementNet.Elements
             });
 
             return lambda;
+        }
+
+        public override IElementHelper[] GetHelpers()
+        {
+            throw new NotImplementedException();
         }
 
 

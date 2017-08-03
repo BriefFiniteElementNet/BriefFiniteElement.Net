@@ -12,6 +12,8 @@ namespace BriefFiniteElementNet.ElementHelpers
     /// </summary>
     public interface IElementHelper
     {
+        Element TargetElement { get; set; }
+
         /// <summary>
         /// Gets the B matrix at defined isometric coordinates (B is derivation of N regarding to local x or y or z, not regarding to ξ, η or γ -- it is ∂N/∂x or ..., it is not ∂N/∂ξ or ...).
         /// </summary>
@@ -147,9 +149,8 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// Will use for determining Gaussian sampling count
         /// </remarks>
         /// <param name="targetElement">The target element.</param>
-        /// 
-        /// <returns>Gaussian sampling point count</returns>
-        int GetNMaxOrder(Element targetElement);
+        /// <returns>Maximum order</returns>
+        int[] GetNMaxOrder(Element targetElement);
 
         /// <summary>
         /// Gets the maximum degree of B matrix members.
@@ -158,9 +159,8 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// Will use for determining Gaussian sampling count
         /// </remarks>
         /// <param name="targetElement">The target element.</param>
-        /// 
         /// <returns>Gaussian sampling point count</returns>
-        int GetBMaxOrder(Element targetElement);
+        int[] GetBMaxOrder(Element targetElement);
 
         /// <summary>
         /// Gets the degree of Det(J).
@@ -169,9 +169,8 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// Will use for determining Gaussian sampling count
         /// </remarks>
         /// <param name="targetElement">The target element.</param>
-        /// 
         /// <returns>Gaussian sampling point count</returns>
-        int GetDetJOrder(Element targetElement);
+        int[] GetDetJOrder(Element targetElement);
 
         /// <summary>
         /// Gets the equivalent nodal loads because of applying <see cref="load" /> on the <see cref="targetElement" />.

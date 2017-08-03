@@ -24,6 +24,11 @@ N"3 = -6 * xi			(help of (B.29)
 N"4 = L * (3 xi + 1)	(help of (B.30)
 N"5 = L * 6 xi
 
+
+#Example converting distributed loads to end moments with shape etc
+
+https://www.ethz.ch/content/dam/ethz/special-interest/baug/ibk/structural-mechanics-dam/education/femI/Numerical_Integration.pdf
+
 octave
 --
 syms xi l c
@@ -44,6 +49,7 @@ ans:
 -12⋅c⋅l⋅ξ + 6⋅ξ  , - 6⋅c⋅l⋅ξ + l⋅(3⋅ξ - 1) , 12⋅c⋅l⋅ξ - 6⋅ξ  , 6⋅c⋅l⋅ξ + l⋅(3⋅ξ + 1)
 
 -12*c*l*xi + 6*xi  , - 6*c*l*xi + l*(3*xi - 1) , 12*c*l*xi - 6*xi  , 6*c*l*xi + l*(3*xi + 1)
+
 
 
 

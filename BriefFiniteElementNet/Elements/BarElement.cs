@@ -34,9 +34,10 @@ namespace BriefFiniteElementNet.Elements
         //private BarElementEndConnection _startConnection = BarElementEndConnection.Fixed;
         //private BarElementEndConnection _endtConnection = BarElementEndConnection.Fixed;
         private BarElementBehaviour _behavior;
-        private BaseBarElementCrossSection _section;
+        private Base1DSection _section;
+        [Obsolete]
         private BaseBarMaterial _matterial;
-
+        private BaseMaterial _material;
 
 
         /// <summary>
@@ -127,7 +128,7 @@ namespace BriefFiniteElementNet.Elements
         /// bar.Section = new UniformParametricBarElementCrossSection(1,1,1,1,1);//sets section
         /// </code>
         /// </example>
-        public BaseBarElementCrossSection Section
+        public Base1DSection Section
         {
             get { return _section; }
             set { _section = value; }
@@ -145,10 +146,10 @@ namespace BriefFiniteElementNet.Elements
         /// bar.Section = new UniformBarMaterial(1,1);//sets material
         /// </code>
         /// </example>
-        public BaseBarMaterial Material
+        public BaseMaterial Material
         {
-            get { return _matterial; }
-            set { _matterial = value; }
+            get { return _material; }
+            set { _material = value; }
         }
 
         /// <summary>
@@ -293,6 +294,7 @@ namespace BriefFiniteElementNet.Elements
         public override Matrix ComputeDMatrixAt(params double[] location)
         {
             double e = 0.0, g = 0;//mechanical
+
             double iz = 0, iy = 0, j = 0, a = 0;//geometrical
 
             var buf = new Matrix(4, 4);
@@ -389,6 +391,11 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
+        public override IElementHelper[] GetHelpers()
+        {
+            throw new NotImplementedException();
+        }
+
         public override Matrix ComputeNMatrixAt(params double[] location)
         {
             throw new NotImplementedException();
@@ -446,7 +453,7 @@ namespace BriefFiniteElementNet.Elements
 
             var buf = mgr.TransformLocalToGlobal(local);
 
-            return local;
+            return buf;
         }
 
         public Matrix GetTransformationMatrix()
@@ -532,9 +539,11 @@ namespace BriefFiniteElementNet.Elements
         {
             var helpers = GetElementHelpers();
 
+
+
             var buf = new Matrix(12, 12);
 
-            var transMatrix = GetTransformationMatrix();
+            //var transMatrix = GetTransformationMatrix();
 
             for (var i = 0; i < helpers.Count; i++)
             {

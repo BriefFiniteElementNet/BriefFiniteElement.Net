@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.Mathh;
 using CSparse.Storage;
 using BriefFiniteElementNet.Solver;
 using CSparse;
+using CSparse.Factorization;
+using CSparse.Ordering;
 using CCS = CSparse.Double.CompressedColumnStorage;
 using Coord = CSparse.Storage.CoordinateStorage<double>;
 
@@ -1055,23 +1059,21 @@ namespace BriefFiniteElementNet
         }
 
         [Obsolete("Under development")]
-        public static CCS GenerateP_Delta_Mpc(Model target, LoadCase loadCase)
+        public static CCS GenerateP_Delta_Mpc(Model target, LoadCase loadCase,IRrefFinder rrefFinder)
         {
             target.ReIndexNodes();
 
             var n = target.Nodes.Count;
 
-            var buf = new CoordinateStorage<double>(n * 6, n * 6, 1);
+            var boundaryConditions = GetModelBoundaryConditions(target, loadCase);
 
-            
 
             var lastRow = 0;
 
             #region step 1
             //step 1: combine all eqs to one system
 
-            var filledCols = new bool[6 * n];
-            
+            //var filledCols = new bool[6 * n];
 
             var extraEqCount = 0;
 
@@ -1079,10 +1081,9 @@ namespace BriefFiniteElementNet
                 if(mpcElm.AppliesForLoadCase(loadCase))
                     extraEqCount += mpcElm.GetExtraEquationsCount();
 
-            var filledRows = new bool[extraEqCount];
+            extraEqCount += boundaryConditions.RowCount;
 
-            var allEqsCrd = new CoordinateStorage<double>(extraEqCount, n * 6, 1);
-
+            var allEqsCrd = new CoordinateStorage<double>(extraEqCount, n * 6 + 1, 1);//rows: extra eqs, cols: 6*n+1 (+1 is for right hand side)
 
             foreach (var mpcElm in target.MpcElements)
             {
@@ -1093,24 +1094,27 @@ namespace BriefFiniteElementNet
                     extras.EnumerateMembers((row, col, val) =>
                     {
                         allEqsCrd.At(row + lastRow, col, val);
-                        filledCols[col] = true;
-                        filledRows[row] = true;
                     });
 
                     lastRow += extras.RowCount;
                 }
-
             }
 
-            var nonFilledCols = filledCols.Count(i => !i);
-            var nonFilledRows = filledRows.Count(i => !i);
+            {
+                boundaryConditions.EnumerateMembers((row, col, val) =>
+                {
+                    allEqsCrd.At(row + lastRow, col, val);
+                });
 
-
+                lastRow += boundaryConditions.RowCount;
+            }
 
             var allEqs = allEqsCrd.ToCCs();
 
             #endregion
 
+            #region comment
+            /*
             #region step 2
             //step 2: create adjacency matrix of variables
 
@@ -1151,10 +1155,148 @@ namespace BriefFiniteElementNet
             }
 
             #endregion
+            */
 
+            #endregion
+
+
+            rrefFinder.CalculateRref(allEqs);
+
+
+            var q = AMD.Generate(allEqs, ColumnOrdering.MinimumDegreeAtA);
+
+            var s = new SymbolicFactorization() {q = q};
+            
+            
+
+            var qr = CSparse.Double.Factorization.SparseQR.Create(allEqs, ColumnOrdering.MinimumDegreeAtA);
+
+            var r = ((CCS)ReflectionUtils.GetFactorR(qr, "R"));
+            //var q = ((CCS)ReflectionUtils.GetFactorR(qr, "Q"));
+            //var s = ((SymbolicFactorization)ReflectionUtils.GetFactorR(qr, "S"));
+
+            
+
+
+            var idependents = new bool[allEqs.RowCount];
+
+            var rd = allEqs.ToDenseMatrix();
+
+
+            r.EnumerateMembers((row, col, val) =>
+                {
+                    if(row==col)
+                        if (Math.Abs(val) < 1e-6)
+                            return;
+
+                    idependents[row] = true;
+                }
+            );
+
+
+            //var t=qr.
             throw new NotImplementedException();
 
-            return buf.ToCCs();
+            //return buf.ToCCs();
+        }
+
+
+        /// <summary>
+        /// Gets the boundary conditions of model (support conditions) as a extra eq system for using in master slave model.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="loadCase"></param>
+        /// <returns></returns>
+        public static CCS GetModelBoundaryConditions(Model model, LoadCase loadCase)
+        {
+            var fixedDofsCount = model.Nodes.Sum(ii => FixedCount(ii.Constraints));
+
+            var n = model.Nodes.Count * 6;
+
+            var crd = new CoordinateStorage<double>(fixedDofsCount, 6 * model.Nodes.Count + 1, 1);
+
+            var cnt = 0;
+
+            foreach (var node in model.Nodes)
+            {
+                var stDof = 6 * node.Index;
+
+                var stm = node.Settlements;
+
+                #region 
+
+                if (node.Constraints.DX == DofConstraint.Fixed)
+                {
+                    crd.At(cnt , stDof + 0, 1);
+                    crd.At(cnt , n, stm.DX);
+                    cnt++;
+                }
+
+                if (node.Constraints.DY == DofConstraint.Fixed)
+                {
+                    crd.At(cnt, stDof + 1, 1);
+                    crd.At(cnt, n, stm.DY);
+                    cnt++;
+                }
+
+                if (node.Constraints.DZ == DofConstraint.Fixed)
+                {
+                    crd.At(cnt, stDof + 2, 1);
+                    crd.At(cnt, n, stm.DZ);
+                    cnt++;
+                }
+
+
+                if (node.Constraints.RX == DofConstraint.Fixed)
+                {
+                    crd.At(cnt, stDof + 3, 1);
+                    crd.At(cnt, n, stm.RX);
+                    cnt++;
+                }
+
+                if (node.Constraints.RY == DofConstraint.Fixed)
+                {
+                    crd.At(cnt, stDof + 4, 1);
+                    crd.At(cnt, n, stm.RY);
+                    cnt++;
+                }
+
+                if (node.Constraints.RZ == DofConstraint.Fixed)
+                {
+                    crd.At(cnt, stDof + 5, 1);
+                    crd.At(cnt, n, stm.RZ);
+                    cnt++;
+                }
+
+                #endregion
+            }
+            
+            return crd.ToCCs();
+        }
+
+        public static int FixedCount(Constraint cns)
+        {
+            var buf = 0;
+
+            if (cns.DX == DofConstraint.Fixed)
+                buf++;
+
+            if (cns.DY == DofConstraint.Fixed)
+                buf++;
+
+            if (cns.DZ == DofConstraint.Fixed)
+                buf++;
+
+            if (cns.RX == DofConstraint.Fixed)
+                buf++;
+
+            if (cns.RY == DofConstraint.Fixed)
+                buf++;
+
+            if (cns.RZ == DofConstraint.Fixed)
+                buf++;
+
+            return buf;
         }
 
         public static int EmptyRowCount(this CCS matrix)
@@ -1167,6 +1309,20 @@ namespace BriefFiniteElementNet
             });
 
             return buf.Count(ii => !ii);
+        }
+
+
+        public static bool IsIsotropicMaterial(AnisotropicMaterialInfo inf)
+        {
+            var arr1 = new double[] { inf.Ex, inf.Ey, inf.Ez };
+            var arr2 = new double[]
+            {
+                inf.NuXy, inf.NuYx,
+                inf.NuXz, inf.NuZx,
+                inf.NuZy, inf.NuYz
+            };
+
+            return arr1.Distinct().Count() == 1 && arr2.Distinct().Count() == 1;
         }
 
         public static int EmptyColumnCount(this CCS matrix)

@@ -12,6 +12,8 @@ namespace BriefFiniteElementNet.ElementHelpers
     /// </summary>
     public class CstHelper : IElementHelper
     {
+        public Element TargetElement { get; set; }
+
         /// <inheritdoc/>
         public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
@@ -67,7 +69,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var d = new Matrix(3, 3);
 
-            var mat = tri.Material.GetMaterialPropertiesAt(tri, isoCoords).Matterial;
+            var mat = tri.Material.GetMaterialPropertiesAt(isoCoords);
 
 
             if (tri.MembraneFormulation == MembraneFormulation.PlaneStress)
@@ -233,17 +235,17 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public int GetNMaxOrder(Element targetElement)
+        public int[] GetNMaxOrder(Element targetElement)
         {
             throw new NotImplementedException();
         }
 
-        public int GetBMaxOrder(Element targetElement)
+        public int[] GetBMaxOrder(Element targetElement)
         {
             throw new NotImplementedException();
         }
 
-        public int GetDetJOrder(Element targetElement)
+        public int[] GetDetJOrder(Element targetElement)
         {
             throw new NotImplementedException();
         }
