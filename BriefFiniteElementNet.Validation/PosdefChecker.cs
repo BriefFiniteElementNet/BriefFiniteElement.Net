@@ -10,8 +10,8 @@ namespace BriefFiniteElementNet.Validation
         public static void CheckModel(Model model,LoadCase lc)
         {
             model.ReIndexNodes();
+            //LoadCase.DefaultLoadCase
 
-            
             var fullst = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(model);
 
             var mgr = DofMappingManager.Create(model, lc);

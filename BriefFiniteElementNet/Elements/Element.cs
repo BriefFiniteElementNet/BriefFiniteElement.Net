@@ -15,6 +15,8 @@ namespace BriefFiniteElementNet.Elements
     [DebuggerDisplay("{this.GetType().Name}, Label: {Label}")]
     public abstract class Element : StructurePart
     {
+        internal int Index;
+
         [Obsolete]
         protected ElementType elementType;
 

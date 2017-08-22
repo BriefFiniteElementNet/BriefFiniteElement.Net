@@ -10,7 +10,8 @@ namespace BriefFiniteElementNet.Materials
     /// <summary>
     /// Represents a base class for general 3D materials
     /// </summary>
-    public abstract class BaseMaterial : ISerializable
+    [Serializable]
+    public abstract class BaseMaterial : ISerializable, IEquatable<BaseMaterial>
     {
         /// <summary>
         /// Gets the material properties at defined location.
@@ -42,6 +43,34 @@ namespace BriefFiniteElementNet.Materials
 
         public BaseMaterial()
         {
+        }
+
+        public bool Equals(BaseMaterial other)
+        {
+            return true;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((BaseMaterial) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return 0;
+        }
+
+        public static bool operator ==(BaseMaterial left, BaseMaterial right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(BaseMaterial left, BaseMaterial right)
+        {
+            return !Equals(left, right);
         }
     }
 }

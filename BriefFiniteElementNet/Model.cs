@@ -373,6 +373,12 @@ namespace BriefFiniteElementNet
             for (int i = 0; i < this.Nodes.Count; i++)
                 this.Nodes[i].Index = i;
         }
+
+        public void ReIndexElements()
+        {
+            for (int i = 0; i < this.Elements.Count; i++)
+                this.Elements[i].Index = i;
+        }
         #endregion
 
         #region Serialization stuff

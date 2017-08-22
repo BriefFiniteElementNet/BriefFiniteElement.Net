@@ -10,7 +10,8 @@ namespace BriefFiniteElementNet.Materials
     /// <summary>
     /// Represents a uniform (not varying) isotropic material.
     /// </summary>
-    public class UniformIsotropicMaterial: BaseMaterial
+    [Serializable]
+    public class UniformIsotropicMaterial: BaseMaterial, IEquatable<UniformIsotropicMaterial>
     {
 
         private double _youngModulus;
@@ -128,6 +129,40 @@ namespace BriefFiniteElementNet.Materials
         }
 
 
+        public bool Equals(UniformIsotropicMaterial other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return base.Equals(other) && _youngModulus.Equals(other._youngModulus) && _poissonRatio.Equals(other._poissonRatio);
+        }
 
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((UniformIsotropicMaterial) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = base.GetHashCode();
+                hashCode = (hashCode*397) ^ _youngModulus.GetHashCode();
+                hashCode = (hashCode*397) ^ _poissonRatio.GetHashCode();
+                return hashCode;
+            }
+        }
+
+        public static bool operator ==(UniformIsotropicMaterial left, UniformIsotropicMaterial right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(UniformIsotropicMaterial left, UniformIsotropicMaterial right)
+        {
+            return !Equals(left, right);
+        }
     }
 }

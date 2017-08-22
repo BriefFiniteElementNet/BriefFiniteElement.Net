@@ -59,6 +59,7 @@
     <Compile Include="IndividualTests.cs" />
     <Compile Include="ModelStaticEquibChecker.cs" />
     <Compile Include="NodeInternalExternalEquibliriumChecker.cs" />
+    <Compile Include="OpenseesValidator.cs" />
     <Compile Include="PosdefChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SerializationTest.cs" />

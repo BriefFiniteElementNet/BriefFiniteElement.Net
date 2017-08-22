@@ -403,6 +403,21 @@ namespace BriefFiniteElementNet
             return new string(buf);
         }
 
+        public string ToString_01()
+        {
+            var arr = new DofConstraint[] { dx, dy, dz, rx, ry, rz };
+
+            var buf = new char[12];
+
+            for (int i = 0; i < 6; i++)
+            {
+                buf[2 * i + 0] = arr[i] == DofConstraint.Fixed ? '1' : '0';
+                buf[2 * i + 1] = ' ';
+            }
+
+            return new string(buf).Trim();
+        }
+
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>

@@ -237,6 +237,17 @@ namespace BriefFiniteElementNet
                 vec[startIndex + 5]);
         }
 
+        public static double[] ToVector(Displacement disp)
+        {
+            var buf = new double[]
+            {
+                disp.DX, disp.DY, disp.DZ,
+                disp.RX, disp.RY, disp.RZ,
+            };
+
+            return buf;
+        }
+
         #region Operator Overloads
 
         /// <summary>
