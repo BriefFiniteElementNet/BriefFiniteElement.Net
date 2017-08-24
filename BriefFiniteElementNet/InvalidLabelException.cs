@@ -9,6 +9,12 @@ namespace BriefFiniteElementNet
     [Serializable]
     public class InvalidLabelException : BriefFiniteElementNetException
     {
+        /// <inheritdoc />
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info,context);
+        }
+
         public InvalidLabelException()
         {
         }

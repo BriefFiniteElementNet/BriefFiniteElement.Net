@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet.Elements
 
         }
 
-        protected RigidElement_MPC(SerializationInfo info, StreamingContext context) : base(info, context)
+        private RigidElement_MPC(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 
@@ -140,12 +140,6 @@ namespace BriefFiniteElementNet.Elements
         public override int GetExtraEquationsCount()
         {
             return Nodes.Count * 6;
-        }
-
-        public NodeList Nodes
-        {
-            get { return _nodes; }
-            set { _nodes = value; }
         }
     }
 }

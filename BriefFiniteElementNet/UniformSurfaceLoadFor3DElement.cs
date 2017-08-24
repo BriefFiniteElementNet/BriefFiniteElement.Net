@@ -139,9 +139,9 @@ namespace BriefFiniteElementNet
 
             info.AddValue("nodeNumbers", nodeNumbers);
 
-            info.AddValue("sx", _sx);
-            info.AddValue("sy", _sy);
-            info.AddValue("sz", _sz);
+            info.AddValue("_sx", _sx);
+            info.AddValue("_sy", _sy);
+            info.AddValue("_sz", _sz);
 
 
             base.GetObjectData(info, context);
@@ -151,11 +151,11 @@ namespace BriefFiniteElementNet
          protected UniformSurfaceLoadFor3DElement(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            _sx = info.GetDouble("sx");
-            _sy = info.GetDouble("sy");
-            _sz = info.GetDouble("sz");
+            _sx = info.GetDouble("_sx");
+            _sy = info.GetDouble("_sy");
+            _sz = info.GetDouble("_sz");
 
-             this.nodeNumbers = info.GetValue<int[]>("nodeNumbers");
+             this.nodeNumbers = (int[]) info.GetValue("nodeNumbers", typeof(int[]));
 
              //NOTE: reassigning the references of _surfaceNodes elements is done in Model.ReassignNodeReferences.
              //this is exception ...

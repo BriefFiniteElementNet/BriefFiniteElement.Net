@@ -15,6 +15,12 @@ namespace BriefFiniteElementNet
     [Serializable]
     public class MatrixException : BriefFiniteElementNetException
     {
+        /// <inheritdoc />
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info,context);
+        }
+
         public MatrixException()
         {
         }

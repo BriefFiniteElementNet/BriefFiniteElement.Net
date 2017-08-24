@@ -15,7 +15,7 @@ namespace BriefFiniteElementNet.Elements
     [Obsolete("use spring1d at the moment")]
     public class HingeLink: MpcElement
     {
-        public HingeLink(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected HingeLink(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 
@@ -35,5 +35,11 @@ namespace BriefFiniteElementNet.Elements
         {
             throw new NotImplementedException();
         }
+
+        #region ISerialization Implementation
+
+        
+
+        #endregion
     }
 }

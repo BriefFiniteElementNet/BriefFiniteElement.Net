@@ -6,6 +6,8 @@ namespace BriefFiniteElementNet.Sections
     /// Represents a uniform section for <see cref="BarElement"/> which defines section properties such 
     /// as area or area moments using <see cref="double"/> properties.
     /// </summary>
+    /// <remarks>
+    /// </remarks>
     public class UniformParametric1DSection : Base1DSection
     {
         private double _a;

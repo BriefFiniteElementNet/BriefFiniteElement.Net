@@ -62,7 +62,7 @@ namespace BriefFiniteElementNet
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("case", _case);
+            info.AddValue("_case", _case);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace BriefFiniteElementNet
         /// <param name="context">The context.</param>
         protected Load(SerializationInfo info, StreamingContext context)
         {
-            _case = info.GetValue<LoadCase>("case");
+			this._case = (BriefFiniteElementNet.LoadCase)info.GetValue("_case", typeof(BriefFiniteElementNet.LoadCase));
         }
 
         #endregion

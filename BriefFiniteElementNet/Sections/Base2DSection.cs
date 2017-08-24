@@ -7,6 +7,10 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Sections
 {
+    /// <summary>
+    /// Represents a base class for cross sections of 2D elements like triangle etc.
+    /// </summary>
+    /// <seealso cref="System.Runtime.Serialization.ISerializable" />
     [Serializable]
     public abstract class Base2DSection:ISerializable
     {

@@ -406,7 +406,7 @@ namespace BriefFiniteElementNet.Elements
         private TrussElement2Node(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _a = info.GetDouble("_a");
-            geometry = info.GetValue<PolygonYz>("geometry");
+            geometry = (PolygonYz)info.GetValue("geometry",typeof(PolygonYz));
             useOverridedProperties = info.GetBoolean("useOverridedProperties");
             _massDensity = info.GetDouble("_massDensity");
         }

@@ -113,10 +113,11 @@ namespace BriefFiniteElementNet
         /// <param name="context">The source (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
         protected StructurePart(SerializationInfo info, StreamingContext context)
         {
-            idHashCode = info.GetValue<int>("idHashCode");
-            id = info.GetValue<Guid>("id");
-            label = info.GetValue<string>("label");
-            tag = info.GetValue<string>("tag");
+			this.tag = (string)info.GetValue("tag", typeof(string));
+			this.label = (string)info.GetValue("label", typeof(string));
+			this.id = (System.Guid)info.GetValue("id", typeof(System.Guid));
+			this.idHashCode = (int)info.GetValue("idHashCode", typeof(int));
+            
         }
 
         #endregion

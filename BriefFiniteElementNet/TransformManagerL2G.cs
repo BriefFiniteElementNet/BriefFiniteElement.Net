@@ -355,10 +355,10 @@ namespace BriefFiniteElementNet
             var matrix = B;
 
             if (!A.IsSquare() || !matrix.IsSquare())
-                throw new Exception();
+                throw new ArgumentException();
 
             if (A.RowCount != 3 || matrix.RowCount % 3 != 0)
-                throw new Exception();
+                throw new ArgumentException();
 
             var count = matrix.RowCount / 3;
 
@@ -426,10 +426,10 @@ namespace BriefFiniteElementNet
             var matrix = B;
 
             if (!A.IsSquare() || !matrix.IsSquare())
-                throw new Exception();
+                throw new ArgumentException();
 
             if (A.RowCount != 3 || matrix.RowCount % 3 != 0)
-                throw new Exception();
+                throw new ArgumentException();
 
             var count = matrix.RowCount / 3;
 

@@ -35,6 +35,7 @@ namespace BriefFiniteElementNet
 
         internal int Index;
 
+        
         /// <summary>
         /// The connected elements, used for calculating 
         /// </summary>
@@ -344,7 +345,7 @@ namespace BriefFiniteElementNet
             base.GetObjectData(info, context);
 
             info.AddValue("location", location);
-            info.AddValue("index", Index);
+            info.AddValue("Index", Index);
             info.AddValue("loads", loads);
             info.AddValue("settlements", settlements);
             info.AddValue("constraints", constraints);
@@ -358,7 +359,7 @@ namespace BriefFiniteElementNet
         protected Node(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             location = (Point) info.GetValue("location", typeof (Point));
-            Index = (int) info.GetValue("index", typeof (int));
+            Index = (int) info.GetValue("Index", typeof (int));
             loads = (List<NodalLoad>) info.GetValue("loads", typeof (List<NodalLoad>));
             settlements = (Displacement) info.GetValue("settlements", typeof (Displacement));
             constraints = (Constraint) info.GetValue("constraints", typeof (Constraint));

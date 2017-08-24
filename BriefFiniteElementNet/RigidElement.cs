@@ -13,6 +13,7 @@ namespace BriefFiniteElementNet
     [Serializable]
     public sealed class RigidElement : StructurePart
     {
+        [NonSerialized()]
         private NodeList _nodes;
 
         /// <summary>
@@ -106,6 +107,7 @@ namespace BriefFiniteElementNet
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+			
             this.nodeNumbers = new int[this._nodes.Count];
 
             for (var i = 0; i < _nodes.Count; i++)
@@ -113,6 +115,7 @@ namespace BriefFiniteElementNet
 
             info.AddValue("_useForAllLoads", _useForAllLoads);
             info.AddValue("_appliedLoadCases", _appliedLoadCases);
+            info.AddValue("_appliedLoadTypes", this._appliedLoadTypes);
             info.AddValue("nodeNumbers", nodeNumbers);
 
             //info.AddValue("_hingedConnections", _hingedConnections);
@@ -130,9 +133,11 @@ namespace BriefFiniteElementNet
 
         private RigidElement(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            nodeNumbers = info.GetValue<int[]>("nodeNumbers");
+			this._appliedLoadTypes = (BriefFiniteElementNet.LoadTypeCollection)info.GetValue("_appliedLoadTypes", typeof(BriefFiniteElementNet.LoadTypeCollection));
+            nodeNumbers = (int[]) info.GetValue("nodeNumbers", typeof(int[]));
+
             _useForAllLoads = info.GetBoolean("_useForAllLoads");
-            _appliedLoadCases = info.GetValue<LoadCaseCollection>("_appliedLoadCases");
+            _appliedLoadCases = (LoadCaseCollection)info.GetValue("_appliedLoadCases",typeof(LoadCaseCollection));
 
             //_centralNodeNumber = info.GetValue<int>("_centralNodeNumber");
             //_hingedConnections = info.GetBoolean("_hingedConnections");
@@ -164,6 +169,7 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// The central node number. used for 
         /// </summary>
+        [NonSerialized()]
         [Obsolete("Not used in calculation anymore")]
         internal int _centralNodeNumber;
 

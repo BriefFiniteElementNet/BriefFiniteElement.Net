@@ -44,12 +44,15 @@ namespace BriefFiniteElementNet
 
         private NodeCollection nodes;
         private ElementCollection elements;
+        private MpcElementCollection mpcElements;
+
+        [NonSerialized()]
         private StaticLinearAnalysisResult lastResult;
         [Obsolete("use MpcElements instead")]
         private RigidElementCollection rigidElements;
         [Obsolete("use MpcElements instead")]
         private TelepathyLinkCollection telepathyLinks;
-        private MpcElementCollection mpcElements;
+        
 
         private LoadCase settlementLoadCase;
 
@@ -146,7 +149,7 @@ namespace BriefFiniteElementNet
             private set { _trace = value; }
         }
 
-       
+       [NonSerialized]
         private Trace _trace = new Trace();
 
         #endregion
@@ -415,14 +418,14 @@ namespace BriefFiniteElementNet
 
         private Model(SerializationInfo info, StreamingContext context)
         {
-            elements = info.GetValue<ElementCollection>("elements");
-            mpcElements = info.GetValue<MpcElementCollection>("mpcElements");
+            elements = (ElementCollection)info.GetValue("elements",typeof(ElementCollection));
+            mpcElements = (MpcElementCollection)info.GetValue("mpcElements",typeof(MpcElementCollection));
 
-            rigidElements = info.GetValue<RigidElementCollection>("rigidElements");
-            telepathyLinks = info.GetValue<TelepathyLinkCollection>("telepathyLinks");
+            rigidElements = (RigidElementCollection)info.GetValue("rigidElements",typeof(RigidElementCollection));
+            telepathyLinks = (TelepathyLinkCollection)info.GetValue("telepathyLinks", typeof(TelepathyLinkCollection));
 
-            nodes = info.GetValue<NodeCollection>("nodes");
-            settlementLoadCase = info.GetValue<LoadCase>("settlementLoadCase");
+            nodes = (NodeCollection)info.GetValue("nodes",typeof(NodeCollection));
+            settlementLoadCase = (LoadCase)info.GetValue("settlementLoadCase", typeof(LoadCase));
         }
 
         [OnDeserialized]

@@ -81,7 +81,7 @@ namespace BriefFiniteElementNet
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("force", force);
-            info.AddValue("case", _case);
+            info.AddValue("_case", _case);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace BriefFiniteElementNet
         private NodalLoad(SerializationInfo info, StreamingContext context)
         {
             force = (Force) info.GetValue("force", typeof (Force));
-            _case = (LoadCase) info.GetValue("case", typeof (LoadCase));
+            _case = (LoadCase) info.GetValue("_case", typeof (LoadCase));
         }
 
         #endregion

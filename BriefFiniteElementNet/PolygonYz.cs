@@ -240,7 +240,7 @@ namespace BriefFiniteElementNet
         /// <param name="context">The context.</param>
         private PolygonYz(SerializationInfo info, StreamingContext context)
         {
-            points = info.GetValue<List<PointYZ>>("points");
+            points = (List<PointYZ>)info.GetValue("points",typeof(List<PointYZ>));
         }
     }
 }

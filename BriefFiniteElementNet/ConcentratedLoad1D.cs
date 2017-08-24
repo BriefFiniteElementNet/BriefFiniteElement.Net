@@ -282,7 +282,7 @@ namespace BriefFiniteElementNet
             : base(info, context)
         {
             this.distanseFromStartNode = info.GetDouble("distanseFromStartNode");
-            this.force = info.GetValue<Force>("force");
+            this.force = (Force)info.GetValue("force",typeof(Force));
         }
 
         #endregion

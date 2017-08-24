@@ -123,9 +123,9 @@ namespace BriefFiniteElementNet
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("vx", _vx);
-            info.AddValue("vy", _vy);
-            info.AddValue("vz", _vz);
+            info.AddValue("_vx", _vx);
+            info.AddValue("_vy", _vy);
+            info.AddValue("_vz", _vz);
 
             base.GetObjectData(info, context);
         }
@@ -133,9 +133,9 @@ namespace BriefFiniteElementNet
         /// <inheritdoc/>
         protected UniformBodyLoad3D(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            _vx = info.GetDouble("vx");
-            _vy = info.GetDouble("vy");
-            _vz = info.GetDouble("vz");
+            _vx = info.GetDouble("_vx");
+            _vy = info.GetDouble("_vy");
+            _vz = info.GetDouble("_vz");
         }
 
         public UniformBodyLoad3D()

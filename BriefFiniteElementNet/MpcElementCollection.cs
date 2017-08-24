@@ -16,6 +16,12 @@ namespace BriefFiniteElementNet
     [Serializable]
     public class MpcElementCollection : StructuralPartCollection<MpcElement>
     {
+        /// <inheritdoc />
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+base.GetObjectData(info,context);
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BriefFiniteElementNet.MpcElementCollection" /> class.
         /// </summary>

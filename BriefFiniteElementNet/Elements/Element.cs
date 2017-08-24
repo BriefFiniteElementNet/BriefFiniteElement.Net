@@ -15,6 +15,7 @@ namespace BriefFiniteElementNet.Elements
     [DebuggerDisplay("{this.GetType().Name}, Label: {Label}")]
     public abstract class Element : StructurePart
     {
+        [NonSerialized]
         internal int Index;
 
         [Obsolete]
@@ -139,15 +140,16 @@ namespace BriefFiniteElementNet.Elements
         /// <param name="context">The context.</param>
         protected Element(SerializationInfo info, StreamingContext context):base(info,context)
         {
-            nodeNumbers = info.GetValue<int[]>("nodeNumbers");
+            nodeNumbers = (int[]) info.GetValue("nodeNumbers", typeof(int[]));
+
             elementType = (ElementType)info.GetInt32("elementType");
-            loads = info.GetValue<List<Load>>("loads");
+            loads = (List<Load>) info.GetValue("loads", typeof(List<Load>));
 
 
             foreach (var pair in info)
             {
                 if (pair.Name == "_massFormulationType")
-                    _massFormulationType = (MassFormulation) info.GetValue<int>("_massFormulationType");
+                    _massFormulationType = (MassFormulation) (int) info.GetValue("_massFormulationType", typeof(int));
             }
             
 
@@ -268,9 +270,11 @@ namespace BriefFiniteElementNet.Elements
                 return TransformManagerL2G.MakeFromLambdaMatrix(lastLambdaMatrix = GetLambdaMatrix());
             }
         }
-        
 
+
+        [NonSerialized]
         private Point[] lastNodalLocations;
+        [NonSerialized]
         private Matrix lastLambdaMatrix = Matrix.Eye(3);
 
         public abstract IElementHelper[] GetHelpers();

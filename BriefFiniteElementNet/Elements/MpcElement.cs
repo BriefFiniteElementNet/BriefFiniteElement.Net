@@ -43,6 +43,8 @@ namespace BriefFiniteElementNet.Elements
                 nodeNumbers[i] = _nodes[i].Index;
 
             info.AddValue("nodeNumbers", nodeNumbers);
+            info.AddValue("_useForAllLoads", _useForAllLoads);
+            info.AddValue("_appliedLoadCases", _appliedLoadCases);
 
             base.GetObjectData(info, context);
         }
@@ -55,9 +57,13 @@ namespace BriefFiniteElementNet.Elements
         /// <param name="context">The context.</param>
         protected MpcElement(SerializationInfo info, StreamingContext context):base(info,context)
         {
-            nodeNumbers = info.GetValue<int[]>("nodeNumbers");
+            nodeNumbers = (int[])info.GetValue("nodeNumbers",typeof(int[]));
 
             this._nodes = new NodeList();
+
+            _useForAllLoads = (bool)info.GetValue("_useForAllLoads", typeof(bool));
+            _appliedLoadCases = (LoadCaseCollection)info.GetValue("_appliedLoadCases", typeof(LoadCaseCollection));
+
         }
 
 

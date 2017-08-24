@@ -9,11 +9,24 @@ using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.Sections
 {
+    /// <summary>
+    /// Represents a Uniform Parametric 2D section
+    /// </summary>
+    /// <remarks>
+    /// Uniform Parametric 2D Section means a uniform or constant thickness secition that thickness parameter is defined in the <see cref="T"/> member of class.
+    /// </remarks>
+    /// <seealso cref="BriefFiniteElementNet.Sections.Base2DSection" />
     [Serializable]
     public class UniformParametric2DSection : Base2DSection
     {
         private double _t;
 
+        /// <summary>
+        /// Gets or sets the Thickness.
+        /// </summary>
+        /// <value>
+        /// The thickness.
+        /// </value>
         public double T
         {
             get { return _t; }
@@ -21,6 +34,11 @@ namespace BriefFiniteElementNet.Sections
         }
 
 
+        /// <summary>
+        /// Gets the thickness of section at specified coordinates.
+        /// </summary>
+        /// <param name="isoCoords">The iso coords.</param>
+        /// <returns>thicness of section</returns>
         public override double GetThicknessAt(params double[] isoCoords)
         {
             return T;
@@ -33,7 +51,7 @@ namespace BriefFiniteElementNet.Sections
 
 
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        public new virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("_t", _t);
             base.GetObjectData(info, context);

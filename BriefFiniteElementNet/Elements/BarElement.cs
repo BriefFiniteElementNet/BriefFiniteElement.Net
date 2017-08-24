@@ -13,6 +13,7 @@ namespace BriefFiniteElementNet.Elements
     /// <summary>
     /// 
     /// </summary>
+    [Serializable]
     [Obsolete("not fully implemented yet")]
     public class BarElement : Element
     {
@@ -682,5 +683,37 @@ namespace BriefFiniteElementNet.Elements
 
             return helpers;
         }
+
+
+
+        #region ISerialization Implementation
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("_webRotation", _webRotation);
+            info.AddValue("_material", _material);
+            info.AddValue("_behavior", (int)_behavior);
+        }
+
+        protected BarElement(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            _webRotation = (double)info.GetValue("_webRotation", typeof(double));
+            _material = (BaseMaterial)info.GetValue("_material", typeof(BaseMaterial));
+            _behavior = (BarElementBehaviour)info.GetValue("_behavior", typeof(int));
+        }
+
+        #endregion
+
+
+        #region Constructor
+
+        public BarElement()
+        {
+        }
+
+        #endregion
+
+
     }
 }

@@ -781,7 +781,7 @@ namespace BriefFiniteElementNet
             _iy = info.GetDouble("_iy");
             _iz = info.GetDouble("_iz");
             _j = info.GetDouble("_j");
-            _geometry = info.GetValue<PolygonYz>("_geometry");
+            _geometry = (PolygonYz)info.GetValue("_geometry",typeof(PolygonYz));
             _useOverridedProperties = info.GetBoolean("_useOverridedProperties");
             _considerShearDeformation = info.GetBoolean("_considerShearDeformation");
             _hingedAtStart = info.GetBoolean("_hingedAtStart");

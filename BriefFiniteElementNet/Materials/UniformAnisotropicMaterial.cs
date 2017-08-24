@@ -158,23 +158,23 @@ namespace BriefFiniteElementNet.Materials
             return new[] {0, 0, 0};
         }
 
-        public UniformAnisotropicMaterial(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected UniformAnisotropicMaterial(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            _ex = info.GetValue<double>("_ex");
-            _ey = info.GetValue<double>("_ey");
-            _ez = info.GetValue<double>("_ez");
+            _ex = info.GetDouble("_ex");
+            _ey = info.GetDouble("_ey");
+            _ez = info.GetDouble("_ez");
 
-            _nuXy = info.GetValue<double>("_nuXy");
-            _nuYx = info.GetValue<double>("_nuYx");
+            _nuXy = info.GetDouble("_nuXy");
+            _nuYx = info.GetDouble("_nuYx");
 
-            _nuXz = info.GetValue<double>("_nuXz");
-            _nuZx = info.GetValue<double>("_nuZx");
+            _nuXz = info.GetDouble("_nuXz");
+            _nuZx = info.GetDouble("_nuZx");
 
-            _nuYz = info.GetValue<double>("_nuYz");
-            _nuZy = info.GetValue<double>("_nuZy");
+            _nuYz = info.GetDouble("_nuYz");
+            _nuZy = info.GetDouble("_nuZy");
 
-            rho = info.GetValue<double>("rho");
-            mu = info.GetValue<double>("mu");
+            rho = info.GetDouble("rho");
+            mu = info.GetDouble("mu");
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

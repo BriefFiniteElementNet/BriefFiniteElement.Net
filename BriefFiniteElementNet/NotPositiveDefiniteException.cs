@@ -12,6 +12,12 @@ namespace BriefFiniteElementNet
     [Serializable]
     public class NotPositiveDefiniteException:BriefFiniteElementNetException
     {
+        /// <inheritdoc />
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NotPositiveDefiniteException"/> class.
         /// </summary>

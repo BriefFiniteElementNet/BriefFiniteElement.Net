@@ -107,6 +107,8 @@ namespace BriefFiniteElementNet
         {
             info.AddValue("caseName", caseName);
             info.AddValue("loadType", (int) loadType);
+
+            
         }
 
         /// <summary>
