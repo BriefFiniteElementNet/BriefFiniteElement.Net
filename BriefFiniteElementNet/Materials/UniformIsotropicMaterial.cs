@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using BriefFiniteElementNet.Elements;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.Materials
 {
@@ -103,6 +104,7 @@ namespace BriefFiniteElementNet.Materials
         }
 
         /// <inheritdoc />
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

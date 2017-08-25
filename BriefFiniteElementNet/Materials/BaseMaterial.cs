@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using BriefFiniteElementNet.Elements;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.Materials
 {
@@ -33,6 +34,7 @@ namespace BriefFiniteElementNet.Materials
         /// <returns>the number of Gaussian integration points needed in xi, eta ann nu directions</returns>
         public abstract int[] GetMaxFunctionOrder();
 
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
         }

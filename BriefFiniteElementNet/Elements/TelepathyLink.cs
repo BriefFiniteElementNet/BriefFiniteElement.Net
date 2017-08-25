@@ -9,19 +9,13 @@ using CSparse.Double;
 namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
-    /// Represents a telepathy link between DoF's of two nodes. connected DoF s will have exactly same displacement after 
+    /// Represents a telepathy link between DoF's of two nodes. connected DoF s will have equal displacement after analysis.
     /// </summary>
     [Serializable]
+    [Obsolete("Not usable yet, under development")]
     public class TelepathyLink : MpcElement
     {
         private bool _connectDx, _connectDy, _connectDz, _connectRx, _connectRy, _connectRz;
-
-
-        public NodeList Nodes
-        {
-            get { return _nodes; }
-            set { _nodes = value; }
-        }
 
         /// <summary>
         /// Gets or sets a value indicating wether bind Dx DoF of all nodes in this element together or not.
@@ -86,7 +80,7 @@ namespace BriefFiniteElementNet.Elements
             info.AddValue("_connectDy", _connectDy);
             info.AddValue("_connectDz", _connectDz);
 
-            info.AddValue("_connectRx", _connectDx);
+            info.AddValue("_connectRx", _connectRx);
             info.AddValue("_connectRy", _connectRy);
             info.AddValue("_connectRz", _connectRz);
 
@@ -103,7 +97,7 @@ namespace BriefFiniteElementNet.Elements
             throw new NotImplementedException();
         }
 
-        private TelepathyLink(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected TelepathyLink(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _connectDx = info.GetBoolean("_connectDx");
             _connectDy = info.GetBoolean("_connectDy");

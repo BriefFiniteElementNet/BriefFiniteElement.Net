@@ -9,6 +9,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents a load combination which consists of a set of Loads and a Factor for each Load.
     /// </summary>
+    [Serializable]
     public sealed class LoadCombination : Dictionary<LoadCase, double>
     {
         /// <summary>
@@ -35,5 +36,13 @@ namespace BriefFiniteElementNet
         }
 
 
+
+        #region Deserialization Constructor
+
+        private LoadCombination(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
+
+        #endregion
     }
 }

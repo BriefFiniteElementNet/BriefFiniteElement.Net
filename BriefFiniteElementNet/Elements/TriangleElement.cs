@@ -5,9 +5,12 @@ using System.Text;
 using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
+using System.Runtime.Serialization;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.Elements
 {
+    [Serializable]
     [Obsolete("not fully implemented yet")]
     public class TriangleElement : Element
     {
@@ -251,5 +254,32 @@ namespace BriefFiniteElementNet.Elements
 
             return buf;
         }
+
+        #region Deserialization Constructor
+
+        protected TriangleElement(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            _material = (BaseMaterial)info.GetValue("_material", typeof(BaseMaterial));
+            _section = (Base2DSection)info.GetValue("_section", typeof(Base2DSection));
+            _behavior = (FlatShellBehaviour)info.GetInt32("_behavior");
+            _formulation = (MembraneFormulation)info.GetInt32("_behavior");
+        }
+
+        #endregion
+
+        #region ISerialization Implementation
+
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("_material", _material);
+            info.AddValue("_section", _section);
+            info.AddValue("_behavior", (int)_behavior);
+            info.AddValue("_formulation", (int)_formulation);
+
+        }
+
+        #endregion
     }
 }

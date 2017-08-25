@@ -78,7 +78,7 @@ namespace BriefFiniteElementNet
         /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo" /> to populate with data.</param>
         /// <param name="context">The destination (see <see cref="T:System.Runtime.Serialization.StreamingContext" />) for this serialization.</param>
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("force", force);
             info.AddValue("_case", _case);
@@ -89,7 +89,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
-        private NodalLoad(SerializationInfo info, StreamingContext context)
+        protected NodalLoad(SerializationInfo info, StreamingContext context)
         {
             force = (Force) info.GetValue("force", typeof (Force));
             _case = (LoadCase) info.GetValue("_case", typeof (LoadCase));

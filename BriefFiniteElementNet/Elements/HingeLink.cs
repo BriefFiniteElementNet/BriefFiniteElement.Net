@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using CSparse.Double;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -23,7 +24,9 @@ namespace BriefFiniteElementNet.Elements
         {
         }
 
+        [NonSerialized]
         public Node Node1;
+        [NonSerialized]
         public Node Node2;
 
         public override CompressedColumnStorage GetExtraEquations()
@@ -38,7 +41,19 @@ namespace BriefFiniteElementNet.Elements
 
         #region ISerialization Implementation
 
-        
+
+
+        #endregion
+
+        #region ISerialization Implementation
+
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("Node1", Node1);
+            info.AddValue("Node2", Node2);
+        }
 
         #endregion
     }

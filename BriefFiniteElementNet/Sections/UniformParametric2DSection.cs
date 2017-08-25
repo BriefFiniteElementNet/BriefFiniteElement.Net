@@ -51,7 +51,7 @@ namespace BriefFiniteElementNet.Sections
 
 
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-        public new virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("_t", _t);
             base.GetObjectData(info, context);

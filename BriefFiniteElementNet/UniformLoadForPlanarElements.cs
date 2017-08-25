@@ -34,7 +34,7 @@ namespace BriefFiniteElementNet
             _uz = uz;
         }
 
-        public UniformLoadForPlanarElements(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected UniformLoadForPlanarElements(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _ux = info.GetDouble("_ux");
             _uy = info.GetDouble("_uy");

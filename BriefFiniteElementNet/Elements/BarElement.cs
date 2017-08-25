@@ -7,6 +7,7 @@ using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Integration;
 using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -688,6 +689,7 @@ namespace BriefFiniteElementNet.Elements
 
         #region ISerialization Implementation
 
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

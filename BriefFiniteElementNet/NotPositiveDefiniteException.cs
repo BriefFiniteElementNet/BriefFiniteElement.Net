@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet
 {
@@ -13,8 +14,10 @@ namespace BriefFiniteElementNet
     public class NotPositiveDefiniteException:BriefFiniteElementNetException
     {
         /// <inheritdoc />
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            base.GetObjectData(info, context);
 
         }
 

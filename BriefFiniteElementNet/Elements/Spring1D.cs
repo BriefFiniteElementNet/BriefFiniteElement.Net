@@ -77,7 +77,7 @@ namespace BriefFiniteElementNet.Elements
             this.nodes[1] = end;
         }
 
-        public Spring1D(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected Spring1D(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _k = info.GetDouble("_k");
         }

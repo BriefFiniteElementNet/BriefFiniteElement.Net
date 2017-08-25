@@ -1592,11 +1592,13 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// The nonzero pattern for each column
         /// </summary>
+        [NonSerialized]
         internal List<int>[] ColumnNonzeros;
 
         /// <summary>
         /// The nonzero pattern for each row
         /// </summary>
+        [NonSerialized]
         internal List<int>[] RowNonzeros;
 
 

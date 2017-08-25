@@ -5,12 +5,14 @@ using System.Net.Sockets;
 using System.Runtime.Serialization;
 using System.Text;
 using BriefFiniteElementNet.Elements;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.Materials
 {
     /// <summary>
     /// Represents a uniform (not varying) anisotropic material.
     /// </summary>
+    [Serializable]
     public class UniformAnisotropicMaterial : BaseMaterial
     {
         #region props
@@ -177,6 +179,7 @@ namespace BriefFiniteElementNet.Materials
             mu = info.GetDouble("mu");
         }
 
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("_ex", _ex);

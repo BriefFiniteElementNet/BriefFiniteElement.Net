@@ -8,6 +8,7 @@ namespace BriefFiniteElementNet.Elements
     /// <summary>
     /// Represents the geometric properties of triangle element in specific point
     /// </summary>
+    [Obsolete]
     public struct TriangleCoordinatedGeometricProperties
     {
         private double _t;
