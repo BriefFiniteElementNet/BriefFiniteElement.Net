@@ -57,6 +57,7 @@
     <Compile Include="HelixHelp.xaml.cs">
       <DependentUpon>HelixHelp.xaml</DependentUpon>
     </Compile>
+    <Compile Include="IElementGraphMeshProvider.cs" />
     <Compile Include="ModelInternalForceVisualizer.xaml.cs">
       <DependentUpon>ModelInternalForceVisualizer.xaml</DependentUpon>
     </Compile>

@@ -38,6 +38,18 @@ namespace BriefFiniteElementNet.Controls
             wnd.ShowDialog();
         }
 
+
+        public static void VisualizeInNewWindow(Model model,params IElementGraphMeshProvider[] prvdrs)
+        {
+            var wnd = new Window();
+
+            wnd.Content = new ModelVisualizerControl() {ModelToVisualize = model, MeshProviders = prvdrs.ToList()};
+
+            wnd.ShowDialog();
+        }
+
+        public List<IElementGraphMeshProvider> MeshProviders = new List<IElementGraphMeshProvider>();
+
         #region ModelToVisualize Property and Property Change Routed event
 
         public static readonly DependencyProperty ModelToVisualizeProperty
@@ -598,6 +610,10 @@ namespace BriefFiniteElementNet.Controls
                         AddElement3D(builder, elm as Element3D);
                     else if (elm is Spring1D)
                         AddSpringElement(builder, elm as Spring1D);
+                    else if (MeshProviders.Any(i => i.CanProvideMeshForElement(elm)))
+                        AddCustomElementWithMeshProvider(builder, elm,
+                            MeshProviders.First(i => i.CanProvideMeshForElement(elm)));
+
 
                     var gradient = new LinearGradientBrush();
                     //TODO: to be done like this: http://waldoscode.blogspot.de/2014/11/helix-3d-toolkit-well-viewer-part-2.html
@@ -1361,6 +1377,18 @@ namespace BriefFiniteElementNet.Controls
                     elm.StartNode.Location.Z), ElementVisualThickness * 3);
             }
             
+        }
+
+        private void AddCustomElementWithMeshProvider(MeshBuilder bldr, Element elm, IElementGraphMeshProvider prv)
+        {
+            foreach (var tuple in prv.ProvideTriangleMeshForElement(elm))
+            {
+                var p1 = elm.Nodes[tuple.Item1].Location;
+                var p2 = elm.Nodes[tuple.Item2].Location;
+                var p3 = elm.Nodes[tuple.Item3].Location;
+
+                bldr.AddTriangle(p1, p3, p2);
+            }
         }
 
         private void AddFrameElement(MeshBuilder bldr, FrameElement2Node elm)
