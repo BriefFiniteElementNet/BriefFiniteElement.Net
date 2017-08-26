@@ -20,6 +20,25 @@ namespace BriefFiniteElementNet
     /// </summary>
     public static class CalcUtil
     {
+        public static void ApplyPermutation(Array arr, params int[] indexes)
+        {
+            if (arr.Length != indexes.Length)
+                throw new Exception();
+
+            if (indexes.Min() < 0 || indexes.Max() > indexes.Length)
+                throw new Exception();
+            
+            var clone = (Array)arr.Clone();
+
+            //Array.Clear(clone,0,clone.Length);
+
+            for (int i = 0; i < indexes.Length; i++)
+            {
+                arr.SetValue(clone.GetValue(indexes[i]), i);
+            }
+            
+        }
+
         public static CCS GetReducedFreeFreeStiffnessMatrix(this Model model)
         {
             return GetReducedFreeFreeStiffnessMatrix(model, LoadCase.DefaultLoadCase);
