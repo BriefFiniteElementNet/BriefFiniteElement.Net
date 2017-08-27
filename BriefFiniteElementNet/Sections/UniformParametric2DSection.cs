@@ -66,5 +66,11 @@ namespace BriefFiniteElementNet.Sections
         {
 
         }
+
+
+        public UniformParametric2DSection(double t)
+        {
+            _t = t;
+        }
     }
 }
