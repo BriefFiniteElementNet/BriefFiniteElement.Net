@@ -58,6 +58,9 @@
       <DependentUpon>HelixHelp.xaml</DependentUpon>
     </Compile>
     <Compile Include="IElementGraphMeshProvider.cs" />
+    <Compile Include="MatrixVisualizerControl.xaml.cs">
+      <DependentUpon>MatrixVisualizerControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ModelInternalForceVisualizer.xaml.cs">
       <DependentUpon>ModelInternalForceVisualizer.xaml</DependentUpon>
     </Compile>
@@ -81,6 +84,10 @@
     <Page Include="HelixHelp.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MatrixVisualizerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="ModelInternalForceVisualizer.xaml">
       <SubType>Designer</SubType>

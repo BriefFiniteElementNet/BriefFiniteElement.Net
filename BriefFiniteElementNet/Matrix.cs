@@ -50,6 +50,7 @@ namespace BriefFiniteElementNet
 
         /// <summary>
         /// Horizontally join the two matrices.
+        /// Matrix 1 left,  2 right side of it
         /// </summary>
         /// <param name="m1">The m1.</param>
         /// <param name="m2">The m2.</param>
@@ -74,15 +75,47 @@ namespace BriefFiniteElementNet
             {
                 for (var j = 0; j < m2.columnCount; j++)
                 {
-                    buf[i + m1.columnCount, j] = m2[i, j];
+                    buf[i , j + m1.columnCount] = m2[i, j];
                 }
             }
 
             return buf;
         }
 
+        public static Matrix HorizontalConcat(params Matrix[] mtx)
+        {
+
+            var rwCnt = mtx.First().rowCount;
+
+            if(mtx.Any(i=>i.rowCount!=rwCnt))
+            //if (m1.RowCount != m2.RowCount)
+                throw new Exception();
+
+            var buf = new Matrix(rwCnt, mtx.Sum(i => i.columnCount));
+
+            var cnt = 0;
+
+            for (var ii = 0; ii < mtx.Length; ii++)
+            {
+                var m = mtx[ii];
+
+                for (var i = 0; i < m.rowCount; i++)
+                {
+                    for (var j = 0; j < m.columnCount; j++)
+                    {
+                        buf[i, j + cnt] = m[i, j];
+                    }
+                }
+
+                cnt += m.columnCount;
+            }
+            
+            return buf;
+        }
+
         /// <summary>
         /// Vertically join the two matrices.
+        /// Matrix 1 on top, 2 below it
         /// </summary>
         /// <param name="m1">The m1.</param>
         /// <param name="m2">The m2.</param>
@@ -1447,7 +1480,20 @@ namespace BriefFiniteElementNet
             }
         }
 
+        public static Matrix DotDivide(Matrix a1, Matrix a2)
+        {
+            if (a1.rowCount != a2.rowCount || a1.columnCount != a2.columnCount)
+                throw new Exception();
 
+            var buf = new Matrix(a1.rowCount, a1.columnCount);
+
+            for (int i = 0; i < a1.coreArray.Length; i++)
+            {
+                buf.coreArray[i] = a1.coreArray[i]/a2.coreArray[i];
+            }
+
+            return buf;
+        }
         public void FillColumn(int colNum, params double[] values)
         {
             if (values.Length != this.rowCount)

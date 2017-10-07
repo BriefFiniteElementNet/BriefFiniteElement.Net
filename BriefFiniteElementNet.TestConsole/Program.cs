@@ -25,9 +25,11 @@ namespace BriefFiniteElementNet.TestConsole
         [STAThread]
         static void Main(string[] args)
         {
-            //Test_P_Delta_matrix();
-            BarElementTester.TestBarStiffness();
+            Test_P_Delta_matrix();
+            //TestSparseRow();
 
+            //BarElementTester.TestBarStiffness();
+            
             //QrTest();
             Console.ReadKey();
         }
@@ -257,10 +259,11 @@ namespace BriefFiniteElementNet.TestConsole
 
         private static void Test_P_Delta_matrix()
         {
-            var model = StructureGenerator.Generate3DFrameElementGrid(10, 10, 10);
+            var model = StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
 
 
-            var zs = model.Nodes.Where(i => i.Constraints != Constraint.Fixed)
+            var zs = model.Nodes
+                //.Where(i => i.Constraints != Constraint.Fixed)
                 .Select(i => i.Location.Z).Distinct().ToList();
 
             foreach(var z in zs)
@@ -277,6 +280,11 @@ namespace BriefFiniteElementNet.TestConsole
 
             StructureGenerator.AddRandomDisplacements(model, 0.1);
 
+            foreach (var node in model.Nodes)
+            {
+                if (node.Constraints == Constraint.Fixed)
+                    node.Settlements = new Displacement(1, 1, 1, 1, 1, 1);
+            }
 
             model.Clone();
 
@@ -284,7 +292,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             #endregion
 
-            CalcUtil.GenerateP_Delta_Mpc(model, LoadCase.DefaultLoadCase,new DenseIrrefFinder());
+            CalcUtil.GenerateP_Delta_Mpc(model, LoadCase.DefaultLoadCase,new GaussRrefFinder());
 
 
         }
@@ -320,6 +328,29 @@ namespace BriefFiniteElementNet.TestConsole
 
             var d = (res1 - res2).Max(ii => Math.Abs(ii));
             Console.WriteLine("Err: {0:g}", d);
+        }
+
+        private static void TestSparseRow()
+        {
+            var r1 = new SparseRow();
+            var r2 = new SparseRow();
+
+            var rnd = new Random();
+
+            r1.Add(24, 1);
+            r1.Add(28, -0.064);
+            r1.Add(29, -1.03);
+            r1.Add(30, -1);
+
+
+            r2.Add(24, 1);
+            r2.Add(28, -0.07);
+            r2.Add(29, -0.017);
+            r2.Add(36, -1);
+
+
+            var r3 = SparseRow.Eliminate(r1, r2, 24);
+
         }
     }
 }

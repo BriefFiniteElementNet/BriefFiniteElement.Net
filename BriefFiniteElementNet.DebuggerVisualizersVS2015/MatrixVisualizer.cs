@@ -2,7 +2,7 @@
 using System.Reflection;
 using System.Windows;
 using BriefFiniteElementNet;
-using BriefFiniteElementNet.DebuggerVisualizersVS13;
+using BriefFiniteElementNet.Controls;
 using BriefFiniteElementNet.DebuggerVisualizersVS2013;
 using Microsoft.VisualStudio.DebuggerVisualizers;
 

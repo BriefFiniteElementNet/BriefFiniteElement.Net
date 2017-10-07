@@ -48,6 +48,10 @@
     <Compile Include="ArrayPool.cs" />
     <Compile Include="BendingStressTensor.cs" />
     <Compile Include="CalculationCache.cs" />
+    <Compile Include="Mathh\SparseEqSystem.cs" />
+    <Compile Include="Mathh\GaussRrefFinder.cs" />
+    <Compile Include="Mathh\SparseRow.cs" />
+    <Compile Include="StrainTensor.cs" />
     <Compile Include="ElementHelpers\BeamDirection.cs" />
     <Compile Include="ElementHelpers\CstHelper.cs" />
     <Compile Include="ElementHelpers\DktHelper.cs" />

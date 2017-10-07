@@ -239,7 +239,7 @@ namespace BriefFiniteElementNet
                 if (startPoint == -1)
                     break;
 
-                var part = DepthFirstSearch(graph, visited, startPoint);
+                var part = DepthFirstSearch(graph, visited, startPoint).Distinct().ToList();
 
                 buf.Add(part);
             }
@@ -247,6 +247,16 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+
+        public static void SetAllMembers(this Array arr, object value)
+        {
+            var n = arr.GetLength(0);
+
+            for (int i = 0; i < n; i++)
+            {
+                arr.SetValue(value, i);
+            }
+        }
         /// <summary>
         /// Does the Depth first search, return connected nodes to <see cref="startNode"/>.
         /// </summary>
@@ -283,7 +293,7 @@ namespace BriefFiniteElementNet
                     {
                         visited[neighbor] = true;
                         q.Enqueue(neighbor);
-                        buf.Add(neighbor);
+                        //buf.Add(neighbor);
                     }
                 }
             }
@@ -662,6 +672,82 @@ namespace BriefFiniteElementNet
             }
         }
 
+        internal static void EnumerateColumnMembers(this CCS matrix, int columnNumber,Action<int, int, double> action)
+        {
+            var n = matrix.ColumnCount;
+
+            var i = columnNumber;//for (int i = 0; i < n; i++)
+            {
+                var col = i;
+
+                var st = matrix.ColumnPointers[i];
+                var en = matrix.ColumnPointers[i + 1];
+
+                for (int j = st; j < en; j++)
+                {
+                    var row = matrix.RowIndices[j];
+
+                    var val = matrix.Values[j];
+
+                    action(row, col, val);
+                }
+            }
+        }
+
+        internal static void EnumerateColumnMembers(this CompressedColumnStorage<double> matrix, int columnNumber, Action<int, int, double> action)
+        {
+            var n = matrix.ColumnCount;
+
+            var i = columnNumber;//for (int i = 0; i < n; i++)
+            {
+                var col = i;
+
+                var st = matrix.ColumnPointers[i];
+                var en = matrix.ColumnPointers[i + 1];
+
+                for (int j = st; j < en; j++)
+                {
+                    var row = matrix.RowIndices[j];
+
+                    var val = matrix.Values[j];
+
+                    action(row, col, val);
+                }
+            }
+        }
+        internal static void EnumerateMembers(this CompressedColumnStorage<double> matrix, Action<int, int, double> action)
+        {
+            var n = matrix.ColumnCount;
+
+            for (int i = 0; i < n; i++)
+            {
+                var col = i;
+
+                var st = matrix.ColumnPointers[i];
+                var en = matrix.ColumnPointers[i + 1];
+
+                for (int j = st; j < en; j++)
+                {
+                    var row = matrix.RowIndices[j];
+
+                    var val = matrix.Values[j];
+
+                    action(row, col, val);
+                }
+            }
+        }
+
+        public static  CompressedColumnStorage<double> Clonee(this CompressedColumnStorage<double>  matrix)
+        {
+            var buf = new CCS(matrix.RowCount, matrix.ColumnCount, matrix.Values.Length);
+
+            matrix.RowIndices.CopyTo(buf.RowIndices, 0);
+            matrix.ColumnPointers.CopyTo(buf.ColumnPointers, 0);
+            matrix.Values.CopyTo(buf.Values, 0);
+
+            return buf;
+        }
+
         internal static void EnumerateColumns(this CCS matrix, Action<int, Dictionary<int,double>> action)
         {
             var n = matrix.ColumnCount;
@@ -687,6 +773,14 @@ namespace BriefFiniteElementNet
                 action(col, dic);
             }
 
+        }
+
+        internal static int GetNnzcForColumn(this CompressedColumnStorage<double> matrix, int column)
+        {
+            var st = matrix.ColumnPointers[column];
+            var en = matrix.ColumnPointers[column+1];
+
+            return en - st;
         }
 
         public static void MakeMatrixSymetric(this CCS mtx)
@@ -1080,6 +1174,8 @@ namespace BriefFiniteElementNet
         [Obsolete("Under development")]
         public static CCS GenerateP_Delta_Mpc(Model target, LoadCase loadCase,IRrefFinder rrefFinder)
         {
+            var totDofCount = target.Nodes.Count * 6;
+
             target.ReIndexNodes();
 
             var n = target.Nodes.Count;
@@ -1110,25 +1206,61 @@ namespace BriefFiniteElementNet
                 {
                     var extras = mpcElm.GetExtraEquations();
 
+                    if (extras.ColumnCount != totDofCount+1)
+                        throw new Exception();
+
+                    foreach(var tuple in extras.EnumerateIndexed2())
+                    {
+                        var row = tuple.Item1;
+                        var col = tuple.Item2;
+                        var val = tuple.Item3;
+
+
+                        allEqsCrd.At(row + lastRow, col, val);
+                    }
+
+                    /*
                     extras.EnumerateMembers((row, col, val) =>
                     {
                         allEqsCrd.At(row + lastRow, col, val);
                     });
+                    */
 
                     lastRow += extras.RowCount;
                 }
             }
 
             {
+                if (boundaryConditions.ColumnCount != totDofCount+1)
+                    throw new Exception();
+
+
+                foreach (var tuple in boundaryConditions.EnumerateIndexed2())
+                {
+                    var row = tuple.Item1;
+                    var col = tuple.Item2;
+                    var val = tuple.Item3;
+
+
+                    allEqsCrd.At(row + lastRow, col, val);
+                }
+
+                /*
                 boundaryConditions.EnumerateMembers((row, col, val) =>
                 {
                     allEqsCrd.At(row + lastRow, col, val);
                 });
+                */
 
                 lastRow += boundaryConditions.RowCount;
             }
 
             var allEqs = allEqsCrd.ToCCs();
+
+
+            var empties = allEqs.EmptyRowCount();// - boundaryConditions.EmptyRowCount();
+
+            var dns = allEqs.ToDenseMatrix();
 
             #endregion
 
@@ -1179,41 +1311,10 @@ namespace BriefFiniteElementNet
             #endregion
 
 
-            rrefFinder.CalculateRref(allEqs);
+            var rref = rrefFinder.CalculateRref(allEqs);
 
 
-            var q = AMD.Generate(allEqs, ColumnOrdering.MinimumDegreeAtA);
-
-            var s = new SymbolicFactorization() {q = q};
-            
-            
-
-            var qr = CSparse.Double.Factorization.SparseQR.Create(allEqs, ColumnOrdering.MinimumDegreeAtA);
-
-            var r = ((CCS)ReflectionUtils.GetFactorR(qr, "R"));
-            //var q = ((CCS)ReflectionUtils.GetFactorR(qr, "Q"));
-            //var s = ((SymbolicFactorization)ReflectionUtils.GetFactorR(qr, "S"));
-
-            
-
-
-            var idependents = new bool[allEqs.RowCount];
-
-            var rd = allEqs.ToDenseMatrix();
-
-
-            r.EnumerateMembers((row, col, val) =>
-                {
-                    if(row==col)
-                        if (Math.Abs(val) < 1e-6)
-                            return;
-
-                    idependents[row] = true;
-                }
-            );
-
-
-            //var t=qr.
+           
             throw new NotImplementedException();
 
             //return buf.ToCCs();
@@ -1330,6 +1431,28 @@ namespace BriefFiniteElementNet
             return buf.Count(ii => !ii);
         }
 
+        public static int[] EmptyRows(this CCS matrix)
+        {
+            var buf = new bool[matrix.RowCount];
+
+            var lst = new List<int>();
+
+            foreach(var tuple in matrix.EnumerateIndexed2())
+            {
+                var rw = tuple.Item1;
+                var col = tuple.Item2;
+                var val = tuple.Item3;
+
+                if (val != 0)
+                    buf[rw] = true;
+            }
+
+            for (var i = 0; i < buf.Length; i++)
+                if (!buf[i])
+                    lst.Add(i);
+
+            return lst.ToArray();
+        }
 
         public static bool IsIsotropicMaterial(AnisotropicMaterialInfo inf)
         {

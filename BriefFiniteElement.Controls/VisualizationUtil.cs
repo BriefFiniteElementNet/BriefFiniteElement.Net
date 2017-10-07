@@ -10,7 +10,7 @@ namespace BriefFiniteElementNet.Controls
 {
     public static class VisualizationUtil
     {
-        public static void VisualizeInNewWindow(DataTable tbl)
+        public static void VisualizeInNewWindow(DataTable tbl,bool dialog=false)
         {
             var wnd = new Window();
             var grd = new DataGrid();
@@ -18,7 +18,11 @@ namespace BriefFiniteElementNet.Controls
 
             wnd.Content = grd;
 
-            wnd.ShowDialog();
+            if (dialog)
+                wnd.ShowDialog();
+            else
+                wnd.Show();
+
         }
     }
 }

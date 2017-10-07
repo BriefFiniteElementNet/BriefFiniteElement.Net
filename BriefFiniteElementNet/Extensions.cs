@@ -550,5 +550,84 @@ namespace BriefFiniteElementNet
 
             return true;
         }
+
+        public static TSource MinBy<TSource, TKey>(this IEnumerable<TSource> source,
+            Func<TSource, TKey> selector, IComparer<TKey> comparer)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (selector == null) throw new ArgumentNullException(nameof(selector));
+            comparer = comparer ?? Comparer<TKey>.Default;
+
+            using (var sourceIterator = source.GetEnumerator())
+            {
+                if (!sourceIterator.MoveNext())
+                {
+                    throw new InvalidOperationException("Sequence contains no elements");
+                }
+                var min = sourceIterator.Current;
+                var minKey = selector(min);
+                while (sourceIterator.MoveNext())
+                {
+                    var candidate = sourceIterator.Current;
+                    var candidateProjected = selector(candidate);
+                    if (comparer.Compare(candidateProjected, minKey) < 0)
+                    {
+                        min = candidate;
+                        minKey = candidateProjected;
+                    }
+                }
+                return min;
+            }
+        }
+
+        public static IEnumerable<Tuple<int, int, double>> EnumerateIndexed2(this CompressedColumnStorage mtx)
+        {
+
+            int n = mtx.ColumnCount;
+
+            var ax = mtx.Values;
+            var ap = mtx.ColumnPointers;
+            var ai = mtx.RowIndices;
+
+            for (int i = 0; i < n; i++)
+            {
+                var end = ap[i + 1];
+                for (var j = ap[i]; j < end; j++)
+                {
+                    yield return new Tuple<int, int, double>(ai[j], i, ax[j]);
+                }
+            }
+        }
+
+        public static T MinBy<T>(this IEnumerable<T> source, IComparer<T> comparer)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+
+            using (var sourceIterator = source.GetEnumerator())
+            {
+                if (!sourceIterator.MoveNext())
+                {
+                    throw new InvalidOperationException("Sequence contains no elements");
+                }
+
+                var min = sourceIterator.Current;
+
+                var minKey = (min);
+
+
+                while (sourceIterator.MoveNext())
+                {
+                    var candidate = sourceIterator.Current;
+                    var candidateProjected = (candidate);
+
+                    if (comparer.Compare(candidateProjected, minKey) < 0)
+                    {
+                        min = candidate;
+                        minKey = candidateProjected;
+                    }
+                }
+                return min;
+            }
+        }
     }
 }

@@ -29,12 +29,36 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+
+        public static FlatShellStressTensor operator -(FlatShellStressTensor left, FlatShellStressTensor right)
+        {
+            var buf = new FlatShellStressTensor
+            {
+                BendingTensor = left.BendingTensor - right.BendingTensor,
+                MembraneTensor = left.MembraneTensor - right.MembraneTensor
+            };
+
+
+            return buf;
+        }
+
         public static FlatShellStressTensor Multiply(double coef, FlatShellStressTensor tensor)
         {
             var buf = new FlatShellStressTensor
             {
                 BendingTensor = coef*tensor.BendingTensor,
                 MembraneTensor = coef*tensor.MembraneTensor
+            };
+
+            return buf;
+        }
+
+        public static FlatShellStressTensor Multiply(FlatShellStressTensor tensor,double coef )
+        {
+            var buf = new FlatShellStressTensor
+            {
+                BendingTensor = coef * tensor.BendingTensor,
+                MembraneTensor = coef * tensor.MembraneTensor
             };
 
             return buf;

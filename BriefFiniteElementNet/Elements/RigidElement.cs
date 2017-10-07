@@ -29,11 +29,15 @@ namespace BriefFiniteElementNet.Elements
         {
             var distinctNodes = Nodes.Distinct().Where(ii => !ReferenceEquals(ii, null)).ToList();
 
-            var coord = new CoordinateStorage<double>((distinctNodes.Count - 1) * 6, parent.Nodes.Count * 6, 1);
+            var modelDofCount = parent.Nodes.Count * 6;
+
+            var coord = new CoordinateStorage<double>((distinctNodes.Count - 1) * 6, modelDofCount + 1, 1);
 
             var centralNode = distinctNodes.FirstOrDefault();
 
-            if (centralNode != null)
+            if (centralNode == null)
+                throw new Exception();
+
             {
                 var i = 0;
 
@@ -44,102 +48,118 @@ namespace BriefFiniteElementNet.Elements
                 var cRy = centralNode.Index * 6 + 4;
                 var cRz = centralNode.Index * 6 + 5;
 
-
                 foreach (var nde in distinctNodes)
                 {
 
-                    if (ReferenceEquals(nde, null) || ReferenceEquals(nde, centralNode))
-                        continue;
+                    if ( ReferenceEquals(nde, centralNode))
+                    {
 
-                    var iDx = nde.Index * 6 + 0;
-                    var iDy = nde.Index * 6 + 1;
-                    var iDz = nde.Index * 6 + 2;
-                    var iRx = nde.Index * 6 + 3;
-                    var iRy = nde.Index * 6 + 4;
-                    var iRz = nde.Index * 6 + 5;
+                    }
+                    else
+                    {
+                        var iDx = nde.Index * 6 + 0;
+                        var iDy = nde.Index * 6 + 1;
+                        var iDz = nde.Index * 6 + 2;
+                        var iRx = nde.Index * 6 + 3;
+                        var iRy = nde.Index * 6 + 4;
+                        var iRz = nde.Index * 6 + 5;
 
 
-                    var d = nde.Location - centralNode.Location;
+                        var d = nde.Location - centralNode.Location;
 
-                    #region i'th Dx
+                        #region i'th Dx
 
-                    //7.15 p 16, ref[1] sais i'th node's:
-                    //Nde.Dx = Central.Dx + d.Z * Central.Ry - d.Y * Central.Rz
-                    // So
-                    //-Nde.Dx + Central.Dx + d.Z * Central.Ry - d.Y * Central.Rz
-                    coord.At(i, cDx, 1);//Central.Dx
-                    coord.At(i, cRy, d.Z);//d.Z * Central.Ry
-                    coord.At(i, cRz, -d.Y);//- d.Y * Central.Rz
+                        //7.15 p 16, ref[1] sais i'th node's:
+                        //nde.Dx = Central.Dx + d.Z * Central.Ry - d.Y * Central.Rz
+                        // So
+                        //-nde.Dx + Central.Dx + d.Z * Central.Ry - d.Y * Central.Rz
+                        coord.At(i, cDx, 1);//Central.Dx
+                        coord.At(i, cRy, d.Z);//d.Z * Central.Ry
+                        coord.At(i, cRz, -d.Y);//- d.Y * Central.Rz
 
-                    coord.At(i, iDx, -1);//Nde.Dx
+                        coord.At(i, iDx, -1);//Nde.Dx
 
-                    #endregion
+                        #endregion
 
-                    i++;
-                    
-                    #region i'th Dy
+                        i++;
 
-                    //Dy = Central.Dy - d.Z * Central.Rx + d.X * Central.Rz
-                    coord.At(i, cDy, 1);//Central.Dy
-                    coord.At(i, cRx, -d.Z);//-d.Z * Central.Rx
-                    coord.At(i, cRz, d.X);//d.X * Central.Rz
+                        #region i'th Dy
 
-                    coord.At(i, iDy, -1);//Nde.Dy
+                        //nde.Dy = Central.Dy - d.Z * Central.Rx + d.X * Central.Rz
+                        //so
+                        //-nde.Dy + Central.Dy - d.Z * Central.Rx + d.X * Central.Rz
+                        coord.At(i, cDy, 1);//Central.Dy
+                        coord.At(i, cRx, -d.Z);//-d.Z * Central.Rx
+                        coord.At(i, cRz, d.X);//d.X * Central.Rz
 
-                    #endregion
+                        coord.At(i, iDy, -1);//Nde.Dy
 
-                    i++;
+                        #endregion
 
-                    #region i'th Dz
+                        i++;
 
-                    //Dz = Central.Dz + d.Y * Central.Rx - d.X * Central.Ry
-                    coord.At(i, cDz, 1);//Central.Dz 
-                    coord.At(i, cRx, d.Y);//d.Y * Central.Rx
-                    coord.At(i, cRy, -d.X);//- d.X * Central.Ry
+                        #region i'th Dz
 
-                    coord.At(i, iDz, -1);//Nde.Dz
+                        //nde.Dz = Central.Dz + d.Y * Central.Rx - d.X * Central.Ry
+                        //so
+                        //-nde.Dz + Central.Dz + d.Y * Central.Rx - d.X * Central.Ry
+                        coord.At(i, cDz, 1);//Central.Dz 
+                        coord.At(i, cRx, d.Y);//d.Y * Central.Rx
+                        coord.At(i, cRy, -d.X);//- d.X * Central.Ry
 
-                    #endregion
+                        coord.At(i, iDz, -1);//Nde.Dz
 
-                    i++;
+                        #endregion
 
-                    #region i'th Rx
-                    //Rx = Central.Rx
-                    coord.At(i, cRx, 1);
+                        i++;
 
-                    coord.At(i, iRx, -1);
-                    #endregion
+                        #region i'th Rx
+                        //nde.Rx = Central.Rx
+                        coord.At(i, cRx, 1);
 
-                    i++;
+                        coord.At(i, iRx, -1);
+                        #endregion
 
-                    #region i'th Ry
-                    //Ry = Central.Ry
-                    coord.At(i, cRy, 1);
+                        i++;
 
-                    coord.At(i, iRy, -1);
-                    #endregion
+                        #region i'th Ry
+                        //nde.Ry = Central.Ry
+                        coord.At(i, cRy, 1);
 
-                    i++;
+                        coord.At(i, iRy, -1);
+                        #endregion
 
-                    #region i'th Rz
-                    //Rz = Central.Rz
-                    coord.At(i, cRz, 1);
+                        i++;
 
-                    coord.At(i, iRz, -1);
-                    #endregion
+                        #region i'th Rz
+                        //nde.Rz = Central.Rz
+                        coord.At(i, cRz, 1);
+
+                        coord.At(i, iRz, -1);
+                        #endregion
+
+                        i++;
+                    }
                 }
             }
 
             var buf =  coord.ToCCs();
 
             var empties = buf.EmptyRowCount();
+
+            if(empties!=0)
+            {
+                throw new Exception();
+            }
             
             return buf;
         }
 
         public override int GetExtraEquationsCount()
         {
-            return Nodes.Count * 6;
+            //count is equal to slave DoFs
+            //except one node, all others are slaves.
+            return (Nodes.Count - 1) * 6;
         }
     }
 }

@@ -16,6 +16,6 @@ namespace BriefFiniteElementNet.Mathh
         /// </summary>
         /// <param name="a">the matrix</param>
         /// <returns>RREF form</returns>
-        CSparse.Double.CompressedColumnStorage CalculateRref(CCS a);
+        CCS CalculateRref(CCS a);
     }
 }

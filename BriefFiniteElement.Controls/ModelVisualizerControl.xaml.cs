@@ -39,13 +39,16 @@ namespace BriefFiniteElementNet.Controls
         }
 
 
-        public static void VisualizeInNewWindow(Model model,params IElementGraphMeshProvider[] prvdrs)
+        public static void VisualizeInNewWindow(Model model, bool dialog = false, params IElementGraphMeshProvider[] prvdrs)
         {
             var wnd = new Window();
 
-            wnd.Content = new ModelVisualizerControl() {ModelToVisualize = model, MeshProviders = prvdrs.ToList()};
+            wnd.Content = new ModelVisualizerControl() { ModelToVisualize = model, MeshProviders = prvdrs.ToList() };
 
-            wnd.ShowDialog();
+            if (dialog)
+                wnd.ShowDialog();
+            else
+                wnd.Show();
         }
 
         public List<IElementGraphMeshProvider> MeshProviders = new List<IElementGraphMeshProvider>();
