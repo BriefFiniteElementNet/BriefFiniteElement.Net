@@ -69,7 +69,13 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// The solvers with key of master mapping! Solvers[Master Mapping] = appropriated solver
         /// </summary>
-        public Dictionary<int[], ISolver> Solvers = new Dictionary<int[], ISolver>(new BriefFiniteElementNet.IntArrayCompairer());
+        public Dictionary<int[], ISolver> Solvers = new Dictionary<int[], ISolver>(new IntArrayCompairer());
+
+        /// <summary>
+        /// The solvers with key of Pd matrix (delta permute) Solvers[Pd] = appropriated solver
+        /// </summary>
+        public Dictionary<CCS, ISolver> Solvers_New = new Dictionary<CCS, ISolver>();
+
 
         [Obsolete]
         public ISolver Solver { get; set; }
@@ -187,6 +193,7 @@ namespace BriefFiniteElementNet
                 return;
 
             AddAnalysisResult(cse);
+            //AddAnalysisResult_v2(cse);
         }
 
         /*
@@ -488,10 +495,8 @@ namespace BriefFiniteElementNet
 
             var map = DofMappingManager.Create(parent, loadCase);
 
-
             var n = parent.Nodes.Count;//node count
             var m = map.M;//master node count
-
 
             var dispPermute = PermutationGenerator.GetDisplacementPermute(parent, map);
             var forcePermute = PermutationGenerator.GetForcePermute(parent, map);
@@ -604,7 +609,7 @@ namespace BriefFiniteElementNet
         /// If system is not analyses against a specific load case, then this method will analyses structure against <see cref="LoadCase"/>.
         /// While this method is using pre computed Cholesky Decomposition , its have a high performance in solving the system.
         /// </remarks>
-        private void AddAnalysisResult(LoadCase loadCase)
+        public void AddAnalysisResult(LoadCase loadCase)
         {
             ISolver solver;
 
@@ -616,8 +621,8 @@ namespace BriefFiniteElementNet
             var pu = PermutationGenerator.GetDisplacementPermute(parent, map);//permutation of U
             var pf = PermutationGenerator.GetForcePermute(parent, map);//permutation of F
 
-            var fe = elementForces[loadCase] = GetTotalElementsForceVector(loadCase, map);
-            var fc = concentratedForces[loadCase] = GetTotalConcentratedForceVector(loadCase, map);
+            var fe = elementForces[loadCase] = GetTotalElementsForceVector(loadCase);
+            var fc = concentratedForces[loadCase] = GetTotalConcentratedForceVector(loadCase);
             
 
             var ft = fe.Plus(fc);
@@ -649,10 +654,10 @@ namespace BriefFiniteElementNet
 
             #endregion
 
-            #region  K_r,d and solver
             var krd = CalcUtil.GetReducedZoneDividedMatrix(kr, map);
-
             AnalyseStiffnessMatrixForWarnings(krd, map, loadCase);
+
+            #region  solver
 
             if (Solvers.ContainsKey(map.MasterMap))
             {
@@ -728,6 +733,110 @@ namespace BriefFiniteElementNet
 
             _forces[loadCase] = ft;
             _displacements[loadCase] = ut;
+        }
+
+
+        /// <summary>
+        /// Adds the analysis result.
+        /// </summary>
+        /// <param name="loadCase">The load case.</param>
+        /// <remarks>if model is analyzed against specific load case, then displacements are available through <see cref="Displacements"/> property.
+        /// If system is not analyses against a specific load case, then this method will analyses structure against <see cref="LoadCase"/>.
+        /// While this method is using pre computed Cholesky Decomposition , its have a high performance in solving the system.
+        /// </remarks>
+        public void AddAnalysisResult_v2(LoadCase loadCase)
+        {
+            var n = parent.Nodes.Count * 6;
+
+
+            ISolver solver;
+
+            var perm = CalcUtil.GenerateP_Delta_Mpc(parent, loadCase, new Mathh.GaussRrefFinder());
+
+            var np = perm.Item1.ColumnCount;//master count
+
+            var rd = perm.Item2;
+
+            var pd = perm.Item1;
+            var pf = pd.Transpose();
+
+            var kt = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(parent);
+            var kr = pf.Multiply(kt).Multiply(pd);
+
+            var ft = new double[n];
+
+            {
+                var fe = elementForces[loadCase] = GetTotalElementsForceVector(loadCase);
+                var fc = concentratedForces[loadCase] = GetTotalConcentratedForceVector(loadCase);
+
+                ft.AddToSelf(fe);
+                ft.AddToSelf(fc);
+            }
+
+            var a1 = new double[n];
+
+            //a1.AddToSelf(rd);
+
+            kt.Multiply(rd, a1);
+
+            a1.AddToSelf(ft);
+
+            var a2 = new double[np];
+
+            pf.Multiply(a1, a2);
+
+            var a3 = new double[np];
+
+            #region load/generate solver
+
+            if (Solvers_New.ContainsKey(pd))
+            {
+                solver = Solvers_New[pd];
+            }
+            else
+            {
+                solver = SolverFactory.CreateSolver((CCS)kr);
+
+                Solvers_New[pd] = solver;
+            }
+
+
+            if (!solver.IsInitialized)
+                solver.Initialize();
+
+            #endregion
+
+
+            solver.Solve(a2, a3);
+
+            var dt = new double[n];
+
+            pd.Multiply(a3, dt);
+
+
+            dt.AddToSelf(rd, -1);
+
+            //_displacements[loadCase] = dt;
+            if(false)
+            {
+                var dsps = _displacements[loadCase];
+
+                var err = CalcUtil.Subtract(dsps, dt);
+
+                var maxErr = err.Max(i => Math.Abs(i));
+            }
+
+
+            {
+                ft.FillWith(0);
+
+                kt.Multiply(dt, ft);
+
+                _forces[loadCase] = ft;
+                _displacements[loadCase] = dt;
+            }
+            
+
         }
 
         /// <summary>
@@ -889,7 +998,7 @@ namespace BriefFiniteElementNet
         /// <param name="cse">The load case.</param>
         /// <param name="map">The map.</param>
         /// <returns></returns>
-        private double[] GetTotalConcentratedForceVector(LoadCase cse, DofMappingManager map)
+        private double[] GetTotalConcentratedForceVector(LoadCase cse)
         {
             //force vector for both free and fixed dof
 
@@ -941,7 +1050,7 @@ namespace BriefFiniteElementNet
         /// <param name="cse">The load case.</param>
         /// <param name="map">The map.</param>
         /// <returns></returns>
-        private double[] GetTotalElementsForceVector(LoadCase cse, DofMappingManager map)
+        private double[] GetTotalElementsForceVector(LoadCase cse)
         {
             //force vector for both free and fixed dof
 
@@ -994,7 +1103,6 @@ namespace BriefFiniteElementNet
 
             return buf;
         }
-
 
         /// <summary>
         /// Gets the total displacement vector for whole structure for specified <see cref="cse"/>

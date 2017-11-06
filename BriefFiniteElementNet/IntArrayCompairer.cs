@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CCS = CSparse.Double.CompressedColumnStorage;
 
 namespace BriefFiniteElementNet
 {
@@ -46,4 +47,5 @@ namespace BriefFiniteElementNet
             return true;
         }
     }
+
 }

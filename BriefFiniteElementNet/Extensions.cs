@@ -13,6 +13,11 @@ namespace BriefFiniteElementNet
 {
     public static class Extensions
     {
+        public static  bool FEquals(this double x, double y, double tol)
+        {
+            return Math.Abs(x - y) < Math.Abs(tol);
+        }
+
         public static double[] Negate(this double[] arr)
         {
             arr = (double[])arr.Clone();

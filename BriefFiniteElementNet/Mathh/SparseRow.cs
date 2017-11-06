@@ -105,6 +105,12 @@ namespace BriefFiniteElementNet.Mathh
             }
         }
 
+        public void Multiply(double coef)
+        {
+            for (var i = 0; i < this.Size; i++)
+                this.Values[i] *= coef;
+        }
+
         /// <summary>
         /// Eliminates the specified index of <see cref="eliminated"/> row by adding appropriated multiply of <see cref="eliminator"/> to it.
         /// </summary>
@@ -274,10 +280,18 @@ namespace BriefFiniteElementNet.Mathh
         /// Calculates the NNZ of specfied row.
         /// </summary>
         /// <param name="lastColumnIndex">Last index of the column.</param>
+        /// <param name="tol">The epsilon.</param>
         /// <returns></returns>
-        public int CalcNnz(int lastColumnIndex)
+        public int CalcNnz(int lastColumnIndex,double tol=1e-9)
         {
-            var buf = Indexes.Count(i=>i!=lastColumnIndex);
+            var buf = 0;
+
+            foreach (var tpl in this.EnumerateIndexed())
+                if (tpl.Item1 != lastColumnIndex)
+                    if (Math.Abs(tpl.Item2) > tol)
+                        buf++;
+
+            //var buf = Indexes.Count(i=>i!=lastColumnIndex);
 
             return buf;
         }
@@ -305,7 +319,35 @@ namespace BriefFiniteElementNet.Mathh
             return buf >= 0;
         }
 
+        public double GetMember(int index)
+        {
+            var buf = Array.BinarySearch(Indexes, 0, Size, index);
 
+            if (buf >= 0)
+                return Values[buf];
+
+            throw new Exception();
+        }
+
+        public bool IsZeroRow(double tol)
+        {
+            for (var i = 0; i < Size; i++)
+                if (Math.Abs(Values[i]) > Math.Abs(tol))
+                    return false;
+
+            return true;
+        }
+
+
+        public void SetMember(int index, double value)
+        {
+            var buf = Array.BinarySearch(Indexes, 0, Size, index);
+
+            if (buf >= 0)
+                Values[buf] = value;
+            else
+                throw new Exception();
+        }
 
         public IEnumerable<Tuple<int, double>> EnumerateIndexed()
         {

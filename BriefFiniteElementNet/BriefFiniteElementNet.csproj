@@ -48,6 +48,7 @@
     <Compile Include="ArrayPool.cs" />
     <Compile Include="BendingStressTensor.cs" />
     <Compile Include="CalculationCache.cs" />
+    <Compile Include="Elements\VirtualSupport.cs" />
     <Compile Include="Mathh\SparseEqSystem.cs" />
     <Compile Include="Mathh\GaussRrefFinder.cs" />
     <Compile Include="Mathh\SparseRow.cs" />
@@ -237,6 +238,7 @@
     <None Include="Elements\Spring1D.md" />
     <None Include="Elements\TelepathyLink.md" />
     <None Include="Elements\Tetrahedral.md" />
+    <None Include="Elements\VirtualSupport.md" />
     <None Include="Mathh\IRrefFinder.md" />
     <None Include="TransformManagerL2G.md" />
     <None Include="Elements\TriangleFlatShell.md" />

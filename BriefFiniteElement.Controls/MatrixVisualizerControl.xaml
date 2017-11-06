@@ -10,7 +10,13 @@
             <RowDefinition />
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
-        <DataGrid Name="DataGrid" LoadingRow="DataGrid_OnLoadingRow" CanUserAddRows="False" Margin="0,0,0,1" />
+        <DataGrid CanUserReorderColumns="False" CanUserSortColumns="False"  SelectionMode="Extended" Name="DataGrid" LoadingRow="DataGrid_OnLoadingRow" CanUserAddRows="False" Margin="0,0,0,1" >
+            <DataGrid.Resources>
+                <Style TargetType="{x:Type DataGridCell}">
+                    <EventSetter Event="GotFocus" Handler="DataGridCell_GotFocus"></EventSetter>
+                </Style>
+            </DataGrid.Resources>
+        </DataGrid>
         <Button Content="Copy to clipboard" ToolTip="Copy matlab formatted matrix to clipboard" HorizontalAlignment="Left" Margin="0,4,0,0" Grid.Row="1" VerticalAlignment="Top" Width="128" Click="Button_Click"/>
 
     </Grid>

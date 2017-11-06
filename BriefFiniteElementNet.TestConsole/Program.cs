@@ -263,37 +263,52 @@ namespace BriefFiniteElementNet.TestConsole
 
 
             var zs = model.Nodes
-                //.Where(i => i.Constraints != Constraint.Fixed)
+                .Where(i => i.Constraints != Constraint.Fixed)
                 .Select(i => i.Location.Z).Distinct().ToList();
 
+            
             foreach(var z in zs)
             {
                 var relm = new RigidElement_MPC();
+                var relm2 = new RigidElement();
 
                 relm.Nodes.AddRange(model.Nodes.Where(i => i.Location.Z == z));
+                relm2.Nodes.AddRange(model.Nodes.Where(i => i.Location.Z == z));
 
                 model.MpcElements.Add(relm);
+                model.RigidElements.Add(relm2);
 
                 relm.UseForAllLoads = true;
-
+                relm2.UseForAllLoads = true;
             }
 
-            StructureGenerator.AddRandomDisplacements(model, 0.1);
+            //StructureGenerator.AddRandomDisplacements(model, 0.1);
 
+            /**/
             foreach (var node in model.Nodes)
             {
                 if (node.Constraints == Constraint.Fixed)
-                    node.Settlements = new Displacement(1, 1, 1, 1, 1, 1);
+                {
+                    node.Settlements = new Displacement(1, 0, 0, 0, 0, 0);
+                    node.Loads.Clear();
+                }
+                    
             }
+            /**/
 
-            model.Clone();
+
+            StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
+
+            //model.Clone();
 
             #region
 
             #endregion
 
-            CalcUtil.GenerateP_Delta_Mpc(model, LoadCase.DefaultLoadCase,new GaussRrefFinder());
-
+            model.Solve();
+            //CalcUtil.GenerateP_Delta_Mpc(model, LoadCase.DefaultLoadCase,new GaussRrefFinder());
+            model.LastResult.AddAnalysisResult(LoadCase.DefaultLoadCase);
+            model.LastResult.AddAnalysisResult_v2(LoadCase.DefaultLoadCase);
 
         }
 

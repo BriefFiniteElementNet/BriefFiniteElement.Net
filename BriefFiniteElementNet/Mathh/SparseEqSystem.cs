@@ -96,6 +96,44 @@ namespace BriefFiniteElementNet.Mathh
             return buf;
         }
 
+        public static SparseEqSystem Generate(SparseRow[] rows,int totalColCount)
+        {
+            
+            var buf = new SparseEqSystem();
+            var lastCol = totalColCount - 1;
+
+            var eqs = buf.Equations = rows;
+            var colNnzs = buf.ColumnNonzeros = new int[totalColCount];
+            buf.RowNonzeros = new int[rows.Length];
+
+
+            for (var i = 0; i < eqs.Length; i++)
+            {
+                var eq = rows[i];
+
+                foreach (var tuple in eq.EnumerateIndexed())
+                {
+                    var rw = i;//tuple.Item1;
+                    var col = tuple.Item1;//tuple.Item2;
+                    var val = tuple.Item2;
+
+                    if (col != lastCol)
+                        colNnzs[col]++;
+                }
+            }
+
+
+            for (var i = 0; i < eqs.Length; i++)
+            {
+                buf.RowNonzeros[i] = buf.Equations[i].CalcNnz(lastCol);
+            }
+
+            buf.RowCount = rows.Length;
+            buf.ColumnCount = totalColCount;
+
+            return buf;
+        }
+
         public int RowCount, ColumnCount;
 
     }

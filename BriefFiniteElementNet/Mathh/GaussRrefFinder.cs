@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CCS = CSparse.Storage.CompressedColumnStorage<double>;
+using CCS = CSparse.Double.CompressedColumnStorage;//<double>;
 using BriefFiniteElementNet;
 
 namespace BriefFiniteElementNet.Mathh
@@ -22,35 +22,39 @@ namespace BriefFiniteElementNet.Mathh
             for (var i = 0; i < sys.Equations.Length; i++)
                 sys.Equations[i].Tag = i;
 
-            var lastColIndex = a.ColumnCount;
+            var lastColIndex = a.ColumnCount-1;
 
             //should have n columns with one nonzero
 
             //var colPivotHistory = new HashSet<int>();
             //var rowPivotHistory = new HashSet<int>();
-            var dependentRows = new HashSet<int>();
+            var dependentRows = new bool[sys.RowCount];// HashSet<int>();
             var leadingMember = new bool[sys.RowCount];
 
 
-            var pivotedYet = new bool[a.RowCount];
+            //var pivotedYet = new bool[a.RowCount];
 
             for (var i = 0; i < sys.Equations.Length; i++)
             {
                 foreach(var tuple in sys.Equations[i].EnumerateIndexed())
                 {
                     if (sys.ColumnNonzeros[tuple.Item1] == 1)
-                        pivotedYet[i] = true;
+                        leadingMember[i] = true;
                 }
             }
 
 
+            var maxItter = Math.Max(a.ColumnCount, a.RowCount);
 
-            while (true)
+            var itter = 0;
+
+            while (itter++ < maxItter)
             {
                 //find count
                 var oneNnzCols = sys.ColumnNonzeros.Count(i => i == 1);
 
-                var eqNeeded = Math.Min(a.ColumnCount, a.RowCount - dependentRows.Count);
+                var eqNeeded = Math.Min(a.ColumnCount - 1, a.RowCount - dependentRows.Count(i => i == true));
+
 
                 if (oneNnzCols == eqNeeded)
                     break;
@@ -66,16 +70,20 @@ namespace BriefFiniteElementNet.Mathh
                 {
                     for (var j = 0; j < sys.RowCount; j++)
                     {
-                        if (rowPivotHistory.Contains(j))
+                        if (leadingMember[j])
                             continue;
 
-                        if (sys.RowNonzeros[j] <= 1)
+                        if (dependentRows[j])
                             continue;
+
+
+                        //if (sys.RowNonzeros[j] <= 1)
+                        //    continue;
 
                         if (sys.RowNonzeros[j] < minRowNnz)
                         {
                             minRowNnzIndex = j;
-                            minRowNnz = sys.ColumnNonzeros[j];
+                            minRowNnz = sys.RowNonzeros[j];
                         }
                     }
                 }
@@ -94,8 +102,8 @@ namespace BriefFiniteElementNet.Mathh
                     {
                         var j = sys.Equations[minRowNnzIndex].Indexes[jj];
 
-                        if (colPivotHistory.Contains(j))
-                            continue;
+                        //if (colPivotHistory.Contains(j))
+                        //    continue;
 
                         if (sys.ColumnNonzeros[j] <= 1)
                             continue;
@@ -114,7 +122,7 @@ namespace BriefFiniteElementNet.Mathh
 
                 if (minColNnzIndex == -1)
                 {
-                    var t = sys.ToCcs().ToDenseMatrix();
+                    //var t = sys.ToCcs().ToDenseMatrix();
 
                     throw new Exception();
                 }
@@ -122,11 +130,14 @@ namespace BriefFiniteElementNet.Mathh
                 var col = minColNnzIndex;
 
 
-                var c1 = sys.Equations.Where(i => i.ContainsIndex(col));
-                var rw =
-                //c1.MinBy(j => j.Size, null);
-                    sys.Equations[minRowNnzIndex];
+                var c1 = sys.Equations.Where(i => i.ContainsIndex(col) && !leadingMember[i.Tag]);
 
+                var rw =
+                c1.MinBy(j => j.Size, null);
+                //sys.Equations[minRowNnzIndex];
+
+                if (dependentRows[sys.Equations.IndexOfReference(rw)])
+                    throw new Exception();
 
                 Console.WriteLine("Pivot: {0},{1}", sys.Equations.IndexOfReference(rw), col);
 
@@ -140,7 +151,7 @@ namespace BriefFiniteElementNet.Mathh
                 {
                     var canditate = eqs[i];
 
-                    if (canditate.ContainsIndex(col) && !ReferenceEquals(eliminator,canditate))
+                    if (canditate.ContainsIndex(col) && !ReferenceEquals(eliminator, canditate))
                     {
                         var oldOne = eqs[i];//to be removed
 
@@ -153,21 +164,25 @@ namespace BriefFiniteElementNet.Mathh
 
                         if (newOne.CalcNnz(lastColIndex) == 0 && newOne.GetRightSideValue(lastColIndex) != 0)
                         {
-                            //a inconsistent equation
                             throw new Exception("Inconsistent system");
                         }
 
                         if (newOne.CalcNnz(lastColIndex) == 0 && newOne.GetRightSideValue(lastColIndex) == 0)
                         {
                             //fully zero equation
-                            dependentRows.Add(newOne.Tag);
+                            dependentRows[i] = true;// newOne.Tag);
                         }
+
+
 
                         newOne.Tag = oldOne.Tag;
 
                         foreach (var enm in newOne.EnumerateIndexed())
                         {
                             sys.ColumnNonzeros[enm.Item1]++;
+
+                            if (sys.ColumnNonzeros[enm.Item1] == 1)
+                                leadingMember[i] = true;
                         }
 
 
@@ -181,21 +196,50 @@ namespace BriefFiniteElementNet.Mathh
 
                 }
 
-                colPivotHistory.Add(col);
-                rowPivotHistory.Add(minRowNnzIndex);
+                leadingMember[sys.Equations.IndexOfReference(rw)] = true;
 
                 Console.WriteLine("elimination done for all eqs, Col[{0}] : {1} nnzs", col, sys.ColumnNonzeros[col]);
-
-                var mxNnz = colPivotHistory.Max(i => sys.ColumnNonzeros[i]);
-
-                Console.WriteLine("max nnz of last pivots {0}", mxNnz);
 
                 if (sys.ColumnNonzeros[col] != 1)
                     Guid.NewGuid();
             }
 
-            throw new Exception();
+            SparseEqSystem newSys;// = new SparseEqSystem();
+
+            {
+                ////////start final check
+
+                var tol = 1e-9;
+
+                var dependentEquationCount = sys.Equations.Count(i => i.CalcNnz(lastColIndex) == 0 && i.GetRightSideValue(lastColIndex).FEquals(0, tol));
+                var incosistentEquationCount = sys.Equations.Count(i => i.CalcNnz(lastColIndex) == 0 && !i.GetRightSideValue(lastColIndex).FEquals(0, tol));
+                var NnzMemberInCol = new int[sys.ColumnCount - 1];
+
+                foreach (var eq in sys.Equations)
+                {
+                    foreach (var idx in eq.EnumerateIndexed())
+                        if (idx.Item1 != lastColIndex)
+                            if (!idx.Item2.FEquals(0, tol))
+                                NnzMemberInCol[idx.Item1]++;
+                }
+
+                var leadingMembers = NnzMemberInCol.Count(i => i == 1);
+
+                if (leadingMembers != Math.Min(sys.ColumnCount-1, sys.RowCount - dependentEquationCount) )
+                    throw new Exception();
+
+                if (incosistentEquationCount != 0)
+                    throw new Exception();
+
+                var allExceptDependentEqs = sys.Equations.Where(i => !(i.CalcNnz(lastColIndex) == 0 && i.GetRightSideValue(lastColIndex).FEquals(0, tol))).ToArray();
+
+                newSys = SparseEqSystem.Generate(allExceptDependentEqs, a.ColumnCount);
+            }
+
+            return newSys.ToCcs();
         }
+
+        
 
         public class SparseRowLengthComparer : IComparer<SparseRow>
         {

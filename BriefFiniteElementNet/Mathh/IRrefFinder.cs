@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CCS = CSparse.Storage.CompressedColumnStorage<double>;
+using CCS = CSparse.Double.CompressedColumnStorage;//<double>;
 
 namespace BriefFiniteElementNet.Mathh
 {

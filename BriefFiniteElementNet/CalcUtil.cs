@@ -487,11 +487,11 @@ namespace BriefFiniteElementNet
         /// Fills the whole <see cref="array"/> with -1.
         /// </summary>
         /// <param name="array">The array.</param>
-        public static void FillNegative(this int[] array)
+        public static void FillWith<T>(this T[] array,T value)
         {
             for (var i = array.Length - 1; i >= 0; i--)
             {
-                array[i] = -1;
+                array[i] = value;
             }
         }
 
@@ -740,6 +740,17 @@ namespace BriefFiniteElementNet
         public static  CompressedColumnStorage<double> Clonee(this CompressedColumnStorage<double>  matrix)
         {
             var buf = new CCS(matrix.RowCount, matrix.ColumnCount, matrix.Values.Length);
+
+            matrix.RowIndices.CopyTo(buf.RowIndices, 0);
+            matrix.ColumnPointers.CopyTo(buf.ColumnPointers, 0);
+            matrix.Values.CopyTo(buf.Values, 0);
+
+            return buf;
+        }
+
+        public static CSparse.Double.CompressedColumnStorage Clonee(this CSparse.Double.CompressedColumnStorage matrix)
+        {
+            var buf = new CSparse.Double.CompressedColumnStorage(matrix.RowCount, matrix.ColumnCount, matrix.Values.Length);
 
             matrix.RowIndices.CopyTo(buf.RowIndices, 0);
             matrix.ColumnPointers.CopyTo(buf.ColumnPointers, 0);
@@ -1172,7 +1183,7 @@ namespace BriefFiniteElementNet
         }
 
         [Obsolete("Under development")]
-        public static CCS GenerateP_Delta_Mpc(Model target, LoadCase loadCase,IRrefFinder rrefFinder)
+        public static Tuple<CCS, double[]> GenerateP_Delta_Mpc(Model target, LoadCase loadCase, IRrefFinder rrefFinder)
         {
             var totDofCount = target.Nodes.Count * 6;
 
@@ -1181,7 +1192,6 @@ namespace BriefFiniteElementNet
             var n = target.Nodes.Count;
 
             var boundaryConditions = GetModelBoundaryConditions(target, loadCase);
-
 
             var lastRow = 0;
 
@@ -1193,7 +1203,7 @@ namespace BriefFiniteElementNet
             var extraEqCount = 0;
 
             foreach (var mpcElm in target.MpcElements)
-                if(mpcElm.AppliesForLoadCase(loadCase))
+                if (mpcElm.AppliesForLoadCase(loadCase))
                     extraEqCount += mpcElm.GetExtraEquationsCount();
 
             extraEqCount += boundaryConditions.RowCount;
@@ -1206,10 +1216,10 @@ namespace BriefFiniteElementNet
                 {
                     var extras = mpcElm.GetExtraEquations();
 
-                    if (extras.ColumnCount != totDofCount+1)
+                    if (extras.ColumnCount != totDofCount + 1)
                         throw new Exception();
 
-                    foreach(var tuple in extras.EnumerateIndexed2())
+                    foreach (var tuple in extras.EnumerateIndexed2())
                     {
                         var row = tuple.Item1;
                         var col = tuple.Item2;
@@ -1231,7 +1241,7 @@ namespace BriefFiniteElementNet
             }
 
             {
-                if (boundaryConditions.ColumnCount != totDofCount+1)
+                if (boundaryConditions.ColumnCount != totDofCount + 1)
                     throw new Exception();
 
 
@@ -1310,11 +1320,123 @@ namespace BriefFiniteElementNet
 
             #endregion
 
-
             var rref = rrefFinder.CalculateRref(allEqs);
 
+            var rrefSys = SparseEqSystem.Generate(rref);
 
-           
+            #region generate P_Delta
+
+            var pRows = new int[totDofCount]; // pRows[i] = index of equation that its right side is Di (ai*Di = a1*D1+...+an*Dn)
+
+            pRows.FillWith(-1);
+
+            for (var i = 0; i < rrefSys.RowCount; i++)
+            {
+                foreach (var tpl in rrefSys.Equations[i].EnumerateIndexed())
+                {
+                    if (rrefSys.ColumnNonzeros[tpl.Item1] == 1)
+                    {
+                        if (pRows[tpl.Item1] != -1)
+                            throw new Exception();
+
+                        pRows[tpl.Item1] = i;
+                    }
+                }
+            }
+
+            int cnt = 0;
+
+            var lastColIndex = rrefSys.ColumnCount - 1;
+
+            var p2Coord = new CoordinateStorage<double>(totDofCount, totDofCount, 1);
+
+            var rightSide = new double[totDofCount];
+
+            
+
+
+
+            for (var i = 0; i < totDofCount; i++)
+            {
+                if (pRows[i] == -1)
+                {
+                    p2Coord.At(i, i, 1);
+                    continue;
+                }
+
+                var eq = rrefSys.Equations[pRows[i]];
+                eq.Multiply(-1 / eq.GetMember(i));
+
+                var minus1 = eq.GetMember(i);
+
+                if (!minus1.FEquals(-1, 1e-9))
+                    throw new Exception();
+
+                //eq.SetMember(i, 0);
+
+                foreach (var tpl in eq.EnumerateIndexed())
+                {
+                    if (tpl.Item1 != lastColIndex)
+                        p2Coord.At(i, tpl.Item1, tpl.Item2);
+                    else
+                        rightSide[i] = tpl.Item2;
+                }
+            }
+
+            
+
+
+            cnt = 0;
+
+            foreach(var eq in rrefSys.Equations)
+            {
+                if(eq.IsZeroRow(1e-9))
+                {
+                    cnt++;
+                }
+            }
+
+            #endregion
+
+            var p2 = p2Coord.ToCCs();
+
+            var colsToRemove = new bool[totDofCount];
+
+            var colNumPerm = new int[totDofCount];
+
+            colNumPerm.FillWith(-1);
+
+            colsToRemove.FillWith(false);
+
+            var tmp = 0;
+
+            for (var i = 0; i < rrefSys.ColumnNonzeros.Length; i++)
+                if (i != lastColIndex)
+                {
+                    if (rrefSys.ColumnNonzeros[i] == 1)
+                        colsToRemove[i] = true;
+                    else
+                        colNumPerm[i] = tmp++;
+                }
+                
+
+            var p3Crd = new CoordinateStorage<double>(totDofCount, totDofCount - colsToRemove.Count(i => i), 1);
+
+            foreach(var tpl in p2.EnumerateIndexed2())
+            {
+                if (!colsToRemove[tpl.Item2])
+                {
+                    p3Crd.At(tpl.Item1, colNumPerm[tpl.Item2], tpl.Item3);
+                }
+            }
+
+            var p3 = p3Crd.ToCCs();
+
+            //var tmpp = p3.ToDenseMatrix();
+
+
+            return Tuple.Create(p3, rightSide);
+
             throw new NotImplementedException();
 
             //return buf.ToCCs();
@@ -1494,5 +1616,15 @@ namespace BriefFiniteElementNet
             throw new NotImplementedException();
         }
 
+        public static void AddToSelf(this double[] vector,double[] addition,double coef=1)
+        {
+            if (vector.Length != addition.Length)
+                throw new Exception();
+
+            for(var i = 0;i<vector.Length;i++)
+            {
+                vector[i] += addition[i] * coef;
+            }
+        }
     }
 }

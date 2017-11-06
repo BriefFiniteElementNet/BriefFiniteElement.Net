@@ -117,8 +117,8 @@ namespace BriefFiniteElementNet
             var map4 = new int[n];
             var rMap4 = new int[m];
 
-            map4.FillNegative();
-            rMap4.FillNegative();
+            map4.FillWith(-1);
+            rMap4.FillWith(-1);
 
             for (var i = 0; i < n; i++)
             {
@@ -137,8 +137,8 @@ namespace BriefFiniteElementNet
             var map1 = new int[6*n];
             var rMap1 = new int[6*m];
 
-            map1.FillNegative();
-            rMap1.FillNegative();
+            map1.FillWith(-1);
+            rMap1.FillWith(-1);
 
             cnt = 0;
 
@@ -178,10 +178,10 @@ namespace BriefFiniteElementNet
             var map2 = new int[6*m];
             var map3 = new int[6*m];
 
-            rMap2.FillNegative();
-            rMap3.FillNegative();
-            map2.FillNegative();
-            map3.FillNegative();
+            rMap2.FillWith(-1);
+            rMap3.FillWith(-1);
+            map2.FillWith(-1);
+            map3.FillWith(-1);
 
 
             var rcnt = 0;
@@ -224,7 +224,7 @@ namespace BriefFiniteElementNet
             #region RMaster
 
             var rMaster = new int[n];
-            rMaster.FillNegative();
+            rMaster.FillWith(-1);
 
             cnt = 0;
 

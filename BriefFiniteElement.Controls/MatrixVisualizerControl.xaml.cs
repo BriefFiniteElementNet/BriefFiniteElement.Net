@@ -22,15 +22,38 @@ namespace BriefFiniteElementNet.Controls
             e.Row.Header = (e.Row.GetIndex()).ToString();
         }
 
-        public static void VisualizeInNewWindow(Matrix matrix,string title="")
+        private void DataGridCell_GotFocus(object sender, RoutedEventArgs e)
         {
-            var wnd = new Window() {Title = title};
+            var src = e.Source as DataGridCell;
+
+            //DataGrid.cells src.Column
+            //e.Row.Header = (e.Row.GetIndex()).ToString();
+        }
+
+
+        public static void VisualizeInNewWindow(Matrix matrix, string title = "")
+        {
+            var wnd = new Window() { Title = title };
             var mtxCtrl = new MatrixVisualizerControl();
             mtxCtrl.VisualizeMatrix(matrix);
 
             wnd.Content = mtxCtrl;
 
             wnd.Show();
+        }
+
+        public static void VisualizeInNewWindow(Matrix matrix, string title ,bool showDialog)
+        {
+            var wnd = new Window() { Title = title };
+            var mtxCtrl = new MatrixVisualizerControl();
+            mtxCtrl.VisualizeMatrix(matrix);
+
+            wnd.Content = mtxCtrl;
+
+            if (showDialog)
+                wnd.ShowDialog();
+            else
+                wnd.Show();
         }
 
         public void VisualizeMatrix(BriefFiniteElementNet.Matrix mtx)
