@@ -406,5 +406,13 @@ namespace BriefFiniteElementNet
         {
             return string.Format("Δx : {0:e2}, Δy : {1:e2}, Δz : {2:e2}, θx : {3:e2}, θy : {4:e2}, θz : {5:e2}", this.dx, this.dy, this.dz, this.rx, this.ry, this.rz);
         }
+
+        public string ToString(int decimalDigits)
+        {
+            var d = decimalDigits;
+
+            return string.Format("Δx : {0:e" + d + "}, Δy : {1:e" + d + "}, Δz : {2:e" + d + "}, θx : {3:e" + d + "}, θy : {4:e" + d + "}, θz : {5:e" + d + "}", this.dx, this.dy, this.dz, this.rx, this.ry, this.rz, decimalDigits);
+
+        }
     }
 }

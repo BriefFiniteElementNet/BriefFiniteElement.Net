@@ -29,7 +29,14 @@ namespace BriefFiniteElementNet
         [NonSerialized]
         protected Model parent;
 
+        /// <summary>
+        /// The temporal data, to store temporal or calculation sensitive data,
+        /// This field is readonly and is not serialized with the containing object.
+        /// </summary>
+        [NonSerialized]
+        protected readonly Dictionary<Array, object> TemporalData = new Dictionary<Array, object>(new ArrayEqualityComparer());
 
+        
 
         /// <summary>
         /// Gets the identifier.
@@ -150,6 +157,37 @@ namespace BriefFiniteElementNet
         /// </summary>
         protected StructurePart()
         {
+            
+        }
+
+        /// <summary>
+        /// Gets the temporal data with specified key
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key">The key, sesitive to order.</param>
+        /// <returns>true if value exists, false otherwise</returns>
+        public bool GetTemporalData<T>(out T value,params object[] key)
+        {
+            if (!TemporalData.ContainsKey(key))
+            {
+                value = default(T);
+                return false;
+            }
+
+            var obj = TemporalData[key];
+
+            value = (T)obj;
+            return true;
+        }
+
+        /// <summary>
+        /// Sets the temporal data with specified key.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <param name="key">The key, sensitive to order.</param>
+        public void SetTemporalData(object value, params object[] key)
+        {
+            TemporalData[key] = value;
         }
 
         /// <summary>

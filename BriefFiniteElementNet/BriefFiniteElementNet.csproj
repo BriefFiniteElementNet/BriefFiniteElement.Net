@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayEqualityCompairer.cs" />
     <Compile Include="ArrayPool.cs" />
     <Compile Include="BendingStressTensor.cs" />
     <Compile Include="CalculationCache.cs" />
