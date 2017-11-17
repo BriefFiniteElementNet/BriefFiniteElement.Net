@@ -114,7 +114,7 @@ namespace BriefFiniteElementNet.Elements
                     new FluentElementPermuteManager.ElementLocalDof(1, DoF.Dz),
                 };
 
-                var kle = FluentElementPermuteManager.FullyExpand(kl, currentOrder, 3);
+                var kle = FluentElementPermuteManager.FullyExpand(kl, currentOrder, 2);
 
                 return kle;
             }

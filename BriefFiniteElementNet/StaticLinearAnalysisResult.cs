@@ -28,6 +28,11 @@ namespace BriefFiniteElementNet
         {
         }
 
+        public StaticLinearAnalysisResult(Model parent)
+        {
+            this.parent = parent;
+        }
+
         #endregion
 
         #region Fields
@@ -194,6 +199,22 @@ namespace BriefFiniteElementNet
 
             AddAnalysisResult(cse);
             //AddAnalysisResult_v2(cse);
+        }
+
+        [Obsolete("under development")]
+        public void AddAnalysisResultIfNotExists_MPC(LoadCase cse)
+        {
+            var f1 = _displacements.ContainsKey(cse);
+            var f2 = _forces.ContainsKey(cse);
+
+            if (f1 != f2)
+                throw new Exception("!");
+
+            if (f1)
+                return;
+
+            //AddAnalysisResult(cse);
+            AddAnalysisResult_MPC(cse);
         }
 
         /*
@@ -657,6 +678,22 @@ namespace BriefFiniteElementNet
             var krd = CalcUtil.GetReducedZoneDividedMatrix(kr, map);
             AnalyseStiffnessMatrixForWarnings(krd, map, loadCase);
 
+            {//TODO: remove
+
+                var minAbsDiag = double.MaxValue;
+
+                foreach(var tpl in krd.ReleasedReleasedPart.EnumerateIndexed2())
+                {
+                    if (tpl.Item1 == tpl.Item2)
+                        minAbsDiag = Math.Min(minAbsDiag, Math.Abs(tpl.Item3));
+                }
+
+                if (krd.ReleasedReleasedPart.RowCount != 0)
+                {
+                    //var kk = krd.ReleasedReleasedPart.ToDenseMatrix();
+                }
+            }
+
             #region  solver
 
             if (Solvers.ContainsKey(map.MasterMap))
@@ -744,10 +781,10 @@ namespace BriefFiniteElementNet
         /// If system is not analyses against a specific load case, then this method will analyses structure against <see cref="LoadCase"/>.
         /// While this method is using pre computed Cholesky Decomposition , its have a high performance in solving the system.
         /// </remarks>
-        public void AddAnalysisResult_v2(LoadCase loadCase)
+        public void AddAnalysisResult_MPC(LoadCase loadCase)
         {
             var n = parent.Nodes.Count * 6;
-
+            var dt = new double[n];//total delta 
 
             ISolver solver;
 
@@ -758,10 +795,9 @@ namespace BriefFiniteElementNet
             var rd = perm.Item2;
 
             var pd = perm.Item1;
-            var pf = pd.Transpose();
 
             var kt = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(parent);
-            var kr = pf.Multiply(kt).Multiply(pd);
+
 
             var ft = new double[n];
 
@@ -773,70 +809,58 @@ namespace BriefFiniteElementNet
                 ft.AddToSelf(fc);
             }
 
-            var a1 = new double[n];
-
-            //a1.AddToSelf(rd);
-
-            kt.Multiply(rd, a1);
-
-            a1.AddToSelf(ft);
-
-            var a2 = new double[np];
-
-            pf.Multiply(a1, a2);
-
-            var a3 = new double[np];
-
-            #region load/generate solver
-
-            if (Solvers_New.ContainsKey(pd))
+            if (perm.Item1.RowCount > 0 && perm.Item1.RowCount > 0)
             {
-                solver = Solvers_New[pd];
+                var pf = pd.Transpose();
+
+                
+                var kr = pf.Multiply(kt).Multiply(pd);
+
+                var a1 = new double[n];
+
+                //a1.AddToSelf(rd);
+
+                kt.Multiply(rd, a1);
+
+                a1.AddToSelf(ft);
+
+                var a2 = new double[np];
+
+                pf.Multiply(a1, a2);
+
+                var a3 = new double[np];
+
+                #region load/generate solver
+
+                if (Solvers_New.ContainsKey(pd))
+                {
+                    solver = Solvers_New[pd];
+                }
+                else
+                {
+                    solver = SolverFactory.CreateSolver((CCS)kr);
+
+                    Solvers_New[pd] = solver;
+                }
+
+
+                if (!solver.IsInitialized)
+                    solver.Initialize();
+
+                #endregion
+
+                solver.Solve(a2, a3);
+
+                pd.Multiply(a3, dt);
             }
-            else
-            {
-                solver = SolverFactory.CreateSolver((CCS)kr);
-
-                Solvers_New[pd] = solver;
-            }
-
-
-            if (!solver.IsInitialized)
-                solver.Initialize();
-
-            #endregion
-
-
-            solver.Solve(a2, a3);
-
-            var dt = new double[n];
-
-            pd.Multiply(a3, dt);
-
 
             dt.AddToSelf(rd, -1);
 
-            //_displacements[loadCase] = dt;
-            if(false)
-            {
-                var dsps = _displacements[loadCase];
+            kt.Multiply(dt, ft);
 
-                var err = CalcUtil.Subtract(dsps, dt);
-
-                var maxErr = err.Max(i => Math.Abs(i));
-            }
-
-
-            {
-                ft.FillWith(0);
-
-                kt.Multiply(dt, ft);
-
-                _forces[loadCase] = ft;
-                _displacements[loadCase] = dt;
-            }
+            _forces[loadCase] = ft;
+            _displacements[loadCase] = dt;
             
-
         }
 
         /// <summary>

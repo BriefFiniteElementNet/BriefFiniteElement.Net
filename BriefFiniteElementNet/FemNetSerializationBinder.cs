@@ -23,7 +23,8 @@ namespace BriefFiniteElementNet
             if (assemblyName.Contains("FAB"))
                 Guid.NewGuid();
 
-            return Type.GetType(typeName);
+            var tp = Type.GetType(typeName);
+            return tp;
         }
     }
 

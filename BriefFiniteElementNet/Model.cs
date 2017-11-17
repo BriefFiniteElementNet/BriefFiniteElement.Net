@@ -278,6 +278,15 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+        public static Model LoadWithBinder(Stream str,SerializationBinder binder)
+        {
+            var formatter = new BinaryFormatter() { Binder = binder };
+
+            var buf = (Model)formatter.Deserialize(str);
+
+            return buf;
+        }
+
 
         [Obsolete]
         private void PrecheckForErrors()
@@ -365,6 +374,38 @@ namespace BriefFiniteElementNet
             {
                 lastResult.AddAnalysisResultIfNotExists(loadCase);
             }
+        }
+
+        [Obsolete("Under Development")]
+        public void Solve_MPC(SolverConfiguration config)
+        {
+            //new version
+            lastResult = new StaticLinearAnalysisResult();
+            lastResult.Parent = this;
+
+            lastResult.SolverFactory = config.SolverFactory;
+
+            ReIndexNodes();
+
+            foreach (var loadCase in config.LoadCases)
+            {
+                lastResult.AddAnalysisResultIfNotExists_MPC(loadCase);
+            }
+        }
+
+        [Obsolete("Under Development")]
+        public void Solve_MPC()
+        {
+            var fact = CalcUtil.CreateBuiltInSolverFactory(BuiltInSolverType.CholeskyDecomposition);
+
+            var cfg = new SolverConfiguration();
+
+            cfg.SolverFactory = fact;
+
+            cfg.LoadCases = new List<LoadCase>() { LoadCase.DefaultLoadCase };
+
+            Solve_MPC(cfg);
+
         }
 
 

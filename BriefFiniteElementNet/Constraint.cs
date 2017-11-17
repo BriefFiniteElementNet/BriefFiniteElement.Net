@@ -22,6 +22,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// A totally Fixed Constraint.
         /// </value>
+        [Obsolete("Use Constraints.Fixed static class")]
         public static Constraint Fixed
         {
             get
@@ -37,6 +38,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// A totally Released Constraint.
         /// </value>
+        [Obsolete("Use Constraints.Released static class")]
         public static Constraint Released
         {
             get
@@ -66,6 +68,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// A Movement Fixed and Rotation Released Constraint.
         /// </value>
+        [Obsolete("Use Constraints.MovementFixed static class")]
         public static Constraint MovementFixed
         {
             get
@@ -81,6 +84,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// A Rotation Fixed and Movement Released Constraint.
         /// </value>
+        [Obsolete("Use Constraints.RotationFixed static class")]
         public static Constraint RotationFixed
         {
             get
@@ -96,6 +100,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// A DX fixed constraint.
         /// </value>
+        [Obsolete("Use Constraints.FixedDX static class")]
         public static Constraint FixedDX
         {
             get
@@ -112,6 +117,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// A DY fixed constraint.
         /// </value>
+        [Obsolete("Use Constraints.FixedDY static class")]
         public static Constraint FixedDY
         {
             get
@@ -128,6 +134,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// A DZ fixed constraint.
         /// </value>
+        [Obsolete("Use Constraints.FixedDZ static class")]
         public static Constraint FixedDZ
         {
             get
@@ -144,6 +151,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// A RX fixed constraint.
         /// </value>
+        [Obsolete("Use Constraints.FixedRX static class")]
         public static Constraint FixedRX
         {
             get
@@ -160,6 +168,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// A RY fixed constraint.
         /// </value>
+        [Obsolete("Use Constraints.FixedRY static class")]
         public static Constraint FixedRY
         {
             get
@@ -176,6 +185,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// A RZ fixed constraint.
         /// </value>
+        [Obsolete("Use Constraints.FixedRZ static class")]
         public static Constraint FixedRZ
         {
             get
@@ -184,9 +194,6 @@ namespace BriefFiniteElementNet
                     DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Released, DofConstraint.Fixed);
             }
         }
-
-
-
 
         #endregion
 

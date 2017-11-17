@@ -49,6 +49,7 @@
     <Compile Include="ArrayPool.cs" />
     <Compile Include="BendingStressTensor.cs" />
     <Compile Include="CalculationCache.cs" />
+    <Compile Include="Constraints.cs" />
     <Compile Include="Elements\VirtualSupport.cs" />
     <Compile Include="Mathh\SparseEqSystem.cs" />
     <Compile Include="Mathh\GaussRrefFinder.cs" />
