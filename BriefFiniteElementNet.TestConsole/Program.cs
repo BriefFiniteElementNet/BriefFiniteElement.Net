@@ -308,7 +308,7 @@ namespace BriefFiniteElementNet.TestConsole
             model.Solve();
             //CalcUtil.GenerateP_Delta_Mpc(model, LoadCase.DefaultLoadCase,new GaussRrefFinder());
             model.LastResult.AddAnalysisResult(LoadCase.DefaultLoadCase);
-            model.LastResult.AddAnalysisResult_v2(LoadCase.DefaultLoadCase);
+            model.LastResult.AddAnalysisResult_MPC(LoadCase.DefaultLoadCase);
 
         }
 

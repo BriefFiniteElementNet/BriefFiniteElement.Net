@@ -207,9 +207,6 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             buf.FillRow(0, arr);
 
-
-            ElementHelperExtensions.RemoveReleasedMembers_bar(this, targetElement, buf);
-
             return buf;
         }
 
@@ -291,6 +288,8 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             return new int[] {0, 0, 0};
         }
+
+
 
         public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation)
         {
