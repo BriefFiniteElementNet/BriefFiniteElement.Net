@@ -21,6 +21,12 @@ namespace BriefFiniteElementNet.Elements
         {
         }
 
+        /// <inheritdoc/>
+        public override Point IsoCoordsToGlobalLocation(params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SdofMass"/> class.
         /// </summary>

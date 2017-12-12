@@ -109,7 +109,7 @@ namespace BriefFiniteElementNet.Validation
 
             #endregion
 
-            model.Trace.Listeners.Add(new BriefFiniteElementNet.ConsoleTraceListener());
+            model.Trace.Listeners.Add(new BriefFiniteElementNet.Common.ConsoleTraceListener());
             new ModelWarningChecker().CheckModel(model);
 
             model.Solve();
@@ -230,7 +230,7 @@ namespace BriefFiniteElementNet.Validation
 
             #endregion
 
-            model.Trace.Listeners.Add(new ConsoleTraceListener());
+            model.Trace.Listeners.Add(new Common.ConsoleTraceListener());
             new ModelWarningChecker().CheckModel(model);
 
             model.Solve();
@@ -327,7 +327,7 @@ namespace BriefFiniteElementNet.Validation
 
             #endregion
 
-            model.Trace.Listeners.Add(new ConsoleTraceListener());
+            model.Trace.Listeners.Add(new Common.ConsoleTraceListener());
             new ModelWarningChecker().CheckModel(model);
 
             model.Solve();
@@ -427,7 +427,7 @@ namespace BriefFiniteElementNet.Validation
 
             #endregion
 
-            model.Trace.Listeners.Add(new BriefFiniteElementNet.ConsoleTraceListener());
+            model.Trace.Listeners.Add(new BriefFiniteElementNet.Common.ConsoleTraceListener());
             new ModelWarningChecker().CheckModel(model);
 
 
@@ -596,7 +596,7 @@ namespace BriefFiniteElementNet.Validation
 
             #endregion
 
-            model.Trace.Listeners.Add(new BriefFiniteElementNet.ConsoleTraceListener());
+            model.Trace.Listeners.Add(new BriefFiniteElementNet.Common.ConsoleTraceListener());
             new ModelWarningChecker().CheckModel(model);
 
 
@@ -851,7 +851,7 @@ namespace BriefFiniteElementNet.Validation
 
             #endregion
 
-            model.Trace.Listeners.Add(new BriefFiniteElementNet.ConsoleTraceListener());
+            model.Trace.Listeners.Add(new BriefFiniteElementNet.Common.ConsoleTraceListener());
             new ModelWarningChecker().CheckModel(model);
 
             model.Solve();

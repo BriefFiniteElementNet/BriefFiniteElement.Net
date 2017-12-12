@@ -17,6 +17,8 @@ using BriefFiniteElementNet.Validation;
 using CSparse;
 using CSparse.Double.Factorization;
 using CSparse.Storage;
+using BriefFiniteElementNet.Common;
+using CSparse.Double;
 
 namespace BriefFiniteElementNet.TestConsole
 {
@@ -25,12 +27,25 @@ namespace BriefFiniteElementNet.TestConsole
         [STAThread]
         static void Main(string[] args)
         {
-            Test_P_Delta_matrix();
+            //Test_P_Delta_matrix();
             //TestSparseRow();
 
             //BarElementTester.TestBarStiffness();
-            
+
             //QrTest();
+            //TstMtx();
+
+            try
+            {
+                TestIntelMkl();
+            }
+            catch(Exception eex)
+            {
+
+            }
+            
+            //Tst();
+
             Console.ReadKey();
         }
 
@@ -343,6 +358,90 @@ namespace BriefFiniteElementNet.TestConsole
 
             var d = (res1 - res2).Max(ii => Math.Abs(ii));
             Console.WriteLine("Err: {0:g}", d);
+        }
+
+        private static void TestIntelMkl()
+        {
+            var model = StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
+
+            
+            //model.Nodes[4].Constraints = model.Nodes[5].Constraints = model.Nodes[6].Constraints = Constraints.Fixed;
+
+            //model.Nodes[7].Constraints = Constraint.FromString("011101");
+
+            var t = model.Nodes.Select(i => i.Constraints).ToArray();
+
+            StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
+
+            var config = new SolverConfiguration();
+            config.SolverFactory = new IntelMklSolver.MklPardisoDirectSPDSolverFactory();
+            config.LoadCases = new List<LoadCase>() { LoadCase.DefaultLoadCase };
+
+            model.Solve_MPC(config);
+            //model.Solve(config);
+
+            //model.Solve();
+
+            var tmp = model.LastResult.Displacements.First().Value;
+
+        }
+
+        private static void Tst()
+        {
+            int n = 8;
+            int[] ia/*[9]*/ = new int[] { 1, 5, 8, 10, 12, 15, 17, 18, 19 };
+
+            int[] ja/*[18]*/ = new int[] { 1, 3, 6, 7,
+                                         2, 3, 5,
+                                         3, 8,
+                                         4, 7,
+                                         5, 6, 7,
+                                         6, 8,
+                                         7,
+                                         8 };
+
+            double[] a/*[18]*/ = new double[] { 7.0, 1.0, 2.0, 7.0,
+                                              -4.0, 8.0, 2.0,
+                                              1.0, 5.0,
+                                              7.0, 9.0,
+                                              5.0, 1.0, 5.0,
+                                              -1.0, 5.0,
+                                              11.0,
+                                              5.0 };
+
+            var csr = new CSparse.Double.CompressedColumnStorage(n, n, 18);
+            csr.ColumnPointers = ia;
+            csr.RowIndices = ja;
+            csr.Values = a;
+
+            
+        }
+
+        private static void TstMtx()
+        {
+            var crd = new CoordinateStorage<double>(5, 5, 1);
+
+            crd.At(0, 0, 1);
+            crd.At(0, 1, -1);
+            crd.At(0, 3, -3);
+
+            crd.At(1, 0, -2);
+            crd.At(1, 1, 5);
+
+            crd.At(2, 2, 4);
+            crd.At(2, 3, 6);
+            crd.At(2, 4, 4);
+
+            crd.At(3, 0, -4);
+            crd.At(3, 2, 2);
+            crd.At(3, 3, 7);
+
+            crd.At(4, 1, 8);
+            crd.At(4, 4, -5);
+
+            var sp = crd.ToCCs().Transpose();
+            var dns = sp.ToDenseMatrix();
+
         }
 
         private static void TestSparseRow()

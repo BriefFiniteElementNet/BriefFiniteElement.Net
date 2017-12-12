@@ -532,6 +532,11 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
+        /// <inheritdoc/>
+        public override Point IsoCoordsToGlobalLocation(params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Gets the stifness matrix in local coordination system.
@@ -698,6 +703,8 @@ namespace BriefFiniteElementNet.Elements
             info.AddValue("_behavior", (int)_behavior);
         }
 
+       
+
         protected BarElement(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _webRotation = (double)info.GetValue("_webRotation", typeof(double));
@@ -710,7 +717,7 @@ namespace BriefFiniteElementNet.Elements
 
         #region Constructor
 
-        public BarElement()
+        public BarElement():base(2)
         {
         }
 

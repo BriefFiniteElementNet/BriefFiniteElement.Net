@@ -44,9 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MklDirectPosdefSolver.cs" />
-    <Compile Include="MklSolverFactory.cs" />
-    <Compile Include="pardiso.cs" />
+    <Compile Include="MklPardisoDirectSPDSolver.cs" />
+    <Compile Include="MklPardisoDirectSPDSolverFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

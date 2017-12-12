@@ -15,6 +15,12 @@ namespace BriefFiniteElementNet.Elements
     {
         private double _k;
 
+        /// <inheritdoc/>
+        public override Point IsoCoordsToGlobalLocation(params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Gets or sets the k.
         /// </summary>

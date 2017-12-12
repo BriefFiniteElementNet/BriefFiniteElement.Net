@@ -44,9 +44,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleTraceListener.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="ISolver.cs" />
     <Compile Include="ISolverFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Trace.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

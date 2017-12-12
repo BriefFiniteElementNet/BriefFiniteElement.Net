@@ -18,6 +18,11 @@ namespace BriefFiniteElementNet.Elements
         {
         }
 
+        /// <inheritdoc/>
+        public override Point IsoCoordsToGlobalLocation(params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
 
         public BaseMaterial _material;
 

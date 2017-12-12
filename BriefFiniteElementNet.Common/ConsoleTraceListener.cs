@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 
-namespace BriefFiniteElementNet
+namespace BriefFiniteElementNet.Common
 {
     public class ConsoleTraceListener:ITraceListener
     {

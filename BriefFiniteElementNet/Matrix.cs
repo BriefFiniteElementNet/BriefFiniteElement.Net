@@ -452,7 +452,7 @@ namespace BriefFiniteElementNet
                     
         }
 
-
+        
         /// <summary>
         /// calculates the m1.transpose * m2 and stores the value into result.
         /// </summary>
@@ -1489,11 +1489,42 @@ namespace BriefFiniteElementNet
 
             for (int i = 0; i < a1.coreArray.Length; i++)
             {
-                buf.coreArray[i] = a1.coreArray[i]/a2.coreArray[i];
+                buf.coreArray[i] = a1.coreArray[i] / a2.coreArray[i];
             }
 
             return buf;
         }
+
+        public static Matrix DotMultiply(Matrix a1, Matrix a2)
+        {
+            if (a1.rowCount != a2.rowCount || a1.columnCount != a2.columnCount)
+                throw new Exception();
+
+            var buf = new Matrix(a1.rowCount, a1.columnCount);
+
+            for (int i = 0; i < a1.coreArray.Length; i++)
+            {
+                buf.coreArray[i] = a1.coreArray[i] * a2.coreArray[i];
+            }
+
+            return buf;
+        }
+
+        public static double DotProduct(Matrix a1, Matrix a2)
+        {
+            if (a1.rowCount != a2.rowCount || a1.columnCount != a2.columnCount)
+                throw new Exception();
+
+            var buf = 0.0;
+
+            for (int i = 0; i < a1.coreArray.Length; i++)
+            {
+                buf+= a1.coreArray[i] * a2.coreArray[i];
+            }
+
+            return buf;
+        }
+
         public void FillColumn(int colNum, params double[] values)
         {
             if (values.Length != this.rowCount)

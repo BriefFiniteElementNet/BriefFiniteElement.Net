@@ -57,6 +57,11 @@ namespace BriefFiniteElementNet.Elements
 
         #endregion
 
+        /// <inheritdoc/>
+        public override Point IsoCoordsToGlobalLocation(params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// the a, look at UpdateGeoMatrix()

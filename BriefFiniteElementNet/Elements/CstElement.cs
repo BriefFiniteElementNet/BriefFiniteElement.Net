@@ -26,6 +26,14 @@ namespace BriefFiniteElementNet.Elements
 
         private MembraneFormulation _formulationType;
 
+        /// <inheritdoc/>
+        public override Point IsoCoordsToGlobalLocation(params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
+
+       
+
         /// <summary>
         /// Gets or sets the thickness.
         /// </summary>

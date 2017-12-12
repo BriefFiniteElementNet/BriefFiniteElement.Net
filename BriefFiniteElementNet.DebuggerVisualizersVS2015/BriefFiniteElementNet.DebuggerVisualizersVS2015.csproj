@@ -63,6 +63,9 @@
       <Name>BriefFiniteElementNet</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy "BriefFiniteElementNet.DebuggerVisualizersVS2015.dll" "%25UserProfile%25\Documents\Visual Studio 2015\Visualizers\" /y

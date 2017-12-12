@@ -70,7 +70,7 @@ namespace BriefFiniteElementNet.Solver
             sp.Stop();
 
             if (Target != null)
-                Target.Trace.Write(TraceRecord.Create(BriefFiniteElementNet.TraceLevel.Info,
+                Target.Trace.Write(TraceRecord.Create(BriefFiniteElementNet.Common.TraceLevel.Info,
                     string.Format("cholesky decomposition of Kff took about {0:#,##0} ms",
                         sp.ElapsedMilliseconds)));
         }

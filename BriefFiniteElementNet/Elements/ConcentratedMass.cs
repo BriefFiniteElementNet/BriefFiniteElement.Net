@@ -22,6 +22,12 @@ namespace BriefFiniteElementNet.Elements
              this.elementType = ElementType.ConcentratedMass;
          }
 
+        /// <inheritdoc/>
+        public override Point IsoCoordsToGlobalLocation(params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConcentratedMass"/> class.
         /// </summary>

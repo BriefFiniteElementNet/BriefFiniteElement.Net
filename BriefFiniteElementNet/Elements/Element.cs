@@ -271,6 +271,13 @@ namespace BriefFiniteElementNet.Elements
             }
         }
 
+        /// <summary>
+        /// Converts the Isometric coordinates to global location.
+        /// </summary>
+        /// <param name="isoCoords">The isometric coords in element.</param>
+        /// <returns>The location in global system</returns>
+        public abstract Point IsoCoordsToGlobalLocation(params double[] isoCoords);
+
 
         [NonSerialized]
         private Point[] lastNodalLocations;

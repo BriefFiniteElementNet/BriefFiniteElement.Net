@@ -16,6 +16,8 @@ using CSparse.Double;
 using CSparse.Double.Factorization;
 using CSparse.Storage;
 using BriefFiniteElementNet.Solver;
+using Trace = BriefFiniteElementNet.Common.Trace;
+
 
 namespace BriefFiniteElementNet
 {
@@ -143,7 +145,7 @@ namespace BriefFiniteElementNet
 
         #region Trace property and field
 
-        public Trace Trace
+        public  Trace Trace
         {
             get { return _trace; }
             private set { _trace = value; }

@@ -114,6 +114,11 @@ namespace BriefFiniteElementNet.Elements
 
         #endregion
 
+        /// <inheritdoc/>
+        public override Point IsoCoordsToGlobalLocation(params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Gets node coordinates in local coordination system.

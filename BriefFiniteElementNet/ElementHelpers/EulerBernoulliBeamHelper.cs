@@ -225,12 +225,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
-        /// <inheritdoc/>
-        public Matrix GetLocalInternalForceAt(Element targetElement, Displacement[] globalDisplacements, params double[] isoCoords)
-        {
 
-            throw new NotImplementedException();
-        }
 
         /// <inheritdoc/>
         public Matrix CalcLocalKMatrix(Element targetElement)
@@ -290,12 +285,13 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
 
-
+        /// <inheritdoc/>
         public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
+        /// <inheritdoc/>
         public FlatShellStressTensor GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation)
         {
             throw new NotImplementedException();
@@ -304,8 +300,48 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var nodalDisps = new Matrix(1, 4);
+
+            var ld = localDisplacements;
+
+            if (_direction == BeamDirection.Y)
+                nodalDisps.FillColumn(0, ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ);
+            else
+                nodalDisps.FillColumn(0, ld[0].DZ, ld[0].RY, ld[1].DZ, ld[1].RY);
+            
+            var shp = GetNMatrixAt(targetElement, isoCoords);
+
+            var d = Matrix.DotProduct(nodalDisps, shp);
+
+            var buf = new Displacement();
+
+            if (_direction == BeamDirection.Y)
+                buf.DY = d;
+            else
+                buf.DZ = d;
+
+            return buf;
         }
+
+        /// <inheritdoc/>
+        public Matrix GetLocalInternalForceAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        {
+            var ld = localDisplacements;
+
+            var b = GetBMatrixAt(targetElement, isoCoords);
+            var d = GetDMatrixAt(targetElement, isoCoords);
+            var u = new Matrix(1, 4);
+
+            if (_direction == BeamDirection.Y)
+                u.FillColumn(0, ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ);
+            else
+                u.FillColumn(0, ld[0].DZ, ld[0].RY, ld[1].DZ, ld[1].RY);
+
+            var frc = d * b * u;
+
+            return frc;
+        }
+
 
         public Force[] GetEquivalentNodalLoads(Element targetElement, Load load)
         {

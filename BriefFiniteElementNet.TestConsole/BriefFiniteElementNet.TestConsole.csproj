@@ -63,6 +63,14 @@
       <Project>{8dabde62-8a8e-4153-b753-3a62015a9c16}</Project>
       <Name>BriefFiniteElementNet.Controls</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj">
+      <Project>{82C63C6B-651A-4308-8B89-B4C643F3A7C2}</Project>
+      <Name>BriefFiniteElementNet.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BriefFiniteElementNet.IntelMklSolver\BriefFiniteElementNet.IntelMklSolver.csproj">
+      <Project>{78ffbbac-8bda-4361-b37c-f397cb103c1c}</Project>
+      <Name>BriefFiniteElementNet.IntelMklSolver</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BriefFiniteElementNet.Validation\BriefFiniteElementNet.Validation.csproj">
       <Project>{7a20ce01-552e-457a-a9c3-18bed244d897}</Project>
       <Name>BriefFiniteElementNet.Validation</Name>

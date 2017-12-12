@@ -36,9 +36,9 @@ namespace BriefFiniteElementNet.Validation
                 var nodeNum = m2/6;
 
                 if (t == 0)
-                    model.Trace.Write(TraceLevel.Warning, "DoF {0} of Node {1} not properly constrained", m2%6, nodeNum);
+                    model.Trace.Write(Common.TraceLevel.Warning, "DoF {0} of Node {1} not properly constrained", m2%6, nodeNum);
                 else//t < 0
-                    model.Trace.Write(TraceLevel.Warning, "DoF {0} of Node {1} not member", m2 % 6, nodeNum);
+                    model.Trace.Write(Common.TraceLevel.Warning, "DoF {0} of Node {1} not member", m2 % 6, nodeNum);
             }
 
             var k = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(model);

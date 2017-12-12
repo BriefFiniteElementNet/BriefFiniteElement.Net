@@ -69,7 +69,6 @@
     <Compile Include="Elements\BarCrossSectionMechanicalProperties.cs" />
     <Compile Include="Elements\BarElementBehaviours.cs" />
     <Compile Include="CheckingUtil.cs" />
-    <Compile Include="ConsoleTraceListener.cs" />
     <Compile Include="DoF.cs" />
     <Compile Include="DofMap.cs" />
     <Compile Include="DofMappingManager.cs" />
@@ -214,7 +213,6 @@
     <Compile Include="StructurePart.cs" />
     <Compile Include="Elements\Tetrahedral.cs" />
     <Compile Include="ThrowUtil.cs" />
-    <Compile Include="Trace.cs" />
     <Compile Include="TraceUtil.cs" />
     <Compile Include="Elements\TrussElement2Node.cs" />
     <Compile Include="Elements\TriangleFlatShellExtensions.cs" />

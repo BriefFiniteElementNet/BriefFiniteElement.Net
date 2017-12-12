@@ -443,7 +443,11 @@ namespace BriefFiniteElementNet.Elements
             return new Vector(buf[0, 0], buf[1, 0], buf[2, 0]);
         }
 
-
+        /// <inheritdoc/>
+        public override Point IsoCoordsToGlobalLocation(params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Gets the transformation matrix.

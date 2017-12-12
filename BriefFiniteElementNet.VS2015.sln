@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Intel
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Common", "BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj", "{82C63C6B-651A-4308-8B89-B4C643F3A7C2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.TestUI", "BriefFiniteElementNet.TestUI\BriefFiniteElementNet.TestUI.csproj", "{A55ED1AC-EB40-4385-A07A-4B8539431EA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{82C63C6B-651A-4308-8B89-B4C643F3A7C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{82C63C6B-651A-4308-8B89-B4C643F3A7C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{82C63C6B-651A-4308-8B89-B4C643F3A7C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A55ED1AC-EB40-4385-A07A-4B8539431EA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A55ED1AC-EB40-4385-A07A-4B8539431EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A55ED1AC-EB40-4385-A07A-4B8539431EA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A55ED1AC-EB40-4385-A07A-4B8539431EA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

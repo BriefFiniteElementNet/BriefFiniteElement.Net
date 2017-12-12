@@ -321,7 +321,12 @@ namespace BriefFiniteElementNet
             return k;
         }
 
-        
+
+        /// <inheritdoc/>
+        public override Point IsoCoordsToGlobalLocation(params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
 
         /// <summary>
         /// Gets the stiffness matrix in Local Coordination system of element.
