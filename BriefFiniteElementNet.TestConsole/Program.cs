@@ -35,14 +35,8 @@ namespace BriefFiniteElementNet.TestConsole
             //QrTest();
             //TstMtx();
 
-            try
-            {
-                TestIntelMkl();
-            }
-            catch(Exception eex)
-            {
-
-            }
+            //TestCuda();
+            Validation.TriangleElementTester.TestSingleElement();
             
             //Tst();
 
@@ -385,6 +379,34 @@ namespace BriefFiniteElementNet.TestConsole
             var tmp = model.LastResult.Displacements.First().Value;
 
         }
+
+
+        private static void TestCuda()
+        {
+            var model = StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
+
+
+            //model.Nodes[4].Constraints = model.Nodes[5].Constraints = model.Nodes[6].Constraints = Constraints.Fixed;
+
+            //model.Nodes[7].Constraints = Constraint.FromString("011101");
+
+            var t = model.Nodes.Select(i => i.Constraints).ToArray();
+
+            StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
+
+            var config = new SolverConfiguration();
+            config.SolverFactory = new CudaSolver.CuSparseDirectSpdSolverFactory();
+            config.LoadCases = new List<LoadCase>() { LoadCase.DefaultLoadCase };
+
+            model.Solve_MPC(config);
+            //model.Solve(config);
+
+            //model.Solve();
+
+            var tmp = model.LastResult.Displacements.First().Value;
+
+        }
+
 
         private static void Tst()
         {

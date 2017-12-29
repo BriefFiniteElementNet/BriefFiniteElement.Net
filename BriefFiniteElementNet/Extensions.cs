@@ -8,6 +8,8 @@ using System.Xml;
 using CSparse.Double;
 using BriefFiniteElementNet.Geometry;
 using CSparse.Storage;
+using BriefFiniteElementNet.ElementHelpers;
+using BriefFiniteElementNet.Elements;
 
 namespace BriefFiniteElementNet
 {

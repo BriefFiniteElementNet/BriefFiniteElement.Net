@@ -79,6 +79,19 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
+        /// Transforms the specified Force.
+        /// </summary>
+        /// <param name="force">The force.</param>
+        /// <returns>Transformed force (force in new coordination system : global)</returns>
+        public Force TransformLocalToGlobal(Force force)
+        {
+            var localF = TransformLocalToGlobal(force.Forces);
+            var localM = TransformLocalToGlobal(force.Moments);
+
+            return new Force(localF, localM);
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="vector"></param>
@@ -222,6 +235,19 @@ namespace BriefFiniteElementNet
                 buf = A_B(TransformMatrix, vector.X, vector.Y, vector.Z);
 
             return new Vector(buf[0], buf[1], buf[2]);
+        }
+
+        /// <summary>
+        /// Transforms back the specified Force.
+        /// </summary>
+        /// <param name="force">The force.</param>
+        /// <returns>Back transformed force (force in original coordination system : local)</returns>
+        public Force TransformGlobalToLocal(Force force)
+        {
+            var localF = TransformGlobalToLocal(force.Forces);
+            var localM = TransformGlobalToLocal(force.Moments);
+
+            return new Force(localF, localM);
         }
 
         /// <summary>

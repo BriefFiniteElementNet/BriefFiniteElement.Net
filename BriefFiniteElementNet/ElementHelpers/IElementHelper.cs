@@ -119,57 +119,6 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <returns></returns>
         FluentElementPermuteManager.ElementLocalDof[] GetDofOrder(Element targetElement);
 
-
-        /// <summary>
-        /// Gets the internal force at defined location in local coordination system.
-        /// </summary>
-        /// <param name="targetElement">The target element.</param>
-        /// <param name="globalDisplacements">The local displacements on nodes.</param>
-        /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
-        /// 
-        /// <returns>Internal force at defined iso coordination</returns>
-        Matrix GetLocalInternalForceAt(Element targetElement, Displacement[] localDisplacements,
-            params double[] isoCoords);
-
-        /// <summary>
-        /// Gets the displacement at specified location in local coordination system.
-        /// </summary>
-        /// <param name="targetElement">The target element.</param>
-        /// <param name="localDisplacements">The displacements in local coordination system (order is same with targetElement.Nodes).</param>
-        /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
-        /// 
-        /// <returns>
-        /// Displacement of element at defined <see cref="isoCoords" /> in element's local coordination system
-        /// </returns>
-        Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords);
-
-        /// <summary>
-        /// Gets the internal force of element, only due to applying specified load.
-        /// </summary>
-        /// <param name="targetElement">The target element.</param>
-        /// <param name="load">The load.</param>
-        /// <param name="isoLocation">The iso location.</param>
-        /// 
-        /// <returns></returns>
-        /// <remarks>
-        /// This gives back internal force of element, if no nodal displacements there are, and only the <see cref="load"/> is applied to it.
-        /// </remarks>
-        FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation);
-
-        /// <summary>
-        /// Gets the displacement of element, only due to applying specified load.
-        /// </summary>
-        /// <param name="targetElement">The target element.</param>
-        /// <param name="load">The load.</param>
-        /// <param name="isoLocation">The iso location.</param>
-        /// 
-        /// <returns></returns>
-        /// <remarks>
-        /// This gives back the displacement of element, if no nodal displacements there are, and only the <see cref="load"/> is applied to it.
-        /// </remarks>
-        FlatShellStressTensor GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation);
-
-
         /// <summary>
         /// Gets the maximum degree of shape function members.
         /// </summary>
@@ -200,14 +149,78 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <returns>Gaussian sampling point count</returns>
         int[] GetDetJOrder(Element targetElement);
 
+
+
+
         /// <summary>
-        /// Gets the equivalent nodal loads because of applying <see cref="load" /> on the <see cref="targetElement" />.
+        /// Gets the internal force at defined location in local coordination system.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="globalDisplacements">The local displacements on nodes.</param>
+        /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
+        /// 
+        /// <returns>Internal force at defined iso coordination</returns>
+        Matrix GetLocalInternalForceAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords);
+
+        /// <summary>
+        /// Gets the strain at defined location in local coordination system.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="globalDisplacements">The local displacements on nodes.</param>
+        /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
+        /// 
+        /// <returns>Strain at defined iso coordination</returns>
+        //Matrix GetLocalStrainAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords);
+
+        /// <summary>
+        /// Gets the internal force of element, only due to applying specified load.
         /// </summary>
         /// <param name="targetElement">The target element.</param>
         /// <param name="load">The load.</param>
+        /// <param name="isoLocation">The iso location.</param>
         /// 
         /// <returns></returns>
-        Force[] GetEquivalentNodalLoads(Element targetElement, Load load);
+        /// <remarks>
+        /// This gives back internal force of element, if no nodal displacements there are, and only the <see cref="load"/> is applied to it.
+        /// </remarks>
+        FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation);
+
+
+
+        /// <summary>
+        /// Gets the displacement at specified location in local coordination system.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="localDisplacements">The displacements in local coordination system (order is same with targetElement.Nodes).</param>
+        /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
+        /// 
+        /// <returns>
+        /// Displacement of element at defined <see cref="isoCoords" /> in element's local coordination system
+        /// </returns>
+        Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords);
+
+        /// <summary>
+        /// Gets the displacement of element, only due to applying specified load.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="load">The load.</param>
+        /// <param name="isoLocation">The iso location.</param>
+        /// 
+        /// <returns></returns>
+        /// <remarks>
+        /// This gives back the displacement of element, if no nodal displacements there are, and only the <see cref="load"/> is applied to it.
+        /// </remarks>
+        FlatShellStressTensor GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation);
+
+
+
+        /// <summary>
+        /// Gets the equivalent nodal loads because of applying <see cref="load" /> on the <see cref="targetElement" /> in local coordination system.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="load">The load.</param>
+        /// <returns>The equivaled nodal load in local coordination system</returns>
+        Force[] GetLocalEquivalentNodalLoads(Element targetElement, Load load);
 
        
     }

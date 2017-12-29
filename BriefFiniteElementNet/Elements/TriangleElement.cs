@@ -151,22 +151,44 @@ namespace BriefFiniteElementNet.Elements
 
         public override IElementHelper[] GetHelpers()
         {
-            throw new NotImplementedException();
+            var helpers = new List<IElementHelper>();
+
+            {
+                if ((this._behavior & FlatShellBehaviour.ThinPlate) != 0)
+                {
+                    //helpers.Add(new Q4DkqHelper());
+                    helpers.Add(new DktHelper());
+                }
+
+                if ((this._behavior & FlatShellBehaviour.Membrane) != 0 && (this._behavior & FlatShellBehaviour.DrillingDof) != 0)
+                {
+                    helpers.Add(new Gt9Helper());
+                }
+
+                if ((this._behavior & FlatShellBehaviour.Membrane) != 0 && (this._behavior & FlatShellBehaviour.DrillingDof) == 0)
+                {
+                    helpers.Add(new CstHelper());
+                }
+
+                if ((this._behavior & FlatShellBehaviour.Membrane) == 0 && (this._behavior & FlatShellBehaviour.DrillingDof) != 0)
+                {
+                    throw new Exception("cant use DrillingDof without Membrane");
+                }
+
+            }
+
+
+            return helpers.ToArray();
         }
 
 
         public Matrix GetLocalStifnessMatrix()
         {
-            var helpers = new List<IElementHelper>();
-
-            if ((this._behavior & FlatShellBehaviour.ThinPlate) != 0)
-            {
-                helpers.Add(new DktHelper());
-            }
+            var helpers = GetHelpers();
             
             var buf = new Matrix(18, 18);
 
-            for (var i = 0; i < helpers.Count; i++)
+            for (var i = 0; i < helpers.Length; i++)
             {
                 var helper = helpers[i];
 

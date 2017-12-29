@@ -66,6 +66,7 @@
     <Compile Include="SparseMatrixMultiplyValidation.cs" />
     <Compile Include="Tet4Checker.cs" />
     <Compile Include="TransformValidator.cs" />
+    <Compile Include="TriangleElementTester.cs" />
     <Compile Include="UnitConverter.cs" />
     <None Include="packages.config" />
     <None Include="Template\Readme.md" />

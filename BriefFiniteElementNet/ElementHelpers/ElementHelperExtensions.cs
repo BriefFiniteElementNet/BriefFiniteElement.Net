@@ -9,6 +9,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 {
     internal static class ElementHelperExtensions
     {
+
         public static Matrix CalcLocalKMatrix_Bar(IElementHelper helper, Element targetElement)
         {
             var elm = targetElement as BarElement;
@@ -127,52 +128,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             return res;
         }
 
-        [Obsolete("Use two node approach")]
-        public static void RemoveReleasedMembers_bar(IElementHelper helper, Element targetElement,Matrix bMatrix)
-        {
-            return;
-            /*
-            var bar = targetElement as BarElement;
-
-            var order = helper.GetDofOrder(targetElement);
-
-            var endReleases = new[]
-            {
-                bar.StartConnection.Dx,
-                bar.StartConnection.Dy,
-                bar.StartConnection.Dz,
-
-                bar.StartConnection.Rx,
-                bar.StartConnection.Ry,
-                bar.StartConnection.Rz,
-
-                bar.EndConnection.Dx,
-                bar.EndConnection.Dy,
-                bar.EndConnection.Dz,
-
-                bar.EndConnection.Rx,
-                bar.EndConnection.Ry,
-                bar.EndConnection.Rz,
-            };
-
-            for (var i = 0; i < endReleases.Length; i++)
-            {
-                if (endReleases[i] == DofConstraint.Fixed)
-                    continue;
-
-                var nodeNum = i/6;
-                var dof = (DoF) (i%6);
-
-                var idx = order.FirstIndexOf(new FluentElementPermuteManager.ElementLocalDof(nodeNum, dof));
-
-                if (idx == -1)
-                    continue;
-
-                bMatrix[0, idx] = 0;
-            }
-            */
-        }
-
         public static Matrix CalcLocalCMatrix_Bar(IElementHelper helper, Element targetElement)
         {
             var elm = targetElement as BarElement;
@@ -234,38 +189,27 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public static Matrix CalcLocalKMatrix_Triangle(IElementHelper helper, Element targetElement)
         {
-            var tri = targetElement as TriangleElement;
+            var qq = targetElement as TriangleElement;
 
-            if (tri == null)
+            if (qq == null)
                 throw new Exception();
 
-            var trans = tri.GetLambdaMatrix().Transpose();
+            var trans = qq.GetLambdaMatrix().Transpose();
 
-            //var nb = helper.GetBMaxOrder(targetElement);
-            //var nd = tri.Material.GetMaxFunctionOrder();
-            //var nt = tri.Section.GetMaxFunctionOrder().Max();
-            //var nj = helper.GetDetJOrder(targetElement);
-
-
-            var nn = helper.GetNMaxOrder(targetElement);
-            var nd = tri.Material.GetMaxFunctionOrder();
-            var nt = tri.Section.GetMaxFunctionOrder();
+            var nb = helper.GetBMaxOrder(targetElement);
+            var nd = qq.Material.GetMaxFunctionOrder();
+            var nt = qq.Section.GetMaxFunctionOrder();
             var nj = helper.GetDetJOrder(targetElement);
 
             var sum = new int[3];
 
-            foreach (var i in new int[][] { nn, nd, nt, nn, nj })
+            foreach (var i in new int[][] { nb, nd, nb, nt, nj })
                 for (int j = 0; j < 3; j++)
                     sum[j] += i[j];
 
             var nXi = sum[0] / 2 + 1;
             var nEta = sum[1] / 2 + 1;
             var nGama = sum[2] / 2 + 1;
-
-
-
-
-            //var ng = (nb + nd + nt + nj)/2 + 1;
 
             var intg = new GaussianIntegrator();
 
@@ -282,21 +226,17 @@ namespace BriefFiniteElementNet.ElementHelpers
             intg.G2 = ((eta, gama) => 1 - eta);
             intg.G1 = ((eta, gama) => 0);
 
-            //intg.GammaPointCount = 1;
-            //intg.XiPointCount = intg.EtaPointCount = ng;
-
             intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
             {
-                var b = helper.GetBMatrixAt(tri, xi, eta);
-                var d = helper.GetDMatrixAt(tri, xi, eta);
-                var j = helper.GetJMatrixAt(tri, xi, eta);
-                var t = tri.Section.GetThicknessAt(xi, eta);
+                var b = helper.GetBMatrixAt(qq, xi, eta);
+                var d = helper.GetDMatrixAt(qq, xi, eta);
+                var j = helper.GetJMatrixAt(qq, xi, eta);
 
-                var buf = MatrixPool.Allocate(9, 9);
+                var buf = MatrixPool.Allocate(b.ColumnCount, b.ColumnCount);
 
                 CalcUtil.Bt_D_B(b, d, buf);
 
-                buf.MultiplyByConstant(t * j.Determinant());
+                buf.MultiplyByConstant((j.Determinant()));
 
                 return buf;
             });

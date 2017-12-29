@@ -297,6 +297,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             throw new NotImplementedException();
         }
 
+        
         /// <inheritdoc/>
         public Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
@@ -343,8 +344,70 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
 
-        public Force[] GetEquivalentNodalLoads(Element targetElement, Load load)
+        public Force[] GetLocalEquivalentNodalLoads(Element targetElement, Load load)
         {
+            //https://www.quora.com/How-should-I-perform-element-forces-or-distributed-forces-to-node-forces-translation-in-the-beam-element
+
+            if (load is Loads.UniformLoad)
+            {
+                var ul = load as Loads.UniformLoad;
+
+                var localDir = ul.Direction;
+
+                if (ul.CoordinationSystem == CoordinationSystem.Global)
+                {
+                    var tr = targetElement.GetTransformationManager();
+                    localDir = tr.TransformGlobalToLocal(ul.Direction);
+                }
+
+                var ux = localDir.X * ul.Magnitude;
+                var uy = localDir.Y * ul.Magnitude;
+                var uz = localDir.Z * ul.Magnitude;
+
+                var intg = new GaussianIntegrator();
+                intg.A1 = -1;
+                intg.A2 = +1;
+                intg.XiPointCount = 2;
+                intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
+                {
+                    var mtx = new Matrix(4, 0);
+                    var shp = GetNMatrixAt(targetElement, xi, eta, gama);
+
+                    return shp;
+                });
+
+                var res = intg.Integrate();
+
+                var buf = new Force[2];
+
+                var fy0 = res[0, 0];
+                var mz0 = res[1, 0];
+                var fy1 = res[2, 0];
+                var mz1 = res[3, 0];
+
+                buf[0] = new Force(0, fy0, 0, 0, 0, mz0);
+                buf[1] = new Force(0, fy1, 0, 0, 0, mz1);
+
+                return buf;
+            }
+
+
+            if (load is Loads.ConcentratedLoad)
+            {
+                var ul = load as Loads.ConcentratedLoad;
+
+                var localforce = ul.Force;
+
+                if (ul.CoordinationSystem == CoordinationSystem.Global)
+                {
+                    var tr = targetElement.GetTransformationManager();
+                    localforce = tr.TransformGlobalToLocal(ul.Force);
+                }
+
+                var shp = GetNMatrixAt(targetElement, ul.ForceIsoLocation);
+                throw new NotImplementedException();
+            }
+
             throw new NotImplementedException();
         }
     }

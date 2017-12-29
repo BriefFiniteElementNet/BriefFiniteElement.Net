@@ -278,15 +278,17 @@ namespace BriefFiniteElementNet.ElementHelpers
             throw new NotImplementedException();
         }
 
+        public int Ng = 2;
+
         /// <inheritdoc/>
         public int[] GetNMaxOrder(Element targetElement)
         {
-            throw new NotImplementedException();
+            return new int[] { Ng, Ng, 0 };
         }
 
         public int[] GetBMaxOrder(Element targetElement)
         {
-            return new int[] { 2, 2, 0 };
+            return new int[] { Ng, Ng, 0 };
         }
 
         public int[] GetDetJOrder(Element targetElement)
@@ -310,7 +312,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             throw new NotImplementedException();
         }
 
-        public Force[] GetEquivalentNodalLoads(Element targetElement, Load load)
+        public Force[] GetLocalEquivalentNodalLoads(Element targetElement, Load load)
         {
             throw new NotImplementedException();
         }

@@ -413,7 +413,7 @@ namespace BriefFiniteElementNet.Elements
 
             foreach (var helper in helpers)
             {
-                var forces = helper.GetEquivalentNodalLoads(this, load);
+                var forces = helper.GetLocalEquivalentNodalLoads(this, load);
 
                 for (var i = 0; i < buf.Length; i++)
                 {

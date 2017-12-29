@@ -14,6 +14,7 @@ namespace BriefFiniteElementNet.Loads
     {
         private Vector _direction;
         private double _magnitude;
+        private CoordinationSystem _coordinationSystem;
 
         /// <summary>
         /// Sets or gets the direction of load
@@ -33,6 +34,25 @@ namespace BriefFiniteElementNet.Loads
             set { _magnitude = value; }
         }
 
+
+        /// <summary>
+        /// Gets or sets the coordination system that <see cref="Direction"/> is defined in.
+        /// </summary>
+        /// <value>
+        /// The coordination system.
+        /// </value>
+        public CoordinationSystem CoordinationSystem
+        {
+            get
+            {
+                return _coordinationSystem;
+            }
+
+            set
+            {
+                _coordinationSystem = value;
+            }
+        }
 
         public override Force[] GetGlobalEquivalentNodalLoads(Element element)
         {
@@ -55,6 +75,7 @@ namespace BriefFiniteElementNet.Loads
         {
             _direction = (Vector)info.GetValue("_direction", typeof(Vector));
             _magnitude = (double)info.GetValue("_magnitude", typeof(double));
+            _coordinationSystem = (CoordinationSystem)(int)info.GetValue("_coordinationSystem", typeof(double));
         }
 
         #endregion
@@ -67,6 +88,7 @@ namespace BriefFiniteElementNet.Loads
             base.GetObjectData(info, context);
             info.AddValue("_direction", _direction);
             info.AddValue("_magnitude", _magnitude);
+            info.AddValue("_coordinationSystem", (int)_coordinationSystem);
         }
 
         #endregion

@@ -235,19 +235,22 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
+        public int Ng = 2;
+
+        /// <inheritdoc/>
         public int[] GetNMaxOrder(Element targetElement)
         {
-            throw new NotImplementedException();
+            return new int[] { Ng, Ng, 0 };
         }
 
         public int[] GetBMaxOrder(Element targetElement)
         {
-            throw new NotImplementedException();
+            return new int[] { Ng, Ng, 0 };
         }
 
         public int[] GetDetJOrder(Element targetElement)
         {
-            throw new NotImplementedException();
+            return new int[] { 0, 0, 0 };
         }
 
         public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation)
@@ -267,7 +270,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
 
-        public Force[] GetEquivalentNodalLoads(Element targetElement, Load load)
+        public Force[] GetLocalEquivalentNodalLoads(Element targetElement, Load load)
         {
             throw new NotImplementedException();
         }

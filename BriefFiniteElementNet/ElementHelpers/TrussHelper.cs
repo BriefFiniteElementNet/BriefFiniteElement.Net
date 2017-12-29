@@ -230,7 +230,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             throw new NotImplementedException();
         }
 
-        public Force[] GetEquivalentNodalLoads(Element targetElement, Load load)
+        public Force[] GetLocalEquivalentNodalLoads(Element targetElement, Load load)
         {
             throw new NotImplementedException();
         }
