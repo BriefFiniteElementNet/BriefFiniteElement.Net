@@ -13,6 +13,7 @@ namespace BriefFiniteElementNet.IntelMklSolver
     /// <summary>
     /// Represents a direct solver for SPD (Symetric Positive Definite) matrixes, based on intel's Math Kernel Library (MKL) pardiso
     /// </summary>
+    [Obsolete()]
     public class MklPardisoDirectSPDSolver : ISolver,IDisposable
     {
         private readonly int mtype = 2;//real and symmetric positive definite : 2
@@ -42,7 +43,13 @@ namespace BriefFiniteElementNet.IntelMklSolver
 
         private void InitVariables()
         {
-            //UPart = GetUpperTri(A);
+            var oldPath = Environment.GetEnvironmentVariable("PATH");
+
+            var newPath = oldPath+ @"C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\redist\intel64_win\mkl;";
+
+            Environment.SetEnvironmentVariable("PATH",newPath);
+
+            var tt = System.IO.File.Exists(@"mkl_intel_thread.dll");
 
             pt = new IntPtr[64];
             /* Pardiso control parameters. */
@@ -61,19 +68,14 @@ namespace BriefFiniteElementNet.IntelMklSolver
             iparm[3] = 0; /* No iterative-direct algorithm */
             iparm[4] = 0; /* No user fill-in reducing permutation */
             iparm[5] = 0; /* Write solution into x */
-            iparm[6] = 0; /* Not in use */
             iparm[7] = 2; /* Max numbers of iterative refinement steps */
             iparm[8] = 0; /* Not in use */
             iparm[9] = 13; /* Perturb the pivot elements with 1E-13 */
             iparm[10] = 1; /* Use nonsymmetric permutation and scaling MPS */
-            iparm[11] = 0; /* Not in use */
             iparm[12] = 0; /* Maximum weighted matching algorithm is switched-off
                         * (default for symmetric). Try iparm[12] = 1 in case of
                         *  inappropriate accuracy */
             iparm[13] = 0; /* Output: Number of perturbed pivots */
-            iparm[14] = 0; /* Not in use */
-            iparm[15] = 0; /* Not in use */
-            iparm[16] = 0; /* Not in use */
             iparm[17] = -1; /* Output: Number of nonzeros in the factor LU */
             iparm[18] = -1; /* Output: Mflops for LU factorization */
             iparm[19] = 0; /* Output: Numbers of CG Iterations */
@@ -211,7 +213,8 @@ namespace BriefFiniteElementNet.IntelMklSolver
         {
             private PardisoNative() { }
 
-            [DllImport("mkl_rt", CallingConvention = CallingConvention.Cdecl,
+            [DllImport(@"mkl_rt.dll",
+                CallingConvention = CallingConvention.Cdecl,
                  ExactSpelling = true, SetLastError = false)]
             internal static extern int pardiso([In, Out] IntPtr[] handle,
                 ref int maxfct, ref int mnum,

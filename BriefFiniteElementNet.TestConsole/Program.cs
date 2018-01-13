@@ -32,12 +32,14 @@ namespace BriefFiniteElementNet.TestConsole
 
             //BarElementTester.TestBarStiffness();
 
-            //QrTest();
+            ////QrTest();
             //TstMtx();
 
             //TestCuda();
-            Validation.TriangleElementTester.TestSingleElement();
-            
+            TestIntelMkl();
+            ///
+            /// /Validation.TriangleElementTester.TestSingleElement();
+
             //Tst();
 
             Console.ReadKey();
@@ -356,7 +358,7 @@ namespace BriefFiniteElementNet.TestConsole
 
         private static void TestIntelMkl()
         {
-            var model = StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
+            var model = StructureGenerator.Generate3DFrameElementGrid(1, 1, 2);
 
             
             //model.Nodes[4].Constraints = model.Nodes[5].Constraints = model.Nodes[6].Constraints = Constraints.Fixed;
