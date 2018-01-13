@@ -31,7 +31,7 @@ namespace BriefFiniteElementNet.CudaSolver
         {
             //Alea.CudaToolkit.CuSparse
             //var t = new CudaSolveSparse();
-           /*
+            /*
             var a = new CudaDeviceVariable<double>(A.Values.Length);
             var rowPtr = new CudaDeviceVariable<int>(A.ColumnPointers.Length);
             var colIndice = new CudaDeviceVariable<int>(A.RowIndices.Length);

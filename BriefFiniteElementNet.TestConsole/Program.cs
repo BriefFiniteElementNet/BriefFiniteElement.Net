@@ -36,9 +36,11 @@ namespace BriefFiniteElementNet.TestConsole
             //TstMtx();
 
             //TestCuda();
-            TestIntelMkl();
-            ///
-            /// /Validation.TriangleElementTester.TestSingleElement();
+            //TestIntelMkl();
+
+            TestWithOpensees();
+
+            //Validation.TriangleElementTester.TestSingleElement();
 
             //Tst();
 
@@ -382,6 +384,19 @@ namespace BriefFiniteElementNet.TestConsole
 
         }
 
+        private static void TestWithOpensees()
+        {
+            var model = StructureGenerator.Generate3DFrameElementGrid(5, 5, 5);
+
+            StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
+            StructureGenerator.AddRandomDisplacements(model, 0.3);
+
+
+            model.Solve_MPC();
+
+            OpenseesValidator.OpenseesValidate(model, LoadCase.DefaultLoadCase, false);
+
+        }
 
         private static void TestCuda()
         {

@@ -7,6 +7,12 @@ namespace BriefFiniteElementNet.Validation
 {
     public static class Extensions
     {
+
+        public static int GetIndex(this StructurePart node)
+        {
+            return (int)node.GetMemberValue("Index");
+        }
+
         public static int ToInt(this object obj)
         {
             return Convert.ToInt32(obj);

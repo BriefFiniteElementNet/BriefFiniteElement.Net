@@ -59,6 +59,9 @@
     <Compile Include="IndividualTests.cs" />
     <Compile Include="ModelStaticEquibChecker.cs" />
     <Compile Include="NodeInternalExternalEquibliriumChecker.cs" />
+    <Compile Include="OpenseesTclGenerator\BarElement2Tcl.cs" />
+    <Compile Include="OpenseesTclGenerator\TclCommand.cs" />
+    <Compile Include="OpenseesTclGenerator\TclGenerator.cs" />
     <Compile Include="OpenseesValidator.cs" />
     <Compile Include="PosdefChecker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,6 +71,7 @@
     <Compile Include="TransformValidator.cs" />
     <Compile Include="TriangleElementTester.cs" />
     <Compile Include="UnitConverter.cs" />
+    <None Include="OpenseesTclGenerator\Readme.md" />
     <None Include="packages.config" />
     <None Include="Template\Readme.md" />
   </ItemGroup>
