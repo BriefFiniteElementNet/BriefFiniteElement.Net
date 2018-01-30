@@ -184,6 +184,104 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+        public static Model Generate3DBarElementGrid(int m, int n, int l)
+        {
+            var buf = new Model();
+
+            var dx = 1.0;
+            var dy = 1.0;
+            var dz = 1.0;
+
+            var nodes = new Node[m, n, l];
+
+            for (int k = 0; k < l; k++)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < m; j++)
+                    {
+
+                        var pos = new Point(i * dx, j * dy, k * dz);
+                        var nde = new Node() { Location = pos };
+                        buf.Nodes.Add(nde);
+                        nodes[j, i, k] = nde;
+                    }
+                }
+            }
+
+            for (int k = 0; k < l - 1; k++)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    for (int j = 0; j < m; j++)
+                    {
+                        var elm = new BarElement();
+                        elm.StartNode = nodes[j, i, k];
+                        elm.EndNode = nodes[j, i, k + 1];
+                        buf.Elements.Add(elm);
+                    }
+                }
+            }
+
+
+            for (int i = 0; i < n - 1; i++)
+            {
+                for (int k = 0; k < l; k++)
+                {
+                    for (int j = 0; j < m; j++)
+                    {
+                        var elm = new BarElement();
+                        elm.StartNode = nodes[j, i, k];
+                        elm.EndNode = nodes[j, i + 1, k];
+                        buf.Elements.Add(elm);
+                    }
+                }
+            }
+
+            for (int j = 0; j < m - 1; j++)
+            {
+                for (int k = 0; k < l; k++)
+                {
+                    for (int i = 0; i < n; i++)
+
+                    {
+                        var elm = new BarElement();
+                        elm.StartNode = nodes[j, i, k];
+                        elm.EndNode = nodes[j + 1, i, k];
+                        buf.Elements.Add(elm);
+
+                    }
+                }
+            }
+
+            foreach (var elm in buf.Elements)
+            {
+                var framElm = elm as BarElement;
+
+
+                if (framElm == null)
+                    continue;
+
+                framElm.Behavior = BarElementBehaviours.FullFrame;
+
+                var sec = (Sections.UniformParametric1DSection)(framElm.Section = new Sections.UniformParametric1DSection());
+                var mat = framElm.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.2);
+
+                sec.A = 7.64 * 1e-4;// 0.01;
+                sec.Iy = sec.Iz = sec.J = 80 * 1e-8;// 0.1 * 0.1 * 0.1 * 0.1 / 12.0;
+
+            }
+
+
+            for (int i = 0; i < n * m; i++)
+            {
+                buf.Nodes[i].Constraints = Constraint.Fixed;
+            }
+
+
+            return buf;
+        }
+
         public static Model Generate3DTet4Grid(int m, int n, int l)
         {
             var buf = new Model();

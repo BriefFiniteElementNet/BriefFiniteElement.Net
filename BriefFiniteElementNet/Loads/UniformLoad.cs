@@ -12,6 +12,24 @@ namespace BriefFiniteElementNet.Loads
     [Obsolete("still in development")]
     public class UniformLoad:Load
     {
+        public UniformLoad(LoadCase @case) : base(@case)
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="case"></param>
+        /// <param name="direction">the direction of load</param>
+        /// <param name="magnitude">magnitude of load</param>
+        /// <param name="coordinationSystem">e coordination system that <see cref="Direction"/> is defined in</param>
+        public UniformLoad(LoadCase @case, Vector direction, double magnitude, CoordinationSystem coordinationSystem) : base(@case)
+        {
+            _direction = direction;
+            _magnitude = magnitude;
+            _coordinationSystem = coordinationSystem;
+        }
+
         private Vector _direction;
         private double _magnitude;
         private CoordinationSystem _coordinationSystem;
@@ -75,7 +93,7 @@ namespace BriefFiniteElementNet.Loads
         {
             _direction = (Vector)info.GetValue("_direction", typeof(Vector));
             _magnitude = (double)info.GetValue("_magnitude", typeof(double));
-            _coordinationSystem = (CoordinationSystem)(int)info.GetValue("_coordinationSystem", typeof(double));
+            _coordinationSystem = (CoordinationSystem)(int)info.GetValue("_coordinationSystem", typeof(int));
         }
 
         #endregion

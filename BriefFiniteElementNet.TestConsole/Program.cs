@@ -360,7 +360,7 @@ namespace BriefFiniteElementNet.TestConsole
 
         private static void TestIntelMkl()
         {
-            var model = StructureGenerator.Generate3DFrameElementGrid(1, 1, 2);
+            var model = StructureGenerator.Generate3DBarElementGrid(1, 1, 2);
 
             
             //model.Nodes[4].Constraints = model.Nodes[5].Constraints = model.Nodes[6].Constraints = Constraints.Fixed;
@@ -386,7 +386,7 @@ namespace BriefFiniteElementNet.TestConsole
 
         private static void TestWithOpensees()
         {
-            var model = StructureGenerator.Generate3DFrameElementGrid(5, 5, 5);
+            var model = StructureGenerator.Generate3DBarElementGrid(5, 5, 5);
 
             StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
             StructureGenerator.AddRandomDisplacements(model, 0.3);

@@ -201,7 +201,6 @@ namespace BriefFiniteElementNet
             //AddAnalysisResult_v2(cse);
         }
 
-        [Obsolete("under development")]
         public void AddAnalysisResultIfNotExists_MPC(LoadCase cse)
         {
             var f1 = _displacements.ContainsKey(cse);

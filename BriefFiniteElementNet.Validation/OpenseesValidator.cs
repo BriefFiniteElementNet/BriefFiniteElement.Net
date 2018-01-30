@@ -21,6 +21,8 @@ namespace BriefFiniteElementNet.Validation
         {
             var gen = new TclGenerator();
 
+            gen.ElementTranslators.Add(new BarElement2Tcl() { TargetGenerator = gen});
+
             gen.ExportElementForces = true;
             gen.ExportNodalDisplacements = true;
             gen.ExportTotalStiffness = validateStiffness;

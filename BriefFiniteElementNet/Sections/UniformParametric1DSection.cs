@@ -10,6 +10,34 @@ namespace BriefFiniteElementNet.Sections
     /// </remarks>
     public class UniformParametric1DSection : Base1DSection
     {
+        public UniformParametric1DSection()
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a">The area of section in m^2</param>
+        /// <param name="iy">The Second Moment of Area of section regard to Z axis.</param>
+        /// <param name="iz">The Second Moment of Area of section regard to Y axis.</param>
+        /// <param name="j">The polar moment of inertial.</param>
+        public UniformParametric1DSection(double a, double iy, double iz, double j)
+        {
+            _a = a;
+            _iy = iy;
+            _iz = iz;
+            _j = j;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a">The area of section in m^2</param>
+        public UniformParametric1DSection(double a)
+        {
+            _a = a;
+        }
+
         private double _a;
         private double _ay;
         private double _az;

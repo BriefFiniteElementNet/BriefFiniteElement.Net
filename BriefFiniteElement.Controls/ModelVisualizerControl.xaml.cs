@@ -595,6 +595,8 @@ namespace BriefFiniteElementNet.Controls
 
                     if (elm is FrameElement2Node)
                         AddFrameElement(builder, elm as FrameElement2Node);
+                    else if (elm is BarElement)
+                        AddBarElement(builder, elm as BarElement);
                     else if (elm is ConcentratedMass)
                         AddMassElement(builder, elm as ConcentratedMass);
                     else if (elm is TrussElement2Node)
@@ -1434,6 +1436,49 @@ namespace BriefFiniteElementNet.Controls
                 bldr.AddTriangle(p4, p2, p3);
             }
         }
+
+        private void AddBarElement(MeshBuilder bldr, BarElement elm)
+        {
+            PolygonYz section = null;
+
+            var r = ElementVisualThickness / 2;
+
+
+            if (true)
+            {
+                section = new PolygonYz(
+                    new PointYZ(-r, -r),
+                    new PointYZ(-r, r),
+                    new PointYZ(r, r),
+                    new PointYZ(r, -r),
+                    new PointYZ(-r, -r));
+            }
+         
+
+
+            for (var i = 0; i < section.Count - 1; i++)
+            {
+                var trs = elm.GetTransformationManager();
+
+                var v1 = new Vector(0, section[i].Y, section[i].Z);
+                var v2 = new Vector(0, section[i + 1].Y, section[i + 1].Z);
+
+                var p1 = elm.StartNode.Location + trs.TransformLocalToGlobal(v1);
+                var p2 = elm.StartNode.Location + trs.TransformLocalToGlobal(v2);
+
+                var v = elm.EndNode.Location - elm.StartNode.Location;
+
+                if (Math.Abs(v.Z) < 0.01)
+                    Guid.NewGuid();
+
+                var p3 = p1 + v;
+                var p4 = p2 + v;
+
+                bldr.AddTriangle(p1, p3, p2);
+                bldr.AddTriangle(p4, p2, p3);
+            }
+        }
+
 
         private void AddMassElement(MeshBuilder bldr, ConcentratedMass elm)
         {

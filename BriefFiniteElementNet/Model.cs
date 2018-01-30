@@ -378,7 +378,6 @@ namespace BriefFiniteElementNet
             }
         }
 
-        [Obsolete("Under Development")]
         public void Solve_MPC(SolverConfiguration config)
         {
             //new version
@@ -395,7 +394,6 @@ namespace BriefFiniteElementNet
             }
         }
 
-        [Obsolete("Under Development")]
         public void Solve_MPC()
         {
             var fact = CalcUtil.CreateBuiltInSolverFactory(BuiltInSolverType.CholeskyDecomposition);

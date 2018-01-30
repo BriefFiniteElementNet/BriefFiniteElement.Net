@@ -13,7 +13,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
         [STAThread]
         static void Main(string[] args)
         {
-            Example1();
+            LoadComb();
         }
 
         private static void Example1()
@@ -132,6 +132,9 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             model.Solve();
         }
 
-        
+        private static void LoadComb()
+        {
+            new LoadCombExample().Run();
+        }
     }
 }

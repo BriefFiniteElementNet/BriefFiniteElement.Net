@@ -32,10 +32,10 @@ namespace BriefFiniteElementNet.Elements
         #region Field & Properties
 
         private double _webRotation;
-        
+
         //private BarElementEndConnection _startConnection = BarElementEndConnection.Fixed;
         //private BarElementEndConnection _endtConnection = BarElementEndConnection.Fixed;
-        private BarElementBehaviour _behavior;
+        private BarElementBehaviour _behavior = BarElementBehaviours.FullFrame;
         private Base1DSection _section;
         [Obsolete]
         private BaseBarMaterial _matterial;
@@ -721,8 +721,36 @@ namespace BriefFiniteElementNet.Elements
         {
         }
 
+
+
         #endregion
 
+        /// <summary>
+        /// Gets the internal force at <see cref="xi" /> position.
+        /// </summary>
+        /// <param name="xi">The iso coordinate of desired point (start = -1, mid = 0, end = 1).</param>
+        /// <param name="combination">The Load Combination.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Will calculate the internal forces of member regarding the <see cref="combination" />
+        /// </remarks>
+        public Force GetInternalForceAt(double xi, LoadCombination combination)
+        {
+            throw new NotImplementedException();
+        }
 
+        /// <summary>
+        /// Gets the internal force at.
+        /// </summary>
+        /// <param name="xi">The iso coordinate of desired point (start = -1, mid = 0, end = 1).</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        /// <remarks>
+        /// Will calculate the internal forces of member regarding Default load case.
+        /// </remarks>
+        public Force GetInternalForceAt(double xi)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
