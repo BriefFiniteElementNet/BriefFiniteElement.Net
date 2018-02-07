@@ -45,7 +45,8 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             buf.Add(new TclCommand("element", "elasticBeamColumn", eleTag,
                 elm.StartNode.GetIndex(),
                 elm.EndNode.GetIndex(),
-                sec.A, mat.YoungModulus,g, sec.Iz, sec.Iy, "$transfTag"));
+                sec.A, 
+                mat.YoungModulus,g, sec.J, sec.Iz, sec.Iy, transTag));
 
             TargetGenerator.SetCounter("element", eleTag + 1);
             TargetGenerator.SetCounter("geomTransf", transTag + 1);

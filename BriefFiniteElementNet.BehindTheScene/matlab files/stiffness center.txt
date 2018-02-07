@@ -1,0 +1,18 @@
+syms fx fy fz;
+f = [0 fz -fy;-fz 0 fx;fy -fx 0;fx fy fz;];
+nl = null(f) * fz;
+
+p0 = [0 1 0 0; 0 0 1 0; 0 0 0 1;];
+p1 = [1 0 0 0; 0 0 1 0; 0 0 0 1;];
+p2 = [1 0 0 0; 0 1 0 0; 0 0 0 1;];
+p3 = [1 0 0 0; 0 1 0 0; 0 0 1 0;];
+
+d3 = (p3*f);
+d2 = (p2*f);
+d1 = (p1*f);
+d0 = (p0*f);
+
+
+----------
+syms a1a a2a a3a a4a a5a a6a a7a a8a a9a
+a=[a1a a2a a3a;a4a a5a a6a;a7a a8a a9a;]

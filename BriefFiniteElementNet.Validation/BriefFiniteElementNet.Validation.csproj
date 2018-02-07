@@ -34,6 +34,10 @@
       <HintPath>..\packages\CSparse.3.1.9\lib\net40\CSparse.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="HtmlTags, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlTags.3.0.0.186\lib\4.0\HtmlTags.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -48,6 +52,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TestValidator.cs" />
+    <Compile Include="ValidationResult.cs" />
     <None Include="Case_01\Readme.md" />
     <Compile Include="BarElementTester.cs" />
     <Compile Include="CustomMeshBuilder.cs" />
@@ -57,6 +63,7 @@
     <Compile Include="F3ddFileReader.cs" />
     <Compile Include="Frame3ddValidator.cs" />
     <Compile Include="IndividualTests.cs" />
+    <Compile Include="IValidator.cs" />
     <Compile Include="ModelStaticEquibChecker.cs" />
     <Compile Include="NodeInternalExternalEquibliriumChecker.cs" />
     <Compile Include="OpenseesTclGenerator\BarElement2Tcl.cs" />

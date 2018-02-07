@@ -14,10 +14,10 @@ namespace BriefFiniteElementNet.Validation
 {
     public class OpenseesValidator
     {
-        private static readonly string openSeeslocation = @"C:\temp\Opensees\Opensees.exe";
+        private static readonly string openSeeslocation = @"C:\Opensees\Opensees.exe";
 
 
-        public static void OpenseesValidate(Model model, LoadCase loadcase, bool validateStiffness = false)
+        public static DataTable OpenseesValidate(Model model, LoadCase loadcase, bool validateStiffness = false)
         {
             var gen = new TclGenerator();
 
@@ -36,6 +36,9 @@ namespace BriefFiniteElementNet.Validation
             var tclFile = System.IO.Path.GetTempFileName() + ".tcl";
 
             System.IO.File.WriteAllText(tclFile, tcl);
+
+            if (!System.IO.File.Exists(openSeeslocation))
+                throw new Exception("Opensees.exe not found, please put opensees.exe into 'C:\\Opensees\\Opensees.exe'");
 
             var stInf = new ProcessStartInfo(openSeeslocation);
 
@@ -81,9 +84,9 @@ namespace BriefFiniteElementNet.Validation
             tbl.Columns.Add("DoF #", typeof(int));
             tbl.Columns.Add("OpenSees Delta", typeof(double));
             tbl.Columns.Add("BFE Delta", typeof(double));
-            tbl.Columns.Add("RelativeErr", typeof(double));
-            tbl.Columns.Add("AbsErr", typeof(double));
-
+            tbl.Columns.Add("Relative Error", typeof(double));
+            tbl.Columns.Add("Absolute Error", typeof(double));
+            
             for (int i = 0; i < myDs.Length; i++)
             {
                 tbl.Rows.Add(
@@ -99,6 +102,9 @@ namespace BriefFiniteElementNet.Validation
 
             for (var i = 0; i < model.Nodes.Count; i++)
                 model.Nodes[i].Label = i.ToString();
+
+
+            return tbl;
         }
 
         public static void FindError(double[] exact, double[] test, double[] relativeError, double[] absError)

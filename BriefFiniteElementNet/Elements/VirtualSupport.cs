@@ -46,30 +46,61 @@ namespace BriefFiniteElementNet.Elements
 
         public override CompressedColumnStorage GetExtraEquations()
         {
+            var n = parent.Nodes.Count;
+
             var buf = new CSparse.Storage.CoordinateStorage<double>(GetExtraEquationsCount(), parent.Nodes.Count * 6 + 1, 1);
+
+            var cnt = 0;
 
             for (var i = 0; i < Nodes.Count; i++)
             {
                 var nde = Nodes[i];
 
+                var stIdx = nde.Index * 6;
+
+
                 if (_constraint.DX == DofConstraint.Fixed)
-                    buf.At(6 * i + 0, nde.Index * 6 + 0, _settlement.DX);
+                {
+                    buf.At(cnt, stIdx + 0, 1);
+                    buf.At(cnt, 6*n, _settlement.DX);
+                    cnt++;
+                }
 
                 if (_constraint.DY == DofConstraint.Fixed)
-                    buf.At(6 * i + 1, nde.Index * 6 + 1, _settlement.DY);
+                {
+                    buf.At(cnt, stIdx + 1, 1);
+                    buf.At(cnt, 6 * n, _settlement.DY);
+                    cnt++;
+                }
 
                 if (_constraint.DZ == DofConstraint.Fixed)
-                    buf.At(6 * i + 2, nde.Index * 6 + 2, _settlement.DZ);
+                {
+                    buf.At(cnt, stIdx + 2, 1);
+                    buf.At(cnt, 6 * n, _settlement.DZ);
+                    cnt++;
+                }
 
 
                 if (_constraint.RX == DofConstraint.Fixed)
-                    buf.At(6 * i + 3, nde.Index * 6 + 3, _settlement.RX);
+                {
+                    buf.At(cnt, stIdx + 3, 1);
+                    buf.At(cnt, 6 * n, _settlement.DX);
+                    cnt++;
+                }
 
                 if (_constraint.RY == DofConstraint.Fixed)
-                    buf.At(6 * i + 4, nde.Index * 6 + 4, _settlement.RY);
+                {
+                    buf.At(cnt, stIdx + 4, 1);
+                    buf.At(cnt, 6 * n, _settlement.DX);
+                    cnt++;
+                }
 
                 if (_constraint.RZ == DofConstraint.Fixed)
-                    buf.At(6 * i + 5, nde.Index * 6 + 5, _settlement.RZ);
+                {
+                    buf.At(cnt, stIdx + 5, 1);
+                    buf.At(cnt, 6 * n, _settlement.DX);
+                    cnt++;
+                }
             }
 
             return buf.ToCCs();

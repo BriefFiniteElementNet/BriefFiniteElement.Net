@@ -293,6 +293,8 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+       
+
         /// <summary>
         /// Gets the supports reaction that are from loads with <see cref="LoadCase.DefaultLoadCase"/> (can be said default loads), which are applying to this <see cref="Node"/> from supports.
         /// </summary>
@@ -310,6 +312,7 @@ namespace BriefFiniteElementNet
         /// This will return all loads which are applying to this node from anywhere other than connected elements!
         /// </remarks>
         /// <returns></returns>
+        [Obsolete]
         public Force GetTotalExternalForce(LoadCombination combination)
         {
             var buf = new Force();
@@ -327,6 +330,24 @@ namespace BriefFiniteElementNet
 
                 buf += fc*combination[cse];
             }
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Gets the sum of external forces (including support reaction and exnternal nodal loads)
+        /// </summary>
+        /// <param name="loadCase">the load case</param>
+        /// <returns></returns>
+        public Force GetTotalExternalForces(LoadCase loadCase)
+        {
+            parent.LastResult.AddAnalysisResultIfNotExists(loadCase);
+
+            var cs = Force.FromVector(parent.LastResult.ConcentratedForces[loadCase], 6 * Index);
+            var es = Force.FromVector(parent.LastResult.ElementForces[loadCase], 6 * Index);
+            var ss = Force.FromVector(parent.LastResult.SupportReactions[loadCase], 6 * Index);
+
+            var buf = ss - cs - es;
 
             return buf;
         }

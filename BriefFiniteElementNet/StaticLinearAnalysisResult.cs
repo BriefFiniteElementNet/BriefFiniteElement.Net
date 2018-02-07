@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Security.Permissions;
 using System.Text;
 using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.Elements;
 using CSparse.Double;
 using BriefFiniteElementNet.Solver;
 using CCS = CSparse.Double.CompressedColumnStorage;
@@ -800,13 +801,13 @@ namespace BriefFiniteElementNet
 
             var ft = new double[n];
 
-            {
+            //{
                 var fe = elementForces[loadCase] = GetTotalElementsForceVector(loadCase);
                 var fc = concentratedForces[loadCase] = GetTotalConcentratedForceVector(loadCase);
 
                 ft.AddToSelf(fe);
                 ft.AddToSelf(fc);
-            }
+            //}
 
             if (perm.Item1.RowCount > 0 && perm.Item1.RowCount > 0)
             {
@@ -855,11 +856,93 @@ namespace BriefFiniteElementNet
 
             dt.AddToSelf(rd, -1);
 
+            ft.FillWith(0);
+
             kt.Multiply(dt, ft);
+
+            ft.AddToSelf(fe, -1);
+            ft.AddToSelf(fc, -1);
+
 
             _forces[loadCase] = ft;
             _displacements[loadCase] = dt;
-            
+
+            //var forcesRegenerated=
+
+
+            var fx = supportReactions[loadCase] = (double[]) ft.Clone();
+
+            for (var i = 0; i < parent.Nodes.Count; i++)
+            {
+                #region constraint
+
+                var virtConsts = new List<Constraint>();
+
+                var origConst = parent.Nodes[i].Constraints;
+
+                virtConsts.Add(origConst);
+
+                foreach (var element in parent.MpcElements)
+                {
+                    if (!(element is VirtualConstraint))
+                        continue;
+
+                    if (!element.AppliesForLoadCase(loadCase))
+                        continue;
+
+                    if (!element.Nodes.Contains(parent.Nodes[i]))
+                        continue;
+
+                    virtConsts.Add((element as VirtualConstraint).Constraint);
+                }
+
+                var finalConst = new Constraint();
+
+                foreach (var cns in virtConsts)
+                {
+                    if (cns.DX == DofConstraint.Fixed)
+                        finalConst.DX = DofConstraint.Fixed;
+
+                    if (cns.DY == DofConstraint.Fixed)
+                        finalConst.DY = DofConstraint.Fixed;
+
+                    if (cns.DZ == DofConstraint.Fixed)
+                        finalConst.DZ = DofConstraint.Fixed;
+
+
+                    if (cns.RX == DofConstraint.Fixed)
+                        finalConst.RX = DofConstraint.Fixed;
+
+                    if (cns.RY == DofConstraint.Fixed)
+                        finalConst.RY = DofConstraint.Fixed;
+
+                    if (cns.RZ == DofConstraint.Fixed)
+                        finalConst.RZ = DofConstraint.Fixed;
+
+
+                }
+
+                #endregion
+
+                if (finalConst.DX == DofConstraint.Released)
+                    fx[6 * i + 0] = 0;
+
+                if (finalConst.DY == DofConstraint.Released)
+                    fx[6 * i + 1] = 0;
+
+                if (finalConst.DY == DofConstraint.Released)
+                    fx[6 * i + 2] = 0;
+
+                if (finalConst.RX == DofConstraint.Released)
+                    fx[6 * i + 3] = 0;
+
+                if (finalConst.RY == DofConstraint.Released)
+                    fx[6 * i + 4] = 0;
+
+                if (finalConst.RZ == DofConstraint.Released)
+                    fx[6 * i + 5] = 0;
+
+            }
         }
 
         /// <summary>

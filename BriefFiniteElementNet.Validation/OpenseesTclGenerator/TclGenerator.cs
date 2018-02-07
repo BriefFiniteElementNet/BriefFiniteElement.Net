@@ -22,7 +22,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
                 return Counters[name];
             }
 
-            return 0;
+            return 1;
         }
 
         public void SetCounter(string name, int value)
@@ -144,7 +144,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             if (ExportElementForces)
                 Commands.Add(new TclCommand("recorder", "Element", "-xml", '"' + elementsOut.Replace("\\", "\\\\") + '"', "-closeOnWrite", "strains", "material", "1"));
 
-            Commands.Add(new TclCommand("analyze", "1"));
+            var anzCmd = (new TclCommand("analyze", "1"));
 
             if (ExportTotalStiffness)
                 Commands.Add(new TclCommand("printA", "-file", '"' + stiffnessOut.Replace("\\", "\\\\") + '"'));
@@ -162,6 +162,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             }
             sb.AppendLine("}");
 
+            sb.AppendLine(anzCmd.CommandName + " " + string.Join(" ", anzCmd.CommandArgs));
 
             return sb.ToString();
         }

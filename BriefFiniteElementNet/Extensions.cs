@@ -15,6 +15,56 @@ namespace BriefFiniteElementNet
 {
     public static class Extensions
     {
+        /// <summary>
+        /// High performance 3x3 determinant
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <returns></returns>
+        public static double Det3x3(this Matrix matrix)
+        {
+            var a = matrix[0, 0];
+            var b = matrix[0, 1];
+            var c = matrix[0, 2];
+
+            var d = matrix[1, 0];
+            var e = matrix[1, 1];
+            var f = matrix[1, 2];
+
+            var g = matrix[2, 0];
+            var h = matrix[2, 1];
+            var i = matrix[2, 2];
+
+            var res = a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g);
+            return res;
+        }
+
+
+        public static Matrix Inv3x3(this Matrix matrix)
+        {
+            var a1a = matrix[0, 0];
+            var a2a = matrix[0, 1];
+            var a3a = matrix[0, 2];
+
+            var a4a = matrix[1, 0];
+            var a5a = matrix[1, 1];
+            var a6a = matrix[1, 2];
+            
+            var a7a = matrix[2, 0];
+            var a8a = matrix[2, 1];
+            var a9a = matrix[2, 2];
+
+            var det = a1a * a5a * a9a - a1a * a6a * a8a - a2a * a4a * a9a + a2a * a6a * a7a + a3a * a4a * a8a - a3a * a5a * a7a;
+
+            var res = new Matrix(3, 3);
+
+            res.FillRow(0, a5a * a9a - a6a * a8a, -a2a * a9a + a3a * a8a, a2a * a6a - a3a * a5a);
+            res.FillRow(1, -a4a * a9a + a6a * a7a, a1a * a9a - a3a * a7a, -a1a * a6a + a3a * a4a);
+            res.FillRow(2, a4a * a8a - a5a * a7a, -a1a * a8a + a2a * a7a, a1a * a5a - a2a * a4a);
+
+            res.MultiplyByConstant(1 / det);
+
+            return res;
+        }
         public static  bool FEquals(this double x, double y, double tol)
         {
             return Math.Abs(x - y) < Math.Abs(tol);

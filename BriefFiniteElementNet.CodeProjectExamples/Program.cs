@@ -13,7 +13,8 @@ namespace BriefFiniteElementNet.CodeProjectExamples
         [STAThread]
         static void Main(string[] args)
         {
-            LoadComb();
+            StiffnessCenterTest();
+
         }
 
         private static void Example1()
@@ -135,6 +136,64 @@ namespace BriefFiniteElementNet.CodeProjectExamples
         private static void LoadComb()
         {
             new LoadCombExample().Run();
+        }
+
+        public static void StiffnessCenterTest()
+        {
+            #region model
+            var model = new Model();
+
+            model.Nodes.Add(new Node(0, 0, 0) { Label = "n0" });
+            model.Nodes.Add(new Node(0, 2, 0) { Label = "n1" });
+            model.Nodes.Add(new Node(4, 2, 0) { Label = "n2" });
+            model.Nodes.Add(new Node(4, 0, 0) { Label = "n3" });
+
+            model.Nodes.Add(new Node(0, 0, 1) { Label = "n4" });
+            model.Nodes.Add(new Node(0, 2, 1) { Label = "n5" });
+            model.Nodes.Add(new Node(4, 2, 1) { Label = "n6" });
+            model.Nodes.Add(new Node(4, 0, 1) { Label = "n7" });
+
+
+            var a = 0.1 * 0.1;//area, assume sections are 10cm*10cm rectangular
+            var iy = 0.1 * 0.1 * 0.1 * 0.1 / 12.0;//Iy
+            var iz = 0.1 * 0.1 * 0.1 * 0.1 / 12.0;//Iz
+            var j = 0.1 * 0.1 * 0.1 * 0.1 / 12.0;//Polar
+            var e = 20e9;//young modulus, 20 [GPa]
+            var nu = 0.2;//poissons ratio
+
+            var sec = new Sections.UniformParametric1DSection(a, iy, iz, j);
+            var mat = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(e, nu);
+
+            model.Elements.Add(new BarElement(model.Nodes["n0"], model.Nodes["n4"]) { Label = "e0", Section = sec, Material = mat });
+            model.Elements.Add(new BarElement(model.Nodes["n1"], model.Nodes["n5"]) { Label = "e1", Section = sec, Material = mat });
+            model.Elements.Add(new BarElement(model.Nodes["n2"], model.Nodes["n6"]) { Label = "e2", Section = sec, Material = mat });
+            model.Elements.Add(new BarElement(model.Nodes["n3"], model.Nodes["n7"]) { Label = "e3", Section = sec, Material = mat });
+
+            model.Elements.Add(new BarElement(model.Nodes["n4"], model.Nodes["n5"]) { Label = "e4", Section = sec, Material = mat });
+            model.Elements.Add(new BarElement(model.Nodes["n5"], model.Nodes["n6"]) { Label = "e5", Section = sec, Material = mat });
+            model.Elements.Add(new BarElement(model.Nodes["n6"], model.Nodes["n7"]) { Label = "e6", Section = sec, Material = mat });
+            model.Elements.Add(new BarElement(model.Nodes["n7"], model.Nodes["n4"]) { Label = "e7", Section = sec, Material = mat });
+
+
+
+            model.Nodes["n0"].Constraints =
+                model.Nodes["n1"].Constraints =
+                    model.Nodes["n2"].Constraints =
+                        model.Nodes["n3"].Constraints =
+                            Constraints.Fixed;
+            #endregion
+
+            var rgd = new RigidElement_MPC();
+
+            rgd.Nodes.Add(model.Nodes["n4"]);
+            rgd.Nodes.Add(model.Nodes["n5"]);
+            rgd.Nodes.Add(model.Nodes["n6"]);
+            rgd.Nodes.Add(model.Nodes["n7"]);
+
+            model.MpcElements.Add(rgd);
+
+            var loc = new StiffnessCenterFinder().GetCenters(model, rgd);
+
         }
     }
 }

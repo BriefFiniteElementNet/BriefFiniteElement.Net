@@ -36,9 +36,9 @@ namespace BriefFiniteElementNet.TestConsole
             //TstMtx();
 
             //TestCuda();
-            //TestIntelMkl();
+            TestIntelMkl();
 
-            TestWithOpensees();
+            //TestWithOpensees();
 
             //Validation.TriangleElementTester.TestSingleElement();
 
@@ -360,6 +360,15 @@ namespace BriefFiniteElementNet.TestConsole
 
         private static void TestIntelMkl()
         {
+            var oldPath = Environment.GetEnvironmentVariable("PATH");
+
+            var newPath = oldPath + @"C:\Program Files (x86)\IntelSWTools\compilers_and_libraries_2018.0.124\windows\redist\intel64_win\mkl;";
+
+            Environment.SetEnvironmentVariable("PATH", newPath);
+
+            BriefFiniteElementNet.PardisoThing.test_pardiso.Main(null);
+
+            return;
             var model = StructureGenerator.Generate3DBarElementGrid(1, 1, 2);
 
             

@@ -49,11 +49,16 @@
     <Compile Include="LoadCombExample.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StiffnessCenterFinder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BriefFiniteElement.Controls\BriefFiniteElementNet.Controls.csproj">
       <Project>{8dabde62-8a8e-4153-b753-3a62015a9c16}</Project>
       <Name>BriefFiniteElementNet.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj">
+      <Project>{82c63c6b-651a-4308-8b89-b4c643f3a7c2}</Project>
+      <Name>BriefFiniteElementNet.Common</Name>
     </ProjectReference>
     <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj">
       <Project>{7cda20d4-9bc8-4bc3-9f22-cb86cd4dc3e1}</Project>
