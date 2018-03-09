@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Solver;
+using CSparse.Double;
+using CSR = CSparse.Double.CompressedColumnStorage;
 
 namespace BriefFiniteElementNet.CodeProjectExamples
 {
@@ -16,19 +18,27 @@ namespace BriefFiniteElementNet.CodeProjectExamples
         /// <param name="model"></param>
         /// <param name="element"></param>
         /// <returns>stiffness centers</returns>
-        public Point[] GetCenters(Model model, RigidElement_MPC element)
+        public Point[] GetCenters(Model model, RigidElement_MPC element,LoadCase loadCase)
         {
+            model = model.Clone();
+
+            var perm = CalcUtil.GenerateP_Delta_Mpc(model, loadCase, new Mathh.GaussRrefFinder());
+
+            var adj = GetAdjacencyGraph(perm.Item1);
+
+
             var cse_x = new LoadCase("tmp_case_x1", LoadType.Other);
 
             var stl = new VirtualConstraint();
 
             stl.AppliedLoadCases.Add(cse_x);
 
-
             stl.Nodes.AddRange(element.Nodes);
 
-            stl.Constraint = Constraints.MovementFixed;
-            stl.Settlement = new Displacement(new Vector(1, 1, 1), Vector.Zero);
+            stl.Constraint = Constraints.Fixed;
+            stl.Settlement = Displacement.Zero;
+
+           
 
             model.MpcElements.Add(stl);
 
@@ -109,6 +119,112 @@ namespace BriefFiniteElementNet.CodeProjectExamples
 
 
             throw new NotImplementedException();
+        }
+
+        public Point[] GetCenters2(Model model, List<Tuple<Node,DoF>> dofs,LoadCase cse)
+        {
+            /*
+            var rnd = Guid.NewGuid().ToString("N").Substring(0, 5) + "_";
+
+            model = model.Clone();
+
+
+            foreach(var dof in dofs)
+            {
+                //var modelLo
+            }
+
+            var centralNode = dofs.FirstOrDefault().Item1;// element.Nodes.FirstOrDefault();
+
+            foreach (var nde in model.Nodes)
+            {
+                nde.Settlements = Displacement.Zero;
+                nde.Loads.Clear();
+
+                if (element.Nodes.IndexOfReference(nde) == -1)
+                    nde.Constraints = Constraints.Fixed;
+                else
+                    nde.Constraints = Constraints.Released;
+            }
+
+
+            foreach(var mpcElm in model.MpcElements)
+            {
+                if (mpcElm is RigidElement_MPC)
+                    if (mpcElm.Nodes.Contains(central))
+                        throw new Exception("invalid model");
+            }
+
+
+            var tls = new string[] { rnd + "dx", rnd + "dy", rnd + "dz", rnd + "rx", rnd + "ry", rnd + "rz" };
+
+            var cnf = new SolverConfiguration();
+            
+            for (var i = 0; i < 6; i++)
+            {
+                var dVec = new double[6];
+
+                dVec[i] = 1;
+
+                var frc = Force.FromVector(dVec, 0);
+
+                var cse = new LoadCase(tls[i], LoadType.Other);
+
+                var ld = new NodalLoad(frc, cse);
+
+                central.Loads.Add(ld);
+
+                cnf.LoadCases.Add(cse);
+            }
+
+            cnf.SolverFactory = new CholeskySolverFactory();
+
+
+            model.Solve_MPC(cnf);
+
+            var flx = new Matrix(6, 6);
+
+            for (var i = 0; i < 6; i++)
+            {
+
+            }
+
+
+            var cse_x = new LoadCase("tmp_case_x1", LoadType.Other);
+
+            var perm = CalcUtil.GenerateP_Delta_Mpc(model, cse_x, new Mathh.GaussRrefFinder());
+
+            var np = perm.Item1.ColumnCount;//master count
+
+            var rd = perm.Item2;
+
+            var pd = perm.Item1;
+
+            var kt = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(model);
+
+            var pf = pd.Transpose();
+
+            var kr = pf.Multiply(kt).Multiply(pd);
+
+            var kr_d = kr.ToDenseMatrix();
+
+
+            
+            */
+
+            throw new NotImplementedException();
+        }
+
+        public CSR GetAdjacencyGraph(CSR P_delta)
+        {
+            var p = P_delta.CloneMatrix();
+            
+            for (var i = 0; i < p.NonZerosCount; i++)
+                p.Values[i] = 1;
+            
+            var buf = (CSR)p.Multiply(p.Transpose());
+
+            return buf;
         }
     }
 }

@@ -422,6 +422,9 @@ namespace BriefFiniteElementNet
         {
             for (int i = 0; i < this.Elements.Count; i++)
                 this.Elements[i].Index = i;
+
+            for (int i = 0; i < this.MpcElements.Count; i++)
+                this.MpcElements[i].Index = i;
         }
         #endregion
 

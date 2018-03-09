@@ -54,6 +54,7 @@
     <Compile Include="ElementHelpers\TriangleBasicDrillingDofHelper.cs" />
     <Compile Include="Elements\VirtualSupport.cs" />
     <Compile Include="Loads\ConcentratedLoad.cs" />
+    <Compile Include="Loads\TrapezoidalLoad.cs" />
     <Compile Include="Mathh\SparseEqSystem.cs" />
     <Compile Include="Mathh\GaussRrefFinder.cs" />
     <Compile Include="Mathh\SparseRow.cs" />

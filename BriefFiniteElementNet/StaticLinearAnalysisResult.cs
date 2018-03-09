@@ -1180,7 +1180,9 @@ namespace BriefFiniteElementNet
                     if (ld.Case != cse)
                         continue;
 
-                    var frcs = ld.GetGlobalEquivalentNodalLoads(elm);
+                    var frcs =
+                        elm.GetEquivalentNodalLoads(ld);
+                        //ld.GetGlobalEquivalentNodalLoads(elm);
 
                     for (var i = 0; i < nc; i++)
                     {

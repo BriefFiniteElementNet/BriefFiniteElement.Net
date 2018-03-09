@@ -15,6 +15,17 @@ namespace BriefFiniteElementNet
 {
     public static class Extensions
     {
+        public static CSparse.Double.CompressedColumnStorage CloneMatrix(this CSparse.Double.CompressedColumnStorage matrix)
+        {
+            var buf = new CSparse.Double.CompressedColumnStorage(matrix.RowCount, matrix.ColumnCount, matrix.NonZerosCount);
+
+            buf.RowIndices = (int[])matrix.RowIndices.Clone();
+            buf.ColumnPointers = (int[])matrix.ColumnPointers.Clone();
+            buf.Values = (double[])matrix.Values.Clone();
+
+            return buf;
+        }
+
         /// <summary>
         /// High performance 3x3 determinant
         /// </summary>

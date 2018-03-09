@@ -24,7 +24,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             return true;
         }
 
-        public override TclCommand[] Translate(StructurePart targetElement)
+        public override TclCommand[] Translate(StructurePart targetElement,out string elementTag)
         {
             var elm = targetElement as BarElement;
             var sec = elm.Section as Sections.UniformParametric1DSection;
@@ -37,7 +37,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             var eleTag = TargetGenerator.GetCounter("element");
             var transTag = TargetGenerator.GetCounter("geomTransf");
 
-            var vec = elm.GetTransformationManager().TransformLocalToGlobal(Vector.I);
+            var vec = elm.GetTransformationManager().TransformLocalToGlobal(Vector.K).GetUnit();
 
             buf.Add(new TclCommand("geomTransf", "Linear ", transTag,
                 vec.X, vec.Y, vec.Z));
@@ -45,11 +45,17 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             buf.Add(new TclCommand("element", "elasticBeamColumn", eleTag,
                 elm.StartNode.GetIndex(),
                 elm.EndNode.GetIndex(),
-                sec.A, 
-                mat.YoungModulus,g, sec.J, sec.Iz, sec.Iy, transTag));
+                sec.A,
+                mat.YoungModulus
+                , g
+                , sec.J,
+                sec.Iz,
+                sec.Iy, transTag));
 
             TargetGenerator.SetCounter("element", eleTag + 1);
             TargetGenerator.SetCounter("geomTransf", transTag + 1);
+
+            elementTag = eleTag.ToString();
 
             return buf.ToArray();
         }

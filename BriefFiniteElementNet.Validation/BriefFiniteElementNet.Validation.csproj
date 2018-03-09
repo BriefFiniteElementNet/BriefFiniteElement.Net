@@ -52,6 +52,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OpenseesTclGenerator\UniformLoad2Tcl.cs" />
     <Compile Include="TestValidator.cs" />
     <Compile Include="ValidationResult.cs" />
     <None Include="Case_01\Readme.md" />

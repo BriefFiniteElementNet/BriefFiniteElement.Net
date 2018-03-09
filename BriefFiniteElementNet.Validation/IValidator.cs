@@ -8,6 +8,7 @@ namespace BriefFiniteElementNet.Validation
 {
     public interface IValidator
     {
-        ValidationResult[] DoValidation();
+        ValidationResult[] DoPopularValidation();
+        ValidationResult[] DoAllValidation();
     }
 }

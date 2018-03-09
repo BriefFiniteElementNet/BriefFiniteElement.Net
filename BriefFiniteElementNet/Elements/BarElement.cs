@@ -12,7 +12,7 @@ using System.Security.Permissions;
 namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
-    /// 
+    /// Represents a Bar element with two nodes (start and end)
     /// </summary>
     [Serializable]
     [Obsolete("not fully implemented yet")]
@@ -369,6 +369,7 @@ namespace BriefFiniteElementNet.Elements
                 czz = d;
             }
 
+            //transformation for webrotation
             var pars = new double[9];
 
             pars[0] = cxx;
@@ -386,9 +387,13 @@ namespace BriefFiniteElementNet.Elements
 
             var buf = new Matrix(3, 3);
 
-            buf.FillColumn(0, pars[0], pars[1], pars[2]);
-            buf.FillColumn(1, pars[3], pars[4], pars[5]);
-            buf.FillColumn(2, pars[6], pars[7], pars[8]);
+            //buf.FillColumn(0, pars[0], pars[1], pars[2]);
+            //buf.FillColumn(1, pars[3], pars[4], pars[5]);
+            //buf.FillColumn(2, pars[6], pars[7], pars[8]);
+
+            buf.FillRow(0, pars[0], pars[1], pars[2]);
+            buf.FillRow(1, pars[3], pars[4], pars[5]);
+            buf.FillRow(2, pars[6], pars[7], pars[8]);
 
             return buf;
         }

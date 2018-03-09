@@ -59,6 +59,24 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+        public static bool GetRandomBool()
+        {
+            return (ForceRnd.Next() % 2) == 0;
+        }
+
+        public static Vector GetRandomVector(double min, double max)
+        {
+            if (min > max)
+                throw new InvalidOperationException();
+
+            var buf = new Vector(
+                (max - min) * ForceRnd.NextDouble() + min,
+                (max - min) * ForceRnd.NextDouble() + min,
+                (max - min) * ForceRnd.NextDouble() + min);
+
+
+            return buf;
+        }
 
 
         public static Random DispsRnd = new Random();

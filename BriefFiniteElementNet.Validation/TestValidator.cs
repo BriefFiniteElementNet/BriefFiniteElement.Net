@@ -9,7 +9,12 @@ namespace BriefFiniteElementNet.Validation
 {
     public class TestValidator:IValidator
     {
-        public ValidationResult[] DoValidation()
+        public ValidationResult[] DoAllValidation()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ValidationResult[] DoPopularValidation()
         {
             var res = new DataTable();// OpenseesValidator.OpenseesValidate(grd, LoadCase.DefaultLoadCase, false);
 
@@ -76,5 +81,7 @@ namespace BriefFiniteElementNet.Validation
             buf.Title = "Fake Validator";
             return new ValidationResult[] { buf , buf , buf , buf};
         }
+
+
     }
 }

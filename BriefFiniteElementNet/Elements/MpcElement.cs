@@ -16,6 +16,10 @@ namespace BriefFiniteElementNet.Elements
     /// </summary>
     public abstract class MpcElement: StructurePart
     {
+
+        [NonSerialized]
+        internal int Index;
+
         public bool AppliesForLoadCase(LoadCase lc)
         {
             if (_useForAllLoads)

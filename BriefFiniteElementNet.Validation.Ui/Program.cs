@@ -12,21 +12,49 @@ namespace BriefFiniteElementNet.Validation.Ui
     {
         static void Main(string[] args)
         {
+
+            //BarElementTester.Test_Trapezoid_1();
+            //BarElementTester.ValidateSingleInclinedFrame();
             TestBar();
         }
 
         static void TestBar()
         {
             Console.WriteLine("Bar Element Test - Start");
+            
 
             ExportToHtmFile("c:\\temp\\validation.html", new BarElementTester());
 
+            
             //var resss = new BarElementTester().DoValidation();
         }
 
         public static void ExportToHtmFile(string fileName, params IValidator[] validators)
         {
+            bool all = false;
+
+            while(true)
+            {
+                Console.Write("Please enter the type of validations to run (All/Populars)[a/p]:p");
+                Console.SetCursorPosition(Console.CursorLeft - 1, Console.CursorTop);
+                var k = Console.ReadKey();
+
+                if (k.Key == ConsoleKey.A )
+                {
+                    all = true;
+                    break;
+                }
+
+                if (k.Key == ConsoleKey.P || k.Key == ConsoleKey.Enter)
+                {
+                    all = false;
+                    break;
+                }
+            }
+            
+
             var doc = new HtmlTags.HtmlDocument();
+            
             
             doc.Head
                 .Add("description").Attr("content", "Some validations of BriefFiniteEelement.NET library")
@@ -66,20 +94,48 @@ namespace BriefFiniteElementNet.Validation.Ui
 
 
 
-            var ctx = body.Add("div").Id("ctxtbl");
+            var ctx = body.Add("div").Id("ctxtbl").AddClass("jumbotron");
 
+            ctx.Add("div").Add("p").Text("Table of contents:");
+
+            body = body.Add("div").AddClass("container");
 
             foreach (var validator in validators)
             {
-                var valReses = validator.DoValidation();
+                var valReses = all ?
+                    validator.DoAllValidation() :
+                    validator.DoPopularValidation();
 
                 foreach (var valRese in valReses)
                 {
                     var id = Guid.NewGuid().ToString("N").Substring(0, 5);
 
-                    valRese.Span.Id(id);
+                    var validationSpan = body.Add("div").Id(id).AddClasses("card");
 
-                    body.Children.Add(valRese.Span);
+
+                    validationSpan.Add("div").AddClasses("card-header").Text("Validation");//title
+
+
+                    var blc = validationSpan.Add("div").AddClasses("card-block");
+
+                    blc.Add("h4").AddClasses("card-title").Text(valRese.Title);
+                    var panelBody = blc.Add("div").AddClasses("card-text");
+
+
+                    panelBody.Children.Add(valRese.Span);
+
+                    if (valRese.ValidationFailed.HasValue)
+                    {
+                        var fail = valRese.ValidationFailed.Value;
+
+                        var sp2 = validationSpan.Add("div").AddClass("alert").AddClass(fail? "alert-danger" : "alert-success").Attr("role", "alert");
+
+                        sp2.Text(fail ? "Validation Failed!!" : "Validation Success!!");
+                        //body.Children.Add(sp2);
+                    }
+                        
+
+
                     ctx.Add("a").Attr("href", "#" + id).Text(valRese.Title);
                     ctx.Add("br");
                 }

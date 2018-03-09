@@ -192,7 +192,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
 
             model.MpcElements.Add(rgd);
 
-            var loc = new StiffnessCenterFinder().GetCenters(model, rgd);
+            var loc = new StiffnessCenterFinder().GetCenters(model, rgd, LoadCase.DefaultLoadCase);
 
         }
     }

@@ -12,12 +12,12 @@ namespace BriefFiniteElementNet.ElementHelpers
     public enum BeamDirection
     {
         /// <summary>
-        /// Beam in Y direction, which means start and end nodes does rotate in Y direction
+        /// Beam in Y direction, which means start and end nodes does rotate about Y direction
         /// </summary>
         Y,
 
         /// <summary>
-        /// Beam in Z direction, which means start and end nodes does rotate in Z direction
+        /// Beam in Z direction, which means start and end nodes does rotate about Z direction
         /// </summary>
         Z
     }

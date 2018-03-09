@@ -13,6 +13,35 @@ namespace BriefFiniteElementNet
     public static class StructureGenerator
     {
 
+        public static void AddRandomiseNodalLoads(Model mdl, params LoadCase[] cases)
+        {
+            foreach (var nde in mdl.Nodes)
+                foreach (var cse in cases)
+                {
+                    nde.Loads.Add(new NodalLoad(RandomStuff.GetRandomForce(-1000, 1000), cse));
+                }
+        }
+
+        public static void AddRandomiseBeamUniformLoads(Model mdl, params LoadCase[] cases)
+        {
+            foreach (var elm in mdl.Elements)
+                foreach (var cse in cases)
+                {
+                    var ul = new Loads.UniformLoad();
+
+                    ul.Direction = RandomStuff.GetRandomVector(-10, 10);
+
+                    ul.CoordinationSystem = RandomStuff.GetRandomBool() ?
+                        CoordinationSystem.Local :
+                        CoordinationSystem.Global;
+
+                    ul.Magnitude = RandomStuff.GetRandomNumber(-100, 100);
+
+                    elm.Loads.Add(ul);
+                }
+        }
+
+
         public static void AddRandomiseLoading(Model mdl, bool addNodalLoads, bool addElementLoads,
             params LoadCase[] cases)
         {
@@ -51,6 +80,28 @@ namespace BriefFiniteElementNet
                 nde.Constraints = rnd.GetRandomConstraint();
         }
 
+        public static void SetRandomiseSections(Model mdl)
+        {
+            foreach (var ele in mdl.Elements)
+            {
+                if(ele is Elements.BarElement)
+                {
+                    var br = ele as Elements.BarElement;
+
+                    var sec = new Sections.UniformParametric1DSection();
+
+                    var b = RandomStuff.GetRandomNumber(0.03,0.05);
+                    var h = RandomStuff.GetRandomNumber(0.03,0.05);
+
+                    sec.A = b * h;
+                    sec.Iy = b * b * b * h / 12;
+                    sec.Iz = h * h * h * b / 12;
+                    sec.J = (sec.Iy + sec.Iz) / 2;//!!! 
+
+                    br.Section = sec;
+                }
+            }
+        }
 
         public static void AddRandomDisplacements(Model mdl,double max)
         {
@@ -264,11 +315,24 @@ namespace BriefFiniteElementNet
 
                 framElm.Behavior = BarElementBehaviours.FullFrame;
 
-                var sec = (Sections.UniformParametric1DSection)(framElm.Section = new Sections.UniformParametric1DSection());
-                var mat = framElm.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.2);
 
-                sec.A = 7.64 * 1e-4;// 0.01;
-                sec.Iy = sec.Iz = sec.J = 80 * 1e-8;// 0.1 * 0.1 * 0.1 * 0.1 / 12.0;
+                var h = RandomStuff.GetRandomNumber(0.01, 0.1);
+                var w = RandomStuff.GetRandomNumber(0.01, 0.1);
+
+                var a = h * w;
+                var iy = h * h * h * w / 12;
+                var iz = w * w * w * h / 12;
+                var j = iy + iz;
+                var e= RandomStuff.GetRandomNumber(100e9, 200e9);
+                var nu = RandomStuff.GetRandomNumber(0.2, 0.3);
+
+                var sec = (Sections.UniformParametric1DSection)(framElm.Section = new Sections.UniformParametric1DSection());
+                var mat = framElm.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(e, nu);
+
+                sec.A = a;
+                sec.Iy = iy;
+                sec.Iz = iz;
+                sec.J = j;
 
             }
 

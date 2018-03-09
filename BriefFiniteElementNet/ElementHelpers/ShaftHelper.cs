@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
+using BriefFiniteElementNet.Loads;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
@@ -233,6 +234,16 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public Force[] GetLocalEquivalentNodalLoads(Element targetElement, Load load)
         {
+            if (load is UniformLoad)
+            {
+                return new Force[2];
+            }
+
+            if (load is TrapezoidalLoad)
+            {
+                return new Force[2];
+            }
+
             throw new NotImplementedException();
         }
     }

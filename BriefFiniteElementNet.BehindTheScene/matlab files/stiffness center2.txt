@@ -1,0 +1,8 @@
+syms pd f0 d0 f1 d1;
+syms a ii;
+syms k_dd_0 k_dr_0 k_rd_0 k_rr_0;
+
+k0 = [k_dd_0 k_dr_0; k_rd_0 k_rr_0];
+pd = [ii a;0 ii];
+
+k1 = pf*k0*pd

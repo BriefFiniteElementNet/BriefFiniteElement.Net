@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
+using BriefFiniteElementNet.Loads;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
@@ -232,6 +233,111 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public Force[] GetLocalEquivalentNodalLoads(Element targetElement, Load load)
         {
+            var tr = targetElement.GetTransformationManager();
+
+            #region uniform
+
+            if (load is Loads.UniformLoad)
+            {
+                var ul = load as Loads.UniformLoad;
+
+                var localDir = ul.Direction.GetUnit();
+
+                if (ul.CoordinationSystem == CoordinationSystem.Global)
+                {
+                    localDir = tr.TransformGlobalToLocal(localDir);
+                }
+
+                var ux = localDir.X * ul.Magnitude;
+                var uy = localDir.Y * ul.Magnitude;
+                var uz = localDir.Z * ul.Magnitude;
+
+                var intg = GaussianIntegrator.CreateFor1DProblem(xi =>
+                {
+                    var shp = GetNMatrixAt(targetElement, xi, 0, 0);
+                    var j = GetJMatrixAt(targetElement, xi, 0, 0);
+                    shp.MultiplyByConstant(j.Determinant());
+                    shp.MultiplyByConstant(ux);
+
+                    return shp;
+                }, -1, 1, 2);
+
+                var res = intg.Integrate();
+
+                var localForces = new Force[2];
+
+                {
+                    var fx0 = res[0, 0];
+                    var fx1 = res[0, 1];
+
+                    localForces[0] = new Force(fx0, 0, 0, 0, 0, 0);
+                    localForces[1] = new Force(fx1, 0, 0, 0, 0, 0);
+
+                }
+
+                var globalForces = localForces.Select(i => tr.TransformLocalToGlobal(i)).ToArray();
+                return globalForces;
+
+            }
+
+            #endregion
+
+            #region trapezoid
+
+            if (load is TrapezoidalLoad)
+            {
+                var trLoad = load as TrapezoidalLoad;
+
+                var localDir = trLoad.Direction;
+
+                var startOffset = trLoad.StartOffsets[0];
+                var endOffset = trLoad.EndOffsets[0];
+                var startMag = trLoad.StartMagnitudes[0];
+                var endMag = trLoad.EndMagnitudes[0];
+
+
+                if (trLoad.CoordinationSystem == CoordinationSystem.Global)
+                {
+                    localDir = tr.TransformGlobalToLocal(localDir);
+                }
+
+
+                var xi0 = -1 + startOffset;
+                var xi1 = 1 - endOffset;
+
+                var intg = GaussianIntegrator.CreateFor1DProblem(xi =>
+                {
+                    var shp = GetNMatrixAt(targetElement, xi, 0, 0);
+                    var q__ = trLoad.GetMagnitudesAt(xi)[0];
+                    var j = GetJMatrixAt(targetElement, xi, 0, 0);
+                    shp.MultiplyByConstant(j.Determinant());
+
+                    var q_ = trLoad.Direction.GetUnit() * q__;
+
+                    shp.MultiplyByConstant(q_.X);
+
+                    return shp;
+                }, xi0, xi1, 3);
+
+                var res = intg.Integrate();
+
+                var localForces = new Force[2];
+
+                {
+                    var fx0 = res[0, 0];
+                    var fx1 = res[0, 1];
+
+                    localForces[0] = new Force(fx0, 0, 0, 0, 0, 0);
+                    localForces[1] = new Force(fx1, 0, 0, 0, 0, 0);
+                }
+
+                var globalForces = localForces.Select(i => tr.TransformLocalToGlobal(i)).ToArray();
+
+                return globalForces;
+            }
+
+            #endregion
+
             throw new NotImplementedException();
         }
     }

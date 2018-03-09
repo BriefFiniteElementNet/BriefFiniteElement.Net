@@ -30,7 +30,7 @@ namespace BriefFiniteElementNet
             _case = @case;
         }
 
-        private LoadCase _case;
+        private LoadCase _case = LoadCase.DefaultLoadCase;
 
         /// <summary>
         /// Gets or sets the case.

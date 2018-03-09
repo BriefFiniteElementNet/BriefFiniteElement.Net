@@ -9,8 +9,10 @@ namespace BriefFiniteElementNet.Validation
     {
         public string HtmlSpanElement;
 
-        public HtmlTags.HtmlTag Span;
+        public HtmlTags.HtmlTag Span = new HtmlTags.HtmlTag("span");
 
         public string Title;
+
+        public bool? ValidationFailed;
     }
 }

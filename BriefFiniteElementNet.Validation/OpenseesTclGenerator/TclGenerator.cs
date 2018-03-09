@@ -14,6 +14,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
         public string nodesOut, elementsOut, stiffnessOut;
 
         public List<ElementToTclTranslator> ElementTranslators = new List<ElementToTclTranslator>();
+        public List<ElementalLoadToTclTranslator> ElementLoadTranslators = new List<ElementalLoadToTclTranslator>();
 
         public int GetCounter(string name)
         {
@@ -46,7 +47,6 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
 
             model.ReIndexElements();
 
-
             var sb = new StringBuilder();
 
             Commands.Add(new TclCommand("wipe"));
@@ -78,11 +78,15 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
 
             #region elements
 
+            var eleTags = new string[model.Elements.Count];
+            var mpcEleTags = new string[model.MpcElements.Count];
+
             foreach (var element in model.Elements)
             {
                 var trs = ElementTranslators.FirstOrDefault(i => i.CanTranslate(element));
-
-                var cmd = trs.Translate(element);
+                string eleTag;
+                var cmd = trs.Translate(element, out eleTag);
+                eleTags[element.Index] = eleTag;
                 Commands.AddRange(cmd);
             }
 
@@ -90,8 +94,8 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             foreach (var element in model.MpcElements)
             {
                 var trs = ElementTranslators.FirstOrDefault(i => i.CanTranslate(element));
-
-                var cmd = trs.Translate(element);
+                string tmp;
+                var cmd = trs.Translate(element,out tmp);
                 Commands.AddRange(cmd);
             }
 
@@ -103,7 +107,11 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             {
                 foreach (var load in element.Loads)
                 {
-                    throw new NotSupportedException();
+                    var trs = ElementLoadTranslators.FirstOrDefault(i => i.CanTranslate(load, element));
+                    var eleTag = eleTags[element.Index];
+
+                    var cmd = trs.Translate(load, element, eleTag);
+                    LoadCommands.AddRange(cmd);
                 }
             }
 

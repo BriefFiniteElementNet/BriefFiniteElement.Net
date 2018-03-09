@@ -1182,7 +1182,6 @@ namespace BriefFiniteElementNet
             return buf.ToCCs();
         }
 
-        [Obsolete("Under development")]
         public static Tuple<CCS, double[]> GenerateP_Delta_Mpc(Model target, LoadCase loadCase, IRrefFinder rrefFinder)
         {
             var totDofCount = target.Nodes.Count * 6;
