@@ -99,6 +99,12 @@ namespace BriefFiniteElementNet.Validation
 
             var res = OpenseesValidator.OpenseesValidate(grd, LoadCase.DefaultLoadCase, false);
 
+            var absErrIdx = res.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("absolute"));
+            var relErrIdx = res.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("relative"));
+
+            var maxAbsError = res.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[absErrIdx]);
+            var maxRelError = res.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[relErrIdx]);
+
             //var buf = new ValidationResult();
 
             var span = new HtmlTag("span");
@@ -116,12 +122,21 @@ namespace BriefFiniteElementNet.Validation
                       " Every node in the model have a random load on it.");
 
             span.Add("h2").Text("Validation Result");
+
             span.Add("paragraph")
-                .Text("This is out put of validation");
+                .Text(string.Format("Validation output for nodal displacements:"));
+
+
+            span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxAbsError, maxRelError));
+
+
+
+            //span.Add("").Text(string.Format("Max ABSOLUTE Error: {0:e3}", maxAbsError));
+
 
             var id = "tbl_" + Guid.NewGuid().ToString("N").Substring(0, 5);
 
-            span.Add("button").Attr("type", "button").Text("Toggle").AddClasses("btn btn-primary")
+            span.Add("button").Attr("type", "button").Text("Toggle Details").AddClasses("btn btn-primary")
                 .Attr("onclick", $"$('#{id}').collapse('toggle');");
 
             var div = span.Add("div").AddClasses("panel-collapse", "collapse", "out").Id(id);
