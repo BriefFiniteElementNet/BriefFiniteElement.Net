@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.MpcElements;
 using BriefFiniteElementNet.Solver;
 using CSparse.Double;
 using CSR = CSparse.Double.CompressedColumnStorage;
@@ -25,6 +26,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             var perm = CalcUtil.GenerateP_Delta_Mpc(model, loadCase, new Mathh.GaussRrefFinder());
 
             var adj = GetAdjacencyGraph(perm.Item1);
+
 
 
             var cse_x = new LoadCase("tmp_case_x1", LoadType.Other);

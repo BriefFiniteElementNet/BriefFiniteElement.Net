@@ -6,7 +6,7 @@ using System.Text;
 using CSparse.Double;
 using System.Security.Permissions;
 
-namespace BriefFiniteElementNet.Elements
+namespace BriefFiniteElementNet.MpcElements
 {
     /// <summary>
     /// Represents a hinge link between two nodes.

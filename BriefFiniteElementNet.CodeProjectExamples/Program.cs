@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Controls;
 using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.MpcElements;
 
 
 namespace BriefFiniteElementNet.CodeProjectExamples
@@ -188,7 +189,12 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             rgd.Nodes.Add(model.Nodes["n4"]);
             rgd.Nodes.Add(model.Nodes["n5"]);
             rgd.Nodes.Add(model.Nodes["n6"]);
-            rgd.Nodes.Add(model.Nodes["n7"]);
+            //rgd.Nodes.Add(model.Nodes["n7"]);
+
+
+
+
+            //var eqDof = new TelepathyLink
 
             model.MpcElements.Add(rgd);
 

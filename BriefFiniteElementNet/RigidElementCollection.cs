@@ -44,7 +44,7 @@ namespace BriefFiniteElementNet
     /// Represents a collection for rigid elements
     /// </summary>
     [Serializable]
-    public class TelepathyLinkCollection : List<TelepathyLink>
+    public class TelepathyLinkCollection : List<MpcElements.TelepathyLink>
     {
         /// <summary>
         /// The parent

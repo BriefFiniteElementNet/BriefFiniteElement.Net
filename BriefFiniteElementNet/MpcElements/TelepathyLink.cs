@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using CSparse.Double;
 
-namespace BriefFiniteElementNet.Elements
+namespace BriefFiniteElementNet.MpcElements
 {
     /// <summary>
     /// Represents a telepathy link between DoF's of two nodes. connected DoF s will have equal displacement after analysis.

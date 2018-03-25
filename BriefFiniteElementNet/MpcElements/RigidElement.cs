@@ -7,7 +7,7 @@ using System.Text;
 using CSparse.Double;
 using CSparse.Storage;
 
-namespace BriefFiniteElementNet.Elements
+namespace BriefFiniteElementNet.MpcElements
 {
     /// <summary>
     /// Represents an element with rigid body with no relative deformation of <see cref="Nodes"/> (the MPC version)

@@ -8,6 +8,7 @@ using System.Security.Permissions;
 using System.Text;
 using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.MpcElements;
 using CSparse.Double;
 using BriefFiniteElementNet.Solver;
 using CCS = CSparse.Double.CompressedColumnStorage;

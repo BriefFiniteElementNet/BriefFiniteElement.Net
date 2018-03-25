@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using CSparse.Double;
 
-namespace BriefFiniteElementNet.Elements
+namespace BriefFiniteElementNet.MpcElements
 {
     /// <summary>
     /// Represents a virtual support for nodes.

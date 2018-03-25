@@ -6,7 +6,7 @@ using System.Security.Permissions;
 using CCS = CSparse.Double.CompressedColumnStorage;
 
 
-namespace BriefFiniteElementNet.Elements
+namespace BriefFiniteElementNet.MpcElements
 {
     [Serializable]
     [CLSCompliant(true)]

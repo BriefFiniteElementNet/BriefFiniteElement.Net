@@ -5,7 +5,8 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Diagnostics;
 using BriefFiniteElementNet.Elements;
-using __targetType__ = BriefFiniteElementNet.Elements.MpcElement;
+using BriefFiniteElementNet.MpcElements;
+using __targetType__ = BriefFiniteElementNet.MpcElements.MpcElement;
 
 namespace BriefFiniteElementNet
 {

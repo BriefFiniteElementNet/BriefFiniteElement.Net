@@ -10,6 +10,7 @@ using System.Xml.Resolvers;
 using BriefFiniteElementNet.Controls;
 using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.MpcElements;
 using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Mathh;
 using BriefFiniteElementNet.Sections;

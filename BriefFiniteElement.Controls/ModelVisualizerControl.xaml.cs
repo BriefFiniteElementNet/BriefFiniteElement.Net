@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using System.Windows.Media.TextFormatting;
 using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.MpcElements;
 using DefaultLights = HelixToolkit.DefaultLights;
 using MaterialHelper = HelixToolkit.MaterialHelper;
 using MeshBuilder = HelixToolkit.MeshBuilder;

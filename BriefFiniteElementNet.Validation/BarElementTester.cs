@@ -108,20 +108,20 @@ namespace BriefFiniteElementNet.Validation
             //var buf = new ValidationResult();
 
             var span = new HtmlTag("span");
-            span.Add("h1").Text("Validate a 3D frame");
-            span.Add("h2").Text("Validate with");
+            span.Add("p").Text("Validate a 3D rame");
+            span.Add("h3").Text("Validate with");
             span.Add("paragraph").Text("OpenSEES (the Open System for Earthquake Engineering Simulation) software (available via http://opensees.berkeley.edu/)");
-            span.Add("h2").Text("Validate objective");
+            span.Add("h3").Text("Validate objective");
             span.Add("paragraph").Text("compare nodal displacement from BFE.net library and OpenSEES for a model consist of 3d bar elements with random material and section for each one, that forms a grid"
                 +" with a randomized nodal loading and narrow erratic on location of joint of grid elements.");
 
-            span.Add("h2").Text("Model Definition");
+            span.Add("h3").Text("Model Definition");
 
             span.Add("paragraph")
                 .Text($"A {nx}x{ny}x{nz} grid, with {grd.Nodes.Count} nodes and {grd.Elements.Count} bar elements." +
                       " Every node in the model have a random load on it.");
 
-            span.Add("h2").Text("Validation Result");
+            span.Add("h3").Text("Validation Result");
 
             span.Add("paragraph")
                 .Text(string.Format("Validation output for nodal displacements:"));
