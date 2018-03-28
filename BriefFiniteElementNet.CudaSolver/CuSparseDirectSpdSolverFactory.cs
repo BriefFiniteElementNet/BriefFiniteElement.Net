@@ -10,6 +10,7 @@ namespace BriefFiniteElementNet.CudaSolver
     /// <summary>
     /// Represents a factory for <see cref="CuSparseDirectSpdSolver"/>
     /// </summary>
+    [Obsolete("Under development")]
     public class CuSparseDirectSpdSolverFactory: ISolverFactory
     {
         public ISolver CreateSolver(CompressedColumnStorage A)

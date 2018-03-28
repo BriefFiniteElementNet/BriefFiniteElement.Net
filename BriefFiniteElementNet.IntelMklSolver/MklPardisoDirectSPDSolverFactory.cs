@@ -7,6 +7,7 @@ namespace BriefFiniteElementNet.IntelMklSolver
     /// <summary>
     /// Represents a factory for <see cref="MklPardisoDirectSPDSolver"/>
     /// </summary>
+    [Obsolete("Under development")]
     public class MklPardisoDirectSPDSolverFactory : ISolverFactory
     {
         public ISolver CreateSolver(CompressedColumnStorage A)

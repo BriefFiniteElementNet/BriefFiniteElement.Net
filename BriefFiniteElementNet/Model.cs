@@ -462,13 +462,13 @@ namespace BriefFiniteElementNet
 
         private Model(SerializationInfo info, StreamingContext context)
         {
-            elements = (ElementCollection)info.GetValue("elements",typeof(ElementCollection));
-            mpcElements = (MpcElementCollection)info.GetValue("mpcElements",typeof(MpcElementCollection));
+            Elements = (ElementCollection)info.GetValue("elements",typeof(ElementCollection));
+            MpcElements = (MpcElementCollection)info.GetValue("mpcElements",typeof(MpcElementCollection));
 
             rigidElements = (RigidElementCollection)info.GetValue("rigidElements",typeof(RigidElementCollection));
             telepathyLinks = (TelepathyLinkCollection)info.GetValue("telepathyLinks", typeof(TelepathyLinkCollection));
 
-            nodes = (NodeCollection)info.GetValue("nodes",typeof(NodeCollection));
+            Nodes = (NodeCollection)info.GetValue("nodes",typeof(NodeCollection));
             settlementLoadCase = (LoadCase)info.GetValue("settlementLoadCase", typeof(LoadCase));
         }
 

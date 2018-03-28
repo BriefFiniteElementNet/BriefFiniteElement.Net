@@ -10,6 +10,7 @@ namespace BriefFiniteElementNet
     /// Represents a collection for rigid elements
     /// </summary>
     [Serializable]
+    [Obsolete("Use MpcElementCollection")]
     public class RigidElementCollection : List<RigidElement>
     {
         /// <summary>
@@ -44,6 +45,7 @@ namespace BriefFiniteElementNet
     /// Represents a collection for rigid elements
     /// </summary>
     [Serializable]
+    [Obsolete("Use MpcElementCollection")]
     public class TelepathyLinkCollection : List<MpcElements.TelepathyLink>
     {
         /// <summary>

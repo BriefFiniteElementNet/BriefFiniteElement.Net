@@ -13,7 +13,7 @@ namespace BriefFiniteElementNet.IntelMklSolver
     /// <summary>
     /// Represents a direct solver for SPD (Symetric Positive Definite) matrixes, based on intel's Math Kernel Library (MKL) pardiso
     /// </summary>
-    [Obsolete()]
+    [Obsolete("Under development")]
     public class MklPardisoDirectSPDSolver : ISolver,IDisposable
     {
         private readonly int mtype = 2;//real and symmetric positive definite : 2

@@ -247,7 +247,52 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+        /// <summary>
+        /// gives a group number to each node 
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <returns></returns>
+        public static int[] EnumerateGraphPartsAsGroups(CompressedColumnStorage<double> graph)
+        {
+            var buf = new List<List<int>>();
 
+            var n = graph.ColumnCount;
+
+            var groups = Enumerable.Repeat(0, n).ToArray();// new int[n];
+
+            var visited = new bool[n];
+
+            var ri = graph.RowIndices;
+            var cp = graph.ColumnPointers;
+
+            for (var i = 0; i < n; i++)
+            {
+                if (cp[i] == cp[i + 1])
+                    visited[i] = true;
+            }
+
+            var cntr = 1;
+
+            while (true)
+            {
+                var startPoint = visited.FirstIndexOf(false);
+
+                if (startPoint == -1)
+                    break;
+
+                var part = DepthFirstSearch(graph, visited, startPoint).Distinct().ToList();
+
+                buf.Add(part);
+                foreach(var nde in part)
+                {
+                    groups[nde] = cntr;
+                }
+
+                cntr++;
+            }
+
+            return groups;
+        }
         public static void SetAllMembers(this Array arr, object value)
         {
             var n = arr.GetLength(0);

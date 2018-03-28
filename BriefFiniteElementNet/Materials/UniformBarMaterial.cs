@@ -9,6 +9,7 @@ namespace BriefFiniteElementNet.Elements
     /// <summary>
     /// 
     /// </summary>
+    [Obsolete("Use UniformIsotropicMaterial instead")]
     public class UniformBarMaterial:BaseBarMaterial
     {
         private double e, g, rho, mu;

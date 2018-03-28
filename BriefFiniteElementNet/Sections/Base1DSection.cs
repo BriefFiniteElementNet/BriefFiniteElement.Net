@@ -1,13 +1,21 @@
 ﻿using System.Runtime.Serialization;
 using BriefFiniteElementNet.Elements;
+using System;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.Sections
 {
     /// <summary>
     /// Represents a base class for cross sections for 1D elements like bar etc.
     /// </summary>
-    public abstract class Base1DSection
+    [Serializable]
+    public abstract class Base1DSection:ISerializable
     {
+        public Base1DSection()
+        {
+
+        }
+
         /// <summary>
         /// Gets the cross section properties at defined location.
         /// </summary>
@@ -27,5 +35,16 @@ namespace BriefFiniteElementNet.Sections
         /// <returns>the number of Gaussian integration points needed</returns>
         public abstract int[] GetMaxFunctionOrder();
 
+
+
+        /// <inheritdoc />
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+        }
+
+        protected Base1DSection(SerializationInfo info, StreamingContext context)
+        {
+        }
     }
 }

@@ -37,8 +37,6 @@ namespace BriefFiniteElementNet.Elements
         //private BarElementEndConnection _endtConnection = BarElementEndConnection.Fixed;
         private BarElementBehaviour _behavior = BarElementBehaviours.FullFrame;
         private Base1DSection _section;
-        [Obsolete]
-        private BaseBarMaterial _matterial;
         private BaseMaterial _material;
 
 
@@ -66,39 +64,6 @@ namespace BriefFiniteElementNet.Elements
             set { nodes[1] = value; }
         }
 
-        /*
-        /// <summary>
-        /// Gets or sets a value indicating whether member is hinged at start.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [hinged at start]; otherwise, <c>false</c>.
-        /// </value>
-        /// <remarks>
-        /// If member is connected with a hing at its start (like simply supported beam) then <see cref="HingedAtStart"/> is set to true, otherwise false
-        /// </remarks>
-        [Obsolete("not implemented, because this would complicate calculations, use two nodes approach instead.")]
-        public BarElementEndConnection StartConnection
-        {
-            get { return _startConnection; }
-            set { _startConnection = value; }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [hinged at end].
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [hinged at end]; otherwise, <c>false</c>.
-        /// </value>
-        /// <remarks>
-        /// If member is connected with a hing at its end (like simply supported beam) then <see cref="HingedAtStart"/> is set to true, otherwise false
-        /// </remarks>
-        [Obsolete("not implemented, because this would complicate calculations, use two nodes approach instead.")]
-        public BarElementEndConnection EndConnection
-        {
-            get { return _endtConnection; }
-            set { _endtConnection = value; }
-        }
-        */
 
         /// <summary>
         /// Gets or sets the web rotation of this member in Degree
@@ -705,6 +670,7 @@ namespace BriefFiniteElementNet.Elements
             base.GetObjectData(info, context);
             info.AddValue("_webRotation", _webRotation);
             info.AddValue("_material", _material);
+            info.AddValue("_section", _section);
             info.AddValue("_behavior", (int)_behavior);
         }
 
@@ -715,6 +681,7 @@ namespace BriefFiniteElementNet.Elements
             _webRotation = (double)info.GetValue("_webRotation", typeof(double));
             _material = (BaseMaterial)info.GetValue("_material", typeof(BaseMaterial));
             _behavior = (BarElementBehaviour)info.GetValue("_behavior", typeof(int));
+            _section = (Base1DSection)info.GetValue("_section", typeof(Base1DSection));
         }
 
         #endregion

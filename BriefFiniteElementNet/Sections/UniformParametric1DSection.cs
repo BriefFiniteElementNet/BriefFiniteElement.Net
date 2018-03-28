@@ -1,4 +1,9 @@
 ﻿using BriefFiniteElementNet.Elements;
+using System.Runtime.Serialization;
+using BriefFiniteElementNet.Elements;
+using System;
+using System.Security.Permissions;
+
 
 namespace BriefFiniteElementNet.Sections
 {
@@ -8,8 +13,29 @@ namespace BriefFiniteElementNet.Sections
     /// </summary>
     /// <remarks>
     /// </remarks>
+    [Serializable]
     public class UniformParametric1DSection : Base1DSection
     {
+        /// <inheritdoc />
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("_a", _a);
+            info.AddValue("_iy", _iy);
+            info.AddValue("_iz", _iz);
+            info.AddValue("_j", _j);
+
+            base.GetObjectData(info, context);
+        }
+
+        protected UniformParametric1DSection(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            _a = info.GetDouble("_a");
+            _iy = info.GetDouble("_iy");
+            _iz = info.GetDouble("_iz");
+            _j = info.GetDouble("_j");
+        }
+
         public UniformParametric1DSection()
         {
         }

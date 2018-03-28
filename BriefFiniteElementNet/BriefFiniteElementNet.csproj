@@ -58,6 +58,7 @@
     <Compile Include="Mathh\SparseEqSystem.cs" />
     <Compile Include="Mathh\GaussRrefFinder.cs" />
     <Compile Include="Mathh\SparseRow.cs" />
+    <Compile Include="FemUtilities\StiffnessCenterFinder.cs" />
     <Compile Include="StrainTensor.cs" />
     <Compile Include="ElementHelpers\BeamDirection.cs" />
     <Compile Include="ElementHelpers\CstHelper.cs" />

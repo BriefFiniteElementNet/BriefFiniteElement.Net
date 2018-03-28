@@ -8,8 +8,9 @@ using BriefFiniteElementNet.Solver;
 using CSparse.Double;
 using CSR = CSparse.Double.CompressedColumnStorage;
 
-namespace BriefFiniteElementNet.CodeProjectExamples
+namespace BriefFiniteElementNet.FemUtilies
 {
+    [Obsolete("Under development")]
     public class StiffnessCenterFinder
     {
         /// <summary>
@@ -21,13 +22,16 @@ namespace BriefFiniteElementNet.CodeProjectExamples
         /// <returns>stiffness centers</returns>
         public Point[] GetCenters(Model model, RigidElement_MPC element,LoadCase loadCase)
         {
-            model = model.Clone();
+            //model = model.Clone();
 
             var perm = CalcUtil.GenerateP_Delta_Mpc(model, loadCase, new Mathh.GaussRrefFinder());
 
             var adj = GetAdjacencyGraph(perm.Item1);
 
+            var dofGroups = CalcUtil.EnumerateGraphPartsAsGroups(adj);
 
+
+            //var parts=CalcUtil.
 
             var cse_x = new LoadCase("tmp_case_x1", LoadType.Other);
 
