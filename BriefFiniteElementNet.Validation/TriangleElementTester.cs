@@ -1,14 +1,17 @@
-﻿using BriefFiniteElementNet.Elements;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using HtmlTags;
 
 namespace BriefFiniteElementNet.Validation
 {
-    public class TriangleElementTester
+    public class TriangleElementTester: IValidator
     {
         public static void TestSingleElement()
         {
@@ -45,6 +48,113 @@ namespace BriefFiniteElementNet.Validation
 
             //var force = elm.GetLocalInternalForceAt(LoadCase.DefaultLoadCase, -0.57735, -0.57735);
 
+        }
+
+        public ValidationResult[] DoAllValidation()
+        {
+            var buf = new List<ValidationResult>();
+
+            buf.Add(Validation_1());
+
+            return buf.ToArray();
+        }
+
+        public ValidationResult[] DoPopularValidation()
+        {
+            var buf = new List<ValidationResult>();
+
+            buf.Add(Validation_1());
+
+            return buf.ToArray();
+        }
+
+        public static ValidationResult Validation_1()
+        {
+            var nx = 5;
+            var ny = 5;
+            var nz = 5;
+
+            var grd = StructureGenerator.Generate3DBarElementGrid(nx, ny, nz);
+
+            StructureGenerator.SetRandomiseSections(grd);
+
+            StructureGenerator.AddRandomiseNodalLoads(grd, LoadCase.DefaultLoadCase);//random nodal loads
+
+            grd.Solve_MPC();
+
+
+            var res = OpenseesValidator.OpenseesValidate(grd, LoadCase.DefaultLoadCase, false);
+
+            var absErrIdx = res.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("absolute"));
+            var relErrIdx = res.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("relative"));
+
+            var maxAbsError = res.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[absErrIdx]);
+            var maxRelError = res.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[relErrIdx]);
+
+            //var buf = new ValidationResult();
+
+            var span = new HtmlTag("span");
+            span.Add("p").Text("Validate a 3D rame");
+            span.Add("h3").Text("Validate with");
+            span.Add("paragraph").Text("OpenSEES (the Open System for Earthquake Engineering Simulation) software (available via http://opensees.berkeley.edu/)");
+            span.Add("h3").Text("Validate objective");
+            span.Add("paragraph").Text("compare nodal displacement from BFE.net library and OpenSEES for a model consist of 3d bar elements with random material and section for each one, that forms a grid"
+                + " with a randomized nodal loading and narrow erratic on location of joint of grid elements.");
+
+            span.Add("h3").Text("Model Definition");
+
+            span.Add("paragraph")
+                .Text($"A {nx}x{ny}x{nz} grid, with {grd.Nodes.Count} nodes and {grd.Elements.Count} bar elements." +
+                      " Every node in the model have a random load on it.");
+
+            span.Add("h3").Text("Validation Result");
+
+            span.Add("paragraph")
+                .Text(string.Format("Validation output for nodal displacements:"));
+
+
+            span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxAbsError, maxRelError));
+
+
+
+            //span.Add("").Text(string.Format("Max ABSOLUTE Error: {0:e3}", maxAbsError));
+
+
+            var id = "tbl_" + Guid.NewGuid().ToString("N").Substring(0, 5);
+
+            span.Add("button").Attr("type", "button").Text("Toggle Details").AddClasses("btn btn-primary")
+                .Attr("onclick", $"$('#{id}').collapse('toggle');");
+
+            var div = span.Add("div").AddClasses("panel-collapse", "collapse", "out").Id(id);
+
+            var tbl = div.Add("table").AddClass("table table-striped table-inverse table-bordered table-hover");
+            tbl.Id(id);
+
+            var trH = tbl.Add("Thead").Add("tr");
+
+
+            foreach (DataColumn column in res.Columns)
+            {
+                trH.Add("th").Attr("scope", "col").Text(column.ColumnName);
+            }
+
+            var tbody = tbl.Add("tbody");
+
+            for (var i = 0; i < res.Rows.Count; i++)
+            {
+                var tr = tbody.Add("tr");
+
+                for (var j = 0; j < res.Columns.Count; j++)
+                {
+                    tr.Add("td").Text(res.Rows[i][j].ToString());
+                }
+            }
+
+            var buf = new ValidationResult();
+            buf.Span = span;
+            buf.Title = "3D Grid Validation";
+
+            return buf;
         }
     }
 }

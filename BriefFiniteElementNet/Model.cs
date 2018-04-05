@@ -322,7 +322,7 @@ namespace BriefFiniteElementNet
         /// Solves the model using specified solver generator.
         /// </summary>
         /// <param name="solverGenerator">The solver generator.</param>
-        [Obsolete]
+        [Obsolete()]
         public void Solve(Func<CompressedColumnStorage, ISolver> solverGenerator)
         {
             throw new NotImplementedException();
@@ -372,11 +372,15 @@ namespace BriefFiniteElementNet
 
             ReIndexNodes();
 
+            if (this.mpcElements.Count > 0)
+                throw new Exception("Invalid solve for MPC element");// Model with MPC element should call Model.Solve_MPC()
+
             foreach (var loadCase in config.LoadCases)
             {
                 lastResult.AddAnalysisResultIfNotExists(loadCase);
             }
         }
+
 
         public void Solve_MPC(SolverConfiguration config)
         {

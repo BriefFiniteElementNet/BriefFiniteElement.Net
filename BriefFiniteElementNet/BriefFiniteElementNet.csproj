@@ -92,15 +92,12 @@
     <Compile Include="Materials\UniformAnisotropicMaterial.cs" />
     <Compile Include="Mathh\DenseIrrefFinder.cs" />
     <Compile Include="Mathh\IRrefFinder.cs" />
-    <Compile Include="Materials\BaseTriangleMaterial.cs" />
-    <Compile Include="Materials\UniformTriangleMaterial.cs" />
     <Compile Include="MpcElements\MpcElement.cs" />
     <Compile Include="Mathh\LinkedListIrrefFinder.cs" />
     <Compile Include="MpcElementCollection.cs" />
     <Compile Include="PlateBendingStressTensor.cs" />
     <Compile Include="ReflectionUtils.cs" />
     <Compile Include="Sections\Base1DSection.cs" />
-    <Compile Include="Materials\BaseBarMaterial.cs" />
     <Compile Include="Elements\ConcentratedMass.cs" />
     <Compile Include="Elements\CstElement.cs" />
     <Compile Include="Elements\DktElement.cs" />
@@ -111,7 +108,6 @@
     <Compile Include="Elements\TriangleElement.cs" />
     <Compile Include="Elements\TriangleElementBehaviour.cs" />
     <Compile Include="Elements\TriangleFlatShell.cs" />
-    <Compile Include="Materials\UniformBarMaterial.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="CalcUtil.cs" />
     <Compile Include="CustomGaussianIntegrator.cs" />
