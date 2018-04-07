@@ -7,6 +7,13 @@ namespace BriefFiniteElementNet.Validation
 {
     public static class Extensions
     {
+        public static HtmlTags.HtmlTag AddClosedTag(this HtmlTags.HtmlTag tag,string closedagName)
+        {
+
+            tag.AppendHtml("<" + closedagName + "/>");
+
+            return tag;
+        }
 
         public static int GetIndex(this StructurePart node)
         {

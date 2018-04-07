@@ -373,13 +373,13 @@ namespace BriefFiniteElementNet.Elements
             throw new NotImplementedException();
         }
 
-        public override Force[] GetEquivalentNodalLoads(Load load)
+        public override Force[] GetGlobalEquivalentNodalLoads(Load load)
         {
             var helpers = GetElementHelpers();
 
             var buf = new Force[nodes.Length];
 
-            var t = GetTransformationMatrix();
+            var t = GetTransformationManager();
 
             foreach (var helper in helpers)
             {
@@ -390,6 +390,11 @@ namespace BriefFiniteElementNet.Elements
                     buf[i] = buf[i] + forces[i];
                 }
             }
+
+
+            for (var i = 0; i < buf.Length; i++)
+                buf[i] = t.TransformLocalToGlobal(buf[i]);
+
 
             return buf;
         }

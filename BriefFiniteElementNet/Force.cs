@@ -127,6 +127,11 @@ namespace BriefFiniteElementNet
             }
         }
 
+        internal static double[] ToVector(Force force)
+        {
+            return new double[] { force.fx, force.fy, force.fz, force.mx, force.my, force.mz };
+        }
+
 
         /// <summary>
         /// Gets or sets the moments.

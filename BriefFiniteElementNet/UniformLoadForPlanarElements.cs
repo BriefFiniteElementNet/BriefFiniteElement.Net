@@ -63,7 +63,7 @@ namespace BriefFiniteElementNet
         {
             //var buf = new Force[3];
 
-            return element.GetEquivalentNodalLoads(this);
+            return element.GetGlobalEquivalentNodalLoads(this);
 
             //return buf;
         }

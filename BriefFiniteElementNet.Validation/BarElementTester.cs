@@ -80,9 +80,9 @@ namespace BriefFiniteElementNet.Validation
 
         public static ValidationResult Validation_1()
         {
-            var nx = 5;
-            var ny = 5;
-            var nz = 5;
+            var nx = 3;
+            var ny = 3;
+            var nz = 3;
 
             var grd = StructureGenerator.Generate3DBarElementGrid(nx, ny, nz);
 
@@ -90,20 +90,32 @@ namespace BriefFiniteElementNet.Validation
             StructureGenerator.SetRandomiseSections(grd);
 
             StructureGenerator.AddRandomiseNodalLoads(grd, LoadCase.DefaultLoadCase);//random nodal loads
-            //StructureGenerator.AddRandomiseBeamUniformLoads(grd, LoadCase.DefaultLoadCase);//random elemental loads
+            StructureGenerator.AddRandomiseBeamUniformLoads(grd, LoadCase.DefaultLoadCase);//random elemental loads
+            StructureGenerator.AddRandomDisplacements(grd, 0.1);
 
-            //StructureGenerator.AddRandomDisplacements(grd, 0.1);
 
             grd.Solve_MPC();
 
 
             var res = OpenseesValidator.OpenseesValidate(grd, LoadCase.DefaultLoadCase, false);
 
-            var absErrIdx = res.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("absolute"));
-            var relErrIdx = res.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("relative"));
 
-            var maxAbsError = res.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[absErrIdx]);
-            var maxRelError = res.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[relErrIdx]);
+            var disp = res[0];
+            var reac = res[1];
+
+            var dispAbsErrIdx = disp.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("absolute"));
+            var dispRelErrIdx = disp.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("relative"));
+
+            var reacAbsErrIdx = reac.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("absolute"));
+            var reacRelErrIdx = reac.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("relative"));
+
+
+            var maxDispAbsError = disp.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[dispAbsErrIdx]);
+            var maxDispRelError = disp.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[dispRelErrIdx]);
+
+
+            var maxReacAbsError = reac.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[reacAbsErrIdx]);
+            var maxReacRelError = reac.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[reacRelErrIdx]);
 
             //var buf = new ValidationResult();
 
@@ -112,58 +124,100 @@ namespace BriefFiniteElementNet.Validation
             span.Add("h3").Text("Validate with");
             span.Add("paragraph").Text("OpenSEES (the Open System for Earthquake Engineering Simulation) software (available via http://opensees.berkeley.edu/)");
             span.Add("h3").Text("Validate objective");
-            span.Add("paragraph").Text("compare nodal displacement from BFE.net library and OpenSEES for a model consist of 3d bar elements with random material and section for each one, that forms a grid"
-                +" with a randomized nodal loading and narrow erratic on location of joint of grid elements.");
+
+
+            span.Add("paragraph").Text("compare nodal displacement from BFE.net library and OpenSEES for a model consist of random 3d bars");
 
             span.Add("h3").Text("Model Definition");
 
-            span.Add("paragraph")
-                .Text($"A {nx}x{ny}x{nz} grid, with {grd.Nodes.Count} nodes and {grd.Elements.Count} bar elements." +
-                      " Every node in the model have a random load on it.");
+            span.Add("paragraph").Text($"A {nx}x{ny}x{nz} grid, with {grd.Nodes.Count} nodes and {grd.Elements.Count} bar elements.").AddClosedTag("br");
+
+            span.Add("paragraph").Text("Every node in the model have a random load on it, random displacement in original location.").AddClosedTag("br");
+            span.Add("paragraph").Text("Every element in the model have a random uniform distributed load on it.").AddClosedTag("br");
+
 
             span.Add("h3").Text("Validation Result");
 
-            span.Add("paragraph")
-                .Text(string.Format("Validation output for nodal displacements:"));
+           
+
+            {//nodal displacements
+
+                span.Add("h4").Text("Nodal Displacements");
+                span.Add("paragraph")
+               .Text(string.Format("Validation output for nodal displacements:"));
 
 
-            span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxAbsError, maxRelError));
+                span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxDispAbsError, maxDispRelError));
+
+                var id = "tbl_" + Guid.NewGuid().ToString("N").Substring(0, 5);
+
+                span.Add("button").Attr("type", "button").Text("Toggle Details").AddClasses("btn btn-primary")
+                    .Attr("onclick", $"$('#{id}').collapse('toggle');");
+
+                var div = span.Add("div").AddClasses("panel-collapse", "collapse", "out").Id(id);
+
+                var tbl = div.Add("table").AddClass("table table-striped table-inverse table-bordered table-hover");
+                tbl.Id(id);
+
+                var trH = tbl.Add("Thead").Add("tr");
 
 
-
-            //span.Add("").Text(string.Format("Max ABSOLUTE Error: {0:e3}", maxAbsError));
-
-
-            var id = "tbl_" + Guid.NewGuid().ToString("N").Substring(0, 5);
-
-            span.Add("button").Attr("type", "button").Text("Toggle Details").AddClasses("btn btn-primary")
-                .Attr("onclick", $"$('#{id}').collapse('toggle');");
-
-            var div = span.Add("div").AddClasses("panel-collapse", "collapse", "out").Id(id);
-
-            var tbl = div.Add("table").AddClass("table table-striped table-inverse table-bordered table-hover");
-            tbl.Id(id);
-
-            var trH = tbl.Add("Thead").Add("tr");
-
-
-            foreach (DataColumn column in res.Columns)
-            {
-                trH.Add("th").Attr("scope", "col").Text(column.ColumnName);
-            }
-
-            var tbody = tbl.Add("tbody");
-
-            for (var i = 0; i < res.Rows.Count; i++)
-            {
-                var tr = tbody.Add("tr");
-
-                for (var j = 0; j < res.Columns.Count; j++)
+                foreach (DataColumn column in disp.Columns)
                 {
-                    tr.Add("td").Text(res.Rows[i][j].ToString());
+                    trH.Add("th").Attr("scope", "col").Text(column.ColumnName);
+                }
+
+                var tbody = tbl.Add("tbody");
+
+                for (var i = 0; i < disp.Rows.Count; i++)
+                {
+                    var tr = tbody.Add("tr");
+
+                    for (var j = 0; j < disp.Columns.Count; j++)
+                    {
+                        tr.Add("td").Text(disp.Rows[i][j].ToString());
+                    }
                 }
             }
 
+            {//nodal reactions
+                span.Add("h4").Text("Nodal Support Reactions");
+                span.Add("paragraph")
+               .Text(string.Format("Validation output for nodal support reactions:"));
+
+
+                span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxReacAbsError, maxReacRelError));
+
+                var id = "tbl_" + Guid.NewGuid().ToString("N").Substring(0, 5);
+
+                span.Add("button").Attr("type", "button").Text("Toggle Details").AddClasses("btn btn-primary")
+                    .Attr("onclick", $"$('#{id}').collapse('toggle');");
+
+                var div = span.Add("div").AddClasses("panel-collapse", "collapse", "out").Id(id);
+
+                var tbl = div.Add("table").AddClass("table table-striped table-inverse table-bordered table-hover");
+                tbl.Id(id);
+
+                var trH = tbl.Add("Thead").Add("tr");
+
+
+                foreach (DataColumn column in reac.Columns)
+                {
+                    trH.Add("th").Attr("scope", "col").Text(column.ColumnName);
+                }
+
+                var tbody = tbl.Add("tbody");
+
+                for (var i = 0; i < reac.Rows.Count; i++)
+                {
+                    var tr = tbody.Add("tr");
+
+                    for (var j = 0; j < reac.Columns.Count; j++)
+                    {
+                        tr.Add("td").Text(reac.Rows[i][j].ToString());
+                    }
+                }
+            }
             var buf = new ValidationResult();
             buf.Span = span;
             buf.Title = "3D Grid Validation";
@@ -206,6 +260,95 @@ namespace BriefFiniteElementNet.Validation
 
         }
 
+
+        public static void ValidateOneSpanUniformLoad()
+        {
+            var model = new Model();
+
+            var ndes = new Node[] {
+                new Node(0, 0, 0),
+                new Node(1, 0, 0),
+                new Node(2, 0, 0)};
+
+            var h = 0.1;
+            var w = 0.05;
+
+            var a = h * w;
+            var iy = h * h * h * w / 12;
+            var iz = w * w * w * h / 12;
+            var j = iy + iz;
+            var e = 210e9;
+
+            var sec = new Sections.UniformParametric1DSection(a, iy, iz, j);
+            var mat = UniformIsotropicMaterial.CreateFromYoungPoisson(e, 0.25);
+
+            model.Elements.Add(new BarElement(ndes[0], ndes[1]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame });
+            model.Elements.Add(new BarElement(ndes[1], ndes[2]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame });
+
+
+            model.Nodes.Add(ndes);
+
+            ndes[0].Constraints = ndes[2].Constraints = Constraints.Fixed;
+            //ndes[1].Constraints = ndes[2].Constraints = Constraints.Fixed;
+
+            for (var i = 0; i < model.Elements.Count; i++)
+                (model.Elements[i] as BarElement).Loads.Add(new Loads.UniformLoad(LoadCase.DefaultLoadCase, Vector.K, 1000, CoordinationSystem.Global));
+
+            //ndes[1].Loads.Add(new NodalLoad(new Force(0, 1, 0, 0, 0, 0)));
+
+            model.Solve_MPC();
+
+            var res = OpenseesValidator.OpenseesValidate(model, LoadCase.DefaultLoadCase, false);
+            var disp = res[0];
+
+            var idx = disp.Columns["Absolute Error"].Ordinal;
+
+            var max = disp.Rows.Cast<DataRow>().Select(i => (double)i[idx]).Max();
+
+
+        }
+
+        public static void ValidateConsoleUniformLoad()
+        {
+            var model = new Model();
+
+            var ndes = new Node[] {
+                new Node(0, 0, 0),
+                new Node(5, 2, 3)};
+
+            var h = 0.1;
+            var w = 0.05;
+
+            var a = h * w;
+            var iy = h * h * h * w / 12;
+            var iz = w * w * w * h / 12;
+            var j = iy + iz;
+            var e = 210e9;
+
+            var sec = new Sections.UniformParametric1DSection(a, iy, iz, j);
+            var mat = UniformIsotropicMaterial.CreateFromYoungPoisson(e, 0.25);
+
+            model.Elements.Add(new BarElement(ndes[0], ndes[1]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame });
+
+            model.Nodes.Add(ndes);
+
+            ndes[0].Constraints = Constraints.Fixed;
+
+            (model.Elements[0] as BarElement).Loads.Add(new Loads.UniformLoad(LoadCase.DefaultLoadCase, Vector.K, 1000, CoordinationSystem.Local));
+
+            model.Solve_MPC();
+
+            var res = OpenseesValidator.OpenseesValidate(model, LoadCase.DefaultLoadCase, false);
+
+            var disp = res[0];
+
+            var idx = disp.Columns["Absolute Error"].Ordinal;
+
+            var max = disp.Rows.Cast<DataRow>().Select(i => (double)i[idx]).Max();
+
+
+        }
+
         public static double epsilon = 1e-9;
 
         public static ValidationResult TestFixedEndMoment_uniformLoad()
@@ -226,7 +369,7 @@ namespace BriefFiniteElementNet.Validation
             ld.CoordinationSystem = CoordinationSystem.Global;
             elm.Loads.Add(ld);
 
-            var loads = elm.GetEquivalentNodalLoads(ld);
+            var loads = elm.GetGlobalEquivalentNodalLoads(ld);
 
             {//test 1 : static balance
 
@@ -282,13 +425,13 @@ namespace BriefFiniteElementNet.Validation
             ld_u.CoordinationSystem = CoordinationSystem.Global;
 
             var ld_t = new Loads.TrapezoidalLoad();
-            ld_t.EndOffsets = ld_t.StartOffsets = new double[] { 0 };
+            ld_t.EndIsoLocations = ld_t.StarIsoLocations = new double[] { 0 };
             ld_t.StartMagnitudes = ld_t.EndMagnitudes = new double[] { 1 };
             ld_t.Direction = direction;
             ld_t.CoordinationSystem = CoordinationSystem.Global;
 
-            var loads = elm.GetEquivalentNodalLoads(ld_u);
-            var loads2 = elm.GetEquivalentNodalLoads(ld_t);
+            var loads = elm.GetGlobalEquivalentNodalLoads(ld_u);
+            var loads2 = elm.GetGlobalEquivalentNodalLoads(ld_t);
 
             var epsilon = 1e-9;
 

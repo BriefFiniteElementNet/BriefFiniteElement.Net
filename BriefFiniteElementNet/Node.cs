@@ -273,7 +273,7 @@ namespace BriefFiniteElementNet
             var es = Force.FromVector(parent.LastResult.ElementForces[cse], 6 * Index);
             var ss = Force.FromVector(parent.LastResult.SupportReactions[cse], 6 * Index);
 
-            var buf = ss- cs - es;
+            var buf = ss - cs - es;
 
             if (constraints.DX == DofConstraint.Released)
                 buf.Fx = 0;

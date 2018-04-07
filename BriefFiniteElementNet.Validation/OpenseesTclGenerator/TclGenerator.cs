@@ -10,8 +10,9 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
         public bool ExportNodalDisplacements;
         public bool ExportElementForces;
         public bool ExportTotalStiffness;
+        public bool ExportNodalReactions;
 
-        public string nodesOut, elementsOut, stiffnessOut;
+        public string nodesOut, elementsOut, stiffnessOut,reactionsOut;
 
         public List<ElementToTclTranslator> ElementTranslators = new List<ElementToTclTranslator>();
         public List<ElementalLoadToTclTranslator> ElementLoadTranslators = new List<ElementalLoadToTclTranslator>();
@@ -40,7 +41,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             nodesOut = ExportNodalDisplacements ? System.IO.Path.GetTempFileName() : null;
             elementsOut = ExportElementForces ? System.IO.Path.GetTempFileName() : null;
             stiffnessOut = ExportTotalStiffness ? System.IO.Path.GetTempFileName() : null;
-
+            reactionsOut = ExportNodalReactions ? System.IO.Path.GetTempFileName() : null;
 
             var Commands = new List<TclCommand>();
             var LoadCommands = new List<TclCommand>();
@@ -66,7 +67,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
 
             foreach (var node in model.Nodes)
             {
-                if (node.Constraints == Constraint.Released)
+                if (node.Constraints == Constraints.Released)
                     continue;
 
                 var cmd = new TclCommand("fix", node.GetMemberValue("Index"),
@@ -149,6 +150,10 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             if (ExportNodalDisplacements)
                 Commands.Add(new TclCommand("recorder", "Node", "-xml", '"' + nodesOut.Replace("\\", "\\\\") + '"', "-dof", "1 2 3 4 5 6", "disp"));
 
+            if (ExportNodalReactions)
+                Commands.Add(new TclCommand("recorder", "Node", "-xml", '"' + reactionsOut.Replace("\\", "\\\\") + '"', "-dof", "1 2 3 4 5 6", "reaction"));
+
+
             if (ExportElementForces)
                 Commands.Add(new TclCommand("recorder", "Element", "-xml", '"' + elementsOut.Replace("\\", "\\\\") + '"', "-closeOnWrite", "strains", "material", "1"));
 
@@ -156,6 +161,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
 
             if (ExportTotalStiffness)
                 Commands.Add(new TclCommand("printA", "-file", '"' + stiffnessOut.Replace("\\", "\\\\") + '"'));
+
 
             foreach (var command in Commands)
             {

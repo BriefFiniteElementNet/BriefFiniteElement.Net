@@ -202,9 +202,9 @@ namespace BriefFiniteElementNet.ElementHelpers
             double[] arr;
 
             if (_direction == BeamDirection.Z)
-                arr = new double[] {n1, -m1, n2, -m2};
-            else
                 arr = new double[] {n1, m1, n2, m2};
+            else
+                arr = new double[] {n1, -m1, n2, -m2};
 
             buf.FillRow(0, arr);
 
@@ -289,6 +289,12 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation)
         {
+            var tr = targetElement.GetTransformationManager();
+
+            var endForces = GetLocalEquivalentNodalLoads(targetElement, load);
+
+            
+
             throw new NotImplementedException();
         }
 
@@ -351,157 +357,108 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var tr = targetElement.GetTransformationManager();
 
-            #region uniform
+            #region uniform & trapezoid
 
-            if (load is UniformLoad)
+            if (load is UniformLoad || load is TrapezoidalLoad)
             {
-                var ul = load as UniformLoad;
 
-                var localDir = ul.Direction.GetUnit();
+                Func<double, double> magnitude;
+                Vector localDir;
 
-                if (ul.CoordinationSystem == CoordinationSystem.Global)
+                double xi0, xi1;
+                int degree;//polynomial degree of magnitude function
+
+                #region inits
+                if (load is UniformLoad)
                 {
-                    
-                    localDir = tr.TransformGlobalToLocal(localDir);
-                }
+                    var uld = (load as UniformLoad);
 
-                var ux = localDir.X * ul.Magnitude;
-                var uy = localDir.Y * ul.Magnitude;
-                var uz = localDir.Z * ul.Magnitude;
+                    magnitude = (xi => uld.Magnitude);
+                    localDir = uld.Direction;
 
-                var intg = GaussianIntegrator.CreateFor1DProblem(xi =>
-                {
-                    var shp = GetNMatrixAt(targetElement, xi, 0, 0);
-                    var j = GetJMatrixAt(targetElement, xi, 0, 0);
-                    shp.MultiplyByConstant(j.Determinant());
+                    if (uld.CoordinationSystem == CoordinationSystem.Global)
+                        localDir = tr.TransformGlobalToLocal(localDir);
 
-                    return shp;
-                }, -1, 1, 2);
-
-                var res = intg.Integrate();
-
-                var localForces = new Force[2];
-
-                if (this._direction == BeamDirection.Y)
-                {
-                    var fz0 = res[0, 0] * uz;
-                    var my0 = res[0, 1] * uz;
-                    var fz1 = res[0, 2] * uz;
-                    var my1 = res[0, 3] * uz;
-
-                    localForces[0] = new Force(0, 0, fz0, 0, my0, 0);
-                    localForces[1] = new Force(0, 0, fz1, 0, my1, 0);
+                    xi0 = -1;
+                    xi1 = 1;
+                    degree = 0;
                 }
                 else
                 {
+                    var tld = (load as TrapezoidalLoad);
 
-                    var fy0 = res[0, 0] * uy;
-                    var mz0 = res[0, 1] * uy;
-                    var fy1 = res[0, 2] * uy;
-                    var mz1 = res[0, 3] * uy;
+                    magnitude = (xi => (load as TrapezoidalLoad).GetMagnitudesAt(xi, 0, 0)[0]);
+                    localDir = tld.Direction;
 
-                    localForces[0] = new Force(0, fy0, 0, 0, 0, mz0);
-                    localForces[1] = new Force(0, fy1, 0, 0, 0, mz1);
+                    if (tld.CoordinationSystem == CoordinationSystem.Global)
+                        localDir = tr.TransformGlobalToLocal(localDir);
+
+                    xi0 = tld.StarIsoLocations[0];
+                    xi1 = tld.EndIsoLocations[0];
+                    degree = 1;
                 }
 
-                var globalForces = localForces.Select(i => tr.TransformLocalToGlobal(i)).ToArray();
+                localDir = localDir.GetUnit();
+                #endregion
 
-                return globalForces;
-            }
-
-            #endregion
-
-            #region trapezoid
-
-            if (load is TrapezoidalLoad)
-            {
-                var ul = load as TrapezoidalLoad;
-
-                var localDir = ul.Direction;
-
-                var startOffset = ul.StartOffsets[0];
-                var endOffset = ul.EndOffsets[0];
-                var startMag = ul.StartMagnitudes[0];
-                var endMag = ul.EndMagnitudes[0];
-
-
-                if (ul.CoordinationSystem == CoordinationSystem.Global)
                 {
-                    localDir = tr.TransformGlobalToLocal(localDir);
-                }
 
+                    var nOrd = GetNMaxOrder(targetElement).Max();
 
-                var xi0 = -1 + startOffset;
-                var xi1 = 1 - endOffset;
+                    var gpt = (nOrd + degree) / 2 + 1;//gauss point count
 
-                var intg = GaussianIntegrator.CreateFor1DProblem(xi =>
-                {
-                    var shp = GetNMatrixAt(targetElement, xi, 0, 0);
-                    var q__ = ul.GetMagnitudesAt(xi)[0];
-                    var j = GetJMatrixAt(targetElement, xi, 0, 0);
-                    shp.MultiplyByConstant(j.Determinant());
+                    var intg = GaussianIntegrator.CreateFor1DProblem(xi =>
+                    {
+                        var shp = GetNMatrixAt(targetElement, xi, 0, 0);
+                        var q__ = magnitude(xi);
+                        var j = GetJMatrixAt(targetElement, xi, 0, 0);
+                        shp.MultiplyByConstant(j.Determinant());
 
-                    var q_ = ul.Direction.GetUnit() * q__;
+                        var q_ = localDir * q__;
+
+                        if (this._direction == BeamDirection.Y)
+                            shp.MultiplyByConstant(q_.Z);
+                        else
+                            shp.MultiplyByConstant(q_.Y);
+
+                        return shp;
+                    }, xi0, xi1, gpt);
+
+                    var res = intg.Integrate();
+
+                    var localForces = new Force[2];
 
                     if (this._direction == BeamDirection.Y)
-                        shp.MultiplyByConstant(q_.Z);
+                    {
+                        var fz0 = res[0, 0];
+                        var my0 = res[0, 1];
+                        var fz1 = res[0, 2];
+                        var my1 = res[0, 3];
+
+                        localForces[0] = new Force(0, 0, fz0, 0, my0, 0);
+                        localForces[1] = new Force(0, 0, fz1, 0, my1, 0);
+                    }
                     else
-                        shp.MultiplyByConstant(q_.Y);
+                    {
 
-                    return shp;
-                }, xi0, xi1, 3);
+                        var fy0 = res[0, 0];
+                        var mz0 = res[0, 1];
+                        var fy1 = res[0, 2];
+                        var mz1 = res[0, 3];
 
-                var res = intg.Integrate();
+                        localForces[0] = new Force(0, fy0, 0, 0, 0, mz0);
+                        localForces[1] = new Force(0, fy1, 0, 0, 0, mz1);
+                    }
 
-                var localForces = new Force[2];
-
-                if (this._direction == BeamDirection.Y)
-                {
-                    var fz0 = res[0, 0];
-                    var my0 = res[0, 1];
-                    var fz1 = res[0, 2];
-                    var my1 = res[0, 3];
-
-                    localForces[0] = new Force(0, 0, fz0, 0, my0, 0);
-                    localForces[1] = new Force(0, 0, fz1, 0, my1, 0);
+                    return localForces;
                 }
-                else
-                {
-
-                    var fy0 = res[0, 0];
-                    var mz0 = res[0, 1];
-                    var fy1 = res[0, 2];
-                    var mz1 = res[0, 3];
-
-                    localForces[0] = new Force(0, fy0, 0, 0, 0, mz0);
-                    localForces[1] = new Force(0, fy1, 0, 0, 0, mz1);
-                }
-
-                var globalForces = localForces.Select(i => tr.TransformLocalToGlobal(i)).ToArray();
-
-                return globalForces;
             }
+            
+            
 
             #endregion
 
-            #region concentrated
-
-            if (load is ConcentratedLoad)
-            {
-                var ul = load as ConcentratedLoad;
-
-                var localforce = ul.Force;
-
-                if (ul.CoordinationSystem == CoordinationSystem.Global)
-                {
-                    localforce = tr.TransformGlobalToLocal(ul.Force);
-                }
-
-                var shp = GetNMatrixAt(targetElement, ul.ForceIsoLocation);
-                throw new NotImplementedException();
-            }
-
-            #endregion
+            
 
             throw new NotImplementedException();
         }

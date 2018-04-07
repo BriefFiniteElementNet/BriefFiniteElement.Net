@@ -85,11 +85,23 @@ namespace BriefFiniteElementNet.Validation
 
             var res = OpenseesValidator.OpenseesValidate(grd, LoadCase.DefaultLoadCase, false);
 
-            var absErrIdx = res.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("absolute"));
-            var relErrIdx = res.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("relative"));
+            var disp = res[0];
+            var reac = res[1];
 
-            var maxAbsError = res.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[absErrIdx]);
-            var maxRelError = res.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[relErrIdx]);
+            var dispAbsErrIdx = disp.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("absolute"));
+            var dispRelErrIdx = disp.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("relative"));
+
+            var reacAbsErrIdx = reac.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("absolute"));
+            var reacRelErrIdx = reac.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("relative"));
+
+
+            var maxDispAbsError = disp.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[dispAbsErrIdx]);
+            var maxDispRelError = disp.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[dispRelErrIdx]);
+
+
+            var maxReacAbsError = reac.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[reacAbsErrIdx]);
+            var maxReacRelError = reac.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[reacRelErrIdx]);
+
 
             //var buf = new ValidationResult();
 
@@ -113,7 +125,7 @@ namespace BriefFiniteElementNet.Validation
                 .Text(string.Format("Validation output for nodal displacements:"));
 
 
-            span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxAbsError, maxRelError));
+            span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxDispAbsError, maxDispRelError));
 
 
 
@@ -133,20 +145,20 @@ namespace BriefFiniteElementNet.Validation
             var trH = tbl.Add("Thead").Add("tr");
 
 
-            foreach (DataColumn column in res.Columns)
+            foreach (DataColumn column in disp.Columns)
             {
                 trH.Add("th").Attr("scope", "col").Text(column.ColumnName);
             }
 
             var tbody = tbl.Add("tbody");
 
-            for (var i = 0; i < res.Rows.Count; i++)
+            for (var i = 0; i < disp.Rows.Count; i++)
             {
                 var tr = tbody.Add("tr");
 
-                for (var j = 0; j < res.Columns.Count; j++)
+                for (var j = 0; j < disp.Columns.Count; j++)
                 {
-                    tr.Add("td").Text(res.Rows[i][j].ToString());
+                    tr.Add("td").Text(disp.Rows[i][j].ToString());
                 }
             }
 

@@ -26,11 +26,15 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
                 uld.Direction :
                 elm.GetTransformationManager().TransformGlobalToLocal(uld.Direction);
 
+            localLoad = localLoad.GetUnit();
+
             var buf = new List<TclCommand>();
 
             buf.Add(new TclCommand("eleLoad", "-ele", targetElementTag,
-                "-type", "-beamUniform", localLoad.Y * uld.Magnitude,
-                localLoad.Z * uld.Magnitude, localLoad.X * uld.Magnitude));
+                "-type", "-beamUniform",
+                localLoad.Y * uld.Magnitude,
+                localLoad.Z * uld.Magnitude, 
+                localLoad.X * uld.Magnitude));
 
             return buf.ToArray();
         }

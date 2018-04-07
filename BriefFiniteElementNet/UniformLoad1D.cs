@@ -73,7 +73,7 @@ namespace BriefFiniteElementNet
             }
 
 
-            return element.GetEquivalentNodalLoads(this);
+            return element.GetGlobalEquivalentNodalLoads(this);
         }
 
         /// <summary>

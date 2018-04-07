@@ -151,7 +151,7 @@ namespace BriefFiniteElementNet.Elements
             throw new NotImplementedException();
         }
 
-        public override Force[] GetEquivalentNodalLoads(Load load)
+        public override Force[] GetGlobalEquivalentNodalLoads(Load load)
         {
             return new Force[2];
         }

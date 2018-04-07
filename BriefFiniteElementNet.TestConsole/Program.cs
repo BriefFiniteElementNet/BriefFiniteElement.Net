@@ -35,12 +35,15 @@ namespace BriefFiniteElementNet.TestConsole
 
             //BarElementTester.TestBarStiffness();
 
+
+            BarElementTester.Validation_1();
+
             ////QrTest();
             //TstMtx();
 
             //TestCuda();
             //TestIntelMkl();
-            StiffnessCenterTest();
+            //StiffnessCenterTest();
 
             //TestWithOpensees();
 

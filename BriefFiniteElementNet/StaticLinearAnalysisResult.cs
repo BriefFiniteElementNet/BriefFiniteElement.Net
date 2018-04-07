@@ -861,6 +861,8 @@ namespace BriefFiniteElementNet
 
             kt.Multiply(dt, ft);
 
+            var fx = supportReactions[loadCase] = (double[])ft.Clone();
+
             ft.AddToSelf(fe, -1);
             ft.AddToSelf(fc, -1);
 
@@ -871,7 +873,7 @@ namespace BriefFiniteElementNet
             //var forcesRegenerated=
 
 
-            var fx = supportReactions[loadCase] = (double[]) ft.Clone();
+            
 
             for (var i = 0; i < parent.Nodes.Count; i++)
             {
@@ -1182,7 +1184,7 @@ namespace BriefFiniteElementNet
                         continue;
 
                     var frcs =
-                        elm.GetEquivalentNodalLoads(ld);
+                        elm.GetGlobalEquivalentNodalLoads(ld);
                         //ld.GetGlobalEquivalentNodalLoads(elm);
 
                     for (var i = 0; i < nc; i++)

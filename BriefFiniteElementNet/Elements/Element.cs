@@ -180,7 +180,7 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         /// <param name="load">The load.</param>
         /// <returns>Equivalent nodal loads in global coordinate system</returns>
-        public abstract Force[] GetEquivalentNodalLoads(Load load);
+        public abstract Force[] GetGlobalEquivalentNodalLoads(Load load);
 
 
         /// <summary>

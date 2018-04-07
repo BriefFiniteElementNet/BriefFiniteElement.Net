@@ -66,16 +66,16 @@ namespace BriefFiniteElementNet
                 case ElementType.TrussElement2Noded:
                     break;
                 case ElementType.TetrahedralIso:
-                    return (element as Tetrahedral).GetEquivalentNodalLoads(this);
+                    return (element as Tetrahedral).GetGlobalEquivalentNodalLoads(this);
                     break;
                 case ElementType.Dkt:
                     return GetGlobalEquivalentNodalLoads(element as DktElement);
                 default:
-                    element.GetEquivalentNodalLoads(this);
+                    element.GetGlobalEquivalentNodalLoads(this);
                     throw new ArgumentOutOfRangeException();
             }
 
-            return element.GetEquivalentNodalLoads(this);
+            return element.GetGlobalEquivalentNodalLoads(this);
             throw new NotImplementedException();
         }
 

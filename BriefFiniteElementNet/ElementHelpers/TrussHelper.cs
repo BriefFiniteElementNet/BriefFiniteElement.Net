@@ -235,6 +235,91 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             var tr = targetElement.GetTransformationManager();
 
+            #region uniform & trapezoid
+
+            if (load is UniformLoad || load is TrapezoidalLoad)
+            {
+
+                Func<double, double> magnitude;
+                Vector localDir;
+
+                double xi0, xi1;
+                int degree;//polynomial degree of magnitude function
+
+                #region inits
+                if (load is UniformLoad)
+                {
+                    var uld = (load as UniformLoad);
+
+                    magnitude = (xi => uld.Magnitude);
+                    localDir = uld.Direction;
+
+                    if (uld.CoordinationSystem == CoordinationSystem.Global)
+                        localDir = tr.TransformGlobalToLocal(localDir);
+
+                    xi0 = -1;
+                    xi1 = 1;
+                    degree = 0;
+                }
+                else
+                {
+                    var tld = (load as TrapezoidalLoad);
+
+                    magnitude = (xi => (load as TrapezoidalLoad).GetMagnitudesAt(xi, 0, 0)[0]);
+                    localDir = tld.Direction;
+
+                    if (tld.CoordinationSystem == CoordinationSystem.Global)
+                        localDir = tr.TransformGlobalToLocal(localDir);
+
+                    xi0 = tld.StarIsoLocations[0];
+                    xi1 = tld.EndIsoLocations[0];
+                    degree = 1;
+                }
+
+                localDir = localDir.GetUnit();
+                #endregion
+
+                {
+
+                    var nOrd = GetNMaxOrder(targetElement).Max();
+
+                    var gpt = (nOrd + degree) / 2 + 1;//gauss point count
+
+                    var intg = GaussianIntegrator.CreateFor1DProblem(xi =>
+                    {
+                        var shp = GetNMatrixAt(targetElement, xi, 0, 0);
+                        var q__ = magnitude(xi);
+                        var j = GetJMatrixAt(targetElement, xi, 0, 0);
+                        shp.MultiplyByConstant(j.Determinant());
+
+                        var q_ = localDir * q__;
+
+                        shp.MultiplyByConstant(q_.X);
+
+                        return shp;
+                    }, xi0, xi1, gpt);
+
+                    var res = intg.Integrate();
+
+                    var localForces = new Force[2];
+
+                    var fx0 = res[0, 0];
+                    var fx1 = res[0, 1];
+
+                    localForces[0] = new Force(fx0, 0, 0, 0, 0, 0);
+                    localForces[1] = new Force(fx1, 0, 0, 0, 0, 0);
+
+                    return localForces;
+                }
+            }
+
+
+
+            #endregion
+
+            throw new NotImplementedException();
+
+            
             #region uniform
 
             if (load is Loads.UniformLoad)
@@ -290,8 +375,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 var localDir = trLoad.Direction;
 
-                var startOffset = trLoad.StartOffsets[0];
-                var endOffset = trLoad.EndOffsets[0];
+                var startOffset = trLoad.StarIsoLocations[0];
+                var endOffset = trLoad.EndIsoLocations[0];
                 var startMag = trLoad.StartMagnitudes[0];
                 var endMag = trLoad.EndMagnitudes[0];
 
@@ -337,8 +422,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
 
             #endregion
-
-            throw new NotImplementedException();
+            
+            
         }
     }
 }

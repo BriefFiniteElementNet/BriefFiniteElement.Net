@@ -502,7 +502,7 @@ namespace BriefFiniteElementNet.Elements
         #endregion
 
         ///<inheritdoc/>
-        public override Force[] GetEquivalentNodalLoads(Load load)
+        public override Force[] GetGlobalEquivalentNodalLoads(Load load)
         {
             if (load is UniformBodyLoad3D)
             {

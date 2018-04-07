@@ -17,7 +17,7 @@ namespace BriefFiniteElementNet.Validation
         private static readonly string openSeeslocation = @"C:\Opensees\Opensees.exe";
 
 
-        public static DataTable OpenseesValidate(Model model, LoadCase loadcase, bool validateStiffness = false)
+        public static DataTable[] OpenseesValidate(Model model, LoadCase loadcase, bool validateStiffness = false)
         {
             var gen = new TclGenerator();
 
@@ -27,6 +27,7 @@ namespace BriefFiniteElementNet.Validation
             gen.ExportElementForces = true;
             gen.ExportNodalDisplacements = true;
             gen.ExportTotalStiffness = validateStiffness;
+            gen.ExportNodalReactions = true;
 
             var tcl = gen.Create(model, LoadCase.DefaultLoadCase);
 
@@ -36,9 +37,12 @@ namespace BriefFiniteElementNet.Validation
 
             var tclFile = System.IO.Path.GetTempFileName() + ".tcl";
 
+
+            Debug.WriteLine("{0}", tclFile);
+
             System.IO.File.WriteAllText(tclFile, tcl);
 
-            if (!System.IO.File.Exists(openSeeslocation))
+                if (!System.IO.File.Exists(openSeeslocation))
                 throw new Exception("Opensees.exe not found, please put opensees.exe into 'C:\\Opensees\\Opensees.exe'");
 
             var stInf = new ProcessStartInfo(openSeeslocation);
@@ -57,55 +61,89 @@ namespace BriefFiniteElementNet.Validation
             var ndisp = new XmlDocument();
             ndisp.Load(nodesFile);
 
+            var nreact = new XmlDocument();
+            nreact.Load(gen.reactionsOut);
+
             var elOut = new XmlDocument();
             elOut.Load(elementsFile);
 
-            var dParts = ndisp.DocumentElement.LastChild.InnerText.Trim().Split('\n').Select(i => i.Trim()).Where(i => !string.IsNullOrEmpty(i)).ToArray();
+            var nodalDispParts = ndisp.DocumentElement.LastChild.InnerText.Trim().Split('\n').Select(i => i.Trim()).Where(i => !string.IsNullOrEmpty(i)).ToArray();
+            var nodalReactParts = nreact.DocumentElement.LastChild.InnerText.Trim().Split('\n').Select(i => i.Trim()).Where(i => !string.IsNullOrEmpty(i)).ToArray();
 
             var elmParts = elOut.DocumentElement.LastChild.InnerText.Trim().Split('\n').Select(i => i.Trim()).Where(i => !string.IsNullOrEmpty(i)).ToArray();
 
-            var openseesDs = dParts[0].Split(' ').Select(double.Parse).ToArray();
+            var openseesDs = nodalDispParts[0].Split(' ').Select(double.Parse).ToArray();
+            var openseesReacts = nodalReactParts[0].Split(' ').Select(double.Parse).ToArray();
 
             var myDs = model.Nodes.SelectMany(i => Displacement.ToVector(i.GetNodalDisplacement(loadcase))).ToArray();
 
-            var abss = new double[myDs.Length];
-            var rels = new double[myDs.Length];
+            var myReacts = model.Nodes.SelectMany(i => Force.ToVector(i.GetSupportReaction(loadcase))).ToArray();
+
+            var absNodalDisp = new double[myDs.Length];
+            var relNodalDisp = new double[myDs.Length];
+
+            var absNodalReac = new double[myDs.Length];
+            var relNodalReac = new double[myDs.Length];
 
             var nums = Enumerable.Range(0, myDs.Length).ToArray();
 
-            FindError(openseesDs, myDs, rels, abss);
+            FindError(openseesDs, myDs, relNodalDisp, absNodalDisp);
+            FindError(openseesReacts, myReacts, relNodalReac, absNodalReac);
 
-            var k = abss;
-            var key = new Func<double[]>(() => (double[])k.Clone());
+            //var k = absNodalDisp;
+            //var key = new Func<double[]>(() => (double[])absNodalDisp.Clone());
 
-            var tbl = new DataTable();
+            var nodalDispTbl = new DataTable();
+            var nodalReactTbl = new DataTable();
 
-            tbl.Columns.Add("Node #", typeof(int));
-            tbl.Columns.Add("DoF", typeof(string));
-            tbl.Columns.Add("DoF #", typeof(int));
-            tbl.Columns.Add("OpenSees Delta", typeof(double));
-            tbl.Columns.Add("BFE Delta", typeof(double));
-            tbl.Columns.Add("Relative Error", typeof(double));
-            tbl.Columns.Add("Absolute Error", typeof(double));
-            
+            {
+                nodalDispTbl.Columns.Add("Node #", typeof(int));
+                nodalDispTbl.Columns.Add("DoF", typeof(string));
+                nodalDispTbl.Columns.Add("DoF #", typeof(int));
+                nodalDispTbl.Columns.Add("OpenSees Delta", typeof(double));
+                nodalDispTbl.Columns.Add("BFE Delta", typeof(double));
+                nodalDispTbl.Columns.Add("Relative Error", typeof(double));
+                nodalDispTbl.Columns.Add("Absolute Error", typeof(double));
+            }
+
+
+            {
+                nodalReactTbl.Columns.Add("Node #", typeof(int));
+                nodalReactTbl.Columns.Add("DoF", typeof(string));
+                nodalReactTbl.Columns.Add("DoF #", typeof(int));
+                nodalReactTbl.Columns.Add("OpenSees Support Reaction", typeof(double));
+                nodalReactTbl.Columns.Add("BFE Support Reaction", typeof(double));
+                nodalReactTbl.Columns.Add("Relative Error", typeof(double));
+                nodalReactTbl.Columns.Add("Absolute Error", typeof(double));
+            }
+
             for (int i = 0; i < myDs.Length; i++)
             {
-                tbl.Rows.Add(
+                nodalDispTbl.Rows.Add(
                     i / 6,
                     ((DoF)(i % 6)).ToString(),
                     nums[i],
                     openseesDs[i],
                     myDs[i],
-                    rels[i],
-                    abss[i]
+                    relNodalDisp[i],
+                    absNodalDisp[i]
+                    );
+
+                nodalReactTbl.Rows.Add(
+                    i / 6,
+                    ((DoF)(i % 6)).ToString().Replace("D", "F").Replace("R", "M"),
+                    nums[i],
+                    openseesReacts[i],
+                    myReacts[i],
+                    relNodalReac[i],
+                    absNodalReac[i]
                     );
             }
 
-            for (var i = 0; i < model.Nodes.Count; i++)
-                model.Nodes[i].Label = i.ToString();
 
 
-            return tbl;
+
+            return new[] { nodalDispTbl, nodalReactTbl };
         }
 
         public static void FindError(double[] exact, double[] test, double[] relativeError, double[] absError)

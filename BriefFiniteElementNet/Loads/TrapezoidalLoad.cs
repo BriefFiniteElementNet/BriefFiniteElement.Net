@@ -45,24 +45,24 @@ namespace BriefFiniteElementNet.Loads
         }
 
         /// <summary>
-        /// Gets or sets the Start Offset
+        /// Gets or sets the start of load range
         /// </summary>
         /// <value>
-        /// The offset from start node(s) regarding isoparametric coordination system (in rangle [0,2])
+        /// The offset from start node(s) regarding isoparametric coordination system (in rangle [-1,1])
         /// </value>
-        public double[] StartOffsets
+        public double[] StarIsoLocations
         {
             get { return _startOffsets; }
             set { _startOffsets = value; }
         }
 
         /// <summary>
-        /// Gets or sets the End Offset
+        /// Gets or sets the end of load range
         /// </summary>
         /// <value>
-        /// The offset from end node(s) regarding isoparametric coordination system (in rangle [0,2])
+        /// The offset from end node(s) regarding isoparametric coordination system (in rangle [-1,1])
         /// </value>
-        public double[] EndOffsets
+        public double[] EndIsoLocations
         {
             get { return _endOffsets; }
             set { _endOffsets = value; }
@@ -108,8 +108,8 @@ namespace BriefFiniteElementNet.Loads
 
             for (var i = 0; i < n; i++)
             {
-                var startOffset = this.StartOffsets[0];
-                var endOffset = this.EndOffsets[0];
+                var startOffset = this.StarIsoLocations[0];
+                var endOffset = this.EndIsoLocations[0];
                 var startMag = this.StartMagnitudes[0];
                 var endMag = this.EndMagnitudes[0];
 
