@@ -24,6 +24,125 @@ namespace BriefFiniteElementNet.Validation
             return buf.ToArray();
         }
 
+        public static void ValidateLoadInternalForce_B_y()
+        {
+            var load = new Loads.PartialTrapezoidalLoad();
+            load.Direction = Vector.K;
+
+            var w = 1;
+
+            load.StarIsoLocations = new double[] { -1 };
+            load.EndIsoLocations = new double[] { 1 };
+
+            load.StartMagnitudes = new double[] { w };
+            load.EndMagnitudes = new double[] { w };
+
+            var hlpr = new BriefFiniteElementNet.ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y);
+
+            var elm = new BarElement(new Node(0, 0, 0), new Node(2, 0, 0));
+
+            var l = (elm.Nodes[0].Location - elm.Nodes[1].Location).Length;
+
+            var v = new Func<double, double>(x => w * (l / 2 - x));
+            var m = new Func<double, double>(x => (w / 12.0) * (6 * l * x - l * l - 6 * x * x));
+
+            var rdn = new Random(0);
+
+            for (var i = 0; i < 10; i++)
+            {
+                var x_t = 
+                    rdn.NextDouble()
+                    //0.125
+                    * l;
+
+                var xi = hlpr.Local2Iso(elm, x_t);
+
+                var frc = hlpr.GetLoadInternalForceAt(elm, load, xi);
+
+                var rv = v(x_t);
+                var rm = m(x_t);
+
+                //var dv = v(x_t) - frc.MembraneTensor.S12;
+                //var dm = m(x_t) - frc.BendingTensor.M13;
+            }
+
+        }
+
+        public static void testInternalForce_Console()
+        {
+            var model = new Model();
+            var ndes = new Node[] { new Node(0, 0, 0), new Node(2, 3, 5) };
+
+            var h = 0.1;
+            var w = 0.05;
+
+            var a = h * w;
+            var iy = h * h * h * w / 12;
+            var iz = w * w * w * h / 12;
+            var j = iy + iz;
+
+            var sec = new Sections.UniformParametric1DSection(a, iy, iz, j);
+            var mat = UniformIsotropicMaterial.CreateFromYoungPoisson(1, 0.25);
+
+            var elm = new BarElement(ndes[0], ndes[1]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame };
+            //var elm2 = new BarElement(ndes[1], ndes[2]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame };
+
+            model.Elements.Add(elm);
+            model.Nodes.Add(ndes);
+
+            ndes[0].Constraints = Constraints.Fixed;
+
+            ndes[1].Loads.Add(new NodalLoad(new Force(0, 1, 0, 0, 0, 0)));
+
+            model.Solve_MPC();
+
+            var frc = elm.GetInternalForceAt(0.5, LoadCase.DefaultLoadCase);
+
+        }
+
+        public static void ValidateLoadInternalForce_B_z()
+        {
+            var load = new Loads.PartialTrapezoidalLoad();
+            load.Direction = Vector.J;
+
+            var w = 1;
+
+            load.StarIsoLocations = new double[] { -1 };
+            load.EndIsoLocations = new double[] { 1 };
+
+            load.StartMagnitudes = new double[] { w };
+            load.EndMagnitudes = new double[] { w };
+
+            var hlpr = new BriefFiniteElementNet.ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z);
+
+            var elm = new BarElement(new Node(0, 0, 0), new Node(2, 0, 0));
+
+            var l = (elm.Nodes[0].Location - elm.Nodes[1].Location).Length;
+
+            var v = new Func<double, double>(x => w * (l / 2 - x));
+            var m = new Func<double, double>(x => -(w / 12.0) * (6 * l * x - l * l - 6 * x * x));
+
+            var rdn = new Random(0);
+
+            for (var i = 0; i < 10; i++)
+            {
+                var x_t =
+                    rdn.NextDouble()
+                    //0.125
+                    * l;
+
+                var xi = hlpr.Local2Iso(elm, x_t);
+
+                var frc = hlpr.GetLoadInternalForceAt(elm, load, xi);
+
+                var rv = v(x_t);
+                var rm = m(x_t);
+
+                //var dv = v(x_t) - frc.MembraneTensor.S13;
+                //var dm = m(x_t) - frc.BendingTensor.M12;
+            }
+
+        }
         public ValidationResult[]  DoPopularValidation()
         {
             var buf = new List<ValidationResult>();
@@ -80,9 +199,9 @@ namespace BriefFiniteElementNet.Validation
 
         public static ValidationResult Validation_1()
         {
-            var nx = 3;
-            var ny = 3;
-            var nz = 3;
+            var nx = 2;
+            var ny = 2;
+            var nz = 2;
 
             var grd = StructureGenerator.Generate3DBarElementGrid(nx, ny, nz);
 
@@ -424,7 +543,7 @@ namespace BriefFiniteElementNet.Validation
             ld_u.Direction = direction;
             ld_u.CoordinationSystem = CoordinationSystem.Global;
 
-            var ld_t = new Loads.TrapezoidalLoad();
+            var ld_t = new Loads.PartialTrapezoidalLoad();
             ld_t.EndIsoLocations = ld_t.StarIsoLocations = new double[] { 0 };
             ld_t.StartMagnitudes = ld_t.EndMagnitudes = new double[] { 1 };
             ld_t.Direction = direction;

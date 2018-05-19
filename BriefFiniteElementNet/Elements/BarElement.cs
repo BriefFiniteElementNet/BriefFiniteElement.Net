@@ -365,7 +365,7 @@ namespace BriefFiniteElementNet.Elements
 
         public override IElementHelper[] GetHelpers()
         {
-            throw new NotImplementedException();
+            return GetElementHelpers().ToArray();
         }
 
         public override Matrix ComputeNMatrixAt(params double[] location)
@@ -665,8 +665,6 @@ namespace BriefFiniteElementNet.Elements
             return helpers;
         }
 
-
-
         #region ISerialization Implementation
 
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
@@ -691,7 +689,6 @@ namespace BriefFiniteElementNet.Elements
 
         #endregion
 
-
         #region Constructor
 
         public BarElement():base(2)
@@ -701,6 +698,8 @@ namespace BriefFiniteElementNet.Elements
 
 
         #endregion
+
+        #region GetInternalForceAt, GetInternalForceAt_Exact
 
         /// <summary>
         /// Gets the internal force at <see cref="xi" /> position.
@@ -713,7 +712,106 @@ namespace BriefFiniteElementNet.Elements
         /// </remarks>
         public Force GetInternalForceAt(double xi, LoadCombination combination)
         {
-            throw new NotImplementedException();
+            var buf = Force.Zero;
+
+            foreach (var lc in combination.Keys)
+                buf += this.GetInternalForceAt(xi, lc);
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Gets the exact internal force at <see cref="xi" /> position.
+        /// </summary>
+        /// <param name="xi">The iso coordinate of desired point (start = -1, mid = 0, end = 1).</param>
+        /// <param name="combination">The Load Combination.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Will calculate the internal forces of member regarding the <see cref="combination" />
+        /// </remarks>
+        public Force GetExactInternalForceAt(double xi, LoadCombination combination)
+        {
+            var buf = Force.Zero;
+
+            foreach (var lc in combination.Keys)
+                buf += this.GetExactInternalForceAt(xi, lc);
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Gets the internal force at <see cref="xi" /> position.
+        /// </summary>
+        /// <param name="xi">The iso coordinate of desired point (start = -1, mid = 0, end = 1).</param>
+        /// <param name="loadCase">The Load case.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Will calculate the internal forces of member regarding the <see cref="loadCase" />
+        /// </remarks>
+        public Force GetInternalForceAt(double xi, LoadCase loadCase)
+        {
+            var buf = new FlatShellStressTensor();
+
+            var helpers = GetHelpers();
+
+            var lds = new Displacement[this.Nodes.Length];
+            var tr = this.GetTransformationManager();
+
+            for (var i = 0; i < Nodes.Length; i++)
+            {
+                var globalD = Nodes[i].GetNodalDisplacement(loadCase);
+                var local = tr.TransformGlobalToLocal(globalD);
+                lds[i] = local;
+            }
+
+            foreach (var helper in helpers)
+            {
+                var tns = helper.GetLocalInternalForceAt(this, lds, new[] { xi });
+                //buf = buf + tns;
+            }
+
+            var buff = new Force();
+
+            var forces = new Vector(buf.MembraneTensor.S11, buf.MembraneTensor.S12, buf.MembraneTensor.S13);
+            //Fx, Vy, Vz
+            var moments = new Vector(buf.BendingTensor.M11, buf.BendingTensor.M12, buf.BendingTensor.M13);
+            //Mx, My, Mz
+
+            return new Force(forces, moments);
+        }
+
+        /// <summary>
+        /// Gets the internal force at <see cref="xi" /> position.
+        /// </summary>
+        /// <param name="xi">The iso coordinate of desired point (start = -1, mid = 0, end = 1).</param>
+        /// <param name="loadCase">The Load case.</param>
+        /// <returns></returns>
+        /// <remarks>
+        /// Will calculate the internal forces of member regarding the <see cref="loadCase" />
+        /// </remarks>
+        public Force GetExactInternalForceAt(double xi, LoadCase loadCase)
+        {
+            var approx = GetInternalForceAt(xi, loadCase);
+
+            var buf = new FlatShellStressTensor();
+
+            var helpers = GetHelpers();
+
+            foreach (var load in this.Loads)
+                foreach (var helper in helpers)
+                {
+                    var tns = helper.GetLoadInternalForceAt(this, load, new[] { xi });
+                    //buf = buf + tns;
+                }
+
+            var buff = new Force();
+
+            var forces = new Vector(buf.MembraneTensor.S11, buf.MembraneTensor.S12, buf.MembraneTensor.S13);
+            //Fx, Vy, Vz
+            var moments = new Vector(buf.BendingTensor.M11, buf.BendingTensor.M12, buf.BendingTensor.M13);
+            //Mx, My, Mz
+
+            return new Force(forces, moments) + approx;
         }
 
         /// <summary>
@@ -727,7 +825,61 @@ namespace BriefFiniteElementNet.Elements
         /// </remarks>
         public Force GetInternalForceAt(double xi)
         {
+            return GetInternalForceAt(xi, LoadCase.DefaultLoadCase);
+        }
+
+        /// <summary>
+        /// Gets the exact internal force at specified <see cref="xi"/> for <see cref="LoadCase.DefaultLoadCase"/>.
+        /// </summary>
+        /// <param name="xi">The iso coordinate of desired point (start = -1, mid = 0, end = 1).</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        /// <remarks>
+        /// Will calculate the internal forces of member regarding Default load case.
+        /// </remarks>
+        public Force GetExactInternalForceAt(double xi)
+        {
+            return GetExactInternalForceAt(xi, LoadCase.DefaultLoadCase);
+        }
+        #endregion
+
+        #region GetInternalDisplacementAt, GetExactInternalDisplacementAt
+
+        
+        public Displacement GetInternalDisplacementAt(double xi, LoadCombination combination)
+        {
             throw new NotImplementedException();
         }
+
+        
+        public Displacement GetExactInternalDisplacementAt(double xi, LoadCombination combination)
+        {
+            throw new NotImplementedException();
+        }
+
+        
+        public Displacement GetInternalDisplacementAt(double xi, LoadCase loadCase)
+        {
+            throw new NotImplementedException();
+        }
+
+        
+        public Displacement GetExactInternalDisplacementAt(double xi, LoadCase loadCase)
+        {
+            throw new NotImplementedException();
+        }
+
+        
+        public Displacement GetInternalDisplacementAt(double xi)
+        {
+            throw new NotImplementedException();
+        }
+
+        
+        public Displacement GetExactInternalDisplacementAt(double xi)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }

@@ -36,7 +36,7 @@ namespace BriefFiniteElementNet.TestConsole
             //BarElementTester.TestBarStiffness();
 
 
-            BarElementTester.Validation_1();
+            BarElementTester.testInternalForce_Console();
 
             ////QrTest();
             //TstMtx();
@@ -435,7 +435,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             Environment.SetEnvironmentVariable("PATH", newPath);
 
-            BriefFiniteElementNet.PardisoThing.test_pardiso.Main(null);
+            //BriefFiniteElementNet.PardisoThing.test_pardiso.Main(null);
 
             return;
             var model = StructureGenerator.Generate3DBarElementGrid(1, 1, 2);
@@ -450,7 +450,7 @@ namespace BriefFiniteElementNet.TestConsole
             StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
 
             var config = new SolverConfiguration();
-            config.SolverFactory = new IntelMklSolver.MklPardisoDirectSPDSolverFactory();
+            //config.SolverFactory = new IntelMklSolver.MklPardisoDirectSPDSolverFactory();
             config.LoadCases = new List<LoadCase>() { LoadCase.DefaultLoadCase };
 
             model.Solve_MPC(config);
@@ -490,7 +490,7 @@ namespace BriefFiniteElementNet.TestConsole
             StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
 
             var config = new SolverConfiguration();
-            config.SolverFactory = new CudaSolver.CuSparseDirectSpdSolverFactory();
+            //config.SolverFactory = new CudaSolver.CuSparseDirectSpdSolverFactory();
             config.LoadCases = new List<LoadCase>() { LoadCase.DefaultLoadCase };
 
             model.Solve_MPC(config);

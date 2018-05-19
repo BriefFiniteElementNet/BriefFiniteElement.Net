@@ -95,6 +95,7 @@ namespace BriefFiniteElementNet.Validation
 
             var nodalDispTbl = new DataTable();
             var nodalReactTbl = new DataTable();
+            var elmFrcTbl = new DataTable();
 
             {
                 nodalDispTbl.Columns.Add("Node #", typeof(int));
@@ -115,6 +116,12 @@ namespace BriefFiniteElementNet.Validation
                 nodalReactTbl.Columns.Add("BFE Support Reaction", typeof(double));
                 nodalReactTbl.Columns.Add("Relative Error", typeof(double));
                 nodalReactTbl.Columns.Add("Absolute Error", typeof(double));
+            }
+
+            {
+                elmFrcTbl.Columns.Add("Elm #", typeof(int));
+                elmFrcTbl.Columns.Add("Relative Error", typeof(double));
+                elmFrcTbl.Columns.Add("Absolute Error", typeof(double));
             }
 
             for (int i = 0; i < myDs.Length; i++)
@@ -140,8 +147,25 @@ namespace BriefFiniteElementNet.Validation
                     );
             }
 
+            /*
+            for (int i = 0; i < model.Elements.Count; i++)
+            {
+                var bar = model.Elements[i] as BarElement;
 
+                var myFrc = bar.GetInternalForceAt(0, LoadCase.DefaultLoadCase);
 
+                nodalDispTbl.Rows.Add(
+                    i ,
+                    ((DoF)(i % 6)).ToString(),
+                    nums[i],
+                    openseesDs[i],
+                    myDs[i],
+                    relNodalDisp[i],
+                    absNodalDisp[i]
+                    );
+                
+            }
+            */
 
             return new[] { nodalDispTbl, nodalReactTbl };
         }

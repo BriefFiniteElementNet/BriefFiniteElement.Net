@@ -11,7 +11,7 @@ namespace BriefFiniteElementNet.Loads
     /// Represents a trapezoidal load with start and end offset.
     /// </summary>
     [Obsolete("still in development")]
-    public class TrapezoidalLoad:Load
+    public class PartialTrapezoidalLoad:Load
     {
         #region props, fields
 
@@ -126,6 +126,7 @@ namespace BriefFiniteElementNet.Loads
             }
 
             return buf;
+            
         }
     }
 }

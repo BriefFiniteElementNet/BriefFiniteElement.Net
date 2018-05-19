@@ -189,9 +189,24 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetLocalInternalForceAt(Element targetElement, Displacement[] globalDisplacements, params double[] isoCoords)
+        public IEnumerable<Tuple<DoF, double>> GetLocalInternalForceAt(Element targetElement,
+            Displacement[] localDisplacements, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var ld = localDisplacements;
+
+            var b = GetBMatrixAt(targetElement, isoCoords);
+            var d = GetDMatrixAt(targetElement, isoCoords);
+            var u = new Matrix(2, 1);
+
+            u.FillColumn(0, ld[0].DX, ld[1].RX);
+
+            var frc = d * b * u;
+
+            var buf = new List<Tuple<DoF, double>>();
+
+            buf.Add(Tuple.Create(DoF.Rx, frc[0, 0]));
+
+            return buf;
         }
 
         /// <inheritdoc/>
@@ -216,12 +231,14 @@ namespace BriefFiniteElementNet.ElementHelpers
             return new int[] { 0, 0, 0 };
         }
 
-        public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation)
+        public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, Load load,
+            double[] isoLocation)
         {
-            throw new NotImplementedException();
+                throw new NotImplementedException();
+
         }
 
-        public FlatShellStressTensor GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation)
+        public Displacement GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
@@ -239,7 +256,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 return new Force[2];
             }
 
-            if (load is TrapezoidalLoad)
+            if (load is PartialTrapezoidalLoad)
             {
                 return new Force[2];
             }

@@ -336,7 +336,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             };
         }
 
-        public Matrix GetLocalInternalForceAt(Element targetElement, Displacement[] globalDisplacements,
+        public IEnumerable<Tuple<DoF, double>> GetLocalInternalForceAt(Element targetElement,
+            Displacement[] globalDisplacements,
             params double[] isoCoords)
         {
             //todo: fix internal forces based on https://en.wikipedia.org/wiki/Kirchhoff%E2%80%93Love_plate_theory#Equilibrium_equations
@@ -349,7 +350,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var mQ4 = d * strain;
 
-            return mQ4;
+            //return mQ4;
 
             throw new NotImplementedException();
         }
@@ -382,12 +383,13 @@ namespace BriefFiniteElementNet.ElementHelpers
             throw new NotImplementedException();
         }
 
-        public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation)
+        public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, Load load,
+            double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
-        public FlatShellStressTensor GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation)
+        public Displacement GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }

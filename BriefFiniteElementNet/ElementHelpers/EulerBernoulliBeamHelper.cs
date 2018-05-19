@@ -226,7 +226,43 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
+        public double[] Iso2Local(Element targetElement, params double[] isoCoords)
+        {
+            var tg = targetElement as BarElement;
 
+
+            if (tg != null)
+            {
+                var xi = isoCoords[0];
+
+                if (tg.Nodes.Length == 2)
+                {
+                    var l = (tg.Nodes[1].Location - tg.Nodes[0].Location).Length;
+                    return new[] { l * (xi + 1) / 2 };
+                }
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public double[] Local2Iso(Element targetElement, params double[] localCoords)
+        {
+            var tg = targetElement as BarElement;
+
+
+            if (tg != null)
+            {
+                var x = localCoords[0];
+
+                if (tg.Nodes.Length == 2)
+                {
+                    var l = (tg.Nodes[1].Location - tg.Nodes[0].Location).Length;
+                    return new[] { 2 * x / l - 1 };
+                }
+            }
+
+            throw new NotImplementedException();
+        }
 
         /// <inheritdoc/>
         public Matrix CalcLocalKMatrix(Element targetElement)
@@ -287,19 +323,151 @@ namespace BriefFiniteElementNet.ElementHelpers
 
 
         /// <inheritdoc/>
-        public FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation)
+        public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, Load load,
+            double[] isoLocation)
         {
+            var buf = new FlatShellStressTensor();
+            
             var tr = targetElement.GetTransformationManager();
+
+            var br = targetElement as BarElement;
 
             var endForces = GetLocalEquivalentNodalLoads(targetElement, load);
 
-            
+
+            var v0 =
+                this._direction == BeamDirection.Z ?
+                endForces[0].Fy : endForces[0].Fz;
+
+            var m0 = this._direction == BeamDirection.Z ?
+                endForces[0].Mz : endForces[0].My;
+
+            v0 = -v0;
+            m0 = -m0;
+
+            var to = Iso2Local(targetElement, isoLocation)[0];
+
+            //var xi = isoLocation[0];
+
+            #region uniform & trapezoid
+
+            if (load is UniformLoad || load is PartialTrapezoidalLoad)
+            {
+
+                Func<double, double> magnitude;
+                Vector localDir;
+
+                double xi0, xi1;
+                int degree;//polynomial degree of magnitude function
+
+                #region inits
+                if (load is UniformLoad)
+                {
+                    var uld = (load as UniformLoad);
+
+                    magnitude = (xi => uld.Magnitude);
+                    localDir = uld.Direction;
+
+                    if (uld.CoordinationSystem == CoordinationSystem.Global)
+                        localDir = tr.TransformGlobalToLocal(localDir);
+
+                    xi0 = -1;
+                    xi1 = 1;
+                    degree = 0;
+                }
+                else
+                {
+                    var tld = (load as PartialTrapezoidalLoad);
+
+                    magnitude = (xi => (load as PartialTrapezoidalLoad).GetMagnitudesAt(xi, 0, 0)[0]);
+                    localDir = tld.Direction;
+
+                    if (tld.CoordinationSystem == CoordinationSystem.Global)
+                        localDir = tr.TransformGlobalToLocal(localDir);
+
+                    xi0 = tld.StarIsoLocations[0];
+                    xi1 = tld.EndIsoLocations[0];
+                    degree = 1;
+                }
+
+                localDir = localDir.GetUnit();
+                #endregion
+
+                {
+
+                    var nOrd = 0;// GetNMaxOrder(targetElement).Max();
+
+                    var gpt = (nOrd + degree) / 2 + 1;//gauss point count
+
+                    Matrix integral;
+
+
+                    if(isoLocation[0]<xi0)
+                    {
+                        integral = new Matrix(2, 1);
+                    }
+                    else
+                    {
+                        var intgV = GaussianIntegrator.CreateFor1DProblem(x =>
+                        {
+                            var xi = Local2Iso(targetElement, x)[0];
+                            var q__ = magnitude(xi);
+                            var q_ = localDir * q__;
+
+                            double df, dm;
+
+                            if (this._direction == BeamDirection.Y)
+                            {
+                                df = q_.Z;
+                                dm = -q_.Z * x;
+                            }
+                            else
+                            {
+                                df = q_.Y;
+                                dm = q_.Y * x;
+                            }
+
+                            var buf_ = new Matrix(new double[] { df, dm });
+
+                            return buf_;
+                        }, 0, to, gpt);
+
+                        integral = intgV.Integrate();
+                    }
+
+                    var v_i = integral[0, 0];
+                    var m_i = integral[1, 0];
+
+                    var memb = buf.MembraneTensor;
+                    var bnd = buf.BendingTensor;
+
+                    if (this._direction == BeamDirection.Y)
+                    {
+                        var v = memb.S12 = memb.S21 = -(v_i + v0);
+                        bnd.M13 = bnd.M31 = -(m0 + m_i + (v * to * -1));
+                    }
+                    else
+                    {
+                        var v = memb.S13 = memb.S31 = -(v_i + v0);
+                        bnd.M12 = bnd.M21 = -(m0 + m_i + (v * to * +1));
+                    }
+
+                    buf.MembraneTensor = memb;
+                    buf.BendingTensor= bnd;
+
+                    //return buf;
+                }
+            }
+
+
+
+            #endregion
 
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public FlatShellStressTensor GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation)
+        public Displacement GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
@@ -332,13 +500,13 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix GetLocalInternalForceAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        public IEnumerable<Tuple<DoF, double>> GetLocalInternalForceAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
             var ld = localDisplacements;
 
             var b = GetBMatrixAt(targetElement, isoCoords);
             var d = GetDMatrixAt(targetElement, isoCoords);
-            var u = new Matrix(1, 4);
+            var u = new Matrix(4, 1);
 
             if (_direction == BeamDirection.Y)
                 u.FillColumn(0, ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ);
@@ -347,7 +515,15 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var frc = d * b * u;
 
-            return frc;
+            var buf = new List<Tuple<DoF, double>>();
+
+            if (_direction == BeamDirection.Y)
+                buf.Add(Tuple.Create(DoF.Ry,frc[0,0]));
+            else
+                buf.Add(Tuple.Create(DoF.Rz, frc[0, 0]));
+
+            return buf;
+            //return frc;
         }
 
 
@@ -359,7 +535,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             #region uniform & trapezoid
 
-            if (load is UniformLoad || load is TrapezoidalLoad)
+            if (load is UniformLoad || load is PartialTrapezoidalLoad)
             {
 
                 Func<double, double> magnitude;
@@ -385,9 +561,9 @@ namespace BriefFiniteElementNet.ElementHelpers
                 }
                 else
                 {
-                    var tld = (load as TrapezoidalLoad);
+                    var tld = (load as PartialTrapezoidalLoad);
 
-                    magnitude = (xi => (load as TrapezoidalLoad).GetMagnitudesAt(xi, 0, 0)[0]);
+                    magnitude = (xi => (load as PartialTrapezoidalLoad).GetMagnitudesAt(xi, 0, 0)[0]);
                     localDir = tld.Direction;
 
                     if (tld.CoordinationSystem == CoordinationSystem.Global)

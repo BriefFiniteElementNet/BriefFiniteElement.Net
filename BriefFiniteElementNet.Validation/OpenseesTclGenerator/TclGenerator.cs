@@ -155,7 +155,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
 
 
             if (ExportElementForces)
-                Commands.Add(new TclCommand("recorder", "Element", "-xml", '"' + elementsOut.Replace("\\", "\\\\") + '"', "-closeOnWrite", "strains", "material", "1"));
+                Commands.Add(new TclCommand("recorder", "Element", "-xml", '"' + elementsOut.Replace("\\", "\\\\") + '"', "-closeOnWrite", "localForce ", "material", "1"));
 
             var anzCmd = (new TclCommand("analyze", "1"));
 
