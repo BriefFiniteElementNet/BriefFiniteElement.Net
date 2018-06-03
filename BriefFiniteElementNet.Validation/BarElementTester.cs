@@ -71,7 +71,7 @@ namespace BriefFiniteElementNet.Validation
         public static void testInternalForce_Console()
         {
             var model = new Model();
-            var ndes = new Node[] { new Node(0, 0, 0), new Node(1, 0, 1) };
+            var ndes = new Node[] { new Node(0, 0, 0), new Node(3, 0, 0) };
 
             var h = UnitConverter.In2M(4);
             var w = UnitConverter.In2M(4);
@@ -94,7 +94,7 @@ namespace BriefFiniteElementNet.Validation
 
             ndes[0].Constraints = Constraints.Fixed;
 
-            ndes[1].Loads.Add(new NodalLoad(new Force(0, 0, 1, 0, 0, 0)));
+            ndes[1].Loads.Add(new NodalLoad(new Force(1, 0, 1, 0, 0, 0)));
 
             model.Solve_MPC();
 
@@ -505,7 +505,7 @@ namespace BriefFiniteElementNet.Validation
 
                 span.Add("h4").Text("Internal Force");
                 span.Add("paragraph")
-                    .Text(string.Format("Validation output for internal force:"));
+                    .Text(string.Format("Validation output for internal force (force residuals):"));
 
                 span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}", maxInternalForceResidual));
             }

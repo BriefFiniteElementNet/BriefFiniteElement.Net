@@ -615,8 +615,12 @@ namespace BriefFiniteElementNet.ElementHelpers
                 throw new Exception();
 
             var n = GetNMatrixAt(targetElement, isoCoords);
-            
+
+            var oldDir = this._direction;
+
+            this._direction = this._direction == BeamDirection.Y ? BeamDirection.Z : BeamDirection.Y;
             var d = GetDMatrixAt(targetElement, isoCoords);
+            this._direction = oldDir;
 
             var u = new Matrix(2 * nc, 1);
 
@@ -627,14 +631,16 @@ namespace BriefFiniteElementNet.ElementHelpers
             else
                 u.FillColumn(0, ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ);
 
-            var f =  n * u;
-
             var ei = d[0, 0];
 
-            f.MultiplyRowByConstant(1, 1 / j);
-            f.MultiplyRowByConstant(2, ei / (j * j));
-            f.MultiplyRowByConstant(3, ei / (j * j * j));
+            n.MultiplyRowByConstant(1, 1 / j);
+            n.MultiplyRowByConstant(2, ei / (j * j));
+            n.MultiplyRowByConstant(3, ei / (j * j * j));
 
+            var f =  n * u;
+
+            f.MultiplyByConstant(-1);
+            
             var buf = new List<Tuple<DoF, double>>();
 
             if (_direction == BeamDirection.Y)
@@ -644,7 +650,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
             else
             {
-                buf.Add(Tuple.Create(DoF.Rz, f[2, 0]));
+                buf.Add(Tuple.Create(DoF.Rz, -f[2, 0]));
                 buf.Add(Tuple.Create(DoF.Dy, f[3, 0]));
             }
 
