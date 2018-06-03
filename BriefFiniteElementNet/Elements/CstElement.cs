@@ -27,7 +27,7 @@ namespace BriefFiniteElementNet.Elements
         private MembraneFormulation _formulationType;
 
         /// <inheritdoc/>
-        public override Point IsoCoordsToGlobalLocation(params double[] isoCoords)
+        public override double[] IsoCoordsToLocalCoords(params double[] isoCoords)
         {
             throw new NotImplementedException();
         }

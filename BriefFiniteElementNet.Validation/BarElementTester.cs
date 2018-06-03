@@ -71,18 +71,20 @@ namespace BriefFiniteElementNet.Validation
         public static void testInternalForce_Console()
         {
             var model = new Model();
-            var ndes = new Node[] { new Node(0, 0, 0), new Node(2, 3, 5) };
+            var ndes = new Node[] { new Node(0, 0, 0), new Node(1, 0, 1) };
 
-            var h = 0.1;
-            var w = 0.05;
+            var h = UnitConverter.In2M(4);
+            var w = UnitConverter.In2M(4);
+
+            var e = UnitConverter.Psi2Pas(20e4);
 
             var a = h * w;
             var iy = h * h * h * w / 12;
             var iz = w * w * w * h / 12;
             var j = iy + iz;
 
-            var sec = new Sections.UniformParametric1DSection(a, iy, iz, j);
-            var mat = UniformIsotropicMaterial.CreateFromYoungPoisson(1, 0.25);
+            var sec = new Sections.UniformParametric1DSection(a=1, iy=1, iz=1, j=1);
+            var mat = UniformIsotropicMaterial.CreateFromYoungPoisson(e=1, 0.25);
 
             var elm = new BarElement(ndes[0], ndes[1]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame };
             //var elm2 = new BarElement(ndes[1], ndes[2]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame };
@@ -92,11 +94,21 @@ namespace BriefFiniteElementNet.Validation
 
             ndes[0].Constraints = Constraints.Fixed;
 
-            ndes[1].Loads.Add(new NodalLoad(new Force(0, 1, 0, 0, 0, 0)));
+            ndes[1].Loads.Add(new NodalLoad(new Force(0, 0, 1, 0, 0, 0)));
 
             model.Solve_MPC();
 
-            var frc = elm.GetInternalForceAt(0.5, LoadCase.DefaultLoadCase);
+            var tr = elm.GetTransformationManager();
+
+            var d1 = tr.TransformLocalToGlobal(elm.GetInternalDisplacementAt(1 - 1e-10, LoadCase.DefaultLoadCase));
+            var d2 = ndes[1].GetNodalDisplacement(LoadCase.DefaultLoadCase);
+           
+            
+            var frc = elm.GetInternalForceAt(-1, LoadCase.DefaultLoadCase);
+
+            var gfrc = elm.GetTransformationManager().TransformLocalToGlobal(frc);
+
+            var f0 = ndes[0].GetSupportReaction();
 
         }
 
@@ -148,6 +160,7 @@ namespace BriefFiniteElementNet.Validation
             var buf = new List<ValidationResult>();
 
             buf.Add(Validation_1());
+            buf.Add(Validation_2());
 
             return buf.ToArray();
         }
@@ -236,10 +249,8 @@ namespace BriefFiniteElementNet.Validation
             var maxReacAbsError = reac.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[reacAbsErrIdx]);
             var maxReacRelError = reac.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[reacRelErrIdx]);
 
-            //var buf = new ValidationResult();
-
             var span = new HtmlTag("span");
-            span.Add("p").Text("Validate a 3D rame");
+            span.Add("p").Text("Validate 3D frame nodal displacement and reactions");
             span.Add("h3").Text("Validate with");
             span.Add("paragraph").Text("OpenSEES (the Open System for Earthquake Engineering Simulation) software (available via http://opensees.berkeley.edu/)");
             span.Add("h3").Text("Validate objective");
@@ -337,6 +348,7 @@ namespace BriefFiniteElementNet.Validation
                     }
                 }
             }
+
             var buf = new ValidationResult();
             buf.Span = span;
             buf.Title = "3D Grid Validation";
@@ -344,7 +356,168 @@ namespace BriefFiniteElementNet.Validation
             return buf;
         }
 
+        public static ValidationResult Validation_2()
+        {
+            var nx = 2;
+            var ny = 2;
+            var nz = 2;
 
+            var grd = StructureGenerator.Generate3DBarElementGrid(nx, ny, nz);
+
+            //StructureGenerator.SetRandomiseConstraints(grd);
+            StructureGenerator.SetRandomiseSections(grd);
+
+            StructureGenerator.AddRandomiseNodalLoads(grd, LoadCase.DefaultLoadCase);//random nodal loads
+            //StructureGenerator.AddRandomiseBeamUniformLoads(grd, LoadCase.DefaultLoadCase);//random elemental loads
+            //StructureGenerator.AddRandomDisplacements(grd, 0.1);
+
+
+            grd.Solve_MPC();
+
+            /*
+            var res = OpenseesValidator.OpenseesValidate(grd, LoadCase.DefaultLoadCase, false);
+
+
+            var disp = res[0];
+            var reac = res[1];
+
+            var dispAbsErrIdx = disp.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("absolute"));
+            var dispRelErrIdx = disp.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("relative"));
+
+            var reacAbsErrIdx = reac.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("absolute"));
+            var reacRelErrIdx = reac.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("relative"));
+
+
+            var maxDispAbsError = disp.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[dispAbsErrIdx]);
+            var maxDispRelError = disp.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[dispRelErrIdx]);
+
+
+            var maxReacAbsError = reac.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[reacAbsErrIdx]);
+            var maxReacRelError = reac.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[reacRelErrIdx]);
+            */
+
+            var maxInternalDisplacementAbsErr = 0.0;
+            var maxInternalForceResidual = 0.0;
+
+
+            foreach (var elm in grd.Elements)
+            {
+                var bar = elm as BarElement;
+
+                if (bar == null)
+                    continue;
+
+                var tr = bar.GetTransformationManager();
+
+                var L = (bar.StartNode.Location - bar.EndNode.Location).Length;
+
+                var d1 = bar.GetInternalDisplacementAt(-1, LoadCase.DefaultLoadCase);
+                var d2 = bar.GetInternalDisplacementAt(+1, LoadCase.DefaultLoadCase);
+
+                var dn1 = tr.TransformGlobalToLocal(bar.StartNode.GetNodalDisplacement(LoadCase.DefaultLoadCase));
+                var dn2 = tr.TransformGlobalToLocal(bar.EndNode.GetNodalDisplacement(LoadCase.DefaultLoadCase));
+
+                var diff1 = dn1 - d1;
+                var diff2 = dn2 - d2;
+
+                var dd = Math.Max(diff1.Displacements.Length, diff2.Displacements.Length);
+                var dr = Math.Max(diff1.Rotations.Length, diff2.Rotations.Length);
+
+                maxInternalDisplacementAbsErr = Math.Max(maxInternalDisplacementAbsErr, dd);
+                maxInternalDisplacementAbsErr = Math.Max(maxInternalDisplacementAbsErr, dr);
+                //yet internal force
+
+                var n = 10;
+
+                var stf = bar.GetLocalStifnessMatrix();//.GetGlobalStifnessMatrix();
+
+                var u1 = Displacement.ToVector(dn1);
+                var u2 = Displacement.ToVector(dn2);
+
+                var u = new Matrix(12, 1);
+
+                u1.CopyTo(u.CoreArray, 0);
+                u2.CopyTo(u.CoreArray, 6);
+
+                var endFrc = stf * u;
+
+                var stFc = Force.FromVector(endFrc.CoreArray, 0);
+                var endFc =Force.FromVector(endFrc.CoreArray, 6);
+
+                for (var i = 0; i < n; i++)
+                {
+                    var xi = i / (n - 1.0) * 2.0 + -1;
+                    var x = bar.IsoCoordsToLocalCoords(xi)[0];
+
+                    var fc = bar.GetInternalForceAt(xi);
+
+                    var toBegin = fc.Move(new Vector(-x, 0, 0));
+                    var toEnd = fc.Move(new Vector(L-x, 0, 0));
+
+                    var stResid = stFc + toBegin;
+                    var endResid = endFc - toEnd;
+
+                    var errs = new double[]
+                    {
+                        stResid.Forces.Length,
+                        stResid.Moments.Length,
+                        endResid.Forces.Length,
+                        endResid.Moments.Length
+                    }.Max();
+
+                    maxInternalForceResidual = Math.Max(maxInternalForceResidual, errs);
+                }
+
+            }
+
+
+            var span = new HtmlTag("span");
+            span.Add("p").Text("Validate a 3D frame internal force and internal displacement");
+            span.Add("h3").Text("Validate objective");
+
+            span.Add("paragraph").Text("validate internal force and internal displacement of bar elements. ")
+                .AddClosedTag("br");
+
+            span.Add("paragraph").Text("Internal displacement in each element at each end node should be equal to that node's displacement.").AddClosedTag("br");
+            span.Add("paragraph").Text("End forces and mid force should be in equiblirium with each other.").AddClosedTag("br");
+
+            span.Add("h3").Text("Model Definition");
+
+            span.Add("paragraph").Text($"A {nx}x{ny}x{nz} grid, with {grd.Nodes.Count} nodes and {grd.Elements.Count} bar elements.").AddClosedTag("br");
+
+            span.Add("paragraph").Text("Every node in the model have a random load on it, random displacement in original location.").AddClosedTag("br");
+
+            span.Add("h3").Text("Validation Result");
+
+
+
+            {//internal displacements
+
+                span.Add("h4").Text("Internal Displacements");
+                span.Add("paragraph")
+                    .Text(string.Format("Validation output for internal displacements:"));
+
+                span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}", maxInternalDisplacementAbsErr));
+            }
+
+
+            {//internal force
+
+                span.Add("h4").Text("Internal Force");
+                span.Add("paragraph")
+                    .Text(string.Format("Validation output for internal force:"));
+
+                span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}", maxInternalForceResidual));
+            }
+
+
+
+            var buf = new ValidationResult();
+            buf.Span = span;
+            buf.Title = "Internal force & displacement validation";
+
+            return buf;
+        }
         public static void ValidateSingleInclinedFrame()
         {
             var model = new Model();

@@ -27,7 +27,19 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var buf = new Matrix(1, 2);
 
-            buf.FillRow(0, -1 / l, 1 / l);
+            var b1 = -1 / l;
+            var b2 = 1 / l;
+
+            var c1 = elm.StartReleaseCondition;
+            var c2 = elm.EndReleaseCondition;
+
+            if (c1.DX == DofConstraint.Released)
+                b1 = 0;
+
+            if (c2.DX == DofConstraint.Released)
+                b2 = 0;
+
+            buf.FillRow(0, b1, b2);
 
             return buf;
         }
@@ -133,6 +145,15 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             double[] arr;
 
+            var c1 = bar.StartReleaseCondition;
+            var c2 = bar.EndReleaseCondition;
+
+            if (c1.DX == DofConstraint.Released)
+                n1 = 0;
+
+            if (c2.DX == DofConstraint.Released)
+                n2 = 0;
+
             arr = new double[] { n1, n2 };
             
             buf.FillRow(0, arr);
@@ -149,8 +170,9 @@ namespace BriefFiniteElementNet.ElementHelpers
                 throw new Exception();
 
             var buf = new Matrix(1, 1);
+            var l = (bar.EndNode.Location - bar.StartNode.Location).Length;
 
-            buf[0, 0] = (bar.EndNode.Location - bar.StartNode.Location).Length / 2;
+            buf[0, 0] = l / 2;
 
             return buf;
         }
@@ -197,7 +219,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var d = GetDMatrixAt(targetElement, isoCoords);
             var u = new Matrix(2, 1);
 
-            u.FillColumn(0, ld[0].DX, ld[1].RX);
+            u.FillColumn(0, ld[0].DX, ld[1].DX);
 
             var frc = d * b * u;
 
@@ -394,7 +416,15 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var n = GetNMatrixAt(targetElement, isoCoords);
+            var u = new Matrix(2, 1);
+
+            u[0, 0] = localDisplacements[0].DX;
+            u[1, 0] = localDisplacements[1].DX;
+
+            var buf = n * u;
+
+            return new Displacement(buf[0, 0], 0, 0, 0, 0, 0);
         }
 
         public Force[] GetLocalEquivalentNodalLoads(Element targetElement, Load load)

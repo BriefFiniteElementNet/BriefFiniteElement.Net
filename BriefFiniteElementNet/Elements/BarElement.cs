@@ -38,7 +38,8 @@ namespace BriefFiniteElementNet.Elements
         private BarElementBehaviour _behavior = BarElementBehaviours.FullFrame;
         private Base1DSection _section;
         private BaseMaterial _material;
-
+        private Constraint _startReleaseCondition = Constraints.Fixed;
+        private Constraint _endReleaseCondition = Constraints.Fixed;
 
         /// <summary>
         /// Gets or sets the start node.
@@ -135,6 +136,25 @@ namespace BriefFiniteElementNet.Elements
         {
             get { return _behavior; }
             set { _behavior = value; }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the connection constraints od element to the start node
+        /// </summary>
+        public Constraint StartReleaseCondition
+        {
+            get { return _startReleaseCondition; }
+            set { _startReleaseCondition = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the connection constraints od element to the end node
+        /// </summary>
+        public Constraint EndReleaseCondition
+        {
+            get { return _endReleaseCondition; }
+            set { _endReleaseCondition = value; }
         }
 
         #endregion
@@ -508,9 +528,13 @@ namespace BriefFiniteElementNet.Elements
         }
 
         /// <inheritdoc/>
-        public override Point IsoCoordsToGlobalLocation(params double[] isoCoords)
+        public override double[] IsoCoordsToLocalCoords(params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var xi = isoCoords[0];
+
+            var L = (this.EndNode.Location - this.StartNode.Location).Length;
+
+            return new double[] { L / 2 * (xi + 1) } ;
         }
 
         /// <summary>
@@ -675,6 +699,9 @@ namespace BriefFiniteElementNet.Elements
             info.AddValue("_material", _material);
             info.AddValue("_section", _section);
             info.AddValue("_behavior", (int)_behavior);
+            info.AddValue("_startReleaseCondition", _startReleaseCondition);
+            info.AddValue("_endReleaseCondition", _endReleaseCondition);
+            
         }
 
        
@@ -685,6 +712,8 @@ namespace BriefFiniteElementNet.Elements
             _material = (BaseMaterial)info.GetValue("_material", typeof(BaseMaterial));
             _behavior = (BarElementBehaviour)info.GetValue("_behavior", typeof(int));
             _section = (Base1DSection)info.GetValue("_section", typeof(Base1DSection));
+            _startReleaseCondition = (Constraint)info.GetValue("_startReleaseCondition", typeof(Constraint));
+            _endReleaseCondition = (Constraint)info.GetValue("_endReleaseCondition", typeof(Constraint));
         }
 
         #endregion
@@ -764,20 +793,53 @@ namespace BriefFiniteElementNet.Elements
                 lds[i] = local;
             }
 
+            var buff = new Force();
+
+            var frc = new Vector();//forcec
+            var mnt = new Vector();//moment
+
+
             foreach (var helper in helpers)
             {
                 var tns = helper.GetLocalInternalForceAt(this, lds, new[] { xi });
+
+                foreach (var tuple in tns)
+                {
+                    switch (tuple.Item1)
+                    {
+                        case DoF.Dx:
+                            frc.X += tuple.Item2;
+                            break;
+                        case DoF.Dy:
+                            frc.Y += tuple.Item2;
+                            break;
+                        case DoF.Dz:
+                            frc.Z += tuple.Item2;
+                            break;
+                        case DoF.Rx:
+                            mnt.X += tuple.Item2;
+                            break;
+                        case DoF.Ry:
+                            mnt.Y += tuple.Item2;
+                            break;
+                        case DoF.Rz:
+                            mnt.Z += tuple.Item2;
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                }
                 //buf = buf + tns;
             }
 
-            var buff = new Force();
+            
 
             var forces = new Vector(buf.MembraneTensor.S11, buf.MembraneTensor.S12, buf.MembraneTensor.S13);
             //Fx, Vy, Vz
             var moments = new Vector(buf.BendingTensor.M11, buf.BendingTensor.M12, buf.BendingTensor.M13);
             //Mx, My, Mz
 
-            return new Force(forces, moments);
+            return new Force(frc, mnt);
         }
 
         /// <summary>
@@ -860,6 +922,26 @@ namespace BriefFiniteElementNet.Elements
         
         public Displacement GetInternalDisplacementAt(double xi, LoadCase loadCase)
         {
+            var buf = Displacement.Zero;
+
+            var helpers = GetHelpers();
+
+            var lds = new Displacement[this.Nodes.Length];
+            var tr = this.GetTransformationManager();
+
+            for (var i = 0; i < Nodes.Length; i++)
+            {
+                var globalD = Nodes[i].GetNodalDisplacement(loadCase);
+                var local = tr.TransformGlobalToLocal(globalD);
+                lds[i] = local;
+            }
+
+            foreach (var hlpr in helpers)
+            {
+                buf += hlpr.GetLocalDisplacementAt(this, lds, xi);
+            }
+
+            return buf;
             throw new NotImplementedException();
         }
 

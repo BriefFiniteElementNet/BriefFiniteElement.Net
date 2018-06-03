@@ -16,7 +16,7 @@ namespace BriefFiniteElementNet.Elements
         private double _k;
 
         /// <inheritdoc/>
-        public override Point IsoCoordsToGlobalLocation(params double[] isoCoords)
+        public override double[] IsoCoordsToLocalCoords(params double[] isoCoords)
         {
             throw new NotImplementedException();
         }

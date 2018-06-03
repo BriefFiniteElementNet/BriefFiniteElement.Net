@@ -272,11 +272,11 @@ namespace BriefFiniteElementNet.Elements
         }
 
         /// <summary>
-        /// Converts the Isometric coordinates to global location.
+        /// Converts the Isometric coordinates to local coordinates.
         /// </summary>
         /// <param name="isoCoords">The isometric coords in element.</param>
-        /// <returns>The location in global system</returns>
-        public abstract Point IsoCoordsToGlobalLocation(params double[] isoCoords);
+        /// <returns>The location in element's local system system</returns>
+        public abstract double[] IsoCoordsToLocalCoords(params double[] isoCoords);
 
 
         [NonSerialized]

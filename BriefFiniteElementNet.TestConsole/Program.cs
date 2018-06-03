@@ -33,10 +33,10 @@ namespace BriefFiniteElementNet.TestConsole
             //Test_P_Delta_matrix();
             //TestSparseRow();
 
-            //BarElementTester.TestBarStiffness();
+            //BarElementTester.va;
 
 
-            BarElementTester.testInternalForce_Console();
+           BarElementTester.testInternalForce_Console();
 
             ////QrTest();
             //TstMtx();

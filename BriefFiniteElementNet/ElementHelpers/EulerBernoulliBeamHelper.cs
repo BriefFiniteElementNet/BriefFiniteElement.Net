@@ -178,6 +178,14 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
         {
+            if (targetElement is BarElement)
+                return GetNMatrixBar2Node(targetElement, isoCoords);
+
+            throw new NotImplementedException();
+        }
+
+        public Matrix GetNMatrixBar2Node(Element targetElement, params double[] isoCoords)
+        {
             var xi = isoCoords[0];
 
             if (xi < -1 || xi > 1)
@@ -190,25 +198,83 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var L = (bar.EndNode.Location - bar.StartNode.Location).Length;
 
-            var n1 = 1/4.0*(1 - xi)*(1 - xi)*(2 + xi); //[slope(-1) = slope(1) = val(1) = 0, val(-1) = 1]
-            var m1 = L/8.0*(1 - xi)*(1 - xi)*(xi + 1); //[slope(-1) = 1, slope(1) = val(1) = val(-1) = 0]
+            var n1s = new double[] //N1,N1', N1'', N1'''
+            {
+                1.0 / 4.0 * (1 - xi) * (1 - xi) * (2 + xi),
+                1.0 / 4.0 * (3 * xi * xi - 3),
+                1.0 / 4.0 * (6 * xi),
+                1.0 / 4.0 * (6)
+            };
 
-            var n2 = 1/4.0*(1 + xi)*(1 + xi)*(2 - xi); //[val(1) = 1, slope(-1) = slope(1) = val(-1) = 0]
-            var m2 = L/8.0*(1 + xi)*(1 + xi)*(xi - 1); //[slope(1) = 1, slope(-1) = val(1) = val(-1) = 0]
+            var m1s = new double[] //M1,M1', M1'', M1'''
+            {
+                L / 8.0 * (1 - xi) * (1 - xi) * (xi + 1),
+                L / 8.0 * (3 * xi * xi - 2 * xi - 1),
+                L / 8.0 * (6 * xi - 2.0),
+                L / 8.0 * (6),
+            };
+
+            var n2s = new double[] //N2,N2', N2'', N2'''
+            {
+                1.0 / 4.0 * (1 + xi)*(1 + xi)*(2 - xi),
+                1.0 / 4.0 * (-3 * xi * xi + 3),
+                1.0 / 4.0 * (-6 * xi),
+                1.0 / 4.0 * (-6)
+            };
+
+            var m2s = new double[] //M1,M1', M1'', M1'''
+            {
+                L / 8.0 * (1 + xi)*(1 + xi)*(xi - 1),
+                L / 8.0 * (3 * xi * xi + 2 * xi - 1),
+                L / 8.0 * (6 * xi + 2.0),
+                L / 8.0 * (6),
+            };
+
+            var buf2 = new Matrix(4, 4);
 
 
-            var buf = new Matrix(1, 4);
-
-            double[] arr;
+            var c1 = bar.StartReleaseCondition;
+            var c2 = bar.EndReleaseCondition;
 
             if (_direction == BeamDirection.Z)
-                arr = new double[] {n1, m1, n2, m2};
+            {
+                if (c1.DY == DofConstraint.Released)
+                    n1s.FillWith(0);
+
+                if (c1.RZ == DofConstraint.Released)
+                    m1s.FillWith(0);
+
+                if (c2.DY == DofConstraint.Released)
+                    n2s.FillWith(0);
+
+                if (c2.RZ == DofConstraint.Released)
+                    m2s.FillWith(0);
+            }
             else
-                arr = new double[] {n1, -m1, n2, -m2};
+            {
+                m1s = m1s.Negate();
+                m2s = m2s.Negate();
 
-            buf.FillRow(0, arr);
+                if (c1.DZ == DofConstraint.Released)
+                    n1s.FillWith(0);
 
-            return buf;
+                if (c1.RY == DofConstraint.Released)
+                    m1s.FillWith(0);
+
+                if (c2.DZ == DofConstraint.Released)
+                    n2s.FillWith(0);
+
+                if (c2.RY == DofConstraint.Released)
+                    m2s.FillWith(0);
+            }
+
+
+            buf2.FillColumn(0, n1s);
+            buf2.FillColumn(1, m1s);
+            buf2.FillColumn(2, n2s);
+            buf2.FillColumn(3, m2s);
+
+            return buf2;
         }
 
         /// <inheritdoc/>
@@ -476,54 +542,113 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
-            var nodalDisps = new Matrix(1, 4);
+            var nc = targetElement.Nodes.Length;
 
             var ld = localDisplacements;
 
-            if (_direction == BeamDirection.Y)
-                nodalDisps.FillColumn(0, ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ);
-            else
-                nodalDisps.FillColumn(0, ld[0].DZ, ld[0].RY, ld[1].DZ, ld[1].RY);
-            
-            var shp = GetNMatrixAt(targetElement, isoCoords);
+            Matrix B = new Matrix(2, 4);
 
-            var d = Matrix.DotProduct(nodalDisps, shp);
+            var xi = isoCoords[0];
+
+            if (xi < -1 || xi > 1)
+                throw new ArgumentOutOfRangeException(nameof(isoCoords));
+
+            var bar = targetElement as BarElement;
+
+            if (bar == null)
+                throw new Exception();
+
+            var n = GetNMatrixAt(targetElement, isoCoords);
+
+            var d = GetDMatrixAt(targetElement, isoCoords);
+
+            var u = new Matrix(2 * nc, 1);
+
+            var j = GetJMatrixAt(targetElement, isoCoords).Determinant();
+
+            if (_direction == BeamDirection.Z)
+                u.FillColumn(0, ld[0].DZ, ld[0].RY, ld[1].DZ, ld[1].RY);
+            else
+                u.FillColumn(0, ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ);
+
+            var f = n * u;
+
+            var ei = d[0, 0];
+
+            f.MultiplyRowByConstant(1, 1 / j);
+            f.MultiplyRowByConstant(2, ei / (j * j));
+            f.MultiplyRowByConstant(3, ei / (j * j * j));
 
             var buf = new Displacement();
 
             if (_direction == BeamDirection.Y)
-                buf.DY = d;
+            {
+                buf.DY = f[0, 0];
+                buf.RZ = -f[1, 0];
+            }
             else
-                buf.DZ = d;
-
+            {
+                buf.DZ = f[0, 0];
+                buf.RY = f[1, 0];
+            }
+            
             return buf;
         }
 
         /// <inheritdoc/>
         public IEnumerable<Tuple<DoF, double>> GetLocalInternalForceAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
+            var nc = targetElement.Nodes.Length;
+
             var ld = localDisplacements;
 
-            var b = GetBMatrixAt(targetElement, isoCoords);
+            Matrix B = new Matrix(2, 4);
+
+            var xi = isoCoords[0];
+
+            if (xi < -1 || xi > 1)
+                throw new ArgumentOutOfRangeException(nameof(isoCoords));
+
+            var bar = targetElement as BarElement;
+
+            if (bar == null)
+                throw new Exception();
+
+            var n = GetNMatrixAt(targetElement, isoCoords);
+            
             var d = GetDMatrixAt(targetElement, isoCoords);
-            var u = new Matrix(4, 1);
+
+            var u = new Matrix(2 * nc, 1);
+
+            var j = GetJMatrixAt(targetElement, isoCoords).Determinant();
 
             if (_direction == BeamDirection.Y)
-                u.FillColumn(0, ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ);
-            else
                 u.FillColumn(0, ld[0].DZ, ld[0].RY, ld[1].DZ, ld[1].RY);
+            else
+                u.FillColumn(0, ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ);
 
-            var frc = d * b * u;
+            var f =  n * u;
+
+            var ei = d[0, 0];
+
+            f.MultiplyRowByConstant(1, 1 / j);
+            f.MultiplyRowByConstant(2, ei / (j * j));
+            f.MultiplyRowByConstant(3, ei / (j * j * j));
 
             var buf = new List<Tuple<DoF, double>>();
 
             if (_direction == BeamDirection.Y)
-                buf.Add(Tuple.Create(DoF.Ry,frc[0,0]));
+            {
+                buf.Add(Tuple.Create(DoF.Ry, f[2, 0]));
+                buf.Add(Tuple.Create(DoF.Dz, f[3, 0]));
+            }
             else
-                buf.Add(Tuple.Create(DoF.Rz, frc[0, 0]));
+            {
+                buf.Add(Tuple.Create(DoF.Rz, f[2, 0]));
+                buf.Add(Tuple.Create(DoF.Dy, f[3, 0]));
+            }
 
             return buf;
-            //return frc;
         }
 
 

@@ -13,7 +13,8 @@ namespace BriefFiniteElementNet.Validation.Ui
         static void Main(string[] args)
         {
 
-            //BarElementTester.Test_Trapezoid_1();
+            //BarElementTester.Validation_2();
+            //return;
             //BarElementTester.ValidateSingleInclinedFrame();
             TestBar();
         }
@@ -21,8 +22,8 @@ namespace BriefFiniteElementNet.Validation.Ui
         static void TestBar()
         {
             Console.WriteLine("Bar Element Test - Start");
-            
 
+            
             ExportToHtmFile("c:\\temp\\validation.html", new BarElementTester());
 
             
