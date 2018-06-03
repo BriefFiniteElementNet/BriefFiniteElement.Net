@@ -618,6 +618,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var oldDir = this._direction;
 
+            //TODO: this is very odd and not true.
+            //TODO: should not change the _direction.
             this._direction = this._direction == BeamDirection.Y ? BeamDirection.Z : BeamDirection.Y;
             var d = GetDMatrixAt(targetElement, isoCoords);
             this._direction = oldDir;

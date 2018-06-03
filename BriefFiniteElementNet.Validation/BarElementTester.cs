@@ -358,9 +358,9 @@ namespace BriefFiniteElementNet.Validation
 
         public static ValidationResult Validation_2()
         {
-            var nx = 2;
-            var ny = 2;
-            var nz = 2;
+            var nx = 5;
+            var ny = 5;
+            var nz = 5;
 
             var grd = StructureGenerator.Generate3DBarElementGrid(nx, ny, nz);
 
@@ -369,32 +369,11 @@ namespace BriefFiniteElementNet.Validation
 
             StructureGenerator.AddRandomiseNodalLoads(grd, LoadCase.DefaultLoadCase);//random nodal loads
             //StructureGenerator.AddRandomiseBeamUniformLoads(grd, LoadCase.DefaultLoadCase);//random elemental loads
-            //StructureGenerator.AddRandomDisplacements(grd, 0.1);
+            StructureGenerator.AddRandomDisplacements(grd, 0.1);
 
 
             grd.Solve_MPC();
 
-            /*
-            var res = OpenseesValidator.OpenseesValidate(grd, LoadCase.DefaultLoadCase, false);
-
-
-            var disp = res[0];
-            var reac = res[1];
-
-            var dispAbsErrIdx = disp.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("absolute"));
-            var dispRelErrIdx = disp.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("relative"));
-
-            var reacAbsErrIdx = reac.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("absolute"));
-            var reacRelErrIdx = reac.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("relative"));
-
-
-            var maxDispAbsError = disp.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[dispAbsErrIdx]);
-            var maxDispRelError = disp.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[dispRelErrIdx]);
-
-
-            var maxReacAbsError = reac.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[reacAbsErrIdx]);
-            var maxReacRelError = reac.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[reacRelErrIdx]);
-            */
 
             var maxInternalDisplacementAbsErr = 0.0;
             var maxInternalForceResidual = 0.0;
