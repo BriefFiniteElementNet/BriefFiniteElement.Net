@@ -38,8 +38,25 @@ namespace BriefFiniteElementNet.Elements
         private BarElementBehaviour _behavior = BarElementBehaviours.FullFrame;
         private Base1DSection _section;
         private BaseMaterial _material;
-        private Constraint _startReleaseCondition = Constraints.Fixed;
-        private Constraint _endReleaseCondition = Constraints.Fixed;
+        //private Constraint _startReleaseCondition = Constraints.Fixed;
+        //private Constraint _endReleaseCondition = Constraints.Fixed;
+        private Constraint[] _nodalReleaseConditions;
+
+        /// <summary>
+        /// Gets or sets the node count of bar element
+        /// </summary>
+        public int NodeCount
+        {
+            get
+            {
+                return nodes.Length;
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
 
         /// <summary>
         /// Gets or sets the start node.
@@ -61,8 +78,8 @@ namespace BriefFiniteElementNet.Elements
         /// </value>
         public Node EndNode
         {
-            get { return nodes[1]; }
-            set { nodes[1] = value; }
+            get { return nodes[nodes.Length - 1]; }
+            set { nodes[nodes.Length - 1] = value; }
         }
 
 
@@ -144,8 +161,8 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         public Constraint StartReleaseCondition
         {
-            get { return _startReleaseCondition; }
-            set { _startReleaseCondition = value; }
+            get { return _nodalReleaseConditions[0]; }
+            set { _nodalReleaseConditions[0] = value; }
         }
 
         /// <summary>
@@ -153,8 +170,8 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         public Constraint EndReleaseCondition
         {
-            get { return _endReleaseCondition; }
-            set { _endReleaseCondition = value; }
+            get { return _nodalReleaseConditions[_nodalReleaseConditions.Length - 1]; }
+            set { _nodalReleaseConditions[_nodalReleaseConditions.Length - 1] = value; }
         }
 
         #endregion
@@ -699,8 +716,7 @@ namespace BriefFiniteElementNet.Elements
             info.AddValue("_material", _material);
             info.AddValue("_section", _section);
             info.AddValue("_behavior", (int)_behavior);
-            info.AddValue("_startReleaseCondition", _startReleaseCondition);
-            info.AddValue("_endReleaseCondition", _endReleaseCondition);
+            info.AddValue("_nodalReleaseConditions", _nodalReleaseConditions);
             
         }
 
@@ -712,8 +728,7 @@ namespace BriefFiniteElementNet.Elements
             _material = (BaseMaterial)info.GetValue("_material", typeof(BaseMaterial));
             _behavior = (BarElementBehaviour)info.GetValue("_behavior", typeof(int));
             _section = (Base1DSection)info.GetValue("_section", typeof(Base1DSection));
-            _startReleaseCondition = (Constraint)info.GetValue("_startReleaseCondition", typeof(Constraint));
-            _endReleaseCondition = (Constraint)info.GetValue("_endReleaseCondition", typeof(Constraint));
+            _nodalReleaseConditions = (Constraint[])info.GetValue("_nodalReleaseConditions", typeof(Constraint[]));
         }
 
         #endregion
