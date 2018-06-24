@@ -55,6 +55,38 @@ namespace BriefFiniteElementNet.ElementHelpers
             else
                 arr = new double[] {(6*xi)/L2, (3*xi)/L - 1/L, -(6*xi)/L2, (3*xi)/L + 1/L};
 
+            var c1 = elm.StartReleaseCondition;
+            var c2 = elm.StartReleaseCondition;
+
+            if (_direction == BeamDirection.Z)
+            {
+                if (c1.DY == DofConstraint.Released)
+                    arr[0] = 0;
+
+                if (c1.RZ == DofConstraint.Released)
+                    arr[1] = 0;
+
+                if (c2.DY == DofConstraint.Released)
+                    arr[2] = 0;
+
+                if (c2.RZ == DofConstraint.Released)
+                    arr[3] = 0;
+            }
+            else
+            {
+                if (c1.DZ == DofConstraint.Released)
+                    arr[0] = 0;
+
+                if (c1.RY == DofConstraint.Released)
+                    arr[1] = 0;
+
+                if (c2.DZ == DofConstraint.Released)
+                    arr[2] = 0;
+
+                if (c2.RY == DofConstraint.Released)
+                    arr[3] = 0;
+            }
+
             buf.FillRow(0, arr);
 
             return buf;
@@ -181,11 +213,16 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (targetElement is BarElement)
                 return GetNMatrixBar2Node(targetElement, isoCoords);
 
+
+            
             throw new NotImplementedException();
         }
 
         public Matrix GetNMatrixBar2Node(Element targetElement, params double[] isoCoords)
         {
+            //for end release handling see http://www.serendi-cdi.org/serendipedia/index.php?title=Beam_Shape_Functions
+
+
             var xi = isoCoords[0];
 
             if (xi < -1 || xi > 1)

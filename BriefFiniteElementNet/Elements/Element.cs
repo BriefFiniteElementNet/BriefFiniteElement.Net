@@ -121,8 +121,12 @@ namespace BriefFiniteElementNet.Elements
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             this.nodeNumbers = new int[this.nodes.Length];
+
             for (int i = 0; i < nodes.Length; i++)
-                nodeNumbers[i] = nodes[i].Index;
+            {
+                nodeNumbers[i] = ReferenceEquals(nodes[i], null) ? -1 : nodes[i].Index;
+            }
+                
 
             info.AddValue("elementType", (int)elementType);
             info.AddValue("loads", loads);

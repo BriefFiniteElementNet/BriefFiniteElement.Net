@@ -598,6 +598,8 @@ namespace BriefFiniteElementNet.Controls
                         AddFrameElement(builder, elm as FrameElement2Node);
                     else if (elm is BarElement)
                         AddBarElement(builder, elm as BarElement);
+                    else if (elm is TriangleElement)
+                        AddTriangleElement(builder, elm as TriangleElement);
                     else if (elm is ConcentratedMass)
                         AddMassElement(builder, elm as ConcentratedMass);
                     else if (elm is TrussElement2Node)
@@ -1357,13 +1359,22 @@ namespace BriefFiniteElementNet.Controls
 
             var d1 = 0.01*dim;
 
-            var d2 = 0.0;
+            var d2 = double.MaxValue;
 
-            if (ModelToVisualize.Elements.Any())
-                d2 = 0.05*
-                     ModelToVisualize.Elements.Where(i => i.Nodes.Length > 1)
-                         .Select(i => (i.Nodes[0].Location - i.Nodes.Last().Location).Length)
-                         .Min();
+            foreach(var elm in ModelToVisualize.Elements)
+            {
+                var fst = elm.Nodes.FirstOrDefault(i => i != null);
+                var lst = elm.Nodes.LastOrDefault(i => i != null);
+
+                if (fst != null && lst != null)
+                {
+                    d2 = Math.Min(d2, 0.05 * (fst.Location - lst.Location).Length);
+                }
+            }
+
+            if (d2 == double.MaxValue)
+                d2 = 0;
+               
 
             var res = new double[] {d1, d2}.Max();
 
@@ -1583,6 +1594,24 @@ namespace BriefFiniteElementNet.Controls
 
             var r = ElementVisualThickness/2;
 
+
+            var p1 = elm.Nodes[0].Location;
+            var p2 = elm.Nodes[1].Location;
+            var p3 = elm.Nodes[2].Location;
+
+
+            bldr.AddTriangle(p1, p3, p2);
+        }
+
+
+        private void AddTriangleElement(MeshBuilder bldr, TriangleElement elm)
+        {
+            PolygonYz section = null;
+
+            var r = ElementVisualThickness / 2;
+
+            if (elm.Nodes.Any(i => i == null))
+                return;
 
             var p1 = elm.Nodes[0].Location;
             var p2 = elm.Nodes[1].Location;

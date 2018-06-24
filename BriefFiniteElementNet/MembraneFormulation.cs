@@ -13,11 +13,11 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// The plane stress
         /// </summary>
-        PlaneStress,
+        PlaneStress = 0,
 
         /// <summary>
         /// The plane strain
         /// </summary>
-        PlaneStrain
+        PlaneStrain = 1
     }
 }

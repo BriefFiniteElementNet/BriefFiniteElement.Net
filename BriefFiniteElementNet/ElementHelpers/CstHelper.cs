@@ -84,17 +84,31 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
             else
             {
-                //page 24 of JAVA Thesis pdf
-                /*
-                var cf = e / ((1 + nu) * (1 - 2 * nu));
+                var delta = 1 - mat.NuXy * mat.NuYx - mat.NuZy * mat.NuYz - mat.NuZx * mat.NuXz - 2 * mat.NuXy * mat.NuYz * mat.NuZx;
 
+                delta /= mat.Ex * mat.Ey * mat.Ez;
+
+                //http://www.efunda.com/formulae/solid_mechanics/mat_mechanics/hooke_orthotropic.cfm
+
+                /*
                 d[0, 0] = d[1, 1] = 1 - nu;
                 d[1, 0] = d[0, 1] = nu;
                 d[2, 2] = (1 - 2 * nu) / 2;
 
                 d.MultiplyByConstant(cf);
                 */
+
+                d[0, 0] = (1 - mat.NuYz * mat.NuZy) / (mat.Ey * mat.Ez * delta);
+                d[0, 1] = (mat.NuYx + mat.NuZx * mat.NuYz) / (mat.Ey * mat.Ez * delta);
+                d[1, 0] = (mat.NuXy + mat.NuXz * mat.NuZy) / (mat.Ez * mat.Ex * delta);
+                d[1, 1] = (1 - mat.NuZx * mat.NuXz) / (mat.Ez * mat.Ex * delta);
+
+                /**/
+
+                throw new NotImplementedException("PlaneStrain");
             }
+
+            return d;
 
             throw new NotImplementedException();
         }
@@ -219,7 +233,19 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public FluentElementPermuteManager.ElementLocalDof[] GetDofOrder(Element targetElement)
         {
-            throw new NotImplementedException();
+            var buf = new FluentElementPermuteManager.ElementLocalDof[]
+            {
+                new FluentElementPermuteManager.ElementLocalDof(0, DoF.Dx),
+                new FluentElementPermuteManager.ElementLocalDof(0, DoF.Dy),
+
+                new FluentElementPermuteManager.ElementLocalDof(1, DoF.Dx),
+                new FluentElementPermuteManager.ElementLocalDof(1, DoF.Dy),
+
+                new FluentElementPermuteManager.ElementLocalDof(2, DoF.Dx),
+                new FluentElementPermuteManager.ElementLocalDof(2, DoF.Dy),
+            };
+
+            return buf;
         }
 
         /// <inheritdoc/>

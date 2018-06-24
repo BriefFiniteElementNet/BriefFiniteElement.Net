@@ -84,14 +84,14 @@ namespace BriefFiniteElementNet
         {
             foreach (var ele in mdl.Elements)
             {
-                if(ele is Elements.BarElement)
+                if (ele is Elements.BarElement)
                 {
                     var br = ele as Elements.BarElement;
 
                     var sec = new Sections.UniformParametric1DSection();
 
-                    var b = RandomStuff.GetRandomNumber(0.03,0.05);
-                    var h = RandomStuff.GetRandomNumber(0.03,0.05);
+                    var b = RandomStuff.GetRandomNumber(0.03, 0.05);
+                    var h = RandomStuff.GetRandomNumber(0.03, 0.05);
 
                     sec.A = b * h;
                     sec.Iy = b * b * b * h / 12;
@@ -99,6 +99,43 @@ namespace BriefFiniteElementNet
                     sec.J = (sec.Iy + sec.Iz) / 2;//!!! 
 
                     br.Section = sec;
+                }
+
+                if (ele is Elements.TriangleElement)
+                {
+                    var tri = ele as Elements.TriangleElement;
+
+                    var sec = new Sections.UniformParametric2DSection();
+
+                    var t = RandomStuff.GetRandomNumber(0.03, 0.05);
+                    sec.T = t;
+
+                    tri.Section = sec;
+                }
+            }
+        }
+
+        public static void SetRandomiseMaterial(Model mdl)
+        {
+            var e = RandomStuff.GetRandomNumber(0.9, 1.1) * 210e9;
+            var nu = RandomStuff.GetRandomNumber(0.25, 0.3) ;
+            
+            foreach (var ele in mdl.Elements)
+            {
+                
+                if (ele is Elements.BarElement)
+                {
+                    var br = ele as Elements.BarElement;
+
+                   
+                    br.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(e,nu);
+                }
+
+                if (ele is Elements.TriangleElement)
+                {
+                    var tri = ele as Elements.TriangleElement;
+
+                    tri.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(e, nu);
                 }
             }
         }
@@ -341,6 +378,167 @@ namespace BriefFiniteElementNet
             {
                 buf.Nodes[i].Constraints = Constraint.Fixed;
             }
+
+
+            return buf;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="m">number of levels in X direction</param>
+        /// <param name="n">number of levels in Y direction</param>
+        /// <param name="l">number of levels in Z direction</param>
+        /// <returns></returns>
+        public static Model Generate3DTriangleElementGrid(int m, int n, int l)
+        {
+            var buf = new Model();
+
+            var dx = 1.0;
+            var dy = 1.0;
+            var dz = 1.0;
+
+            var nodes = new Node[m, n, l];
+
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    for (int k = 0; k < l; k++)
+                    {
+                        var pos = new Point(j * dx, i * dy, k * dz);
+                        var nde = new Node() { Location = pos };
+                        buf.Nodes.Add(nde);
+                        nodes[i, j, k] = nde;
+                    }
+                }
+            }
+
+            //elements parallel to XZ
+            for (int j = 0; j < n; j++) 
+            {
+                for (int i = 0; i < m - 1; i++)
+                {
+                    for (int k = 0; k < l - 1; k++)
+                    {
+                        {
+                            var elm2 = new TriangleElement();
+                            elm2.Nodes[0] = nodes[i, j, k];
+                            elm2.Nodes[1] = nodes[i, j, k + 1];
+                            elm2.Nodes[2] = nodes[i + 1, j, k];
+
+                            buf.Elements.Add(elm2);
+                        }
+
+                        {
+                            var elm2 = new TriangleElement();
+                            elm2.Nodes[0] = nodes[i+1, j, k+1];
+                            elm2.Nodes[1] = nodes[i, j, k + 1];
+                            elm2.Nodes[2] = nodes[i + 1, j, k];
+
+                            buf.Elements.Add(elm2);
+                        }
+
+                    }
+                }
+            }
+
+
+            //elements parallel to YZ
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n - 1; j++)
+                {
+                    for (int k = 0; k < l - 1; k++)
+                    {
+                        {
+                            var elm2 = new TriangleElement();
+                            elm2.Nodes[0] = nodes[i, j, k];
+                            elm2.Nodes[1] = nodes[i, j, k + 1];
+                            elm2.Nodes[2] = nodes[i, j + 1, k];
+
+                            buf.Elements.Add(elm2);
+                        }
+
+                        {
+                            var elm2 = new TriangleElement();
+                            elm2.Nodes[0] = nodes[i, j + 1, k + 1];
+                            elm2.Nodes[1] = nodes[i, j, k + 1];
+                            elm2.Nodes[2] = nodes[i, j + 1, k];
+
+                            buf.Elements.Add(elm2);
+                        }
+
+                    }
+                }
+            }
+
+            //elements parallel to XY
+            for (int k = 0; k < l; k++) 
+            {
+                for (int j = 0; j < n - 1; j++)
+                {
+                    for (int i = 0; i < m-1; i++)
+                    {
+                        {
+                            var elm2 = new TriangleElement();
+                            elm2.Nodes[0] = nodes[i, j, k];
+                            elm2.Nodes[1] = nodes[i + 1, j, k ];
+                            elm2.Nodes[2] = nodes[i, j + 1, k];
+
+                            buf.Elements.Add(elm2);
+                        }
+
+                        {
+                            var elm2 = new TriangleElement();
+                            elm2.Nodes[0] = nodes[i + 1, j + 1, k];
+                            elm2.Nodes[1] = nodes[i + 1, j, k ];
+                            elm2.Nodes[2] = nodes[i, j + 1, k];
+
+                            buf.Elements.Add(elm2);
+                        }
+
+                    }
+                }
+            }
+
+
+            foreach (var elm in buf.Elements)
+            {
+                var triElm = elm as TriangleElement;
+
+
+                if (triElm == null)
+                    continue;
+
+                triElm.Behavior = TriangleElementBehaviours.Shell;
+
+
+
+                var h = RandomStuff.GetRandomNumber(0.01, 0.1);
+                var w = RandomStuff.GetRandomNumber(0.01, 0.1);
+
+                var e = RandomStuff.GetRandomNumber(100e9, 200e9);
+                var nu = RandomStuff.GetRandomNumber(0.2, 0.3);
+
+                var sec = (Sections.UniformParametric2DSection)(triElm.Section = new Sections.UniformParametric2DSection());
+
+                var mat = triElm.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(e, nu);
+
+                sec.T = 0.1;
+
+            }
+
+
+            for (int i = 0; i < m; i++)
+            {
+                for (int j = 0; j < n; j++)
+                {
+                    nodes[i, j, 0].Constraints = Constraint.Fixed;
+                }
+            }
+
+
 
 
             return buf;

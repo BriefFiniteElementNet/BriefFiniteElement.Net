@@ -36,7 +36,9 @@ namespace BriefFiniteElementNet.TestConsole
             //BarElementTester.va;
 
 
-           BarElementTester.testInternalForce_Console();
+
+            var grd = StructureGenerator.Generate3DTriangleElementGrid(5, 6, 7);
+            ModelVisualizerControl.VisualizeInNewWindow(grd);
 
             ////QrTest();
             //TstMtx();
@@ -235,7 +237,7 @@ namespace BriefFiniteElementNet.TestConsole
             dkt.Nodes[2] = n3;
 
             var tri = new TriangleElement();
-            tri.Behavior = FlatShellBehaviours.FullThinShell;
+            tri.Behavior = TriangleElementBehaviours.Shell;
             tri.Section = new UniformParametric2DSection() { T = t };
             tri.Material = new UniformIsotropicMaterial(e, nu);// {E = e, Nu = nu};
 

@@ -37,7 +37,7 @@ namespace BriefFiniteElementNet.Validation
                 model.Nodes[1].Constraints =
                 Constraint.Fixed;
 
-            elm.Behavior = FlatShellBehaviours.FullThinShell;
+            elm.Behavior = TriangleElementBehaviours.Shell;
             elm.MembraneFormulation = MembraneFormulation.PlaneStress;
             elm.Material = new UniformIsotropicMaterial(2100, 0.3);
             elm.Section = new UniformParametric2DSection(0.2);
@@ -74,9 +74,19 @@ namespace BriefFiniteElementNet.Validation
             var ny = 5;
             var nz = 5;
 
-            var grd = StructureGenerator.Generate3DBarElementGrid(nx, ny, nz);
+            #region model definition
+            var grd = StructureGenerator.Generate3DTriangleElementGrid(nx, ny, nz);
 
             StructureGenerator.SetRandomiseSections(grd);
+            StructureGenerator.SetRandomiseMaterial(grd);
+
+            StructureGenerator.AddRandomiseNodalLoads(grd, LoadCase.DefaultLoadCase);//random nodal loads
+            //StructureGenerator.AddRandomiseBeamUniformLoads(grd, LoadCase.DefaultLoadCase);//random elemental loads
+            StructureGenerator.AddRandomDisplacements(grd, 0.3);
+            #endregion
+
+
+
 
             StructureGenerator.AddRandomiseNodalLoads(grd, LoadCase.DefaultLoadCase);//random nodal loads
 

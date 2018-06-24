@@ -450,8 +450,9 @@ namespace BriefFiniteElementNet
             {
                 foreach (var node in elm.Nodes)
                 {
-                    if (!this.nodes.Contains(node))
-                        throw new Exception("Node not belong to Model!");
+                    if (!ReferenceEquals(null, node))
+                        if (!this.nodes.Contains(node))
+                            throw new Exception("Node not belong to Model!");
                 }
             }
 
@@ -487,7 +488,8 @@ namespace BriefFiniteElementNet
 
                 for (int i = 0; i < elm.nodeNumbers.Length; i++)
                 {
-                    elm.Nodes[i] = this.nodes[elm.nodeNumbers[i]];
+                    if (elm.nodeNumbers[i] != -1)
+                        elm.Nodes[i] = this.nodes[elm.nodeNumbers[i]];
                 }
 
                 elm.Parent = this;

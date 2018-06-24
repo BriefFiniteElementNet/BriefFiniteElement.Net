@@ -28,7 +28,7 @@ namespace BriefFiniteElementNet.Elements
 
         public Base2DSection _section;
 
-        public FlatShellBehaviour _behavior;
+        public TriangleElementBehaviour _behavior;
 
         public MembraneFormulation _formulation;
 
@@ -46,7 +46,7 @@ namespace BriefFiniteElementNet.Elements
             set { _section = value; }
         }
 
-        public FlatShellBehaviour Behavior
+        public TriangleElementBehaviour Behavior
         {
             get { return _behavior; }
             set { _behavior = value; }
@@ -154,26 +154,37 @@ namespace BriefFiniteElementNet.Elements
             var helpers = new List<IElementHelper>();
 
             {
-                if ((this._behavior & FlatShellBehaviour.ThinPlate) != 0)
+                if ((this._behavior & TriangleElementBehaviour.Bending) != 0)
                 {
                     //helpers.Add(new Q4DkqHelper());
                     helpers.Add(new DktHelper());
                 }
 
-                if ((this._behavior & FlatShellBehaviour.Membrane) != 0 && (this._behavior & FlatShellBehaviour.DrillingDof) != 0)
-                {
-                    helpers.Add(new Gt9Helper());
-                }
-
-                if ((this._behavior & FlatShellBehaviour.Membrane) != 0 && (this._behavior & FlatShellBehaviour.DrillingDof) == 0)
+                if ((this._behavior & TriangleElementBehaviour.Membrane) != 0 )
                 {
                     helpers.Add(new CstHelper());
                 }
 
-                if ((this._behavior & FlatShellBehaviour.Membrane) == 0 && (this._behavior & FlatShellBehaviour.DrillingDof) != 0)
+                if ((this._behavior & TriangleElementBehaviour.DrillingDof) != 0)
+                {
+                    helpers.Add(new TriangleBasicDrillingDofHelper());
+                }
+
+                /*
+                if ((this._behavior & TriangleElementBehaviour.Membrane) != 0 && (this._behavior & TriangleElementBehaviour.DrillingDof) != 0)
+                {
+                    helpers.Add(new Gt9Helper());
+                }
+
+                if ((this._behavior & TriangleElementBehaviour.Membrane) != 0 && (this._behavior & TriangleElementBehaviour.DrillingDof) == 0)
+                {
+                    helpers.Add(new CstHelper());
+                }
+
+                if ((this._behavior & TriangleElementBehaviour.Membrane) == 0 && (this._behavior & TriangleElementBehaviour.DrillingDof) != 0)
                 {
                     throw new Exception("cant use DrillingDof without Membrane");
-                }
+                }*/
 
             }
 
@@ -216,7 +227,7 @@ namespace BriefFiniteElementNet.Elements
         {
             var helpers = new List<IElementHelper>();
 
-            if ((this._behavior & FlatShellBehaviour.ThinPlate) != 0)
+            if ((this._behavior & TriangleElementBehaviour.Bending) != 0)
             {
                 helpers.Add(new DktHelper());
             }
@@ -251,7 +262,7 @@ namespace BriefFiniteElementNet.Elements
         {
             var helpers = new List<IElementHelper>();
 
-            if ((this._behavior & FlatShellBehaviour.ThinPlate) != 0)
+            if ((this._behavior & TriangleElementBehaviour.Bending) != 0)
             {
                 helpers.Add(new DktHelper());
             }
@@ -288,7 +299,7 @@ namespace BriefFiniteElementNet.Elements
         {
             _material = (BaseMaterial)info.GetValue("_material", typeof(BaseMaterial));
             _section = (Base2DSection)info.GetValue("_section", typeof(Base2DSection));
-            _behavior = (FlatShellBehaviour)info.GetInt32("_behavior");
+            _behavior = (TriangleElementBehaviour)info.GetInt32("_behavior");
             _formulation = (MembraneFormulation)info.GetInt32("_behavior");
         }
 

@@ -13,20 +13,32 @@ namespace BriefFiniteElementNet.Validation.Ui
         static void Main(string[] args)
         {
 
-            //BarElementTester.Validation_2();
+            TestTri();
+
             //return;
             //BarElementTester.ValidateSingleInclinedFrame();
-            TestBar();
+            //TestBar();
         }
 
         static void TestBar()
         {
             Console.WriteLine("Bar Element Test - Start");
 
-            
+
             ExportToHtmFile("c:\\temp\\validation.html", new BarElementTester());
 
-            
+
+            //var resss = new BarElementTester().DoValidation();
+        }
+
+        static void TestTri()
+        {
+            Console.WriteLine("Trianlge Element Test - Start");
+
+
+            ExportToHtmFile("c:\\temp\\tri-validation.html", new TriangleElementTester());
+
+
             //var resss = new BarElementTester().DoValidation();
         }
 

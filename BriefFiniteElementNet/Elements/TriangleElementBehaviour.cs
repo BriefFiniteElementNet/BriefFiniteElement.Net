@@ -12,19 +12,27 @@ namespace BriefFiniteElementNet.Elements
     public enum TriangleElementBehaviour
     {
         /// <summary>
-        /// The thin plate bending behavior, based on DKT (discrete Kirchoff triangle).
+        /// The plate bending behavior.
         /// </summary>
-        ThinBending = 1,
+        Bending = 1,
 
+        /*
         /// <summary>
         /// The membrane behavior with Plane Stress assumption. based on CST (Constant Stress/Strain Triangle) element.
         /// </summary>
         PlaneStressMembrane = 2,
 
+
         /// <summary>
         /// The membrane behavior with Plane Strain assumption. based on CST (Constant Stress/Strain Triangle) element.
         /// </summary>
         PlaneStrainMembrane = 4,
+        */
+
+        /// <summary>
+        /// The membrane behavior.
+        /// </summary>
+        Membrane = 2,
 
         /// <summary>
         /// Add drilling DoF to the element

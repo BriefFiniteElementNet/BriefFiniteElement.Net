@@ -216,6 +216,7 @@ namespace BriefFiniteElementNet.Validation
             var ny = 2;
             var nz = 2;
 
+            #region model definition
             var grd = StructureGenerator.Generate3DBarElementGrid(nx, ny, nz);
 
             //StructureGenerator.SetRandomiseConstraints(grd);
@@ -224,11 +225,11 @@ namespace BriefFiniteElementNet.Validation
             StructureGenerator.AddRandomiseNodalLoads(grd, LoadCase.DefaultLoadCase);//random nodal loads
             StructureGenerator.AddRandomiseBeamUniformLoads(grd, LoadCase.DefaultLoadCase);//random elemental loads
             StructureGenerator.AddRandomDisplacements(grd, 0.1);
-
+            #endregion
 
             grd.Solve_MPC();
 
-
+            #region solve & compare
             var res = OpenseesValidator.OpenseesValidate(grd, LoadCase.DefaultLoadCase, false);
 
 
@@ -249,135 +250,9 @@ namespace BriefFiniteElementNet.Validation
             var maxReacAbsError = reac.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[reacAbsErrIdx]);
             var maxReacRelError = reac.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[reacRelErrIdx]);
 
-            var span = new HtmlTag("span");
-            span.Add("p").Text("Validate 3D frame nodal displacement and reactions");
-            span.Add("h3").Text("Validate with");
-            span.Add("paragraph").Text("OpenSEES (the Open System for Earthquake Engineering Simulation) software (available via http://opensees.berkeley.edu/)");
-            span.Add("h3").Text("Validate objective");
-
-
-            span.Add("paragraph").Text("compare nodal displacement from BFE.net library and OpenSEES for a model consist of random 3d bars");
-
-            span.Add("h3").Text("Model Definition");
-
-            span.Add("paragraph").Text($"A {nx}x{ny}x{nz} grid, with {grd.Nodes.Count} nodes and {grd.Elements.Count} bar elements.").AddClosedTag("br");
-
-            span.Add("paragraph").Text("Every node in the model have a random load on it, random displacement in original location.").AddClosedTag("br");
-            span.Add("paragraph").Text("Every element in the model have a random uniform distributed load on it.").AddClosedTag("br");
-
-
-            span.Add("h3").Text("Validation Result");
-
-           
-
-            {//nodal displacements
-
-                span.Add("h4").Text("Nodal Displacements");
-                span.Add("paragraph")
-               .Text(string.Format("Validation output for nodal displacements:"));
-
-
-                span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxDispAbsError, maxDispRelError));
-
-                var id = "tbl_" + Guid.NewGuid().ToString("N").Substring(0, 5);
-
-                span.Add("button").Attr("type", "button").Text("Toggle Details").AddClasses("btn btn-primary")
-                    .Attr("onclick", $"$('#{id}').collapse('toggle');");
-
-                var div = span.Add("div").AddClasses("panel-collapse", "collapse", "out").Id(id);
-
-                var tbl = div.Add("table").AddClass("table table-striped table-inverse table-bordered table-hover");
-                tbl.Id(id);
-
-                var trH = tbl.Add("Thead").Add("tr");
-
-
-                foreach (DataColumn column in disp.Columns)
-                {
-                    trH.Add("th").Attr("scope", "col").Text(column.ColumnName);
-                }
-
-                var tbody = tbl.Add("tbody");
-
-                for (var i = 0; i < disp.Rows.Count; i++)
-                {
-                    var tr = tbody.Add("tr");
-
-                    for (var j = 0; j < disp.Columns.Count; j++)
-                    {
-                        tr.Add("td").Text(disp.Rows[i][j].ToString());
-                    }
-                }
-            }
-
-            {//nodal reactions
-                span.Add("h4").Text("Nodal Support Reactions");
-                span.Add("paragraph")
-               .Text(string.Format("Validation output for nodal support reactions:"));
-
-
-                span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxReacAbsError, maxReacRelError));
-
-                var id = "tbl_" + Guid.NewGuid().ToString("N").Substring(0, 5);
-
-                span.Add("button").Attr("type", "button").Text("Toggle Details").AddClasses("btn btn-primary")
-                    .Attr("onclick", $"$('#{id}').collapse('toggle');");
-
-                var div = span.Add("div").AddClasses("panel-collapse", "collapse", "out").Id(id);
-
-                var tbl = div.Add("table").AddClass("table table-striped table-inverse table-bordered table-hover");
-                tbl.Id(id);
-
-                var trH = tbl.Add("Thead").Add("tr");
-
-
-                foreach (DataColumn column in reac.Columns)
-                {
-                    trH.Add("th").Attr("scope", "col").Text(column.ColumnName);
-                }
-
-                var tbody = tbl.Add("tbody");
-
-                for (var i = 0; i < reac.Rows.Count; i++)
-                {
-                    var tr = tbody.Add("tr");
-
-                    for (var j = 0; j < reac.Columns.Count; j++)
-                    {
-                        tr.Add("td").Text(reac.Rows[i][j].ToString());
-                    }
-                }
-            }
-
-            var buf = new ValidationResult();
-            buf.Span = span;
-            buf.Title = "3D Grid Validation";
-
-            return buf;
-        }
-
-        public static ValidationResult Validation_2()
-        {
-            var nx = 5;
-            var ny = 5;
-            var nz = 5;
-
-            var grd = StructureGenerator.Generate3DBarElementGrid(nx, ny, nz);
-
-            //StructureGenerator.SetRandomiseConstraints(grd);
-            StructureGenerator.SetRandomiseSections(grd);
-
-            StructureGenerator.AddRandomiseNodalLoads(grd, LoadCase.DefaultLoadCase);//random nodal loads
-            //StructureGenerator.AddRandomiseBeamUniformLoads(grd, LoadCase.DefaultLoadCase);//random elemental loads
-            StructureGenerator.AddRandomDisplacements(grd, 0.1);
-
-
-            grd.Solve_MPC();
-
 
             var maxInternalDisplacementAbsErr = 0.0;
             var maxInternalForceResidual = 0.0;
-
 
             foreach (var elm in grd.Elements)
             {
@@ -421,7 +296,7 @@ namespace BriefFiniteElementNet.Validation
                 var endFrc = stf * u;
 
                 var stFc = Force.FromVector(endFrc.CoreArray, 0);
-                var endFc =Force.FromVector(endFrc.CoreArray, 6);
+                var endFc = Force.FromVector(endFrc.CoreArray, 6);
 
                 for (var i = 0; i < n; i++)
                 {
@@ -431,7 +306,7 @@ namespace BriefFiniteElementNet.Validation
                     var fc = bar.GetInternalForceAt(xi);
 
                     var toBegin = fc.Move(new Vector(-x, 0, 0));
-                    var toEnd = fc.Move(new Vector(L-x, 0, 0));
+                    var toEnd = fc.Move(new Vector(L - x, 0, 0));
 
                     var stResid = stFc + toBegin;
                     var endResid = endFc - toEnd;
@@ -448,6 +323,259 @@ namespace BriefFiniteElementNet.Validation
                 }
 
             }
+            #endregion
+
+
+            var span = new HtmlTag("span");
+            span.Add("p").Text("Validate 3D frame nodal displacement and reactions");
+            span.Add("h3").Text("Validate with");
+            span.Add("paragraph").Text("OpenSEES (the Open System for Earthquake Engineering Simulation) software (available via http://opensees.berkeley.edu/)");
+            span.Add("h3").Text("Validate objective");
+
+
+            span.Add("paragraph").Text("compare nodal displacement from BFE.net library and OpenSEES for a model consist of random 3d bars");
+
+            span.Add("h3").Text("Model Definition");
+
+            span.Add("paragraph").Text($"A {nx}x{ny}x{nz} grid, with {grd.Nodes.Count} nodes and {grd.Elements.Count} bar elements.").AddClosedTag("br");
+
+            span.Add("paragraph").Text("Every node in the model have a random load on it, random displacement in original location.").AddClosedTag("br");
+            span.Add("paragraph").Text("Every element in the model have a random uniform distributed load on it.").AddClosedTag("br");
+
+            span.Add("h3").Text("Validation Result");
+
+            #region nodal disp
+
+            {//nodal displacements
+
+                span.Add("h4").Text("Nodal Displacements");
+                span.Add("paragraph")
+               .Text(string.Format("Validation output for nodal displacements:"));
+
+
+                span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxDispAbsError, maxDispRelError));
+
+                var id = "tbl_" + Guid.NewGuid().ToString("N").Substring(0, 5);
+
+                span.Add("button").Attr("type", "button").Text("Toggle Details").AddClasses("btn btn-primary")
+                    .Attr("onclick", $"$('#{id}').collapse('toggle');");
+
+                var div = span.Add("div").AddClasses("panel-collapse", "collapse", "out").Id(id);
+
+                var tbl = div.Add("table").AddClass("table table-striped table-inverse table-bordered table-hover");
+                tbl.Id(id);
+
+                var trH = tbl.Add("Thead").Add("tr");
+
+
+                foreach (DataColumn column in disp.Columns)
+                {
+                    trH.Add("th").Attr("scope", "col").Text(column.ColumnName);
+                }
+
+                var tbody = tbl.Add("tbody");
+
+                for (var i = 0; i < disp.Rows.Count; i++)
+                {
+                    var tr = tbody.Add("tr");
+
+                    for (var j = 0; j < disp.Columns.Count; j++)
+                    {
+                        tr.Add("td").Text(disp.Rows[i][j].ToString());
+                    }
+                }
+            }
+
+            #endregion
+
+            #region nodal reaction
+
+            
+
+           
+
+            {//nodal reactions
+                span.Add("h4").Text("Nodal Support Reactions");
+                span.Add("paragraph")
+               .Text(string.Format("Validation output for nodal support reactions:"));
+
+
+                span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxReacAbsError, maxReacRelError));
+
+                var id = "tbl_" + Guid.NewGuid().ToString("N").Substring(0, 5);
+
+                span.Add("button").Attr("type", "button").Text("Toggle Details").AddClasses("btn btn-primary")
+                    .Attr("onclick", $"$('#{id}').collapse('toggle');");
+
+                var div = span.Add("div").AddClasses("panel-collapse", "collapse", "out").Id(id);
+
+                var tbl = div.Add("table").AddClass("table table-striped table-inverse table-bordered table-hover");
+                tbl.Id(id);
+
+                var trH = tbl.Add("Thead").Add("tr");
+
+
+                foreach (DataColumn column in reac.Columns)
+                {
+                    trH.Add("th").Attr("scope", "col").Text(column.ColumnName);
+                }
+
+                var tbody = tbl.Add("tbody");
+
+                for (var i = 0; i < reac.Rows.Count; i++)
+                {
+                    var tr = tbody.Add("tr");
+
+                    for (var j = 0; j < reac.Columns.Count; j++)
+                    {
+                        tr.Add("td").Text(reac.Rows[i][j].ToString());
+                    }
+                }
+            }
+
+            #endregion
+
+            #region internal force
+            {//internal displacements
+
+                span.Add("h4").Text("Internal Displacements");
+                span.Add("paragraph")
+                    .Text(string.Format("Validation output for internal displacements (Displacement at each end node of bar elements should be equal to bar element's internal displacement of bar element at that node)"));
+
+                span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}", maxInternalDisplacementAbsErr));
+            }
+            #endregion
+
+            #region internal displacement
+            {//internal force
+
+                span.Add("h4").Text("Internal Force");
+                span.Add("paragraph")
+                    .Text(string.Format("Validation output for internal force (forces retrived by K.Δ formula should be in equiblirium with internal force of bar elements at any location within element):"));
+
+                span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}", maxInternalForceResidual));
+            }
+            #endregion
+
+            var buf = new ValidationResult();
+            buf.Span = span;
+            buf.Title = "3D Grid Validation";
+
+            return buf;
+        }
+
+        public static ValidationResult Validation_2()
+        {
+            var nx = 5;
+            var ny = 5;
+            var nz = 5;
+
+            var grd = StructureGenerator.Generate3DBarElementGrid(nx, ny, nz);
+
+            //StructureGenerator.SetRandomiseConstraints(grd);
+            StructureGenerator.SetRandomiseSections(grd);
+
+            StructureGenerator.AddRandomiseNodalLoads(grd, LoadCase.DefaultLoadCase);//random nodal loads
+            //StructureGenerator.AddRandomiseBeamUniformLoads(grd, LoadCase.DefaultLoadCase);//random elemental loads
+            StructureGenerator.AddRandomDisplacements(grd, 0.1);
+
+            var rnd = new Random(0);
+
+            foreach (var elm in grd.Elements)
+            {
+                var bar = elm as BarElement;
+
+                if (bar == null)
+                    continue;
+
+
+                if (rnd.Next() % 10 == 0)
+                {
+                    var cnd = RandomStuff.GetRandomConstraint();
+
+                    cnd.DY = cnd.DZ = cnd.RY = cnd.RZ = DofConstraint.Fixed;
+
+                    bar.StartReleaseCondition = cnd;
+
+                }
+
+
+                if (rnd.Next() % 10 == 1)
+                {
+                    var cnd = RandomStuff.GetRandomConstraint();
+
+                    cnd.DY = cnd.DZ = cnd.RY = cnd.RZ = DofConstraint.Fixed;
+
+                    bar.EndReleaseCondition = cnd;
+
+                }
+            }
+
+            grd.Solve_MPC();
+
+            var maxEpsilon = 0.0;
+
+
+            foreach (var elm in grd.Elements)
+            {
+                var bar = elm as BarElement;
+
+                if (bar == null)
+                    continue;
+
+                var start = bar.StartReleaseCondition;
+                var end = bar.EndReleaseCondition;
+
+
+                var stFrc = bar.GetInternalForceAt(-1, LoadCase.DefaultLoadCase);
+                var enFrc = bar.GetInternalForceAt(1, LoadCase.DefaultLoadCase);
+
+
+                if (start != Constraints.Fixed)
+                {
+                    if (start.DX == DofConstraint.Released)
+                        maxEpsilon = Math.Max(Math.Abs(stFrc.Fx), maxEpsilon);
+
+                    if (start.DY == DofConstraint.Released)
+                        maxEpsilon = Math.Max(Math.Abs(stFrc.Fy), maxEpsilon);
+
+                    if (start.DZ == DofConstraint.Released)
+                        maxEpsilon = Math.Max(Math.Abs(stFrc.Fz), maxEpsilon);
+
+                    if (start.RX == DofConstraint.Released)
+                        maxEpsilon = Math.Max(Math.Abs(stFrc.Mx), maxEpsilon);
+
+                    if (start.RY == DofConstraint.Released)
+                        maxEpsilon = Math.Max(Math.Abs(stFrc.My), maxEpsilon);
+
+                    if (start.RZ == DofConstraint.Released)
+                        maxEpsilon = Math.Max(Math.Abs(stFrc.Mz), maxEpsilon);
+                }
+
+                if (end != Constraints.Fixed)
+                {
+                    if (end.DX == DofConstraint.Released)
+                        maxEpsilon = Math.Max(Math.Abs(enFrc.Fx), maxEpsilon);
+
+                    if (end.DY == DofConstraint.Released)
+                        maxEpsilon = Math.Max(Math.Abs(enFrc.Fy), maxEpsilon);
+
+                    if (end.DZ == DofConstraint.Released)
+                        maxEpsilon = Math.Max(Math.Abs(enFrc.Fz), maxEpsilon);
+
+                    if (end.RX == DofConstraint.Released)
+                        maxEpsilon = Math.Max(Math.Abs(enFrc.Mx), maxEpsilon);
+
+                    if (end.RY == DofConstraint.Released)
+                        maxEpsilon = Math.Max(Math.Abs(enFrc.My), maxEpsilon);
+
+                    if (end.RZ == DofConstraint.Released)
+                        maxEpsilon = Math.Max(Math.Abs(enFrc.Mz), maxEpsilon);
+                }
+
+            }
+
+          
 
 
             var span = new HtmlTag("span");
@@ -469,7 +597,7 @@ namespace BriefFiniteElementNet.Validation
             span.Add("h3").Text("Validation Result");
 
 
-
+            /*
             {//internal displacements
 
                 span.Add("h4").Text("Internal Displacements");
@@ -488,7 +616,7 @@ namespace BriefFiniteElementNet.Validation
 
                 span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}", maxInternalForceResidual));
             }
-
+            */
 
 
             var buf = new ValidationResult();
@@ -539,7 +667,8 @@ namespace BriefFiniteElementNet.Validation
             var ndes = new Node[] {
                 new Node(0, 0, 0),
                 new Node(1, 0, 0),
-                new Node(2, 0, 0)};
+                //new Node(2, 0, 0)
+            };
 
             var h = 0.1;
             var w = 0.05;
@@ -553,8 +682,18 @@ namespace BriefFiniteElementNet.Validation
             var sec = new Sections.UniformParametric1DSection(a, iy, iz, j);
             var mat = UniformIsotropicMaterial.CreateFromYoungPoisson(e, 0.25);
 
-            model.Elements.Add(new BarElement(ndes[0], ndes[1]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame });
-            model.Elements.Add(new BarElement(ndes[1], ndes[2]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame });
+            BarElement e1;
+
+            model.Elements.Add(e1 = new BarElement(ndes[0], ndes[1]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame });
+            //model.Elements.Add(new BarElement(ndes[1], ndes[2]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame });
+
+            e1.StartReleaseCondition = 
+            //e1.EndReleaseCondition =
+                Constraints.MovementFixed;
+
+            var ld = new Loads.UniformLoad(LoadCase.DefaultLoadCase, Vector.K, 1000, CoordinationSystem.Global);
+
+            var eqload = e1.GetGlobalEquivalentNodalLoads(ld);
 
 
             model.Nodes.Add(ndes);
@@ -562,10 +701,12 @@ namespace BriefFiniteElementNet.Validation
             ndes[0].Constraints = ndes[2].Constraints = Constraints.Fixed;
             //ndes[1].Constraints = ndes[2].Constraints = Constraints.Fixed;
 
-            for (var i = 0; i < model.Elements.Count; i++)
-                (model.Elements[i] as BarElement).Loads.Add(new Loads.UniformLoad(LoadCase.DefaultLoadCase, Vector.K, 1000, CoordinationSystem.Global));
+            //for (var i = 0; i < model.Elements.Count; i++)
+            //    (model.Elements[i] as BarElement).Loads.Add();
 
             //ndes[1].Loads.Add(new NodalLoad(new Force(0, 1, 0, 0, 0, 0)));
+
+
 
             model.Solve_MPC();
 
