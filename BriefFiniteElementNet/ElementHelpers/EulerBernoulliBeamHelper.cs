@@ -31,10 +31,6 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
-          
-
-
-
             //TODO: Take end supports into consideration
 
             var elm = targetElement as BarElement;
@@ -64,57 +60,30 @@ namespace BriefFiniteElementNet.ElementHelpers
             arr[2] *= 4 / L2;
             arr[3] *= 4 / L2;
 
+            
 
             if (_direction == BeamDirection.Z)
             {
                 arr2 = new double[] { -(6 * xi) / L2, (3 * xi - 1) / L, +(6 * xi) / L2, (3 * xi + 1) / L };
-
             }
             else
             {
                 arr2 = new double[] { (6 * xi) / L2, (3 * xi - 1) / L, -(6 * xi) / L2, (3 * xi + 1) / L };
+                arr.MultiplyWithConstant(-1);
             }
 
-            Guid.NewGuid();
 
-            
+            var diff = (double[]) arr.Clone();
+
+            CalcUtil.AddToSelf(diff, arr2, -1);
+
+            var err = diff.Max(i => Math.Abs(i));
+
+            if (err > 1e-10)
+                throw new Exception();
 
 
-            /*
-            var c1 = elm.StartReleaseCondition;
-            var c2 = elm.StartReleaseCondition;
-
-            if (_direction == BeamDirection.Z)
-            {
-                if (c1.DY == DofConstraint.Released)
-                    arr[0] = 0;
-
-                if (c1.RZ == DofConstraint.Released)
-                    arr[1] = 0;
-
-                if (c2.DY == DofConstraint.Released)
-                    arr[2] = 0;
-
-                if (c2.RZ == DofConstraint.Released)
-                    arr[3] = 0;
-            }
-            else
-            {
-                if (c1.DZ == DofConstraint.Released)
-                    arr[0] = 0;
-
-                if (c1.RY == DofConstraint.Released)
-                    arr[1] = 0;
-
-                if (c2.DZ == DofConstraint.Released)
-                    arr[2] = 0;
-
-                if (c2.RY == DofConstraint.Released)
-                    arr[3] = 0;
-            }
-            */
-
-            buf.FillRow(0, arr2);
+            buf.FillRow(0, arr);
 
             return buf;
         }
