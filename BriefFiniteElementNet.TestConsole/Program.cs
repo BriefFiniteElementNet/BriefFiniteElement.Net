@@ -34,11 +34,11 @@ namespace BriefFiniteElementNet.TestConsole
             //TestSparseRow();
 
             //BarElementTester.va;
+            TestMultinodeBar1();
 
 
-
-            var grd = StructureGenerator.Generate3DTriangleElementGrid(5, 6, 7);
-            ModelVisualizerControl.VisualizeInNewWindow(grd);
+            //var grd = StructureGenerator.Generate3DTriangleElementGrid(5, 6, 7);
+            //ModelVisualizerControl.VisualizeInNewWindow(grd);
 
             ////QrTest();
             //TstMtx();
@@ -56,6 +56,33 @@ namespace BriefFiniteElementNet.TestConsole
             Console.ReadKey();
         }
 
+        private static void TestMultinodeBar1()
+        {
+
+            var n = 2;
+
+            var bar = new BarElement(n);
+
+            var hlp = new EulerBernoulliBeamHelper(BeamDirection.Y);
+
+           
+
+            for (var i = 0; i < n; i++)
+            {
+                bar.Nodes[i] = new Node(i * 3, 0, 0);
+            }
+
+
+            var testXi = -0.66;
+
+            var n1 = hlp.GetNMatrixBar2Node(bar, testXi);
+            var n2 = hlp.GetNMatrixAt(bar, testXi);
+
+            var b = hlp.GetBMatrixAt(bar, testXi);
+
+            var d = n1 - n2;
+
+        }
 
         private void Test1()
         {

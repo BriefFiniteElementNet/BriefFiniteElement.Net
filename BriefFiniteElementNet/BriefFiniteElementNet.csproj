@@ -53,6 +53,7 @@
     <Compile Include="ElementHelpers\Gt9Helper.cs" />
     <Compile Include="ElementHelpers\TriangleBasicDrillingDofHelper.cs" />
     <Compile Include="Elements\TriangleElementBehaviours.cs" />
+    <Compile Include="Mathh\Polynomial.cs" />
     <Compile Include="MpcElements\VirtualSupport.cs" />
     <Compile Include="Loads\ConcentratedLoad.cs" />
     <Compile Include="Loads\PartialTrapezoidalLoad.cs" />

@@ -23,10 +23,21 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         /// <param name="n1">The n1.</param>
         /// <param name="n2">The n2.</param>
-        public BarElement(Node n1, Node n2) : base(2)
+        public BarElement(Node n1, Node n2) : this(2)
         {
             StartNode = n1;
             EndNode = n2;
+
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BarElement"/> class.
+        /// </summary>
+        /// <param name="nodeCount">The number of nodes.</param>
+        public BarElement(int nodeCount) : base(nodeCount)
+        {
+            _nodalReleaseConditions = Enumerable.Repeat(Constraints.Fixed, nodeCount).ToArray();
         }
 
         #region Field & Properties
@@ -41,6 +52,12 @@ namespace BriefFiniteElementNet.Elements
         //private Constraint _startReleaseCondition = Constraints.Fixed;
         //private Constraint _endReleaseCondition = Constraints.Fixed;
         private Constraint[] _nodalReleaseConditions;
+
+
+        public Constraint[] NodalReleaseConditions
+        {
+            get { return _nodalReleaseConditions; }
+        }
 
         /// <summary>
         /// Gets or sets the node count of bar element
@@ -735,7 +752,7 @@ namespace BriefFiniteElementNet.Elements
 
         #region Constructor
 
-        public BarElement():base(2)
+        public BarElement():this(2)
         {
         }
 
