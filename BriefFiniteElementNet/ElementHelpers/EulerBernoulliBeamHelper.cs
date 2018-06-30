@@ -47,7 +47,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var L2 = L*L;
 
-            var buf = new Matrix(1, 4);
+            
 
             var NN = GetNMatrixAt(targetElement, isoCoords);
 
@@ -82,8 +82,9 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (err > 1e-10)
                 throw new Exception();
 
+            var buf = new Matrix(1, 4);
 
-            buf.FillRow(0, arr);
+            buf.FillRow(0, arr2);
 
             return buf;
         }
