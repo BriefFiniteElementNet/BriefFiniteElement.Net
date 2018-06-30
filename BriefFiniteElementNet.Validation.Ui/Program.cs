@@ -13,11 +13,22 @@ namespace BriefFiniteElementNet.Validation.Ui
         static void Main(string[] args)
         {
 
-            TestTri();
+            //TestTri();
+            testFlatShell();
 
             //return;
             //BarElementTester.ValidateSingleInclinedFrame();
             //TestBar();
+        }
+
+        static void testFlatShell()
+        {
+            FlatShellElementChecker.Test1();
+            FlatShellElementChecker.Test2();
+            FlatShellElementChecker.Test3();
+            FlatShellElementChecker.Test5();
+            FlatShellElementChecker.Test6();
+            FlatShellElementChecker.Test7();
         }
 
         static void TestBar()

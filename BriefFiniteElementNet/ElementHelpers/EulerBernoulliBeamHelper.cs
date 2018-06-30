@@ -54,38 +54,8 @@ namespace BriefFiniteElementNet.ElementHelpers
                 arr = new double[] {-(6*xi)/L2, (3*xi)/L - 1/L, +(6*xi)/L2, (3*xi)/L + 1/L};
             else
                 arr = new double[] {(6*xi)/L2, (3*xi)/L - 1/L, -(6*xi)/L2, (3*xi)/L + 1/L};
-
-            var c1 = elm.StartReleaseCondition;
-            var c2 = elm.StartReleaseCondition;
-
-            if (_direction == BeamDirection.Z)
-            {
-                if (c1.DY == DofConstraint.Released)
-                    arr[0] = 0;
-
-                if (c1.RZ == DofConstraint.Released)
-                    arr[1] = 0;
-
-                if (c2.DY == DofConstraint.Released)
-                    arr[2] = 0;
-
-                if (c2.RZ == DofConstraint.Released)
-                    arr[3] = 0;
-            }
-            else
-            {
-                if (c1.DZ == DofConstraint.Released)
-                    arr[0] = 0;
-
-                if (c1.RY == DofConstraint.Released)
-                    arr[1] = 0;
-
-                if (c2.DZ == DofConstraint.Released)
-                    arr[2] = 0;
-
-                if (c2.RY == DofConstraint.Released)
-                    arr[3] = 0;
-            }
+            
+            
 
             buf.FillRow(0, arr);
 
