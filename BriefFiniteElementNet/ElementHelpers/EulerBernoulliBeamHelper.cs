@@ -64,11 +64,11 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             if (_direction == BeamDirection.Z)
             {
-                arr2 = new double[] { -(6 * xi) / L2, (3 * xi - 1) / L, +(6 * xi) / L2, (3 * xi + 1) / L };
+                arr2 = new double[] { -(6 * xi) / L2, (3 * xi) / L - 1 / L, +(6 * xi) / L2, (3 * xi) / L + 1 / L };
             }
             else
             {
-                arr2 = new double[] { (6 * xi) / L2, (3 * xi - 1) / L, -(6 * xi) / L2, (3 * xi + 1) / L };
+                arr2 = new double[] { (6 * xi) / L2, (3 * xi) / L - 1 / L, -(6 * xi) / L2, (3 * xi) / L + 1 / L };
                 arr.MultiplyWithConstant(-1);
             }
 
