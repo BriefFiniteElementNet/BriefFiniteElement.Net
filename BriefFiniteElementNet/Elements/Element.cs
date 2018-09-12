@@ -36,6 +36,15 @@ namespace BriefFiniteElementNet.Elements
         }
 
 
+        private Dictionary<string, object> cache = new Dictionary<string, object>();
+
+        public Dictionary<string, object> Cache
+        {
+            get
+            {
+                return cache;
+            }
+        }
 
         protected List<Load> loads = new List<Load>();
 
@@ -176,6 +185,8 @@ namespace BriefFiniteElementNet.Elements
             get { return _massFormulationType; }
             set { _massFormulationType = value; }
         }
+
+        
 
         #endregion
 

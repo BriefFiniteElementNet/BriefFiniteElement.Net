@@ -414,8 +414,8 @@ namespace BriefFiniteElementNet
                 buf[2, 4] = -(iy/(l*(l2/12 + ey)))*(l/2);
                 buf[2, 8] = -((iy/(l*(l2/12 + ey)))*(1));
                 buf[2, 10] = -(iy/(l*(l2/12 + ey)))*(l/2);
-                buf[3, 3] = g*j/e*l;
-                buf[3, 9] = -g*j/e*l;
+                buf[3, 3] = g*j/(e*l);
+                buf[3, 9] = -g*j/(e*l);
                 buf[4, 4] = (iy/(l*(l2/12 + ey)))*((l2/3 + ey));
                 buf[4, 8] = -(-(iy/(l*(l2/12 + ey)))*(l/2));
                 buf[4, 10] = (iy/(l*(l2/12 + ey)))*((l2/6 - ey));
@@ -427,7 +427,7 @@ namespace BriefFiniteElementNet
                 buf[7, 11] = -((iz/(l*(l2/12 + ez)))*(l/2));
                 buf[8, 8] = (iy/(l*(l2/12 + ey)))*(1);
                 buf[8, 10] = -(-(iy/(l*(l2/12 + ey)))*(l/2));
-                buf[9, 9] = g*j/e*l;
+                buf[9, 9] = g*j/(e*l);
                 buf[10, 10] = (iy/(l*(l2/12 + ey)))*((l2/3 + ey));
                 buf[11, 11] = (iz/(l*(l2/12 + ez)))*((l2/3 + ez));
 

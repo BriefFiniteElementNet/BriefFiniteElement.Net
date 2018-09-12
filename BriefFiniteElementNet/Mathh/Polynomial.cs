@@ -10,7 +10,7 @@ namespace BriefFiniteElementNet.Mathh
 
         public Polynomial(params double[] coefs)
         {
-            Coefficients = coefs;
+            Coefficients = (double[])coefs.Clone();
         }
 
 

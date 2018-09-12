@@ -49,8 +49,9 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
                 mat.YoungModulus
                 , g
                 , sec.J,
-                sec.Iz,
-                sec.Iy, transTag));
+                sec.Iy, //sec.Iz, Iz of BFE is Iy of opensees and vise versa
+                sec.Iz, //sec.Iy,
+                transTag));
 
             TargetGenerator.SetCounter("element", eleTag + 1);
             TargetGenerator.SetCounter("geomTransf", transTag + 1);

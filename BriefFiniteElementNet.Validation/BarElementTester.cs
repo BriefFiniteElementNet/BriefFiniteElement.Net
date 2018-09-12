@@ -68,7 +68,88 @@ namespace BriefFiniteElementNet.Validation
 
         }
 
-        public static void testInternalForce_Console()
+        public static void ValidateEndRelease()
+        {
+            var model = new Model();
+
+            var ndes = new Node[] {
+                new Node(0, 0, 0),
+                new Node(3, 0, 0),
+                    new Node(6, 0, 0),
+            };
+
+            /**/
+            var h = 0.1;
+            var w = 0.05;
+
+            var a = h * w;
+            var iy = h * h * h * w / 12;
+            var iz = w * w * w * h / 12;
+            var j = iy + iz;
+            var e = 210e9;
+            var nu = 0.3;
+
+            var g = e / (2 * 1 + nu);
+            /**/
+
+            var sec = new Sections.UniformParametric1DSection(a, iy, iz, j);
+            var mat = UniformIsotropicMaterial.CreateFromYoungShear(e, g);
+
+            {
+                var belm = new BarElement(ndes[0], ndes[1]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame };
+
+                belm.StartReleaseCondition =
+                    Constraint.FixedDX & Constraint.FixedDY & Constraint.FixedDZ &
+                    Constraint.FixedRX;
+
+            model.Elements.Add(belm);
+            }
+            {
+                var belm = new BarElement(ndes[1], ndes[2]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame };
+
+                belm.EndReleaseCondition =
+                    Constraint.FixedDX & Constraint.FixedDY & Constraint.FixedDZ &
+                    Constraint.FixedRX;
+
+                model.Elements.Add(belm);
+            }
+
+
+            model.Nodes.Add(ndes);
+
+            ndes[0].Constraints = ndes[2].Constraints = Constraints.Fixed;
+
+            //ndes[1].Constraints =
+            //    Constraints.FixedDX & Constraints.FixedRX
+            //& Constraints.FixedDY & Constraints.FixedRZ//find beam.z dofs
+
+            ;
+            //(model.Elements[0] as BarElement).Loads.Add(new Loads.UniformLoad(LoadCase.DefaultLoadCase, Vector.K, 1000, CoordinationSystem.Local));
+
+            ndes[1].Loads.Add(new NodalLoad(new Force(Vector.K, Vector.Zero)));
+            //ndes[1].Loads.Add(new NodalLoad(new Force(Vector.J * 2, Vector.Zero)));
+
+            model.Solve_MPC();
+
+
+            var d = model.Nodes[1].GetNodalDisplacement();
+
+
+            var t = (model.Elements[0] as BarElement).GetInternalForceAt(1);
+
+
+            var res = OpenseesValidator.OpenseesValidate(model, LoadCase.DefaultLoadCase, false);
+
+            var disp = res[0];
+
+            var idx = disp.Columns["Absolute Error"].Ordinal;
+
+            var max = disp.Rows.Cast<DataRow>().Select(i => (double)i[idx]).Max();
+
+
+        }
+
+    public static void testInternalForce_Console()
         {
             var model = new Model();
             var ndes = new Node[] { new Node(0, 0, 0), new Node(3, 0, 0) };
@@ -223,7 +304,7 @@ namespace BriefFiniteElementNet.Validation
             StructureGenerator.SetRandomiseSections(grd);
 
             StructureGenerator.AddRandomiseNodalLoads(grd, LoadCase.DefaultLoadCase);//random nodal loads
-            StructureGenerator.AddRandomiseBeamUniformLoads(grd, LoadCase.DefaultLoadCase);//random elemental loads
+            //StructureGenerator.AddRandomiseBeamUniformLoads(grd, LoadCase.DefaultLoadCase);//random elemental loads
             StructureGenerator.AddRandomDisplacements(grd, 0.1);
             #endregion
 
@@ -435,7 +516,7 @@ namespace BriefFiniteElementNet.Validation
 
             #endregion
 
-            #region internal force
+            #region internal displacement
             {//internal displacements
 
                 span.Add("h4").Text("Internal Displacements");
@@ -446,7 +527,7 @@ namespace BriefFiniteElementNet.Validation
             }
             #endregion
 
-            #region internal displacement
+            #region internal force
             {//internal force
 
                 span.Add("h4").Text("Internal Force");
@@ -476,7 +557,7 @@ namespace BriefFiniteElementNet.Validation
             StructureGenerator.SetRandomiseSections(grd);
 
             StructureGenerator.AddRandomiseNodalLoads(grd, LoadCase.DefaultLoadCase);//random nodal loads
-            //StructureGenerator.AddRandomiseBeamUniformLoads(grd, LoadCase.DefaultLoadCase);//random elemental loads
+            StructureGenerator.AddRandomiseBeamUniformLoads(grd, LoadCase.DefaultLoadCase);//random elemental loads
             StructureGenerator.AddRandomDisplacements(grd, 0.1);
 
             var rnd = new Random(0);
@@ -488,7 +569,7 @@ namespace BriefFiniteElementNet.Validation
                 if (bar == null)
                     continue;
 
-
+                /*
                 if (rnd.Next() % 10 == 0)
                 {
                     var cnd = RandomStuff.GetRandomConstraint();
@@ -509,6 +590,7 @@ namespace BriefFiniteElementNet.Validation
                     bar.EndReleaseCondition = cnd;
 
                 }
+                */
             }
 
             grd.Solve_MPC();
@@ -726,29 +808,58 @@ namespace BriefFiniteElementNet.Validation
 
             var ndes = new Node[] {
                 new Node(0, 0, 0),
-                new Node(5, 2, 3)};
+                new Node(3, 0, 0)};
 
+            /**/
             var h = 0.1;
             var w = 0.05;
 
-            var a = h * w;
-            var iy = h * h * h * w / 12;
+            var a =  h * w;
+            var iy =  h * h * h * w / 12;
             var iz = w * w * w * h / 12;
-            var j = iy + iz;
+            var j =  iy + iz;
             var e = 210e9;
+            var nu = 0.3;
+
+            var g = e / (2 * 1 + nu);
+            /**/
 
             var sec = new Sections.UniformParametric1DSection(a, iy, iz, j);
-            var mat = UniformIsotropicMaterial.CreateFromYoungPoisson(e, 0.25);
+            var mat = UniformIsotropicMaterial.CreateFromYoungShear(e, g);
 
-            model.Elements.Add(new BarElement(ndes[0], ndes[1]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame });
+            BarElement belm;
+            FrameElement2Node frmelm;
+
+            belm = new BarElement(ndes[0], ndes[1]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame };
+            frmelm = new FrameElement2Node(ndes[0], ndes[1]) { Iz = sec.Iz, Iy = sec.Iy, A = sec.A, J = sec.J, E = e, G = g };
+
+            var bk = belm.GetGlobalStifnessMatrix();
+            var fk = frmelm.GetGlobalStifnessMatrix();
+            var diff = bk-fk;
+
+            model.Elements.Add(belm);
 
             model.Nodes.Add(ndes);
 
             ndes[0].Constraints = Constraints.Fixed;
 
-            (model.Elements[0] as BarElement).Loads.Add(new Loads.UniformLoad(LoadCase.DefaultLoadCase, Vector.K, 1000, CoordinationSystem.Local));
+            ndes[1].Constraints = 
+                Constraints.FixedDX & Constraints.FixedRX 
+                //& Constraints.FixedDY & Constraints.FixedRZ//find beam.z dofs
+
+            ;
+            //(model.Elements[0] as BarElement).Loads.Add(new Loads.UniformLoad(LoadCase.DefaultLoadCase, Vector.K, 1000, CoordinationSystem.Local));
+
+            ndes[1].Loads.Add(new NodalLoad(new Force(Vector.K, Vector.Zero)));
+            ndes[1].Loads.Add(new NodalLoad(new Force(Vector.J*2, Vector.Zero)));
 
             model.Solve_MPC();
+
+
+            var d = model.Nodes[1].GetNodalDisplacement();
+
+            var t = (model.Elements[0] as BarElement).GetInternalForceAt(-1);
+
 
             var res = OpenseesValidator.OpenseesValidate(model, LoadCase.DefaultLoadCase, false);
 

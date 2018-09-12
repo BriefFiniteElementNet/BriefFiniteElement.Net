@@ -995,5 +995,86 @@ namespace BriefFiniteElementNet.Elements
             throw new NotImplementedException();
         }
         #endregion
+
+        /// <summary>
+        /// get the polynomial that takes iso coord as input and return local coord as output
+        /// </summary>
+        /// <returns>X(ξ) (ξ input, X output)</returns>
+        public Mathh.Polynomial GetIsoToLocalConverter()
+        {
+            var cachekey = "{54CEC6B2-F882-4505-9FC0-E7844C99F249}";
+
+            object chd;
+
+            if (this.Cache.TryGetValue(cachekey, out chd))//prevent double calculation
+            {
+                return (chd as Mathh.Polynomial);
+            }
+
+            var targetElement = this;
+            var bar = this;
+
+
+            Mathh.Polynomial x_xi = null;//x(ξ)
+
+            var n = targetElement.Nodes.Length;
+
+            var xs = new double[n];
+            var xi_s = new double[n];
+
+            {
+                //var conds = new List<Tuple<double, double>>();//x[i] , ξ[i]
+
+                for (var i = 0; i < n; i++)
+                {
+                    var deltaXi = 2.0 / (n - 1);
+                    var xi = (bar.Nodes[i].Location - bar.Nodes[0].Location).Length;
+                    var xi_i = -1 + deltaXi * i;
+
+                    xs[i] = xi;
+                    xi_s[i] = xi_i;
+
+                    //conds.Add(Tuple.Create(xi, xi_i));
+                }
+
+                //polinomial degree of shape function is n-1
+
+
+                var mtx = new Matrix(n, n);
+                var right = new Matrix(n, 1);
+
+                var o = n - 1;
+
+                for (var i = 0; i < n; i++)
+                {
+                    //fill row i'th of mtx
+
+                    //x[i] = { ξ[i]^o, ξ[i]^o-1 ... ξ[i]^1 ξ[i]^0} * {a[o] a[o-1] ... a[1] a[0]}'
+
+                    var kesi_i = xi_s[i];
+
+                    for (var j = 0; j < n; j++)
+                    {
+                        mtx[i, j] = Math.Pow(kesi_i, n - j - 1);
+                        right[i, 0] = xs[i];
+                    }
+                }
+
+                var as_ = mtx.Inverse() * right;
+                var poly = x_xi = new Mathh.Polynomial(as_.CoreArray);
+
+                {//test
+                    for (var i = 0; i < n; i++)
+                    {
+                        var epsilon = poly.Evaluate(xi_s[i]) - xs[i];
+
+                        if (Math.Abs(epsilon) > 1e-10)
+                            System.Diagnostics.Debug.Fail("check failed");
+                    }
+                }
+            }
+
+            return (Mathh.Polynomial)(Cache[cachekey] = x_xi);
+        }
     }
 }
