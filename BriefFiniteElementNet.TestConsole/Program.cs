@@ -33,12 +33,16 @@ namespace BriefFiniteElementNet.TestConsole
             //Test_P_Delta_matrix();
             //TestSparseRow();
 
-            //BarElementTester.va;
+            //BarElementTester.ValidateConsoleUniformLoad();
+            //BarElementTester.ValidateEndRelease();
+            TestTrussShapeFunction();
+
+            //new BarElementTester.Test_Trapezoid_1
+            //TestMultinodeBar1();
 
 
-
-            var grd = StructureGenerator.Generate3DTriangleElementGrid(5, 6, 7);
-            ModelVisualizerControl.VisualizeInNewWindow(grd);
+            //var grd = StructureGenerator.Generate3DTriangleElementGrid(5, 6, 7);
+            //ModelVisualizerControl.VisualizeInNewWindow(grd);
 
             ////QrTest();
             //TstMtx();
@@ -56,6 +60,52 @@ namespace BriefFiniteElementNet.TestConsole
             Console.ReadKey();
         }
 
+        private static void TestTrussShapeFunction()
+        {
+
+            var bar = new BarElement(3);
+
+            bar.Nodes[0] = new Node(0, 0, 0);
+            bar.Nodes[1] = new Node(1, 0, 0);
+            bar.Nodes[2] = new Node(2, 0, 0);
+
+            bar.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(3, 0.3);
+            bar.Section = new Sections.UniformParametric1DSection(4);
+
+            var hlp = new TrussHelper();
+
+            var pl = hlp.GetN_i(bar, 0);
+            hlp.GetJMatrixAt(bar, 0);
+            var stf = hlp.CalcLocalKMatrix(bar);
+        }
+
+        private static void TestMultinodeBar1()
+        {
+
+            var n = 2;
+
+            var bar = new BarElement(n);
+
+            var hlp = new EulerBernoulliBeamHelper(BeamDirection.Y);
+
+           
+
+            for (var i = 0; i < n; i++)
+            {
+                bar.Nodes[i] = new Node(i * 3, 0, 0);
+            }
+
+
+            var testXi = -0.66;
+
+            var n1 = hlp.GetNMatrixBar2Node(bar, testXi);
+            var n2 = hlp.GetNMatrixAt(bar, testXi);
+
+            var b = hlp.GetBMatrixAt(bar, testXi);
+
+            var d = n1 - n2;
+
+        }
 
         private void Test1()
         {

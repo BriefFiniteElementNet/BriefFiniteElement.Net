@@ -197,7 +197,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords);
 
         /// <summary>
-        /// Gets the displacement of element, only due to applying specified load.
+        /// Gets the displacement of element, only due to applying specified load. where all nodes are assumed as fixed
         /// </summary>
         /// <param name="targetElement">The target element.</param>
         /// <param name="load">The load.</param>

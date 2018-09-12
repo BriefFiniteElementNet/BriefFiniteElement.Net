@@ -1134,8 +1134,13 @@ namespace BriefFiniteElementNet
 
         public static void MultiplyWithConstant(this CCS mtx,double coef)
         {
-            for (var i = 0; i < mtx.Values.Length; i++)
-                mtx.Values[i] = mtx.Values[i] * coef;
+            MultiplyWithConstant(mtx.Values, coef);
+        }
+
+        public static void MultiplyWithConstant(this double[] vec, double coef)
+        {
+            for (var i = 0; i < vec.Length; i++)
+                vec[i] = vec[i] * coef;
         }
 
         private static void FillBi(Matrix B,int i,Matrix bi)

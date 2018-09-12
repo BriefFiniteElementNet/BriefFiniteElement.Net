@@ -23,10 +23,21 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         /// <param name="n1">The n1.</param>
         /// <param name="n2">The n2.</param>
-        public BarElement(Node n1, Node n2) : base(2)
+        public BarElement(Node n1, Node n2) : this(2)
         {
             StartNode = n1;
             EndNode = n2;
+
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BarElement"/> class.
+        /// </summary>
+        /// <param name="nodeCount">The number of nodes.</param>
+        public BarElement(int nodeCount) : base(nodeCount)
+        {
+            _nodalReleaseConditions = Enumerable.Repeat(Constraints.Fixed, nodeCount).ToArray();
         }
 
         #region Field & Properties
@@ -38,8 +49,31 @@ namespace BriefFiniteElementNet.Elements
         private BarElementBehaviour _behavior = BarElementBehaviours.FullFrame;
         private Base1DSection _section;
         private BaseMaterial _material;
-        private Constraint _startReleaseCondition = Constraints.Fixed;
-        private Constraint _endReleaseCondition = Constraints.Fixed;
+        //private Constraint _startReleaseCondition = Constraints.Fixed;
+        //private Constraint _endReleaseCondition = Constraints.Fixed;
+        private Constraint[] _nodalReleaseConditions;
+
+
+        public Constraint[] NodalReleaseConditions
+        {
+            get { return _nodalReleaseConditions; }
+        }
+
+        /// <summary>
+        /// Gets or sets the node count of bar element
+        /// </summary>
+        public int NodeCount
+        {
+            get
+            {
+                return nodes.Length;
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
 
         /// <summary>
         /// Gets or sets the start node.
@@ -61,8 +95,8 @@ namespace BriefFiniteElementNet.Elements
         /// </value>
         public Node EndNode
         {
-            get { return nodes[1]; }
-            set { nodes[1] = value; }
+            get { return nodes[nodes.Length - 1]; }
+            set { nodes[nodes.Length - 1] = value; }
         }
 
 
@@ -144,8 +178,8 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         public Constraint StartReleaseCondition
         {
-            get { return _startReleaseCondition; }
-            set { _startReleaseCondition = value; }
+            get { return _nodalReleaseConditions[0]; }
+            set { _nodalReleaseConditions[0] = value; }
         }
 
         /// <summary>
@@ -153,8 +187,8 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         public Constraint EndReleaseCondition
         {
-            get { return _endReleaseCondition; }
-            set { _endReleaseCondition = value; }
+            get { return _nodalReleaseConditions[_nodalReleaseConditions.Length - 1]; }
+            set { _nodalReleaseConditions[_nodalReleaseConditions.Length - 1] = value; }
         }
 
         #endregion
@@ -699,8 +733,7 @@ namespace BriefFiniteElementNet.Elements
             info.AddValue("_material", _material);
             info.AddValue("_section", _section);
             info.AddValue("_behavior", (int)_behavior);
-            info.AddValue("_startReleaseCondition", _startReleaseCondition);
-            info.AddValue("_endReleaseCondition", _endReleaseCondition);
+            info.AddValue("_nodalReleaseConditions", _nodalReleaseConditions);
             
         }
 
@@ -712,15 +745,14 @@ namespace BriefFiniteElementNet.Elements
             _material = (BaseMaterial)info.GetValue("_material", typeof(BaseMaterial));
             _behavior = (BarElementBehaviour)info.GetValue("_behavior", typeof(int));
             _section = (Base1DSection)info.GetValue("_section", typeof(Base1DSection));
-            _startReleaseCondition = (Constraint)info.GetValue("_startReleaseCondition", typeof(Constraint));
-            _endReleaseCondition = (Constraint)info.GetValue("_endReleaseCondition", typeof(Constraint));
+            _nodalReleaseConditions = (Constraint[])info.GetValue("_nodalReleaseConditions", typeof(Constraint[]));
         }
 
         #endregion
 
         #region Constructor
 
-        public BarElement():base(2)
+        public BarElement():this(2)
         {
         }
 
@@ -963,5 +995,86 @@ namespace BriefFiniteElementNet.Elements
             throw new NotImplementedException();
         }
         #endregion
+
+        /// <summary>
+        /// get the polynomial that takes iso coord as input and return local coord as output
+        /// </summary>
+        /// <returns>X(ξ) (ξ input, X output)</returns>
+        public Mathh.Polynomial GetIsoToLocalConverter()
+        {
+            var cachekey = "{54CEC6B2-F882-4505-9FC0-E7844C99F249}";
+
+            object chd;
+
+            if (this.Cache.TryGetValue(cachekey, out chd))//prevent double calculation
+            {
+                return (chd as Mathh.Polynomial);
+            }
+
+            var targetElement = this;
+            var bar = this;
+
+
+            Mathh.Polynomial x_xi = null;//x(ξ)
+
+            var n = targetElement.Nodes.Length;
+
+            var xs = new double[n];
+            var xi_s = new double[n];
+
+            {
+                //var conds = new List<Tuple<double, double>>();//x[i] , ξ[i]
+
+                for (var i = 0; i < n; i++)
+                {
+                    var deltaXi = 2.0 / (n - 1);
+                    var xi = (bar.Nodes[i].Location - bar.Nodes[0].Location).Length;
+                    var xi_i = -1 + deltaXi * i;
+
+                    xs[i] = xi;
+                    xi_s[i] = xi_i;
+
+                    //conds.Add(Tuple.Create(xi, xi_i));
+                }
+
+                //polinomial degree of shape function is n-1
+
+
+                var mtx = new Matrix(n, n);
+                var right = new Matrix(n, 1);
+
+                var o = n - 1;
+
+                for (var i = 0; i < n; i++)
+                {
+                    //fill row i'th of mtx
+
+                    //x[i] = { ξ[i]^o, ξ[i]^o-1 ... ξ[i]^1 ξ[i]^0} * {a[o] a[o-1] ... a[1] a[0]}'
+
+                    var kesi_i = xi_s[i];
+
+                    for (var j = 0; j < n; j++)
+                    {
+                        mtx[i, j] = Math.Pow(kesi_i, n - j - 1);
+                        right[i, 0] = xs[i];
+                    }
+                }
+
+                var as_ = mtx.Inverse() * right;
+                var poly = x_xi = new Mathh.Polynomial(as_.CoreArray);
+
+                {//test
+                    for (var i = 0; i < n; i++)
+                    {
+                        var epsilon = poly.Evaluate(xi_s[i]) - xs[i];
+
+                        if (Math.Abs(epsilon) > 1e-10)
+                            System.Diagnostics.Debug.Fail("check failed");
+                    }
+                }
+            }
+
+            return (Mathh.Polynomial)(Cache[cachekey] = x_xi);
+        }
     }
 }
