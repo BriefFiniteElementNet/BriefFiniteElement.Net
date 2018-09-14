@@ -1,4 +1,14 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="FrameElement2Node.cs">
+// Copyright (c) 2010, Hossein Rahami (https://www.mathworks.com/matlabcentral/fileexchange/27012-matrix-structural-analysis)
+// Copyright (c) 2018, Ehsan Mohammad Ali, C# version
+// </copyright>
+// -----------------------------------------------------------------------
+
+
+All rights reserved.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management.Instrumentation;
