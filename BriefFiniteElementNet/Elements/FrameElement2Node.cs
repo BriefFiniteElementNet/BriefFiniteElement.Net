@@ -6,7 +6,6 @@
 // -----------------------------------------------------------------------
 
 
-All rights reserved.
 
 using System;
 using System.Collections.Generic;
@@ -266,7 +265,7 @@ namespace BriefFiniteElementNet
         /// <value>
         /// The mass density of member in kg/m^3.
         /// </value>
-        [Obsolete]
+        [System.Obsolete]
         public double MassDensity
         {
             get { return _massDensity; }

@@ -564,11 +564,24 @@ namespace BriefFiniteElementNet.Elements
         /// <inheritdoc/>
         public override double[] IsoCoordsToLocalCoords(params double[] isoCoords)
         {
-            var xi = isoCoords[0];
+            var pl = GetIsoToLocalConverter().Evaluate(isoCoords[0]);
 
-            var L = (this.EndNode.Location - this.StartNode.Location).Length;
+            return new double[] { pl };
+        }
 
-            return new double[] { L / 2 * (xi + 1) } ;
+        public double[] LocalCoordsToIsoCoords(params double[] localCoords)
+        {
+            var pl = GetIsoToLocalConverter();
+            var x = localCoords[0];
+
+            double rt;
+
+            if (!pl.TryFindRoot(localCoords[0], out rt))
+            {
+                throw new Exception();
+            }
+
+            return new double[] { rt };
         }
 
         /// <summary>
@@ -1076,5 +1089,7 @@ namespace BriefFiniteElementNet.Elements
 
             return (Mathh.Polynomial)(Cache[cachekey] = x_xi);
         }
+
+        
     }
 }

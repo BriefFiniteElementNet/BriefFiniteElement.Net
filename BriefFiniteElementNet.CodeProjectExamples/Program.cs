@@ -14,7 +14,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
         [STAThread]
         static void Main(string[] args)
         {
-            Example1();
+            LoadComb();
 
         }
 
@@ -84,8 +84,8 @@ namespace BriefFiniteElementNet.CodeProjectExamples
 
             model.Nodes.Add(n1, n2, n3, n4, n5);
 
-            var secAA = SectionGenerator.GetISetion(0.24, 0.67, 0.01, 0.006);
-            var secBB = SectionGenerator.GetISetion(0.24, 0.52, 0.01, 0.006);
+            var secAA = new PolygonYz(SectionGenerator.GetISetion(0.24, 0.67, 0.01, 0.006));
+            var secBB = new PolygonYz(SectionGenerator.GetISetion(0.24, 0.52, 0.01, 0.006));
 
             var e1 = new FrameElement2Node(n1, n2);
             e1.Label = "e1";

@@ -18,14 +18,14 @@ namespace BriefFiniteElementNet
         /// <param name="w">The width of section.</param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public static PolygonYz GetRectangularSection(double h, double w)
+        public static PointYZ[] GetRectangularSection(double h, double w)
         {
-            var buf = new PolygonYz(
+            var buf = new PointYZ[] {
                 new PointYZ(-w/2, -h/2),
                 new PointYZ(-w/2, h/2),
                 new PointYZ(w/2, h/2),
                 new PointYZ(w/2, -h/2),
-                new PointYZ(-w/2, -h/2));
+                new PointYZ(-w/2, -h/2) };
 
             return buf;
         }
@@ -39,9 +39,9 @@ namespace BriefFiniteElementNet
         /// <param name="tw">The thickness of web of section.</param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public static PolygonYz GetISetion(double w, double h, double tf, double tw)
+        public static PointYZ[] GetISetion(double w, double h, double tf, double tw)
         {
-            var buf = new PolygonYz(
+            var buf = new PointYZ[] { 
                 new PointYZ(-w/2, -h/2),
                 new PointYZ(-w/2, -h/2 + tf),
                 new PointYZ(-tw/2, -h/2 + tf),
@@ -51,13 +51,13 @@ namespace BriefFiniteElementNet
 
                 new PointYZ(w/2, h/2),
                 new PointYZ(w/2, h/2 - tf),
-                new PointYZ(tw/2, h/2 - tf), 
+                new PointYZ(tw/2, h/2 - tf),
                 new PointYZ(tw/2, -h/2 + tf),
                 new PointYZ(w/2, -h/2 + tf),
                 new PointYZ(w/2, -h/2),
 
                 new PointYZ(-w/2, -h/2)
-                );
+                };
 
 
             return buf;

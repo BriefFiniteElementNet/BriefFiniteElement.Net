@@ -35,6 +35,9 @@ namespace BriefFiniteElementNet.Mathh
             return buf;
         }
 
+
+        
+
         /// <summary>
         /// Gets the derivative of polynomial as another polynomial
         /// </summary>
@@ -123,6 +126,31 @@ namespace BriefFiniteElementNet.Mathh
             {
                 return x * Factorial(x - 1);
             }
+        }
+
+        public bool TryFindRoot(double y,out double x)
+        {
+            var cnt = 0;
+
+            var loc = -1.0;
+
+            while(cnt++<100)
+            {
+                var yi = this.Evaluate(loc);
+                var d = y - yi;
+
+                if (Math.Abs(d) < 1e-6)
+                {
+                    x = loc;
+                    return true;
+                }
+
+                loc = loc - d / this.EvaluateDerivative(loc, 1);
+            }
+
+            x = default(double);
+
+            return false;
         }
     }
 }

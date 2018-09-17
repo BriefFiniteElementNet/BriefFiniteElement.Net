@@ -158,7 +158,7 @@ namespace BriefFiniteElementNet.Sections
             set { _j = value; }
         }
 
-        public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double x)
+        public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi)
         {
             var buf = new _1DCrossSectionGeometricProperties();
 

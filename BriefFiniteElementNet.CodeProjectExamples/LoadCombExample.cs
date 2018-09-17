@@ -88,10 +88,12 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             combination1[l_case] = 0.8;
 
             var n3Force = model.Nodes["N3"].GetSupportReaction(combination1);
-            Console.WriteLine(n3Force);
+            Console.WriteLine("support reaction of n3: " + n3Force);
 
-            var e4Force = (model.Elements["e4"] as BarElement).GetInternalForceAt(0, combination1);
-            Console.WriteLine(e4Force);
+            var e1 = (model.Elements["e1"] as BarElement);
+            
+            var e1Force = (model.Elements["e1"] as BarElement).GetInternalForceAt(0);
+            Console.WriteLine("internal force of e1 at middle : ",e1Force);
 
         }
     }

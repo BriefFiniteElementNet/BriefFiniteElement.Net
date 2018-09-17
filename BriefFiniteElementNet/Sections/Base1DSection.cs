@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet.Sections
         /// </summary>
         /// <param name="x">The location, [-1,1] range.</param>
         /// <returns></returns>
-        public abstract _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double x);
+        public abstract _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi);
 
         /// <summary>
         /// Gets the maximum order (degree) of members of material regarding xi.
