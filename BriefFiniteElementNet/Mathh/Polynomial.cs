@@ -137,7 +137,7 @@ namespace BriefFiniteElementNet.Mathh
             while(cnt++<100)
             {
                 var yi = this.Evaluate(loc);
-                var d = y - yi;
+                var d =  yi -y;
 
                 if (Math.Abs(d) < 1e-6)
                 {

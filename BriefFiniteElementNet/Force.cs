@@ -330,5 +330,15 @@ namespace BriefFiniteElementNet
                 return hashCode;
             }
         }
+
+        public override string ToString()
+        {
+            var buf = string.Format("F: {0}, M: {1}", Forces, Moments);
+
+            //MathUtil.Equals(X, 0) && X != 0 ? "~0" : (object)X,
+            //MathUtil.Equals(Y, 0) && Y != 0 ? "~0" : (object)Y,
+            //MathUtil.Equals(Z, 0) && Z != 0 ? "~0" : (object)Z);
+            return buf;
+        }
     }
 }

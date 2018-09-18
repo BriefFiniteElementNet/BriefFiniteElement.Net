@@ -20,7 +20,6 @@ namespace BriefFiniteElementNet.Loads
         public double[] _startSeverities;
         public double[] _endSeverities;
         private Vector _direction;
-        private double _magnitude;
         private CoordinationSystem _coordinationSystem;
 
         /// <summary>
@@ -92,11 +91,7 @@ namespace BriefFiniteElementNet.Loads
 
         #endregion
 
-        /// <inheritdoc />
-        public override Force[] GetGlobalEquivalentNodalLoads(Element element)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public double[] GetMagnitudesAt(params double[] isoCoords)
         {

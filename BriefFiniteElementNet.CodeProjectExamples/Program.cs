@@ -136,7 +136,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
 
         private static void LoadComb()
         {
-            new LoadCombExample().Run();
+            new BarIncliendFrameExample().Run();
         }
 
         

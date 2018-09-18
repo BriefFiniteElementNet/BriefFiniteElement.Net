@@ -72,10 +72,7 @@ namespace BriefFiniteElementNet.Loads
             }
         }
 
-        public override Force[] GetGlobalEquivalentNodalLoads(Element element)
-        {
-            throw new NotImplementedException();
-        }
+
 
 
         #region Constructor
