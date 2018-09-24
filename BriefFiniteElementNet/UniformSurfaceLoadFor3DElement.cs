@@ -15,7 +15,7 @@ namespace BriefFiniteElementNet
     public class UniformSurfaceLoadFor3DElement : Load3D
     {
         /// <inheritdoc />
-        public override Force[] GetGlobalEquivalentNodalLoads(Element element)
+        public Force[] GetGlobalEquivalentNodalLoads(Element element)
         {
             switch (element.ElementType)
             {

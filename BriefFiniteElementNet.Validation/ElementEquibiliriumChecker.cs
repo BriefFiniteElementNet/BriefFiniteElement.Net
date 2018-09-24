@@ -48,7 +48,7 @@ namespace BriefFiniteElementNet.Validation
                     if (ld.Case != lc)
                         continue;
 
-                    var tg = ld.GetGlobalEquivalentNodalLoads(elm);
+                    var tg = elm.GetGlobalEquivalentNodalLoads(ld);
 
                     var f1l = elm.TransformGlobalToLocal(tg[0]);
                     var f2l = elm.TransformGlobalToLocal(tg[1]);

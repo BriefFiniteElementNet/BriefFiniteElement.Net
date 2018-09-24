@@ -59,7 +59,7 @@ namespace BriefFiniteElementNet
         private CoordinationSystem _coordinationSystem;
 
         /// <inheritdoc />
-        public override Force[] GetGlobalEquivalentNodalLoads(Element element)
+        public Force[] GetGlobalEquivalentNodalLoads(Element element)
         {
             //var buf = new Force[3];
 

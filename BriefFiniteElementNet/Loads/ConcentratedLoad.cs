@@ -98,6 +98,7 @@ namespace BriefFiniteElementNet.Loads
             }
         }
 
+        /*
         private void SetIsoLocation(double xi)
         {
             SetIsoLocation(new double[] { xi, 0, 0 });
@@ -112,6 +113,7 @@ namespace BriefFiniteElementNet.Loads
         {
             SetIsoLocation(new double[] { xi, eta, gamma });
         }
+        */
         #endregion
 
         #region Deserialization Constructor

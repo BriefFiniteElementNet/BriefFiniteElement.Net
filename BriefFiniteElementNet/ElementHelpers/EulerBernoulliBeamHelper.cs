@@ -714,7 +714,9 @@ namespace BriefFiniteElementNet.ElementHelpers
         public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, Load load,
             double[] isoLocation)
         {
-            var buf = new FlatShellStressTensor();
+            var buff = new List<Tuple<DoF, double>>();
+
+            //var buf = new FlatShellStressTensor();
             
             var tr = targetElement.GetTransformationManager();
 
@@ -734,10 +736,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             m0 = -m0;
 
             var to = Iso2Local(targetElement, isoLocation)[0];
-
-            //var xi = isoLocation[0];
-
-            #region uniform & trapezoid
+            
+            #region uniform & trapezoid, uses integration method
 
             if (load is UniformLoad || load is PartialTrapezoidalLoad)
             {
@@ -826,24 +826,29 @@ namespace BriefFiniteElementNet.ElementHelpers
                     var v_i = integral[0, 0];
                     var m_i = integral[1, 0];
 
-                    var memb = buf.MembraneTensor;
-                    var bnd = buf.BendingTensor;
-
                     if (this._direction == BeamDirection.Y)
                     {
-                        var v = memb.S12 = memb.S21 = -(v_i + v0);
-                        bnd.M13 = bnd.M31 = -(m0 + m_i + (v * to * -1));
+                        var v =  -(v_i + v0);
+                        //memb.S12 = memb.S21 = v;
+                        var m = -(m0 + m_i + (v * to * -1));
+                        //bnd.M13 = bnd.M31 = m;
+
+                        buff.Add(Tuple.Create(DoF.Ry, m));
+                        buff.Add(Tuple.Create(DoF.Dz, v));
+
                     }
                     else
                     {
-                        var v = memb.S13 = memb.S31 = -(v_i + v0);
-                        bnd.M12 = bnd.M21 = -(m0 + m_i + (v * to * +1));
+                        var v =  -(v_i + v0);
+                        //memb.S13 = memb.S31 = v;
+                        var m =  -(m0 + m_i + (v * to * +1));
+                        //bnd.M12 = bnd.M21 = m;
+
+                        buff.Add(Tuple.Create(DoF.Rz, m));
+                        buff.Add(Tuple.Create(DoF.Dy, v));
                     }
 
-                    buf.MembraneTensor = memb;
-                    buf.BendingTensor= bnd;
-
-                    //return buf;
+                    return buff;
                 }
             }
 
@@ -851,8 +856,16 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             #endregion
 
+            #region concentrated
+            {//concentrated
+                var n = this.GetNMatrixAt(br, isoLocation);
+
+            }
+            #endregion
+
             throw new NotImplementedException();
         }
+
 
         /// <inheritdoc/>
         public Displacement GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation)
@@ -1025,6 +1038,10 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public Force[] GetLocalEquivalentNodalLoads(Element targetElement, Load load)
         {
+            var bar = targetElement as BarElement;
+            var n = bar.Nodes.Length;
+
+
             //https://www.quora.com/How-should-I-perform-element-forces-or-distributed-forces-to-node-forces-translation-in-the-beam-element
 
             var tr = targetElement.GetTransformationManager();
@@ -1125,12 +1142,65 @@ namespace BriefFiniteElementNet.ElementHelpers
                     return localForces;
                 }
             }
-            
-            
+
+
 
             #endregion
 
+            #region uniform & trapezoid
+
+            if (load is ConcentratedLoad)
+            {
+                var cl = load as ConcentratedLoad;
+
+                var localforce = cl.Force;
+
+                if (cl.CoordinationSystem == CoordinationSystem.Global)
+                    localforce = tr.TransformGlobalToLocal(localforce);
+
+                var buf = new Force[n];
+
+                var ns = GetNMatrixAt(targetElement, cl.ForceIsoLocation);
+
+                for (var i = 0; i < n; i++)
+                {
+                    var node = bar.Nodes[i];
+
+                    var fi = new Force();
+
+                    var ni = ns[0, 2 * i];
+                    var mi = ns[0, 2 * i + 1];
+
+                    var nip = ns[1, 2 * i];
+                    var mip = ns[1, 2 * i + 1];
+
+                    if (this._direction == BeamDirection.Z)
+                    {
+                        fi.Fy += localforce.Fy * ni;//concentrated force
+                        fi.Mz += localforce.Fy * mi;//concentrated force
+
+                        fi.Fy += -localforce.Mz * nip;//concentrated moment
+                        fi.Mz += -localforce.Mz * mip;//concentrated moment
+                    }
+                    else
+                    {
+                        fi.Fz += localforce.Fz * ni;//concentrated force
+                        fi.My += localforce.Fz * mi;//concentrated force
+
+                        fi.Fz += -localforce.My * nip;//concentrated moment
+                        fi.My += -localforce.My * mip;//concentrated moment
+                    }
+
+                    buf[i] = fi;
+                }
+
+                return buf;
+            }
             
+
+
+
+            #endregion
 
             throw new NotImplementedException();
         }

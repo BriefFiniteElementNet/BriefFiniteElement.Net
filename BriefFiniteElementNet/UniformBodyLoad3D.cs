@@ -55,7 +55,7 @@ namespace BriefFiniteElementNet
             set { _vx = value; }
         }
 
-        public override Force[] GetGlobalEquivalentNodalLoads(Element element)
+        public Force[] GetGlobalEquivalentNodalLoads(Element element)
         {
             switch (element.ElementType)
             {
