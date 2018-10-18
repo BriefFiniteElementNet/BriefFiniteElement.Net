@@ -26,13 +26,19 @@ based on ``https://www.slideshare.net/AnasCivil/table-of-fixed-end-moments-formu
 
 result: 
 
-m0 = p * mm1
+m1 = p * mm1
 
-m1 = p * mm2
+m2 = p * mm2
 
-v0 = p * nn1
+v1 = p * nn1
 
-v1 = p * nn2
+v2 = p * nn2
+
+so:
+
+v[i] = p * nn[i]
+
+m[i] = p * mm[i]
 
 	
 where nn1,nn2,mm1,mm2 are hermitian shape functions of beam 
@@ -62,12 +68,18 @@ based on ``https://www.slideshare.net/AnasCivil/table-of-fixed-end-moments-formu
 	
 result: (unrendered version looks right!)
 
-m0 = -m1' * M
+v1 = -nn1' * M
 
-m1 = -m2' * M
+v2 = -nn2' * M
 
-v0 = -n1' * M
+m1 = -mm1' * M
 
-v1 = -n2' * M
+m2 = -mm2' * M
+
+so:
+
+v[i] = M * -nn'[i]
+
+m[i] = M * -mm'[i]
 	
-where n1,n2,m1,m2 are shape functions of beam, M is concentrated moment maGNITUDE
+where n1,n2,m1,m2 are hermitian shape functions of beam, M is concentrated moment maGNITUDE

@@ -14,7 +14,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
         [STAThread]
         static void Main(string[] args)
         {
-            LoadComb();
+            DocSnippets.Test1();
 
         }
 

@@ -430,6 +430,8 @@ namespace BriefFiniteElementNet.ElementHelpers
         public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, Load load,
             double[] isoLocation)
         {
+            var buff = new List<Tuple<DoF, double>>();
+
             var buf = new FlatShellStressTensor();
 
             var tr = targetElement.GetTransformationManager();
@@ -525,16 +527,11 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     var f_i = integral[0, 0];
 
-                    var memb = buf.MembraneTensor;
-                    var bnd = buf.BendingTensor;
-
-                    var v = memb.S11 = -(f_i + v0);
-
-                    buf.MembraneTensor = memb;
-                    buf.BendingTensor = bnd;
-
-                    //return buf;
+                    buff.Add(Tuple.Create(DoF.Dx, f_i+ v0));
+                    
                 }
+
+                return buff;
             }
 
 

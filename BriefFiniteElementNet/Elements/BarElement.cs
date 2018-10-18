@@ -900,6 +900,8 @@ namespace BriefFiniteElementNet.Elements
         {
             var approx = GetInternalForceAt(xi, loadCase);
 
+            var fcs = new Dictionary<DoF, double>();
+
             var buf = new FlatShellStressTensor();
 
             var helpers = GetHelpers();
@@ -908,17 +910,38 @@ namespace BriefFiniteElementNet.Elements
                 foreach (var helper in helpers)
                 {
                     var tns = helper.GetLoadInternalForceAt(this, load, new[] { xi });
-                    //buf = buf + tns;
+
+                    foreach(var fc in tns)
+                    {
+                        double existing;
+
+                        fcs.TryGetValue(fc.Item1, out existing);
+
+                        fcs[fc.Item1] = existing + fc.Item2;
+                    }
                 }
 
             var buff = new Force();
 
-            var forces = new Vector(buf.MembraneTensor.S11, buf.MembraneTensor.S12, buf.MembraneTensor.S13);
-            //Fx, Vy, Vz
-            var moments = new Vector(buf.BendingTensor.M11, buf.BendingTensor.M12, buf.BendingTensor.M13);
-            //Mx, My, Mz
+            if (fcs.ContainsKey(DoF.Dx))
+                buff.Fx = fcs[DoF.Dx];
 
-            return new Force(forces, moments) + approx;
+            if (fcs.ContainsKey(DoF.Dy))
+                buff.Fy = fcs[DoF.Dy];
+
+            if (fcs.ContainsKey(DoF.Dz))
+                buff.Fz = fcs[DoF.Dz];
+
+            if (fcs.ContainsKey(DoF.Rx))
+                buff.Mx = fcs[DoF.Rx];
+
+            if (fcs.ContainsKey(DoF.Ry))
+                buff.My = fcs[DoF.Ry];
+
+            if (fcs.ContainsKey(DoF.Rz))
+                buff.Mz = fcs[DoF.Rz];
+
+            return buff;
         }
 
         /// <summary>

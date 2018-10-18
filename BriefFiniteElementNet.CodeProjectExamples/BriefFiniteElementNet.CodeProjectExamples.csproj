@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BarIncliendFrameExample.cs" />
+    <Compile Include="DocSnippets.cs" />
     <Compile Include="LoadCombExample.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

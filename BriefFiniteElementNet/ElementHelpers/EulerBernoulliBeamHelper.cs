@@ -736,7 +736,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             m0 = -m0;
 
             var to = Iso2Local(targetElement, isoLocation)[0];
-            
+
+
             #region uniform & trapezoid, uses integration method
 
             if (load is UniformLoad || load is PartialTrapezoidalLoad)
@@ -857,10 +858,34 @@ namespace BriefFiniteElementNet.ElementHelpers
             #endregion
 
             #region concentrated
-            {//concentrated
-                var n = this.GetNMatrixAt(br, isoLocation);
 
+            if (load is ConcentratedLoad)
+            {
+                var xi = isoLocation[0];
+                var targetX = br.IsoCoordsToLocalCoords(xi)[0];
+
+                var f0 = Force.Zero;
+
+                for(var i = 0;i<targetElement.Nodes.Length;i++)
+                {
+                    var x_i = targetElement.Nodes[i].Location - targetElement.Nodes[0].Location;
+
+                    var xi_i = br.LocalCoordsToIsoCoords(x_i.Length)[0];
+
+                    if (xi_i < xi)
+                    {
+                        f0 += endForces[i].Move(new Point(x_i.Length, 0, 0), new Point(targetX, 0, 0));
+                    }
+                }
+
+                buff.Add(Tuple.Create(DoF.Ry, f0.My));
+                buff.Add(Tuple.Create(DoF.Rz, f0.Mz));
+                buff.Add(Tuple.Create(DoF.Dy, f0.Fy));
+                buff.Add(Tuple.Create(DoF.Dz, f0.Fz));
+
+                return buff;
             }
+
             #endregion
 
             throw new NotImplementedException();

@@ -395,7 +395,12 @@ namespace BriefFiniteElementNet.ElementHelpers
         public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, Load load,
             double[] isoLocation)
         {
-                throw new NotImplementedException();
+            if (load is UniformLoad || load is PartialTrapezoidalLoad)
+            {
+                return new List<Tuple<DoF, double>>();
+            }
+
+            throw new NotImplementedException();
 
         }
 
