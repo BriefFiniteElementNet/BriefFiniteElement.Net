@@ -6,7 +6,7 @@ using System.Text;
 using CSparse;
 using CSparse.Double;
 using CSparse.Storage;
-using CCS = CSparse.Double.CompressedColumnStorage;
+using CCS = CSparse.Double.SparseMatrix;
 
 namespace BriefFiniteElementNet
 {

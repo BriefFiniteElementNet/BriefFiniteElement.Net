@@ -1,7 +1,8 @@
-﻿using CSparse.Double;
-
+﻿
 namespace BriefFiniteElementNet.Common
 {
+    using CSparse.Double;
+
     /// <summary>
     /// Represents an interface for a solver to solve A*x = b.
     /// </summary>
@@ -13,7 +14,7 @@ namespace BriefFiniteElementNet.Common
         /// <value>
         /// A value in A*x=b equation.
         /// </value>
-        CompressedColumnStorage A { get; set; }
+        SparseMatrix A { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the solver is initialized.

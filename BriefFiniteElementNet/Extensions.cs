@@ -15,9 +15,9 @@ namespace BriefFiniteElementNet
 {
     public static class Extensions
     {
-        public static CSparse.Double.CompressedColumnStorage CloneMatrix(this CSparse.Double.CompressedColumnStorage matrix)
+        public static CSparse.Double.SparseMatrix CloneMatrix(this CSparse.Double.SparseMatrix matrix)
         {
-            var buf = new CSparse.Double.CompressedColumnStorage(matrix.RowCount, matrix.ColumnCount, matrix.NonZerosCount);
+            var buf = new CSparse.Double.SparseMatrix(matrix.RowCount, matrix.ColumnCount, matrix.NonZerosCount);
 
             buf.RowIndices = (int[])matrix.RowIndices.Clone();
             buf.ColumnPointers = (int[])matrix.ColumnPointers.Clone();
@@ -330,7 +330,7 @@ namespace BriefFiniteElementNet
             sp.Start();
         }
 
-        public static Matrix ToDenseMatrix(this CompressedColumnStorage csr)
+        public static Matrix ToDenseMatrix(this SparseMatrix csr)
         {
             var buf = new Matrix(csr.RowCount, csr.ColumnCount);
 
@@ -660,7 +660,7 @@ namespace BriefFiniteElementNet
             }
         }
 
-        public static IEnumerable<Tuple<int, int, double>> EnumerateIndexed2(this CompressedColumnStorage mtx)
+        public static IEnumerable<Tuple<int, int, double>> EnumerateIndexed2(this SparseMatrix mtx)
         {
 
             int n = mtx.ColumnCount;

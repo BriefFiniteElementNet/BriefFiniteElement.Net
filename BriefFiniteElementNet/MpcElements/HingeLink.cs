@@ -29,7 +29,7 @@ namespace BriefFiniteElementNet.MpcElements
         [NonSerialized]
         public Node Node2;
 
-        public override CompressedColumnStorage GetExtraEquations()
+        public override SparseMatrix GetExtraEquations()
         {
             throw new NotImplementedException();
         }

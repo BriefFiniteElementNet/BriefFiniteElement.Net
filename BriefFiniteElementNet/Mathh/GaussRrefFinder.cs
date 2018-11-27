@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CCS = CSparse.Double.CompressedColumnStorage;//<double>;
+using CCS = CSparse.Double.SparseMatrix;//<double>;
 using BriefFiniteElementNet;
 
 namespace BriefFiniteElementNet.Mathh
@@ -11,7 +11,7 @@ namespace BriefFiniteElementNet.Mathh
     {
         public CCS CalculateRref(CCS a)
         {
-            var sys = SparseEqSystem.Generate((CSparse.Double.CompressedColumnStorage)a);
+            var sys = SparseEqSystem.Generate((CSparse.Double.SparseMatrix)a);
 
             var dns = a.ToDenseMatrix();
 

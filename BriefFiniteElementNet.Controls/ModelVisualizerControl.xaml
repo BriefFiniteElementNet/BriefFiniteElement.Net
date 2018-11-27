@@ -1,0 +1,55 @@
+﻿<UserControl x:Name="userControl" x:Class="BriefFiniteElementNet.Controls.ModelVisualizerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:helixToolkit="clr-namespace:HelixToolkit.Wpf;assembly=HelixToolkit.Wpf"
+             mc:Ignorable="d"
+             d:DesignHeight="507" d:DesignWidth="693">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+
+
+        <Grid Grid.Row="1">
+            <helixToolkit:HelixViewport3D x:Name="MainViewport" RotateGesture="RightClick" PanGesture="LeftClick" />
+            <Canvas x:Name="MainCanvas" />
+        </Grid>
+
+        <Grid Margin="0" Background="#5900FFC5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="150" />
+                <ColumnDefinition Width="233*" />
+                <ColumnDefinition Width="320" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Row="0" x:Name="txtHelp" HorizontalAlignment="Center" TextWrapping="Wrap"
+                       Text="Mouse Gestures HELP!" ToolTipService.InitialShowDelay="0" VerticalAlignment="Center"
+                       Margin="0" />
+            <TextBlock Text="3D Visualization in this window is powered by Helix toolkit" HorizontalAlignment="Right"
+                       VerticalAlignment="Center" MouseDown="TextBlock_MouseDown" TextDecorations="Underline"
+                       Foreground="Blue" Cursor="Hand" Grid.Column="2" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button Content="Zoom2Extent" Click="ButtonBase_OnClick" />
+                <ToggleButton Content="Nodes" IsChecked="{Binding ShowNodes, ElementName=userControl}" />
+                <ToggleButton Content="Elements" IsChecked="{Binding ShowElements, ElementName=userControl}" />
+                <ToggleButton Content="Mpc Elements" IsChecked="{Binding ShowRigidElements, ElementName=userControl}" />
+                <ToggleButton Content="NodalLoads (Forces)"
+                              IsChecked="{Binding ShowNodalLoads_Force, ElementName=userControl}" />
+                <ToggleButton Content="NodalLoads (Moments)"
+                              IsChecked="{Binding ShowNodalLoads_Moment, ElementName=userControl}" />
+                <ToggleButton Content="Constraints" IsChecked="{Binding ShowConstraints, ElementName=userControl}" />
+            </StackPanel>
+
+
+        </Grid>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal">
+            <Button Content="Solve" Click="btnSolve_OnClick"/>
+            <Button Content="ShowInternalForce" Click="btnInternalForce_OnClick"/>
+            
+        </StackPanel>
+    </Grid>
+</UserControl>
