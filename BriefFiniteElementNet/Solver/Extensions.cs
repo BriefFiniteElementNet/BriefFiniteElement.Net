@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using CCS = CSparse.Double.CompressedColumnStorage;
+using CCS = CSparse.Double.SparseMatrix;
 
 namespace BriefFiniteElementNet.Solver
 {

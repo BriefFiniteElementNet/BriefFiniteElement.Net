@@ -5,7 +5,7 @@ using System.Text;
 using CSparse.Double;
 using CSparse.Ordering;
 using CSparse.Storage;
-using CCS = CSparse.Double.CompressedColumnStorage;//<double>;
+using CCS = CSparse.Double.SparseMatrix;//<double>;
 namespace BriefFiniteElementNet.Mathh
 {
     public class DenseIrrefFinder:IRrefFinder

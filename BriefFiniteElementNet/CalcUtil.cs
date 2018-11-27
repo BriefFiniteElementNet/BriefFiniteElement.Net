@@ -10,7 +10,7 @@ using BriefFiniteElementNet.Solver;
 using CSparse;
 using CSparse.Factorization;
 using CSparse.Ordering;
-using CCS = CSparse.Double.CompressedColumnStorage;
+using CCS = CSparse.Double.SparseMatrix;
 using Coord = CSparse.Storage.CoordinateStorage<double>;
 
 namespace BriefFiniteElementNet
@@ -793,9 +793,9 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static CSparse.Double.CompressedColumnStorage Clonee(this CSparse.Double.CompressedColumnStorage matrix)
+        public static CSparse.Double.SparseMatrix Clonee(this CSparse.Double.SparseMatrix matrix)
         {
-            var buf = new CSparse.Double.CompressedColumnStorage(matrix.RowCount, matrix.ColumnCount, matrix.Values.Length);
+            var buf = new CSparse.Double.SparseMatrix(matrix.RowCount, matrix.ColumnCount, matrix.Values.Length);
 
             matrix.RowIndices.CopyTo(buf.RowIndices, 0);
             matrix.ColumnPointers.CopyTo(buf.ColumnPointers, 0);

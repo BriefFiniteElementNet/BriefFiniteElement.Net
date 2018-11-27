@@ -578,7 +578,7 @@ namespace BriefFiniteElementNet.TestConsole
                                               11.0,
                                               5.0 };
 
-            var csr = new CSparse.Double.CompressedColumnStorage(n, n, 18);
+            var csr = new CSparse.Double.SparseMatrix(n, n, 18);
             csr.ColumnPointers = ia;
             csr.RowIndices = ja;
             csr.Values = a;

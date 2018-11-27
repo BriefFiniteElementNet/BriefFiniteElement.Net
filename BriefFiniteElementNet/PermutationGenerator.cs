@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using CSparse;
 using CSparse.Storage;
-using CCS = CSparse.Double.CompressedColumnStorage;
+using CCS = CSparse.Double.SparseMatrix;
 using Coord = CSparse.Storage.CoordinateStorage<double>;
 
 namespace BriefFiniteElementNet

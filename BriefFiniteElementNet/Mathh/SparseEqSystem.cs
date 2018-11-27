@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet.Mathh
             throw new NotImplementedException();
         }
 
-        public CompressedColumnStorage ToCcs()
+        public SparseMatrix ToCcs()
         {
             var crd = new CoordinateStorage<double>(this.RowCount, this.ColumnCount, this.Equations.Sum(i => i.Size) + 1);
 
@@ -56,7 +56,7 @@ namespace BriefFiniteElementNet.Mathh
         public int[] RowNonzeros;
 
 
-        public static SparseEqSystem Generate(CSparse.Double.CompressedColumnStorage eqSystem)
+        public static SparseEqSystem Generate(CSparse.Double.SparseMatrix eqSystem)
         {
             var buf = new SparseEqSystem();
             var lastCol = eqSystem.ColumnCount;

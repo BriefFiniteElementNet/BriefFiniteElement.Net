@@ -11,7 +11,7 @@ using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.MpcElements;
 using CSparse.Double;
 using BriefFiniteElementNet.Solver;
-using CCS = CSparse.Double.CompressedColumnStorage;
+using CCS = CSparse.Double.SparseMatrix;
 
 namespace BriefFiniteElementNet
 {
@@ -65,11 +65,11 @@ namespace BriefFiniteElementNet
         #region Stiffness matrices
 
         [Obsolete]
-        internal CompressedColumnStorage Kff { get; set; }
+        internal SparseMatrix Kff { get; set; }
         [Obsolete]
-        internal CompressedColumnStorage Kfs { get; set; }
+        internal SparseMatrix Kfs { get; set; }
         [Obsolete]
-        internal CompressedColumnStorage Kss { get; set; }
+        internal SparseMatrix Kss { get; set; }
 
         #endregion
 
@@ -175,7 +175,7 @@ namespace BriefFiniteElementNet
         /// The solver generator which generates an <see cref="ISolver"/> for every <see cref="CompressedColumnStorage"/>.
         /// </value>
         [Obsolete("use SolverFactory instead")]
-        public Func<CompressedColumnStorage, ISolver> SolverGenerator { get; set; }
+        public Func<SparseMatrix, ISolver> SolverGenerator { get; set; }
 
         public ISolverFactory SolverFactory { get; set; }
 
@@ -1003,7 +1003,7 @@ namespace BriefFiniteElementNet
             }
         }
 
-        private void CheckForSymmetricity(CompressedColumnStorage cs)
+        private void CheckForSymmetricity(SparseMatrix cs)
         {
             var cr = cs.Transpose();
 

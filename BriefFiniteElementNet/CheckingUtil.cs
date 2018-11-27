@@ -37,7 +37,7 @@ namespace BriefFiniteElementNet
         /// <param name="x">The x.</param>
         /// <param name="b">The b.</param>
         /// <returns></returns>
-        public static double GetResidual(CompressedColumnStorage A, double[] x, double[] b)
+        public static double GetResidual(SparseMatrix A, double[] x, double[] b)
         {
             var buf = 0.0;
 
