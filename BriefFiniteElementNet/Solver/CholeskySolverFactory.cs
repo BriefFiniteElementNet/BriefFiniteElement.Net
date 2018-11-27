@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using BriefFiniteElementNet.Common;
+﻿using BriefFiniteElementNet.Common;
 using CSparse.Double;
 
 namespace BriefFiniteElementNet.Solver
@@ -13,7 +9,7 @@ namespace BriefFiniteElementNet.Solver
     public class CholeskySolverFactory:ISolverFactory
     {
         /// <inheritDoc />
-        public ISolver CreateSolver(CompressedColumnStorage A)
+        public ISolver CreateSolver(SparseMatrix A)
         {
             return new CholeskySolver(A);
         }

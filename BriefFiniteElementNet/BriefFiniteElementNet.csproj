@@ -35,9 +35,8 @@
     <DocumentationFile>bin\Release\BriefFiniteElementNet.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CSparse, Version=3.1.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CSparse.3.1.9\lib\net40\CSparse.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="CSparse, Version=3.2.2.38595, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CSparse.3.2.2\lib\net40\CSparse.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -244,12 +243,12 @@
     <None Include="Elements\Tetrahedral.md" />
     <None Include="MpcElements\VirtualSupport.md" />
     <None Include="Mathh\IRrefFinder.md" />
+    <None Include="packages.config" />
     <None Include="TransformManagerL2G.md" />
     <None Include="Elements\TriangleFlatShell.md" />
     <None Include="Elements\TriangleFlatShellExtensions.md" />
     <None Include="MpcElements\HingeLink.md" />
     <None Include="Integration\GaussianIntegrator.md" />
-    <None Include="packages.config" />
     <None Include="RigidElement.md" />
     <None Include="Todo.md" />
     <None Include="UniformLoad1D.md" />

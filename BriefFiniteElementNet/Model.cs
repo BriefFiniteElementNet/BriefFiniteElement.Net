@@ -323,7 +323,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="solverGenerator">The solver generator.</param>
         [Obsolete()]
-        public void Solve(Func<CompressedColumnStorage, ISolver> solverGenerator)
+        public void Solve(Func<SparseMatrix, ISolver> solverGenerator)
         {
             throw new NotImplementedException();
         }

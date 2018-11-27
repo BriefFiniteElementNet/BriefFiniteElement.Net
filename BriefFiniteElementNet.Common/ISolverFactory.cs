@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using CSparse.Double;
-
+﻿
 namespace BriefFiniteElementNet.Common
 {
+    using CSparse.Double;
+
     /// <summary>
     /// Represents a factory for <see cref="ISolver"/> interface.
     /// </summary>
@@ -15,6 +12,6 @@ namespace BriefFiniteElementNet.Common
         /// Creates the solver.
         /// </summary>
         /// <returns></returns>
-        ISolver CreateSolver(CompressedColumnStorage A);
+        ISolver CreateSolver(SparseMatrix A);
     }
 }

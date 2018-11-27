@@ -87,7 +87,7 @@ namespace BriefFiniteElementNet.MpcElements
             base.GetObjectData(info, context);
         }
 
-        public override CompressedColumnStorage GetExtraEquations()
+        public override SparseMatrix GetExtraEquations()
         {
             throw new NotImplementedException();
         }

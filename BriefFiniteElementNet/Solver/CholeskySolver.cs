@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet.Solver
         /// Initializes a new instance of the <see cref="CholeskySolver"/> class.
         /// </summary>
         /// <param name="a">A.</param>
-        public CholeskySolver(CompressedColumnStorage a)
+        public CholeskySolver(SparseMatrix a)
         {
             A = a;
         }
@@ -36,7 +36,7 @@ namespace BriefFiniteElementNet.Solver
         public Model Target { get; private set; }
 
         /// <inheritdoc />
-        public CompressedColumnStorage A { get; set; }
+        public SparseMatrix A { get; set; }
 
 
         ISparseFactorization<double> cholesky;

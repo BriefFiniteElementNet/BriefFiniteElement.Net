@@ -14,8 +14,9 @@ namespace BriefFiniteElementNet.CodeProjectExamples
         [STAThread]
         static void Main(string[] args)
         {
-            DocSnippets.Test1();
-
+            Example1();
+            //Example2();
+            //DocSnippets.Test1();
         }
 
         private static void Example1()

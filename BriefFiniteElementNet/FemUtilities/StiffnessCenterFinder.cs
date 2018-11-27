@@ -6,7 +6,7 @@ using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.MpcElements;
 using BriefFiniteElementNet.Solver;
 using CSparse.Double;
-using CSR = CSparse.Double.CompressedColumnStorage;
+using CSR = CSparse.Double.SparseMatrix;
 
 namespace BriefFiniteElementNet.FemUtilies
 {

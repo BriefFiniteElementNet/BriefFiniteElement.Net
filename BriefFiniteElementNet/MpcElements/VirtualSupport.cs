@@ -44,7 +44,7 @@ namespace BriefFiniteElementNet.MpcElements
         }
 
 
-        public override CompressedColumnStorage GetExtraEquations()
+        public override SparseMatrix GetExtraEquations()
         {
             var n = parent.Nodes.Count;
 

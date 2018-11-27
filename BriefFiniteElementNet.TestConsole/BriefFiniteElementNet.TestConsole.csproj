@@ -35,23 +35,14 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CSparse, Version=3.1.9.0, Culture=neutral, PublicKeyToken=null" />
-    <Reference Include="CudaSolve, Version=8.0.22.0, Culture=neutral, processorArchitecture=AMD64">
-      <HintPath>..\packages\ManagedCuda-CUSOLVE.8.0.22\lib\net45\CudaSolve.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="CudaSparse, Version=8.0.22.0, Culture=neutral, PublicKeyToken=f65ee2ae6b331585, processorArchitecture=AMD64">
-      <HintPath>..\packages\ManagedCuda-CUSPARSE.8.0.22\lib\net45\CudaSparse.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="ManagedCuda, Version=8.0.22.0, Culture=neutral, PublicKeyToken=242d898828717aa0, processorArchitecture=MSIL">
-      <HintPath>..\packages\ManagedCuda-80.8.0.22\lib\net45\ManagedCuda.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="CSparse, Version=3.2.2.38595, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CSparse.3.2.2\lib\net40\CSparse.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />

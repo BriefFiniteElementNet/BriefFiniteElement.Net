@@ -76,7 +76,7 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static double[] Muly(CompressedColumnStorage mtx, double[] vec)
+        public static double[] Muly(SparseMatrix mtx, double[] vec)
         {
             var buf = new double[mtx.RowCount];
 

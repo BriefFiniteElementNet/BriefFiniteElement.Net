@@ -12,7 +12,7 @@ namespace BriefFiniteElementNet.Solver
     /// <typeparam name="T"></typeparam>
     public abstract class IterativeSolver : IIterativeSolver
     {
-        public CompressedColumnStorage A { get; set; }
+        public SparseMatrix A { get; set; }
 
         public Model Target { get; private set; }
 
