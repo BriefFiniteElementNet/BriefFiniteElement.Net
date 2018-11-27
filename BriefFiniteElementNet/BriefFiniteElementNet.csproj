@@ -47,7 +47,6 @@
     <Compile Include="ArrayEqualityCompairer.cs" />
     <Compile Include="ArrayPool.cs" />
     <Compile Include="BendingStressTensor.cs" />
-    <Compile Include="CalculationCache.cs" />
     <Compile Include="Constraints.cs" />
     <Compile Include="ElementHelpers\Gt9Helper.cs" />
     <Compile Include="ElementHelpers\TriangleBasicDrillingDofHelper.cs" />
@@ -97,7 +96,6 @@
     <Compile Include="MpcElements\MpcElement.cs" />
     <Compile Include="Mathh\LinkedListIrrefFinder.cs" />
     <Compile Include="MpcElementCollection.cs" />
-    <Compile Include="PlateBendingStressTensor.cs" />
     <Compile Include="ReflectionUtils.cs" />
     <Compile Include="Sections\Base1DSection.cs" />
     <Compile Include="Elements\ConcentratedMass.cs" />
@@ -113,7 +111,6 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="CalcUtil.cs" />
     <Compile Include="CustomGaussianIntegrator.cs" />
-    <Compile Include="FlatshellInternalForceUtil.cs" />
     <Compile Include="FlatShellStressTensor.cs" />
     <Compile Include="FluentElementPermuteManager.cs" />
     <Compile Include="MpcElements\HingeLink.cs" />
@@ -179,7 +176,6 @@
     <Compile Include="ConcentratedLoad1D.cs" />
     <Compile Include="Constraint.cs" />
     <Compile Include="CoordinationSystem.cs" />
-    <Compile Include="CustomLinearLoad1D.cs" />
     <Compile Include="LoadDirection.cs" />
     <Compile Include="Displacement.cs" />
     <Compile Include="DofConstraint.cs" />
@@ -225,11 +221,9 @@
     <Compile Include="UniformLoadForPlanarElements.cs" />
     <Compile Include="UniformSurfaceLoadFor3DElement.cs" />
     <Compile Include="Vector.cs" />
-    <Compile Include="XmlIO.cs" />
     <Compile Include="ZoneDevidedMatrix.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CalculationCache.md" />
     <None Include="CalcUtil.md" />
     <None Include="ClassDiagram1.cd" />
     <None Include="Documents\SupportReactions.mkd" />
