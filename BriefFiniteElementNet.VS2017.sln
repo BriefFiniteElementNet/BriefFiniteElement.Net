@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Bench
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.CodeProjectExamples", "BriefFiniteElementNet.CodeProjectExamples\BriefFiniteElementNet.CodeProjectExamples.csproj", "{24EBA191-F9E3-47CF-B0FE-865B6243A354}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Controls", "BriefFiniteElement.Controls\BriefFiniteElementNet.Controls.csproj", "{8DABDE62-8A8E-4153-B753-3A62015A9C16}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Controls", "BriefFiniteElementNet.Controls\BriefFiniteElementNet.Controls.csproj", "{8DABDE62-8A8E-4153-B753-3A62015A9C16}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Validation", "BriefFiniteElementNet.Validation\BriefFiniteElementNet.Validation.csproj", "{7A20CE01-552E-457A-A9C3-18BED244D897}"
 EndProject
