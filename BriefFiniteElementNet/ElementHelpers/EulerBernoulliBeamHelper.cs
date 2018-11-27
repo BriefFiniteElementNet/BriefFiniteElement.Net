@@ -714,9 +714,9 @@ namespace BriefFiniteElementNet.ElementHelpers
         public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, Load load,
             double[] isoLocation)
         {
-            var buff = new List<Tuple<DoF, double>>();
+            var n = targetElement.Nodes.Length;
 
-            //var buf = new FlatShellStressTensor();
+            var buff = new List<Tuple<DoF, double>>();
             
             var tr = targetElement.GetTransformationManager();
 
@@ -724,18 +724,49 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var endForces = GetLocalEquivalentNodalLoads(targetElement, load);
 
+            var buf = new Force();
 
-            var v0 =
-                this._direction == BeamDirection.Z ?
-                endForces[0].Fy : endForces[0].Fz;
+            
 
-            var m0 = this._direction == BeamDirection.Z ?
-                endForces[0].Mz : endForces[0].My;
+            var xi_s = new double[br.Nodes.Length];//xi loc of each force
+            var x_s = new double[br.Nodes.Length];//x loc of each force
 
-            v0 = -v0;
-            m0 = -m0;
+            for (var i = 0; i < xi_s.Length; i++)
+            {
+                var x_i = targetElement.Nodes[i].Location - targetElement.Nodes[0].Location;
+                var xi_i = br.LocalCoordsToIsoCoords(x_i.Length)[0];
+
+                xi_s[i] = xi_i;
+                x_s[i] = x_i.X;
+            }
+
+            var ends = new Force();//sum of moved end forces to destination
+
+            for (var i = 0; i < n; i++)
+            {
+                if (xi_s[i] < isoLocation[0])
+                {
+                    var frc_i = new Force();
+
+                    if (this._direction == BeamDirection.Y)
+                    {
+                        frc_i.My = endForces[i].My;
+                        frc_i.Fz = endForces[i].Fz;
+                    }
+                    else
+                    {
+                        frc_i.Mz = endForces[i].Mz;
+                        frc_i.Fy = endForces[i].Fy;
+                    }
+
+                    ends += frc_i.Move(Point.Origins, new Point(x_s[i], 0, 0));
+                }
+                
+            }
+
 
             var to = Iso2Local(targetElement, isoLocation)[0];
+            
 
 
             #region uniform & trapezoid, uses integration method
@@ -790,16 +821,39 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     Matrix integral;
 
+                    double i0=0, i1=0;//span for integration
 
-                    if(isoLocation[0]<xi0)
+                    var xi_t = isoLocation[0];
+
+                    if (xi_t < xi0)
+                    {
+                        i0 = i1 = xi0;
+                    }
+
+                    if (xi_t > xi1)
+                    {
+                        i0 = xi0;
+                        i1 = xi1;
+                    }
+
+                    if (xi_t < xi1 && xi_t > xi0)
+                    {
+                        i0 = xi0;
+                        i1 = xi_t;
+                    }
+
+
+                    if (i1 == i0)
                     {
                         integral = new Matrix(2, 1);
                     }
                     else
                     {
-                        var intgV = GaussianIntegrator.CreateFor1DProblem(x =>
+                        var intgV = GaussianIntegrator.CreateFor1DProblem(xi =>
                         {
-                            var xi = Local2Iso(targetElement, x)[0];
+                            //var xi = Local2Iso(targetElement, x)[0];
+                            var j = GetJMatrixAt(targetElement, xi);
+                            
                             var q__ = magnitude(xi);
                             var q_ = localDir * q__;
 
@@ -808,18 +862,20 @@ namespace BriefFiniteElementNet.ElementHelpers
                             if (this._direction == BeamDirection.Y)
                             {
                                 df = q_.Z;
-                                dm = -q_.Z * x;
+                                dm = -q_.Z * xi;
                             }
                             else
                             {
                                 df = q_.Y;
-                                dm = q_.Y * x;
+                                dm = q_.Y * xi;
                             }
 
                             var buf_ = new Matrix(new double[] { df, dm });
+                            var detj = j.Determinant();
+                            buf_.MultiplyByConstant(detj);
 
                             return buf_;
-                        }, 0, to, gpt);
+                        }, i0, i1, gpt);
 
                         integral = intgV.Integrate();
                     }
@@ -827,27 +883,26 @@ namespace BriefFiniteElementNet.ElementHelpers
                     var v_i = integral[0, 0];
                     var m_i = integral[1, 0];
 
+                    var frc = new Force();
+
+
                     if (this._direction == BeamDirection.Y)
                     {
-                        var v =  -(v_i + v0);
-                        //memb.S12 = memb.S21 = v;
-                        var m = -(m0 + m_i + (v * to * -1));
-                        //bnd.M13 = bnd.M31 = m;
-
-                        buff.Add(Tuple.Create(DoF.Ry, m));
-                        buff.Add(Tuple.Create(DoF.Dz, v));
-
+                        frc.My = m_i;
+                        frc.Fz = v_i;
                     }
                     else
                     {
-                        var v =  -(v_i + v0);
-                        //memb.S13 = memb.S31 = v;
-                        var m =  -(m0 + m_i + (v * to * +1));
-                        //bnd.M12 = bnd.M21 = m;
-
-                        buff.Add(Tuple.Create(DoF.Rz, m));
-                        buff.Add(Tuple.Create(DoF.Dy, v));
+                        frc.Mz = m_i;
+                        frc.Fy = v_i;
                     }
+
+                    frc += ends;
+
+                    buff.Add(Tuple.Create(DoF.Ry, frc.My));
+                    buff.Add(Tuple.Create(DoF.Rz, frc.Mz));
+                    buff.Add(Tuple.Create(DoF.Dy, frc.Fy));
+                    buff.Add(Tuple.Create(DoF.Dz, frc.Fz));
 
                     return buff;
                 }

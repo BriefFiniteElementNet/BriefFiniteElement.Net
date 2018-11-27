@@ -47,7 +47,23 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix GetJMatrixAt(Element targetElement, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var tet = targetElement as Tetrahedral;
+
+            if (tet == null)
+                throw new Exception();
+
+            var n1 = tet.Nodes[0].Location;
+            var n2 = tet.Nodes[1].Location;
+            var n3 = tet.Nodes[2].Location;
+            var n4 = tet.Nodes[3].Location;
+
+            var buf = new Matrix(3, 3);
+
+            buf.SetRow(0, n2.X - n1.X, n3.X - n1.X, n4.X - n1.X);
+            buf.SetRow(1, n2.Y - n1.Y, n3.Y - n1.Y, n4.Y - n1.Y);
+            buf.SetRow(2, n2.Z - n1.Z, n3.Z - n1.Z, n4.Z - n1.Z);
+
+            return buf;
         }
 
         /// <inheritdoc/>

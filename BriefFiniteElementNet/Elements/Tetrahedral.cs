@@ -2,6 +2,7 @@
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using Elo = BriefFiniteElementNet.FluentElementPermuteManager.ElementLocalDof;
+using BriefFiniteElementNet.Materials;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -13,6 +14,27 @@ namespace BriefFiniteElementNet.Elements
     {
 
         #region mechanical props
+        private BaseMaterial _material;
+
+        /// <summary>
+        /// Gets or sets the material of bar element.
+        /// </summary>
+        /// <value>
+        /// The material.
+        /// </value>
+        /// <example>
+        /// <code>
+        /// var bar = new BarElement();
+        /// bar.Section = new UniformBarMaterial(1,1);//sets material
+        /// </code>
+        /// </example>
+        public BaseMaterial Material_obs
+        {
+            get { return _material; }
+            set { _material = value; }
+        }
+
+
 
         private double _e;
         private double _nu;

@@ -870,6 +870,8 @@ namespace BriefFiniteElementNet
         /// <returns></returns>
         public double Determinant()
         {
+            if (rowCount == columnCount && columnCount == 1)
+                return this[0, 0];
             //Seems working good!
 
             if (!IsSquare())

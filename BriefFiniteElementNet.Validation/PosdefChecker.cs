@@ -55,6 +55,58 @@ namespace BriefFiniteElementNet.Validation
             var max = sym.Values.Max(i => Math.Abs(i));
         }
 
+        public static void CheckModel_mpc(Model model, LoadCase lc)
+        {
+            var n = model.Nodes.Count * 6;
+
+            //model.ReIndexNodes();
+            //LoadCase.DefaultLoadCase
+
+            var perm = CalcUtil.GenerateP_Delta_Mpc(model, lc, new Mathh.GaussRrefFinder());
+
+            var np = perm.Item1.ColumnCount;//master count
+
+            var rd = perm.Item2;
+
+            var pd = perm.Item1;
+
+            var kt = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(model);
+
+
+            if (perm.Item1.RowCount > 0 && perm.Item1.RowCount > 0)
+            {
+                var pf = pd.Transpose();
+
+
+                var kr = pf.Multiply(kt).Multiply(pd);
+
+                var nr = kr.RowCount;
+
+                for (int i = 0; i < nr; i++)
+                {
+
+                    //two conditions: 
+                    // 1 - DoF[i] in reduced structure is a member of bounded dof group with MPC equations
+                    // 2 - DoF[i] in reduced structure is not in first condition, it is standalone and not related to any other DoF or Fixed Value
+                    
+                    var t = kr.At(i, i);
+
+                    if (t > 0)
+                        continue;
+
+                    
+
+                    var nodeNum = 6.0 / 6;
+
+                    if (t == 0)
+                        model.Trace.Write(Common.TraceLevel.Warning, "DoF {0} of Node {1} not properly constrained", 7 % 6, nodeNum);
+                    else//t < 0
+                        model.Trace.Write(Common.TraceLevel.Warning, "DoF {0} of Node {1} not member", 7 % 6, nodeNum);
+                }
+
+            }
+        }
+
 
         public static void FixUnrestrainedDofs(Model model, LoadCase lc)
         {
