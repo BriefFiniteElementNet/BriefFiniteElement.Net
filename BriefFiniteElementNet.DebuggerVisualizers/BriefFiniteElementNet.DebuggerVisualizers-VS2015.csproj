@@ -54,7 +54,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BriefFiniteElement.Controls\BriefFiniteElementNet.Controls.csproj">
+    <ProjectReference Include="..\BriefFiniteElementNet.Controls\BriefFiniteElementNet.Controls.csproj">
       <Project>{8dabde62-8a8e-4153-b753-3a62015a9c16}</Project>
       <Name>BriefFiniteElementNet.Controls</Name>
     </ProjectReference>
