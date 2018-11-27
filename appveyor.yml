@@ -1,4 +1,4 @@
 before_build:
-  - nuget restore
+  - nuget restore BriefFiniteElementNet.VS2015.sln
 build:
   project: BriefFiniteElementNet.VS2015.sln
