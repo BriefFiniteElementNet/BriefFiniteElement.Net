@@ -4,11 +4,11 @@ using System.Linq;
 using System.Windows;
 using BriefFiniteElementNet;
 using BriefFiniteElementNet.Controls;
-using BriefFiniteElementNet.DebuggerVisualizersVS2012;
+using BriefFiniteElementNet.DebuggerVisualizers;
 using Microsoft.VisualStudio.DebuggerVisualizers;
 
 [assembly: System.Diagnostics.DebuggerVisualizer(typeof(ModelVisualizer), typeof(VisualizerObjectSource), Target = typeof(Model), Description = "Epsi1on Model Visualizer!")]
-namespace BriefFiniteElementNet.DebuggerVisualizersVS2012
+namespace BriefFiniteElementNet.DebuggerVisualizers
 {
     
     public class ModelVisualizer : DialogDebuggerVisualizer

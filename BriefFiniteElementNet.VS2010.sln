@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.CodeP
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Controls", "BriefFiniteElement.Controls\BriefFiniteElementNet.Controls.csproj", "{8DABDE62-8A8E-4153-B753-3A62015A9C16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.DebuggerVisualizersVS2010", "BriefFiniteElementNet.DebuggerVisualizersVS2010\BriefFiniteElementNet.DebuggerVisualizersVS2010.csproj", "{68B48A72-1735-4848-9C41-1307D7BCBEB1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.DebuggerVisualizers", "BriefFiniteElementNet.DebuggerVisualizers\BriefFiniteElementNet.DebuggerVisualizers-VS2010.csproj", "{68B48A72-1735-4848-9C41-1307D7BCBEB1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

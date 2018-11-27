@@ -8,8 +8,8 @@
     <ProjectGuid>{68B48A72-1735-4848-9C41-1307D7BCBEB1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BriefFiniteElementNet.DebuggerVisualizersVS2010</RootNamespace>
-    <AssemblyName>BriefFiniteElementNet.DebuggerVisualizersVS2010</AssemblyName>
+    <RootNamespace>BriefFiniteElementNet.DebuggerVisualizers</RootNamespace>
+    <AssemblyName>BriefFiniteElementNet.DebuggerVisualizers</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -72,7 +72,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "BriefFiniteElementNet.DebuggerVisualizersVS2010.dll" "%25UserProfile%25\Documents\Visual Studio 2010\Visualizers\" /y
+    <PostBuildEvent>xcopy "BriefFiniteElementNet.DebuggerVisualizers.dll" "%25UserProfile%25\Documents\Visual Studio 2010\Visualizers\" /y
 xcopy "BriefFiniteElementNet.dll" "%25UserProfile%25\Documents\Visual Studio 2010\Visualizers\" /y
 xcopy "BriefFiniteElementNet.Controls.dll" "%25UserProfile%25\Documents\Visual Studio 2010\Visualizers\" /y
 xcopy "HelixToolkit.dll" "%25UserProfile%25\Documents\Visual Studio 2010\Visualizers\" /y</PostBuildEvent>

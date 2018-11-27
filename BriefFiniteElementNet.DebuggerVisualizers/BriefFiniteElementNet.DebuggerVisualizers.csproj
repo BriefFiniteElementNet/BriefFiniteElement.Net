@@ -7,8 +7,8 @@
     <ProjectGuid>{E12A7AD9-780B-4ADC-8C08-C7D5FD63C18B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BriefFiniteElementNet.DebuggerVisualizersVS2013</RootNamespace>
-    <AssemblyName>BriefFiniteElementNet.DebuggerVisualizersVS2013</AssemblyName>
+    <RootNamespace>BriefFiniteElementNet.DebuggerVisualizers</RootNamespace>
+    <AssemblyName>BriefFiniteElementNet.DebuggerVisualizers</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,7 +33,7 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.DebuggerVisualizers, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.DebuggerVisualizers, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -50,9 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MatrixVisualizer.cs" />
-    <Compile Include="MatrixVisualizerControl.xaml.cs">
-      <DependentUpon>MatrixVisualizerControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ModelVisualizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -67,17 +64,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="MatrixVisualizerControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
+    <None Include="app.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "BriefFiniteElementNet.DebuggerVisualizersVS2013.dll" "%25UserProfile%25\Documents\Visual Studio 2013\Visualizers\" /y
-xcopy "BriefFiniteElementNet.dll" "%25UserProfile%25\Documents\Visual Studio 2013\Visualizers\" /y
-xcopy "BriefFiniteElementNet.Controls.dll" "%25UserProfile%25\Documents\Visual Studio 2013\Visualizers\" /y
-xcopy "HelixToolkit.dll" "%25UserProfile%25\Documents\Visual Studio 2013\Visualizers\" /y</PostBuildEvent>
+    <PostBuildEvent>xcopy "BriefFiniteElementNet.DebuggerVisualizers.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
+xcopy "BriefFiniteElementNet.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
+xcopy "BriefFiniteElementNet.Controls.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
+xcopy "HelixToolkit.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

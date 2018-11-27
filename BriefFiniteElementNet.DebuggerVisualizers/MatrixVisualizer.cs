@@ -2,12 +2,12 @@
 using System.Reflection;
 using System.Windows;
 using BriefFiniteElementNet;
-using BriefFiniteElementNet.DebuggerVisualizersVS13;
-using BriefFiniteElementNet.DebuggerVisualizersVS2013;
+using BriefFiniteElementNet.Controls;
+using BriefFiniteElementNet.DebuggerVisualizers;
 using Microsoft.VisualStudio.DebuggerVisualizers;
 
 [assembly: System.Diagnostics.DebuggerVisualizer(typeof(MatrixVisualizer), typeof(VisualizerObjectSource), Target = typeof(Matrix), Description = "Epsi1on Matrix Visualizer!")]
-namespace BriefFiniteElementNet.DebuggerVisualizersVS2013
+namespace BriefFiniteElementNet.DebuggerVisualizers
 {
     public class MatrixVisualizer : DialogDebuggerVisualizer
     {

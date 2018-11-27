@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		XmlInputFormat.txt = XmlInputFormat.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.DebuggerVisualizersVS2013", "BriefFiniteElementNet.DebuggerVisualizersVS2013\BriefFiniteElementNet.DebuggerVisualizersVS2013.csproj", "{E12A7AD9-780B-4ADC-8C08-C7D5FD63C18B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.DebuggerVisualizers", "BriefFiniteElementNet.DebuggerVisualizers\BriefFiniteElementNet.DebuggerVisualizers-VS2013.csproj", "{E12A7AD9-780B-4ADC-8C08-C7D5FD63C18B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Validation", "BriefFiniteElementNet.Validation\BriefFiniteElementNet.Validation.csproj", "{7A20CE01-552E-457A-A9C3-18BED244D897}"
 EndProject

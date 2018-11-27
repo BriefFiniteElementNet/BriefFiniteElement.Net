@@ -13,7 +13,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Contr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Validation", "BriefFiniteElementNet.Validation\BriefFiniteElementNet.Validation.csproj", "{7A20CE01-552E-457A-A9C3-18BED244D897}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.DebuggerVisualizersVS2015", "BriefFiniteElementNet.DebuggerVisualizersVS2015\BriefFiniteElementNet.DebuggerVisualizersVS2015.csproj", "{E12A7AD9-780B-4ADC-8C08-C7D5FD63C18B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.DebuggerVisualizers", "BriefFiniteElementNet.DebuggerVisualizers\BriefFiniteElementNet.DebuggerVisualizers.csproj", "{E12A7AD9-780B-4ADC-8C08-C7D5FD63C18B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.TestConsole", "BriefFiniteElementNet.TestConsole\BriefFiniteElementNet.TestConsole.csproj", "{1DD7D04E-0DFB-49BD-AAA2-30128005ACE7}"
 EndProject

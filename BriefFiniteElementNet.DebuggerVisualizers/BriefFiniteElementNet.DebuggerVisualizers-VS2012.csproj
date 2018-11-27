@@ -7,8 +7,8 @@
     <ProjectGuid>{39005DFE-A367-43C3-8781-D71125D8D190}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BriefFiniteElementNet.DebuggerVisualizersVS2012</RootNamespace>
-    <AssemblyName>BriefFiniteElementNet.DebuggerVisualizersVS2012</AssemblyName>
+    <RootNamespace>BriefFiniteElementNet.DebuggerVisualizers</RootNamespace>
+    <AssemblyName>BriefFiniteElementNet.DebuggerVisualizers</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
@@ -79,7 +79,7 @@
     </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>xcopy "BriefFiniteElementNet.DebuggerVisualizersVS2012.dll" "%25UserProfile%25\Documents\Visual Studio 2012\Visualizers\" /y
+    <PostBuildEvent>xcopy "BriefFiniteElementNet.DebuggerVisualizers.dll" "%25UserProfile%25\Documents\Visual Studio 2012\Visualizers\" /y
 xcopy "BriefFiniteElementNet.dll" "%25UserProfile%25\Documents\Visual Studio 2012\Visualizers\" /y
 xcopy "BriefFiniteElementNet.Controls.dll" "%25UserProfile%25\Documents\Visual Studio 2012\Visualizers\" /y
 xcopy "HelixToolkit.dll" "%25UserProfile%25\Documents\Visual Studio 2012\Visualizers\" /y</PostBuildEvent>
