@@ -91,7 +91,7 @@ namespace BriefFiniteElementNet.Loads
 
         #endregion
 
-        
+       
 
         public double[] GetMagnitudesAt(params double[] isoCoords)
         {
@@ -122,6 +122,12 @@ namespace BriefFiniteElementNet.Loads
 
             return buf;
             
+        }
+
+        public override IsoPoint[] GetInternalForceDiscretationPoints()
+        {
+            //no discrete points
+            return new IsoPoint[0];
         }
     }
 }

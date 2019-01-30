@@ -60,25 +60,7 @@ namespace BriefFiniteElementNet.Elements
 
 
 
-        public override Matrix ComputeBMatrix(params double[] location)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Matrix ComputeDMatrixAt(params double[] location)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Matrix ComputeJMatrixAt(params double[] location)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Matrix ComputeNMatrixAt(params double[] location)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public override Force[] GetGlobalEquivalentNodalLoads(Load load)
         {

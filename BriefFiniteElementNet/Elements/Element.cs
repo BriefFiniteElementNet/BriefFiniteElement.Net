@@ -207,8 +207,8 @@ namespace BriefFiniteElementNet.Elements
         /// For example B is ∂N / ∂x and is NOT ∂N / ∂ξ
         /// </remarks>
         /// <returns>The B matrix at specified <see cref="location"/></returns>
-        [Obsolete]
-        public abstract Matrix ComputeBMatrix(params double[] location);
+        //[Obsolete]
+        //public abstract Matrix ComputeBMatrix(params double[] location);
 
         /// <summary>
         /// Gets the constitutive matrix in local coordination system at specified <see cref="location" />.
@@ -217,8 +217,8 @@ namespace BriefFiniteElementNet.Elements
         /// <returns>
         /// The constitutive matrix at specified <see cref="location" />
         /// </returns>
-        [Obsolete]
-        public abstract Matrix ComputeDMatrixAt(params double[] location);
+        //[Obsolete]
+        //public abstract Matrix ComputeDMatrixAt(params double[] location);
 
         /// <summary>
         /// Gets the N matrix (shape function) in local coordination system at specified <see cref="location" />.
@@ -227,8 +227,8 @@ namespace BriefFiniteElementNet.Elements
         /// <returns>
         /// The N matrix at specified <see cref="location" />
         /// </returns>
-        [Obsolete]
-        public abstract Matrix ComputeNMatrixAt(params double[] location);
+        //[Obsolete]
+        //public abstract Matrix ComputeNMatrixAt(params double[] location);
 
         /// <summary>
         /// Computes the J matrix at specified <see cref="location"/>.
@@ -242,8 +242,8 @@ namespace BriefFiniteElementNet.Elements
         /// </remarks>
         /// <param name="location">The location.</param>
         /// <returns>the Jacobian matrix</returns>
-        [Obsolete]
-        public abstract Matrix ComputeJMatrixAt(params double[] location);
+        //[Obsolete]
+        //public abstract Matrix ComputeJMatrixAt(params double[] location);
 
         /// <summary>
         /// Gets the lambda matrix of element (for transforming between local and global axis).
@@ -317,5 +317,6 @@ namespace BriefFiniteElementNet.Elements
 
 
 
+        
     }
 }

@@ -15,7 +15,7 @@ namespace BriefFiniteElementNet.Elements
     /// Represents a Bar element with two nodes (start and end)
     /// </summary>
     [Serializable]
-    [Obsolete("not fully implemented yet")]
+
     public class BarElement : Element
     {
         /// <summary>
@@ -193,7 +193,10 @@ namespace BriefFiniteElementNet.Elements
 
         #endregion
 
-        public override Matrix ComputeBMatrix(params double[] location)
+
+        #region obsolete methods
+
+        public Matrix ComputeBMatrix(params double[] location)
         {
             var L = (EndNode.Location - StartNode.Location).Length;
 
@@ -312,7 +315,7 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
-        public override Matrix ComputeDMatrixAt(params double[] location)
+        public Matrix ComputeDMatrixAt(params double[] location)
         {
             double e = 0.0, g = 0;//mechanical
 
@@ -328,7 +331,7 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
-        public override Matrix ComputeJMatrixAt(params double[] location)
+        public Matrix ComputeJMatrixAt(params double[] location)
         {
             // J =  ∂x / ∂ξ
             var L = (EndNode.Location - StartNode.Location).Length;
@@ -337,6 +340,13 @@ namespace BriefFiniteElementNet.Elements
             buf[0, 0] = L/2;/// J =  ∂x / ∂ξ
             return buf;
         }
+
+        public Matrix ComputeNMatrixAt(params double[] location)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
         public override Matrix GetLambdaMatrix()
         {
@@ -422,10 +432,7 @@ namespace BriefFiniteElementNet.Elements
             return GetElementHelpers().ToArray();
         }
 
-        public override Matrix ComputeNMatrixAt(params double[] location)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public override Force[] GetGlobalEquivalentNodalLoads(Load load)
         {
@@ -898,6 +905,24 @@ namespace BriefFiniteElementNet.Elements
         /// </remarks>
         public Force GetExactInternalForceAt(double xi, LoadCase loadCase)
         {
+            var discretePoints = new List<IsoPoint>();
+
+            discretePoints.AddRange(this.GetInternalForceDiscretationPoints());
+
+
+            foreach (var load in Loads)
+            {
+                if (load.Case == loadCase)
+                    discretePoints.AddRange(load.GetInternalForceDiscretationPoints());
+            }
+
+            foreach (var point in discretePoints)
+            {
+                if (xi == point.Xi)
+                    throw new Exception(
+                        $"Internal force is descrete at xi = {xi}, thus have two values in this location. try to find internal force a little bit after or before this point");
+            }
+
             var approx = GetInternalForceAt(xi, loadCase);
 
             var fcs = new Dictionary<DoF, double>();
@@ -971,6 +996,10 @@ namespace BriefFiniteElementNet.Elements
         {
             return GetExactInternalForceAt(xi, LoadCase.DefaultLoadCase);
         }
+
+        
+       
+
         #endregion
 
         #region GetInternalDisplacementAt, GetExactInternalDisplacementAt
@@ -1113,6 +1142,45 @@ namespace BriefFiniteElementNet.Elements
             return (Mathh.Polynomial)(Cache[cachekey] = x_xi);
         }
 
-        
+        /// <summary>
+        /// Gets the iso location of points that internal force in those points are discrete only due to element.
+        /// </summary>
+        /// <returns>list of iso locations</returns>
+        public IsoPoint[] GetInternalForceDiscretationPoints()
+        {
+            var buf = new List<IsoPoint>();
+
+            foreach (var node in nodes)
+            {
+                var x = (node.Location - nodes[0].Location).Length;
+
+                buf.Add(new IsoPoint(IsoCoordsToLocalCoords(x)[0]));
+            }
+
+            //Note: internal loads are not accounted
+            /*
+            foreach (var load in this.loads)
+            {
+                if (load.Case != loadCase)
+                    continue;
+
+                var pts = load.GetInternalForceDiscretationPoints();
+
+                buf.AddRange(pts);
+            }
+            */
+            var b2 = new List<IsoPoint>();
+
+           
+            foreach (var point in buf.OrderBy(i=>i.Xi))
+            {
+                var pt = new IsoPoint(point.Xi);
+
+                if(!b2.Contains(pt))
+                    b2.Add(pt);
+            }
+
+            return b2.ToArray();
+        }
     }
 }

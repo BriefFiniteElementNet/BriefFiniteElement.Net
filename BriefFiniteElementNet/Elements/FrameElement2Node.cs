@@ -21,6 +21,7 @@ namespace BriefFiniteElementNet
     /// Represents a Frame Element with 2 nodes (start and end)
     /// </summary>
     [Serializable]
+    [Obsolete("use BarElement instead")]
     public sealed class FrameElement2Node : Element1D
     {
         /// <summary>
@@ -1076,8 +1077,9 @@ namespace BriefFiniteElementNet
             throw new NotImplementedException();
         }
 
+        #region obsoletes
         ///<inheritdoc/>
-        public override Matrix ComputeBMatrix(params double[] location)
+        public Matrix ComputeBMatrix(params double[] location)
         {
             var L = (EndNode.Location - StartNode.Location).Length;
 
@@ -1116,13 +1118,13 @@ namespace BriefFiniteElementNet
         }
 
         ///<inheritdoc/>
-        public override Matrix ComputeDMatrixAt(params double[] location)
+        public Matrix ComputeDMatrixAt(params double[] location)
         {
             throw new NotImplementedException();
         }
 
         ///<inheritdoc/>
-        public override Matrix ComputeNMatrixAt(params double[] location)
+        public Matrix ComputeNMatrixAt(params double[] location)
         {
             var L = (EndNode.Location - StartNode.Location).Length;
 
@@ -1151,11 +1153,13 @@ namespace BriefFiniteElementNet
         }
 
         ///<inheritdoc/>
-        public override Matrix ComputeJMatrixAt(params double[] location)
+        public Matrix ComputeJMatrixAt(params double[] location)
         {
             var v = (EndNode.Location - StartNode.Location).Length;
 
             return new Matrix(new double[] {v/2});
         }
+        #endregion
+
     }
 }

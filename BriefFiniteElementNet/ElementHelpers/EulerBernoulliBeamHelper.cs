@@ -817,7 +817,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     var nOrd = 0;// GetNMaxOrder(targetElement).Max();
 
-                    var gpt = (nOrd + degree) / 2 + 1;//gauss point count
+                    var gpt = (nOrd + degree) / 2 + 3;//gauss point count
 
                     Matrix integral;
 
@@ -862,17 +862,20 @@ namespace BriefFiniteElementNet.ElementHelpers
                             if (this._direction == BeamDirection.Y)
                             {
                                 df = q_.Z;
-                                dm = -q_.Z * xi;
+                                dm = -q_.Z * (1+xi);
                             }
                             else
                             {
                                 df = q_.Y;
-                                dm = q_.Y * xi;
+                                dm = q_.Y * (1+xi);
                             }
 
                             var buf_ = new Matrix(new double[] { df, dm });
                             var detj = j.Determinant();
-                            buf_.MultiplyByConstant(detj);
+
+                            buf_[0, 0] = buf_[0, 0] * detj;
+                            buf_[1, 0] = buf_[1, 0] * detj*detj;
+
 
                             return buf_;
                         }, i0, i1, gpt);
@@ -885,19 +888,32 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     var frc = new Force();
 
+                    var x = Iso2Local(targetElement, isoLocation)[0];
 
                     if (this._direction == BeamDirection.Y)
                     {
-                        frc.My = m_i;
-                        frc.Fz = v_i;
+                        var v0 = ends.Fz;
+                        var m0 = ends.My;
+
+                        var v1 = v_i - v0;
+                        var m1 = -m0 - v1 * x - m_i;
+
+                        frc.My = m1;
+                        frc.Fz = v1;
                     }
                     else
                     {
-                        frc.Mz = m_i;
-                        frc.Fy = v_i;
+                        var v0 = ends.Fy;
+                        var m0 = ends.Mz;
+
+                        var v1 = v_i - v0;
+                        var m1 = -m0 - v1 * x + m_i;
+
+                        frc.Mz = m1;
+                        frc.Fy = v1;
                     }
 
-                    frc += ends;
+                    //frc = frc + ends;
 
                     buff.Add(Tuple.Create(DoF.Ry, frc.My));
                     buff.Add(Tuple.Create(DoF.Rz, frc.Mz));

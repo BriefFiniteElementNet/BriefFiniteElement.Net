@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet.Loads
     public class ConcentratedLoad : Load
     {
         private double[] _forceIsoLocation;
-       
+
         private Force _force;
 
         private CoordinationSystem _coordinationSystem;
@@ -140,5 +140,26 @@ namespace BriefFiniteElementNet.Loads
         }
 
         #endregion
+
+       
+        public override IsoPoint[] GetInternalForceDiscretationPoints()
+        {
+            var buf = new List<IsoPoint>();
+
+            var isoPoint = new IsoPoint();
+
+            if (_forceIsoLocation.Length > 0)
+                isoPoint.Xi = _forceIsoLocation[0];
+
+            if (_forceIsoLocation.Length > 1)
+                isoPoint.Eta = _forceIsoLocation[1];
+
+            if (_forceIsoLocation.Length > 2)
+                isoPoint.Lambda = _forceIsoLocation[2];
+
+            buf.Add(isoPoint);
+
+            return buf.ToArray();
+        }
     }
 }

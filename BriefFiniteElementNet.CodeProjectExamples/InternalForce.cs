@@ -38,7 +38,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             Console.WriteLine("support reaction of n1: {0}", n1Force);
             var elm = model.Elements[0] as BarElement;
 
-            var frc = elm.GetExactInternalForceAt(0.00);
+            var frc = elm.GetExactInternalForceAt(1-1e-9);
         }
     }
 }

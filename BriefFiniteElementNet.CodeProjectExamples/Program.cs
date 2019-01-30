@@ -15,13 +15,13 @@ namespace BriefFiniteElementNet.CodeProjectExamples
         static void Main(string[] args)
         {
 
-            //InternalForceExample.Run();
+            InternalForceExample.Run();
             //DocSnippets.Test2();
 
             //Example1();
             //Example2();
             //DocSnippets.Test1();
-
+            //TestMatrixMult();
         }
 
         private static void Example1()
@@ -39,14 +39,22 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             var n4 = new Node(-1, -1, 0) {Label = "n4"};
             var n5 = new Node(0, 0, 1) {Label = "n5"};
 
-            var e1 = new TrussElement2Node(n1, n5) {Label = "e1"};
-            var e2 = new TrussElement2Node(n2, n5) {Label = "e2"};
-            var e3 = new TrussElement2Node(n3, n5) {Label = "e3"};
-            var e4 = new TrussElement2Node(n4, n5) {Label = "e4"};
+            var e1 = new BarElement(n1, n5) { Label = "e1", Behavior = BarElementBehaviours.Truss };
+            var e2 = new BarElement(n2, n5) {Label = "e2", Behavior = BarElementBehaviours.Truss };
+            var e3 = new BarElement(n3, n5) {Label = "e3", Behavior = BarElementBehaviours.Truss };
+            var e4 = new BarElement(n4, n5) { Label = "e4", Behavior = BarElementBehaviours.Truss };
             //Note: labels for all members should be unique, else you will receive InvalidLabelException when adding it to model
 
-            e1.A = e2.A = e3.A = e4.A = 9e-4;
-            e1.E = e2.E = e3.E = e4.E = 210e9;
+            e1.Section = new Sections.UniformParametric1DSection() { A = 9e-4 };
+            e2.Section = new Sections.UniformParametric1DSection() { A = 9e-4 };
+            e3.Section = new Sections.UniformParametric1DSection() { A = 9e-4 };
+            e4.Section = new Sections.UniformParametric1DSection() { A = 9e-4 };
+
+            e1.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
+            e2.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
+            e3.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
+            e4.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
+
 
             model.Nodes.Add(n1, n2, n3, n4, n5);
             model.Elements.Add(e1, e2, e3, e4);
@@ -54,12 +62,12 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             //Applying restrains
 
 
-            n1.Constraints = n2.Constraints = n3.Constraints = n4.Constraints = Constraint.Fixed;
-            n5.Constraints = Constraint.RotationFixed;
+            n1.Constraints = n2.Constraints = n3.Constraints = n4.Constraints = Constraints.Fixed;
+            n5.Constraints = Constraints.RotationFixed;
 
 
             //Applying load
-            var force = new Force(0, 1000, -1000, 0, 0, 0);
+            var force = new Force(0, 0, -1000, 0, 0, 0);
             n5.Loads.Add(new NodalLoad(force));//adds a load with LoadCase of DefaultLoadCase to node loads
             
             //Adds a NodalLoad with Default LoadCase
@@ -145,6 +153,23 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             new BarIncliendFrameExample().Run();
         }
 
-        
+        private static void TestMatrixMult()
+        {
+            var n = 1500;
+            var m1 = new Matrix(n, n);
+            var m2 = new Matrix(n, n);
+
+            var sp = System.Diagnostics.Stopwatch.StartNew();
+
+            var m3 = Matrix.Multiply(m1, m2);
+
+            Console.WriteLine("{1}x{1}*{1}x{1} took {0} milisecs", sp.ElapsedMilliseconds,n);
+        }
+
+        private static void TestConcLoad()
+        {
+            var model = new Model();
+            
+        }
     }
 }

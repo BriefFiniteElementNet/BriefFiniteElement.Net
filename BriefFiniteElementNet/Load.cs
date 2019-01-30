@@ -78,7 +78,11 @@ namespace BriefFiniteElementNet
 
         #endregion
 
-
+        /// <summary>
+        /// Gets the iso location of points that internal force in those points are discrete.
+        /// </summary>
+        /// <returns>list of iso locations</returns>
+        public abstract IsoPoint[] GetInternalForceDiscretationPoints();
 
     }
 }

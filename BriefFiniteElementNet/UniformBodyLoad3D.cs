@@ -142,5 +142,11 @@ namespace BriefFiniteElementNet
         {
             
         }
+
+        public override IsoPoint[] GetInternalForceDiscretationPoints()
+        {
+            //no discrete points
+            return new IsoPoint[0];
+        }
     }
 }

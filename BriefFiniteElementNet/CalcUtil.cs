@@ -20,6 +20,25 @@ namespace BriefFiniteElementNet
     /// </summary>
     public static class CalcUtil
     {
+        public static double[] Divide(double length, int pcs)
+        {
+            if (pcs < 1)
+                throw new Exception();
+
+
+            var delta = length / (pcs);
+
+            var buf = new double[pcs + 1];
+            var n = pcs + 1.0;
+
+            for (var i = 0; i < pcs+1; i++)
+            {
+                buf[i] = length * i / (pcs * 1.0);
+            }
+
+            return buf;
+        }
+
         public static void ApplyPermutation(Array arr, params int[] indexes)
         {
             if (arr.Length != indexes.Length)

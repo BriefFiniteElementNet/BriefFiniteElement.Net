@@ -54,12 +54,12 @@ namespace BriefFiniteElementNet
             var v1 = p2 - p1;
             var v2 = p3 - p1;
 
-            var s = v1.Cross(v2).Length/2;
+            var s = v1.Cross(v2).Length / 2;
 
-            var f = new Force {Fx = this.Sx*s/3, Fy = this.Sy*s/3, Fz = this.Sz*s/3};
+            var f = new Force { Fx = this.Sx * s / 3, Fy = this.Sy * s / 3, Fz = this.Sz * s / 3 };
 
 
-            return new[] {f, f, f};
+            return new[] { f, f, f };
         }
 
         [NonSerialized]
@@ -68,7 +68,7 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// used for referencing nodes after de serialization
         /// </summary>
-        
+
         internal int[] nodeNumbers;
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace BriefFiniteElementNet
 
 
 
-      
+
 
         /// <inheritdoc />
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
@@ -145,22 +145,26 @@ namespace BriefFiniteElementNet
 
 
             base.GetObjectData(info, context);
-        }        
+        }
 
-         /// <inheritdoc/>
-         protected UniformSurfaceLoadFor3DElement(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+        /// <inheritdoc/>
+        protected UniformSurfaceLoadFor3DElement(SerializationInfo info, StreamingContext context)
+           : base(info, context)
         {
             _sx = info.GetDouble("_sx");
             _sy = info.GetDouble("_sy");
             _sz = info.GetDouble("_sz");
 
-             this.nodeNumbers = (int[]) info.GetValue("nodeNumbers", typeof(int[]));
+            this.nodeNumbers = (int[])info.GetValue("nodeNumbers", typeof(int[]));
 
-             //NOTE: reassigning the references of _surfaceNodes elements is done in Model.ReassignNodeReferences.
-             //this is exception ...
+            //NOTE: reassigning the references of _surfaceNodes elements is done in Model.ReassignNodeReferences.
+            //this is exception ...
         }
 
-
+        public override IsoPoint[] GetInternalForceDiscretationPoints()
+        {
+            //no discrete points
+            return new IsoPoint[0];
+        }
     }
 }

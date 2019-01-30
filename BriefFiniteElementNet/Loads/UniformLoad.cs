@@ -9,7 +9,6 @@ using System.Security.Permissions;
 namespace BriefFiniteElementNet.Loads
 {
     [Serializable]
-    [Obsolete("still in development")]
     public class UniformLoad:Load
     {
         public UniformLoad(LoadCase @case) : base(@case)
@@ -106,6 +105,13 @@ namespace BriefFiniteElementNet.Loads
             info.AddValue("_coordinationSystem", (int)_coordinationSystem);
         }
 
+
         #endregion
+
+        public override IsoPoint[] GetInternalForceDiscretationPoints()
+        {
+            //no discrete points
+            return new IsoPoint[2] { new IsoPoint(-1, -1, -1), new IsoPoint(1, 1, 1) };
+        }
     }
 }

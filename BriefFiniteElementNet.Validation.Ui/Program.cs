@@ -14,8 +14,8 @@ namespace BriefFiniteElementNet.Validation.Ui
         {
 
             //TestTri();
-            //TestBar();
-            TestTetra();
+            TestBar();
+            //TestTetra();
             //return;
             //BarElementTester.ValidateSingleInclinedFrame();
 
@@ -23,11 +23,11 @@ namespace BriefFiniteElementNet.Validation.Ui
 
         static void TestBar()
         {
-            Console.WriteLine("Bar Element Test - Start");
+            //Console.WriteLine("Bar Element Test - Start");
 
 
-            ExportToHtmFile("c:\\temp\\validation.html", new BarElementTester());
-
+            //ExportToHtmFile("c:\\temp\\validation.html", new BarElementTester());
+            BarElementTester.TestFixedInternalForce2();
 
             //var resss = new BarElementTester().DoValidation();
         }

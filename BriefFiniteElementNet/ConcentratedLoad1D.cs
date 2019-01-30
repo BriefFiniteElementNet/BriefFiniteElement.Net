@@ -286,5 +286,17 @@ namespace BriefFiniteElementNet
         }
 
         #endregion
+
+        public override IsoPoint[] GetInternalForceDiscretationPoints()
+        {
+            var buf = new List<IsoPoint>();
+
+            //will not work with these
+            //var isoPoint = new IsoPoint();
+            //isoPoint.Xi = distanseFromStartNode;// _forceIsoLocation[0];
+            //buf.Add(isoPoint);
+
+            return buf.ToArray();
+        }
     }
 }
