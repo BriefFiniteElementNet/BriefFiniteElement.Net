@@ -771,7 +771,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             #region uniform & trapezoid, uses integration method
 
-            if (load is UniformLoad || load is PartialTrapezoidalLoad)
+            if (load is UniformLoad)
             {
 
                 Func<double, double> magnitude;
@@ -797,6 +797,8 @@ namespace BriefFiniteElementNet.ElementHelpers
                 }
                 else
                 {
+                    throw new NotImplementedException();
+                    /*
                     var tld = (load as PartialTrapezoidalLoad);
 
                     magnitude = (xi => (load as PartialTrapezoidalLoad).GetMagnitudesAt(xi, 0, 0)[0]);
@@ -805,9 +807,10 @@ namespace BriefFiniteElementNet.ElementHelpers
                     if (tld.CoordinationSystem == CoordinationSystem.Global)
                         localDir = tr.TransformGlobalToLocal(localDir);
 
-                    xi0 = tld.StarIsoLocations[0];
-                    xi1 = tld.EndIsoLocations[0];
+                    xi0 = tld.StartLocation[0];
+                    xi1 = tld.EndLocation[0];
                     degree = 1;
+                    */
                 }
 
                 localDir = localDir.GetUnit();
@@ -1144,7 +1147,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             #region uniform & trapezoid
 
-            if (load is UniformLoad || load is PartialTrapezoidalLoad)
+            if (load is UniformLoad)
             {
 
                 Func<double, double> magnitude;
@@ -1170,6 +1173,8 @@ namespace BriefFiniteElementNet.ElementHelpers
                 }
                 else
                 {
+                    throw new NotImplementedException();
+                    /*
                     var tld = (load as PartialTrapezoidalLoad);
 
                     magnitude = (xi => (load as PartialTrapezoidalLoad).GetMagnitudesAt(xi, 0, 0)[0]);
@@ -1178,9 +1183,10 @@ namespace BriefFiniteElementNet.ElementHelpers
                     if (tld.CoordinationSystem == CoordinationSystem.Global)
                         localDir = tr.TransformGlobalToLocal(localDir);
 
-                    xi0 = tld.StarIsoLocations[0];
-                    xi1 = tld.EndIsoLocations[0];
+                    xi0 = tld.StartLocation[0];
+                    xi1 = tld.EndLocation[0];
                     degree = 1;
+                    */
                 }
 
                 localDir = localDir.GetUnit();

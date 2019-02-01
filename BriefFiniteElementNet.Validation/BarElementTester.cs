@@ -125,16 +125,16 @@ namespace BriefFiniteElementNet.Validation
 
         public static void ValidateLoadInternalForce_B_y()
         {
-            var load = new Loads.PartialTrapezoidalLoad();
+            var load = new Loads.PartialNonUniformLoad();
             load.Direction = Vector.K;
 
             var w = 1;
 
-            load.StarIsoLocations = new double[] { -1 };
-            load.EndIsoLocations = new double[] { 1 };
+            load.StartLocation = new IsoPoint(-1);
+            load.EndLocation = new IsoPoint(-1);
 
-            load.StartMagnitudes = new double[] { w };
-            load.EndMagnitudes = new double[] { w };
+            //load.StartMagnitude = new double[] { w };
+            //load.EndMagnitude = new double[] { w };
 
             var hlpr = new BriefFiniteElementNet.ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y);
 
@@ -294,16 +294,16 @@ namespace BriefFiniteElementNet.Validation
 
         public static void ValidateLoadInternalForce_B_z()
         {
-            var load = new Loads.PartialTrapezoidalLoad();
+            var load = new Loads.PartialNonUniformLoad();
             load.Direction = Vector.J;
 
             var w = 1;
 
-            load.StarIsoLocations = new double[] { -1 };
-            load.EndIsoLocations = new double[] { 1 };
+            //load.StartLocation = new double[] { -1 };
+            //load.EndLocation = new double[] { 1 };
 
-            load.StartMagnitudes = new double[] { w };
-            load.EndMagnitudes = new double[] { w };
+            //load.StartMagnitude = new double[] { w };
+            //load.EndMagnitude = new double[] { w };
 
             var hlpr = new BriefFiniteElementNet.ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z);
 
@@ -1046,9 +1046,9 @@ namespace BriefFiniteElementNet.Validation
             ld_u.Direction = direction;
             ld_u.CoordinationSystem = CoordinationSystem.Global;
 
-            var ld_t = new Loads.PartialTrapezoidalLoad();
-            ld_t.EndIsoLocations = ld_t.StarIsoLocations = new double[] { 0 };
-            ld_t.StartMagnitudes = ld_t.EndMagnitudes = new double[] { 1 };
+            var ld_t = new Loads.PartialNonUniformLoad();
+            //ld_t.EndLocation = ld_t.StartLocation = new double[] { 0 };
+            //ld_t.StartMagnitude = ld_t.EndMagnitude = new double[] { 1 };
             ld_t.Direction = direction;
             ld_t.CoordinationSystem = CoordinationSystem.Global;
 

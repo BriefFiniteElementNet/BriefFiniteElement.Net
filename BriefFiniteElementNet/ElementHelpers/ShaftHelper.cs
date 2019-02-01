@@ -395,7 +395,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, Load load,
             double[] isoLocation)
         {
-            if (load is UniformLoad || load is PartialTrapezoidalLoad)
+            if (load is UniformLoad || load is PartialNonUniformLoad)
             {
                 return new List<Tuple<DoF, double>>();
             }
@@ -431,7 +431,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 return new Force[2];
             }
 
-            if (load is PartialTrapezoidalLoad)
+            if (load is PartialNonUniformLoad)
             {
                 return new Force[2];
             }
