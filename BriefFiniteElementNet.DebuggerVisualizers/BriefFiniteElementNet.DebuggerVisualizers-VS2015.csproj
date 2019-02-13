@@ -36,7 +36,27 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DynamicDataDisplay, Version=0.4.0.0, Culture=neutral, PublicKeyToken=5b7d744a7263923f, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicDataDisplayWpf.0.4.0\lib\DynamicDataDisplay.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DynamicDataDisplay.Maps, Version=0.1.0.0, Culture=neutral, PublicKeyToken=5b7d744a7263923f, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicDataDisplayWpf.0.4.0\lib\DynamicDataDisplay.Maps.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DynamicDataDisplay.Markers, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5b7d744a7263923f, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicDataDisplayWpf.0.4.0\lib\DynamicDataDisplay.Markers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DynamicDataDisplay.Markers2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5b7d744a7263923f, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicDataDisplayWpf.0.4.0\lib\DynamicDataDisplay.Markers2.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.DebuggerVisualizers, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Parser, Version=1.0.0.0, Culture=neutral, PublicKeyToken=5b7d744a7263923f, processorArchitecture=MSIL">
+      <HintPath>..\packages\DynamicDataDisplayWpf.0.4.0\lib\Parser.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -54,6 +74,7 @@
   <ItemGroup>
     <Compile Include="MatrixVisualizer.cs" />
     <Compile Include="ModelVisualizer.cs" />
+    <Compile Include="PolynomialVisualizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -68,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -584,7 +584,7 @@ namespace BriefFiniteElementNet
 
             var urf = new double[map.RMap2.Length];
 
-            string msg;
+            //string msg;
 
             //var res = 
             solver.Solve(ff_r, urf);

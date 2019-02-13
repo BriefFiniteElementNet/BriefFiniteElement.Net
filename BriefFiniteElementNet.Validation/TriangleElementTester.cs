@@ -35,7 +35,7 @@ namespace BriefFiniteElementNet.Validation
 
             model.Nodes[0].Constraints =
                 model.Nodes[1].Constraints =
-                Constraint.Fixed;
+                Constraints.Fixed;
 
             elm.Behavior = TriangleElementBehaviours.Shell;
             elm.MembraneFormulation = MembraneFormulation.PlaneStress;

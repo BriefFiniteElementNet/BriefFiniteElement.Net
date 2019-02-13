@@ -381,7 +381,7 @@ namespace BriefFiniteElementNet
                 masters[i] = i;
             }
 
-            var masterCount = 0;
+            //var masterCount = 0;
 
             #region filling the masters
 
@@ -431,7 +431,7 @@ namespace BriefFiniteElementNet
                 masters[i] = i;
             }
 
-            var masterCount = 0;
+            //var masterCount = 0;
 
             #region filling the masters
 

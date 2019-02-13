@@ -448,5 +448,22 @@ namespace BriefFiniteElementNet.Controls
 
             plotter.AddLineGraph(src2);
         }
+
+        public static void VisualizeInNewWindow(Func<double, double> fnc, double s, double e)
+        {
+            var ctrl = new FunctionVisualizer();
+
+            ctrl.Min = s;
+            ctrl.Max = e;
+
+            ctrl.TargetFunction = fnc;
+
+            var wnd = new Window();
+
+            wnd.Content = ctrl;
+            ctrl.UpdateUi();
+
+            wnd.ShowDialog();
+        }
     }
 }

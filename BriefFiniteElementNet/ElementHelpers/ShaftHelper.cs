@@ -320,13 +320,13 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix CalcLocalKMatrix(Element targetElement)
+        public Matrix CalcLocalStiffnessMatrix(Element targetElement)
         {
             return ElementHelperExtensions.CalcLocalKMatrix_Bar(this, targetElement);
         }
 
         /// <inheritdoc/>
-        public Matrix CalcLocalMMatrix(Element targetElement)
+        public Matrix CalcLocalMassMatrix(Element targetElement)
         {
             var buf = ElementHelperExtensions.CalcLocalMMatrix_Bar(this, targetElement);
 
@@ -334,7 +334,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix CalcLocalCMatrix(Element targetElement)
+        public Matrix CalcLocalDampMatrix(Element targetElement)
         {
             return ElementHelperExtensions.CalcLocalCMatrix_Bar(this, targetElement);
         }
@@ -342,11 +342,17 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public FluentElementPermuteManager.ElementLocalDof[] GetDofOrder(Element targetElement)
         {
-            return new FluentElementPermuteManager.ElementLocalDof[]
-           {
-                new FluentElementPermuteManager.ElementLocalDof(0, DoF.Rx),
-                new FluentElementPermuteManager.ElementLocalDof(1, DoF.Rx),
-           }; 
+            var n = targetElement.Nodes.Length;
+
+            var buf = new FluentElementPermuteManager.ElementLocalDof[n];
+
+            for (int i = 0; i < n; i++)
+            {
+                buf[i] = new FluentElementPermuteManager.ElementLocalDof(i, DoF.Rx);
+            }
+
+            return buf;
+
         }
 
         /// <inheritdoc/>
@@ -357,9 +363,13 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var b = GetBMatrixAt(targetElement, isoCoords);
             var d = GetDMatrixAt(targetElement, isoCoords);
-            var u = new Matrix(2, 1);
+            var nc = targetElement.Nodes.Length;
 
-            u.FillColumn(0, ld[0].RX, ld[1].RX);
+
+            var u = new Matrix( nc, 1);
+
+            for (var i = 0; i < nc; i++)
+                u[i, 0] = ld[i].RX;
 
             var frc = d * b * u;
 

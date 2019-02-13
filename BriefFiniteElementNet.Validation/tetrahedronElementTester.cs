@@ -9,10 +9,6 @@ using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
 using HtmlTags;
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace BriefFiniteElementNet.Validation
 {

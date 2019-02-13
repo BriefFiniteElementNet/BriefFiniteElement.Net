@@ -390,8 +390,8 @@ namespace BriefFiniteElementNet
 
             lastResult.SolverFactory = config.SolverFactory;
 
-            if(elements.Any(i=>i is RigidElement))
-                throw new Exception("Invalid solve for MPC element");// Model with RigidElement element should call Model.Solve()
+            //if(elements.Any(i=>i is RigidElement))
+            //    throw new Exception("Invalid solve for MPC element");// Model with RigidElement element should call Model.Solve()
 
             ReIndexNodes();
 

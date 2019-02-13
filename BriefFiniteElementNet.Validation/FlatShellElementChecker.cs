@@ -28,7 +28,7 @@ namespace BriefFiniteElementNet.Validation
             var model = new Model();
 
             var l = 48 * 0.0254; //in [m]
-            var b = 12 * 0.0254; //
+            //var b = 12 * 0.0254; //
             var t = 1 * 0.0254;
 
             var e = 206842772603; //30000 ksi
@@ -51,7 +51,7 @@ namespace BriefFiniteElementNet.Validation
                     model.Nodes.Add(nodes[i][j] = new Node(i * span, j * span, 0));
 
                     if (i == 0)
-                        nodes[i][j].Constraints = Constraint.Fixed;
+                        nodes[i][j].Constraints = Constraints.Fixed;
 
                     var newCns = new Constraint(
                         DofConstraint.Released, DofConstraint.Released, DofConstraint.Fixed,
@@ -173,7 +173,7 @@ namespace BriefFiniteElementNet.Validation
                     model.Nodes.Add(nodes[i][j] = new Node(i*span, j*span, 0));
 
                     if (i == 0 || i == n - 1 || j == 0 || j == n - 1)
-                        nodes[i][j].Constraints = Constraint.Fixed;
+                        nodes[i][j].Constraints = Constraints.Fixed;
 
                     var newCns = new Constraint(DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Released,
                         DofConstraint.Released, DofConstraint.Released, DofConstraint.Fixed);
@@ -246,8 +246,8 @@ namespace BriefFiniteElementNet.Validation
 
             var model = new Model();
 
-            var l = 10; //in [m]
-            var w = 1;
+            //var l = 10; //in [m]
+            //var w = 1;
 
             var t = 0.1;//
 
@@ -270,7 +270,7 @@ namespace BriefFiniteElementNet.Validation
                     model.Nodes.Add(nodes[i][j] = new Node(i * span, j * span, 0));
 
                     if (j == 0)
-                        nodes[i][j].Constraints = Constraint.Fixed;
+                        nodes[i][j].Constraints = Constraints.Fixed;
 
                     var newCns = new Constraint(DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Released,
                         DofConstraint.Released, DofConstraint.Released, DofConstraint.Fixed);
@@ -339,7 +339,7 @@ namespace BriefFiniteElementNet.Validation
         {
             Console.WriteLine("Example 13: I Beam With Flat Shell, BFE vs SAP2000");
 
-            var magic = 0;
+            //var magic = 0;
 
             //example #13 p175
 
@@ -423,7 +423,7 @@ namespace BriefFiniteElementNet.Validation
             nodes.Last()[0].Loads.Add(new NodalLoad(new Force(0, UnitConverter.Kip2N(1.6), 0, 0, 0, 0)));
             nodes.Last()[6].Loads.Add(new NodalLoad(new Force(0, -UnitConverter.Kip2N(1.6), 0, 0, 0, 0)));
 
-            nodes[0].ToList().ForEach(i => i.Constraints = Constraint.Fixed);
+            nodes[0].ToList().ForEach(i => i.Constraints = Constraints.Fixed);
 
             #endregion
 
@@ -508,7 +508,7 @@ namespace BriefFiniteElementNet.Validation
         {
             Console.WriteLine("Example 13: I Beam With Flat Shell, BFE vs ABAQUS");
 
-            var magic = 0;
+            //var magic = 0;
 
             //example #13 p175
 
@@ -592,7 +592,7 @@ namespace BriefFiniteElementNet.Validation
             nodes.Last()[0].Loads.Add(new NodalLoad(new Force(0, UnitConverter.Kip2N(1.6), 0, 0, 0, 0)));
             nodes.Last()[6].Loads.Add(new NodalLoad(new Force(0, -UnitConverter.Kip2N(1.6), 0, 0, 0, 0)));
 
-            nodes[0].ToList().ForEach(i => i.Constraints = Constraint.Fixed);
+            nodes[0].ToList().ForEach(i => i.Constraints = Constraints.Fixed);
 
             #endregion
 
@@ -753,7 +753,7 @@ namespace BriefFiniteElementNet.Validation
                     model.Nodes.Add(nodes[i][j] = new Node(i * xSpan, j * ySpan, 0));
 
                     if (i == 0 || i == n - 1 || j == 0 || j == n - 1)
-                        nodes[i][j].Constraints = BriefFiniteElementNet.Constraint.Fixed;
+                        nodes[i][j].Constraints = Constraints.Fixed;
 
                     /*
                     var newCns = new Constraint(DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Released,
@@ -812,28 +812,28 @@ namespace BriefFiniteElementNet.Validation
             {
                 for (var j = 0; j < n; j++)
                 {
-                    nodes[i][j].Constraints = Constraint.FixedRZ & Constraint.FixedDX & Constraint.FixedDY;
+                    nodes[i][j].Constraints = Constraints.FixedRZ & Constraints.FixedDX & Constraints.FixedDY;
 
                     if (i > 3 && i < 7 && j > 1 && j < 7)
                     {
-                        nodes[i][j].Constraints &= Constraint.MovementFixed;
+                        nodes[i][j].Constraints &= Constraints.MovementFixed;
                     }
 
 
                     if (i == 0 || i == 10)
                     {
-                        nodes[i][j].Constraints &= Constraint.MovementFixed;
+                        nodes[i][j].Constraints &= Constraints.MovementFixed;
                     }
 
                     if (j == 0 || j == 8)
                     {
-                        nodes[i][j].Constraints &= BriefFiniteElementNet.Constraint.MovementFixed;
+                        nodes[i][j].Constraints &= BriefFiniteElementNet.Constraints.MovementFixed;
                     }
 
 
                     if (i == 5 && j > 2 && j < 6)
                     {
-                        nodes[i][j].Constraints = Constraint.Fixed;
+                        nodes[i][j].Constraints = Constraints.Fixed;
                     }
                 }
             }

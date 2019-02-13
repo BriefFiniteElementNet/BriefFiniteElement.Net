@@ -317,7 +317,7 @@ namespace BriefFiniteElementNet.Elements
 
         public Matrix ComputeDMatrixAt(params double[] location)
         {
-            double e = 0.0, g = 0;//mechanical
+            double e = 0.0;//, g = 0;//mechanical
 
             double iz = 0, iy = 0, j = 0, a = 0;//geometrical
 
@@ -465,9 +465,13 @@ namespace BriefFiniteElementNet.Elements
             var local = GetLocalDampMatrix();
             var t = GetTransformationMatrix();
 
-            CalcUtil.ApplyTransformMatrix(local, t);
+            var tr = this.GetTransformationManager();
 
-            return local;
+            var globalDamp = tr.TransformLocalToGlobal(local);
+
+            //CalcUtil.ApplyTransformMatrix(local, t);
+
+            return globalDamp;
         }
 
         public override Matrix GetGlobalMassMatrix()
@@ -601,7 +605,7 @@ namespace BriefFiniteElementNet.Elements
 
 
 
-            var buf = new Matrix(12, 12);
+            var buf = new Matrix(6 * nodes.Length, 6 * nodes.Length);
 
             //var transMatrix = GetTransformationMatrix();
 
@@ -609,7 +613,7 @@ namespace BriefFiniteElementNet.Elements
             {
                 var helper = helpers[i];
 
-                var ki = helper.CalcLocalKMatrix(this);// ComputeK(helper, transMatrix);
+                var ki = helper.CalcLocalStiffnessMatrix(this);// ComputeK(helper, transMatrix);
 
                 var dofs = helper.GetDofOrder(this);
 
@@ -646,7 +650,7 @@ namespace BriefFiniteElementNet.Elements
             {
                 var helper = helpers[i];
 
-                var ki = helper.CalcLocalCMatrix(this);// ComputeK(helper, transMatrix);
+                var ki = helper.CalcLocalDampMatrix(this);// ComputeK(helper, transMatrix);
 
                 var dofs = helper.GetDofOrder(this);
 
@@ -682,7 +686,7 @@ namespace BriefFiniteElementNet.Elements
             {
                 var helper = helpers[i];
 
-                var ki = helper.CalcLocalMMatrix(this);// ComputeK(helper, transMatrix);
+                var ki = helper.CalcLocalMassMatrix(this);// ComputeK(helper, transMatrix);
 
                 var dofs = helper.GetDofOrder(this);
 
@@ -845,7 +849,7 @@ namespace BriefFiniteElementNet.Elements
                 lds[i] = local;
             }
 
-            var buff = new Force();
+            //var buff = new Force();
 
             var frc = new Vector();//forcec
             var mnt = new Vector();//moment
@@ -927,7 +931,7 @@ namespace BriefFiniteElementNet.Elements
 
             var fcs = new Dictionary<DoF, double>();
 
-            var buf = new FlatShellStressTensor();
+            //var buf = new FlatShellStressTensor();
 
             var helpers = GetHelpers();
 

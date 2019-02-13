@@ -10,9 +10,9 @@ using System.Windows.Media.Media3D;
 using System.Windows.Media.TextFormatting;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.MpcElements;
-using DefaultLights = HelixToolkit.Wpf.DefaultLights;
-using MaterialHelper = HelixToolkit.Wpf.MaterialHelper;
-using MeshBuilder = HelixToolkit.Wpf.MeshBuilder;
+using DefaultLights = HelixToolkit.DefaultLights;
+using MaterialHelper = HelixToolkit.MaterialHelper;
+using MeshBuilder = HelixToolkit.MeshBuilder;
 
 namespace BriefFiniteElementNet.Controls
 {
@@ -1383,7 +1383,7 @@ namespace BriefFiniteElementNet.Controls
 
         private void AddSpringElement(MeshBuilder bldr, Spring1D elm)
         {
-            PolygonYz section = null;
+           // PolygonYz section = null;
 
             var r = ElementVisualThickness / 2;
 
@@ -1500,7 +1500,7 @@ namespace BriefFiniteElementNet.Controls
 
         private void AddRigidElement(MeshBuilder bldr, RigidElement elm)
         {
-            PolygonYz section = null;
+            //PolygonYz section = null;
 
             if (elm.Nodes.Count(i => !ReferenceEquals(i, null)) < 2)
                 return;
@@ -1590,7 +1590,7 @@ namespace BriefFiniteElementNet.Controls
 
         private void AddDktElement(MeshBuilder bldr, DktElement elm)
         {
-            PolygonYz section = null;
+            //PolygonYz section = null;
 
             var r = ElementVisualThickness/2;
 
@@ -1606,7 +1606,7 @@ namespace BriefFiniteElementNet.Controls
 
         private void AddTriangleElement(MeshBuilder bldr, TriangleElement elm)
         {
-            PolygonYz section = null;
+            //PolygonYz section = null;
 
             var r = ElementVisualThickness / 2;
 
@@ -1623,7 +1623,7 @@ namespace BriefFiniteElementNet.Controls
 
         private void AddTetrahedronElement(MeshBuilder bldr, Tetrahedral elm)
         {
-            PolygonYz section = null;
+            //PolygonYz section = null;
 
             var r = ElementVisualThickness / 2;
 
@@ -1643,7 +1643,7 @@ namespace BriefFiniteElementNet.Controls
 
         private void AddFlatshellElement(MeshBuilder bldr, TriangleFlatShell elm)
         {
-            PolygonYz section = null;
+            //PolygonYz section = null;
 
             var r = ElementVisualThickness / 2;
 
@@ -1687,7 +1687,7 @@ namespace BriefFiniteElementNet.Controls
 
         private void AddCstElement(MeshBuilder bldr, CstElement elm)
         {
-            PolygonYz section = null;
+            //PolygonYz section = null;
 
             var r = ElementVisualThickness/2;
 
@@ -1737,7 +1737,7 @@ namespace BriefFiniteElementNet.Controls
 
         private void AddMpcElement(MeshBuilder bldr, MpcElement elm)
         {
-            PolygonYz section = null;
+            //PolygonYz section = null;
 
             if (elm.Nodes.Count(i => !ReferenceEquals(i, null)) < 2)
                 return;

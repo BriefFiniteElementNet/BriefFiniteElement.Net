@@ -110,7 +110,7 @@ namespace BriefFiniteElementNet.Loads
 
         public double[] GetMagnitudesAt(Element targetelement, IsoPoint location)
         {
-            var buf = 0.0;//new double[EndMagnitude.Length];
+            //var buf = 0.0;//new double[EndMagnitude.Length];
 
             //var dims = StartMagnitude.Length;
 

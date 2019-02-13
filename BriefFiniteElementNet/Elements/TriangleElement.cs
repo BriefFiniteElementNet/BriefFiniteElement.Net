@@ -185,7 +185,7 @@ namespace BriefFiniteElementNet.Elements
             {
                 var helper = helpers[i];
 
-                var ki = helper.CalcLocalKMatrix(this);// ComputeK(helper, transMatrix);
+                var ki = helper.CalcLocalStiffnessMatrix(this);// ComputeK(helper, transMatrix);
 
                 var dofs = helper.GetDofOrder(this);
 
@@ -220,7 +220,7 @@ namespace BriefFiniteElementNet.Elements
             {
                 var helper = helpers[i];
 
-                var ki = helper.CalcLocalMMatrix(this);// ComputeK(helper, transMatrix);
+                var ki = helper.CalcLocalMassMatrix(this);// ComputeK(helper, transMatrix);
 
                 var dofs = helper.GetDofOrder(this);
 
@@ -255,7 +255,7 @@ namespace BriefFiniteElementNet.Elements
             {
                 var helper = helpers[i];
 
-                var ki = helper.CalcLocalCMatrix(this);// ComputeK(helper, transMatrix);
+                var ki = helper.CalcLocalDampMatrix(this);// ComputeK(helper, transMatrix);
 
                 var dofs = helper.GetDofOrder(this);
 

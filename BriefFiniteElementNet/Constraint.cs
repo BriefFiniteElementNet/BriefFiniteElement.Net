@@ -386,16 +386,16 @@ namespace BriefFiniteElementNet
         /// </returns>
         public override string ToString()
         {
-            if (this.Equals(Released))
+            if (this.Equals(Constraints.Released))
                 return "Release";
 
-            if (this.Equals(Fixed))
+            if (this.Equals(Constraints.Fixed))
                 return "Fixed";
 
-            if (this.Equals(MovementFixed))
+            if (this.Equals(Constraints.MovementFixed))
                 return "Movement Fixed";
 
-            if (this.Equals(RotationFixed))
+            if (this.Equals(Constraints.RotationFixed))
                 return "Rotation Fixed";
 
             var arr = new DofConstraint[] {dx, dy, dz, rx, ry, rz};

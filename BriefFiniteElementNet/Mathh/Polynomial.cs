@@ -5,16 +5,24 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Mathh
 {
+    [Serializable]
     public class Polynomial
     {
-
         public Polynomial(params double[] coefs)
         {
             Coefficients = (double[])coefs.Clone();
         }
 
-
         double[] Coefficients;
+
+        public Polynomial Clone()
+        {
+            var c2 = (double[]) Coefficients?.Clone();
+
+            var buf = new Polynomial(c2);
+
+            return buf;
+        }
 
         /// <summary>
         /// Evaluates the value o polynomial at specified <see cref="x"/>
@@ -35,9 +43,6 @@ namespace BriefFiniteElementNet.Mathh
             return buf;
         }
 
-
-        
-
         /// <summary>
         /// Gets the derivative of polynomial as another polynomial
         /// </summary>
@@ -45,9 +50,18 @@ namespace BriefFiniteElementNet.Mathh
         /// <returns>derivation</returns>
         public Polynomial GetDerivative(int deg)
         {
-            throw new NotImplementedException();
-            /*
-            var buf = new double[Coefficients.Length];
+            //throw new NotImplementedException();
+            /**/
+
+            if (deg == 0)
+                return (Polynomial)this.MemberwiseClone();
+
+            if (Coefficients.Length == 0)
+                return this.Clone();
+
+            var dic = new Dictionary<int, double>();
+
+            var buf = new double[Coefficients.Length - deg];
 
             for (var i = 0; i < Coefficients.Length; i++)
             {
@@ -57,15 +71,23 @@ namespace BriefFiniteElementNet.Mathh
                 var m = deg;
 
                 if (n - m >= 0)
-                    buf[i] = Factorial(n) / Factorial(n - m);
+                {
+                    var newPow = n - m;
+                    dic[newPow] = Factorial(n)/Factorial(n - m) * this.Coefficients[i];
+                }
             }
 
+            for (var i = 0; i < buf.Length; i++)
+            {
+                var origPow = buf.Length - 1 - i;
 
-            return new Polynomial(buf);
-            */
+                buf[i] = dic[origPow];
+            }
+
+            var pBuf = new Polynomial(buf);
+            return pBuf;
+            /**/
         }
-
-
 
         /// <summary>
         /// Evaluates the <see cref="n"/>'th derivation of current polynomial at specified <see cref="x"/>.
@@ -151,6 +173,58 @@ namespace BriefFiniteElementNet.Mathh
             x = default(double);
 
             return false;
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+
+            var parts = new List<String>();
+
+            for (var i = 0; i < Coefficients.Length; i++)
+            {
+                var origPow = Coefficients.Length - 1 - i;
+
+                parts.Add(string.Format("{0} * x^{1}", Coefficients[i], origPow));
+            }
+
+            return string.Join(" + ", parts);
+        }
+
+        protected bool Equals(Polynomial other)
+        {
+            if (ReferenceEquals(Coefficients, null) && ReferenceEquals(other.Coefficients, null))
+                return true;
+
+            if (ReferenceEquals(Coefficients, null) || ReferenceEquals(other.Coefficients, null))
+                return false;
+
+
+            if (Coefficients.Length != other.Coefficients.Length)
+                return false;
+
+            for (int i = 0; i < Coefficients.Length; i++)
+            {
+                var d = Math.Abs(Coefficients[i] - other.Coefficients[i]);
+
+                if (d > 1e-10*Math.Abs(Coefficients[i]))
+                    return false;
+            }
+
+            return true;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Polynomial) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return (Coefficients != null ? Coefficients.GetHashCode() : 0);
         }
     }
 }

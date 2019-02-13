@@ -1,6 +1,5 @@
 ﻿using BriefFiniteElementNet.Elements;
 using System.Runtime.Serialization;
-using BriefFiniteElementNet.Elements;
 using System;
 using System.Security.Permissions;
 

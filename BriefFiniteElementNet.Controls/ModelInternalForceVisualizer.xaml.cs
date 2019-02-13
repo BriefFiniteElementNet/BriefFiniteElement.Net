@@ -7,7 +7,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Media3D;
 using BriefFiniteElementNet.Elements;
-using HelixToolkit.Wpf;
+using HelixToolkit;
 
 
 namespace BriefFiniteElementNet.Controls
@@ -565,8 +565,13 @@ namespace BriefFiniteElementNet.Controls
                 var p3 = p1 + v;
                 var p4 = p2 + v;
 
-                bldr.AddTriangle(p1, p3, p2);
-                bldr.AddTriangle(p4, p2, p3);
+                var p13d = new Point3D(p1.X, p1.Y, p1.Z);
+                var p23d = new Point3D(p2.X, p2.Y, p2.Z);
+                var p33d = new Point3D(p3.X, p3.Y, p3.Z);
+                var p43d = new Point3D(p4.X, p4.Y, p4.Z);
+
+                bldr.AddTriangle(p13d, p33d, p23d);
+                bldr.AddTriangle(p43d, p23d, p33d);
             }
 
         }
@@ -607,8 +612,13 @@ namespace BriefFiniteElementNet.Controls
                 var p3 = p1 + v;
                 var p4 = p2 + v;
 
-                bldr.AddTriangle(p1, p3, p2);
-                bldr.AddTriangle(p4, p2, p3);
+                var p13d = new Point3D(p1.X, p1.Y, p1.Z);
+                var p23d = new Point3D(p2.X, p2.Y, p2.Z);
+                var p33d = new Point3D(p3.X, p3.Y, p3.Z);
+                var p43d = new Point3D(p4.X, p4.Y, p4.Z);
+
+                bldr.AddTriangle(p13d, p33d, p23d);
+                bldr.AddTriangle(p43d, p23d, p33d);
             }
         }
 
@@ -647,8 +657,19 @@ namespace BriefFiniteElementNet.Controls
 
             for (var i = 0; i < n-1; i++)
             {
-                bldr.AddTriangle(baseDiagramPoints[i], baseDiagramPoints[i + 1], diagramPoints[i]);
-                bldr.AddTriangle(diagramPoints[i], baseDiagramPoints[i + 1], diagramPoints[i + 1]);
+                var p1 = baseDiagramPoints[i];
+                var p2 = baseDiagramPoints[i + 1];
+                var p3 = diagramPoints[i];
+                var p4 = diagramPoints[i + 1];
+
+                var p13d = new Point3D(p1.X, p1.Y, p1.Z);
+                var p23d = new Point3D(p2.X, p2.Y, p2.Z);
+                var p33d = new Point3D(p3.X, p3.Y, p3.Z);
+                var p43d = new Point3D(p4.X, p4.Y, p4.Z);
+
+
+                bldr.AddTriangle(p13d,p23d, p33d);
+                bldr.AddTriangle(p33d, p23d, p43d);
             }
         }
 

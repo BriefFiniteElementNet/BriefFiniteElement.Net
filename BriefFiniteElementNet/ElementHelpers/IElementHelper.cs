@@ -94,7 +94,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="targetElement">The target element.</param>
         /// 
         /// <returns>Stiffness matrix</returns>
-        Matrix CalcLocalKMatrix(Element targetElement);
+        Matrix CalcLocalStiffnessMatrix(Element targetElement);
 
         /// <summary>
         /// Gets the mass [M] matrix in local coordination system.
@@ -102,7 +102,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="targetElement">The target element.</param>
         /// 
         /// <returns>Mass matrix</returns>
-        Matrix CalcLocalMMatrix(Element targetElement);
+        Matrix CalcLocalMassMatrix(Element targetElement);
 
         /// <summary>
         /// Gets the damp [C] matrix in local coordination system.
@@ -110,7 +110,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="targetElement">The target element.</param>
         /// 
         /// <returns>Damp matrix</returns>
-        Matrix CalcLocalCMatrix(Element targetElement);
+        Matrix CalcLocalDampMatrix(Element targetElement);
 
         /// <summary>
         /// Gets the DoF order of returned values.

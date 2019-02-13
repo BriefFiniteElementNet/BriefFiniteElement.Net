@@ -6,6 +6,9 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
+using System.Windows;
+using System.Windows.Media;
+using System.Windows.Shapes;
 using System.Xml.Resolvers;
 using BriefFiniteElementNet.Controls;
 using BriefFiniteElementNet.ElementHelpers;
@@ -32,11 +35,29 @@ namespace BriefFiniteElementNet.TestConsole
             Console.Title = "BFE tests & temporary codes";
             //Test_P_Delta_matrix();
             //TestSparseRow();
+            /*
+            var pl = new Polynomial(1, 1, 1, 1);
 
+            var ctrl = new FunctionVisualizer();
+
+            ctrl.GraphColor = Colors.Black;
+            //ctrl.HorizontalAxisLabel = "X";
+            //ctrl.VerticalAxisLabel = "Y";
+            ctrl.Min = -1;
+            ctrl.Max = 1;
+            ctrl.SamplingCount = 100;
+            ctrl.TargetFunction = new Func<double, double>(i => pl.Evaluate(i));
+
+            ctrl.UpdateUi();
+            ctrl.InitializeComponent();
+
+            new Window() { Content = ctrl, Title = "polynomial Visualizer!", Width = 500, Height = 300 }
+                .ShowDialog();
+            */
             //BarElementTester.ValidateConsoleUniformLoad();
-            //BarElementTester.ValidateEndRelease();
-            TestTrussShapeFunction();
-
+            BarElementTester.TestEndreleaseInternalForce();
+            //TestTrussShapeFunction();
+            //new BriefFiniteElementNet.Tests.BarElementTests().barelement_endrelease();
             //new BarElementTester.Test_Trapezoid_1
             //TestMultinodeBar1();
 
@@ -76,7 +97,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             var pl = hlp.GetN_i(bar, 0);
             hlp.GetJMatrixAt(bar, 0);
-            var stf = hlp.CalcLocalKMatrix(bar);
+            var stf = hlp.CalcLocalStiffnessMatrix(bar);
         }
 
         private static void TestMultinodeBar1()
@@ -397,7 +418,7 @@ namespace BriefFiniteElementNet.TestConsole
 
 
             var zs = model.Nodes
-                .Where(i => i.Constraints != Constraint.Fixed)
+                .Where(i => i.Constraints != Constraints.Fixed)
                 .Select(i => i.Location.Z).Distinct().ToList();
 
             
@@ -421,7 +442,7 @@ namespace BriefFiniteElementNet.TestConsole
             /**/
             foreach (var node in model.Nodes)
             {
-                if (node.Constraints == Constraint.Fixed)
+                if (node.Constraints == Constraints.Fixed)
                 {
                     node.Settlements = new Displacement(1, 0, 0, 0, 0, 0);
                     node.Loads.Clear();

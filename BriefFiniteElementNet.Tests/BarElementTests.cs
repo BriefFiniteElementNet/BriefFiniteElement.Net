@@ -2,8 +2,11 @@
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BriefFiniteElementNet;
+using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Loads;
+using BriefFiniteElementNet.Materials;
+using BriefFiniteElementNet.Sections;
 
 
 namespace BriefFiniteElementNet.Tests
@@ -95,7 +98,7 @@ namespace BriefFiniteElementNet.Tests
             }
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void LoadInternalForce_trapezoidload_eulerbernoullybeam_dirY()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -146,6 +149,40 @@ namespace BriefFiniteElementNet.Tests
                 Assert.IsTrue(d < 1e-5, "invalid value");
 
             }
+        }
+
+        [TestMethod]
+        public void barelement_endrelease()
+        {
+            //internal force of 2 node beam beam with uniform load and both ends fixed
+
+            var eI = 210e9*(0.1*0.1*0.1*0.1)/12;
+            var l = 2.0;
+            
+            var n1 = new Node(0, 0, 0);
+            var n2 = new Node(l, 0, 0);
+
+            var e1 = new BarElement(2);
+
+            e1.Nodes[0] =  n1;
+            e1.Nodes[1] = n2;
+
+            e1.NodalReleaseConditions[0] = Constraints.Fixed;
+            e1.NodalReleaseConditions[1] = Constraints.MovementFixed;
+
+            e1.Material = new UniformIsotropicMaterial(210e9, 0.3);
+            e1.Section = new UniformParametric1DSection(0.1, 0.01, 0.01, 0.01);
+
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y);
+
+            var s1 = hlpr.CalcLocalStiffnessMatrix(e1);
+
+            //var d1 = 1.0/s1[3, 3];
+
+            var theoricalK = 12*eI/(l*l*l);
+            var calculatedK = s1[2, 2];
+
+            var ratio = theoricalK / calculatedK;
         }
     }
 }

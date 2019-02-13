@@ -65,17 +65,17 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Matrix CalcLocalKMatrix(Element targetElement)
+        public Matrix CalcLocalStiffnessMatrix(Element targetElement)
         {
             throw new NotImplementedException();
         }
 
-        public Matrix CalcLocalMMatrix(Element targetElement)
+        public Matrix CalcLocalMassMatrix(Element targetElement)
         {
             throw new NotImplementedException();
         }
 
-        public Matrix CalcLocalCMatrix(Element targetElement)
+        public Matrix CalcLocalDampMatrix(Element targetElement)
         {
             throw new NotImplementedException();
         }

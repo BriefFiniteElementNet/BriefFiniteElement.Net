@@ -72,6 +72,10 @@
       <Project>{82C63C6B-651A-4308-8B89-B4C643F3A7C2}</Project>
       <Name>BriefFiniteElementNet.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BriefFiniteElementNet.Tests\BriefFiniteElementNet.Tests.csproj">
+      <Project>{bcd6c94b-19cc-4e03-80c9-8643727ab5c6}</Project>
+      <Name>BriefFiniteElementNet.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BriefFiniteElementNet.Validation\BriefFiniteElementNet.Validation.csproj">
       <Project>{7a20ce01-552e-457a-a9c3-18bed244d897}</Project>
       <Name>BriefFiniteElementNet.Validation</Name>

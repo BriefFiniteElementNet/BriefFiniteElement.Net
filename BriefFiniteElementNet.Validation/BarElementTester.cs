@@ -123,6 +123,201 @@ namespace BriefFiniteElementNet.Validation
         }
 
 
+        public static void TestEndreleaseInternalForce()
+        {
+            /**/
+            var m1 = new Model();
+
+            
+
+            var I = (0.1 * 0.1 * 0.1 * 0.1) / 12;
+            var A = (0.1 * 0.1 * 0.1);
+            var E = 210e9;
+
+            var sec = new Sections.UniformParametric1DSection(A, I, I, I);
+            var mat = new Materials.UniformIsotropicMaterial(E, 0.3);
+            var p = 1e3;
+
+            /**/
+            //var p0 = new Point(0, 0, 0);
+            //var p1 = new Point(3, 4, 5);
+
+            var l = 4.0;
+
+            {//model 1 
+                var el1 = new BarElement(3);
+
+                el1.Nodes[0] = new Node(0, 0, 0) { Constraints = Constraints.Fixed & Constraints.FixedRX, Label = "n0" }; ;
+                el1.Nodes[1] = new Node(l, 0, 0) { Label = "n1" };
+                el1.Nodes[2] = new Node(2*l, 0, 0) { Constraints = Constraints.Released, Label = "n2" };
+
+                el1.Section = sec;
+                el1.Material = mat;
+
+                m1.Nodes.Add(el1.Nodes);
+                m1.Elements.Add(el1);
+                m1.Nodes[1].Loads.Add(new NodalLoad(new Force(0, 0, p, 0, 0, 0)));
+
+                var ep = 1e-10;
+
+                m1.Solve_MPC();
+
+                var frc = el1.GetInternalForceAt(1-ep);
+
+                var fnc = new Func<double, double>(i => el1.GetInternalDisplacementAt(i).DZ);
+
+                Controls.FunctionVisualizer.VisualizeInNewWindow(fnc, -1+ep, 1-ep);
+
+                var s2 = m1.Nodes["n2"].GetSupportReaction();
+                var s0 = m1.Nodes["n0"].GetSupportReaction();
+
+                var k = (el1 as BarElement).GetLocalStifnessMatrix();
+            }
+
+
+
+            //m1.Solve_MPC();
+           // m2.Solve_MPC();
+
+           // var d1 = m1.Nodes.Last().GetNodalDisplacement();
+           // var d2 = m2.Nodes.Last().GetNodalDisplacement();
+
+        }
+
+        public static void Test3NodeBeam()
+        {
+            var m1 = new Model();
+            var m2 = new Model();
+
+            var l = 2.0;
+
+            var I = 1;//(0.1 * 0.1 * 0.1 * 0.1) / 12;
+            var A = 1;//(0.1 * 0.1 * 0.1);
+            var E = 1;//210e9;
+
+            var sec = new Sections.UniformParametric1DSection(A, I, I, I);
+            var mat = new Materials.UniformIsotropicMaterial(E, 0.3);
+            var p = 1e3;
+
+
+            //var p0 = new Point(0, 0, 0);
+            //var p1 = new Point(3, 4, 5);
+
+
+            {//model 1 
+                var el1 = new BarElement(3);
+
+                //el1.Behavior= BarElementBehaviour.BeamZEulerBernoulli;
+                el1.Nodes[0] = new Node(0, 0, 0) { Constraints = Constraints.Fixed }; ;
+                el1.Nodes[1] = new Node(l/2, 0, 0) { Constraints = Constraints.Released};
+                el1.Nodes[2] = new Node(l, 0, 0) { Constraints = Constraints.Released };
+
+                el1.Section = sec;
+                el1.Material = mat;
+
+                m1.Nodes.Add(el1.Nodes);
+                m1.Elements.Add(el1);
+                m1.Nodes.Last().Loads.Add(new NodalLoad(new Force(0, 0, p, 0, 0, 0)));
+
+                var k = (el1 as BarElement).GetLocalStifnessMatrix();
+            }
+
+
+            {//model 2 
+                var el1 = new BarElement(3);
+
+                //el1.Behavior= BarElementBehaviour.BeamZEulerBernoulli;
+                el1.Nodes[0] = new Node(0, 0, 0) { Constraints = Constraints.Fixed }; ;
+                el1.Nodes[1] = new Node(l / 2, 0, 0) { Constraints = Constraints.Released };
+                el1.Nodes[2] = new Node(l, 0, 0) { Constraints = Constraints.Released };
+
+                el1.Section = sec;
+                el1.Material = mat;
+
+                m1.Nodes.Add(el1.Nodes);
+                m1.Elements.Add(el1);
+                m1.Nodes.Last().Loads.Add(new NodalLoad(new Force(0, 0, p, 0, 0, 0)));
+
+                var k = (el1 as BarElement).GetLocalStifnessMatrix();
+            }
+
+
+            m1.Solve_MPC();
+
+            var d1 = m1.Nodes.First().GetSupportReaction();
+            //var d2 = m2.Nodes.Last().GetNodalDisplacement();
+
+        }
+
+        public static void TestEndrelease()
+        {
+            var m1 = new Model();
+            var m2 = new Model();
+
+            var l = 4.0;
+
+            var I = (0.1 * 0.1 * 0.1 * 0.1) / 12;
+            var A = (0.1 * 0.1 * 0.1);
+            var E = 210e9;
+
+            var sec = new Sections.UniformParametric1DSection(A, I, I, I);
+            var mat = new Materials.UniformIsotropicMaterial(E, 0.3);
+            var p = 1e3;
+
+
+            //var p0 = new Point(0, 0, 0);
+            //var p1 = new Point(3, 4, 5);
+
+
+            {//model 1 
+                var el1 = new BarElement(2);
+                var el2 = new BarElement(2);
+
+                el1.Nodes[0] = new Node(0, 0, 0) { Constraints = Constraints.Fixed, Label = "n0" }; ;
+                el2.Nodes[0] = el1.Nodes[1] = new Node(l/2, 0, 0) { Label = "n1" };
+                el2.Nodes[1] = new Node(l, 0, 0) {  Label = "n2" };
+
+                el1.Section = el2.Section = sec;
+                el1.Material = el2.Material = mat;
+
+                m1.Nodes.Add(el1.Nodes);
+                m1.Nodes.Add(el2.Nodes[1]);
+
+                m1.Elements.Add(el1,el2);
+
+                m1.Nodes["n1"].Loads.Add(new NodalLoad(new Force(0, 0, p, 0, 0, 0)));
+
+                var k = (el1 as BarElement).GetLocalStifnessMatrix();
+            }
+
+            {//model 2 
+                var el2 = new BarElement(3);
+
+                el2.Nodes[0] = new Node(0, 0, 0) {Constraints = Constraints.Fixed, Label = "n0"};
+                el2.Nodes[1] = new Node(l/2, 0, 0) { Label = "n1" };
+                el2.Nodes[2] = new Node(l, 0, 0) {Constraints = Constraints.Fixed, Label = "n2"};
+
+                el2.NodalReleaseConditions[2] = Constraints.Released;
+
+                el2.Section = sec;
+                el2.Material = mat;
+
+                m2.Nodes.Add(el2.Nodes);
+                m2.Elements.Add(el2);
+
+                m2.Nodes["n1"].Loads.Add(new NodalLoad(new Force(0, 0, p, 0, 0, 0)));
+
+                var k = (el2 as BarElement).GetLocalStifnessMatrix();
+            }
+
+            m1.Solve_MPC();
+            m2.Solve_MPC();
+
+            var d1 = m1.Nodes["n1"].GetNodalDisplacement();
+            var d2 = m2.Nodes["n1"].GetNodalDisplacement();
+
+        }
+
         public static void ValidateLoadInternalForce_B_y()
         {
             var load = new Loads.PartialNonUniformLoad();
@@ -198,8 +393,8 @@ namespace BriefFiniteElementNet.Validation
                 var belm = new BarElement(ndes[0], ndes[1]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame };
 
                 belm.StartReleaseCondition =
-                    Constraint.FixedDX & Constraint.FixedDY & Constraint.FixedDZ &
-                    Constraint.FixedRX;
+                    Constraints.FixedDX & Constraints.FixedDY & Constraints.FixedDZ &
+                    Constraints.FixedRX;
 
             model.Elements.Add(belm);
             }
@@ -207,8 +402,8 @@ namespace BriefFiniteElementNet.Validation
                 var belm = new BarElement(ndes[1], ndes[2]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame };
 
                 belm.EndReleaseCondition =
-                    Constraint.FixedDX & Constraint.FixedDY & Constraint.FixedDZ &
-                    Constraint.FixedRX;
+                    Constraints.FixedDX & Constraints.FixedDY & Constraints.FixedDZ &
+                    Constraints.FixedRX;
 
                 model.Elements.Add(belm);
             }
@@ -354,7 +549,7 @@ namespace BriefFiniteElementNet.Validation
 
             var e = 210e9;
             var g = 70e9;
-            var rho = 13;
+            //var rho = 13;
 
             var model = new Model();
 

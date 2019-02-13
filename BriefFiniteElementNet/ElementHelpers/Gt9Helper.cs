@@ -301,19 +301,19 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
-        public Matrix CalcLocalKMatrix(Element targetElement)
+        public Matrix CalcLocalStiffnessMatrix(Element targetElement)
         {
             var buf = ElementHelperExtensions.CalcLocalKMatrix_Triangle(this, targetElement);
 
             return buf;
         }
 
-        public Matrix CalcLocalMMatrix(Element targetElement)
+        public Matrix CalcLocalMassMatrix(Element targetElement)
         {
             throw new NotImplementedException();
         }
 
-        public Matrix CalcLocalCMatrix(Element targetElement)
+        public Matrix CalcLocalDampMatrix(Element targetElement)
         {
             throw new NotImplementedException();
         }

@@ -128,11 +128,11 @@ namespace BriefFiniteElementNet.CodeProjectExamples
                     n3.Constraints =
                         n4.Constraints =
                             n5.Constraints =
-                                Constraint.FixedDY & Constraint.FixedRX & Constraint.FixedRZ;//DY fixed and RX fixed and RZ fixed
+                                Constraints.FixedDY & Constraints.FixedRX & Constraints.FixedRZ;//DY fixed and RX fixed and RZ fixed
 
 
-            n1.Constraints = n1.Constraints & Constraint.MovementFixed;
-            n5.Constraints = n5.Constraints & Constraint.MovementFixed;
+            n1.Constraints = n1.Constraints & Constraints.MovementFixed;
+            n5.Constraints = n5.Constraints & Constraints.MovementFixed;
 
 
             var ll = new UniformLoad1D(-10000, LoadDirection.Z, CoordinationSystem.Global);
