@@ -15,7 +15,9 @@ namespace BriefFiniteElementNet.CodeProjectExamples
         static void Main(string[] args)
         {
 
-            InternalForceExample.Run();
+            //InternalForceExample.Run();
+            new BarIncliendFrameExample().Run();
+            //new UniformLoadCoordSystem().run();
             //DocSnippets.Test2();
 
             //Example1();

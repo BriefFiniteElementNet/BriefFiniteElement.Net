@@ -1619,7 +1619,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             #endregion
 
-            #region uniform & trapezoid
+            #region ConcentratedLoad
 
             if (load is ConcentratedLoad)
             {
@@ -1632,7 +1632,16 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 var buf = new Force[n];
 
-                var ns = GetNMatrixAt(targetElement, cl.ForceIsoLocation);
+                var ns = GetNMatrixAt(targetElement, cl.ForceIsoLocation.Xi);
+
+                var j = GetJMatrixAt(targetElement, cl.ForceIsoLocation.Xi);
+
+                var detJ = j.Determinant();
+
+                ns.MultiplyRowByConstant(1, 1 / detJ);
+                ns.MultiplyRowByConstant(2, 1 / (detJ * detJ));
+                ns.MultiplyRowByConstant(3, 1 / (detJ * detJ * detJ));
+
 
                 for (var i = 0; i < n; i++)
                 {

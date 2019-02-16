@@ -16,7 +16,11 @@ namespace BriefFiniteElementNet.Loads
 
     public class ConcentratedLoad : Load
     {
-        private double[] _forceIsoLocation;
+        public ConcentratedLoad():base()
+        {
+        }
+
+        private IsoPoint _forceIsoLocation;
 
         private Force _force;
 
@@ -26,7 +30,7 @@ namespace BriefFiniteElementNet.Loads
         /// <summary>
         /// The isoparametric (xi eta gamma) location of force inside element's boddy
         /// </summary>
-        public double[] ForceIsoLocation
+        public IsoPoint ForceIsoLocation
         {
             get
             {
@@ -83,15 +87,16 @@ namespace BriefFiniteElementNet.Loads
         /// <param name="isoCoords">The isoparametric coordiation components (xi, eta, gamma).</param>
         private void SetIsoLocation(params double[] isoCoords)
         {
-            _forceIsoLocation = new double[3];
+            _forceIsoLocation = new IsoPoint(isoCoords[0], isoCoords[1], isoCoords[2]);
 
+            /*
             for (var i = 0; i < isoCoords.Length; i++)
             {
                 if (i >= _forceIsoLocation.Length)
                     break;
 
                 _forceIsoLocation[i] = isoCoords[i];
-            }
+            }*/
         }
 
         /*
@@ -116,7 +121,7 @@ namespace BriefFiniteElementNet.Loads
 
         protected ConcentratedLoad(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            _forceIsoLocation = (double[])info.GetValue("_forceIsoLocation", typeof(Vector));
+            _forceIsoLocation = (IsoPoint)info.GetValue("_forceIsoLocation", typeof(Vector));
             _force = (Force)info.GetValue("_force", typeof(double));
             _coordinationSystem = (CoordinationSystem)(int)info.GetValue("_coordinationSystem", typeof(double));
 
@@ -142,18 +147,8 @@ namespace BriefFiniteElementNet.Loads
         {
             var buf = new List<IsoPoint>();
 
-            var isoPoint = new IsoPoint();
 
-            if (_forceIsoLocation.Length > 0)
-                isoPoint.Xi = _forceIsoLocation[0];
-
-            if (_forceIsoLocation.Length > 1)
-                isoPoint.Eta = _forceIsoLocation[1];
-
-            if (_forceIsoLocation.Length > 2)
-                isoPoint.Lambda = _forceIsoLocation[2];
-
-            buf.Add(isoPoint);
+            buf.Add(_forceIsoLocation);
 
             return buf.ToArray();
         }

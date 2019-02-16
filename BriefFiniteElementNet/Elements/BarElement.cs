@@ -1158,7 +1158,9 @@ namespace BriefFiniteElementNet.Elements
             {
                 var x = (node.Location - nodes[0].Location).Length;
 
-                buf.Add(new IsoPoint(IsoCoordsToLocalCoords(x)[0]));
+                var xi = LocalCoordsToIsoCoords(x)[0];
+
+                buf.Add(new IsoPoint(xi));
             }
 
             //Note: internal loads are not accounted

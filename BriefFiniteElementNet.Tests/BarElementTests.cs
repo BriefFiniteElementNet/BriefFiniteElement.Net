@@ -184,5 +184,97 @@ namespace BriefFiniteElementNet.Tests
 
             var ratio = theoricalK / calculatedK;
         }
+
+        [TestMethod]
+        public void LoadInternalForce_concentratedLLoad_eulerbernoullybeam_dirY_fz()
+        {
+            //internal force of 2 node beam beam with uniform load and both ends fixed
+
+            var w = 2.0;
+
+            var pz = 7.0;
+
+
+            //https://en.wikipedia.org/wiki/Fixed_end_moment
+
+            var nodes = new Node[2];
+
+            var l = 4.0;
+            var a = 1.5;
+            var b = l - a;
+
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(l, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad();
+
+            u1.CoordinationSystem = CoordinationSystem.Global;
+            u1.Force = new Force(0, 0, pz, 0, 0, 0);
+
+            var xi = elm.LocalCoordsToIsoCoords(a)[0];
+
+            u1.ForceIsoLocation = new IsoPoint(xi);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y);
+
+            var t = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var my1_pz = pz * a * b * b / (l * l);//for pz
+            var my2_pz = -pz * a * a * b / (l * l);//for pz
+
+            var tol = 1e-10;
+
+            Assert.IsTrue(Math.Abs(my1_pz - t[0].My) < tol, "Invalid value");
+            Assert.IsTrue(Math.Abs(my2_pz - t[1].My) < tol, "Invalid value");
+
+        }
+
+        [TestMethod]
+        public void LoadInternalForce_concentratedLLoad_eulerbernoullybeam_dirY_my()
+        {
+            //internal force of 2 node beam beam with uniform load and both ends fixed
+
+            var m0 = 7.0;
+
+
+            //https://en.wikipedia.org/wiki/Fixed_end_moment
+
+            var nodes = new Node[2];
+
+            var l = 4.0;
+            var a = 1.25866;
+            var b = l - a;
+
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(l, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad();
+
+            u1.CoordinationSystem = CoordinationSystem.Global;
+            u1.Force = new Force(0, 0, 0, 0, m0, 0);
+
+            var xi = elm.LocalCoordsToIsoCoords(a)[0];
+
+            u1.ForceIsoLocation = new IsoPoint(xi);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y);
+
+            var t = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var my1 = m0 * b * (2*a-b) / (l * l);//for pz
+            var my2 = m0 * a * (2 * b - a) / (l * l);//for pz
+
+            var tol = 1e-10;
+
+            Assert.IsTrue(Math.Abs(my1 - t[0].My) < tol, "Invalid value");
+            Assert.IsTrue(Math.Abs(my2 - t[1].My) < tol, "Invalid value");
+
+        }
     }
 }

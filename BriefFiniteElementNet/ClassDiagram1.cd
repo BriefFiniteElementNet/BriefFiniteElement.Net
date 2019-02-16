@@ -1,59 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="BriefFiniteElementNet.StaticLinearAnalysisResult" Collapsed="true">
-    <Position X="18" Y="2.5" Width="1.5" />
+    <Position X="18.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AgAECAkCAIQAAAhgAAAAQCAIAAQwABAABBAAgiAIJUg=</HashCode>
+      <HashCode>AgAECgkCAIQAAAhgAAAAQCCIAAQwABAABBAAgiAIJUg=</HashCode>
       <FileName>StaticLinearAnalysisResult.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="BriefFiniteElementNet.ConcentratedLoad1D" Collapsed="true">
-    <Position X="8.75" Y="3.25" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAgAAAAAAAAAACAAABIAAAAgAAAAAIAAAAAAAAAIAAA=</HashCode>
-      <FileName>ConcentratedLoad1D.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="BriefFiniteElementNet.CustomLinearLoad1D" Collapsed="true">
-    <Position X="13.5" Y="3.25" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAACAAABAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>CustomLinearLoad1D.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="BriefFiniteElementNet.Elements.Element" Collapsed="true">
-    <Position X="6.5" Y="6.75" Width="1.5" />
+    <Position X="13.5" Y="1.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AQBgBAAAEAQAEAAAABAAAEAgAAAEAEEAAIhCAAAAIAQ=</HashCode>
+      <HashCode>ACBgBAAkEAQAECAAAAAAAEAgAACAAEAAAAtCBACAoAQ=</HashCode>
       <FileName>Elements\Element.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="BriefFiniteElementNet.Element1D" Collapsed="true">
-    <Position X="4.25" Y="8.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAEAAAABAAAAAgAAAAAAAKAAAACgAAAAA=</HashCode>
-      <FileName>Elements\Element1D.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="BriefFiniteElementNet.Element2D" Collapsed="true">
-    <Position X="7.5" Y="8.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Elements\Element2D.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="BriefFiniteElementNet.Element3D" Collapsed="true">
-    <Position X="9.75" Y="8.25" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAEAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Elements\Element3D.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="BriefFiniteElementNet.ElementCollection" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="16.25" Y="0.5" Width="1.5" />
+    <Position X="17" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AEIAAEAAAAAAABRQCAAARAQgAAAAAAAESAAAAABQIAA=</HashCode>
       <FileName>ElementCollection.cs</FileName>
@@ -61,7 +26,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BriefFiniteElementNet.FemNetStringCompairer" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="19.75" Y="0.5" Width="1.5" />
+    <Position X="20.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAgQAAAAAAAAAAAIgAAAAAAAAAQAA=</HashCode>
       <FileName>FemNetStringCompairer.cs</FileName>
@@ -69,57 +34,36 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BriefFiniteElementNet.Load" Collapsed="true">
-    <Position X="7.5" Y="0.5" Width="1.5" />
+    <Position X="3" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AACAAAAAAAAAACAAAAAAAAAgAAAAAAAAAAAAAQAAAAA=</HashCode>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAgAAAAgAAAAAAAAQAAAAA=</HashCode>
       <FileName>Load.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="BriefFiniteElementNet.Load1D" Collapsed="true">
-    <Position X="11.25" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AQAAAAAAAAAAIAAAATAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Load1D.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="BriefFiniteElementNet.Load2D" Collapsed="true">
-    <Position X="1" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Load2D.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="BriefFiniteElementNet.Load3D" Collapsed="true">
-    <Position X="5" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Load3D.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="BriefFiniteElementNet.LoadCombination" Collapsed="true">
-    <Position X="21.5" Y="0.5" Width="1.5" />
+    <Position X="22.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>LoadCombination.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.MathUtil" Collapsed="true">
-    <Position X="16.25" Y="1.5" Width="1.5" />
+    <Position X="17" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAACAggAAAAAAAAAQAAAAAAgAAAAAAAA=</HashCode>
       <FileName>MathUtil.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.Node" Collapsed="true">
-    <Position X="0.75" Y="6.75" Width="1.5" />
+    <Position X="10" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AIAAAAAAAAAAAAAACAIiAAgiAAAAAFAAAAFRAAAAAAA=</HashCode>
+      <HashCode>AIAAEAAAAAAAAAAACAIiAAgiAAAAAFAAAAFRAAAAAAA=</HashCode>
       <FileName>Node.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.NodeCollection" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="19.75" Y="1.5" Width="1.5" />
+    <Position X="20.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AEKAAEAAAAAAABBQCAAARAQgAAAAAAAESAAAAABUIAA=</HashCode>
       <FileName>NodeCollection.cs</FileName>
@@ -127,130 +71,218 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BriefFiniteElementNet.Model" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="18" Y="1.5" Width="1.5" />
+    <Position X="18.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CCAgyIAAAAAAABAAAIgQAAAoAACAAnEAAAIAAAAgIAA=</HashCode>
+      <HashCode>CCAgyIAAAEAAABAAAIgQAAAoAACCAnMAAgMAAAAgIAA=</HashCode>
       <FileName>Model.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BriefFiniteElementNet.StructurePart" Collapsed="true">
-    <Position X="5.25" Y="5.5" Width="1.5" />
+    <Position X="7.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACACAAEAAwABBAAAAAQAAiAABAAAAAAAAAgAAAAgA=</HashCode>
+      <HashCode>AAACACAAEAAwABBAAAAAQAAiEADBAAAAAAAAgAAAAgA=</HashCode>
       <FileName>StructurePart.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
+    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BriefFiniteElementNet.BriefFiniteElementNetException" Collapsed="true">
-    <Position X="9.5" Y="4.5" Width="2.75" />
+    <Position X="5.5" Y="7.5" Width="2.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAEAAAAAAAAAA=</HashCode>
       <FileName>BriefFiniteElementNetException.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.InvalidLabelException" Collapsed="true">
-    <Position X="9.75" Y="6" Width="2.25" />
+    <Position X="5.75" Y="9" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>InvalidLabelException.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.ExceptionHelper" Collapsed="true">
-    <Position X="18" Y="0.5" Width="1.5" />
+    <Position X="18.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAEAAA=</HashCode>
       <FileName>ExceptionHelper.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="BriefFiniteElementNet.FrameElement2Node" Collapsed="true">
-    <Position X="3" Y="9.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AQEEAAoEkQACQQkAIFBgAEApSAAkCpEAAIBCoIgLgUA=</HashCode>
-      <FileName>Elements\FrameElement2Node.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="BriefFiniteElementNet.PolygonYz" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="21.5" Y="1.5" Width="1.5" />
+    <Position X="22.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAACAAAAAABAACAAAAAQgAAAACAAEAAAAAAAAAAA=</HashCode>
+      <HashCode>AAIAAACAAAAAABAQCAAABAQgAAAACAAEAAAAAABQIAA=</HashCode>
       <FileName>PolygonYz.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BriefFiniteElementNet.SolverConfiguration" Collapsed="true">
-    <Position X="16.25" Y="2.5" Width="1.5" />
+    <Position X="17" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAACAAAAAAAAAAAAAAAAAAIAAAAAQAAAAEAAAQA=</HashCode>
       <FileName>SolverConfiguration.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="BriefFiniteElementNet.UniformLoad1D" Collapsed="true">
-    <Position X="11.25" Y="3.25" Width="1.5" />
+  <Class Name="BriefFiniteElementNet.Loads.UniformLoad" Collapsed="true">
+    <Position X="0.75" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAACAAABAAAAAgAAAAAAAAAQAAIAEAAAA=</HashCode>
-      <FileName>UniformLoad1D.cs</FileName>
+      <HashCode>AQAAAAAAABAACAAAACAAAAAgAAAAgAAAAAAIAAEAAAA=</HashCode>
+      <FileName>Loads\UniformLoad.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="BriefFiniteElementNet.Elements.TrussElement2Node" Collapsed="true">
-    <Position X="5.25" Y="9.75" Width="1.5" />
+  <Class Name="BriefFiniteElementNet.Loads.PartialNonUniformLoad" Collapsed="true">
+    <Position X="3" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQCAAAIEEQgCQggAIBBgAEAoCAAEwBEAAIBCIAAAgEA=</HashCode>
-      <FileName>Elements\TrussElement2Node.cs</FileName>
+      <HashCode>AQAAAQAAABAAAAAAACAAEAAIAAAAhAQAAAAIAAQBAgA=</HashCode>
+      <FileName>Loads\PartialNonUniformLoad.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="BriefFiniteElementNet.UniformBodyLoad3D" Collapsed="true">
-    <Position X="3.25" Y="3.25" Width="2.5" />
+  <Class Name="BriefFiniteElementNet.Loads.ConcentratedLoad" Collapsed="true">
+    <Position X="5.25" Y="5.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAABAAAAACACAAAAAAAAAgAAAAAAAAgAAAAABAAAA=</HashCode>
-      <FileName>UniformBodyLoad3D.cs</FileName>
+      <HashCode>AQAAAAAAAJAAAAAAAAAAASAgAAAAgAAAAAAAAAAIAAE=</HashCode>
+      <FileName>Loads\ConcentratedLoad.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="BriefFiniteElementNet.UniformSurfaceLoadFor3DElement" Collapsed="true">
-    <Position X="6.25" Y="3.25" Width="2.25" />
+  <Class Name="BriefFiniteElementNet.Elements.BarElement" Collapsed="true">
+    <Position X="12.25" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAIAAAEAAACAAAAAAAAAgAAEAAAAAAAAAAAAAEgQ=</HashCode>
-      <FileName>UniformSurfaceLoadFor3DElement.cs</FileName>
+      <HashCode>AUTEABIFkQAAECgECBIgAEghAAAEgIEACABCAIAJgAA=</HashCode>
+      <FileName>Elements\BarElement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.Elements.TriangleElement" Collapsed="true">
+    <Position X="14.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAEAAAEEAAAECAECCAAAEAgAAAAAIAAGAACAIABgAA=</HashCode>
+      <FileName>Elements\TriangleElement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.Elements.Tetrahedral" Collapsed="true">
+    <Position X="20.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAABAAEEABAACgCAAAAiEAgAAIAAACkKQACAgGAAAA=</HashCode>
+      <FileName>Elements\Tetrahedral.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.Materials.BaseMaterial" Collapsed="true">
+    <Position X="1.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAIAAAgAAAAAAgAAAAAIAAAAAAAAAAAiA=</HashCode>
+      <FileName>Materials\BaseMaterial.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BriefFiniteElementNet.Materials.UniformAnisotropicMaterial" Collapsed="true">
+    <Position X="0.5" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAGCgAQBAABQIJABAAAAAAAgAAAAAADhAAAACQAAAAA=</HashCode>
+      <FileName>Materials\UniformAnisotropicMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.Materials.UniformIsotropicMaterial" Collapsed="true">
+    <Position X="2.75" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAIAAAAAAAIACAgAJAAAQgAAAAAIAAwAAAAAAAAiA=</HashCode>
+      <FileName>Materials\UniformIsotropicMaterial.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="BriefFiniteElementNet.MpcElements.MpcElement" Collapsed="true">
+    <Position X="4.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAkABAAEAAAAAAAAAAACAAgEACAAAAABBEQiAAAAAQ=</HashCode>
+      <FileName>MpcElements\MpcElement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.MpcElements.HingeLink" Collapsed="true">
+    <Position X="3.25" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEABAAAAAAAAgAAAgAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>MpcElements\HingeLink.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.MpcElements.RigidElement_MPC" Collapsed="true">
+    <Position X="7.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>MpcElements\RigidElement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.MpcElements.VirtualConstraint" Collapsed="true">
+    <Position X="5.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAEAAAAAAAAAAAAAAQAAAAAAAAADAAAAAAAAA=</HashCode>
+      <FileName>MpcElements\VirtualSupport.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.MpcElements.TelepathyLink" Collapsed="true">
+    <Position X="1" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAEAAAAAAAAAAADgAgAAAAAAAAABAIAAAAAAA=</HashCode>
+      <FileName>MpcElements\TelepathyLink.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.Solver.CholeskySolver" Collapsed="true">
+    <Position X="10" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAEAAAAAQAAAAAAACAIAAAAAACAAAAAJAAAAAA=</HashCode>
+      <FileName>Solver\CholeskySolver.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BriefFiniteElementNet.Solver.IterativeSolver" Collapsed="true">
+    <Position X="12" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAkAAQAAAgAEAGAIAAAAAACAAAAAJBAAAAA=</HashCode>
+      <FileName>Solver\IterativeSolver.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.1" />
+  </Class>
+  <Class Name="BriefFiniteElementNet.Solver.PCG" Collapsed="true">
+    <Position X="12" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAABAACAAAAAAAAAAAA=</HashCode>
+      <FileName>Solver\PCG.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Struct Name="BriefFiniteElementNet.Constraint" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="16.25" Y="3.75" Width="1.5" />
+    <Position X="17" Y="3.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAEAAAAAAAEAQAAkkEAKANAgACAAAIkQAAAECABABjI=</HashCode>
+      <HashCode>AAEAAAAAAAEAQAAkkEAKANAgACAAAImQAAAECABABjI=</HashCode>
       <FileName>Constraint.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Struct>
   <Struct Name="BriefFiniteElementNet.Displacement" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="18" Y="3.75" Width="1.5" />
+    <Position X="18.75" Y="3.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAEAAAAAAAEAQIAg4EEIARAgASAAAIgQAAAEACAABiA=</HashCode>
+      <HashCode>AAEAAAAAAAEAQIAk4EEIARAgASAEAIgQAAAEACAABiA=</HashCode>
       <FileName>Displacement.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Struct>
   <Struct Name="BriefFiniteElementNet.Force" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="19.75" Y="3.75" Width="1.5" />
+    <Position X="20.5" Y="3.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAQAgAAAAAAEAIA4BECAQAgAQAAAIBACAAEQAgIEiI=</HashCode>
+      <HashCode>AAAQAgAAAAAAEAIE4BECAQAgAQAEAIBACAAEQAgIEiI=</HashCode>
       <FileName>Force.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Struct>
   <Struct Name="BriefFiniteElementNet.LoadCase" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="21.5" Y="3.75" Width="1.5" />
+    <Position X="22.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>UAAAAAAAAAAAAAAAgAAAAAAgAAAAAIACAAAAAhAAAiA=</HashCode>
       <FileName>LoadCase.cs</FileName>
@@ -258,7 +290,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Struct>
   <Struct Name="BriefFiniteElementNet.Point" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="16.25" Y="4.75" Width="1.5" />
+    <Position X="17" Y="4.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
@@ -270,19 +302,19 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Struct>
   <Struct Name="BriefFiniteElementNet.Vector" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="19.75" Y="4.75" Width="1.5" />
+    <Position X="22.25" Y="4.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAkAAAAAAE5AUAAABgCQBAAIAAAADgCaCBYqE=</HashCode>
+      <HashCode>BAAAAAAAkAAAAAAE5gUAAABgCQAAAIAAAADgAaCBYqE=</HashCode>
       <FileName>Vector.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Struct>
   <Struct Name="BriefFiniteElementNet.PointYZ" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="18" Y="4.75" Width="1.5" />
+    <Position X="18.75" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAgAAAAAAAAAAAAIAAAAAgAQAAIiE=</HashCode>
       <FileName>PointYz.cs</FileName>
@@ -290,50 +322,61 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Struct>
   <Struct Name="BriefFiniteElementNet.StrainTensor3D" Collapsed="true">
-    <Position X="12.5" Y="6.25" Width="1.5" />
+    <Position X="20.5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAABAAAAAAAAAAAACAAAAAAABAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>StrainTensor3D.cs</FileName>
       <NewMemberFileName>StressTensor3D.cs</NewMemberFileName>
     </TypeIdentifier>
   </Struct>
+  <Interface Name="BriefFiniteElementNet.Common.ISolver" Collapsed="true">
+    <Position X="14.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier />
+  </Interface>
+  <Interface Name="BriefFiniteElementNet.Solver.IIterativeSolver" Collapsed="true">
+    <Position X="14.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAkAAAAAAgAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Solver\IIterativeSolver.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Enum Name="BriefFiniteElementNet.CoordinationSystem" Collapsed="true">
-    <Position X="16.25" Y="7" Width="1.5" />
+    <Position X="18.75" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAABAAA=</HashCode>
       <FileName>CoordinationSystem.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="BriefFiniteElementNet.LoadDirection" Collapsed="true">
-    <Position X="21.5" Y="7" Width="1.5" />
+    <Position X="17" Y="6.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYAE=</HashCode>
       <FileName>LoadDirection.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="BriefFiniteElementNet.DofConstraint" Collapsed="true">
-    <Position X="18" Y="7" Width="1.5" />
+    <Position X="20.5" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAABAAAA=</HashCode>
       <FileName>DofConstraint.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="BriefFiniteElementNet.LoadType" Collapsed="true">
-    <Position X="16.25" Y="7.75" Width="1.5" />
+    <Position X="18.75" Y="6.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>BAAAAAABAAAAAABAAAAAIQAAAAAAAAAAAAAECAABAAA=</HashCode>
       <FileName>LoadType.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="BriefFiniteElementNet.ElementType" Collapsed="true">
-    <Position X="19.75" Y="7" Width="1.5" />
+    <Position X="22.25" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAIAAAAAAAAAAAAQAABgAAEAAAAAAAAgAAACA=</HashCode>
       <FileName>ElementType.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="BriefFiniteElementNet.BuiltInSolverType" Collapsed="true">
-    <Position X="18" Y="7.75" Width="1.5" />
+    <Position X="17" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
       <FileName>BuiltInSolverType.cs</FileName>

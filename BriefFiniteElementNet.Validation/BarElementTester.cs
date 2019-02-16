@@ -73,6 +73,7 @@ namespace BriefFiniteElementNet.Validation
         }
 
 
+
         public static void TestFixedInternalForce2()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -182,6 +183,11 @@ namespace BriefFiniteElementNet.Validation
            // var d1 = m1.Nodes.Last().GetNodalDisplacement();
            // var d2 = m2.Nodes.Last().GetNodalDisplacement();
 
+        }
+
+        public void TestConcentratedLoad()
+        {
+            
         }
 
         public static void Test3NodeBeam()
