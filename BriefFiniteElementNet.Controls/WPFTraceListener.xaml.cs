@@ -133,9 +133,9 @@ namespace BriefFiniteElementNet.Controls
             {
                 showModelTrace(model);
                 return;
-                var thr = new Thread(showModelTrace);
-                thr.SetApartmentState(ApartmentState.STA);
-                thr.Start(model);
+                //var thr = new Thread(showModelTrace);
+                //thr.SetApartmentState(ApartmentState.STA);
+                //thr.Start(model);
             }
             catch (Exception ex)
             {

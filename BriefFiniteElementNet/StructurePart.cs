@@ -33,8 +33,8 @@ namespace BriefFiniteElementNet
         /// The temporal data, to store temporal or calculation sensitive data,
         /// This field is readonly and is not serialized with the containing object.
         /// </summary>
-        [NonSerialized]
-        protected readonly Dictionary<Array, object> TemporalData = new Dictionary<Array, object>(new ArrayEqualityComparer());
+       // [NonSerialized]
+        //protected readonly Dictionary<Array, object> TemporalData = new Dictionary<Array, object>(new ArrayEqualityComparer());
 
         
 
@@ -166,6 +166,7 @@ namespace BriefFiniteElementNet
         /// <typeparam name="T"></typeparam>
         /// <param name="key">The key, sesitive to order.</param>
         /// <returns>true if value exists, false otherwise</returns>
+        /*
         public bool GetTemporalData<T>(out T value,params object[] key)
         {
             if (!TemporalData.ContainsKey(key))
@@ -179,6 +180,7 @@ namespace BriefFiniteElementNet
             value = (T)obj;
             return true;
         }
+        
 
         /// <summary>
         /// Sets the temporal data with specified key.
@@ -189,6 +191,7 @@ namespace BriefFiniteElementNet
         {
             TemporalData[key] = value;
         }
+        */
 
         /// <summary>
         /// Re assign s the node references. Used after deserialization

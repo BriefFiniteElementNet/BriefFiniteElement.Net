@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Validation
 {
-    public class SparseMatrixMultiplyValidation
+    public static class SparseMatrixMultiplyValidation
     {
         public static void Test1()
         {

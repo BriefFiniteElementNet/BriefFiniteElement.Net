@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Validation
 {
-    public class IndividualTests
+    public static class IndividualTests
     {
         public static void TestNoFreeDof()
         {

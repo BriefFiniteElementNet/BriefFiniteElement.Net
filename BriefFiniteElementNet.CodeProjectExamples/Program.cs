@@ -9,7 +9,7 @@ using BriefFiniteElementNet.MpcElements;
 
 namespace BriefFiniteElementNet.CodeProjectExamples
 {
-    class Program
+    internal static class Program
     {
         [STAThread]
         static void Main(string[] args)

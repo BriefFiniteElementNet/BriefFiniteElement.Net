@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Validation
 {
-    class Tet4Checker
+    internal static class Tet4Checker
     {
         static void Test1()
         {

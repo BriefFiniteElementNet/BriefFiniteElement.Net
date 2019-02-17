@@ -7,7 +7,7 @@ using BriefFiniteElementNet.Sections;
 
 namespace BriefFiniteElementNet.Validation
 {
-    public class MatrixTransformValidator
+    public static class MatrixTransformValidator
     {
         public static void Validate()
         {

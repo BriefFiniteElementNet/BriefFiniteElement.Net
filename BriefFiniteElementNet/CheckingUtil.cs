@@ -8,7 +8,7 @@ using CSparse.Double;
 namespace BriefFiniteElementNet
 {
     [Obsolete]
-    public class CheckingUtil
+    public static class CheckingUtil
     {
         
         public static bool IsInStaticEquilibrium(StaticLinearAnalysisResult res, LoadCase cse)

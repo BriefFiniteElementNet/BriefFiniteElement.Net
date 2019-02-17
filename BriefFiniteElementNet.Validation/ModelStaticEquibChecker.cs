@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Validation
 {
-    public class ModelStaticEquibChecker
+    public static class ModelStaticEquibChecker
     {
         public static void Check(Model model, LoadCase cse)
         {

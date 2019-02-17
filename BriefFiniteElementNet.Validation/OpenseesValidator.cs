@@ -12,7 +12,7 @@ using System.Data;
 
 namespace BriefFiniteElementNet.Validation
 {
-    public class OpenseesValidator
+    public static class OpenseesValidator
     {
         private static readonly string openSeeslocation = @"C:\Opensees\Opensees.exe";
 

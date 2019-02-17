@@ -196,7 +196,7 @@ namespace BriefFiniteElementNet.Controls
 
             public EventHandler<PropertyValueChangedEventArgs<ForceComponent>> ComponentChanged;
 
-            public static void OnComponentChanged(object sender, PropertyValueChangedEventArgs<ForceComponent> e)
+            private static void OnComponentChanged(object sender, PropertyValueChangedEventArgs<ForceComponent> e)
             {
                 var obj = sender as BarInternalForceContext;
 
@@ -231,7 +231,7 @@ namespace BriefFiniteElementNet.Controls
 
             public EventHandler<PropertyValueChangedEventArgs<ForceType>> TypeChanged;
 
-            public static void OnTypeChanged(object sender, PropertyValueChangedEventArgs<ForceType> e)
+            private static void OnTypeChanged(object sender, PropertyValueChangedEventArgs<ForceType> e)
             {
                 var obj = sender as BarInternalForceContext;
 
@@ -266,7 +266,7 @@ namespace BriefFiniteElementNet.Controls
 
             public EventHandler<PropertyValueChangedEventArgs<BarElement>> TargetElementChanged;
 
-            public static void OnTargetElementChanged(object sender, PropertyValueChangedEventArgs<BarElement> e)
+            private static void OnTargetElementChanged(object sender, PropertyValueChangedEventArgs<BarElement> e)
             {
                 var obj = sender as BarInternalForceContext;
 

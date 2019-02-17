@@ -373,7 +373,7 @@ namespace BriefFiniteElementNet
             ReIndexNodes();
 
             if (this.mpcElements.Count > 0)
-                throw new Exception("Invalid solve for MPC element");// Model with MPC element should call Model.Solve_MPC()
+                throw new InvalidOperationException("Invalid solve for MPC element");// Model with MPC element should call Model.Solve_MPC()
 
             foreach (var loadCase in config.LoadCases)
             {
@@ -470,13 +470,13 @@ namespace BriefFiniteElementNet
 
         private Model(SerializationInfo info, StreamingContext context)
         {
-            Elements = (ElementCollection)info.GetValue("elements",typeof(ElementCollection));
-            MpcElements = (MpcElementCollection)info.GetValue("mpcElements",typeof(MpcElementCollection));
+            elements = (ElementCollection)info.GetValue("elements",typeof(ElementCollection));
+            mpcElements = (MpcElementCollection)info.GetValue("mpcElements",typeof(MpcElementCollection));
 
             rigidElements = (RigidElementCollection)info.GetValue("rigidElements",typeof(RigidElementCollection));
             telepathyLinks = (TelepathyLinkCollection)info.GetValue("telepathyLinks", typeof(TelepathyLinkCollection));
 
-            Nodes = (NodeCollection)info.GetValue("nodes",typeof(NodeCollection));
+            nodes = (NodeCollection)info.GetValue("nodes",typeof(NodeCollection));
             settlementLoadCase = (LoadCase)info.GetValue("settlementLoadCase", typeof(LoadCase));
         }
 

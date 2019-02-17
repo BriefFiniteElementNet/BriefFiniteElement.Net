@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Validation
 {
-    public class NodeInternalExternalEquibliriumChecker
+    public static class NodeInternalExternalEquibliriumChecker
     {
         public static void CheckForEquiblirium(Model model, LoadCase lc)
         {

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Validation
 {
-    public class SerializationTest
+    public static class SerializationTest
     {
         public static void Test1()
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Elements;
+using System.Runtime.Serialization;
 
 namespace BriefFiniteElementNet.Loads
 {
@@ -187,5 +188,44 @@ namespace BriefFiniteElementNet.Loads
             //no discrete points
             return new IsoPoint[0];
         }
+
+        #region ISerialization Implementation
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("_magnitudesAtNodes", _magnitudesAtNodes);
+            info.AddValue("_startLocation", _startLocation);
+            info.AddValue("_endLocation", _endLocation);
+            info.AddValue("_startMagnitude", _startMagnitude);
+            info.AddValue("_endMagnitude", _endMagnitude);
+            info.AddValue("_direction", _direction);
+        }
+
+        #endregion
+
+
+        #region Constructor
+
+        public PartialNonUniformLoad()
+        {
+        }
+
+        #endregion
+
+
+        #region Deserialization Constructor
+
+        protected PartialNonUniformLoad(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            _magnitudesAtNodes = (double[])info.GetValue("_magnitudesAtNodes", typeof(double[]));
+            _startLocation = (IsoPoint)info.GetValue("_startLocation", typeof(IsoPoint));
+            _endLocation = (IsoPoint)info.GetValue("_endLocation", typeof(IsoPoint));
+            _startMagnitude = (double)info.GetValue("_startMagnitude", typeof(double));
+            _endMagnitude = (double)info.GetValue("_endMagnitude", typeof(double));
+            _direction = (Vector)info.GetValue("_direction", typeof(Vector));
+        }
+
+        #endregion
     }
 }

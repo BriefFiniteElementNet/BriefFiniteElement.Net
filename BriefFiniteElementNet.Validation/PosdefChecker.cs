@@ -5,7 +5,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Validation
 {
-    public class PosdefChecker
+    public static class PosdefChecker
     {
         public static void CheckModel(Model model,LoadCase lc)
         {

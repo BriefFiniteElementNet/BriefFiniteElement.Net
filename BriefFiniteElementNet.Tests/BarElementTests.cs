@@ -244,7 +244,7 @@ namespace BriefFiniteElementNet.Tests
 
             var nodes = new Node[2];
 
-            var l = 4.0;
+            var l = 5.0;
             var a = 1.25866;
             var b = l - a;
 

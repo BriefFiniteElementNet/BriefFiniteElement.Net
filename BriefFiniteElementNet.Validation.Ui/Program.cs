@@ -8,7 +8,7 @@ using HtmlTags;
 
 namespace BriefFiniteElementNet.Validation.Ui
 {
-    class Program
+    internal static class Program
     {
         static void Main(string[] args)
         {

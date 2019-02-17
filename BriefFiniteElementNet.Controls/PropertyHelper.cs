@@ -12,7 +12,7 @@ using System.Windows.Data;
 
 namespace BriefFiniteElementNet.Controls
 {
-    public class PropertyHelper
+    public static class PropertyHelper
     {
         public static void Populate(DataGrid dg, object obj)
         {

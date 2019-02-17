@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet.CodeProjectExamples
 {
-    public class InternalForceExample
+    public static class InternalForceExample
     {
         public static void Run()
         {

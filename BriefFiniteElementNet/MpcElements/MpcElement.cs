@@ -71,7 +71,7 @@ namespace BriefFiniteElementNet.MpcElements
         }
 
 
-        public MpcElement()
+        protected MpcElement()
         {
             _nodes = new NodeList();
         }

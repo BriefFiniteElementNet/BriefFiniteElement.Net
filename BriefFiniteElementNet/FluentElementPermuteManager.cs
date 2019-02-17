@@ -9,7 +9,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet
 {
-    public class FluentElementPermuteManager
+    public static class FluentElementPermuteManager
     {
         public static Matrix FullyExpand(Matrix originalMatrix, IEnumerable<ElementLocalDof>  src, int totalNodes)
         {

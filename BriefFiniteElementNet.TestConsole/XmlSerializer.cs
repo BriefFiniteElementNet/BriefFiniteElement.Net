@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet.TestConsole
 {
-    public class XmlSerializer
+    public static class XmlSerializer
     {
         public static void Serialize(ISerializable obj)
         {

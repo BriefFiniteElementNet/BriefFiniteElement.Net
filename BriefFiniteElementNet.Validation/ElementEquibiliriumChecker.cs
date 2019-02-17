@@ -8,7 +8,7 @@ namespace BriefFiniteElementNet.Validation
     /// <summary>
     /// Checks for every element to be statically stable
     /// </summary>
-    public class ElementEquibiliriumChecker
+    public static class ElementEquibiliriumChecker
     {
         public static void Check(Model model, LoadCase lc)
         {

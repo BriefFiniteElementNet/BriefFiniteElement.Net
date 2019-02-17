@@ -13,7 +13,7 @@ using BriefFiniteElementNet.Solver;
 
 namespace BriefFiniteElementNet.BenchmarkApplication
 {
-    internal class Program
+    internal static class Program
     {
         private static void Main(string[] args)
         {

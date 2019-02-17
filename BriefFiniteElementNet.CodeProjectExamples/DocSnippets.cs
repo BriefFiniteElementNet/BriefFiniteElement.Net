@@ -6,7 +6,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet.CodeProjectExamples
 {
-    public class DocSnippets
+    public static class DocSnippets
     {
         public static void Test1()
         {

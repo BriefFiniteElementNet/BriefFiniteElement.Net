@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSparse.Double;
+using System.Runtime.Serialization;
 
 namespace BriefFiniteElementNet.MpcElements
 {
@@ -13,6 +14,7 @@ namespace BriefFiniteElementNet.MpcElements
     /// This class is a vitual support for nodes in it. this also supports settlement.
     /// </remarks>
     /// <seealso cref="BriefFiniteElementNet.Elements.MpcElement" />
+    [Serializable]
     public class VirtualConstraint : MpcElement
     {
         private Displacement _settlement;
@@ -116,5 +118,36 @@ namespace BriefFiniteElementNet.MpcElements
 
             return restCount * Nodes.Count;
         }
+
+        #region ISerialization Implementation
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("_settlement", _settlement);
+            info.AddValue("_constraint", _constraint);
+        }
+
+        #endregion
+
+
+        #region Constructor
+
+        public VirtualConstraint()
+        {
+        }
+
+        #endregion
+
+
+        #region Deserialization Constructor
+
+        protected VirtualConstraint(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            _settlement = (Displacement)info.GetValue("_settlement", typeof(Displacement));
+            _constraint = (Constraint)info.GetValue("_constraint", typeof(Constraint));
+        }
+
+        #endregion
     }
 }
