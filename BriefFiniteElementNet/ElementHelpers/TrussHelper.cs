@@ -191,6 +191,10 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
         {
+            var br = targetElement as BarElement;
+
+            
+
             var xi = isoCoords[0];
 
             Polynomial[] ns = null;
@@ -211,9 +215,13 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     for (var i = 0; i < ns.Length; i++)
                         ns[i] = GetN_i(targetElement, i);
+
+                    targetElement.Cache.Add(nsKey, ns);
                 }
             }
 
+
+            //var buf = new Matrix(2, br.Nodes.Length);
             var buf = new Matrix(2, ns.Length);
 
             {//fill buff

@@ -326,7 +326,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             DofConstraint[] cv,
             DofConstraint[] cm)
         {
-            //conditions for M_basenode(targetNode) and M_basenode`(targetNode)
+            //conditions for N_basenode(targetNode) and N_basenode`(targetNode)
 
             var nodeCount = cv.Length;
 
@@ -360,14 +360,10 @@ namespace BriefFiniteElementNet.ElementHelpers
             return lst.ToArray();
         }
 
-
-        /// <inheritdoc/>
-        public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
+        private bool GetShapeFunctions(Element targetElement, double[] isoCoords, out Polynomial[] nss,out Polynomial[] mss)
         {
-            //note: this method gives the shape function on variable node count beam with variable constraint on each node 
 
             var cnds = new List<Condition>();
-
 
             var sb = new StringBuilder();
             //var conditions = new List<>();
@@ -378,7 +374,11 @@ namespace BriefFiniteElementNet.ElementHelpers
             var l = (bar.StartNode.Location - bar.EndNode.Location).Length;
 
             if (bar == null)
-                return null;
+            {
+                nss = null;
+                mss = null;
+                return false;
+            }
 
             var n = bar.NodeCount;
 
@@ -428,17 +428,15 @@ namespace BriefFiniteElementNet.ElementHelpers
                     cnds.AddRange(GetMCondition(targetElement, bnode, tnode, cv, cm));
                     cnds.AddRange(GetNCondition(targetElement, bnode, tnode, cv, cm));
                 }
-
-                
-
             }
+
             #endregion
 
             cnds.Sort(new Condition.ConditionEqualityComparer());
             var grpd = cnds.GroupBy(i => Tuple.Create(i.NodeNumber, i.Type)).ToArray();
 
-            var mss = new Polynomial[n];
-            var nss = new Polynomial[n];
+            mss = new Polynomial[n];
+            nss = new Polynomial[n];
 
             foreach (var grp in grpd)
             {
@@ -472,7 +470,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 {
                     pl = new Polynomial();
                 }
-                
+
 
                 if (tp == Condition.FunctionType.M)
                     mss[nodeNum] = pl;
@@ -480,6 +478,56 @@ namespace BriefFiniteElementNet.ElementHelpers
                 if (tp == Condition.FunctionType.N)
                     nss[nodeNum] = pl;
             }
+
+            return true;
+        }
+
+
+        /// <inheritdoc/>
+        public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
+        {
+            //note: this method gives the shape function on variable node count beam with variable constraint on each node 
+
+            Polynomial[] nss = null;
+            Polynomial[] mss = null;
+
+            {//retrieve or generate shapefunctions
+                
+                var nssKey = "AAE77B42-E403-4EF1-933E-B35BD6ECAC83";//a random unified key for store truss shape functions for bar element
+                var mssKey = "E5AEF7C6-5128-4BB6-A605-153A40DF5AD7";
+
+
+                object obj;
+
+                if (targetElement.Cache.TryGetValue(nssKey, out obj))
+                {
+                    nss = obj as Polynomial[];
+                }
+
+                if (targetElement.Cache.TryGetValue(mssKey, out obj))
+                {
+                    mss = obj as Polynomial[];
+                }
+
+
+                if (nss == null || mss==null)
+                {
+                    if (!GetShapeFunctions(targetElement, isoCoords, out nss, out mss))
+                        throw new NotImplementedException();
+
+                    targetElement.Cache.Add(nssKey, nss);
+                    targetElement.Cache.Add(mssKey, mss);
+                }
+            }
+
+
+            var bar = targetElement as BarElement;
+
+            var n = bar.NodeCount;
+
+            var xi = isoCoords[0];
+
+
 
             var buf = new Matrix(4, 2 * n);
 
@@ -515,7 +563,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                     //var v2 = buf[ii, 2 * i + 1] = cf * mi.EvaluateDerivative(xi, ii);
 
                     var nid = ni.GetDerivative(ii);
-                    var mid =mi.GetDerivative(ii);
+                    var mid = mi.GetDerivative(ii);
 
                     var v1 = buf[ii, 2*i + 0] = nid.Evaluate(xi);
                     var v2 = buf[ii, 2*i + 1] = mid.Evaluate(xi);
@@ -1047,8 +1095,8 @@ namespace BriefFiniteElementNet.ElementHelpers
         public int[] GetBMaxOrder(Element targetElement)
         {
             var n = targetElement.Nodes.Length;
-            var t = 2*n - 3;
-            return new[] {2*t,0,0};
+            var t = (2*n - 1) - 3;
+            return new[] {t,0,0};
         }
 
         public int[] GetDetJOrder(Element targetElement)

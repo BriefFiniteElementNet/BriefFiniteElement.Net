@@ -216,6 +216,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     for (var i = 0; i < ns.Length; i++)
                         ns[i] = GetN_i(targetElement, i);
+
+                    targetElement.Cache.Add(nsKey, ns);
                 }
             }
 

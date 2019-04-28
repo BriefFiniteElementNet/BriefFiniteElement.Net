@@ -121,9 +121,9 @@ namespace BriefFiniteElementNet.Loads
 
         protected ConcentratedLoad(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            _forceIsoLocation = (IsoPoint)info.GetValue("_forceIsoLocation", typeof(Vector));
-            _force = (Force)info.GetValue("_force", typeof(double));
-            _coordinationSystem = (CoordinationSystem)(int)info.GetValue("_coordinationSystem", typeof(double));
+            _forceIsoLocation = (IsoPoint)info.GetValue("_forceIsoLocation", typeof(IsoPoint));
+            _force = (Force)info.GetValue("_force", typeof(Force));
+            _coordinationSystem = (CoordinationSystem)(int)info.GetValue("_coordinationSystem", typeof(int));
 
         }
 
@@ -146,7 +146,6 @@ namespace BriefFiniteElementNet.Loads
         public override IsoPoint[] GetInternalForceDiscretationPoints()
         {
             var buf = new List<IsoPoint>();
-
 
             buf.Add(_forceIsoLocation);
 

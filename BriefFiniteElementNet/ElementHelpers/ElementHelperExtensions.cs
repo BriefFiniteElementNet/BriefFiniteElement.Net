@@ -33,6 +33,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var nEta = sum[1] / 2 + 1;
             var nGama = sum[2] / 2 + 1;
 
+            nXi += 2;
 
             //var ng = (2*nb + nd + nj)/2 + 1;
             var intg = new GaussianIntegrator();

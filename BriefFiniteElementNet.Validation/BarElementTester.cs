@@ -13,6 +13,134 @@ namespace BriefFiniteElementNet.Validation
 {
     public class BarElementTester:IValidator
     {
+        public static void TestEndReleaseStyiffness()
+        {
+            //A NUMERICAL PROCEDURE FOR THE NONLINEAR ANALYSIS OF REINFORCED CONCRETE FRAMES WITH INFILL WALLS
+            //by MURAT EFE GÜNEY
+            //p. 51: 2.3 Condensation and Constraint Equations
+
+            var elm = new BarElement(3);
+
+            elm.Nodes[0] = new Node(-1, 0, 0);
+            elm.Nodes[1] = new Node(0, 0, 0);
+            elm.Nodes[2] = new Node(1, 0, 0);
+
+
+            //elm.StartReleaseCondition = Constraints.FixedRX;
+            elm.Section = new UniformParametric1DSection(1, 2, 3, 4);
+            elm.Material = new UniformIsotropicMaterial(210e9, 0.3);
+
+            var kfull = elm.GetLocalStifnessMatrix();
+
+
+            var newConds = new Constraint[elm.NodeCount];
+
+            {
+                for (int i = 0; i < newConds.Length; i++)
+                {
+                    newConds[i] = Constraints.Fixed;
+                }
+
+                //newConds[0].DY = DofConstraint.Released;
+                newConds[1].DY = DofConstraint.Released;
+                newConds[2].DY = DofConstraint.Released;
+
+                //newConds[0].RZ = DofConstraint.Released;
+
+            }
+
+            var kr = GetCondensedStiffness(kfull, newConds);
+
+            Array.Copy(newConds, elm.NodalReleaseConditions,newConds.Length);
+            
+            var kr2 = elm.GetLocalStifnessMatrix();
+
+            var ratio = Matrix.DotDivide(kr, kr2);
+            ratio.Replace(double.NaN, 0);
+
+            var d = (kr - kr2);
+
+        }
+
+        private static Matrix GetCondensedStiffness(Matrix k, params Constraint[] consts)
+        {
+            var n = consts.Length;
+            var fixes = 0;
+
+            for (int i = 0; i < n; i++)
+            {
+                var cns = consts[i];
+
+                if (cns.DX == DofConstraint.Fixed) fixes++;
+
+                if (cns.DY == DofConstraint.Fixed) fixes++;
+
+                if (cns.DZ == DofConstraint.Fixed) fixes++;
+
+                if (cns.RX == DofConstraint.Fixed) fixes++;
+
+                if (cns.RY == DofConstraint.Fixed) fixes++;
+
+                if (cns.RZ == DofConstraint.Fixed) fixes++;
+            }
+
+
+            var pf = new Matrix(fixes, 6 * n);
+            var pc = new Matrix(6 * n-fixes, 6 * n);
+
+            var c1 = 0;
+            var c2 = 0;
+
+            for (var i = 0; i < n; i++)
+            {
+                var cns = consts[i];
+
+                if (cns.DX == DofConstraint.Fixed)
+                    pf[c1++, 6*i + 0] = 1;
+                else
+                    pc[c2++, 6*i + 0] = 1;
+
+                if (cns.DY == DofConstraint.Fixed)
+                    pf[c1++, 6*i + 1] = 1;
+                else
+                    pc[c2++, 6*i + 1] = 1;
+
+                if (cns.DZ == DofConstraint.Fixed)
+                    pf[c1++, 6*i + 2] = 1;
+                else
+                    pc[c2++, 6*i + 2] = 1;
+
+                if (cns.RX == DofConstraint.Fixed)
+                    pf[c1++, 6*i + 3] = 1;
+                else
+                    pc[c2++, 6*i + 3] = 1;
+
+
+                if (cns.RY == DofConstraint.Fixed)
+                    pf[c1++, 6*i + 4] = 1;
+                else
+                    pc[c2++, 6*i + 4] = 1;
+
+                if (cns.RZ == DofConstraint.Fixed)
+                    pf[c1++, 6*i + 5] = 1;
+                else
+                    pc[c2++, 6*i + 5] = 1;
+            }
+
+            var kff = pf * k * pf.Transpose();
+            var kfc = pf * k * pc.Transpose();
+            var kcf = pc * k * pf.Transpose();
+            var kcc = pc * k * pc.Transpose();
+
+
+            var kr = kff - kfc*kcc.Inverse2()*kcf;
+
+
+            var kt = pf.Transpose()*kr*pf;
+
+            return kt;
+            throw new NotImplementedException();
+        }
 
         public ValidationResult[] DoAllValidation()
         {

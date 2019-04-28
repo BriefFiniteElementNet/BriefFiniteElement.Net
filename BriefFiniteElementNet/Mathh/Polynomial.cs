@@ -59,6 +59,9 @@ namespace BriefFiniteElementNet.Mathh
             if (Coefficients.Length == 0)
                 return this.Clone();
 
+            if (deg >= Coefficients.Length)
+                return new Polynomial();
+
             var dic = new Dictionary<int, double>();
 
             var buf = new double[Coefficients.Length - deg];

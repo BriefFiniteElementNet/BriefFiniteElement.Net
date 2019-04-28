@@ -1410,6 +1410,16 @@ namespace BriefFiniteElementNet
 
         #endregion
 
+
+        public void Replace(double oldValue, double newValue)
+        {
+            for (int i = 0; i < coreArray.Length; i++)
+            {
+                if (coreArray[i].Equals(oldValue))
+                    coreArray[i] = newValue;
+            }
+        }
+
         public override string ToString()
         {
             var sb = new StringBuilder();
