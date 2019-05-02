@@ -417,6 +417,15 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
 
 
+            if(cv.All(i => i == DofConstraint.Fixed) && cm.All(i => i == DofConstraint.Fixed))
+            {
+                if (n == 2)
+                {
+                    //return GetNMatrixBar2Node(targetElement, isoCoords);
+                    return GetShapeFunction2Node(targetElement, out nss, out mss);
+                }
+            }
+
             #region detect conditions
 
             for (var bnode = 0; bnode < n; bnode++)
@@ -433,6 +442,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             #endregion
 
             cnds.Sort(new Condition.ConditionEqualityComparer());
+
             var grpd = cnds.GroupBy(i => Tuple.Create(i.NodeNumber, i.Type)).ToArray();
 
             mss = new Polynomial[n];
@@ -491,10 +501,15 @@ namespace BriefFiniteElementNet.ElementHelpers
             Polynomial[] nss = null;
             Polynomial[] mss = null;
 
+            var bar = targetElement as BarElement;
+
+            /*//as length and nodal releases are taken into account, better do not cache shape function
             {//retrieve or generate shapefunctions
-                
-                var nssKey = "AAE77B42-E403-4EF1-933E-B35BD6ECAC83";//a random unified key for store truss shape functions for bar element
-                var mssKey = "E5AEF7C6-5128-4BB6-A605-153A40DF5AD7";
+
+                var releaseText = string.Join(",", bar._nodalReleaseConditions.Select(i => i.ToString_01()));
+
+                var nssKey = "AAE77B42-E403-4EF1-933E-B35BD6ECAC83"+ releaseText;//a random unified key for store truss shape functions for bar element
+                var mssKey = "E5AEF7C6-5128-4BB6-A605-153A40DF5AD7"+ releaseText;
 
 
                 object obj;
@@ -512,16 +527,20 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 if (nss == null || mss==null)
                 {
-                    if (!GetShapeFunctions(targetElement, isoCoords, out nss, out mss))
-                        throw new NotImplementedException();
+                    
 
                     targetElement.Cache.Add(nssKey, nss);
                     targetElement.Cache.Add(mssKey, mss);
                 }
             }
+            */
+
+            //if (bar._nodalReleaseConditions.All(i => i == Constraints.Fixed) && bar.Nodes.Length == 2)
+            //    GetShapeFunction2Node(targetElement, out nss, out mss);
+            if (!GetShapeFunctions(targetElement, isoCoords, out nss, out mss))
+                throw new Exception();
 
 
-            var bar = targetElement as BarElement;
 
             var n = bar.NodeCount;
 
@@ -898,11 +917,33 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
         }
 
+        public bool GetShapeFunction2Node(Element targetElement, out Polynomial[] ns, out Polynomial[] ms)
+        {
+            ns = new Polynomial[2];
+
+            ms = new Polynomial[2];
+
+            var bar = targetElement as BarElement;
+
+            if (bar == null)
+                throw new Exception();
+
+            var L = (bar.EndNode.Location - bar.StartNode.Location).Length;
+
+            ns[0] = new Polynomial(0.25, 0, -0.75, 0.5);
+
+            ms[0] = new Polynomial(0.125 * L, -0.125 * L, -0.125 * L, 0.125 * L);
+
+            ns[1] = new Polynomial(-0.25, 0, 0.75, 0.5);
+
+            ms[1] = new Polynomial(0.125 * L, 0.125 * L, -0.125 * L, -0.125 * L);
+
+            return true;
+        }
+
         public Matrix GetNMatrixBar2Node(Element targetElement, params double[] isoCoords)
         {
             //for end release handling see http://www.serendi-cdi.org/serendipedia/index.php?title=Beam_Shape_Functions
-
-           
 
             var xi = isoCoords[0];
 
@@ -931,7 +972,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 L / 8.0 * (6 * xi - 2.0),
                 L / 8.0 * (6),
             };
-
+            
             var n2s = new double[] //N2,N2', N2'', N2'''
             {
                 1.0 / 4.0 * (1 + xi)*(1 + xi)*(2 - xi),
@@ -939,7 +980,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 1.0 / 4.0 * (-6 * xi),
                 1.0 / 4.0 * (-6)
             };
-
+            
             var m2s = new double[] //M1,M1', M1'', M1'''
             {
                 L / 8.0 * (1 + xi)*(1 + xi)*(xi - 1),
@@ -949,7 +990,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             };
 
             var buf2 = new Matrix(4, 4);
-
 
             var c1 = bar.StartReleaseCondition;
             var c2 = bar.EndReleaseCondition;
@@ -982,9 +1022,19 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (bar == null)
                 throw new Exception();
 
+            var buf = new Matrix(1, 1);
+
+
+            if (bar.NodeCount == 2)
+            {
+                var l = (bar.Nodes.Last().Location - bar.Nodes.First().Location);
+                buf[0, 0] = l.Length / 2;
+                return buf;
+            }
+
             var x_xi = bar.GetIsoToLocalConverter();
 
-            var buf = new Matrix(1, 1);
+            
             //we need J = ∂X / ∂ξ = dX / dξ
 
             buf[0, 0] = x_xi.GetDerivative(1).Evaluate(isoCoords[0]);
@@ -1484,9 +1534,6 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             if (_direction == BeamDirection.Y)
             {
-                //n.MultiplyColumnByConstant(1, -1);
-                //n.MultiplyColumnByConstant(3, -1);
-
                 for (var i = 0; i < n.ColumnCount; i++)
                 {
                     if (i % 2 == 1)
@@ -1509,7 +1556,6 @@ namespace BriefFiniteElementNet.ElementHelpers
                     u[2*i + 0, 0] = ld[i].DZ;
                     u[2*i + 1, 0] = ld[i].RY;
                 }
-                //u.FillColumn(0, ld[0].DZ, ld[0].RY, ld[1].DZ, ld[1].RY);
             }
             else
             {
@@ -1518,13 +1564,9 @@ namespace BriefFiniteElementNet.ElementHelpers
                     u[ 2 * i + 0,0] = ld[i].DY;
                     u[ 2 * i + 1,0] = ld[i].RZ;
                 }
-
-                //u.FillColumn(0, ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ);
             }
 
-
             var f = n * u;
-            //var f2 = d*GetBMatrixAt(targetElement, isoCoords)*u;
 
             var ei = d[0, 0];
 
@@ -1533,23 +1575,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             f.MultiplyRowByConstant(3, ei / (j * j * j));
 
             f.MultiplyRowByConstant(2, -1);//m/ei = - n''*u
-
-            //var buf = new Displacement();
-            
-
-            /*
-            if (_direction == BeamDirection.Y)
-            {
-                buf.Add(Tuple.Create(DoF.Ry, -f[2, 0]));
-                buf.Add(Tuple.Create(DoF.Dz, f[3, 0]));
-            }
-            else
-            {
-                buf.Add(Tuple.Create(DoF.Rz, f[2, 0]));
-                buf.Add(Tuple.Create(DoF.Dy, f[3, 0]));
-            }
-            */
-
 
             if (_direction == BeamDirection.Y)
             {

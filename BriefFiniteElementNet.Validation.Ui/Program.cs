@@ -26,8 +26,8 @@ namespace BriefFiniteElementNet.Validation.Ui
             //Console.WriteLine("Bar Element Test - Start");
 
 
-            //ExportToHtmFile("c:\\temp\\validation.html", new BarElementTester());
-            BarElementTester.TestEndReleaseStyiffness();
+            ExportToHtmFile("c:\\temp\\validation.html", new BarElementTester());
+            //BarElementTester.TestEndReleaseStyiffness();
 
             //var resss = new BarElementTester().DoValidation();
         }
