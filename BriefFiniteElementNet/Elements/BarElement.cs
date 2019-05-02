@@ -49,13 +49,14 @@ namespace BriefFiniteElementNet.Elements
         private BaseMaterial _material;
         //private Constraint _startReleaseCondition = Constraints.Fixed;
         //private Constraint _endReleaseCondition = Constraints.Fixed;
-        private Constraint[] _nodalReleaseConditions;
+        internal Constraint[] _nodalReleaseConditions;
 
 
-        //public Constraint[] NodalReleaseConditions
-        //{
-        //    get { return _nodalReleaseConditions; }
-        //}
+        /*
+        public Constraint[] NodalReleaseConditions
+        {
+            get { return _nodalReleaseConditions; }
+        }*/
 
         /// <summary>
         /// Gets or sets the node count of bar element

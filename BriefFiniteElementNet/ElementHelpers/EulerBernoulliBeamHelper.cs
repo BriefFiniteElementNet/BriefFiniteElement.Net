@@ -406,13 +406,13 @@ namespace BriefFiniteElementNet.ElementHelpers
             {
                 if (this._direction == BeamDirection.Z)
                 {
-                    cv[i] = bar.NodalReleaseConditions[i].DY;
-                    cm[i] = bar.NodalReleaseConditions[i].RZ;
+                    cv[i] = bar._nodalReleaseConditions[i].DY;
+                    cm[i] = bar._nodalReleaseConditions[i].RZ;
                 }
                 else
                 {
-                    cv[i] = bar.NodalReleaseConditions[i].DZ;
-                    cm[i] = bar.NodalReleaseConditions[i].RY;
+                    cv[i] = bar._nodalReleaseConditions[i].DZ;
+                    cm[i] = bar._nodalReleaseConditions[i].RY;
                 }
             }
 
@@ -613,13 +613,13 @@ namespace BriefFiniteElementNet.ElementHelpers
             {
                 if (this._direction == BeamDirection.Z)
                 {
-                    cv[i] = bar.NodalReleaseConditions[i].DY;
-                    cm[i] = bar.NodalReleaseConditions[i].RZ;
+                    cv[i] = bar._nodalReleaseConditions[i].DY;
+                    cm[i] = bar._nodalReleaseConditions[i].RZ;
                 }
                 else
                 {
-                    cv[i] = bar.NodalReleaseConditions[i].DZ;
-                    cm[i] = bar.NodalReleaseConditions[i].RY;
+                    cv[i] = bar._nodalReleaseConditions[i].DZ;
+                    cm[i] = bar._nodalReleaseConditions[i].RY;
                 }
             }
 
@@ -773,13 +773,13 @@ namespace BriefFiniteElementNet.ElementHelpers
             {
                 if (this._direction == BeamDirection.Z)
                 {
-                    cv[i] = bar.NodalReleaseConditions[i].DY;
-                    cm[i] = bar.NodalReleaseConditions[i].RZ;
+                    cv[i] = bar._nodalReleaseConditions[i].DY;
+                    cm[i] = bar._nodalReleaseConditions[i].RZ;
                 }
                 else
                 {
-                    cv[i] = bar.NodalReleaseConditions[i].DZ;
-                    cm[i] = bar.NodalReleaseConditions[i].RY;
+                    cv[i] = bar._nodalReleaseConditions[i].DZ;
+                    cm[i] = bar._nodalReleaseConditions[i].RY;
                 }
             }
 

@@ -51,7 +51,7 @@ namespace BriefFiniteElementNet.Validation
 
             var kr = GetCondensedStiffness(kfull, newConds);
 
-            Array.Copy(newConds, elm.NodalReleaseConditions,newConds.Length);
+            Array.Copy(newConds, elm._nodalReleaseConditions, newConds.Length);
             
             var kr2 = elm.GetLocalStifnessMatrix();
 
@@ -431,7 +431,7 @@ namespace BriefFiniteElementNet.Validation
                 el2.Nodes[1] = new Node(l/2, 0, 0) { Label = "n1" };
                 el2.Nodes[2] = new Node(l, 0, 0) {Constraints = Constraints.Fixed, Label = "n2"};
 
-                el2.NodalReleaseConditions[2] = Constraints.Released;
+                el2._nodalReleaseConditions[2] = Constraints.Released;
 
                 el2.Section = sec;
                 el2.Material = mat;

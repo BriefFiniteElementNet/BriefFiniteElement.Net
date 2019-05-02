@@ -253,7 +253,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             for (var i = 0; i < n; i++)
             {
-                if (bar.NodalReleaseConditions[i].RX == DofConstraint.Fixed)
+                if (bar._nodalReleaseConditions[i].RX == DofConstraint.Fixed)
                     conditions.Add(Tuple.Create(xis(i), ith == i ? 1.0 : 0.0));
             }
 

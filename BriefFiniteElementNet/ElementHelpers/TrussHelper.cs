@@ -255,7 +255,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             for (var i = 0; i < n; i++)
             {
-                if (bar.NodalReleaseConditions[i].DX == DofConstraint.Fixed)
+                if (bar._nodalReleaseConditions[i].DX == DofConstraint.Fixed)
                     conditions.Add(Tuple.Create(xis(i), ith == i ? 1.0 : 0.0));
             }
 
@@ -492,7 +492,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                         localDir = tr.TransformGlobalToLocal(localDir);
 
                     xi0 = -1;
-                    xi1 = 1;
+                    //xi1 = 1;
                     degree = 0;
                 }
                 else
