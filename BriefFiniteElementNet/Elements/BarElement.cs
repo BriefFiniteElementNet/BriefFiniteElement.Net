@@ -27,8 +27,6 @@ namespace BriefFiniteElementNet.Elements
         {
             StartNode = n1;
             EndNode = n2;
-
-
         }
 
         /// <summary>
@@ -54,10 +52,10 @@ namespace BriefFiniteElementNet.Elements
         private Constraint[] _nodalReleaseConditions;
 
 
-        public Constraint[] NodalReleaseConditions
-        {
-            get { return _nodalReleaseConditions; }
-        }
+        //public Constraint[] NodalReleaseConditions
+        //{
+        //    get { return _nodalReleaseConditions; }
+        //}
 
         /// <summary>
         /// Gets or sets the node count of bar element
@@ -800,7 +798,7 @@ namespace BriefFiniteElementNet.Elements
             var buf = Force.Zero;
 
             foreach (var lc in combination.Keys)
-                buf += this.GetInternalForceAt(xi, lc);
+                buf += combination[lc] * this.GetInternalForceAt(xi, lc);
 
             return buf;
         }
@@ -819,7 +817,7 @@ namespace BriefFiniteElementNet.Elements
             var buf = Force.Zero;
 
             foreach (var lc in combination.Keys)
-                buf += this.GetExactInternalForceAt(xi, lc);
+                buf += combination[lc] * this.GetExactInternalForceAt(xi, lc);
 
             return buf;
         }
@@ -835,7 +833,6 @@ namespace BriefFiniteElementNet.Elements
         /// </remarks>
         public Force GetInternalForceAt(double xi, LoadCase loadCase)
         {
-            var buf = new FlatShellStressTensor();
 
             var helpers = GetHelpers();
 
@@ -885,18 +882,11 @@ namespace BriefFiniteElementNet.Elements
                             throw new ArgumentOutOfRangeException();
                     }
                 }
-                //buf = buf + tns;
             }
-
-            
-
-            var forces = new Vector(buf.MembraneTensor.S11, buf.MembraneTensor.S12, buf.MembraneTensor.S13);
-            //Fx, Vy, Vz
-            var moments = new Vector(buf.BendingTensor.M11, buf.BendingTensor.M12, buf.BendingTensor.M13);
-            //Mx, My, Mz
 
             return new Force(frc, mnt);
         }
+
 
         /// <summary>
         /// Gets the internal force at <see cref="xi" /> position.

@@ -1461,6 +1461,19 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (xi < -1 || xi > 1)
                 throw new ArgumentOutOfRangeException(nameof(isoCoords));
 
+            var buf = new List<Tuple<DoF, double>>();
+
+            if (_direction == BeamDirection.Y)
+            {
+                if (localDisplacements.All(i => i.DZ == 0 && i.RY == 0))
+                    return buf;
+            }
+            else
+            {
+                if (localDisplacements.All(i => i.DY == 0 && i.RZ == 0))
+                    return buf;
+            }
+
             var bar = targetElement as BarElement;
 
             if (bar == null)
@@ -1511,7 +1524,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
 
             var f = n * u;
-            var f2 = d*GetBMatrixAt(targetElement, isoCoords)*u;
+            //var f2 = d*GetBMatrixAt(targetElement, isoCoords)*u;
 
             var ei = d[0, 0];
 
@@ -1522,7 +1535,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             f.MultiplyRowByConstant(2, -1);//m/ei = - n''*u
 
             //var buf = new Displacement();
-            var buf = new List<Tuple<DoF, double>>();
+            
 
             /*
             if (_direction == BeamDirection.Y)

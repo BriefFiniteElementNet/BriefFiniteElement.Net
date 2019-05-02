@@ -1264,10 +1264,6 @@ namespace BriefFiniteElementNet
             var lastRow = 0;
 
             #region step 1
-            //step 1: combine all eqs to one system
-
-            //var filledCols = new bool[6 * n];
-
             var extraEqCount = 0;
 
             foreach (var mpcElm in target.MpcElements)
@@ -1336,9 +1332,9 @@ namespace BriefFiniteElementNet
             var allEqs = allEqsCrd.ToCCs();
 
 
-            var empties = allEqs.EmptyRowCount();// - boundaryConditions.EmptyRowCount();
+            var empties = allEqs.EmptyRowCount();
 
-            var dns = allEqs.ToDenseMatrix();
+            //var dns = allEqs.ToDenseMatrix();
 
             #endregion
 
@@ -1500,14 +1496,8 @@ namespace BriefFiniteElementNet
 
             var p3 = p3Crd.ToCCs();
 
-            //var tmpp = p3.ToDenseMatrix();
-
-
             return Tuple.Create(p3, rightSide);
 
-            throw new NotImplementedException();
-
-            //return buf.ToCCs();
         }
 
 

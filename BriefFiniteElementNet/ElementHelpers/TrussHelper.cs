@@ -477,7 +477,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 Func<double, double> magnitude;
                 Vector localDir;
 
-                double xi0, xi1;
+                double xi0;
                 int degree;//polynomial degree of magnitude function
 
                 #region inits

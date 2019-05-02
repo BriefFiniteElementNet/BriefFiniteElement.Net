@@ -717,7 +717,7 @@ namespace BriefFiniteElementNet
             #endregion
 
             double[] ufr = new double[map.RMap2.Length];
-            string message;
+            //string message;
 
             var input = ffr.Minus(krd.ReleasedFixedPart.Multiply(usr));
 

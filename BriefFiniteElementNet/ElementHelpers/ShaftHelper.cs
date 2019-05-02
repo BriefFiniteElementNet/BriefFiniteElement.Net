@@ -181,7 +181,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (c2.RX == DofConstraint.Released)
                 n2 = 0;
 
-
             var buf = new Matrix(1, 2);
 
             double[] arr;
