@@ -151,7 +151,7 @@ namespace BriefFiniteElementNet.Tests
             }
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void barelement_endrelease()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -167,8 +167,8 @@ namespace BriefFiniteElementNet.Tests
             e1.Nodes[0] =  n1;
             e1.Nodes[1] = n2;
 
-            e1.NodalReleaseConditions[0] = Constraints.Fixed;
-            e1.NodalReleaseConditions[1] = Constraints.MovementFixed;
+            //e1.NodalReleaseConditions[0] = Constraints.Fixed;
+            //e1.NodalReleaseConditions[1] = Constraints.MovementFixed;
 
             e1.Material = new UniformIsotropicMaterial(210e9, 0.3);
             e1.Section = new UniformParametric1DSection(0.1, 0.01, 0.01, 0.01);
