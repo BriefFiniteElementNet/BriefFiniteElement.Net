@@ -56,7 +56,7 @@ namespace BriefFiniteElementNet.TestConsole
             */
             //BarElementTester.ValidateConsoleUniformLoad();
             //BarElementTester.TestEndreleaseInternalForce();
-            SimplySupportedBeamUDL();
+            SingleSpanBeamWithOverhang();
             //TestTrussShapeFunction();
             //new BriefFiniteElementNet.Tests.BarElementTests().barelement_endrelease();
             //new BarElementTester.Test_Trapezoid_1
@@ -118,7 +118,7 @@ namespace BriefFiniteElementNet.TestConsole
             elm1.Section = section;
             elm1.Material = material;
 
-            var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, new Vector(0, 0, 1), -3, CoordinationSystem.Global);
+            var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, new Vector(0, 1, 0), -3, CoordinationSystem.Global);
             elm1.Loads.Add(u1);
 
             model.Solve_MPC();
@@ -128,7 +128,7 @@ namespace BriefFiniteElementNet.TestConsole
             x = reaction1.Fz; //15000 = 3*10000/2 -> correct
             x = reaction1.My; // 0 -> correct
 
-            Force f1_internal = elm1.GetExactInternalForceAt(-0.99999);//-1 is start
+            Force f1_internal = elm1.GetExactInternalForceAt(-1);//-1 is start
             x = f1_internal.Fz; //bug: 0 should be -15000
             x = f1_internal.My; //bug: 25000000 should be 0, bug?
         }
@@ -165,6 +165,9 @@ namespace BriefFiniteElementNet.TestConsole
             elm1.Loads.Add(elementLoad);//is this possible?
 
             model.Solve_MPC();//crashes here
+
+
+            var val = elm1.GetExactInternalForceAt(0.25);
 
             var d2 = n2.GetNodalDisplacement();
         }
