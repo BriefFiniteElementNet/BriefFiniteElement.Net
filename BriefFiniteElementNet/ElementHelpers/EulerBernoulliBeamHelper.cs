@@ -1170,6 +1170,9 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var endForces = GetLocalEquivalentNodalLoads(targetElement, load);
 
+            for (var i = 0; i < n; i++)
+                endForces[i] = -endForces[i];
+
             //var buf = new Force();
 
             

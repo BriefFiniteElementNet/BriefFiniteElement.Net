@@ -56,7 +56,7 @@ namespace BriefFiniteElementNet.TestConsole
             */
             //BarElementTester.ValidateConsoleUniformLoad();
             //BarElementTester.TestEndreleaseInternalForce();
-            SingleSpanBeamWithOverhang();
+            SimplySupportedBeamUDL();
             //TestTrussShapeFunction();
             //new BriefFiniteElementNet.Tests.BarElementTests().barelement_endrelease();
             //new BarElementTester.Test_Trapezoid_1
@@ -80,6 +80,57 @@ namespace BriefFiniteElementNet.TestConsole
             //Tst();
 
             Console.ReadKey();
+        }
+
+        /*
+
+                   3 kN/m                           
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^              
+         ----------------------------
+        /\           10m             /\
+
+        n1                         n2   
+
+        */
+
+        public static void SimplySupportedBeamUDL()
+        {
+            var model = new BriefFiniteElementNet.Model();
+
+            var pin = new Constraint(
+              dx: DofConstraint.Fixed, dy: DofConstraint.Fixed, dz: DofConstraint.Fixed,
+              rx: DofConstraint.Fixed, ry: DofConstraint.Released, rz: DofConstraint.Fixed);
+
+            Node n1, n2;
+
+            model.Nodes.Add(n1 = new Node(x: 0.0, y: 0.0, z: 0.0) { Constraints = pin });
+            model.Nodes.Add(n2 = new Node(x: 10.0, y: 0.0, z: 0.0) { Constraints = pin });
+
+            var elm1 = new BarElement(n1, n2);
+            model.Elements.Add(elm1);
+
+            double height = 0.200;
+            double width = 0.050;
+            double E = 7900;
+            var section = new UniformGeometric1DSection(SectionGenerator.GetRectangularSection(height, width));
+            BaseMaterial material = UniformIsotropicMaterial.CreateFromYoungPoisson(E, 1);
+
+            elm1.Section = section;
+            elm1.Material = material;
+
+            var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, new Vector(0, 0, 1), -3, CoordinationSystem.Global);
+            elm1.Loads.Add(u1);
+
+            model.Solve_MPC();
+
+            double x;
+            Force reaction1 = n1.GetSupportReaction();
+            x = reaction1.Fz; //15000 = 3*10000/2 -> correct
+            x = reaction1.My; // 0 -> correct
+
+            Force f1_internal = elm1.GetExactInternalForceAt(-0.99999);//-1 is start
+            x = f1_internal.Fz; //bug: 0 should be -15000
+            x = f1_internal.My; //bug: 25000000 should be 0, bug?
         }
 
 

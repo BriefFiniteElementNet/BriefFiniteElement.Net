@@ -939,24 +939,25 @@ namespace BriefFiniteElementNet.Elements
                 }
 
             var buff = new Force();
+            buff += approx;
 
             if (fcs.ContainsKey(DoF.Dx))
-                buff.Fx = fcs[DoF.Dx];
+                buff.Fx += fcs[DoF.Dx];
 
             if (fcs.ContainsKey(DoF.Dy))
-                buff.Fy = fcs[DoF.Dy];
+                buff.Fy += fcs[DoF.Dy];
 
             if (fcs.ContainsKey(DoF.Dz))
-                buff.Fz = fcs[DoF.Dz];
+                buff.Fz += fcs[DoF.Dz];
 
             if (fcs.ContainsKey(DoF.Rx))
-                buff.Mx = fcs[DoF.Rx];
+                buff.Mx += fcs[DoF.Rx];
 
             if (fcs.ContainsKey(DoF.Ry))
-                buff.My = fcs[DoF.Ry];
+                buff.My += fcs[DoF.Ry];
 
             if (fcs.ContainsKey(DoF.Rz))
-                buff.Mz = fcs[DoF.Rz];
+                buff.Mz += fcs[DoF.Rz];
 
             return buff;
         }
