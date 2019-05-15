@@ -90,10 +90,6 @@ namespace BriefFiniteElementNet
             //SetMasterMapping();
         }
 
-        private static void InsertSubmatrix(int row, int column, Coord coord, Matrix subMatrix)
-        {
-            throw new NotImplementedException();
-        }
 
 
         private int _n;
@@ -224,6 +220,7 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+        /*
         /// <summary>
         /// Gets the force permutation matrix.
         /// </summary>
@@ -244,6 +241,7 @@ namespace BriefFiniteElementNet
 
             throw new NotImplementedException();
         }
+        */
 
         /// <summary>
         /// Gets the Pf (force permutation) for the slave node (transfers the forces and momnets on slave node into forces and moments on the master node).

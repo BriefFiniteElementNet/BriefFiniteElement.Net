@@ -672,10 +672,33 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             #endregion
 
+            if (load is ConcentratedLoad)
+            {
+                var cns = load as ConcentratedLoad;
+
+                var shapes = this.GetNMatrixAt(targetElement, cns.ForceIsoLocation.Xi);
+
+                var localForce = cns.Force;
+
+                if (cns.CoordinationSystem == CoordinationSystem.Global)
+                    localForce = tr.TransformGlobalToLocal(localForce);
+
+
+                shapes.MultiplyByConstant(localForce.Fx);
+
+                var fxs = shapes.ExtractRow(0);
+
+                var n = targetElement.Nodes.Length;
+
+                var buf = new Force[n];
+
+                for (var i = 0; i < n; i++)
+                    buf[i] = new Force(fxs[0, i], 0, 0, 0, 0, 0);
+
+                return buf;
+            }
+
             throw new NotImplementedException();
-
-            
-
             
             
         }

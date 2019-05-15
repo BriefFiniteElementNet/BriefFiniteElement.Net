@@ -49,6 +49,7 @@
     <Compile Include="ArrayPool.cs" />
     <Compile Include="BendingStressTensor.cs" />
     <Compile Include="Constraints.cs" />
+    <Compile Include="DoF.cs" />
     <Compile Include="ElementHelpers\Gt9Helper.cs" />
     <Compile Include="ElementHelpers\TriangleBasicDrillingDofHelper.cs" />
     <Compile Include="Elements\TriangleElementBehaviours.cs" />
@@ -76,7 +77,6 @@
     <Compile Include="Elements\BarCrossSectionMechanicalProperties.cs" />
     <Compile Include="Elements\BarElementBehaviours.cs" />
     <Compile Include="CheckingUtil.cs" />
-    <Compile Include="DoF.cs" />
     <Compile Include="DofMap.cs" />
     <Compile Include="DofMappingManager.cs" />
     <Compile Include="Elements\BarElement.cs" />

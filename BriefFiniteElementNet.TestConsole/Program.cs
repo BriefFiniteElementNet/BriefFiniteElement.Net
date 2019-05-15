@@ -55,7 +55,8 @@ namespace BriefFiniteElementNet.TestConsole
                 .ShowDialog();
             */
             //BarElementTester.ValidateConsoleUniformLoad();
-            BarElementTester.TestEndreleaseInternalForce();
+            //BarElementTester.TestEndreleaseInternalForce();
+            SingleSpanBeamWithOverhang();
             //TestTrussShapeFunction();
             //new BriefFiniteElementNet.Tests.BarElementTests().barelement_endrelease();
             //new BarElementTester.Test_Trapezoid_1
@@ -80,6 +81,43 @@ namespace BriefFiniteElementNet.TestConsole
 
             Console.ReadKey();
         }
+
+
+        public static void SingleSpanBeamWithOverhang()
+        {
+            var model = new BriefFiniteElementNet.Model();
+
+            var pin = new Constraint(dx: DofConstraint.Fixed, dy: DofConstraint.Fixed, dz: DofConstraint.Fixed, rx: DofConstraint.Fixed, ry: DofConstraint.Fixed, rz: DofConstraint.Released);
+
+            Node n1, n2;
+
+            model.Nodes.Add(n1 = new Node(x: 0.0, y: 0.0, z: 0.0) { Constraints = pin });
+            model.Nodes.Add(n2 = new Node(x: 10.0, y: 0.0, z: 0.0) { Constraints = pin });
+
+            var elm1 = new BarElement(n1, n2);
+
+            model.Elements.Add(elm1);
+
+            elm1.Section = new BriefFiniteElementNet.Sections.UniformParametric1DSection(a: 0.01, iy: 8.3e-6, iz: 8.3e-6, j: 16.6e-6);//section's second area moments Iy and Iz = 8.3*10^-6, area = 0.01
+            elm1.Material = BriefFiniteElementNet.Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);//Elastic mudule is 210e9 and poisson ratio is 0.3
+
+            var frc = new Force();
+            frc.Fz = 1000;// 1kN force in Z direction
+
+            var elementLoad = new BriefFiniteElementNet.Loads.ConcentratedLoad();
+
+            elementLoad.CoordinationSystem = CoordinationSystem.Local;
+            elementLoad.Force = frc;
+            elementLoad.ForceIsoLocation = new IsoPoint(0);
+
+            //frc, 5, CoordinationSystem.Local);
+            elm1.Loads.Add(elementLoad);//is this possible?
+
+            model.Solve_MPC();//crashes here
+
+            var d2 = n2.GetNodalDisplacement();
+        }
+
 
         private static void TestTrussShapeFunction()
         {

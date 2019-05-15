@@ -645,7 +645,7 @@ namespace BriefFiniteElementNet
         public static void CopyTo(Matrix source, Matrix destination)
         {
             if (source.rowCount != destination.rowCount || source.columnCount != destination.columnCount)
-                throw new NotImplementedException();
+                throw new InvalidOperationException("incostintent size");
 
             Array.Copy(source.coreArray, destination.coreArray, destination.coreArray.Length);
         }
@@ -653,7 +653,7 @@ namespace BriefFiniteElementNet
         public static void TransposeCopyTo(Matrix source, Matrix destination)
         {
             if (source.rowCount != destination.columnCount || source.rowCount != destination.columnCount)
-                throw new NotImplementedException();
+                throw new InvalidOperationException("incostintent size");
 
             for (var i = 0; i < source.RowCount; i++)
                 for (var j = 0; j < source.ColumnCount; j++)

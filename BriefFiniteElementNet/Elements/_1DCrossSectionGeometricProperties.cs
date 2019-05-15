@@ -61,7 +61,7 @@ namespace BriefFiniteElementNet.Elements
         /// </value>
         /// <remarks>
         ///     /
-        /// Iy= | Z^2 . dA
+        /// Iy= | Z² . dA
         ///    /A
         /// </remarks>
         public double Iy
@@ -78,7 +78,7 @@ namespace BriefFiniteElementNet.Elements
         /// </value>
         /// <remarks>
         ///     /
-        /// Iz= | Y^2 . dA
+        /// Iz= | Y² . dA
         ///    /A
         /// </remarks>
         public double Iz

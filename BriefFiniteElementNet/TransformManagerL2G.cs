@@ -10,6 +10,7 @@ namespace BriefFiniteElementNet
     /// </summary>
     public class TransformManagerL2G
     {
+
         /// <summary>
         /// Makes a new <see cref="TransformManagerL2G"/> from a transformation matrix.
         /// </summary>

@@ -924,7 +924,7 @@ namespace BriefFiniteElementNet
         public static Force[] ApplyReleaseMatrixToEndForces(FrameElement2Node element, Force[] localEndForces)
         {
             if (localEndForces.Length != 2)
-                throw new NotImplementedException();
+                throw new InvalidOperationException();
 
             var fullLoadVector = new double[12];//for applying release matrix
 

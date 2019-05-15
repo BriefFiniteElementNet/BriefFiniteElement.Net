@@ -67,10 +67,7 @@ namespace BriefFiniteElementNet.Elements
             {
                 return nodes.Length;
             }
-            set
-            {
-                throw new NotImplementedException();
-            }
+            
         }
 
 
@@ -1034,7 +1031,6 @@ namespace BriefFiniteElementNet.Elements
             }
 
             return buf;
-            throw new NotImplementedException();
         }
 
         

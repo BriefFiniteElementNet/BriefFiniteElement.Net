@@ -1387,5 +1387,15 @@ namespace BriefFiniteElementNet
         */
         #endregion
 
+        public void Clear()
+        {
+            Displacements.Clear();
+            Forces.Clear();
+            ElementForces.Clear();
+            ConcentratedForces.Clear();
+            SupportReactions.Clear();
+            
+        }
+
     }
 }

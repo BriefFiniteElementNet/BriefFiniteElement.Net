@@ -753,8 +753,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
 
             return buf;
-            throw new NotImplementedException();
         }
+
         private Polynomial GetNIth(Element targetElement, int ith, int disprot)
         {
 

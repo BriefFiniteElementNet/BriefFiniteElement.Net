@@ -318,6 +318,7 @@ namespace BriefFiniteElementNet
             Solve(CalcUtil.CreateBuiltInSolverFactory(solverType));
         }
 
+        /*
         /// <summary>
         /// Solves the model using specified solver generator.
         /// </summary>
@@ -327,6 +328,7 @@ namespace BriefFiniteElementNet
         {
             throw new NotImplementedException();
         }
+        */
 
         /// <summary>
         /// Solves the model using specified solver factory.

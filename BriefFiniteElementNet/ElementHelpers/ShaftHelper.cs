@@ -437,6 +437,10 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public Force[] GetLocalEquivalentNodalLoads(Element targetElement, Load load)
         {
+
+            var tr = targetElement.GetTransformationManager();
+
+
             if (load is UniformLoad)
             {
                 return new Force[2];
@@ -445,6 +449,32 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (load is PartialNonUniformLoad)
             {
                 return new Force[2];
+            }
+
+            if (load is ConcentratedLoad)
+            {
+                var cns = load as ConcentratedLoad;
+
+                var shapes = this.GetNMatrixAt(targetElement, cns.ForceIsoLocation.Xi);
+
+                var localForce = cns.Force;
+
+                if (cns.CoordinationSystem == CoordinationSystem.Global)
+                    localForce = tr.TransformGlobalToLocal(localForce);
+
+
+                shapes.MultiplyByConstant(localForce.Mx);
+
+                var fxs = shapes.ExtractRow(0);
+
+                var n = targetElement.Nodes.Length;
+
+                var buf = new Force[n];
+
+                for (var i = 0; i < n; i++)
+                    buf[i] = new Force(0, 0, 0, fxs[0, i], 0, 0);
+
+                return buf;
             }
 
             throw new NotImplementedException();
