@@ -1171,52 +1171,57 @@ namespace BriefFiniteElementNet.ElementHelpers
             var endForces = GetLocalEquivalentNodalLoads(targetElement, load);
 
             for (var i = 0; i < n; i++)
-                endForces[i] = -endForces[i];
+                endForces[i] = -endForces[i];//(2,1) section
 
-            //var buf = new Force();
+            #region 2,1 (due to inverse of equivalent nodal loads)
 
+            Force ends;//internal force in x=0 due to inverse of equivalent nodal loads will store in this variable, 
+
+            {
+                var xi_s = new double[br.Nodes.Length];//xi loc of each force
+                var x_s = new double[br.Nodes.Length];//x loc of each force
+
+                for (var i = 0; i < xi_s.Length; i++)
+                {
+                    var x_i = targetElement.Nodes[i].Location - targetElement.Nodes[0].Location;
+                    var xi_i = br.LocalCoordsToIsoCoords(x_i.Length)[0];
+
+                    xi_s[i] = xi_i;
+                    x_s[i] = x_i.X;
+                }
+
+                ends = new Force();//sum of moved end forces to destination
+
+                for (var i = 0; i < n; i++)
+                {
+                    if (xi_s[i] < isoLocation[0])
+                    {
+                        var frc_i = endForces[i];// new Force();
+
+                        /*
+                        if (this._direction == BeamDirection.Y)
+                        {
+                            frc_i.My = endForces[i].My;
+                            frc_i.Fz = endForces[i].Fz;
+                        }
+                        else
+                        {
+                            frc_i.Mz = endForces[i].Mz;
+                            frc_i.Fy = endForces[i].Fy;
+                        }*/
+
+                        ends += frc_i.Move(new Point(x_s[i], 0, 0), Point.Origins);
+                    }
+
+                }
+            }
             
 
-            var xi_s = new double[br.Nodes.Length];//xi loc of each force
-            var x_s = new double[br.Nodes.Length];//x loc of each force
-
-            for (var i = 0; i < xi_s.Length; i++)
-            {
-                var x_i = targetElement.Nodes[i].Location - targetElement.Nodes[0].Location;
-                var xi_i = br.LocalCoordsToIsoCoords(x_i.Length)[0];
-
-                xi_s[i] = xi_i;
-                x_s[i] = x_i.X;
-            }
-
-            var ends = new Force();//sum of moved end forces to destination
-
-            for (var i = 0; i < n; i++)
-            {
-                if (xi_s[i] < isoLocation[0])
-                {
-                    var frc_i = new Force();
-
-                    if (this._direction == BeamDirection.Y)
-                    {
-                        frc_i.My = endForces[i].My;
-                        frc_i.Fz = endForces[i].Fz;
-                    }
-                    else
-                    {
-                        frc_i.Mz = endForces[i].Mz;
-                        frc_i.Fy = endForces[i].Fy;
-                    }
-
-                    ends += frc_i.Move(Point.Origins, new Point(x_s[i], 0, 0));
-                }
-                
-            }
-
+            #endregion
 
             var to = Iso2Local(targetElement, isoLocation)[0];
-            
 
+            
 
             #region uniform & trapezoid, uses integration method
 
@@ -1230,7 +1235,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 int degree;//polynomial degree of magnitude function
 
                 #region inits
-                if (load is UniformLoad)
+                if (load is UniformLoad || load is PartialNonUniformLoad)
                 {
                     var uld = (load as UniformLoad);
 
@@ -1246,11 +1251,11 @@ namespace BriefFiniteElementNet.ElementHelpers
                 }
                 else
                 {
-                    throw new NotImplementedException();
-                    /*
-                    var tld = (load as PartialTrapezoidalLoad);
 
-                    magnitude = (xi => (load as PartialTrapezoidalLoad).GetMagnitudesAt(xi, 0, 0)[0]);
+                    /** /
+                    var tld = (load as PartialNonUniformLoad);
+
+                    magnitude = (xi => (load as PartialNonUniformLoad).GetMagnitudesAt(xi, 0, 0)[0]);
                     localDir = tld.Direction;
 
                     if (tld.CoordinationSystem == CoordinationSystem.Global)
@@ -1259,7 +1264,9 @@ namespace BriefFiniteElementNet.ElementHelpers
                     xi0 = tld.StartLocation[0];
                     xi1 = tld.EndLocation[0];
                     degree = 1;
-                    */
+                    /**/
+
+                    throw new NotImplementedException();
                 }
 
                 localDir = localDir.GetUnit();
@@ -1273,67 +1280,81 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     Matrix integral;
 
-                    double i0=0, i1=0;//span for integration
+                    double i0 = 0, i1 = 0;//span for integration
 
                     var xi_t = isoLocation[0];
 
-                    if (xi_t < xi0)
+                    #region span of integration
                     {
-                        i0 = i1 = xi0;
-                    }
 
-                    if (xi_t > xi1)
-                    {
-                        i0 = xi0;
-                        i1 = xi1;
-                    }
-
-                    if (xi_t < xi1 && xi_t > xi0)
-                    {
-                        i0 = xi0;
-                        i1 = xi_t;
-                    }
-
-
-                    if (i1 == i0)
-                    {
-                        integral = new Matrix(2, 1);
-                    }
-                    else
-                    {
-                        var intgV = GaussianIntegrator.CreateFor1DProblem(xi =>
+                        if (xi_t < xi0)
                         {
-                            //var xi = Local2Iso(targetElement, x)[0];
-                            var j = GetJMatrixAt(targetElement, xi);
-                            
-                            var q__ = magnitude(xi);
-                            var q_ = localDir * q__;
+                            i0 = i1 = xi0;
+                        }
 
-                            double df, dm;
+                        if (xi_t > xi1)
+                        {
+                            i0 = xi0;
+                            i1 = xi1;
+                        }
 
-                            if (this._direction == BeamDirection.Y)
-                            {
-                                df = q_.Z;
-                                dm = -q_.Z * (1+xi);
-                            }
-                            else
-                            {
-                                df = q_.Y;
-                                dm = q_.Y * (1+xi);
-                            }
-
-                            var buf_ = new Matrix(new double[] { df, dm });
-                            var detj = j.Determinant();
-
-                            buf_[0, 0] = buf_[0, 0] * detj;
-                            buf_[1, 0] = buf_[1, 0] * detj*detj;
-
-
-                            return buf_;
-                        }, i0, i1, gpt);
-
-                        integral = intgV.Integrate();
+                        if (xi_t < xi1 && xi_t > xi0)
+                        {
+                            i0 = xi0;
+                            i1 = xi_t;
+                        }
                     }
+                    #endregion
+
+                    #region integration
+                    {
+                        if (i1 == i0)
+                        {
+                            integral = new Matrix(2, 1);
+                        }
+                        else
+                        {
+                            var x0 = br.IsoCoordsToLocalCoords(i0)[0];
+                            var x1 = br.IsoCoordsToLocalCoords(i1)[0];
+
+                            var intgV = GaussianIntegrator.CreateFor1DProblem(xx =>
+                            {
+                                //var xi = Local2Iso(targetElement, x)[0];
+                                //var j = GetJMatrixAt(targetElement, xi);
+
+                                var xi = br.LocalCoordsToIsoCoords(xx)[0];
+
+                                var q__ = magnitude(xi);
+                                var q_ = localDir * q__;
+
+                                double df, dm;
+
+                                if (this._direction == BeamDirection.Y)
+                                {
+                                    df = q_.Z;
+                                    dm = -q_.Z * xx;
+                                }
+                                else
+                                {
+                                    df = q_.Y;
+                                    dm = q_.Y * xx;
+                                }
+
+                                var buf_ = new Matrix(new double[] { df, dm });
+                                //var detj = j.Determinant();
+
+                                //buf_[0, 0] = buf_[0, 0];// * detj;
+                                //buf_[1, 0] = buf_[1, 0];// * detj * detj;
+
+
+                                return buf_;
+                            }, x0, x1, gpt);
+
+                            integral = intgV.Integrate();
+                        }
+                    }
+                    #endregion
+
 
                     var v_i = integral[0, 0];
                     var m_i = integral[1, 0];
@@ -1342,35 +1363,31 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     var x = Iso2Local(targetElement, isoLocation)[0];
 
+                    var f = new Force();
+
+
                     if (this._direction == BeamDirection.Y)
                     {
-                        var v0 = ends.Fz;
-                        var m0 = ends.My;
-
-                        var v1 = v_i - v0;
-                        var m1 = -m0 - v1 * x - m_i;
-
-                        frc.My = m1;
-                        frc.Fz = v1;
+                        f.Fz = v_i;
+                        f.My = m_i;//negative is taken into account earlier
                     }
                     else
                     {
-                        var v0 = ends.Fy;
-                        var m0 = ends.Mz;
-
-                        var v1 = v_i - v0;
-                        var m1 = -m0 - v1 * x + m_i;
-
-                        frc.Mz = m1;
-                        frc.Fy = v1;
+                        f.Fy = v_i;
+                        f.Mz = m_i;
                     }
 
+                    f = f.Move(new Point(0, 0, 0), new Point(x, 0, 0));
                     //frc = frc + ends;
+                    var movedEnds = ends.Move(new Point(0, 0, 0), new Point(x, 0, 0));
 
-                    buff.Add(Tuple.Create(DoF.Ry, frc.My));
-                    buff.Add(Tuple.Create(DoF.Rz, frc.Mz));
-                    buff.Add(Tuple.Create(DoF.Dy, frc.Fy));
-                    buff.Add(Tuple.Create(DoF.Dz, frc.Fz));
+                    var f2 = f + movedEnds;
+
+                    f2 *= -1;
+                    buff.Add(Tuple.Create(DoF.Ry, f2.My));
+                    buff.Add(Tuple.Create(DoF.Rz, f2.Mz));
+                    buff.Add(Tuple.Create(DoF.Dy, f2.Fy));
+                    buff.Add(Tuple.Create(DoF.Dz, f2.Fz));
 
                     return buff;
                 }
@@ -1384,27 +1401,34 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             if (load is ConcentratedLoad)
             {
+                var cns = load as ConcentratedLoad;
+
                 var xi = isoLocation[0];
                 var targetX = br.IsoCoordsToLocalCoords(xi)[0];
 
-                var f0 = Force.Zero;
+                var frc = Force.Zero;
 
-                for(var i = 0;i<targetElement.Nodes.Length;i++)
-                {
-                    var x_i = targetElement.Nodes[i].Location - targetElement.Nodes[0].Location;
+                if (cns.ForceIsoLocation.Xi < xi)
+                    frc = cns.Force;
 
-                    var xi_i = br.LocalCoordsToIsoCoords(x_i.Length)[0];
+                if (cns.CoordinationSystem == CoordinationSystem.Global)
+                    frc = tr.TransformGlobalToLocal(frc);
 
-                    if (xi_i < xi)
-                    {
-                        f0 += endForces[i].Move(new Point(x_i.Length, 0, 0), new Point(targetX, 0, 0));
-                    }
-                }
+                var frcX = br.IsoCoordsToLocalCoords(cns.ForceIsoLocation.Xi)[0];
 
-                buff.Add(Tuple.Create(DoF.Ry, f0.My));
-                buff.Add(Tuple.Create(DoF.Rz, f0.Mz));
-                buff.Add(Tuple.Create(DoF.Dy, f0.Fy));
-                buff.Add(Tuple.Create(DoF.Dz, f0.Fz));
+
+                frc = frc.Move(new Point(frcX, 0, 0), new Point(0, 0, 0));
+                frc = frc.Move(new Point(0, 0, 0), new Point(targetX, 0, 0));
+
+                var movedEnds = ends.Move(new Point(0, 0, 0), new Point(targetX, 0, 0));
+
+                var f2 = frc + movedEnds;
+                f2 *= -1;
+
+                buff.Add(Tuple.Create(DoF.Ry, f2.My));
+                buff.Add(Tuple.Create(DoF.Rz, f2.Mz));
+                buff.Add(Tuple.Create(DoF.Dy, f2.Fy));
+                buff.Add(Tuple.Create(DoF.Dz, f2.Fz));
 
                 return buff;
             }
@@ -1660,6 +1684,16 @@ namespace BriefFiniteElementNet.ElementHelpers
                     var intg = GaussianIntegrator.CreateFor1DProblem(xi =>
                     {
                         var shp = GetNMatrixAt(targetElement, xi, 0, 0);
+
+                        if (_direction == BeamDirection.Y)
+                        {
+                            for (var i = 0; i < shp.ColumnCount; i++)
+                            {
+                                if (i % 2 == 1)
+                                    shp.MultiplyColumnByConstant(i, -1);
+                            }
+                        }
+
                         var q__ = magnitude(xi);
                         var j = GetJMatrixAt(targetElement, xi, 0, 0);
                         shp.MultiplyByConstant(j.Determinant());
@@ -1722,6 +1756,13 @@ namespace BriefFiniteElementNet.ElementHelpers
                 var buf = new Force[n];
 
                 var ns = GetNMatrixAt(targetElement, cl.ForceIsoLocation.Xi);
+
+                if (_direction == BeamDirection.Y)
+                    for (var i = 0; i < ns.ColumnCount; i++)
+                        if (i % 2 == 1)
+                            ns.MultiplyColumnByConstant(i, -1);
+
+
 
                 var j = GetJMatrixAt(targetElement, cl.ForceIsoLocation.Xi);
 

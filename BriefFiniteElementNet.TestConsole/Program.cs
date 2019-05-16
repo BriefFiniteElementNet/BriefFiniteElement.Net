@@ -56,7 +56,8 @@ namespace BriefFiniteElementNet.TestConsole
             */
             //BarElementTester.ValidateConsoleUniformLoad();
             //BarElementTester.TestEndreleaseInternalForce();
-            SingleSpanBeamWithOverhang();
+            //SingleSpanBeamWithOverhang();
+            SimpleBeamInternalMoment();
             //TestTrussShapeFunction();
             //new BriefFiniteElementNet.Tests.BarElementTests().barelement_endrelease();
             //new BarElementTester.Test_Trapezoid_1
@@ -133,6 +134,31 @@ namespace BriefFiniteElementNet.TestConsole
             x = f1_internal.My; //bug: 25000000 should be 0, bug?
         }
 
+        public static void SimpleBeamInternalMoment()
+        {
+            var model = new Model();
+            model.Nodes.Add(new Node(0, 0, 0) { Label = "n1" });
+            model.Nodes.Add(new Node(6, 0, 0) { Label = "n2" });
+            model.Nodes["n1"].Constraints = Constraints.FixedDZ & Constraints.FixedDY & Constraints.FixedRX & Constraints.FixedRZ;
+            model.Nodes["n2"].Constraints = Constraints.MovementFixed;
+            model.Elements.Add(new BarElement(model.Nodes["n1"], model.Nodes["n2"]) { Label = "r1" });
+            (model.Elements["r1"] as BarElement).Section = new BriefFiniteElementNet.Sections.UniformGeometric1DSection(SectionGenerator.GetRectangularSection(0.01, 0.01));
+            (model.Elements["r1"] as BarElement).Material = BriefFiniteElementNet.Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210 * Math.Pow(10, 9), 0.3);
+            model.Elements["r1"].Loads.Add(new BriefFiniteElementNet.Loads.UniformLoad(LoadCase.DefaultLoadCase, new Vector(0, 0, 1), -10000, CoordinationSystem.Local));
+            model.Solve_MPC();
+
+            var locs = new double[] { 1e-5, 1, 2, 3, 4, 5, 6 - 1e-5 };
+
+            foreach(var loc in locs)
+            {
+                var xi = (model.Elements["r1"] as BarElement).LocalCoordsToIsoCoords(loc)[0];
+                var f = (model.Elements["r1"] as BarElement).GetExactInternalForceAt(xi, LoadCase.DefaultLoadCase);
+                Console.WriteLine("@X={0}, My={1}", loc, f.My);
+            }
+
+            
+            Console.ReadKey();
+        }
 
         public static void SingleSpanBeamWithOverhang()
         {

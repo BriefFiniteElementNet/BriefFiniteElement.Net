@@ -464,8 +464,38 @@ namespace BriefFiniteElementNet.ElementHelpers
             for (var i = 0; i < n; i++)
                 endForces[i] = -endForces[i];
 
-            var v0 =
-                endForces[0].Fx;
+            #region 2,1 (due to inverse of equivalent nodal loads)
+
+            Force ends;//internal force in x=0 due to inverse of equivalent nodal loads will store in this variable, 
+
+            {
+                var xi_s = new double[br.Nodes.Length];//xi loc of each force
+                var x_s = new double[br.Nodes.Length];//x loc of each force
+
+                for (var i = 0; i < xi_s.Length; i++)
+                {
+                    var x_i = targetElement.Nodes[i].Location - targetElement.Nodes[0].Location;
+                    var xi_i = br.LocalCoordsToIsoCoords(x_i.Length)[0];
+
+                    xi_s[i] = xi_i;
+                    x_s[i] = x_i.X;
+                }
+
+                ends = new Force();//sum of moved end forces to destination
+
+                for (var i = 0; i < n; i++)
+                {
+                    if (xi_s[i] < isoLocation[0])
+                    {
+                        var frc_i = endForces[i];// new Force();
+                        ends += frc_i.Move(new Point(x_s[i], 0, 0), Point.Origins);
+                    }
+
+                }
+            }
+
+
+            #endregion
 
 
             var to = Iso2Local(targetElement, isoLocation)[0];
@@ -552,40 +582,57 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     var f_i = integral[0, 0];
 
-                    buff.Add(Tuple.Create(DoF.Dx, f_i+ v0));
+                    var movedEnds = ends.Move(new Point(), new Point());//no need to move as it is truss without moments
+                    var fMoved = new Force(f_i, 00, 00, 0, 0, 0);
+
+                    var ft = movedEnds + fMoved;
+
+                    ft *= -1;
+
+                    buff.Add(Tuple.Create(DoF.Dx, ft.Fx));
                     
                 }
 
                 return buff;
             }
 
+            #endregion
+
+            #region concentrated
+
             if (load is ConcentratedLoad)
             {
+                var cns = load as ConcentratedLoad;
+
                 var xi = isoLocation[0];
                 var targetX = br.IsoCoordsToLocalCoords(xi)[0];
 
-                var f0 = Force.Zero;
+                var frc = Force.Zero;
 
-                for (var i = 0; i < targetElement.Nodes.Length; i++)
-                {
-                    var x_i = targetElement.Nodes[i].Location - targetElement.Nodes[0].Location;
+                if (cns.ForceIsoLocation.Xi < xi)
+                    frc = cns.Force;
 
-                    var xi_i = br.LocalCoordsToIsoCoords(x_i.Length)[0];
+                if (cns.CoordinationSystem == CoordinationSystem.Global)
+                    frc = tr.TransformGlobalToLocal(frc);
 
-                    if (xi_i < xi)
-                    {
-                        f0 += endForces[i].Move(new Point(x_i.Length, 0, 0), new Point(targetX, 0, 0));
-                    }
-                }
 
-                buff.Add(Tuple.Create(DoF.Dx, f0.Fx));
+                var frcX = br.IsoCoordsToLocalCoords(cns.ForceIsoLocation.Xi)[0];
+
+                frc = frc.Move(new Point(frcX, 0, 0), new Point(0, 0, 0));
+                frc = frc.Move(new Point(0, 0, 0), new Point(targetX, 0, 0));
+
+                var movedEnds = ends.Move(new Point(0, 0, 0), new Point(targetX, 0, 0));
+
+                var f2 = frc + movedEnds;
+                f2 *= -1;
+
+                buff.Add(Tuple.Create(DoF.Dx, f2.Fx));
 
                 return buff;
             }
 
-
-
             #endregion
+
 
             throw new NotImplementedException();
         }

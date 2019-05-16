@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Commo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Validation.Ui", "BriefFiniteElementNet.Validation.Ui\BriefFiniteElementNet.Validation.Ui.csproj", "{FC6E4877-B949-4522-BD35-116172A20925}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Tests", "BriefFiniteElementNet.Tests\BriefFiniteElementNet.Tests.csproj", "{BCD6C94B-19CC-4E03-80C9-8643727AB5C6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,8 +65,15 @@ Global
 		{FC6E4877-B949-4522-BD35-116172A20925}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC6E4877-B949-4522-BD35-116172A20925}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC6E4877-B949-4522-BD35-116172A20925}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCD6C94B-19CC-4E03-80C9-8643727AB5C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCD6C94B-19CC-4E03-80C9-8643727AB5C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCD6C94B-19CC-4E03-80C9-8643727AB5C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCD6C94B-19CC-4E03-80C9-8643727AB5C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A2423FE1-F612-4C6D-B808-65E81B874574}
 	EndGlobalSection
 EndGlobal

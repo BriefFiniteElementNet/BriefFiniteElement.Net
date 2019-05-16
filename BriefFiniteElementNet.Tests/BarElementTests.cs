@@ -21,8 +21,6 @@ namespace BriefFiniteElementNet.Tests
 
             var w = 2.0;
 
-            //var model = new Model();
-
             var nodes = new Node[2];
 
             nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
@@ -42,16 +40,19 @@ namespace BriefFiniteElementNet.Tests
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 
-                var mi = w / 12 * (6 * length * x - 6 * x * x - length * length);
-                var vi = w * (length / 2 - x);
+                var mi = -w / 12 * (6 * length * x - 6 * x * x - length * length);
+                var vi = -w * (length / 2 - x);
 
                 var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
 
                 var exactFrc = new Force(fx: 0, fy: 0, fz: vi, mx: 0, my: mi, mz: 0);
 
-                var d = testFrc.FirstOrDefault(i => i.Item1 == DoF.Ry).Item2 + exactFrc.My;
+                var dm = testFrc.FirstOrDefault(i => i.Item1 == DoF.Ry).Item2 - exactFrc.My;
+                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dz).Item2 - exactFrc.Fz;
 
-                Assert.IsTrue(d < 1e-5, "invalid value");
+
+                Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
+                Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
 
             }
         }
@@ -85,15 +86,18 @@ namespace BriefFiniteElementNet.Tests
                 var xi = elm.LocalCoordsToIsoCoords(x);
 
                 var mi = w / 12 * (6 * length * x - 6 * x * x - length * length);
-                var vi = w * (length / 2 - x);
+                var vi = -w * (length / 2 - x);
 
                 var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
 
                 var exactFrc = new Force(fx: 0, fy: vi, fz: 0, mx: 0, my: 0, mz: mi);
 
-                var d = testFrc.FirstOrDefault(i => i.Item1 == DoF.Rz).Item2 + exactFrc.Mz;
+                var dm = testFrc.FirstOrDefault(i => i.Item1 == DoF.Rz).Item2 - exactFrc.Mz;
+                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dy).Item2 - exactFrc.Fy;
 
-                Assert.IsTrue(d < 1e-5, "invalid value");
+
+                Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
+                Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
 
             }
         }
@@ -191,89 +195,487 @@ namespace BriefFiniteElementNet.Tests
             //internal force of 2 node beam beam with uniform load and both ends fixed
 
             var w = 2.0;
+            var forceLocation = 0.5;//[m]
+            var L = 4;//[m]
 
-            var pz = 7.0;
-
-
-            //https://en.wikipedia.org/wiki/Fixed_end_moment
+            //var model = new Model();
 
             var nodes = new Node[2];
 
-            var l = 4.0;
-            var a = 1.5;
-            var b = l - a;
-
-
             nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
-            nodes[1] = (new Node(l, 0, 0) { Label = "n1" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
 
             var u1 = new Loads.ConcentratedLoad();
 
+            u1.Case = LoadCase.DefaultLoadCase;
+            u1.Force = new Force(0, 0, -w, 0, 0, 0);
             u1.CoordinationSystem = CoordinationSystem.Global;
-            u1.Force = new Force(0, 0, pz, 0, 0, 0);
 
-            var xi = elm.LocalCoordsToIsoCoords(a)[0];
+            u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
 
-            u1.ForceIsoLocation = new IsoPoint(xi);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y);
+            var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
-            var t = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
-            var my1_pz = pz * a * b * b / (l * l);//for pz
-            var my2_pz = -pz * a * a * b / (l * l);//for pz
+            foreach (var x in CalcUtil.Divide(length, 10))
+            {
+                var xi = elm.LocalCoordsToIsoCoords(x);
 
-            var tol = 1e-10;
 
-            Assert.IsTrue(Math.Abs(my1_pz - t[0].My) < tol, "Invalid value");
-            Assert.IsTrue(Math.Abs(my2_pz - t[1].My) < tol, "Invalid value");
+                //https://www.engineeringtoolbox.com/beams-fixed-both-ends-support-loads-deflection-d_809.html
+
+                var mi = 0.0;
+                var vi = 0.0;
+
+                {
+                    var a = forceLocation;
+                    var b = L - a;
+
+                    var ma = -w * a * b * b / (L * L);
+                    var mb = -w * a * a * b / (L * L);
+                    var mf = 2 * w * a * a * b * b / (L * L * L);
+
+                    double x0, x1, y0, y1;
+
+                    if (x < forceLocation)
+                    {
+                        x0 = 0;
+                        x1 = forceLocation;
+
+                        y0 = ma;
+                        y1 = mf;
+                    }
+                    else
+                    {
+                        x0 = forceLocation;
+                        x1 = L;
+
+                        y0 = mf;
+                        y1 = mb;
+                    }
+
+
+                    var m = (y1 - y0) / (x1 - x0);
+
+                    mi = m * (x - x0) + y0;
+
+                    var ra = w * (3 * a + b) * b * b / (L * L * L);//1f
+                    var rb = w * (a + 3*b) * a * a / (L * L * L);//1g
+
+                    if (x < forceLocation)
+                        vi = ra;
+                    else
+                        vi = -rb;
+                }
+
+
+                var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
+
+                var exactFrc = new Force(fx: 0, fy: 0, fz: vi, mx: 0, my: -mi, mz: 0);
+
+                var dm =  testFrc.FirstOrDefault(i => i.Item1 == DoF.Ry).Item2 - exactFrc.My;
+                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dz).Item2 + exactFrc.Fz;
+
+
+                Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
+                Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
+
+
+            }
 
         }
 
         [TestMethod]
-        public void LoadInternalForce_concentratedLLoad_eulerbernoullybeam_dirY_my()
+        public void LoadInternalForce_concentratedLLoad_eulerbernoullybeam_dirZ_fy()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
 
-            var m0 = 7.0;
+            var w = 2.0;
+            var forceLocation = 0.5;//[m]
+            var L = 4;//[m]
 
-
-            //https://en.wikipedia.org/wiki/Fixed_end_moment
+            //var model = new Model();
 
             var nodes = new Node[2];
 
-            var l = 5.0;
-            var a = 1.25866;
-            var b = l - a;
-
-
             nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
-            nodes[1] = (new Node(l, 0, 0) { Label = "n1" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
 
             var u1 = new Loads.ConcentratedLoad();
 
+            u1.Case = LoadCase.DefaultLoadCase;
+            u1.Force = new Force(0, -w, 0, 0, 0, 0);
             u1.CoordinationSystem = CoordinationSystem.Global;
-            u1.Force = new Force(0, 0, 0, 0, m0, 0);
 
-            var xi = elm.LocalCoordsToIsoCoords(a)[0];
+            u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
 
-            u1.ForceIsoLocation = new IsoPoint(xi);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Z);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y);
+            var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
-            var t = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
-            var my1 = m0 * b * (2*a-b) / (l * l);//for pz
-            var my2 = m0 * a * (2 * b - a) / (l * l);//for pz
+            foreach (var x in CalcUtil.Divide(length, 10))
+            {
+                var xi = elm.LocalCoordsToIsoCoords(x);
 
-            var tol = 1e-10;
 
-            Assert.IsTrue(Math.Abs(my1 - t[0].My) < tol, "Invalid value");
-            Assert.IsTrue(Math.Abs(my2 - t[1].My) < tol, "Invalid value");
+                //https://www.engineeringtoolbox.com/beams-fixed-both-ends-support-loads-deflection-d_809.html
+
+                var mi = 0.0;
+                var vi = 0.0;
+
+                {
+                    var a = forceLocation;
+                    var b = L - a;
+
+                    var ma = -w * a * b * b / (L * L);
+                    var mb = -w * a * a * b / (L * L);
+                    var mf = 2 * w * a * a * b * b / (L * L * L);
+
+                    double x0, x1, y0, y1;
+
+                    if (x < forceLocation)
+                    {
+                        x0 = 0;
+                        x1 = forceLocation;
+
+                        y0 = ma;
+                        y1 = mf;
+                    }
+                    else
+                    {
+                        x0 = forceLocation;
+                        x1 = L;
+
+                        y0 = mf;
+                        y1 = mb;
+                    }
+
+
+                    var m = (y1 - y0) / (x1 - x0);
+
+                    mi = m * (x - x0) + y0;
+
+                    var ra = w * (3 * a + b) * b * b / (L * L * L);//1f
+                    var rb = w * (a + 3 * b) * a * a / (L * L * L);//1g
+
+                    if (x < forceLocation)
+                        vi = ra;
+                    else
+                        vi = -rb;
+                }
+
+
+                var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
+
+                var exactFrc = new Force(fx: 0, fy: vi, fz: 0, mx: 0, my: 0, mz: +mi);
+
+                var dm = testFrc.FirstOrDefault(i => i.Item1 == DoF.Rz).Item2 - exactFrc.Mz;
+                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dy).Item2 + exactFrc.Fy;
+
+
+                Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
+                Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
+
+
+            }
+
+        }
+
+        [TestMethod]
+        public void LoadInternalForce_concentratedLLoad_eulerbernoullybeam_dirZ_Mz()
+        {
+            //internal force of 2 node beam beam with uniform load and both ends fixed
+
+            var w = 2.0;
+            var forceLocation = 0.5;//[m]
+            var L = 4;//[m]
+
+            //var model = new Model();
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad();
+
+            u1.Case = LoadCase.DefaultLoadCase;
+            u1.Force = new Force(0, 0, 0, 0, 0, w);
+            u1.CoordinationSystem = CoordinationSystem.Global;
+
+            u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
+
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Z);
+
+            var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
+
+
+            foreach (var x in CalcUtil.Divide(length, 10))
+            {
+                var xi = elm.LocalCoordsToIsoCoords(x);
+
+                var mi = 0.0;
+                var vi = 0.0;
+
+                {
+                    //https://www.amesweb.info/Beam/Fixed-Fixed-Beam-Bending-Moment.aspx
+
+                    var a = forceLocation;
+                    var b = L - a;
+
+                    var ma = -w / (L * L) * (L * L - 4 * a * L + 3 * a * a);
+
+                    var mb = -w / (L * L) * (3 * a * a - 2 * a * L);
+
+                    //var m = (y1 - y0) / (x1 - x0);
+
+                    
+
+                    var ra = -6 * w * a / (L * L * L) * (L - a);//R1
+                    var rb = -ra;//R2
+
+                    mi = ma + ra * x + ((x > forceLocation) ? -w : 0.0);
+
+                    vi = ra;
+                }
+
+
+                var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
+
+                var exactFrc = new Force(fx: 0, fy: vi, fz: 0, mx: 0, my: 0, mz: +mi);
+
+                var dm = testFrc.FirstOrDefault(i => i.Item1 == DoF.Rz).Item2 - exactFrc.Mz;
+                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dy).Item2 + exactFrc.Fy;
+
+
+                Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
+                Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
+
+
+            }
+
+        }
+
+        [TestMethod]
+        public void LoadInternalForce_concentratedLLoad_eulerbernoullybeam_dirY_My()
+        {
+            //internal force of 2 node beam beam with uniform load and both ends fixed
+
+            var w = 2.0;
+            var forceLocation = 0.5;//[m]
+            var L = 4;//[m]
+
+            //var model = new Model();
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad();
+
+            u1.Case = LoadCase.DefaultLoadCase;
+            u1.Force = new Force(0, 0, 0, 0, w, 0);
+            u1.CoordinationSystem = CoordinationSystem.Global;
+
+            u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
+
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y);
+
+            var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
+
+
+            foreach (var x in CalcUtil.Divide(length, 10))
+            {
+                var xi = elm.LocalCoordsToIsoCoords(x);
+
+                var mi = 0.0;
+                var vi = 0.0;
+
+                {
+                    //https://www.amesweb.info/Beam/Fixed-Fixed-Beam-Bending-Moment.aspx
+
+                    var a = forceLocation;
+                    var b = L - a;
+
+                    var ma = -w / (L * L) * (L * L - 4 * a * L + 3 * a * a);
+
+                    var mb = -w / (L * L) * (3 * a * a - 2 * a * L);
+
+                    //var m = (y1 - y0) / (x1 - x0);
+
+
+
+                    var ra = -6 * w * a / (L * L * L) * (L - a);//R1
+                    var rb = -ra;//R2
+
+                    mi = ma + ra * x + ((x > forceLocation) ? w : 0.0);
+
+                    vi = ra;
+                }
+
+
+                var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
+
+                var exactFrc = new Force(fx: 0, fy: 0, fz: vi, mx: 0, my: -mi, mz: 0);
+
+                var dm = testFrc.FirstOrDefault(i => i.Item1 == DoF.Ry).Item2 - exactFrc.My;
+                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dz).Item2 + exactFrc.Fz;
+
+
+                Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
+                Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
+
+
+            }
+
+        }
+
+        [TestMethod]
+        public void LoadInternalForce_concentratedLLoad_truss_Fx()
+        {
+            //internal force of 2 node truss with concentrated load and both ends fixed
+
+            var w = 2.0;
+            var forceLocation = 0.5;//[m]
+            var L = 4;//[m]
+
+            //var model = new Model();
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad();
+
+            u1.Case = LoadCase.DefaultLoadCase;
+            u1.Force = new Force(w, 0, 0, 0, 0, 0);
+            u1.CoordinationSystem = CoordinationSystem.Global;
+
+            u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
+
+            var hlpr = new TrussHelper();
+
+            var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
+
+
+            foreach (var x in CalcUtil.Divide(length, 10))
+            {
+                var xi = elm.LocalCoordsToIsoCoords(x);
+
+                var mi = 0.0;
+                var vi = 0.0;
+
+                {
+                    //https://www.amesweb.info/Beam/Fixed-Fixed-Beam-Bending-Moment.aspx
+
+                    var a = forceLocation;
+                    var b = L - a;
+
+                    var ra = (1 - (a / L)) * w;
+
+                    var rb = (1 - (b / L)) * w;
+
+                    mi = ra + ((x > forceLocation) ? -w : 0.0);
+                }
+
+
+                var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
+
+                var exactFrc = new Force(fx: -mi, fy: 0, fz: vi, mx: 0, my: 0, mz: 0);
+
+                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dx).Item2 + exactFrc.Fx;
+
+
+                Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
+            }
+
+        }
+
+        [TestMethod]
+        public void LoadInternalForce_concentratedLLoad_Shaft_Mx()
+        {
+            //internal force of 2 node truss with concentrated load and both ends fixed
+
+            var w = 2.0;
+            var forceLocation = 0.5;//[m]
+            var L = 4;//[m]
+
+            //var model = new Model();
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad();
+
+            u1.Case = LoadCase.DefaultLoadCase;
+            u1.Force = new Force(0, 0, 0, w, 0, 0);
+            u1.CoordinationSystem = CoordinationSystem.Global;
+
+            u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
+
+            var hlpr = new ShaftHelper();
+
+            var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
+
+
+            foreach (var x in CalcUtil.Divide(length, 10))
+            {
+                var xi = elm.LocalCoordsToIsoCoords(x);
+
+                var mi = 0.0;
+                var vi = 0.0;
+
+                {
+                    var a = forceLocation;
+                    var b = L - a;
+
+                    var ra = (1 - (a / L)) * w;
+
+                    var rb = (1 - (b / L)) * w;
+
+                    mi = ra + ((x > forceLocation) ? -w : 0.0);
+                }
+
+
+                var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
+
+                var exactFrc = new Force(fx: 0, fy: 0, fz: vi, mx: -mi, my: 0, mz: 0);
+
+                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Rx).Item2 + exactFrc.Mx;
+
+
+                Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
+            }
 
         }
     }

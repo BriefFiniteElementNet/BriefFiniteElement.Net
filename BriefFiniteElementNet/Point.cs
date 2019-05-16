@@ -307,6 +307,7 @@ namespace BriefFiniteElementNet
             Lambda = lambda;
         }
 
+
         #region Operators
 
 
