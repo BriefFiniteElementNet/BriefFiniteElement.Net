@@ -25,7 +25,7 @@ namespace BriefFiniteElementNet.Validation
             gen.ElementTranslators.Add(new TetrahedronToTcl() { TargetGenerator = gen });
             gen.ElementLoadTranslators.Add(new UniformLoad2Tcl() { TargetGenerator = gen });
 
-            gen.ExportElementForces = true;
+            gen.ExportElementForces = false;
             gen.ExportNodalDisplacements = true;
             gen.ExportTotalStiffness = validateStiffness;
             gen.ExportNodalReactions = true;
@@ -65,14 +65,21 @@ namespace BriefFiniteElementNet.Validation
             var nreact = new XmlDocument();
             nreact.Load(gen.reactionsOut);
 
-            var elOut = new XmlDocument();
-            elOut.Load(elementsFile);
+
+            if (gen.ExportElementForces)
+            {
+                var elOut = new XmlDocument();
+                elOut.Load(elementsFile);
+
+                var elmParts = elOut.DocumentElement.LastChild.InnerText.Trim().Split('\n').Select(i => i.Trim()).Where(i => !string.IsNullOrEmpty(i)).ToArray();
+
+            }
+
 
             var nodalDispParts = ndisp.DocumentElement.LastChild.InnerText.Trim().Split('\n').Select(i => i.Trim()).Where(i => !string.IsNullOrEmpty(i)).ToArray();
             var nodalReactParts = nreact.DocumentElement.LastChild.InnerText.Trim().Split('\n').Select(i => i.Trim()).Where(i => !string.IsNullOrEmpty(i)).ToArray();
 
-            var elmParts = elOut.DocumentElement.LastChild.InnerText.Trim().Split('\n').Select(i => i.Trim()).Where(i => !string.IsNullOrEmpty(i)).ToArray();
-
+           
             var openseesDs = nodalDispParts[0].Split(' ').Select(double.Parse).ToArray();
             var openseesReacts = nodalReactParts[0].Split(' ').Select(double.Parse).ToArray();
 

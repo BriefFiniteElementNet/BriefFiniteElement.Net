@@ -1245,6 +1245,8 @@ namespace BriefFiniteElementNet.ElementHelpers
                     if (uld.CoordinationSystem == CoordinationSystem.Global)
                         localDir = tr.TransformGlobalToLocal(localDir);
 
+                    localDir = localDir.GetUnit();
+
                     xi0 = -1;
                     xi1 = 1;
                     degree = 0;
@@ -1471,13 +1473,24 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             if (_direction == BeamDirection.Y)
             {
+                for (var i = 0; i < n.ColumnCount; i++)
+                {
+                    if (i % 2 == 1)
+                        n.MultiplyColumnByConstant(i, -1);
+                }
+
+            }
+
+            /*
+            if (_direction == BeamDirection.Y)
+            {
                 //n.MultiplyColumnByConstant(1, -1);
             }
             else
             {
                 n.MultiplyColumnByConstant(1, -1);
                 n.MultiplyColumnByConstant(3, -1);
-            }
+            }*/
 
 
             /*
@@ -1649,6 +1662,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     if (uld.CoordinationSystem == CoordinationSystem.Global)
                         localDir = tr.TransformGlobalToLocal(localDir);
+
+                    localDir = localDir.GetUnit();
 
                     xi0 = -1;
                     xi1 = 1;

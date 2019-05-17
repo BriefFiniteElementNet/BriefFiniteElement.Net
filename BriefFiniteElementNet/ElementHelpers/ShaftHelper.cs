@@ -199,6 +199,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             Polynomial[] ns = null;
 
+            /**/
             {//retrieve or generate shapefunctions
                 var nsKey = "{4EA77E8B-F44A-4524-9F1F-848A807106E6}";//a random unified key for store truss shape functions for bar element
 
@@ -206,7 +207,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 if (targetElement.Cache.TryGetValue(nsKey, out obj))
                 {
-                    ns = obj as Polynomial[];
+                    //ns = obj as Polynomial[];
                 }
 
                 if (ns == null)
@@ -216,9 +217,10 @@ namespace BriefFiniteElementNet.ElementHelpers
                     for (var i = 0; i < ns.Length; i++)
                         ns[i] = GetN_i(targetElement, i);
 
-                    targetElement.Cache.Add(nsKey, ns);
+                   // targetElement.Cache.Add(nsKey, ns);
                 }
             }
+            /**/
 
             var buf = new Matrix(2, ns.Length);
 

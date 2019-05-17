@@ -147,7 +147,7 @@ namespace BriefFiniteElementNet.Validation
             var buf = new List<ValidationResult>();
 
             buf.Add(TestFixedEndMoment_uniformLoad());
-            buf.Add(Test_Trapezoid_1());
+            //buf.Add(Test_Trapezoid_1());
 
             return buf.ToArray();
         }
@@ -721,9 +721,9 @@ namespace BriefFiniteElementNet.Validation
 
         public static ValidationResult Validation_1()
         {
-            var nx = 2;
-            var ny = 2;
-            var nz = 2;
+            var nx = 5;
+            var ny = 5;
+            var nz = 5;
 
             #region model definition
             var grd = StructureGenerator.Generate3DBarElementGrid(nx, ny, nz);
@@ -732,7 +732,7 @@ namespace BriefFiniteElementNet.Validation
             StructureGenerator.SetRandomiseSections(grd);
 
             StructureGenerator.AddRandomiseNodalLoads(grd, LoadCase.DefaultLoadCase);//random nodal loads
-            //StructureGenerator.AddRandomiseBeamUniformLoads(grd, LoadCase.DefaultLoadCase);//random elemental loads
+            StructureGenerator.AddRandomiseBeamUniformLoads(grd, LoadCase.DefaultLoadCase);//random elemental loads
             StructureGenerator.AddRandomDisplacements(grd, 0.1);
             #endregion
 
@@ -1271,15 +1271,19 @@ namespace BriefFiniteElementNet.Validation
 
             ndes[0].Constraints = Constraints.Fixed;
 
-            ndes[1].Constraints = 
-                Constraints.FixedDX & Constraints.FixedRX 
+            //ndes[1].Constraints = 
+            //    Constraints.FixedDX & Constraints.FixedRX 
                 //& Constraints.FixedDY & Constraints.FixedRZ//find beam.z dofs
 
             ;
-            //(model.Elements[0] as BarElement).Loads.Add(new Loads.UniformLoad(LoadCase.DefaultLoadCase, Vector.K, 1000, CoordinationSystem.Local));
+            var ul = new Loads.UniformLoad(LoadCase.DefaultLoadCase, Vector.K, 1000, CoordinationSystem.Global);
 
-            ndes[1].Loads.Add(new NodalLoad(new Force(Vector.K, Vector.Zero)));
-            ndes[1].Loads.Add(new NodalLoad(new Force(Vector.J*2, Vector.Zero)));
+            (model.Elements[0] as BarElement).Loads.Add(ul);
+
+
+            var eqv = (model.Elements[0] as BarElement).GetGlobalEquivalentNodalLoads(ul);
+            //ndes[1].Loads.Add(new NodalLoad(new Force(Vector.K, Vector.Zero)));
+            //ndes[1].Loads.Add(new NodalLoad(new Force(Vector.J*2, Vector.Zero)));
 
             model.Solve_MPC();
 

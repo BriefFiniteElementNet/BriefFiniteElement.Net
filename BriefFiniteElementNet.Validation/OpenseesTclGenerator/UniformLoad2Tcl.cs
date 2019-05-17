@@ -32,8 +32,8 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
 
             buf.Add(new TclCommand("eleLoad", "-ele", targetElementTag,
                 "-type", "-beamUniform",
-                localLoad.Z * uld.Magnitude,
-                localLoad.Y * uld.Magnitude, 
+                localLoad.Y * uld.Magnitude,
+                localLoad.Z * uld.Magnitude, 
                 localLoad.X * uld.Magnitude));
 
             return buf.ToArray();

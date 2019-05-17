@@ -206,7 +206,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 if (targetElement.Cache.TryGetValue(nsKey, out obj))
                 {
-                    ns = obj as Polynomial[];
+                    //ns = obj as Polynomial[];
                 }
 
                 if (ns == null)
@@ -216,9 +216,10 @@ namespace BriefFiniteElementNet.ElementHelpers
                     for (var i = 0; i < ns.Length; i++)
                         ns[i] = GetN_i(targetElement, i);
 
-                    targetElement.Cache.Add(nsKey, ns);
+                    //targetElement.Cache.Add(nsKey, ns);
                 }
             }
+            
 
 
             //var buf = new Matrix(2, br.Nodes.Length);
@@ -524,6 +525,8 @@ namespace BriefFiniteElementNet.ElementHelpers
                     if (uld.CoordinationSystem == CoordinationSystem.Global)
                         localDir = tr.TransformGlobalToLocal(localDir);
 
+                    localDir = localDir.GetUnit();
+
                     xi0 = -1;
                     //xi1 = 1;
                     degree = 0;
@@ -682,6 +685,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     if (uld.CoordinationSystem == CoordinationSystem.Global)
                         localDir = tr.TransformGlobalToLocal(localDir);
+
+                    localDir = localDir.GetUnit();
 
                     xi0 = -1;
                     xi1 = 1;

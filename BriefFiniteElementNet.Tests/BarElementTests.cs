@@ -15,6 +15,113 @@ namespace BriefFiniteElementNet.Tests
     public class BarElementTests
     {
         [TestMethod]
+        public void LoadEquivalentNodalLoads_uniformload_eulerbernoullybeam_dirY()
+        {
+            //internal force of 2 node beam beam with uniform load and both ends fixed
+
+            var w = 2.0;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+
+            var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, -Vector.K, w, CoordinationSystem.Global);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y);
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var L = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
+
+            var m1 = w * L * L / 12;
+            var m2 = -w * L * L / 12;
+
+            var v1 = -w * L / 2;
+            var v2 = -w * L / 2;
+
+            Assert.IsTrue(Math.Abs(loads[0].Fz - v1) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(loads[0].My - m1) < 1e-5, "invalid value");
+
+            Assert.IsTrue(Math.Abs(loads[1].Fz - v2) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(loads[1].My - m2) < 1e-5, "invalid value");
+        }
+
+        [TestMethod]
+        public void LoadEquivalentNodalLoads_uniformload_eulerbernoullybeam_dirZ()
+        {
+            //internal force of 2 node beam beam with uniform load and both ends fixed
+
+            var w = 2.0;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+
+            var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, -Vector.J, w, CoordinationSystem.Global);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z);
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var L = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
+
+            var m1 = -w * L * L / 12;
+            var m2 = w * L * L / 12;
+
+            var v1 = -w * L / 2;
+            var v2 = -w * L / 2;
+
+
+
+            Assert.IsTrue(Math.Abs(loads[0].Fy - v1) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(loads[0].Mz - m1) < 1e-5, "invalid value");
+
+            Assert.IsTrue(Math.Abs(loads[1].Fy - v2) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(loads[1].Mz - m2) < 1e-5, "invalid value");
+        }
+
+        [TestMethod]
+        public void LoadEquivalentNodalLoads_uniformload_truss()
+        {
+            //internal force of 2 node beam beam with uniform load and both ends fixed
+
+            var w = 2.0;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+
+            var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, -Vector.I, w, CoordinationSystem.Global);
+
+            var hlpr = new ElementHelpers.TrussHelper();
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var L = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
+
+            var f1 = -w * L / 2;
+            var f2 = -w * L / 2;
+
+
+
+            Assert.IsTrue(Math.Abs(loads[0].Fx - f1) < 1e-5, "invalid value");
+            
+            Assert.IsTrue(Math.Abs(loads[1].Fx - f2) < 1e-5, "invalid value");
+        }
+
+        [TestMethod]
         public void LoadInternalForce_uniformload_eulerbernoullybeam_dirY()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -56,6 +163,7 @@ namespace BriefFiniteElementNet.Tests
 
             }
         }
+
 
         [TestMethod]
         public void LoadInternalForce_uniformload_eulerbernoullybeam_dirZ()

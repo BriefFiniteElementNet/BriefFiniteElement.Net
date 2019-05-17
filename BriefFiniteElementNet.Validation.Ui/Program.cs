@@ -17,7 +17,7 @@ namespace BriefFiniteElementNet.Validation.Ui
             TestBar();
             //TestTetra();
             //return;
-            //BarElementTester.ValidateSingleInclinedFrame();
+            //BarElementTester.ValidateConsoleUniformLoad();
 
         }
 

@@ -57,7 +57,7 @@ namespace BriefFiniteElementNet.TestConsole
             //BarElementTester.ValidateConsoleUniformLoad();
             //BarElementTester.TestEndreleaseInternalForce();
             //SingleSpanBeamWithOverhang();
-            SimpleBeamInternalMoment();
+            SingleSpanBeamWithOverhang();
             //TestTrussShapeFunction();
             //new BriefFiniteElementNet.Tests.BarElementTests().barelement_endrelease();
             //new BarElementTester.Test_Trapezoid_1
