@@ -16,6 +16,8 @@ namespace BriefFiniteElementNet.Loads
 
     public class ConcentratedLoad : Load
     {
+
+
         public ConcentratedLoad():base()
         {
         }
@@ -125,6 +127,13 @@ namespace BriefFiniteElementNet.Loads
             _force = (Force)info.GetValue("_force", typeof(Force));
             _coordinationSystem = (CoordinationSystem)(int)info.GetValue("_coordinationSystem", typeof(int));
 
+        }
+
+        public ConcentratedLoad(Force force, IsoPoint forceIsoLocation, CoordinationSystem coordinationSystem)
+        {
+            Force = force;
+            ForceIsoLocation = forceIsoLocation;
+            CoordinationSystem = coordinationSystem;
         }
 
         #endregion

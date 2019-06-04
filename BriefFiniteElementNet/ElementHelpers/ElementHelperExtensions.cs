@@ -7,8 +7,39 @@ using BriefFiniteElementNet.Integration;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
-    internal static class ElementHelperExtensions
+    public static class ElementHelperExtensions
     {
+
+        public static Force ToForce(this IEnumerable<Tuple<DoF, double>> items)
+        {
+            var buf = new Force();
+
+            foreach(var itm in items)
+            {
+                switch (itm.Item1)
+                {
+                    case DoF.Dx:
+                        buf.Fx += itm.Item2;
+                        break;
+                    case DoF.Dy:
+                        buf.Fy += itm.Item2;
+                        break;
+                    case DoF.Dz:
+                        buf.Fz += itm.Item2;
+                        break;
+                    case DoF.Rx:
+                        buf.Mx += itm.Item2;
+                        break;
+                    case DoF.Ry:
+                        buf.My += itm.Item2;
+                        break;
+                    case DoF.Rz:
+                        buf.Mz += itm.Item2;
+                        break;
+                }
+            }
+            return buf;
+        }
 
         public static Matrix CalcLocalKMatrix_Bar(IElementHelper helper, Element targetElement)
         {
@@ -247,6 +278,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             return res;
         }
 
-        
+
     }
 }

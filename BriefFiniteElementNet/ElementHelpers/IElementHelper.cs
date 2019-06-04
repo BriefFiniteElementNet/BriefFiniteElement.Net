@@ -29,8 +29,8 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="targetElement">The target element.</param>
         /// <param name="isoCoords">The isometric coordinations.</param>
         /// <returns></returns>
-        [Obsolete("Bt D B implemented with higher performance")]
-        Matrix GetB_iMatrixAt(Element targetElement, int i, params double[] isoCoords);
+        //[Obsolete("Bt D B implemented with higher performance")]
+        ///Matrix GetB_iMatrixAt(Element targetElement, int i, params double[] isoCoords);
 
         /// <summary>
         /// Gets the compliance D matrix at defined isometric coordinates in local coordination system.

@@ -43,6 +43,45 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (xi < -1 || xi > 1)
                 throw new ArgumentOutOfRangeException(nameof(isoCoords));
 
+            /**/
+            var n = elm.Nodes.Length;
+
+            Polynomial[] nss, mss;
+
+            if (!GetShapeFunctions(targetElement, isoCoords, out nss, out mss))
+            {
+                throw new Exception("Unable to find shape functions");
+            }
+
+
+           
+
+            var shp = GetNMatrixAt(targetElement, isoCoords);
+
+            var buf = shp.ExtractRow(2);
+
+            //return buf;
+
+            /*
+            for (var i = 0; i < n; i++)
+            {
+                buf[0, 2*i] = nss[i].EvaluateDerivative(isoCoords[0], 2);
+                buf[0, 2*i + 1] = mss[i].EvaluateDerivative(isoCoords[0], 2);
+
+                //if (this._direction == BeamDirection.Y)
+                //    buf[0, 2*i + 1] *= -1;
+            }*/
+
+            //arr is d²N/dξ²
+            //but B is d²N/dx²
+            //so B will be arr * dξ²/dx² = arr * 1/ j.det ^2
+            //based on http://www-g.eng.cam.ac.uk/csml/teaching/4d9/4D9_handout2.pdf
+            var detJ = GetJMatrixAt(targetElement, isoCoords).Determinant();
+
+            buf.MultiplyRowByConstant(0, 1 / (detJ * detJ));
+            /**/
+
+            /** /
             var NN = GetNMatrixAt(targetElement, isoCoords);
 
             if (_direction == BeamDirection.Y)
@@ -66,7 +105,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             //so B will be arr * dξ²/dx² = arr * 1/ j.det ^2
             //based on http://www-g.eng.cam.ac.uk/csml/teaching/4d9/4D9_handout2.pdf
 
-            arr.MultiplyWithConstant(-1);
+            //arr.MultiplyWithConstant(-1);
 
             var j = GetJMatrixAt(targetElement, isoCoords).Determinant();
             var j2 = j * j;
@@ -77,57 +116,14 @@ namespace BriefFiniteElementNet.ElementHelpers
                 arr[i] *= 1 / j2;
             }
             
-            var buf = new Matrix(1, arr.Length);
+            var buf2 = new Matrix(1, arr.Length);
 
-            buf.FillRow(0, arr);
+            buf2.FillRow(0, arr);
+            var d = (buf2 - buf).CoreArray.Max(i => Math.Abs(i));
+            
+            /**/
 
-            return buf;
-        }
 
-        /// <inheritdoc/>
-        public Matrix GetB_iMatrixAt(Element targetElement, int i, params double[] isoCoords)
-        {
-            var elm = targetElement as BarElement;
-
-            if (elm == null)
-                throw new Exception();
-
-            var xi = isoCoords[0];
-
-            if (xi < -1 || xi > 1)
-                throw new ArgumentOutOfRangeException(nameof(isoCoords));
-
-            var L = (elm.EndNode.Location - elm.StartNode.Location).Length;
-
-            var L2 = L * L;
-
-            double bufVal;
-
-            switch(i)
-            {
-                case 0:
-                    bufVal = _direction == BeamDirection.Z ? -(6 * xi) / L2 : -(6 * xi) / L2;
-                    break;
-
-                case 1:
-                    bufVal = (3 * xi) / L - 1 / L;
-                    break;
-
-                case 2:
-                    bufVal = _direction == BeamDirection.Z ? +(6 * xi) / L2 : -(6 * xi) / L2;
-                    break;
-
-                case 3:
-                    bufVal = (3 * xi) / L + 1 / L;
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            var buf = new Matrix(1, 1);
-
-            buf.SetMember(0, 0, bufVal);
 
             return buf;
         }
@@ -198,6 +194,9 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             return buf;
         }
+
+
+        #region partial end release stuff
 
         private class Condition
         {
@@ -271,17 +270,17 @@ namespace BriefFiniteElementNet.ElementHelpers
                     return t;
                 }
 
-               
+
             }
 
 
 
-           
+
         }
 
 
 
-        private Condition[] GetMCondition(Element targetElement,int baseNode, int targetNode,
+        private Condition[] GetMCondition(Element targetElement, int baseNode, int targetNode,
             DofConstraint[] cv,
             DofConstraint[] cm)
         {
@@ -310,7 +309,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 if (cm[targetNode] == DofConstraint.Fixed)
                 {
-                    var j = GetJMatrixAt(targetElement,xis(baseNode))[0, 0];
+                    var j = GetJMatrixAt(targetElement, xis(baseNode))[0, 0];
 
                     var val = baseNode == targetNode ? j : 0.0;
 
@@ -322,7 +321,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
 
-        private Condition[] GetNCondition(Element targetElement,int baseNode, int targetNode,
+        private Condition[] GetNCondition(Element targetElement, int baseNode, int targetNode,
             DofConstraint[] cv,
             DofConstraint[] cm)
         {
@@ -360,7 +359,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             return lst.ToArray();
         }
 
-        private bool GetShapeFunctions(Element targetElement, double[] isoCoords, out Polynomial[] nss,out Polynomial[] mss)
+        private bool GetShapeFunctions(Element targetElement, double[] isoCoords, out Polynomial[] nss, out Polynomial[] mss)
         {
 
             var cnds = new List<Condition>();
@@ -417,7 +416,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
 
 
-            if(cv.All(i => i == DofConstraint.Fixed) && cm.All(i => i == DofConstraint.Fixed))
+            if (cv.All(i => i == DofConstraint.Fixed) && cm.All(i => i == DofConstraint.Fixed))
             {
                 if (n == 2)
                 {
@@ -492,377 +491,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             return true;
         }
 
-
-        /// <inheritdoc/>
-        public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
-        {
-            //note: this method gives the shape function on variable node count beam with variable constraint on each node 
-
-            Polynomial[] nss = null;
-            Polynomial[] mss = null;
-
-            var bar = targetElement as BarElement;
-
-            /*//as length and nodal releases are taken into account, better do not cache shape function
-            {//retrieve or generate shapefunctions
-
-                var releaseText = string.Join(",", bar._nodalReleaseConditions.Select(i => i.ToString_01()));
-
-                var nssKey = "AAE77B42-E403-4EF1-933E-B35BD6ECAC83"+ releaseText;//a random unified key for store truss shape functions for bar element
-                var mssKey = "E5AEF7C6-5128-4BB6-A605-153A40DF5AD7"+ releaseText;
-
-
-                object obj;
-
-                if (targetElement.Cache.TryGetValue(nssKey, out obj))
-                {
-                    nss = obj as Polynomial[];
-                }
-
-                if (targetElement.Cache.TryGetValue(mssKey, out obj))
-                {
-                    mss = obj as Polynomial[];
-                }
-
-
-                if (nss == null || mss==null)
-                {
-                    
-
-                    targetElement.Cache.Add(nssKey, nss);
-                    targetElement.Cache.Add(mssKey, mss);
-                }
-            }
-            */
-
-            //if (bar._nodalReleaseConditions.All(i => i == Constraints.Fixed) && bar.Nodes.Length == 2)
-            //    GetShapeFunction2Node(targetElement, out nss, out mss);
-            if (!GetShapeFunctions(targetElement, isoCoords, out nss, out mss))
-                throw new Exception();
-
-
-
-            var n = bar.NodeCount;
-
-            var xi = isoCoords[0];
-
-
-
-            var buf = new Matrix(4, 2 * n);
-
-            for (var i = 0; i < n; i++)
-            {
-                if (nss[i] == null) nss[i] = new Polynomial();
-                if (mss[i] == null) mss[i] = new Polynomial();
-            }
-
-            for (var i = 0; i < n; i++)
-            {
-                var cf = _direction == BeamDirection.Z ? 1 : -1;
-
-                //var niCoefs = (ns[i].Inverse2() * rns[i]).CoreArray;
-                //var miCoefs = (ms[i].Inverse2() * rms[i]).CoreArray;
-
-                var ni = nss[i];// new Polynomial(niCoefs);
-                var mi = mss[i];//new Polynomial(miCoefs);
-
-                {
-                    /*
-                    var np = ni.GetDerivative(1);
-                    var npp = ni.GetDerivative(2);
-
-                    var mp = mi.GetDerivative(1);
-                    var mpp = mi.GetDerivative(2);
-                    */
-
-                }
-                for (var ii = 0; ii < 4; ii++)
-                {
-                    //var v1 = buf[ii, 2 * i + 0] = -ni.EvaluateDerivative(xi, ii);
-                    //var v2 = buf[ii, 2 * i + 1] = cf * mi.EvaluateDerivative(xi, ii);
-
-                    var nid = ni.GetDerivative(ii);
-                    var mid = mi.GetDerivative(ii);
-
-                    var v1 = buf[ii, 2*i + 0] = nid.Evaluate(xi);
-                    var v2 = buf[ii, 2*i + 1] = mid.Evaluate(xi);
-                }
-            }
-
-            return buf;
-            throw new NotImplementedException();
-        }
-
-
-        public Matrix GetNMatrixAt_backup(Element targetElement, params double[] isoCoords)
-        {
-            //note: this method gives the shape function on variable node count beam with variable constraint on each node 
-
-            var xi = isoCoords[0];
-
-            var bar = targetElement as BarElement;
-            var l = (bar.StartNode.Location - bar.EndNode.Location).Length;
-
-            if (bar == null)
-                return null;
-
-            var n = bar.NodeCount;
-
-            var xis = new Func<int, double>(i =>
-            {
-                var delta = 2.0 / (n - 1);
-
-                return -1 + delta * i;
-            });
-
-
-            var ms = new Matrix[n];
-            var ns = new Matrix[n];
-
-            var rms = new Matrix[n];
-            var rns = new Matrix[n];
-
-            var nflags = new bool[n];
-            var mflags = new bool[n];
-
-            var cv = new DofConstraint[n];//shear constraint
-            var cm = new DofConstraint[n];//moment constraints
-
-            for (var i = 0; i < n; i++)
-            {
-                if (this._direction == BeamDirection.Z)
-                {
-                    cv[i] = bar._nodalReleaseConditions[i].DY;
-                    cm[i] = bar._nodalReleaseConditions[i].RZ;
-                }
-                else
-                {
-                    cv[i] = bar._nodalReleaseConditions[i].DZ;
-                    cm[i] = bar._nodalReleaseConditions[i].RY;
-                }
-            }
-
-
-
-            for (var bnode = 0; bnode < n; bnode++)
-            {
-                {
-                    var N = ns[bnode] = new Matrix(2 * n, 2 * n);
-                    var rn = rns[bnode] = new Matrix(2 * n, 1);
-                    var ncnt = 0;
-
-                    for (var tnode = 0; tnode < n; tnode++)
-                    {
-                        if (cv[tnode] == DofConstraint.Fixed)
-                        {
-                            N.SetRow(ncnt, Diff(xis(tnode), 2 * n - 1, 0));
-                            if (bnode == tnode) rn.SetRow(ncnt, 1.0);
-                        }
-                        else
-                        {
-                            //N.SetRow(ncnt, Diff(xis(tnode), 2 * n - 1, 3));
-                            if (bnode == tnode) nflags[bnode] = true;
-                        }
-
-                        ncnt++;
-
-                        if (cm[tnode] == DofConstraint.Fixed)
-                        {
-                            N.SetRow(ncnt, Diff(xis(tnode), 2 * n - 1, 1));
-                            if (bnode == tnode) rn.SetRow(ncnt, 0.0);
-                        }
-                        else
-                        {
-                            //N.SetRow(ncnt, Diff(xis(tnode), 2 * n - 1, 2));
-                            if (bnode == tnode) nflags[bnode] = true;
-                        }
-
-                        ncnt++;
-                    }
-                }
-
-                var J = GetJMatrixAt(targetElement, isoCoords);
-                var detJ = J.Determinant();
-                {
-                    var M = ms[bnode] = new Matrix(2 * n, 2 * n);
-                    var rm = rms[bnode] = new Matrix(2 * n, 1);
-                    var mcnt = 0;
-
-                    for (var tnode = 0; tnode < n; tnode++)
-                    {
-                        if (cv[tnode] == DofConstraint.Fixed)
-                        {
-                            M.SetRow(mcnt, Diff(xis(tnode), 2 * n - 1, 0));
-                            if (bnode == tnode) rm.SetRow(mcnt, 0.0);
-                        }
-                        else
-                        {
-                            //M.SetRow(mcnt, Diff(xis(tnode), 2 * n - 1, 3));
-                            if (bnode == tnode) mflags[bnode] = true;
-                        }
-
-                        mcnt++;
-
-                        if (cm[tnode] == DofConstraint.Fixed)
-                        {
-                            M.SetRow(mcnt, Diff(xis(tnode), 2 * n - 1, 1));
-                            if (bnode == tnode) rm.SetRow(mcnt, J[0, 0] * 1.0);
-                        }
-                        else
-                        {
-                            //M.SetRow(mcnt, Diff(xis(tnode), 2 * n - 1, 2));
-                            if (bnode == tnode) mflags[bnode] = true;
-                        }
-
-                        mcnt++;
-                    }
-                }
-
-            }
-
-            var buf = new Matrix(4, 2 * n);
-
-            for (var i = 0; i < n; i++)
-            {
-                var cf = _direction == BeamDirection.Z ? 1 : -1;
-
-                var niCoefs = (ns[i].Inverse2() * rns[i]).CoreArray;
-                var miCoefs = (ms[i].Inverse2() * rms[i]).CoreArray;
-
-                var ni = new Polynomial(niCoefs);
-                var mi = new Polynomial(miCoefs);
-
-                {
-                    /*
-                    var np = ni.GetDerivative(1);
-                    var npp = ni.GetDerivative(2);
-
-                    var mp = mi.GetDerivative(1);
-                    var mpp = mi.GetDerivative(2);
-                    */
-
-                }
-                for (var ii = 0; ii < 4; ii++)
-                {
-                    //var v1 = buf[ii, 2 * i + 0] = -ni.EvaluateDerivative(xi, ii);
-                    //var v2 = buf[ii, 2 * i + 1] = cf * mi.EvaluateDerivative(xi, ii);
-
-                    var v1 = buf[ii, 2 * i + 0] = ni.EvaluateDerivative(xi, ii);
-                    var v2 = buf[ii, 2 * i + 1] = mi.EvaluateDerivative(xi, ii);
-                }
-            }
-
-            return buf;
-        }
-
-        private Polynomial GetNIth(Element targetElement, int ith, int disprot)
-        {
-
-            var bar = targetElement as BarElement;
-            var l = (bar.StartNode.Location - bar.EndNode.Location).Length;
-
-            if (bar == null)
-                return null;
-
-            var n = bar.NodeCount;
-
-            var xis = new Func<int, double>(i =>
-            {
-                var delta = 2.0 / (n - 1);
-
-                return -1 + delta * i;
-            });
-
-
-            var ms = new Matrix[n];
-            var ns = new Matrix[n];
-
-
-
-            var rms = new Matrix[n];
-            var rns = new Matrix[n];
-
-            var nflags = new bool[n];
-            var mflags = new bool[n];
-
-            var cv = new DofConstraint[n];//shear constraint
-            var cm = new DofConstraint[n];//moment constraints
-
-            for (var i = 0; i < n; i++)
-            {
-                if (this._direction == BeamDirection.Z)
-                {
-                    cv[i] = bar._nodalReleaseConditions[i].DY;
-                    cm[i] = bar._nodalReleaseConditions[i].RZ;
-                }
-                else
-                {
-                    cv[i] = bar._nodalReleaseConditions[i].DZ;
-                    cm[i] = bar._nodalReleaseConditions[i].RY;
-                }
-            }
-
-            var conditions = new List<Tuple<double, double, int>>();
-            //xi,value,diff deg
-
-            for (var bnode = 0; bnode < n; bnode++)
-            {
-                var xi = xis(bnode);
-
-                //test bnode + disp
-                {
-                    if (cv[bnode] == DofConstraint.Fixed)
-                    {
-                        conditions.Add(Tuple.Create(xi, (bnode == ith && disprot == 0) ? 1.0 : 0.0, 0));
-                    }
-
-                    /*
-                    if (bnode == ith && disprot == 0)
-                        conditions.Add(Tuple.Create(xi, 1.0, 0));
-                    else if (cv[bnode] == DofConstraint.Fixed)
-                    {
-                        conditions.Add(Tuple.Create(xi, 0.0, 0));
-                    }
-                    */
-                }
-
-                //test bnode + rotation
-                {
-                    if (cm[bnode] == DofConstraint.Fixed)
-                    {
-                        conditions.Add(Tuple.Create(xi, (bnode == ith && disprot == 1) ? 1.0 : 0.0, 1));
-                    }
-
-                    /*
-                    if (bnode == ith && disprot == 1)
-                        conditions.Add(Tuple.Create(xi, 1.0, 1));
-                    else if (cm[bnode] == DofConstraint.Fixed)
-                    {
-                        conditions.Add(Tuple.Create(xi, 0.0, 1));
-                    }
-                    */
-                }
-            }
-
-            var d = conditions.Count;
-
-            var mtx = new Matrix(d, d);
-            var r = new Matrix(d, 1);
-
-            for (var i = 0; i < d; i++)
-            {
-                var xi = conditions[i].Item1;
-
-                for (var j = 0; j < d; j++)
-                {
-                    mtx[i, j] = Math.Pow(xi, j - d);
-                    r[i, 0] = conditions[i].Item2;
-                }
-            }
-
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Gets the coeficient ??!
         /// </summary>
@@ -870,11 +498,11 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="pOrder"></param>
         /// <param name="diffDegree"></param>
         /// <returns></returns>
-        public double[] Diff(double xi,int pOrder,int diffDegree)
+        public double[] Diff(double xi, int pOrder, int diffDegree)
         {
             var buf = new double[pOrder + 1];
 
-            for(var i = 0;i<buf.Length;i++)
+            for (var i = 0; i < buf.Length; i++)
             {
                 var origPow = pOrder - i;
 
@@ -884,7 +512,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
-        
+
         /// <summary>
         /// returns value of n'th derivative of F where F(x) = x ^ n
         /// </summary>
@@ -892,7 +520,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="n"></param>
         /// <param name="m"></param>
         /// <returns></returns>
-        public double NthDer(double x,int n,int m)
+        public double NthDer(double x, int n, int m)
         {
             var pval = Math.Pow(x, n - m);
 
@@ -916,6 +544,63 @@ namespace BriefFiniteElementNet.ElementHelpers
                 return x * Factorial(x - 1);
             }
         }
+        #endregion
+
+
+        /// <inheritdoc/>
+        public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
+        {
+            //note: this method gives the shape function on variable node count beam with variable constraint on each node 
+
+            Polynomial[] nss = null;
+            Polynomial[] mss = null;
+
+            var bar = targetElement as BarElement;
+
+            if (!GetShapeFunctions(targetElement, isoCoords, out nss, out mss))
+                throw new Exception();
+
+            var n = bar.NodeCount;
+
+            var xi = isoCoords[0];
+
+
+
+            var buf = new Matrix(4, 2 * n);
+
+            for (var i = 0; i < n; i++)
+            {
+                if (nss[i] == null) nss[i] = new Polynomial();
+                if (mss[i] == null) mss[i] = new Polynomial();
+            }
+
+            for (var i = 0; i < n; i++)
+            {
+                //var cf = _direction == BeamDirection.Z ? 1 : -1;
+
+                var ni = nss[i];// new Polynomial(niCoefs);
+                var mi = mss[i];//new Polynomial(miCoefs);
+
+                for (var ii = 0; ii < 4; ii++)
+                {
+                    var nid = ni.GetDerivative(ii);
+                    var mid = mi.GetDerivative(ii);
+
+                    var v1 = buf[ii, 2*i + 0] = nid.Evaluate(xi);
+                    var v2 = buf[ii, 2*i + 1] = mid.Evaluate(xi);
+                }
+            }
+
+
+            if (this._direction == BeamDirection.Y)
+                for (var i = 0; i < 2 * n; i++)
+                {
+                    if (i % 2 == 1)
+                        buf.MultiplyColumnByConstant(i, -1);
+                }
+
+            return buf;
+        }
 
         public bool GetShapeFunction2Node(Element targetElement, out Polynomial[] ns, out Polynomial[] ms)
         {
@@ -930,6 +615,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var L = (bar.EndNode.Location - bar.StartNode.Location).Length;
 
+            
+
             ns[0] = new Polynomial(0.25, 0, -0.75, 0.5);
 
             ms[0] = new Polynomial(0.125 * L, -0.125 * L, -0.125 * L, 0.125 * L);
@@ -941,78 +628,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             return true;
         }
 
-        public Matrix GetNMatrixBar2Node(Element targetElement, params double[] isoCoords)
-        {
-            //for end release handling see http://www.serendi-cdi.org/serendipedia/index.php?title=Beam_Shape_Functions
-
-            var xi = isoCoords[0];
-
-            if (xi < -1 || xi > 1)
-                throw new ArgumentOutOfRangeException(nameof(isoCoords));
-
-            var bar = targetElement as BarElement;
-
-            if (bar == null)
-                throw new Exception();
-
-            var L = (bar.EndNode.Location - bar.StartNode.Location).Length;
-
-            var n1s = new double[] //N1,N1', N1'', N1'''
-            {
-                1.0 / 4.0 * (1 - xi) * (1 - xi) * (2 + xi),
-                1.0 / 4.0 * (3 * xi * xi - 3),
-                1.0 / 4.0 * (6 * xi),
-                1.0 / 4.0 * (6)
-            };
-
-            var m1s = new double[] //M1,M1', M1'', M1'''
-            {
-                L / 8.0 * (1 - xi) * (1 - xi) * (xi + 1),
-                L / 8.0 * (3 * xi * xi - 2 * xi - 1),
-                L / 8.0 * (6 * xi - 2.0),
-                L / 8.0 * (6),
-            };
-            
-            var n2s = new double[] //N2,N2', N2'', N2'''
-            {
-                1.0 / 4.0 * (1 + xi)*(1 + xi)*(2 - xi),
-                1.0 / 4.0 * (-3 * xi * xi + 3),
-                1.0 / 4.0 * (-6 * xi),
-                1.0 / 4.0 * (-6)
-            };
-            
-            var m2s = new double[] //M1,M1', M1'', M1'''
-            {
-                L / 8.0 * (1 + xi)*(1 + xi)*(xi - 1),
-                L / 8.0 * (3 * xi * xi + 2 * xi - 1),
-                L / 8.0 * (6 * xi + 2.0),
-                L / 8.0 * (6),
-            };
-
-            var buf2 = new Matrix(4, 4);
-
-            var c1 = bar.StartReleaseCondition;
-            var c2 = bar.EndReleaseCondition;
-
-            if (_direction == BeamDirection.Y)
-            {
-
-            }
-            else
-            {
-                m1s = m1s.Negate();
-                m2s = m2s.Negate();
-
-            }
-
-
-            buf2.FillColumn(0, n1s);
-            buf2.FillColumn(1, m1s);
-            buf2.FillColumn(2, n2s);
-            buf2.FillColumn(3, m2s);
-
-            return buf2;
-        }
+       
 
         /// <inheritdoc/>
         public Matrix GetJMatrixAt(Element targetElement, params double[] isoCoords)
@@ -1385,11 +1001,21 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     var f2 = f + movedEnds;
 
-                    f2 *= -1;
-                    buff.Add(Tuple.Create(DoF.Ry, f2.My));
-                    buff.Add(Tuple.Create(DoF.Rz, f2.Mz));
-                    buff.Add(Tuple.Create(DoF.Dy, f2.Fy));
-                    buff.Add(Tuple.Create(DoF.Dz, f2.Fz));
+                    //f2 *= -1;
+
+                    if (_direction == BeamDirection.Y)
+                    {
+                        buff.Add(Tuple.Create(DoF.Ry, f2.My));
+                        buff.Add(Tuple.Create(DoF.Dz, f2.Fz));
+                    }
+                    else
+                    {
+                        buff.Add(Tuple.Create(DoF.Rz, f2.Mz));
+                        buff.Add(Tuple.Create(DoF.Dy, f2.Fy));
+                    }
+
+
+                  
 
                     return buff;
                 }
@@ -1425,12 +1051,22 @@ namespace BriefFiniteElementNet.ElementHelpers
                 var movedEnds = ends.Move(new Point(0, 0, 0), new Point(targetX, 0, 0));
 
                 var f2 = frc + movedEnds;
-                f2 *= -1;
+                //f2 *= -1;
 
-                buff.Add(Tuple.Create(DoF.Ry, f2.My));
-                buff.Add(Tuple.Create(DoF.Rz, f2.Mz));
-                buff.Add(Tuple.Create(DoF.Dy, f2.Fy));
-                buff.Add(Tuple.Create(DoF.Dz, f2.Fz));
+
+                if(_direction == BeamDirection.Y)
+                {
+                    buff.Add(Tuple.Create(DoF.Ry, f2.My));
+                    buff.Add(Tuple.Create(DoF.Dz, f2.Fz));
+                }
+                else
+                {
+                    buff.Add(Tuple.Create(DoF.Rz, f2.Mz));
+                    buff.Add(Tuple.Create(DoF.Dy, f2.Fy));
+                }
+                
+                
+                
 
                 return buff;
             }
@@ -1471,37 +1107,6 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var n = GetNMatrixAt(targetElement, isoCoords);
 
-            if (_direction == BeamDirection.Y)
-            {
-                for (var i = 0; i < n.ColumnCount; i++)
-                {
-                    if (i % 2 == 1)
-                        n.MultiplyColumnByConstant(i, -1);
-                }
-
-            }
-
-            /*
-            if (_direction == BeamDirection.Y)
-            {
-                //n.MultiplyColumnByConstant(1, -1);
-            }
-            else
-            {
-                n.MultiplyColumnByConstant(1, -1);
-                n.MultiplyColumnByConstant(3, -1);
-            }*/
-
-
-            /*
-            var nOld = GetNMatrixBar2Node(targetElement, isoCoords);
-
-            var dd = (n - nOld).CoreArray.Max(i => Math.Abs(i));
-
-            if (dd > 1e-10)
-                throw new Exception();
-            */
-
             var d = GetDMatrixAt(targetElement, isoCoords);
 
             var u = new Matrix(2 * nc, 1);
@@ -1518,9 +1123,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var ei = d[0, 0];
 
             f.MultiplyRowByConstant(1, 1 / j);
-            f.MultiplyRowByConstant(2, ei / (j * j));
-            f.MultiplyRowByConstant(3, ei / (j * j * j));
-
+            
             var buf = new Displacement();
 
             if (_direction == BeamDirection.Y)
@@ -1531,7 +1134,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             else
             {
                 buf.DY = f[0, 0];
-                buf.RZ = -f[1, 0];
+                buf.RZ = f[1, 0];
             }
             
             return buf;
@@ -1571,7 +1174,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var n = GetNMatrixAt(targetElement, isoCoords);
 
-
+            /*
             if (_direction == BeamDirection.Y)
             {
                 for (var i = 0; i < n.ColumnCount; i++)
@@ -1579,8 +1182,8 @@ namespace BriefFiniteElementNet.ElementHelpers
                     if (i % 2 == 1)
                         n.MultiplyColumnByConstant(i, -1);
                 }
-
             }
+            */
 
 
             var d = GetDMatrixAt(targetElement, isoCoords);
@@ -1618,7 +1221,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             if (_direction == BeamDirection.Y)
             {
-                buf.Add(Tuple.Create(DoF.Ry, f[2, 0]));
+                buf.Add(Tuple.Create(DoF.Ry, -f[2, 0]));
                 buf.Add(Tuple.Create(DoF.Dz, -f[3, 0]));
             }
             else
@@ -1700,6 +1303,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                     {
                         var shp = GetNMatrixAt(targetElement, xi, 0, 0);
 
+                        /*
                         if (_direction == BeamDirection.Y)
                         {
                             for (var i = 0; i < shp.ColumnCount; i++)
@@ -1707,7 +1311,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                                 if (i % 2 == 1)
                                     shp.MultiplyColumnByConstant(i, -1);
                             }
-                        }
+                        }*/
 
                         var q__ = magnitude(xi);
                         var j = GetJMatrixAt(targetElement, xi, 0, 0);
@@ -1772,11 +1376,12 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 var ns = GetNMatrixAt(targetElement, cl.ForceIsoLocation.Xi);
 
+                /*
                 if (_direction == BeamDirection.Y)
                     for (var i = 0; i < ns.ColumnCount; i++)
                         if (i % 2 == 1)
                             ns.MultiplyColumnByConstant(i, -1);
-
+                */
 
 
                 var j = GetJMatrixAt(targetElement, cl.ForceIsoLocation.Xi);

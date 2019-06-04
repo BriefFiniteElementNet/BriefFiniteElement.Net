@@ -48,6 +48,9 @@ namespace BriefFiniteElementNet.Tests
 
             Assert.IsTrue(Math.Abs(loads[1].Fz - v2) < 1e-5, "invalid value");
             Assert.IsTrue(Math.Abs(loads[1].My - m2) < 1e-5, "invalid value");
+
+            
+
         }
 
         [TestMethod]
@@ -87,6 +90,188 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(Math.Abs(loads[1].Fy - v2) < 1e-5, "invalid value");
             Assert.IsTrue(Math.Abs(loads[1].Mz - m2) < 1e-5, "invalid value");
         }
+
+
+        [TestMethod]
+        public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirY_Fz()
+        {
+            //internal force of 2 node beam beam with uniform load and both ends fixed
+
+
+            //     ^z                       w
+            //     |  /y                      ||
+            //     | /                       \/
+            //      ====================================== --> x
+            //
+
+            var w = 2.0;
+            var a = 2.75;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad(new Force(0, 0, -w, 0, 0, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y);
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var L = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
+
+            var b = L - a;
+
+
+            var ma = w * a * b * b / (L * L);
+            var mb = w * a * a * b / (L * L);
+
+            var ra = w * (3 * a + b) * b * b / (L * L * L);//1f
+            var rb = w * (a + 3 * b) * a * a / (L * L * L);//1g
+
+            var expectedF0 = new Force(0, 0, -ra, 0, +ma, 0);
+            var expectedF1 = new Force(0, 0, -rb, 0, -mb, 0);
+
+            /*
+            var m1 = -w * L * L / 12;
+            var m2 = w * L * L / 12;
+
+            var v1 = -w * L / 2;
+            var v2 = -w * L / 2;
+            */
+
+            var d0 = loads[0] - expectedF0;
+            var d1 = loads[1] - expectedF1;
+
+            Assert.IsTrue(Math.Abs(d0.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d0.Moments.Length) < 1e-5, "invalid value");
+
+            Assert.IsTrue(Math.Abs(d1.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
+        }
+
+        //[TestMethod]
+        public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirZ_Mz()
+        {
+            //internal force of 2 node beam beam with uniform load and both ends fixed
+
+            //                               ^
+            //     ^m                     m0 ^
+            //     |  /z                     |
+            //     | /                       |
+            //      ====================================== --> x
+            //
+
+            var w = 2.0;
+            var a = 2.75;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad(new Force(0, 0, -w, 0, 0, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y);
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var L = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
+
+            var b = L - a;
+
+            var ma = -w / (L * L) * (L * L - 4 * a * L + 3 * a * a);
+            var mb = -w / (L * L) * (3 * a * a - 2 * a * L);
+
+            var ra = 6 * w * a / (L * L * L) * (L - a);//R1
+            var rb = 6 * w * a / (L * L * L) * (L - a);//R1
+
+            var expectedF0 = new Force(0, 0, -ra, 0, +ma, 0);
+            var expectedF1 = new Force(0, 0, -rb, 0, -mb, 0);
+
+            /*
+            var m1 = -w * L * L / 12;
+            var m2 = w * L * L / 12;
+
+            var v1 = -w * L / 2;
+            var v2 = -w * L / 2;
+            */
+
+            var d0 = loads[0] - expectedF0;
+            var d1 = loads[1] - expectedF1;
+
+            Assert.IsTrue(Math.Abs(d0.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d0.Moments.Length) < 1e-5, "invalid value");
+
+            Assert.IsTrue(Math.Abs(d1.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
+        }
+
+        [TestMethod]
+        public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirZ_Fy()
+        {
+            //internal force of 2 node beam beam with uniform load and both ends fixed
+
+
+            //     ^y                       w
+            //     |                        ||
+            //     |                        \/
+            //      ====================================== --> x
+            //    / 
+            //   /z
+
+            var w = 2.0;
+            var a = 2.75;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad(new Force(0, -w, 0, 0, 0, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z);
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var L = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
+
+            var b = L - a;
+
+
+            var ma = w * a * b * b / (L * L);
+            var mb = w * a * a * b / (L * L);
+
+            var ra = w * (3 * a + b) * b * b / (L * L * L);//1f
+            var rb = w * (a + 3 * b) * a * a / (L * L * L);//1g
+
+            var expectedF0 = new Force(0, -ra, 0, 0, 0, -ma);
+            var expectedF1 = new Force(0, -rb, 0, 0, 0, mb);
+
+            /*
+            var m1 = -w * L * L / 12;
+            var m2 = w * L * L / 12;
+
+            var v1 = -w * L / 2;
+            var v2 = -w * L / 2;
+            */
+
+            var d0 = loads[0] - expectedF0;
+            var d1 = loads[1] - expectedF1;
+
+            Assert.IsTrue(Math.Abs(d0.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d0.Moments.Length) < 1e-5, "invalid value");
+
+            Assert.IsTrue(Math.Abs(d1.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
+        }
+
 
         [TestMethod]
         public void LoadEquivalentNodalLoads_uniformload_truss()
@@ -147,19 +332,35 @@ namespace BriefFiniteElementNet.Tests
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 
-                var mi = -w / 12 * (6 * length * x - 6 * x * x - length * length);
-                var vi = -w * (length / 2 - x);
+                var mi = w / 12 * (6 * length * x - 6 * x * x - length * length);
+                var vi = w * (length / 2 - x);
 
-                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
+                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) }).ToForce();
 
                 var exactFrc = new Force(fx: 0, fy: 0, fz: vi, mx: 0, my: mi, mz: 0);
 
-                var dm = testFrc.FirstOrDefault(i => i.Item1 == DoF.Ry).Item2 - exactFrc.My;
-                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dz).Item2 - exactFrc.Fz;
+                var d = testFrc - exactFrc;
+
+                var dm = d.My;
+                var df = d.Fz;
 
 
                 Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
                 Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
+
+            }
+
+
+            {
+                var end1 = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var f0 = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -1 + 1e-9 }).ToForce(); ;
+
+                var sum = end1[0] + f0;
+
+                Assert.IsTrue(Math.Abs(sum.Forces.Length) < 1e-5, "invalid value");
+                Assert.IsTrue(Math.Abs(sum.Moments.Length) < 1e-5, "invalid value");
+
 
             }
         }
@@ -196,16 +397,29 @@ namespace BriefFiniteElementNet.Tests
                 var mi = w / 12 * (6 * length * x - 6 * x * x - length * length);
                 var vi = -w * (length / 2 - x);
 
-                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
+                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) }).ToForce();
 
                 var exactFrc = new Force(fx: 0, fy: vi, fz: 0, mx: 0, my: 0, mz: mi);
 
-                var dm = testFrc.FirstOrDefault(i => i.Item1 == DoF.Rz).Item2 - exactFrc.Mz;
-                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dy).Item2 - exactFrc.Fy;
+                var dm = Math.Abs(testFrc.Mz) - Math.Abs(exactFrc.Mz);
+                var df = Math.Abs(testFrc.Fy) - Math.Abs(exactFrc.Fy);
 
 
                 Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
                 Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
+
+            }
+
+            {
+                var end1 = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var f0 = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -1 + 1e-9 }).ToForce(); ;
+
+                var sum = end1[0] + f0;
+
+                Assert.IsTrue(Math.Abs(sum.Forces.Length) < 1e-5, "invalid value");
+                Assert.IsTrue(Math.Abs(sum.Moments.Length) < 1e-5, "invalid value");
+
 
             }
         }
@@ -382,12 +596,12 @@ namespace BriefFiniteElementNet.Tests
 
                 var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
-                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
+                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) }).ToForce();
 
                 var exactFrc = new Force(fx: 0, fy: 0, fz: vi, mx: 0, my: -mi, mz: 0);
 
-                var dm =  testFrc.FirstOrDefault(i => i.Item1 == DoF.Ry).Item2 - exactFrc.My;
-                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dz).Item2 + exactFrc.Fz;
+                var dm =  testFrc.My + exactFrc.My;
+                var df = testFrc.Fz - exactFrc.Fz;
 
 
                 Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
@@ -396,6 +610,18 @@ namespace BriefFiniteElementNet.Tests
 
             }
 
+            {
+                var end1 = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var f0 = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -1 + 1e-9 }).ToForce(); ;
+
+                var sum = end1[0] + f0;
+
+                Assert.IsTrue(Math.Abs(sum.Forces.Length) < 1e-5, "invalid value");
+                Assert.IsTrue(Math.Abs(sum.Moments.Length) < 1e-5, "invalid value");
+
+
+            }
         }
 
         [TestMethod]
@@ -483,12 +709,12 @@ namespace BriefFiniteElementNet.Tests
 
                 var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
-                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
+                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) }).ToForce();
 
                 var exactFrc = new Force(fx: 0, fy: vi, fz: 0, mx: 0, my: 0, mz: +mi);
 
-                var dm = testFrc.FirstOrDefault(i => i.Item1 == DoF.Rz).Item2 - exactFrc.Mz;
-                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dy).Item2 + exactFrc.Fy;
+                var dm = Math.Abs( testFrc.Mz) - Math.Abs(exactFrc.Mz);
+                var df = Math.Abs(testFrc.Fy) - Math.Abs(exactFrc.Fy);
 
 
                 Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
@@ -497,6 +723,18 @@ namespace BriefFiniteElementNet.Tests
 
             }
 
+            {
+                var end1 = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var f0 = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -1 + 1e-9 }).ToForce(); ;
+
+                var sum = end1[0] + f0;
+
+                Assert.IsTrue(Math.Abs(sum.Forces.Length) < 1e-5, "invalid value");
+                Assert.IsTrue(Math.Abs(sum.Moments.Length) < 1e-5, "invalid value");
+
+
+            }
         }
 
         [TestMethod]
@@ -562,12 +800,12 @@ namespace BriefFiniteElementNet.Tests
 
                 var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
-                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
+                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) }).ToForce();
 
                 var exactFrc = new Force(fx: 0, fy: vi, fz: 0, mx: 0, my: 0, mz: +mi);
 
-                var dm = testFrc.FirstOrDefault(i => i.Item1 == DoF.Rz).Item2 - exactFrc.Mz;
-                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dy).Item2 + exactFrc.Fy;
+                var dm = testFrc.Mz + exactFrc.Mz;
+                var df = testFrc.Fy - exactFrc.Fy;
 
 
                 Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
@@ -576,6 +814,18 @@ namespace BriefFiniteElementNet.Tests
 
             }
 
+            {
+                var end1 = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var f0 = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -1 + 1e-9 }).ToForce(); ;
+
+                var sum = end1[0] + f0;
+
+                Assert.IsTrue(Math.Abs(sum.Forces.Length) < 1e-5, "invalid value");
+                Assert.IsTrue(Math.Abs(sum.Moments.Length) < 1e-5, "invalid value");
+
+
+            }
         }
 
         [TestMethod]
@@ -641,12 +891,13 @@ namespace BriefFiniteElementNet.Tests
 
                 var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
-                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
+                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) }).ToForce();
 
                 var exactFrc = new Force(fx: 0, fy: 0, fz: vi, mx: 0, my: -mi, mz: 0);
 
-                var dm = testFrc.FirstOrDefault(i => i.Item1 == DoF.Ry).Item2 - exactFrc.My;
-                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dz).Item2 + exactFrc.Fz;
+
+                var dm = Math.Abs( testFrc.My) - Math.Abs(exactFrc.My);//regarding value
+                var df = Math.Abs(testFrc.Fz) - Math.Abs(exactFrc.Fz);//regarding value
 
 
                 Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
@@ -655,6 +906,16 @@ namespace BriefFiniteElementNet.Tests
 
             }
 
+            {
+                var end1 = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var f0 = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -1 + 1e-9 }).ToForce(); ;
+
+                var sum = end1[0] + f0;
+
+                Assert.IsTrue(Math.Abs(sum.Forces.Length) < 1e-5, "invalid value");//regarding sign
+                Assert.IsTrue(Math.Abs(sum.Moments.Length) < 1e-5, "invalid value");//regarding sign
+            }
         }
 
         [TestMethod]
@@ -713,7 +974,7 @@ namespace BriefFiniteElementNet.Tests
 
                 var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
 
-                var exactFrc = new Force(fx: -mi, fy: 0, fz: vi, mx: 0, my: 0, mz: 0);
+                var exactFrc = new Force(fx: mi, fy: 0, fz: vi, mx: 0, my: 0, mz: 0);
 
                 var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dx).Item2 + exactFrc.Fx;
 
@@ -721,6 +982,18 @@ namespace BriefFiniteElementNet.Tests
                 Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
             }
 
+            {
+                var end1 = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var f0 = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -1 + 1e-9 }).ToForce(); ;
+
+                var sum = end1[0] + f0;
+
+                Assert.IsTrue(Math.Abs(sum.Forces.Length) < 1e-5, "invalid value");
+                Assert.IsTrue(Math.Abs(sum.Moments.Length) < 1e-5, "invalid value");
+
+
+            }
         }
 
         [TestMethod]
@@ -775,16 +1048,32 @@ namespace BriefFiniteElementNet.Tests
 
                 var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
-                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
+                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) }).ToForce();
 
                 var exactFrc = new Force(fx: 0, fy: 0, fz: vi, mx: -mi, my: 0, mz: 0);
 
-                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Rx).Item2 + exactFrc.Mx;
+                var df = Math.Abs(testFrc.Mx) - Math.Abs(exactFrc.Mx);
 
 
                 Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
             }
 
+            {
+                var end1 = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var f0 = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -1 + 1e-9 }).ToForce(); ;
+
+                var sum = end1[0] + f0;
+
+                Assert.IsTrue(Math.Abs(sum.Forces.Length) < 1e-5, "invalid value");
+                Assert.IsTrue(Math.Abs(sum.Moments.Length) < 1e-5, "invalid value");
+
+
+            }
         }
+
+        
+
+
     }
 }

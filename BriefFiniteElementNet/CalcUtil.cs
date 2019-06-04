@@ -20,6 +20,82 @@ namespace BriefFiniteElementNet
     /// </summary>
     public static class CalcUtil
     {
+
+        public static Matrix GetBarTransformationMatrix(Vector v,double _webRotation=0)
+        {
+            var cxx = 0.0;
+            var cxy = 0.0;
+            var cxz = 0.0;
+
+            var cyx = 0.0;
+            var cyy = 0.0;
+            var cyz = 0.0;
+
+            var czx = 0.0;
+            var czy = 0.0;
+            var czz = 0.0;
+
+            var teta = _webRotation;
+
+            var s = Math.Sin(teta * Math.PI / 180.0);
+            var c = Math.Cos(teta * Math.PI / 180.0);
+
+            //var v = this.EndNode.Location - this.StartNode.Location;
+
+            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
+            {
+                if (v.Z > 0)
+                {
+                    czx = 1;
+                    cyy = 1;
+                    cxz = -1;
+                }
+                else
+                {
+                    czx = -1;
+                    cyy = 1;
+                    cxz = 1;
+                }
+            }
+            else
+            {
+                var l = v.Length;
+                cxx = v.X / l;
+                cyx = v.Y / l;
+                czx = v.Z / l;
+                var d = Math.Sqrt(cxx * cxx + cyx * cyx);
+                cxy = -cyx / d;
+                cyy = cxx / d;
+                cxz = -cxx * czx / d;
+                cyz = -cyx * czx / d;
+                czz = d;
+            }
+
+            var pars = new double[9];
+
+            pars[0] = cxx;
+            pars[1] = cxy * c + cxz * s;
+            pars[2] = -cxy * s + cxz * c;
+
+            pars[3] = cyx;
+            pars[4] = cyy * c + cyz * s;
+            pars[5] = -cyy * s + cyz * c;
+
+            pars[6] = czx;
+            pars[7] = czy * c + czz * s;
+            pars[8] = -czy * s + czz * c;
+
+
+            var buf = new Matrix(3, 3);
+
+            buf.FillColumn(0, pars[0], pars[1], pars[2]);
+            buf.FillColumn(1, pars[3], pars[4], pars[5]);
+            buf.FillColumn(2, pars[6], pars[7], pars[8]);
+
+            return buf;
+        }
+
+
         public static double[] Divide(double length, int pcs)
         {
             if (pcs < 1)

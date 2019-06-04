@@ -33,6 +33,8 @@ namespace BriefFiniteElementNet.TestConsole
         static void Main(string[] args)
         {
             Console.Title = "BFE tests & temporary codes";
+            SimplySupportedBeamUDL();
+
             //Test_P_Delta_matrix();
             //TestSparseRow();
             /*
@@ -100,7 +102,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             var pin = new Constraint(
               dx: DofConstraint.Fixed, dy: DofConstraint.Fixed, dz: DofConstraint.Fixed,
-              rx: DofConstraint.Fixed, ry: DofConstraint.Released, rz: DofConstraint.Fixed);
+              rx: DofConstraint.Fixed, ry: DofConstraint.Released, rz: DofConstraint.Released);
 
             Node n1, n2;
 
@@ -119,7 +121,7 @@ namespace BriefFiniteElementNet.TestConsole
             elm1.Section = section;
             elm1.Material = material;
 
-            var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, new Vector(0, 1, 0), -3, CoordinationSystem.Global);
+            var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, new Vector(0, 0, 1), -1, CoordinationSystem.Global);
             elm1.Loads.Add(u1);
 
             model.Solve_MPC();
@@ -129,9 +131,12 @@ namespace BriefFiniteElementNet.TestConsole
             x = reaction1.Fz; //15000 = 3*10000/2 -> correct
             x = reaction1.My; // 0 -> correct
 
-            Force f1_internal = elm1.GetExactInternalForceAt(-1);//-1 is start
-            x = f1_internal.Fz; //bug: 0 should be -15000
-            x = f1_internal.My; //bug: 25000000 should be 0, bug?
+            Force f1_internal = elm1.GetExactInternalForceAt(-1+1e-10);//-1 is start
+            x = f1_internal.Fz; 
+            x = f1_internal.My;
+
+            var delta = elm1.GetInternalDisplacementAt(0);
+
         }
 
         public static void SimpleBeamInternalMoment()
@@ -193,7 +198,7 @@ namespace BriefFiniteElementNet.TestConsole
             model.Solve_MPC();//crashes here
 
 
-            var val = elm1.GetExactInternalForceAt(0.25);
+            var val = elm1.GetExactInternalForceAt(-0.25);
 
             var d2 = n2.GetNodalDisplacement();
         }
@@ -237,12 +242,12 @@ namespace BriefFiniteElementNet.TestConsole
 
             var testXi = -0.66;
 
-            var n1 = hlp.GetNMatrixBar2Node(bar, testXi);
+            //var n1 = hlp.GetNMatrixBar2Node(bar, testXi);
             var n2 = hlp.GetNMatrixAt(bar, testXi);
 
             var b = hlp.GetBMatrixAt(bar, testXi);
 
-            var d = n1 - n2;
+            //var d = n1 - n2;
 
         }
 

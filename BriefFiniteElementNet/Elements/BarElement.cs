@@ -1043,7 +1043,7 @@ namespace BriefFiniteElementNet.Elements
         
         public Displacement GetInternalDisplacementAt(double xi)
         {
-            throw new NotImplementedException();
+            return GetInternalDisplacementAt(xi, LoadCase.DefaultLoadCase);
         }
 
         
