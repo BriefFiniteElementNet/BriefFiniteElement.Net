@@ -28,25 +28,20 @@ namespace BriefFiniteElementNet.Validation
 
             //elm.StartReleaseCondition = Constraints.FixedRX;
             elm.Section = new UniformParametric1DSection(1, 2, 3, 4);
-            elm.Material = new UniformIsotropicMaterial(210e9, 0.3);
+            elm.Material = new UniformIsotropicMaterial(1, 0.3);
 
             var kfull = elm.GetLocalStifnessMatrix();
-
 
             var newConds = new Constraint[elm.NodeCount];
 
             {
+
                 for (int i = 0; i < newConds.Length; i++)
                 {
                     newConds[i] = Constraints.Fixed;
                 }
 
-                //newConds[0].DY = DofConstraint.Released;
-                newConds[1].DY = DofConstraint.Released;
-                newConds[2].DY = DofConstraint.Released;
-
-                //newConds[0].RZ = DofConstraint.Released;
-
+                newConds[0].RZ = DofConstraint.Released;
             }
 
             var kr = GetCondensedStiffness(kfull, newConds);
@@ -60,6 +55,7 @@ namespace BriefFiniteElementNet.Validation
 
             var d = (kr - kr2);
 
+            var dmax = d.Max(i => Math.Abs(i));
         }
 
         private static Matrix GetCondensedStiffness(Matrix k, params Constraint[] consts)
@@ -83,6 +79,9 @@ namespace BriefFiniteElementNet.Validation
 
                 if (cns.RZ == DofConstraint.Fixed) fixes++;
             }
+
+            if (fixes == 6 * n)
+                return k.Clone();
 
 
             var pf = new Matrix(fixes, 6 * n);

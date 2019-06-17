@@ -14,11 +14,11 @@ namespace BriefFiniteElementNet.Validation.Ui
         {
 
             //TestTri();
-            TestBar();
+            //TestBar();
             //TestTetra();
             //return;
             //BarElementTester.ValidateConsoleUniformLoad();
-
+            BarElementTester.TestEndReleaseStyiffness();
         }
 
         static void TestBar()

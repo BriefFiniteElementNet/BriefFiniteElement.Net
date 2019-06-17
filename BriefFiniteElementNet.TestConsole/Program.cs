@@ -33,7 +33,10 @@ namespace BriefFiniteElementNet.TestConsole
         static void Main(string[] args)
         {
             Console.Title = "BFE tests & temporary codes";
-            SimplySupportedBeamUDL();
+            TestIssue20();
+            //SimplySupportedBeamUDL();
+            //BeamShapeFunction();
+            //BarElementTester.TestEndReleaseStyiffness();
 
             //Test_P_Delta_matrix();
             //TestSparseRow();
@@ -59,7 +62,7 @@ namespace BriefFiniteElementNet.TestConsole
             //BarElementTester.ValidateConsoleUniformLoad();
             //BarElementTester.TestEndreleaseInternalForce();
             //SingleSpanBeamWithOverhang();
-            SingleSpanBeamWithOverhang();
+            //SingleSpanBeamWithOverhang();
             //TestTrussShapeFunction();
             //new BriefFiniteElementNet.Tests.BarElementTests().barelement_endrelease();
             //new BarElementTester.Test_Trapezoid_1
@@ -85,6 +88,45 @@ namespace BriefFiniteElementNet.TestConsole
             Console.ReadKey();
         }
 
+
+        /// <summary>
+        /// for issue # 20
+        /// </summary>
+        static void TestIssue20()
+        {
+            var model = new Model();
+
+            model.Nodes.Add(new Node(0, 0, 0) { Label = "n1" });
+            model.Nodes.Add(new Node(0, 0, 6) { Label = "n2" });
+            model.Nodes.Add(new Node(6, 0, 6) { Label = "n3" });
+            model.Nodes.Add(new Node(6, 0, 0) { Label = "n4" });
+
+            model.Nodes["n1"].Constraints = Constraints.Fixed;
+            model.Nodes["n4"].Constraints = Constraints.Fixed;
+
+            model.Nodes["n2"].Loads.Add(new NodalLoad(new Force(10000, 0, 0, 0, 0, 0)));
+
+            model.Elements.Add(new BarElement(model.Nodes["n1"], model.Nodes["n2"]) { Label = "r1" });
+            model.Elements.Add(new BarElement(model.Nodes["n2"], model.Nodes["n3"]) { Label = "r2" });
+            model.Elements.Add(new BarElement(model.Nodes["n3"], model.Nodes["n4"]) { Label = "r3" });
+
+            (model.Elements["r1"] as BarElement).Section = new BriefFiniteElementNet.Sections.UniformGeometric1DSection(SectionGenerator.GetRectangularSection(0.01, 0.01));
+            (model.Elements["r2"] as BarElement).Section = new BriefFiniteElementNet.Sections.UniformGeometric1DSection(SectionGenerator.GetRectangularSection(0.01, 0.01));
+            (model.Elements["r3"] as BarElement).Section = new BriefFiniteElementNet.Sections.UniformGeometric1DSection(SectionGenerator.GetRectangularSection(0.01, 0.01));
+
+            (model.Elements["r1"] as BarElement).Material = BriefFiniteElementNet.Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210 * Math.Pow(10, 9), 0.3);
+            (model.Elements["r2"] as BarElement).Material = BriefFiniteElementNet.Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210 * Math.Pow(10, 9), 0.3);
+            (model.Elements["r3"] as BarElement).Material = BriefFiniteElementNet.Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210 * Math.Pow(10, 9), 0.3);
+
+            (model.Elements["r3"] as BarElement).StartReleaseCondition =
+            new Constraint(dx: DofConstraint.Fixed, dy: DofConstraint.Fixed, dz: DofConstraint.Fixed, rx: DofConstraint.Fixed, ry: DofConstraint.Released, rz: DofConstraint.Fixed);
+
+            model.Solve_MPC();
+
+            Console.WriteLine((model.Elements["r2"] as BarElement).GetInternalForceAt(1, LoadCase.DefaultLoadCase).My.ToString());
+            Console.WriteLine((model.Elements["r3"] as BarElement).GetInternalForceAt(-1, LoadCase.DefaultLoadCase).My.ToString());
+            Console.ReadKey();
+        }
         /*
 
                    3 kN/m                           
@@ -95,6 +137,34 @@ namespace BriefFiniteElementNet.TestConsole
         n1                         n2   
 
         */
+
+
+        public static void BeamShapeFunction()
+        {
+            var fix = Constraints.Fixed;
+
+            var beam1 = new BarElement(3);
+
+            beam1.Nodes[0] = new Node(0, 0, 0) { Constraints = fix };
+            beam1.Nodes[1] = new Node(1, 0, 0) { Constraints = fix };
+            beam1.Nodes[2] = new Node(2, 0, 0) { Constraints = fix };
+
+
+            var old = beam1.StartReleaseCondition;//.DZ = DofConstraint.Released;
+
+            old.DZ = DofConstraint.Released;
+            //old.RZ = DofConstraint.Released;
+
+            beam1.StartReleaseCondition = old;
+
+            
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y);
+
+            Polynomial[] ns, ms;
+
+            hlpr.GetShapeFunctions(beam1, out ns, out ms);
+
+        }
 
         public static void SimplySupportedBeamUDL()
         {
@@ -121,7 +191,7 @@ namespace BriefFiniteElementNet.TestConsole
             elm1.Section = section;
             elm1.Material = material;
 
-            var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, new Vector(0, 0, 1), -1, CoordinationSystem.Global);
+            var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, new Vector(0, 1, 1), -1, CoordinationSystem.Global);
             elm1.Loads.Add(u1);
 
             model.Solve_MPC();
