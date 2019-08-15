@@ -21,8 +21,8 @@ namespace BriefFiniteElementNet.Validation
 
             sp.Restart();
 
-            var at_b_a_mgr = TransformManagerL2G.At_B_A(A, B);
-            var a_b_at_mgr = TransformManagerL2G.A_B_At(A, B);
+            //var at_b_a_mgr = new TransformManagerL2G().At_B_A(A, B);
+            //var a_b_at_mgr = new TransformManagerL2G().A_B_At(A, B);
 
             sp.Stop();
 
@@ -36,11 +36,11 @@ namespace BriefFiniteElementNet.Validation
 
             System.Console.WriteLine("Non optimised took {0} ms", sp.ElapsedMilliseconds);
 
-            var d1 = (at_b_a_mgr - at_b_a_dir).ToArray().Max(i => Math.Abs(i));
-            var d2 = (a_b_at_mgr - a_b_at_dir).ToArray().Max(i => Math.Abs(i));
+           // var d1 = (at_b_a_mgr - at_b_a_dir).ToArray().Max(i => Math.Abs(i));
+            //var d2 = (a_b_at_mgr - a_b_at_dir).ToArray().Max(i => Math.Abs(i));
 
-            System.Console.WriteLine("ERR = {0} for {1}x{1} matrix", d1, dim);
-            System.Console.WriteLine("ERR = {0} for {1}x{1} matrix", d2, dim);
+            //System.Console.WriteLine("ERR = {0} for {1}x{1} matrix", d1, dim);
+            //System.Console.WriteLine("ERR = {0} for {1}x{1} matrix", d2, dim);
         }
     }
 }

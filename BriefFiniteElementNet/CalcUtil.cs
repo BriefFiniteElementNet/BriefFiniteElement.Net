@@ -20,8 +20,18 @@ namespace BriefFiniteElementNet
     /// </summary>
     public static class CalcUtil
     {
+        public static double DotProduct(double[] v1,double[] v2)
+        {
+            ThrowUtil.ThrowIf(v1.Length != v2.Length,"inconsistent sizes");
 
-        public static Matrix GetBarTransformationMatrix(Vector v,double _webRotation=0)
+            var buf = 0.0;
+
+            for (var i = 0; i < v1.Length; i++)
+                buf += v1[i] * v2[i];
+
+            return buf;
+        }
+        public static Matrix GetBarTransformationMatrix(Vector v, double _webRotation = 0)
         {
             var cxx = 0.0;
             var cxy = 0.0;
@@ -91,6 +101,136 @@ namespace BriefFiniteElementNet
             buf.FillColumn(0, pars[0], pars[1], pars[2]);
             buf.FillColumn(1, pars[3], pars[4], pars[5]);
             buf.FillColumn(2, pars[6], pars[7], pars[8]);
+
+            return buf;
+        }
+
+        public static Matrix GetBarTransformationMatrixnew(Vector v, double _webRotation = 0,MatrixPool pool=null)
+        {
+            var cxx = 0.0;
+            var cxy = 0.0;
+            var cxz = 0.0;
+
+            var cyx = 0.0;
+            var cyy = 0.0;
+            var cyz = 0.0;
+
+            var czx = 0.0;
+            var czy = 0.0;
+            var czz = 0.0;
+
+            var teta = _webRotation;
+
+            var s = _webRotation == 0 ? 0.0 : Math.Sin(teta * Math.PI / 180.0);
+            var c = _webRotation == 0 ? 1.0 : Math.Cos(teta * Math.PI / 180.0);
+
+            //var v = this.EndNode.Location - this.StartNode.Location;
+            //copied from MATLAB Codes for Finite Element Analysis, Solids and Structures by A.J.M.Ferreira p 107
+
+            
+
+            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
+            {
+                if (v.Z > 0)
+                {
+                    czx = 1;
+                    cyy = 1;
+                    cxz = -1;
+                }
+                else
+                {
+                    czx = -1;
+                    cyy = 1;
+                    cxz = 1;
+                }
+            }
+            else
+            {
+                var l = v.Length;
+                cxx = v.X / l;
+                cyx = v.Y / l;
+                czx = v.Z / l;
+                var d = Math.Sqrt(cxx * cxx + cyx * cyx);
+                cxy = -cyx / d;
+                cyy = cxx / d;
+                cxz = -cxx * czx / d;
+                cyz = -cyx * czx / d;
+                czz = d;
+            }
+
+            /*
+            var pars = new double[9];
+
+            pars[0] = cxx;
+            pars[1] = cxy * c + cxz * s;
+            pars[2] = -cxy * s + cxz * c;
+
+            pars[3] = cyx;
+            pars[4] = cyy * c + cyz * s;
+            pars[5] = -cyy * s + cyz * c;
+
+            pars[6] = czx;
+            pars[7] = czy * c + czz * s;
+            pars[8] = -czy * s + czz * c;
+            */
+
+            var buf =
+                pool == null ?
+                new Matrix(3, 3) : pool.Allocate(3, 3);
+
+            //buf.FillColumn(0, pars[0], pars[1], pars[2]);
+            buf.FillColumn(0, cxx, cxy * c + cxz * s, -cxy * s + cxz * c);
+            //buf.FillColumn(1, pars[3], pars[4], pars[5]);
+            buf.FillColumn(1, cyx, cyy * c + cyz * s, -cyy * s + cyz * c);
+            //buf.FillColumn(2, pars[6], pars[7], pars[8]);
+            buf.FillColumn(2, czx, czy * c + czz * s, -czy * s + czz * c);
+
+            if (buf.CoreArray.Any(ii => ii < 0.9 && ii > 0.6))
+                Guid.NewGuid();
+
+
+            //var v2 = GetBarTransformationMatrixV2(v);
+
+            return buf;
+        }
+
+        public static Matrix GetBarTransformationMatrixV2(Vector v, double _webRotation = 0, MatrixPool pool = null)
+        {
+            //FROM https://searchcode.com/codesearch/view/11708439/
+            var r = v.Length;
+            var rho = Math.Atan2(v.Y, v.X);
+            var theta = Math.Acos(v.Z / r);
+
+            //from MSA by H.Rahami
+            var a = theta;
+            var b = rho;
+            var L = r;
+            var c = _webRotation * Math.PI / 180.0;
+
+            var ca = Math.Cos(a);
+            var sa = Math.Sin(a);
+            var cb = Math.Cos(b);
+            var sb = Math.Sin(b);
+            var cc = Math.Cos(c);
+            var sc = Math.Sin(c);
+
+            var r1 = new Matrix(3, 3);
+            var r2 = new Matrix(3, 3);
+            var r3 = new Matrix(3, 3);
+
+            r1.FillRow(0, 1, 0, 0);
+            r1.FillRow(1, 0, cc, sc);
+            r1.FillRow(2, 0, -sc, cc);
+
+            r2.FillRow(0, cb, sb, 0);
+            r2.FillRow(1, -sb, cb, 0);
+            r2.FillRow(2, 0, 0, 1);
+
+            r3.FillRow(0,ca, 0, sa);
+            r3.FillRow(1, 0, 1, 0);
+            r3.FillRow(2,-sa, 0, ca);
+
+            var buf = r1 * r2 * r3;
 
             return buf;
         }
@@ -267,6 +407,9 @@ namespace BriefFiniteElementNet
                     return new CholeskySolverFactory();
                     break;
                 case BuiltInSolverType.ConjugateGradient:
+                    return new ConjugateGradientFactory();// PCG(new SSOR());
+                    break;
+                case BuiltInSolverType.Lu:
                     return new ConjugateGradientFactory();// PCG(new SSOR());
                     break;
                 default:
@@ -1597,7 +1740,12 @@ namespace BriefFiniteElementNet
             {
                 var stDof = 6 * node.Index;
 
-                var stm = node.Settlements;
+                var stm = Displacement.Zero;
+
+                foreach (var stlm in node.Settlements)
+                    if (stlm.LoadCase == loadCase)
+                        stm += stlm.Displacement;
+
 
                 #region 
 

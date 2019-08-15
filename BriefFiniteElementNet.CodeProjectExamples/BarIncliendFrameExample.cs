@@ -70,7 +70,10 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             Console.WriteLine("Displacement of n1: {0}", d1);
 
 
-            Controls.BarInternalForceVisualizer.VisualizeInNewWindow((model.Elements["e1"] as BarElement));
+            var x = 1.0;//need to find internal force at x = 1.0 m
+            var iso = (model.Elements["e3"] as BarElement).LocalCoordsToIsoCoords(x);//find the location of 1m in iso coordination system
+            var e4Force = (model.Elements["e3"] as BarElement).GetInternalForceAt(iso[0]);//find internal force
+            Console.WriteLine("internal force at x={0} is {1}", x, e4Force);
 
             //Controls.ModelInternalForceVisualizer.VisualizeInNewWindow(model);
 

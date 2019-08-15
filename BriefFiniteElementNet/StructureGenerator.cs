@@ -272,7 +272,7 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static Model Generate3DBarElementGrid(int m, int n, int l)
+        public static Model Generate3DBarElementGrid(int m, int n, int l,Func<BarElement> factory)
         {
             var buf = new Model();
 
@@ -303,7 +303,7 @@ namespace BriefFiniteElementNet
                 {
                     for (int j = 0; j < m; j++)
                     {
-                        var elm = new BarElement();
+                        var elm = factory();// new BarElement();
                         elm.StartNode = nodes[j, i, k];
                         elm.EndNode = nodes[j, i, k + 1];
                         buf.Elements.Add(elm);
@@ -318,7 +318,7 @@ namespace BriefFiniteElementNet
                 {
                     for (int j = 0; j < m; j++)
                     {
-                        var elm = new BarElement();
+                        var elm = factory();//new BarElement();
                         elm.StartNode = nodes[j, i, k];
                         elm.EndNode = nodes[j, i + 1, k];
                         buf.Elements.Add(elm);
@@ -333,7 +333,7 @@ namespace BriefFiniteElementNet
                     for (int i = 0; i < n; i++)
 
                     {
-                        var elm = new BarElement();
+                        var elm = factory();//new BarElement();
                         elm.StartNode = nodes[j, i, k];
                         elm.EndNode = nodes[j + 1, i, k];
                         buf.Elements.Add(elm);
@@ -382,6 +382,14 @@ namespace BriefFiniteElementNet
 
             return buf;
         }
+
+        public static Model Generate3DBarElementGrid(int m, int n, int l)
+        {
+            var fnc = new Func<BarElement>(() => new BarElement());
+
+            return Generate3DBarElementGrid(m, n, l, fnc);
+        }
+
 
         /// <summary>
         /// 

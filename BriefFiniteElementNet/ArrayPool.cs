@@ -8,6 +8,37 @@ using System.Text;
 
 namespace BriefFiniteElementNet
 {
+
+    public class ListPool<T>
+    {
+        private readonly Stack<List<T>> _pool = new Stack<List<T>>();
+
+        //public readonly T[] Empty = new T[0];
+
+        public virtual void Clear()
+        {
+            _pool.Clear();
+        }
+
+        public virtual List<T> Allocate()
+        {
+            var buf = _pool.Any() ? _pool.Pop() : new List<T>();// .TryGetValue(size, out candidates) && candidates.Count > 0 ? candidates.Pop() : new T[size];
+
+            buf.Clear();
+
+            return buf;
+        }
+
+        public virtual void Free(List<T> array)
+        {
+            if (array == null) throw new ArgumentNullException("array");
+
+            array.Clear();
+
+            _pool.Push(array);
+        }
+    }
+
     public class ArrayPool<T>
     {
         private readonly Dictionary<int, Stack<T[]>> _pool = new Dictionary<int, Stack<T[]>>();
@@ -27,6 +58,12 @@ namespace BriefFiniteElementNet
 
             Stack<T[]> candidates;
 
+            if (_pool.TryGetValue(size, out candidates))
+                if (candidates.Count > 0)
+                    return candidates.Pop();
+
+            return new T[size];
+
             return _pool.TryGetValue(size, out candidates) && candidates.Count > 0 ? candidates.Pop() : new T[size];
         }
 
@@ -41,8 +78,10 @@ namespace BriefFiniteElementNet
             if (!_pool.TryGetValue(array.Length, out candidates))
                 _pool.Add(array.Length, candidates = new Stack<T[]>());
 
+            Array.Clear(array, 0, array.Length);
+
             if (candidates.Count < MaxQLength)
-                if (!candidates.Contains(array))
+                //if (!candidates.Contains(array))
                 {
                     candidates.Push(array);
                     //Console.WriteLine("Freeing");
@@ -79,25 +118,41 @@ namespace BriefFiniteElementNet
         }
     }
 
-    public static class MatrixPool
+    public class MatrixPool
     {
-        private static ConcurrentArrayPool<double> Pool = new ConcurrentArrayPool<double>();
+        public int TotalRents;
+        public int TotalReturns;
 
-        public static Matrix Allocate(int rows, int columns)
+        public MatrixPool()
+        {
+            Pool = new ArrayPool<double>();
+        }
+
+        public MatrixPool(ArrayPool<double> pool)
+        {
+            Pool = pool;
+        }
+
+        private ArrayPool<double> Pool;//= new ArrayPool<double>();
+
+        public Matrix Allocate(int rows, int columns)
         {
             var arr = Pool.Allocate(rows * columns);
 
             for (var i = 0; i < arr.Length; i++)
                 arr[i] = 0.0;
 
-            var buf = new Matrix(rows, columns, arr);
+            var buf = new Matrix(rows, columns, ref arr);
 
             buf.UsePool = true;
+            buf.Pool = this;
+
+            TotalRents++;
 
             return buf;
         }
 
-        public static void Free(params Matrix[] matrices)
+        public void Free(params Matrix[] matrices)
         {
             foreach(var mtx in matrices)
             {
@@ -106,6 +161,7 @@ namespace BriefFiniteElementNet
 
                 Pool.Free(mtx.CoreArray);
                 mtx.CoreArray = null;
+                TotalReturns++;
             }
         }
     }

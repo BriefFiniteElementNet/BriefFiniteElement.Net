@@ -95,12 +95,20 @@ namespace BriefFiniteElementNet.Integration
         /// </summary>
         public IMatrixFunction H;
 
+
+        public MatrixPool MatrixPool;
+
+
         /// <summary>
         /// Computes the I.
         /// </summary>
         /// <returns>The I</returns>
         public Matrix Integrate()
         {
+            if (MatrixPool == null)
+                MatrixPool = new MatrixPool();
+
+
             if (XiPointCount < 1 || EtaPointCount < 1 || GammaPointCount < 1)
                 throw new NotSupportedException();
 
@@ -141,23 +149,37 @@ namespace BriefFiniteElementNet.Integration
 
                         //initiate I, phi and beta
                         if (beta == null)
-                            beta = new Matrix(val.RowCount, val.ColumnCount);
+                            beta = 
+                                //new Matrix(val.RowCount, val.ColumnCount);
+                                MatrixPool.Allocate(val.RowCount, val.ColumnCount);
 
                         if (phi == null)
-                            phi = new Matrix(val.RowCount, val.ColumnCount);
-
+                            phi = 
+                                //new Matrix(val.RowCount, val.ColumnCount);
+                                MatrixPool.Allocate(val.RowCount, val.ColumnCount);
+    
                         if (I == null)
-                            I = new Matrix(val.RowCount, val.ColumnCount);
-
+                            I = 
+                                //new Matrix(val.RowCount, val.ColumnCount);
+                                MatrixPool.Allocate(val.RowCount, val.ColumnCount);
 
                         val.MultiplyByConstant((g2(noj, gammaK) - g1(noj, gammaK)) / 2 * wi[i]);
-                        beta += val;
+
+                        //beta += val;
+                        Matrix.InplacePlus(beta, val);
+
+                        val.ReturnToPool();
                     }
 
-                    phi += (f2(gammaK) - f1(gammaK))/2*wj[j]*beta;
+                    Matrix.InplacePlus(phi, beta, (f2(gammaK) - f1(gammaK)) / 2 * wj[j]);
+
+                    beta.ReturnToPool();
                 }
 
-                I += (a2 - a1)/2*wk[k]*phi;
+                Matrix.InplacePlus(I, phi, (a2 - a1) / 2 * wk[k]);
+
+                phi.ReturnToPool();
+                //I += (a2 - a1) / 2 * wk[k] * phi;
             }
 
             return I;

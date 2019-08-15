@@ -19,18 +19,18 @@ namespace BriefFiniteElementNet.Validation
             //by MURAT EFE GÜNEY
             //p. 51: 2.3 Condensation and Constraint Equations
 
-            var elm = new BarElement(3);
+            var elm = new BarElement(2);
 
             elm.Nodes[0] = new Node(-1, 0, 0);
             elm.Nodes[1] = new Node(0, 0, 0);
-            elm.Nodes[2] = new Node(1, 0, 0);
+            //elm.Nodes[2] = new Node(1, 0, 0);
 
 
             //elm.StartReleaseCondition = Constraints.FixedRX;
             elm.Section = new UniformParametric1DSection(1, 2, 3, 4);
             elm.Material = new UniformIsotropicMaterial(1, 0.3);
 
-            var kfull = elm.GetLocalStifnessMatrix();
+            
 
             var newConds = new Constraint[elm.NodeCount];
 
@@ -41,14 +41,21 @@ namespace BriefFiniteElementNet.Validation
                     newConds[i] = Constraints.Fixed;
                 }
 
-                newConds[0].RZ = DofConstraint.Released;
+                newConds[0].DZ = DofConstraint.Released;
             }
 
-            var kr = GetCondensedStiffness(kfull, newConds);
+            
 
             Array.Copy(newConds, elm._nodalReleaseConditions, newConds.Length);
             
             var kr2 = elm.GetLocalStifnessMatrix();
+
+            for (var i = 0; i < elm.NodeCount; i++)
+                elm.NodalReleaseConditions[i] = Constraint.Fixed;
+
+            var kfull = elm.GetLocalStifnessMatrix();
+            var kr = GetCondensedStiffness(kfull, newConds);
+
 
             var ratio = Matrix.DotDivide(kr, kr2);
             ratio.Replace(double.NaN, 0);
@@ -169,7 +176,7 @@ namespace BriefFiniteElementNet.Validation
 
             var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, -Vector.K, w, CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y);
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
 
             var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
@@ -219,7 +226,7 @@ namespace BriefFiniteElementNet.Validation
 
             var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, -Vector.J, w, CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z);
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z,elm);
 
             var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
@@ -464,9 +471,11 @@ namespace BriefFiniteElementNet.Validation
             //load.StartMagnitude = new double[] { w };
             //load.EndMagnitude = new double[] { w };
 
-            var hlpr = new BriefFiniteElementNet.ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y);
+            
 
             var elm = new BarElement(new Node(0, 0, 0), new Node(2, 0, 0));
+
+            var hlpr = new BriefFiniteElementNet.ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y,elm);
 
             var l = (elm.Nodes[0].Location - elm.Nodes[1].Location).Length;
 
@@ -633,9 +642,11 @@ namespace BriefFiniteElementNet.Validation
             //load.StartMagnitude = new double[] { w };
             //load.EndMagnitude = new double[] { w };
 
-            var hlpr = new BriefFiniteElementNet.ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z);
+            
 
             var elm = new BarElement(new Node(0, 0, 0), new Node(2, 0, 0));
+
+            var hlpr = new BriefFiniteElementNet.ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z, elm);
 
             var l = (elm.Nodes[0].Location - elm.Nodes[1].Location).Length;
 

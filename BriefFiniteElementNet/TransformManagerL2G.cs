@@ -10,18 +10,29 @@ namespace BriefFiniteElementNet
     /// </summary>
     public class TransformManagerL2G
     {
+        public MatrixPool MatrixPool;
+
+        public void ReturnMatrixesToPool()
+        {
+            if (LambdaMatrix != null)
+                LambdaMatrix.ReturnToPool();
+
+            if (TransformMatrix != null)
+                TransformMatrix.ReturnToPool();
+        }
 
         /// <summary>
         /// Makes a new <see cref="TransformManagerL2G"/> from a transformation matrix.
         /// </summary>
         /// <param name="transformMatrix">The T Matrix.</param>
         /// <returns>new TransformManagerL2G</returns>
-        public static TransformManagerL2G MakeFromTransformationMatrix(Matrix transformMatrix)
+        public static TransformManagerL2G MakeFromTransformationMatrix(Matrix transformMatrix,MatrixPool pool=null)
         {
             var buf = new TransformManagerL2G();
             buf.TransformMatrix = transformMatrix;
-
             buf.VeryMagicNumber = 2;
+
+            buf.MatrixPool = pool == null ? new MatrixPool() : pool;
 
             return buf;
         }
@@ -31,16 +42,22 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="lambdaMatrix">The λ Matrix.</param>
         /// <returns>new TransformManagerL2G</returns>
-        public static TransformManagerL2G MakeFromLambdaMatrix(Matrix lambdaMatrix)
+        public static TransformManagerL2G MakeFromLambdaMatrix(Matrix lambdaMatrix, MatrixPool pool = null)
         {
             var buf = new TransformManagerL2G();
             buf.LambdaMatrix = lambdaMatrix;
 
             buf.VeryMagicNumber = 1;
 
+            buf.MatrixPool = pool == null ? new MatrixPool() : pool;
+
             return buf;
         }
 
+        private TransformManagerL2G()
+        {
+
+        }
 
         /// <summary>
         /// The transform
@@ -133,6 +150,21 @@ namespace BriefFiniteElementNet
             var buf = new List<Point>();
 
             foreach (var point in points)
+                buf.Add(TransformLocalToGlobal(point));
+
+            return buf.ToArray();
+        }
+
+        /// <summary>
+        /// Transforms the specified forces.
+        /// </summary>
+        /// <param name="forces">The forces.</param>
+        /// <returns>Transformed forces (force in new coordination system : global)</returns>
+        public Force[] TransformLocalToGlobal(IEnumerable<Force> forces)
+        {
+            var buf = new List<Force>();
+
+            foreach (var point in forces)
                 buf.Add(TransformLocalToGlobal(point));
 
             return buf.ToArray();
@@ -252,6 +284,21 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
+        /// Transforms back the specified Force.
+        /// </summary>
+        /// <param name="force">The force.</param>
+        /// <returns>Back transformed force (force in original coordination system : local)</returns>
+        public Force[] TransformGlobalToLocal(Force[] force)
+        {
+            var buf = (Force[])force.Clone();
+
+            for (var i = 0; i < force.Length; i++)
+                buf[i] = TransformGlobalToLocal(buf[i]);
+
+            return buf;
+        }
+
+        /// <summary>
         /// Transforms back the specified displacement.
         /// </summary>
         /// <param name="vector"></param>
@@ -262,6 +309,21 @@ namespace BriefFiniteElementNet
             var rot = TransformGlobalToLocal(vector.Rotations);
 
             return new Displacement(disp, rot);
+        }
+
+        /// <summary>
+        /// Transforms back the specified displacement.
+        /// </summary>
+        /// <param name="vector"></param>
+        /// <returns></returns>
+        public Displacement[] TransformGlobalToLocal(Displacement[] vector)
+        {
+            var buf = (Displacement[])vector.Clone();
+
+            for (var i = 0; i < buf.Length; i++)
+                buf[i] = TransformGlobalToLocal(buf[i]);
+
+            return buf;
         }
 
         /// <summary>
@@ -377,7 +439,7 @@ namespace BriefFiniteElementNet
         /// <param name="A">the A</param>
         /// <param name="B">The B</param>
         /// <returns>C</returns>
-        internal static Matrix At_B_A(Matrix A, Matrix B)
+        internal Matrix At_B_A(Matrix A, Matrix B)
         {
             var matrix = B;
 
@@ -401,7 +463,9 @@ namespace BriefFiniteElementNet
             var a32 = A[2, 1];
             var a33 = A[2, 2];
 
-            var buf = new Matrix(matrix.RowCount, matrix.ColumnCount);
+            var buf =
+                //new Matrix(matrix.RowCount, matrix.ColumnCount);
+                MatrixPool.Allocate(matrix.RowCount, matrix.ColumnCount);
 
             double b_i_j, b_i_j1, b_i_j2, b_i1_j, b_i1_j1, b_i1_j2, b_i2_j, b_i2_j1, b_i2_j2;
 
@@ -448,7 +512,7 @@ namespace BriefFiniteElementNet
         /// <param name="A">the A</param>
         /// <param name="B">The B</param>
         /// <returns>C</returns>
-        internal static Matrix A_B_At(Matrix A, Matrix B)
+        internal Matrix A_B_At(Matrix A, Matrix B)
         {
             var matrix = B;
 
@@ -472,7 +536,9 @@ namespace BriefFiniteElementNet
             var a23 = A[1, 2];
             var a33 = A[2, 2];
 
-            var buf = new Matrix(matrix.RowCount, matrix.ColumnCount);
+            var buf = 
+                //new Matrix(matrix.RowCount, matrix.ColumnCount);
+                MatrixPool.Allocate(matrix.RowCount, matrix.ColumnCount);
 
             double b_i_j, b_i_j1, b_i_j2, b_i1_j, b_i1_j1, b_i1_j2, b_i2_j, b_i2_j1, b_i2_j2;
 

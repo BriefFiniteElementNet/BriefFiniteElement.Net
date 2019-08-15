@@ -246,7 +246,7 @@ namespace BriefFiniteElementNet
         public Element this[int index]
         {
             get { return _list[index]; }
-            set { _list[index] = value; }
+            set { _list[index] = value;value.Parent = this.parent; }
         }
 
         #endregion

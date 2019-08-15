@@ -127,7 +127,7 @@ namespace BriefFiniteElementNet
             }
         }
 
-        internal static double[] ToVector(Force force)
+        public static double[] ToVector(Force force)
         {
             return new double[] { force.fx, force.fy, force.fz, force.mx, force.my, force.mz };
         }
@@ -305,6 +305,21 @@ namespace BriefFiniteElementNet
         }
 
         #endregion
+
+        public static Force DotDivide(Force f1, Force f2)
+        {
+            var buf = new Force();
+
+            buf.fx = f1.fx / f2.fx;
+            buf.fy = f1.fy / f2.fy;
+            buf.fz = f1.fz / f2.fz;
+
+            buf.mx = f1.mx / f2.mx;
+            buf.my = f1.my / f2.my;
+            buf.mz = f1.mz / f2.mz;
+
+            return buf;
+        }
 
         public bool Equals(Force other)
         {

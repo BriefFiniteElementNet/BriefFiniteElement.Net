@@ -126,7 +126,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             #endregion
 
-            var buf = MatrixPool.Allocate(3, 9);
+            var buf = new Matrix(3, 9);
 
             for (var i = 0; i < 9; i++)
             {
@@ -156,7 +156,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var mat = tri._material.GetMaterialPropertiesAt(isoCoords);
             var t = tri.Section.GetThicknessAt(isoCoords);
 
-            var d = MatrixPool.Allocate(3, 3);
+            var d = new Matrix(3, 3);
 
             {
                 var cf = t*t*t/12;
@@ -224,7 +224,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var y31 = p31.Y;
             var y12 = p12.Y;
 
-            var buf = MatrixPool.Allocate(2, 2);
+            var buf = new Matrix(2, 2);
 
             buf[0, 0] = x31;
             buf[1, 1] = y12;

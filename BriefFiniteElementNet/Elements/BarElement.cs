@@ -187,6 +187,14 @@ namespace BriefFiniteElementNet.Elements
             set { _nodalReleaseConditions[_nodalReleaseConditions.Length - 1] = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the connection constraints od element to the all node
+        /// </summary>
+        public Constraint[] NodalReleaseConditions
+        {
+            get { return _nodalReleaseConditions; }
+            set { _nodalReleaseConditions = value; }
+        }
         #endregion
 
 
@@ -346,6 +354,19 @@ namespace BriefFiniteElementNet.Elements
 
         public override Matrix GetLambdaMatrix()
         {
+            var p0 = nodes.First().Location;// + TrialDisplacements[0].Displacements;
+            var p1 = nodes.Last().Location;// + TrialDisplacements[1].Displacements;
+
+            var v = p1 - p0;
+
+            var tr = CalcUtil.GetBarTransformationMatrix(v);//, 0, this.MatrixPool);
+
+            //tr = tr.Transpose();// 
+            tr.InPlaceTranspose();
+
+            return tr;
+            /*
+
             var cxx = 0.0;
             var cxy = 0.0;
             var cxz = 0.0;
@@ -395,6 +416,7 @@ namespace BriefFiniteElementNet.Elements
             }
 
             //transformation for webrotation
+            
             var pars = new double[9];
 
             pars[0] = cxx;
@@ -408,19 +430,22 @@ namespace BriefFiniteElementNet.Elements
             pars[6] = czx;
             pars[7] = czy * c + czz * s;
             pars[8] = -czy * s + czz * c;
+            
 
+            var buf = 
+                //new Matrix(3, 3);
+                MatrixPool.Allocate(3, 3);
 
-            var buf = new Matrix(3, 3);
+            //buf.FillRow(0, pars[0], pars[1], pars[2]);
+            //buf.FillRow(1, pars[3], pars[4], pars[5]);
+            //buf.FillRow(2, pars[6], pars[7], pars[8]);
 
-            //buf.FillColumn(0, pars[0], pars[1], pars[2]);
-            //buf.FillColumn(1, pars[3], pars[4], pars[5]);
-            //buf.FillColumn(2, pars[6], pars[7], pars[8]);
-
-            buf.FillRow(0, pars[0], pars[1], pars[2]);
-            buf.FillRow(1, pars[3], pars[4], pars[5]);
-            buf.FillRow(2, pars[6], pars[7], pars[8]);
+            buf.FillRow(0, cxx, cxy * c + cxz * s, -cxy * s + cxz * c);
+            buf.FillRow(1, cyx, cyy * c + cyz * s, -cyy * s + cyz * c);
+            buf.FillRow(2, czx, czy * c + czz * s, -czy * s + czz * c);
 
             return buf;
+            */
         }
 
         public override IElementHelper[] GetHelpers()
@@ -485,11 +510,17 @@ namespace BriefFiniteElementNet.Elements
         {
             var local = GetLocalStifnessMatrix();
 
-            var t = GetTransformationMatrix();
+            //var t = GetTransformationMatrix();
 
-            var mgr = TransformManagerL2G.MakeFromTransformationMatrix(t);
+            //var mgr = TransformManagerL2G.MakeFromTransformationMatrix(t);
+
+            var mgr = this.GetTransformationManager();
 
             var buf = mgr.TransformLocalToGlobal(local);
+
+            local.ReturnToPool();
+
+            mgr.ReturnMatrixesToPool();
 
             return buf;
         }
@@ -559,7 +590,9 @@ namespace BriefFiniteElementNet.Elements
             pars[8] = -czy * s + czz * c;
 
 
-            var buf = new Matrix(3, 3);
+            var buf =
+            //new Matrix(3, 3);
+            MatrixPool.Allocate(3, 3);
 
             buf.FillColumn(0, pars[0], pars[1], pars[2]);
             buf.FillColumn(1, pars[3], pars[4], pars[5]);
@@ -595,13 +628,12 @@ namespace BriefFiniteElementNet.Elements
         /// Gets the stifness matrix in local coordination system.
         /// </summary>
         /// <returns>stiffness matrix</returns>
-        public Matrix GetLocalStifnessMatrix()
+        public virtual Matrix GetLocalStifnessMatrix()
         {
             var helpers = GetElementHelpers();
 
-
-
-            var buf = new Matrix(6 * nodes.Length, 6 * nodes.Length);
+            var buf =
+                MatrixPool.Allocate(6 * nodes.Length, 6 * nodes.Length);
 
             //var transMatrix = GetTransformationMatrix();
 
@@ -616,15 +648,17 @@ namespace BriefFiniteElementNet.Elements
 
                 for (var ii = 0; ii < dofs.Length; ii++)
                 {
-                    var bi = dofs[ii].NodeIndex*6 + (int)dofs[ii].Dof;
+                    var bi = dofs[ii].NodeIndex * 6 + (int)dofs[ii].Dof;
 
                     for (var jj = 0; jj < dofs.Length; jj++)
                     {
-                        var bj = dofs[jj].NodeIndex*6 + (int)dofs[jj].Dof;
+                        var bj = dofs[jj].NodeIndex * 6 + (int)dofs[jj].Dof;
 
                         buf[bi, bj] += ki[ii, jj];
                     }
                 }
+
+                ki.ReturnToPool();
             }
 
             return buf;
@@ -706,13 +740,13 @@ namespace BriefFiniteElementNet.Elements
         /// Gets the list of element helpers reagarding <see cref="Behavior"/>.
         /// </summary>
         /// <returns></returns>
-        private List<IElementHelper> GetElementHelpers()
+        protected List<IElementHelper> GetElementHelpers()
         {
             var helpers = new List<IElementHelper>();
 
             if ((this._behavior & BarElementBehaviour.BeamYEulerBernoulli) != 0)
             {
-                helpers.Add(new EulerBernoulliBeamHelper(BeamDirection.Y));
+                helpers.Add(new EulerBernoulliBeamHelper(BeamDirection.Y,this));
             }
 
             if ((this._behavior & BarElementBehaviour.BeamYTimoshenko) != 0)
@@ -722,7 +756,7 @@ namespace BriefFiniteElementNet.Elements
 
             if ((this._behavior & BarElementBehaviour.BeamZEulerBernoulli) != 0)
             {
-                helpers.Add(new EulerBernoulliBeamHelper(BeamDirection.Z));
+                helpers.Add(new EulerBernoulliBeamHelper(BeamDirection.Z, this));
             }
 
             if ((this._behavior & BarElementBehaviour.BeamZTimoshenko) != 0)
@@ -732,12 +766,12 @@ namespace BriefFiniteElementNet.Elements
 
             if ((this._behavior & BarElementBehaviour.Truss) != 0)
             {
-                helpers.Add(new TrussHelper());
+                helpers.Add(new TrussHelper(this));
             }
 
             if ((this._behavior & BarElementBehaviour.Shaft) != 0)
             {
-                helpers.Add(new ShaftHelper());
+                helpers.Add(new ShaftHelper(this));
             }
 
             return helpers;
@@ -829,9 +863,8 @@ namespace BriefFiniteElementNet.Elements
         /// <remarks>
         /// Will calculate the internal forces of member regarding the <see cref="loadCase" />
         /// </remarks>
-        public Force GetInternalForceAt(double xi, LoadCase loadCase)
+        public virtual Force GetInternalForceAt(double xi, LoadCase loadCase)
         {
-
             var helpers = GetHelpers();
 
             var lds = new Displacement[this.Nodes.Length];
@@ -1000,7 +1033,12 @@ namespace BriefFiniteElementNet.Elements
         
         public Displacement GetInternalDisplacementAt(double xi, LoadCombination combination)
         {
-            throw new NotImplementedException();
+            var buf = new Displacement();
+
+            foreach (var pair in combination)
+                buf += pair.Value * GetInternalDisplacementAt(xi, pair.Key);
+
+            return buf;
         }
 
         
@@ -1061,16 +1099,16 @@ namespace BriefFiniteElementNet.Elements
         {
             var cachekey = "{54CEC6B2-F882-4505-9FC0-E7844C99F249}";
 
-            object chd;
+            Mathh.Polynomial chd;
 
-            if (this.Cache.TryGetValue(cachekey, out chd))//prevent double calculation
-            {
-                return (chd as Mathh.Polynomial);
-            }
+            if (this.TryGetCache(cachekey, out chd))//prevent double calculation
+                if (IsValidIsoToLocalConverter(chd))//Validation of chached polynomial to see if is outdated due to change in node locations
+                    return chd;
+
+            chd = null;
 
             var targetElement = this;
             var bar = this;
-
 
             Mathh.Polynomial x_xi = null;//x(ξ)
 
@@ -1097,10 +1135,15 @@ namespace BriefFiniteElementNet.Elements
                 //polinomial degree of shape function is n-1
 
 
-                var mtx = new Matrix(n, n);
-                var right = new Matrix(n, 1);
+                var mtx = 
+                    //new Matrix(n, n);
+                    MatrixPool.Allocate(n, n);
 
-                var o = n - 1;
+                var right = 
+                    //new Matrix(n, 1);
+                    MatrixPool.Allocate(n, 1);
+
+                //var o = n - 1;
 
                 for (var i = 0; i < n; i++)
                 {
@@ -1117,8 +1160,49 @@ namespace BriefFiniteElementNet.Elements
                     }
                 }
 
-                var as_ = mtx.Inverse() * right;
-                var poly = x_xi = new Mathh.Polynomial(as_.CoreArray);
+                //var as_ = mtx.Inverse() * right;
+                var as_ = mtx.Solve(right.CoreArray);
+
+                x_xi = new Mathh.Polynomial(as_);
+
+
+                right.ReturnToPool();
+                mtx.ReturnToPool();
+            }
+
+            SetCache(cachekey, x_xi);
+
+            return x_xi;
+        }
+
+        /// <summary>
+        /// determines is the defined converter a valid one for converting iso coord to local coords
+        /// </summary>
+        /// <param name="converter"></param>
+        /// <returns></returns>
+        private bool IsValidIsoToLocalConverter(Mathh.Polynomial converter)
+        {
+            return true;
+            var bar = this;
+            var n = NodeCount;
+
+            var xs = new double[n];
+            var xi_s = new double[n];
+
+            {
+                //var conds = new List<Tuple<double, double>>();//x[i] , ξ[i]
+
+                for (var i = 0; i < n; i++)
+                {
+                    var deltaXi = 2.0 / (n - 1);
+                    var xi = (bar.Nodes[i].Location - bar.Nodes[0].Location).Length;
+                    var xi_i = -1 + deltaXi * i;
+
+                    xs[i] = xi;
+                    xi_s[i] = xi_i;
+                }
+
+                var poly = converter;
 
                 {//test
                     for (var i = 0; i < n; i++)
@@ -1126,12 +1210,12 @@ namespace BriefFiniteElementNet.Elements
                         var epsilon = poly.Evaluate(xi_s[i]) - xs[i];
 
                         if (Math.Abs(epsilon) > 1e-10)
-                            System.Diagnostics.Debug.Fail("check failed");
+                            return false;
                     }
                 }
             }
 
-            return (Mathh.Polynomial)(Cache[cachekey] = x_xi);
+            return true;
         }
 
         /// <summary>

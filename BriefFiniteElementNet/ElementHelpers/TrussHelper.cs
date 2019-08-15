@@ -16,6 +16,94 @@ namespace BriefFiniteElementNet.ElementHelpers
     {
         public Element TargetElement { get; set; }
 
+        public TrussHelper(Element targetElement)
+        {
+            TargetElement = targetElement;
+
+            {//loading condistions list pool from element's cache
+                var listPoolKey = "98821744-2A0D-49F0-AAEF-F44DBCED700E";
+
+                object obj;
+
+                targetElement.TryGetCache(listPoolKey, out CondsListPool);
+
+                if (CondsListPool == null)
+                {
+                    CondsListPool = new ListPool<Condition>();
+
+                    if (targetElement != null)
+                        targetElement.SetCache(listPoolKey, CondsListPool);
+                }
+
+            }
+        }
+
+        [NonSerialized]
+        private ListPool<Condition> CondsListPool = new ListPool<Condition>();
+
+        internal class Condition
+        {
+            public Condition()
+            {
+            }
+
+            public Condition(int nodeNumber, double xi, int differentialDegree, double value)
+            {
+                NodeNumber = nodeNumber;
+                Xi = xi;
+                DifferentialDegree = differentialDegree;
+                RightSide = value;
+            }
+
+            public int NodeNumber;
+
+            public double Xi;
+
+            public int DifferentialDegree;
+
+            public double RightSide;
+
+            public override string ToString()
+            {
+                var sb = new StringBuilder();
+
+                sb.Append("N");
+
+                sb.Append(NodeNumber);
+
+                for (int i = 0; i < DifferentialDegree; i++)
+                {
+                    sb.Append("'");
+                }
+
+                sb.AppendFormat("({0}) = {1}", Xi, RightSide);
+
+                return sb.ToString();
+            }
+
+            public class ConditionEqualityComparer : IComparer<Condition>
+            {
+                public int Compare(Condition x, Condition y)
+                {
+                    var t = 0;
+
+                    if ((t = x.NodeNumber.CompareTo(y.NodeNumber)) != 0)
+                        return t;
+
+                    if ((t = x.Xi.CompareTo(y.Xi)) != 0)
+                        return t;
+
+                    if ((t = x.DifferentialDegree.CompareTo(y.DifferentialDegree)) != 0)
+                        return t;
+
+                    if ((t = x.RightSide.CompareTo(y.RightSide)) != 0)
+                        return t;
+
+                    return t;
+                }
+            }
+        }
+
         /// <inheritdoc/>
         public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
@@ -24,51 +112,27 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (elm == null)
                 throw new Exception();
 
-            double[] v1 = null;
+            var n = GetNMatrixAt(targetElement, isoCoords);
 
-            {//new
-                var n = GetNMatrixAt(targetElement, isoCoords);
+            var buf = targetElement.MatrixPool.Allocate(1, n.ColumnCount);
 
-                var buf = n.ExtractRow(1);
-                var l = (targetElement.Nodes.First().Location - targetElement.Nodes.Last().Location).Length;
+            for (var i = 0; i < buf.ColumnCount; i++)
+                buf[0, i] = n[1, i];
 
-                buf.MultiplyByConstant(2 / l);//http://www.solid.iei.liu.se/Education/TMHL08/Lectures/Lecture__8.pdf
-
-                v1 = buf.CoreArray;
-
-                return buf;
-            }
-
-
-            double[] v2 = null;
-
-            {//old
-               
-
-                var l = (elm.EndNode.Location - elm.StartNode.Location).Length;
-
-                var buf = new Matrix(1, 2);
-
-                var b1 = -1 / l;
-                var b2 = 1 / l;
-
-                var c1 = elm.StartReleaseCondition;
-                var c2 = elm.EndReleaseCondition;
-
-                if (c1.DX == DofConstraint.Released)
-                    b1 = 0;
-
-                if (c2.DX == DofConstraint.Released)
-                    b2 = 0;
-
-                buf.FillRow(0, b1, b2);
-
-                return buf;
-                v2 = buf.CoreArray;
-            }
-
-            return null;
+            //n.ExtractRow(1);
             
+            n.ReturnToPool();
+
+            //buff is dN/dξ
+            //but B is dN/dx
+            //so B will be arr * dξ/dx = arr * 1/ j.det
+
+            var J = GetJMatrixAt(targetElement, isoCoords);
+            var detJ = J.Determinant();
+            J.ReturnToPool();
+            buf.MultiplyRowByConstant(0, 1 / (detJ));
+
+            return buf;
         }
 
         /// <inheritdoc/>
@@ -105,7 +169,9 @@ namespace BriefFiniteElementNet.ElementHelpers
             var geo = elm.Section.GetCrossSectionPropertiesAt(xi);
             var mech = elm.Material.GetMaterialPropertiesAt(xi);
 
-            var buf = new Matrix(1, 1);
+            var buf =
+            //new Matrix(1, 1);
+            targetElement.MatrixPool.Allocate(1, 1);
 
             buf.FillRow(0, geo.A*mech.Ex);
 
@@ -200,14 +266,11 @@ namespace BriefFiniteElementNet.ElementHelpers
             Polynomial[] ns = null;
 
             {//retrieve or generate shapefunctions
-                var nsKey = "{F2133247-149A-429C-857F-9E0159227170}";//a random unified key for store truss shape functions for bar element
+                var nsKey = "011F9D96-6398-4126-BC4E-FFDA7F91D6E3";//a random unified key for store truss shape functions for bar element
 
                 object obj;
 
-                if (targetElement.Cache.TryGetValue(nsKey, out obj))
-                {
-                    //ns = obj as Polynomial[];
-                }
+                targetElement.TryGetCache(nsKey, out ns);
 
                 if (ns == null)
                 {
@@ -216,14 +279,16 @@ namespace BriefFiniteElementNet.ElementHelpers
                     for (var i = 0; i < ns.Length; i++)
                         ns[i] = GetN_i(targetElement, i);
 
-                    //targetElement.Cache.Add(nsKey, ns);
+                    targetElement.SetCache(nsKey, ns);
                 }
             }
-            
+
 
 
             //var buf = new Matrix(2, br.Nodes.Length);
-            var buf = new Matrix(2, ns.Length);
+            var buf = 
+                //new Matrix(2, ns.Length);
+                targetElement.MatrixPool.Allocate(2, ns.Length);
 
             {//fill buff
                 for (var i = 0; i < ns.Length; i++)
@@ -313,8 +378,11 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var x_xi = bar.GetIsoToLocalConverter();
             
-            var buf = new Matrix(1, 1);
-            //we need J = ∂X / ∂ξ = dX / dξ
+            var buf = 
+                //new Matrix(1, 1);
+            targetElement.MatrixPool.Allocate(1, 1);
+
+            //we need J = ?X / ?? = dX / d?
 
             buf[0, 0] = x_xi.EvaluateDerivative(isoCoords[0], 1);
             //var old = l / 2;
@@ -371,17 +439,24 @@ namespace BriefFiniteElementNet.ElementHelpers
             var nc = targetElement.Nodes.Length;
 
 
-            var u = new Matrix(nc, 1);
+            var u = 
+                //new Matrix(nc, 1);
+                targetElement.MatrixPool.Allocate(nc, 1);
 
             for (var i = 0; i < nc; i++)
                 u[i, 0] = ld[i].DX;
             //u.FillColumn(0, ld[0].DX, ld[1].DX);
 
-            var frc = d * b * u;
+
+            //var frc = d * b * u;
+            var frc = d[0, 0] * CalcUtil.DotProduct(b.CoreArray, u.CoreArray);//performance tip, equals to d * b * u
+            d.ReturnToPool();
+            u.ReturnToPool();
+            b.ReturnToPool();
 
             var buf = new List<Tuple<DoF, double>>();
 
-            buf.Add(Tuple.Create(DoF.Dx, frc[0, 0]));
+            buf.Add(Tuple.Create(DoF.Dx, frc));
 
             return buf;
         }

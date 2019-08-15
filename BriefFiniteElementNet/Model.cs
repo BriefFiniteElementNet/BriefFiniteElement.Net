@@ -38,6 +38,7 @@ namespace BriefFiniteElementNet
             this.elements = new ElementCollection(this);
             this.rigidElements = new RigidElementCollection(this);
             this.mpcElements = new MpcElementCollection(this);
+            InitPool();
         }
 
         #endregion
@@ -480,6 +481,8 @@ namespace BriefFiniteElementNet
 
             nodes = (NodeCollection)info.GetValue("nodes",typeof(NodeCollection));
             settlementLoadCase = (LoadCase)info.GetValue("settlementLoadCase", typeof(LoadCase));
+
+            InitPool();
         }
 
         [OnDeserialized]
@@ -554,5 +557,23 @@ namespace BriefFiniteElementNet
 
         #endregion
 
+
+        #region pooling
+
+        [NonSerialized]
+        public ArrayPool<double> ArrayPool;
+
+        [NonSerialized]
+        public MatrixPool MatrixPool;
+
+        /// <summary>
+        /// Initiates the matrix and array pools
+        /// </summary>
+        private void InitPool()
+        {
+            ArrayPool = new ArrayPool<double>();
+            MatrixPool = new MatrixPool(ArrayPool);
+        }
+        #endregion
     }
 }

@@ -14,6 +14,99 @@ namespace BriefFiniteElementNet.ElementHelpers
     /// </summary>
     public class ShaftHelper : IElementHelper
     {
+        public ShaftHelper(Element targetElement)
+        {
+            TargetElement = targetElement;
+
+            {//loading condistions list pool from element's cache
+                var listPoolKey = "866E612A-438F-439A-A4B1-E51315279B71";
+
+                object obj;
+
+                targetElement.TryGetCache(listPoolKey, out CondsListPool);
+
+                if (CondsListPool == null)
+                {
+                    CondsListPool = new ListPool<Condition>();
+
+                    if (targetElement != null)
+                        targetElement.SetCache(listPoolKey, CondsListPool);
+                }
+
+            }
+        }
+
+        [NonSerialized]
+        private ListPool<Condition> CondsListPool = new ListPool<Condition>();
+
+        internal class Condition
+        {
+            public Condition()
+            {
+            }
+
+            public Condition(int nodeNumber, double xi, int differentialDegree, double value)
+            {
+                NodeNumber = nodeNumber;
+                Xi = xi;
+                DifferentialDegree = differentialDegree;
+                RightSide = value;
+            }
+
+            public int NodeNumber;
+
+            public double Xi;
+
+            public int DifferentialDegree;
+
+            public double RightSide;
+
+            public override string ToString()
+            {
+                var sb = new StringBuilder();
+
+                sb.Append("N");
+
+                sb.Append(NodeNumber);
+
+                for (int i = 0; i < DifferentialDegree; i++)
+                {
+                    sb.Append("'");
+                }
+
+                sb.AppendFormat("({0}) = {1}", Xi, RightSide);
+
+                return sb.ToString();
+            }
+
+            public class ConditionEqualityComparer : IComparer<Condition>
+            {
+                public int Compare(Condition x, Condition y)
+                {
+                    var t = 0;
+
+                    if ((t = x.NodeNumber.CompareTo(y.NodeNumber)) != 0)
+                        return t;
+
+                    if ((t = x.Xi.CompareTo(y.Xi)) != 0)
+                        return t;
+
+                    if ((t = x.DifferentialDegree.CompareTo(y.DifferentialDegree)) != 0)
+                        return t;
+
+                    if ((t = x.RightSide.CompareTo(y.RightSide)) != 0)
+                        return t;
+
+                    return t;
+                }
+
+
+            }
+
+
+
+
+        }
         public Element TargetElement { get; set; }
 
         /// <inheritdoc/>
@@ -24,50 +117,28 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (elm == null)
                 throw new Exception();
 
-            double[] v1 = null;
+            var n = GetNMatrixAt(targetElement, isoCoords);
 
-            {//new
-                var n = GetNMatrixAt(targetElement, isoCoords);
+            var buf = targetElement.MatrixPool.Allocate(1, n.ColumnCount);
 
-                var buf = n.ExtractRow(1);
-                var l = (targetElement.Nodes.First().Location - targetElement.Nodes.Last().Location).Length;
+            for (var i = 0; i < buf.ColumnCount; i++)
+                buf[0, i] = n[1, i];
 
-                buf.MultiplyByConstant(2 / l);//http://www.solid.iei.liu.se/Education/TMHL08/Lectures/Lecture__8.pdf
+            //n.ExtractRow(1);
 
-                v1 = buf.CoreArray;
+            n.ReturnToPool();
 
-                return buf;
-            }
+            //buff is dN/dξ
+            //but B is dN/dx
+            //so B will be arr * dξ/dx = arr * 1/ j.det
 
+            var J = GetJMatrixAt(targetElement, isoCoords);
+            var detJ = J.Determinant();
+            J.ReturnToPool();
+            buf.MultiplyRowByConstant(0, 1 / (detJ));
 
-            double[] v2 = null;
+            return buf;
 
-            {//old
-
-
-                var l = (elm.EndNode.Location - elm.StartNode.Location).Length;
-
-                var buf = new Matrix(1, 2);
-
-                var b1 = -1 / l;
-                var b2 = 1 / l;
-
-                var c1 = elm.StartReleaseCondition;
-                var c2 = elm.EndReleaseCondition;
-
-                if (c1.DX == DofConstraint.Released)
-                    b1 = 0;
-
-                if (c2.DX == DofConstraint.Released)
-                    b2 = 0;
-
-                buf.FillRow(0, b1, b2);
-
-                return buf;
-                v2 = buf.CoreArray;
-            }
-
-            return null;
 
         }
 
@@ -104,7 +175,9 @@ namespace BriefFiniteElementNet.ElementHelpers
             var geo = elm.Section.GetCrossSectionPropertiesAt(xi);
             var mech = elm.Material.GetMaterialPropertiesAt(xi);
 
-            var buf = new Matrix(1, 1);
+            var buf =
+            //new Matrix(1, 1);
+            targetElement.MatrixPool.Allocate(1, 1);
 
             ThrowUtil.ThrowIf(!CalcUtil.IsIsotropicMaterial(mech), "anistropic material not impolemented yet");
 
@@ -205,10 +278,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 object obj;
 
-                if (targetElement.Cache.TryGetValue(nsKey, out obj))
-                {
-                    //ns = obj as Polynomial[];
-                }
+                targetElement.TryGetCache(nsKey, out ns);
 
                 if (ns == null)
                 {
@@ -217,12 +287,14 @@ namespace BriefFiniteElementNet.ElementHelpers
                     for (var i = 0; i < ns.Length; i++)
                         ns[i] = GetN_i(targetElement, i);
 
-                   // targetElement.Cache.Add(nsKey, ns);
+                    targetElement.SetCache(nsKey, ns);
                 }
             }
             /**/
 
-            var buf = new Matrix(2, ns.Length);
+            var buf = 
+                //new Matrix(2, ns.Length);
+                targetElement.MatrixPool.Allocate(2, ns.Length);
 
             {//fill buff
                 for (var i = 0; i < ns.Length; i++)
@@ -314,7 +386,9 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var x_xi = bar.GetIsoToLocalConverter();
 
-            var buf = new Matrix(1, 1);
+            var buf = 
+                //new Matrix(1, 1);
+                targetElement.MatrixPool.Allocate(1, 1);
             //we need J = ∂X / ∂ξ = dX / dξ
 
             buf[0, 0] = x_xi.EvaluateDerivative(isoCoords[0], 1);

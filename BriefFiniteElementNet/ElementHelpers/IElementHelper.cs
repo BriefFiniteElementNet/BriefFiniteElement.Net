@@ -167,19 +167,14 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// Gets the strain at defined location in local coordination system.
         /// </summary>
         /// <param name="targetElement">The target element.</param>
-        /// <param name="targetElement">The target element.</param>
         /// <param name="load">The load.</param>
         /// <param name="isoLocation">The iso location.</param>
-        /// <param name="globalDisplacements">The local displacements on nodes.</param>
-        /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
-        /// 
-        /// <returns>Strain at defined iso coordination</returns>
+        /// <returns>load internal force at defined iso coordination</returns>
         /// <summary>
         /// Gets the internal force of element, only due to applying specified load.
         /// </summary>
-        /// <returns></returns>
         /// <remarks>
-        /// This gives back internal force of element, if no nodal displacements there are, and only the <see cref="load"/> is applied to it.
+        /// This gives back internal force of element assuming no nodal displacements there are, and only the <see cref="load"/> is applied to it.
         /// </remarks>
         IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation);
 

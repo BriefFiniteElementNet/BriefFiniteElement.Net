@@ -15,6 +15,7 @@ namespace BriefFiniteElementNet.Elements
     [DebuggerDisplay("{this.GetType().Name}, Label: {Label}")]
     public abstract class Element : StructurePart
     {
+        
         [NonSerialized]
         internal int Index;
 
@@ -35,16 +36,80 @@ namespace BriefFiniteElementNet.Elements
             private set { elementType = value; }
         }
 
+        #region pooling and caching
 
-        private Dictionary<string, object> cache = new Dictionary<string, object>();
-
-        public Dictionary<string, object> Cache
+        /// <summary>
+        /// Gets the matrix pool
+        /// </summary>
+        public MatrixPool MatrixPool
         {
             get
             {
-                return cache;
+                if (parent != null)
+                    return parent.MatrixPool;
+
+                return new MatrixPool(new ArrayPool<double>());
             }
         }
+
+        [NonSerialized]
+        public int CacheHit;
+        [NonSerialized]
+        public int CacheMiss;
+
+        private Dictionary<string, object> cache = new Dictionary<string, object>();
+
+        /// <summary>
+        /// Gets the object from cache
+        /// </summary>
+        /// <typeparam name="T">type of expected object</typeparam>
+        /// <param name="key">key</param>
+        /// <param name="value">output object</param>
+        /// <returns></returns>
+        public bool TryGetCache<T>(string key, out T value)
+        {
+            //value = default(T);
+            //return false;
+
+            lock (cache)
+            {
+                object obj;
+
+                if (cache.TryGetValue(key, out obj))
+                {
+                    if (obj is T)
+                    {
+                        value = (T)obj;
+                        CacheHit++;
+                        return true;
+                    }
+                }
+
+                CacheMiss++;
+                value = default(T);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Sets the cache
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public void SetCache(string key, object value)
+        {
+            lock (cache)
+            {
+                cache[key] = value;
+            }
+        }
+
+        #endregion
+
+
+
+
+
 
         protected List<Load> loads = new List<Load>();
 
@@ -84,7 +149,6 @@ namespace BriefFiniteElementNet.Elements
         /// <remarks>
         /// The number of DoFs is in element local regrading order in <see cref="Element.Nodes"/>!</remarks>
         public abstract Matrix GetGlobalStifnessMatrix();
-
 
         /// <summary>
         /// Gets the mass matrix of element in global coordination system.
@@ -261,6 +325,7 @@ namespace BriefFiniteElementNet.Elements
         /// <returns>the trasformation manager related to this element</returns>
         public TransformManagerL2G GetTransformationManager()
         {
+            /*
             if (this.lastNodalLocations == null)
                 lastNodalLocations = new Point[this.nodes.Length];
 
@@ -279,12 +344,14 @@ namespace BriefFiniteElementNet.Elements
                 return TransformManagerL2G.MakeFromLambdaMatrix(lastLambdaMatrix);
 
 
-            else
+            else*/
             {
-                for (var i = 0; i < this.nodes.Length; i++)
-                    lastNodalLocations[i] = nodes[i].Location;
+                //for (var i = 0; i < this.nodes.Length; i++)
+                //    lastNodalLocations[i] = nodes[i].Location;
 
-                return TransformManagerL2G.MakeFromLambdaMatrix(lastLambdaMatrix = GetLambdaMatrix());
+                var lambda = GetLambdaMatrix();
+
+                return TransformManagerL2G.MakeFromLambdaMatrix(lambda, MatrixPool);
             }
         }
 
@@ -296,10 +363,10 @@ namespace BriefFiniteElementNet.Elements
         public abstract double[] IsoCoordsToLocalCoords(params double[] isoCoords);
 
 
-        [NonSerialized]
-        private Point[] lastNodalLocations;
-        [NonSerialized]
-        private Matrix lastLambdaMatrix = Matrix.Eye(3);
+        //[NonSerialized]
+        //private Point[] lastNodalLocations;
+        //[NonSerialized]
+        //private Matrix lastLambdaMatrix = Matrix.Eye(3);
 
         public abstract IElementHelper[] GetHelpers();
 

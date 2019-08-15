@@ -22,6 +22,8 @@ namespace BriefFiniteElementNet
         public Node()
         {
             loads = new List<NodalLoad>();
+            settlements = new List<Settlement>();
+
             //memberLoads = new List<NodalLoad>();
         }
 
@@ -33,17 +35,25 @@ namespace BriefFiniteElementNet
         public Node(double x, double y, double z) : this(new Point(x, y, z))
         {}
 
-        internal int Index;
+        public int Index
+        {
+            get { return _index; }
+            internal set { _index = value; }
+        }
+
+        private int _index;
 
         
         /// <summary>
         /// The connected elements, used for calculating 
         /// </summary>
         [NonSerialized][Obsolete]
-        internal List<Element> ConnectedElements = new List<Element>(); 
+        internal List<Element> ConnectedElements = new List<Element>();
         private List<NodalLoad> loads;
+        private List<Settlement> settlements;
+
         private Point location;
-        private Displacement settlements;
+        //private Displacement settlements_old;
         private Constraint constraints;
 
 
@@ -60,6 +70,15 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
+        /// gets the settlements
+        /// </summary>
+        public List<Settlement> Settlements
+        {
+            get { return settlements; }
+        }
+
+
+        /// <summary>
         /// Gets or sets the location.
         /// </summary>
         /// <value>
@@ -71,17 +90,20 @@ namespace BriefFiniteElementNet
             set { location = value; }
         }
 
+        /*
         /// <summary>
         /// Gets or sets the settlements.
         /// </summary>
         /// <value>
         /// The settlements (initial displacements) of the Node in 3D (including both movement and rotation).
         /// </value>
-        public Displacement Settlements
+        [Obsolete("use Settlementss instead")]
+        public Displacement Settlements_old
         {
-            get { return settlements; }
-            set { settlements = value; }
+            get { return settlements_old; }
+            set { settlements_old = value; }
         }
+        */
 
         /// <summary>
         /// Gets or sets the constraints.
@@ -336,7 +358,7 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Gets the sum of external forces (including support reaction and exnternal nodal loads)
+        /// Gets the sum of external forces (including support reaction + exnternal nodal loads + Equivalent nodal loads of elemental loads)
         /// </summary>
         /// <param name="loadCase">the load case</param>
         /// <returns></returns>
@@ -349,6 +371,88 @@ namespace BriefFiniteElementNet
             var ss = Force.FromVector(parent.LastResult.SupportReactions[loadCase], 6 * Index);
 
             var buf = ss - cs - es;
+
+            return buf;
+        }
+
+        /// Gets the sum of external applying forces (including exnternal nodal loads + Equivalent nodal loads of elemental loads)
+        /// </summary>
+        /// <param name="loadCase">the load case</param>
+        /// <returns></returns>
+        public Force GetTotalApplyingForces(LoadCase loadCase)
+        {
+            parent.LastResult.AddAnalysisResultIfNotExists(loadCase);
+
+            var cs = Force.FromVector(parent.LastResult.ConcentratedForces[loadCase], 6 * Index);
+            var es = Force.FromVector(parent.LastResult.ElementForces[loadCase], 6 * Index);
+
+            var buf = -cs - es;
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Gets the sum of external forces (including exnternal nodal loads)
+        /// </summary>
+        /// <param name="loadCombination">the load combintation</param>
+        /// <returns></returns>
+        public Force GetTotalApplyingForces(LoadCombination loadCombination)
+        {
+            var buf = new Force();
+
+            foreach (var tuple in loadCombination)
+            {
+                buf += GetTotalApplyingForces(tuple.Key) * tuple.Value;
+            }
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Gets the sum of external forces (including support reaction and exnternal nodal loads)
+        /// </summary>
+        /// <param name="loadCombination">the load combintation</param>
+        /// <returns></returns>
+        public Force GetTotalExternalForces(LoadCombination loadCombination)
+        {
+            var buf = new Force();
+
+            foreach(var tuple in loadCombination)
+            {
+                buf += GetTotalExternalForces(tuple.Key) * tuple.Value;
+            }
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Gets the total displacements with specified <see cref="loadCase"/>
+        /// </summary>
+        /// <param name="loadCase">the load case</param>
+        /// <returns></returns>
+        public Displacement GetTotalSettlementAmount(LoadCase loadCase)
+        {
+            var buf = new Displacement();
+
+            foreach (var st in settlements)
+                if (st.LoadCase == loadCase)
+                    buf += st.Displacement;
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Gets the total displacements with specified <see cref="loadCombination"/>
+        /// </summary>
+        /// <param name="loadCase">the load case</param>
+        /// <returns></returns>
+        public Displacement GetTotalSettlementAmount(LoadCombination loadCombination)
+        {
+            var buf = new Displacement();
+
+            foreach (var st in settlements)
+                if (loadCombination.ContainsKey(st.LoadCase))
+                    buf += loadCombination[st.LoadCase] * st.Displacement;
 
             return buf;
         }
@@ -383,7 +487,7 @@ namespace BriefFiniteElementNet
             location = (Point) info.GetValue("location", typeof (Point));
             Index = (int) info.GetValue("Index", typeof (int));
             loads = (List<NodalLoad>) info.GetValue("loads", typeof (List<NodalLoad>));
-            settlements = (Displacement) info.GetValue("settlements", typeof (Displacement));
+            settlements = info.GetValue<List<Settlement>>("settlements");
             constraints = (Constraint) info.GetValue("constraints", typeof (Constraint));
         }
 

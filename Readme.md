@@ -2,7 +2,7 @@
 
 # BriefFiniteElement.NET
 
-A Finite Element library for static linear analysis of solids and structures fully in C#.
+A Finite Element library for Static and Linear analysis of solids and structures 100% in C#.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/q5an94f88kofefm9?svg=true)](https://ci.appveyor.com/project/epsi1on/bfe-net)     [![Join the chat at https://gitter.im/BFE-Net/Lobby](https://badges.gitter.im/BFE-Net/Lobby.svg)](https://gitter.im/BFE-NET/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -38,6 +38,15 @@ This project is using/used these projects/files:
 - Reasonable performance ([More](https://github.com/BriefFiniteElementNet/BFE.Net/wiki/Performance-and-Speed), [More 2](https://github.com/BriefFiniteElementNet/BFE.Net/wiki/Performance))
 
 - Good Documentation available at [bfenet.readthedocs.io](https://bfenet.readthedocs.io/en/latest/)
+
+## Validation
+
+This library is developed regarding "Code Reuse" so the code will be somehow complicated. There are several types of validation for FE models in this library:
+	- Unit Test (in project ``BriefFiniteElementNet.Tests``)
+	- Validating the result with other well known and open source applications:
+		- Validating the result with OpenSees (the Open System for Earthquake Engineering Simulation) available at [opensees.berkeley.edu](http://opensees.berkeley.edu/)
+		- Validating the result with Frame3dd application available at [frame3dd.sourceforge.net](http://frame3dd.sourceforge.net)
+for more information on validation please have a look at [Validation.md](Validation.md) file.
 ## Donation
 
 

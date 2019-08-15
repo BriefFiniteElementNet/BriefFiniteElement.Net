@@ -50,9 +50,6 @@ namespace BriefFiniteElementNet.Mathh
         /// <returns>derivation</returns>
         public Polynomial GetDerivative(int deg)
         {
-            //throw new NotImplementedException();
-            /**/
-
             if (deg == 0)
                 return (Polynomial)this.MemberwiseClone();
 
@@ -76,7 +73,11 @@ namespace BriefFiniteElementNet.Mathh
                 if (n - m >= 0)
                 {
                     var newPow = n - m;
-                    dic[newPow] = Factorial(n)/Factorial(n - m) * this.Coefficients[i];
+
+                    //dic[newPow] = Factorial(n)/Factorial(n - m) * this.Coefficients[i];
+                    dic[newPow] = Factorial(n, n - m) * this.Coefficients[i];
+
+                    //var d = Factorial(n) / Factorial(n - m) - Factorial(n, n - m);
                 }
             }
 
@@ -111,16 +112,18 @@ namespace BriefFiniteElementNet.Mathh
 
                 if (nn - mm >= 0)
                 {
-                    var cf = Factorial(nn) / Factorial(nn - mm);
+                    var cff = Factorial(nn, nn - mm);
+
                     var cf2 = Coefficients[i];
                     var vari = Math.Pow(x, nn - mm);
-                    retVal += vari * cf * cf2;
+                    retVal += vari * cff * cf2;
                 }
             }
 
             return retVal;
         }
 
+        /*
         /// <summary>
         /// returns value of n'th derivative of F where F(x) = x ^ n
         /// </summary>
@@ -136,6 +139,7 @@ namespace BriefFiniteElementNet.Mathh
 
             return Factorial(n) / Factorial(n - m) * pval;
         }
+        */
 
         static int Factorial(int x)
         {
@@ -151,6 +155,33 @@ namespace BriefFiniteElementNet.Mathh
             {
                 return x * Factorial(x - 1);
             }
+        }
+
+        /// <summary>
+        /// return x!/y! where y < x
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        static long Factorial(int x,int y)
+        {
+            if (x < y)
+                throw new NotImplementedException();
+
+            if (x == y)
+                return 1;
+
+            if (y > 1)
+            {
+                var buf = 1l;
+
+                for (var i = y + 1; i <= x; i++)
+                    buf *= i;
+
+                return buf;
+            }
+
+            return Factorial(x) / Factorial(y);
         }
 
         public bool TryFindRoot(double y,out double x)

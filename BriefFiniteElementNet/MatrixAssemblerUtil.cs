@@ -57,6 +57,8 @@ namespace BriefFiniteElementNet
                         kt.At(rElmMap[i], rElmMap[j], mtx[i, j]);
                     }
                 }
+
+                mtx.ReturnToPool();
             }
 
             var stiffness = (CCS)Converter.ToCompressedColumnStorage(kt, true);

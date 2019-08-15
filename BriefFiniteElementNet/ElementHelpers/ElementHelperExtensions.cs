@@ -56,7 +56,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var sum = new int[3];
 
-            foreach (var i in new int[][] { nb, nd, nb, nt, nj })
+            foreach (var i in new int[][] { nb, nd, nb, nt, nj })//B D B |J|
                 for (int j = 0; j < 3; j++)
                     sum[j] += i[j];
 
@@ -64,7 +64,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var nEta = sum[1] / 2 + 1;
             var nGama = sum[2] / 2 + 1;
 
-            nXi += 2;
+            //nXi += 2;
 
             //var ng = (2*nb + nd + nj)/2 + 1;
             var intg = new GaussianIntegrator();
@@ -83,17 +83,32 @@ namespace BriefFiniteElementNet.ElementHelpers
             intg.XiPointCount = nXi;
             intg.EtaPointCount = nEta;
 
+            /*
             intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
             {
                 var b = helper.GetBMatrixAt(elm, xi);
                 var d = helper.GetDMatrixAt(elm, xi);
                 var j = helper.GetJMatrixAt(elm, xi);
 
-                var buf_ = b.Transpose() * d * b;
-                buf_.MultiplyByConstant(Math.Abs(j.Determinant()));
+                var buf_ =
+                    //new Matrix(b.ColumnCount, b.ColumnCount);
+                    targetElement.CreateOrRentMatrixFromPool(b.ColumnCount, b.ColumnCount);
+
+                Matrix.TransposeMultiply(b, b, buf_);
+
+                //var buf_2 = b.Transpose() * d * b;
+                buf_.MultiplyByConstant(d[0, 0] * Math.Abs(j.Determinant()));
+
+                b.ReturnToPool();
+                d.ReturnToPool();
+                j.ReturnToPool();
 
                 return buf_;
-            });
+            });*/
+
+            intg.H = new MultiplierMatrixFunction(elm, helper);
+
+            intg.MatrixPool = elm.MatrixPool;
 
             var res = intg.Integrate();
 
@@ -264,7 +279,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 var d = helper.GetDMatrixAt(qq, xi, eta);
                 var j = helper.GetJMatrixAt(qq, xi, eta);
 
-                var buf = MatrixPool.Allocate(b.ColumnCount, b.ColumnCount);
+                var buf = new Matrix(b.ColumnCount, b.ColumnCount);
 
                 CalcUtil.Bt_D_B(b, d, buf);
 

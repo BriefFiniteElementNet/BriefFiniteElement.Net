@@ -148,10 +148,10 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             Commands.Add(new TclCommand("analysis", "Static"));
 
             if (ExportNodalDisplacements)
-                Commands.Add(new TclCommand("recorder", "Node", "-xml", '"' + nodesOut.Replace("\\", "\\\\") + '"', "-dof", "1 2 3 4 5 6", "disp"));
+                Commands.Add(new TclCommand("recorder", "Node", "-precision", "10", "-xml", '"' + nodesOut.Replace("\\", "\\\\") + '"', "-dof", "1 2 3 4 5 6", "disp"));
 
             if (ExportNodalReactions)
-                Commands.Add(new TclCommand("recorder", "Node", "-xml", '"' + reactionsOut.Replace("\\", "\\\\") + '"', "-dof", "1 2 3 4 5 6", "reaction"));
+                Commands.Add(new TclCommand("recorder", "Node", "-precision", "10", "-xml", '"' + reactionsOut.Replace("\\", "\\\\") + '"', "-dof", "1 2 3 4 5 6", "reaction"));
 
 
             if (ExportElementForces)

@@ -15,7 +15,10 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             if (elm == null)
                 return false;
 
-            if (!(elm.Section is Sections.UniformParametric1DSection))
+            var isUPara = elm.Section is Sections.UniformParametric1DSection;
+            var isUGeo = elm.Section is Sections.UniformGeometric1DSection;
+
+            if (!isUPara && !isUGeo)
                 return false;
 
             if (!(elm.Material is Materials.UniformIsotropicMaterial))
@@ -27,7 +30,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
         public override TclCommand[] Translate(StructurePart targetElement,out string elementTag)
         {
             var elm = targetElement as BarElement;
-            var sec = elm.Section as Sections.UniformParametric1DSection;
+            var sec = elm.Section.GetCrossSectionPropertiesAt(0);// as Sections.UniformParametric1DSection;
             var mat = elm.Material as Materials.UniformIsotropicMaterial;
             var g = mat.YoungModulus / (2 * (1 + mat.PoissonRatio));
 

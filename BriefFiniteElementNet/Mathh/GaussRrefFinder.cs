@@ -13,7 +13,7 @@ namespace BriefFiniteElementNet.Mathh
         {
             var sys = SparseEqSystem.Generate((CSparse.Double.SparseMatrix)a);
 
-            var dns = a.ToDenseMatrix();
+            //var dns = a.ToDenseMatrix();
 
             sys.RowsPool = new SortedSet<SparseRow>();
 

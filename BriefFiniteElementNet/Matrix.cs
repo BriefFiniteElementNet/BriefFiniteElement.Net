@@ -16,6 +16,8 @@ namespace BriefFiniteElementNet
     [Serializable]
     public class Matrix : ISerializable, IEnumerable<double>
     {
+        public MatrixPool Pool;
+
         public static Matrix Repeat(Matrix mtx, int ni, int nj)
         {
             var r = mtx.rowCount;
@@ -251,6 +253,8 @@ namespace BriefFiniteElementNet
         /// </summary>
         private int columnCount;
 
+        public static long CreateCount,DistructCount;
+
         #region Constructors
 
         /// <summary>
@@ -258,6 +262,32 @@ namespace BriefFiniteElementNet
         /// </summary>
         private Matrix()
         {
+            CreateCount++;
+           // GenerateCallStack_Temp = Environment.StackTrace;
+        }
+
+
+        ~Matrix()
+        {
+            /*
+            if (coreArray != null)
+            {
+                if (coreArray.Length == 2)
+                    Guid.NewGuid();
+
+                int i;
+
+                lock (dists)
+                {
+                    if (dists.TryGetValue(coreArray.Length, out i))
+                        dists[coreArray.Length]++;
+                    else
+                        dists.Add(coreArray.Length, 1);
+                }
+
+            }
+            */
+
         }
 
         /// <summary>
@@ -270,7 +300,7 @@ namespace BriefFiniteElementNet
         /// or
         /// n
         /// </exception>
-        public Matrix(int m, int n)
+        public Matrix(int m, int n):this()
         {
             rowCount = m;
             columnCount = n;
@@ -288,7 +318,7 @@ namespace BriefFiniteElementNet
         /// Initializes a new square matrix
         /// </summary>
         /// <param name="n">The matrix dimension.</param>
-        public Matrix(int n)
+        public Matrix(int n) : this()
         {
             rowCount = n;
             columnCount = n;
@@ -303,7 +333,7 @@ namespace BriefFiniteElementNet
         /// Initializes a new instance of the <see cref="Matrix"/> class with a 2-d double array.
         /// </summary>
         /// <param name="vals">The values.</param>
-        public Matrix(double[,] vals)
+        public Matrix(double[,] vals) : this()
         {
             var rows = vals.GetLength(0);
             var cols = vals.GetLength(1);
@@ -323,7 +353,7 @@ namespace BriefFiniteElementNet
         /// Initializes a new instance of the <see cref="Matrix"/> class with a 2-d double array.
         /// </summary>
         /// <param name="vals">The values.</param>
-        public Matrix(double[][] vals)
+        public Matrix(double[][] vals) : this()
         {
             var rows = vals.Length;
             var cols = vals.Select(i => i.Length).Max();
@@ -344,14 +374,20 @@ namespace BriefFiniteElementNet
         /// Initializes a new instance of the <see cref="Matrix"/> class as a column vector.
         /// </summary>
         /// <param name="vals">The vals.</param>
-        public Matrix(double[] vals)
+        public Matrix(double[] vals) : this()
         {
             this.rowCount = vals.Length;
             this.columnCount = 1;
             this.CoreArray = (double[]) vals.Clone();
         }
 
-        public Matrix(int rows, int cols, double[] coreArray)
+        /// <summary>
+        /// creates
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <param name="cols"></param>
+        /// <param name="coreArray"></param>
+        public Matrix(int rows, int cols, ref double[] coreArray) :this()
         {
             rowCount = rows;
             columnCount = cols;
@@ -363,6 +399,8 @@ namespace BriefFiniteElementNet
                 throw new ArgumentException("cols");
 
             this.CoreArray = coreArray;
+
+            CreateCount--;
         }
 
         #endregion
@@ -409,7 +447,6 @@ namespace BriefFiniteElementNet
 
             return res;
         }
-
 
         /// <summary>
         /// Adds the specified matrix to current matrix.
@@ -498,6 +535,48 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
+        /// calculates the m1.transpose * v and stores the value into result.
+        /// </summary>
+        /// <param name="m1">The m1.</param>
+        /// <param name="v">The m2.</param>
+        /// <param name="result">The result.</param>
+        /// <returns></returns>
+        public static void TransposeMultiply(Matrix m1, double[] v, double[] result)
+        {
+            if (m1.rowCount != v.Length)
+                throw new InvalidOperationException("No consistent dimensions");
+
+            var res = result;
+
+            if (v.Length != result.Length)
+                throw new Exception("result dimension mismatch");
+
+            var a = m1;
+            var b = v;
+
+
+            var a_arr = a.coreArray;
+            var b_arr = v;// b.coreArray;
+
+            var vecLength = a.rowCount;
+
+            for (var i = 0; i < a.columnCount; i++)
+                for (var j = 0; j < 1; j++)
+                {
+                    var t = 0.0;
+
+                    var a_st = i * a.rowCount;
+                    var b_st = j * b.Length;
+
+                    for (var k = 0; k < vecLength; k++)
+                        t += a_arr[a_st + k] * b_arr[b_st + k];
+
+                    res[i] = t;
+                }
+
+        }
+
+        /// <summary>
         /// Multiplies the specified <see cref="Matrix"/> with specified Vector <see cref="vec"/>.
         /// </summary>
         /// <param name="m">The m.</param>
@@ -576,11 +655,31 @@ namespace BriefFiniteElementNet
             }
         }
 
-        ~Matrix()
+        public static Dictionary<int, int> dists = new Dictionary<int, int>();
+
+
+        /// <summary>
+        /// Returns the matrix into pool and invalidates the matrix
+        /// </summary>
+        /// <returns></returns>
+        public void ReturnToPool()
         {
-            if (UsePool)
-                MatrixPool.Free(this);
+            //return;
+            if (Disposed)
+                return;
+
+            this.Disposed = true;
+
+            lock (this)
+            {
+                if (Pool != null)
+                    Pool.Free(this);
+            }
+            
         }
+
+        private bool Disposed = false;
+        private string GenerateCallStack_Temp;
 
         /// <summary>
         /// Gets or sets a value indicating whether pool is used for this object or not.
@@ -640,6 +739,26 @@ namespace BriefFiniteElementNet
 
             buf.CoreArray = newMatrix;
             return buf;
+        }
+
+        public void InPlaceTranspose()
+        {
+            //var buf = new Matrix(this.ColumnCount, this.RowCount);
+
+            //var newMatrix = buf.CoreArray;
+
+            for (int row = 0; row < this.RowCount; row++)
+                for (int column = row; column < this.ColumnCount; column++)
+                {
+                    var tmp = this[row, column];
+
+                    this[row, column] = this[column, row];
+
+                    this[column, row] = tmp;
+                }
+
+            //buf.CoreArray = newMatrix;
+            //return buf;
         }
 
         public static void CopyTo(Matrix source, Matrix destination)
@@ -1158,6 +1277,87 @@ namespace BriefFiniteElementNet
             return eye;
         }
 
+        /// <summary>
+        /// return the value that this * value = rightSide
+        /// </summary>
+        /// <param name="rightSide"></param>
+        /// <returns></returns>
+        public double[] Solve(double[] rightSide)
+        {
+            if (!IsSquare())
+                throw new Exception("Matrix must be square");
+
+            var buf = (double[])rightSide.Clone();
+
+            var n = this.rowCount;
+
+            var clone = Pool != null ? Pool.Allocate(n, n) : new Matrix(n, n);
+
+            this.coreArray.CopyTo(clone.coreArray,0);
+
+            var canditates = new bool[n];//if true, then row is canditate for pivot
+            var pivoted = new int[n];//if nonNegative, then row is pivoted once, cannot be used again as pivot
+
+            pivoted.FillWith(-1);
+
+            
+
+            {//find next pivot
+
+                for (var j = 0; j < n; j++) // do for each column
+                {
+                    canditates.FillWith(false);
+                    for (var i = 0; i < n; i++) // find pivot canditate
+                    {
+                        if (pivoted[i] != -1)
+                            continue;
+
+                        if (clone[i, j] != 0)
+                            canditates[i] = true;
+                    }
+
+                    var pivot = canditates.FirstIndexOf(true);
+
+                    if (pivot == -1)
+                        throw new Exception("singular matrix");
+
+                    pivoted[pivot] = j;
+
+                    buf[pivot] *= 1 / clone[pivot, j];
+                    clone.MultiplyRowByConstant(pivot, 1 / clone[pivot, j]);
+                    
+
+                    for (var i = 0; i < n; i++) //eliminate each row with pivot
+                    {
+                        if (i == pivot)
+                            continue;
+
+                        var alpha = -clone[i, j];
+
+                        if (clone[i, j] == 0)
+                            continue;
+
+                        for (var jj = 0; jj < n; jj++)
+                        {
+                            clone[i, jj] += alpha * clone[pivot, jj];
+                        }
+
+                        buf[i] += alpha * buf[pivot];
+                    }
+                }
+            }
+
+            var buf2 = new double[n];// Matrix.Multiply(clone.Transpose(), buf);
+
+            for (var i = 0; i < n; i++)
+                buf2[pivoted[i]] = buf[i];
+
+            if (Pool != null)
+                clone.ReturnToPool();
+
+            return buf2;
+        }
+
         #endregion
 
         #region Static Methods
@@ -1378,6 +1578,62 @@ namespace BriefFiniteElementNet
             }
 
             return buf;
+        }
+
+        public static void Plus(Matrix mat1, Matrix mat2, Matrix result)
+        {
+            MatrixException.ThrowIf(
+                mat1.RowCount != mat2.RowCount ||
+                mat2.RowCount != result.RowCount ||
+
+                mat1.ColumnCount != mat2.ColumnCount ||
+                mat2.ColumnCount != result.ColumnCount,
+                "Inconsistent matrix sizes");
+
+            var n = mat1.rowCount * mat1.columnCount;
+
+            for (int i = 0; i < n; i++)
+            {
+                result.CoreArray[i] = mat1.CoreArray[i] + mat2.CoreArray[i];
+            }
+        }
+
+
+        /// <summary>
+        /// mat1 = mat1 + mat2
+        /// </summary>
+        /// <param name="mat1"></param>
+        /// <param name="mat2"></param>
+        public static void InplacePlus(Matrix mat1, Matrix mat2)
+        {
+            MatrixException.ThrowIf(
+                mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount
+                , "Inconsistent matrix sizes");
+
+            var n = mat1.rowCount * mat1.columnCount;
+
+            for (int i = 0; i < n; i++)
+            {
+                mat1.CoreArray[i] = mat1.CoreArray[i] + mat2.CoreArray[i];
+            }
+        }
+
+        /// <summary>
+        /// mat1 = mat1 + mat2 * coefficient
+        /// </summary>
+        /// <param name="mat1"></param>
+        /// <param name="mat2"></param>
+        /// <param name="coefficient"></param>
+        public static void InplacePlus(Matrix mat1, Matrix mat2,double coefficient)
+        {
+            MatrixException.ThrowIf(
+                mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount
+                , "Inconsistent matrix sizes");
+
+            var n = mat1.rowCount * mat1.columnCount;
+
+            for (int i = 0; i < n; i++)
+                mat1.CoreArray[i] = mat1.CoreArray[i] + mat2.CoreArray[i] * coefficient;
         }
 
         public static Matrix operator -(

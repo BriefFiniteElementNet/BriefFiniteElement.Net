@@ -623,6 +623,13 @@ namespace BriefFiniteElementNet
             _displacements[loadCase] = ut2;
         }
 
+
+        public void AddLoadVectors(LoadCase loadCase)
+        {
+            elementForces[loadCase] = GetTotalElementsForceVector(loadCase);
+            concentratedForces[loadCase] = GetTotalConcentratedForceVector(loadCase);
+        }
+
         /// <summary>
         /// Adds the analysis result.
         /// </summary>
@@ -1240,7 +1247,15 @@ namespace BriefFiniteElementNet
 
             for (var i = 0; i < n; i++)
             {
-                var disp = nodes[i].Settlements;
+                
+
+                var stm = Displacement.Zero;
+
+                foreach (var stlm in nodes[i].Settlements)
+                    if (stlm.LoadCase == cse)
+                        stm += stlm.Displacement;
+
+                var disp = stm;// nodes[i].Settlements;
 
                 buf[6 * i + 0] = disp.DX;
                 buf[6 * i + 1] = disp.DY;

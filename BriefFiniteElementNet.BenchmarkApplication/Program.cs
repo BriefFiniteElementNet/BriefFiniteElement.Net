@@ -51,7 +51,8 @@ namespace BriefFiniteElementNet.BenchmarkApplication
             logger.Log("");
             //Log("Benchmarks:");
 
-            var solvers = Enum.GetValues(typeof (BuiltInSolverType));
+            var solvers = new BuiltInSolverType[] { BuiltInSolverType.CholeskyDecomposition, BuiltInSolverType.ConjugateGradient };
+            //Enum.GetValues(typeof (BuiltInSolverType));
 
             var sw = System.Diagnostics.Stopwatch.StartNew();
 

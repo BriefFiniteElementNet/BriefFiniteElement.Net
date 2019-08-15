@@ -33,11 +33,11 @@ namespace BriefFiniteElementNet.TestConsole
         static void Main(string[] args)
         {
             Console.Title = "BFE tests & temporary codes";
-            TestIssue20();
+            //TestIssue20();
             //SimplySupportedBeamUDL();
             //BeamShapeFunction();
-            //BarElementTester.TestEndReleaseStyiffness();
-
+            BarElementTester.TestEndReleaseStyiffness();
+            //TestGrid();
             //Test_P_Delta_matrix();
             //TestSparseRow();
             /*
@@ -85,9 +85,16 @@ namespace BriefFiniteElementNet.TestConsole
 
             //Tst();
 
-            Console.ReadKey();
+            //Console.ReadKey();
         }
 
+        static void TestGrid()
+        {
+            var model = StructureGenerator.Generate3DBarElementGrid(10, 10, 10);
+            model.Trace.Listeners.Add(new ConsoleTraceListener());
+
+            model.Solve_MPC();
+        }
 
         /// <summary>
         /// for issue # 20
@@ -158,7 +165,7 @@ namespace BriefFiniteElementNet.TestConsole
             beam1.StartReleaseCondition = old;
 
             
-            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y,beam1);
 
             Polynomial[] ns, ms;
 
@@ -286,7 +293,7 @@ namespace BriefFiniteElementNet.TestConsole
             bar.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(3, 0.3);
             bar.Section = new Sections.UniformParametric1DSection(4);
 
-            var hlp = new TrussHelper();
+            var hlp = new TrussHelper(bar);
 
             var pl = hlp.GetN_i(bar, 0);
             hlp.GetJMatrixAt(bar, 0);
@@ -300,7 +307,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             var bar = new BarElement(n);
 
-            var hlp = new EulerBernoulliBeamHelper(BeamDirection.Y);
+            var hlp = new EulerBernoulliBeamHelper(BeamDirection.Y,bar);
 
            
 
@@ -637,7 +644,7 @@ namespace BriefFiniteElementNet.TestConsole
             {
                 if (node.Constraints == Constraints.Fixed)
                 {
-                    node.Settlements = new Displacement(1, 0, 0, 0, 0, 0);
+                    node.Settlements.Add(new Settlement(new Displacement(1, 0, 0, 0, 0, 0)));
                     node.Loads.Clear();
                 }
                     

@@ -615,8 +615,9 @@ and place frame3dd.exe beside this application.");
 
             foreach (var nde in settledNodes)
             {
-                sb.AppendLineArray(nde.Settlements.DX, nde.Settlements.DY, nde.Settlements.DZ, nde.Settlements.RX,
-                    nde.Settlements.RY, nde.Settlements.RZ);
+                var st = nde.GetTotalSettlementAmount(lc);
+
+                sb.AppendLineArray(st.DX, st.DY, st.DZ, st.RX, st.RY, st.RZ);
             }
 
 

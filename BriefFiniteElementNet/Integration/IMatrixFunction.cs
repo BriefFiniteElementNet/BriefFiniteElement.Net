@@ -19,5 +19,12 @@ namespace BriefFiniteElementNet.Integration
         /// <param name="gamma">The γ.</param>
         /// <returns>result matrix</returns>
         Matrix GetMatrix(double xi, double eta, double gamma);
+
+        /// <summary>
+        /// Gets the size of matrix
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <param name="cols"></param>
+        //void GetSize(out int rows, out int cols);
     }
 }

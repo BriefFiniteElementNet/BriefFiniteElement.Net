@@ -22,7 +22,7 @@ namespace BriefFiniteElementNet
     /// </summary>
     [Serializable]
     [Obsolete("use BarElement instead")]
-    public sealed class FrameElement2Node : Element1D
+    public class FrameElement2Node : Element1D
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FrameElement2Node"/> class.
@@ -344,7 +344,7 @@ namespace BriefFiniteElementNet
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
         /// <exception cref="System.InvalidOperationException">When considering shear defoemation none of the parameters Ay, Az and G should be zero</exception>
-        public Matrix GetLocalStiffnessMatrix()
+        public virtual Matrix GetLocalStiffnessMatrix()
         {
 
             //if (this.e.Equals(0.0))
@@ -622,13 +622,13 @@ namespace BriefFiniteElementNet
         /// The last start point which LastTransformationParameters is related to
         /// </summary>
         [NonSerialized]
-        private Point? LastStartPoint;
+        protected Point? LastStartPoint;
 
         /// <summary>
         /// The last end point which LastTransformationParameters is related to
         /// </summary>
         [NonSerialized]
-        private Point? LastEndPoint;
+        protected Point? LastEndPoint;
 
 
 
@@ -639,7 +639,7 @@ namespace BriefFiniteElementNet
         //[NonSerialized]
         //private Vector LastElementVector;
 
-        private double[] GetTransformationParameters()
+        protected virtual double[] GetTransformationParameters()
         {
             var recalc = true;
 
@@ -656,7 +656,7 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// Calculates the transformation parameters for this <see cref="FrameElement2Node"/>
         /// </summary>
-        private void ReCalculateTransformationStuff()
+        protected virtual void ReCalculateTransformationStuff()
         {
             var cxx = 0.0;
             var cxy = 0.0;
@@ -747,7 +747,7 @@ namespace BriefFiniteElementNet
         /// if UseOverridedProperties set to false then geometric properties from Geometry polygon should be used.
         /// This method will return whatever properties that should be used regarding to UseOverridedProperties;
         /// </remarks>
-        private double[] GetGeometricProperties()
+        protected double[] GetGeometricProperties()
         {
             if (this._useOverridedProperties)
                 return new[] { Iz, Iy, J, A, Ay, Az };

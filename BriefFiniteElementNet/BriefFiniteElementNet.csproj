@@ -53,6 +53,7 @@
     <Compile Include="ElementHelpers\Gt9Helper.cs" />
     <Compile Include="ElementHelpers\TriangleBasicDrillingDofHelper.cs" />
     <Compile Include="Elements\TriangleElementBehaviours.cs" />
+    <Compile Include="Integration\MultiplierMatrixFunction.cs" />
     <Compile Include="Loads\PartialNonUniformLoad.cs" />
     <Compile Include="Mathh\Polynomial.cs" />
     <Compile Include="MpcElements\VirtualSupport.cs" />
@@ -62,6 +63,11 @@
     <Compile Include="Mathh\SparseRow.cs" />
     <Compile Include="FemUtilities\StiffnessCenterFinder.cs" />
     <Compile Include="Sections\UniformGeometric1DSection.cs" />
+    <Compile Include="Settlement.cs" />
+    <Compile Include="Solver\QrSolverFactory.cs" />
+    <Compile Include="Solver\QRSolver.cs" />
+    <Compile Include="Solver\LuSolverFactory.cs" />
+    <Compile Include="Solver\LuSolver.cs" />
     <Compile Include="StrainTensor.cs" />
     <Compile Include="ElementHelpers\BeamDirection.cs" />
     <Compile Include="ElementHelpers\CstHelper.cs" />

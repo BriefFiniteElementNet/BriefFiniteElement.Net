@@ -29,7 +29,17 @@ namespace BriefFiniteElementNet
             this.loadCases = new List<LoadCase>(loadCases);
         }
 
+        public SolverConfiguration(List<LoadCase> loadCases, ISolverFactory solverFactory)
+        {
+            this.loadCases = loadCases;
+            SolverFactory = solverFactory;
+        }
 
+
+        public SolverConfiguration(ISolverFactory solverFactory)
+        {
+            SolverFactory = solverFactory;
+        }
 
         #endregion
 
