@@ -126,7 +126,7 @@ namespace BriefFiniteElementNet.Validation
             span.Add("h3").Text("Model Definition");
 
             span.Add("paragraph")
-                .Text($"A {nx}x{ny}x{nz} grid, with {grd.Nodes.Count} nodes and {grd.Elements.Count} bar elements." +
+                .Text(string.Format("A {0}x{1}x{2} grid, with {3} nodes and {4} bar elements." ,nx,ny,nz,grd.Nodes.Count,grd.Elements.Count)+
                       " Every node in the model have a random load on it.");
 
             span.Add("h3").Text("Validation Result");
@@ -145,7 +145,7 @@ namespace BriefFiniteElementNet.Validation
             var id = "tbl_" + Guid.NewGuid().ToString("N").Substring(0, 5);
 
             span.Add("button").Attr("type", "button").Text("Toggle Details").AddClasses("btn btn-primary")
-                .Attr("onclick", $"$('#{id}').collapse('toggle');");
+                .Attr("onclick", string.Format("$('#{0}').collapse('toggle');", id));
 
             var div = span.Add("div").AddClasses("panel-collapse", "collapse", "out").Id(id);
 

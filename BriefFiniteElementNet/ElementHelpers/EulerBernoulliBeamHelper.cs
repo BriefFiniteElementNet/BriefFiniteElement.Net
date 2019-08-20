@@ -48,7 +48,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         public Element TargetElement { get; set; }
-        public BeamDirection Direction { get => _direction;  }
+        public BeamDirection Direction { get { return _direction; } }
 
         /// <inheritdoc/>
         public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
@@ -1116,7 +1116,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var xi = isoCoords[0];
 
             if (xi < -1 || xi > 1)
-                throw new ArgumentOutOfRangeException(nameof(isoCoords));
+                throw new ArgumentOutOfRangeException("isoCoords");
 
             var bar = targetElement as BarElement;
 
@@ -1170,7 +1170,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var xi = isoCoords[0];
 
             if (xi < -1 || xi > 1)
-                throw new ArgumentOutOfRangeException(nameof(isoCoords));
+                throw new ArgumentOutOfRangeException("isoCoords");
 
             var buf = new List<Tuple<DoF, double>>();
 

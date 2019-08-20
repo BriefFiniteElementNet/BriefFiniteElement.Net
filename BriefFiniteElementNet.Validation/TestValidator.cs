@@ -39,7 +39,7 @@ namespace BriefFiniteElementNet.Validation
             span.Add("h2").Text("Model Definition");
 
             span.Add("paragraph")
-                .Text($"-");
+                .Text("-");
 
             span.Add("h2").Text("Validation Result");
             span.Add("paragraph")
@@ -47,8 +47,8 @@ namespace BriefFiniteElementNet.Validation
 
             var id = "tbl_" + Guid.NewGuid().ToString("N").Substring(0, 5);
 
-            span.Add("button").Attr("type","button").Text("Toggle")
-                .Attr("onclick", $"$('#{id}').collapse('toggle');");
+            span.Add("button").Attr("type", "button").Text("Toggle")
+                .Attr("onclick", string.Format("$('#{0}').collapse('toggle');", id));
 
             var div = span.Add("div").AddClasses("panel-collapse", "collapse", "out").Id(id);
 

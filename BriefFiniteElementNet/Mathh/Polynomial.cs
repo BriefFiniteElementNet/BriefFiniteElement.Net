@@ -17,7 +17,7 @@ namespace BriefFiniteElementNet.Mathh
 
         public Polynomial Clone()
         {
-            var c2 = (double[]) Coefficients?.Clone();
+            var c2 = Coefficients == null ? (double[])null : (double[])Coefficients.Clone();
 
             var buf = new Polynomial(c2);
 

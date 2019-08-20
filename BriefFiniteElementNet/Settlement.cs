@@ -13,8 +13,17 @@ namespace BriefFiniteElementNet
         private LoadCase loadCase;
         private Displacement displacement;
 
-        public LoadCase LoadCase { get => loadCase; set => loadCase = value; }
-        public Displacement Displacement { get => displacement; set => displacement = value; }
+        public LoadCase LoadCase 
+        {
+            get         {            return loadCase;}
+            set { loadCase = value; }
+        }
+
+        public Displacement Displacement
+        {
+            get { return displacement; }
+            set { displacement = value; }
+        }
 
 
         #region Equality Compairer

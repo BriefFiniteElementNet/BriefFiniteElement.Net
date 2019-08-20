@@ -1089,7 +1089,7 @@ namespace BriefFiniteElementNet
             var xi = location[0];
 
             if (xi < -1 || xi > 1)
-                throw new ArgumentOutOfRangeException(nameof(location));
+                throw new ArgumentOutOfRangeException("location");
 
 
             var buf = new Matrix(4, 12);
@@ -1131,7 +1131,7 @@ namespace BriefFiniteElementNet
             var xi = location[0];
 
             if (xi < -1 || xi > 1)
-                throw new ArgumentOutOfRangeException(nameof(location));
+                throw new ArgumentOutOfRangeException("location");
 
             var buf = new Matrix(1, 12);
 

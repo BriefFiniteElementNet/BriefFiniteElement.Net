@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+# Visual Studio Express 2013 for Windows Desktop
+VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet", "BriefFiniteElementNet\BriefFiniteElementNet.csproj", "{7CDA20D4-9BC8-4BC3-9F22-CB86CD4DC3E1}"
 EndProject
@@ -17,15 +17,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		XmlInputFormat.txt = XmlInputFormat.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.DebuggerVisualizers", "BriefFiniteElementNet.DebuggerVisualizers\BriefFiniteElementNet.DebuggerVisualizers-VS2013.csproj", "{E12A7AD9-780B-4ADC-8C08-C7D5FD63C18B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.DebuggerVisualizers-VS2013", "BriefFiniteElementNet.DebuggerVisualizers\BriefFiniteElementNet.DebuggerVisualizers-VS2013.csproj", "{E12A7AD9-780B-4ADC-8C08-C7D5FD63C18B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Validation", "BriefFiniteElementNet.Validation\BriefFiniteElementNet.Validation.csproj", "{7A20CE01-552E-457A-A9C3-18BED244D897}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.SimpleUI", "BriefFiniteElementNet.SimpleUI\BriefFiniteElementNet.SimpleUI.csproj", "{BA826ABE-E2C4-4658-8D0D-11F6E6B995E9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.StructuralExtension", "BriefFiniteElementNet.StructuralExtension\BriefFiniteElementNet.StructuralExtension.csproj", "{7659C1CB-FAA4-47F6-B421-142B32C753B0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.TestConsole", "BriefFiniteElementNet.TestConsole\BriefFiniteElementNet.TestConsole.csproj", "{1DD7D04E-0DFB-49BD-AAA2-30128005ACE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Validation.Ui", "BriefFiniteElementNet.Validation.Ui\BriefFiniteElementNet.Validation.Ui.csproj", "{FC6E4877-B949-4522-BD35-116172A20925}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Common", "BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj", "{82C63C6B-651A-4308-8B89-B4C643F3A7C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,18 +57,18 @@ Global
 		{7A20CE01-552E-457A-A9C3-18BED244D897}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A20CE01-552E-457A-A9C3-18BED244D897}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A20CE01-552E-457A-A9C3-18BED244D897}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BA826ABE-E2C4-4658-8D0D-11F6E6B995E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BA826ABE-E2C4-4658-8D0D-11F6E6B995E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BA826ABE-E2C4-4658-8D0D-11F6E6B995E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BA826ABE-E2C4-4658-8D0D-11F6E6B995E9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7659C1CB-FAA4-47F6-B421-142B32C753B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7659C1CB-FAA4-47F6-B421-142B32C753B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7659C1CB-FAA4-47F6-B421-142B32C753B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7659C1CB-FAA4-47F6-B421-142B32C753B0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1DD7D04E-0DFB-49BD-AAA2-30128005ACE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1DD7D04E-0DFB-49BD-AAA2-30128005ACE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1DD7D04E-0DFB-49BD-AAA2-30128005ACE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1DD7D04E-0DFB-49BD-AAA2-30128005ACE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC6E4877-B949-4522-BD35-116172A20925}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC6E4877-B949-4522-BD35-116172A20925}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC6E4877-B949-4522-BD35-116172A20925}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC6E4877-B949-4522-BD35-116172A20925}.Release|Any CPU.Build.0 = Release|Any CPU
+		{82C63C6B-651A-4308-8B89-B4C643F3A7C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82C63C6B-651A-4308-8B89-B4C643F3A7C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82C63C6B-651A-4308-8B89-B4C643F3A7C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82C63C6B-651A-4308-8B89-B4C643F3A7C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

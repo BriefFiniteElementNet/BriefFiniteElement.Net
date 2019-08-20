@@ -634,8 +634,8 @@ namespace BriefFiniteElementNet
         public static TSource MinBy<TSource, TKey>(this IEnumerable<TSource> source,
             Func<TSource, TKey> selector, IComparer<TKey> comparer)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
-            if (selector == null) throw new ArgumentNullException(nameof(selector));
+            if (source == null) throw new ArgumentNullException("source");
+            if (selector == null) throw new ArgumentNullException("selector");
             comparer = comparer ?? Comparer<TKey>.Default;
 
             using (var sourceIterator = source.GetEnumerator())
@@ -681,7 +681,7 @@ namespace BriefFiniteElementNet
 
         public static T MinBy<T>(this IEnumerable<T> source, IComparer<T> comparer)
         {
-            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (source == null) throw new ArgumentNullException("source");
 
             using (var sourceIterator = source.GetEnumerator())
             {
