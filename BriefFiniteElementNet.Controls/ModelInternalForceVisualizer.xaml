@@ -3,11 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:helixToolkit="clr-namespace:HelixToolkit;assembly=HelixToolkit"
              
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:controls="clr-namespace:BriefFiniteElementNet.Controls"
-             xmlns:helixToolkit1="clr-namespace:HelixToolkit;assembly=HelixToolkit"
+             xmlns:helixToolkit11="http://helix-toolkit.org/wpf"
              mc:Ignorable="d" 
              d:DesignHeight="287" d:DesignWidth="746">
     <UserControl.Resources>
@@ -25,7 +24,8 @@
             <RowDefinition Height="30"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <helixToolkit:HelixViewport3D Name="MainViewport" RotateGesture="RightClick" PanGesture="LeftClick" Grid.RowSpan="2" Grid.ColumnSpan="4"/>
+        
+        <helixToolkit11:HelixViewport3D Name="MainViewport" RotateGesture="RightClick" PanGesture="LeftClick" Grid.RowSpan="2" Grid.ColumnSpan="4"/>
         <Grid Margin="0" Background="#5900FFC5" Grid.ColumnSpan="4">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="137"/>

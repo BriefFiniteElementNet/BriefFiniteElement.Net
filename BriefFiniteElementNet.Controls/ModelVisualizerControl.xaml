@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:helixToolkit="clr-namespace:HelixToolkit;assembly=HelixToolkit"
+             xmlns:helixToolkit="http://helix-toolkit.org/wpf"
              xmlns:helixToolkit1="clr-namespace:HelixToolkit;assembly=HelixToolkit"
              mc:Ignorable="d"
              d:DesignHeight="507" d:DesignWidth="693">
@@ -16,7 +16,7 @@
 
 
         <Grid Grid.Row="1">
-            <helixToolkit1:HelixViewport3D x:Name="MainViewport" RotateGesture="RightClick" PanGesture="LeftClick" />
+            <helixToolkit:HelixViewport3D x:Name="MainViewport" RotateGesture="RightClick" PanGesture="LeftClick" />
             <Canvas x:Name="MainCanvas" />
         </Grid>
 

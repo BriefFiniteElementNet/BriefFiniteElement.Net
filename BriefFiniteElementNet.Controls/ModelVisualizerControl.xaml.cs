@@ -10,9 +10,9 @@ using System.Windows.Media.Media3D;
 using System.Windows.Media.TextFormatting;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.MpcElements;
-using DefaultLights = HelixToolkit.DefaultLights;
-using MaterialHelper = HelixToolkit.MaterialHelper;
-using MeshBuilder = HelixToolkit.MeshBuilder;
+using DefaultLights = HelixToolkit.Wpf.DefaultLights;
+using MaterialHelper = HelixToolkit.Wpf.MaterialHelper;
+using MeshBuilder = HelixToolkit.Wpf.MeshBuilder;
 
 namespace BriefFiniteElementNet.Controls
 {
