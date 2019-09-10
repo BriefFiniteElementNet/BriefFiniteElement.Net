@@ -27,7 +27,7 @@ namespace BriefFiniteElementNet.Tests
 
             var zero = matrix * new Matrix(res)- new Matrix(rightSide);
 
-            var err = zero.CoreArray.Max(Math.Abs);
+            var err = zero.CoreArray.Max(i => Math.Abs(i));
 
             Assert.IsTrue(err < 1e-10);
 
@@ -50,8 +50,8 @@ namespace BriefFiniteElementNet.Tests
             var eye1 = inverse * matrix;//should be I
             var eye2 = matrix * inverse;//should be I too
 
-            var maxErr1 = (eye1 - Matrix.Eye(n)).CoreArray.Max(Math.Abs);
-            var maxErr2 = (eye2 - Matrix.Eye(n)).CoreArray.Max(Math.Abs);
+            var maxErr1 = (eye1 - Matrix.Eye(n)).CoreArray.Max(i => Math.Abs(i));
+            var maxErr2 = (eye2 - Matrix.Eye(n)).CoreArray.Max(i => Math.Abs(i));
 
             Assert.IsTrue(maxErr1 < 1e-10);
             Assert.IsTrue(maxErr2 < 1e-10);
