@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.DebuggerVisualizers;
-using System;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Media;
@@ -12,7 +11,6 @@ using BriefFiniteElementNet;
 using BriefFiniteElementNet.Controls;
 using BriefFiniteElementNet.DebuggerVisualizers;
 using BriefFiniteElementNet.Mathh;
-using Microsoft.VisualStudio.DebuggerVisualizers;
 
 [assembly: System.Diagnostics.DebuggerVisualizer(typeof(PolynomialVisualizer), typeof(VisualizerObjectSource), Target = typeof(Polynomial), Description = "Epsi1on polynomial Visualizer!")]
 namespace BriefFiniteElementNet.DebuggerVisualizers

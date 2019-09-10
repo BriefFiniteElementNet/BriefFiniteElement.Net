@@ -97,7 +97,7 @@
 xcopy "BriefFiniteElementNet.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
 xcopy "BriefFiniteElementNet.Controls.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
 xcopy "BriefFiniteElementNet.Common.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
-xcopy "HelixToolkit.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
+xcopy "HelixToolkit.Wpf.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
 xcopy "DynamicDataDisplay.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
 </PostBuildEvent>
   </PropertyGroup>

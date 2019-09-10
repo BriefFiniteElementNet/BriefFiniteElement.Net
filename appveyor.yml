@@ -2,3 +2,5 @@ before_build:
   - nuget restore BriefFiniteElementNet.VS2019.sln
 build:
   project: BriefFiniteElementNet.VS2019.sln
+ 
+image: Visual Studio 2019
