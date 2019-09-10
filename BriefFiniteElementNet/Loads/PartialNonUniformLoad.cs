@@ -4,14 +4,16 @@ using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Elements;
 using System.Runtime.Serialization;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.Loads
 {
-   
+
     /// <summary>
     /// Represents a nonuniform load over rectangular area of element in 1d, or 2d or 3d
     /// </summary>
-    [Obsolete("still in development")]
+    [Serializable]
+    [Obsolete("still in development, have bugs")]
     public class PartialNonUniformLoad:Load
     {
         #region props, fields
@@ -191,6 +193,7 @@ namespace BriefFiniteElementNet.Loads
 
         #region ISerialization Implementation
 
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

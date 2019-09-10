@@ -13,12 +13,18 @@ namespace BriefFiniteElementNet
         private LoadCase loadCase;
         private Displacement displacement;
 
+        /// <summary>
+        /// Gets or sets the load case of Settlement
+        /// </summary>
         public LoadCase LoadCase 
         {
             get         {            return loadCase;}
             set { loadCase = value; }
         }
 
+        /// <summary>
+        /// Gets or sets the amount of settlement
+        /// </summary>
         public Displacement Displacement
         {
             get { return displacement; }

@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using Elo = BriefFiniteElementNet.FluentElementPermuteManager.ElementLocalDof;
 using BriefFiniteElementNet.Materials;
+using BriefFiniteElementNet.ElementHelpers;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -10,7 +11,7 @@ namespace BriefFiniteElementNet.Elements
     /// Represents a tetrahedron with isotropic material.
     /// </summary>
     [Serializable]
-    public class Tetrahedral : Element3D
+    public class Tetrahedral : Element
     {
 
         #region mechanical props
@@ -505,6 +506,7 @@ namespace BriefFiniteElementNet.Elements
             _nu = (double)info.GetValue("_nu", typeof(double));
             _massDensity = (double)info.GetValue("_massDensity", typeof(double));
             hash = (int)info.GetValue("hash", typeof(int));
+            _material = (BaseMaterial)info.GetValue("_material", typeof(int));
         }
 
         #endregion
@@ -519,6 +521,7 @@ namespace BriefFiniteElementNet.Elements
             info.AddValue("_nu", _nu);
             info.AddValue("_massDensity", _massDensity);
             info.AddValue("hash", hash);
+            info.AddValue("_material", _material);
         }
 
         #endregion
@@ -548,7 +551,14 @@ namespace BriefFiniteElementNet.Elements
             throw new NotImplementedException();
         }
 
+        public override Matrix GetLambdaMatrix()
+        {
+            throw new NotImplementedException();
+        }
 
-
+        public override IElementHelper[] GetHelpers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

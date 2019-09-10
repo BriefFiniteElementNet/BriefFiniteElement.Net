@@ -3,6 +3,7 @@ using System;
 
 namespace BriefFiniteElementNet.Solver
 {
+    /*
     /// <summary>
     /// Result of an iterative solver.
     /// </summary>
@@ -18,4 +19,5 @@ namespace BriefFiniteElementNet.Solver
         /// </summary>
         Failure
     }
+    */
 }

@@ -3,7 +3,7 @@
   <Class Name="BriefFiniteElementNet.StaticLinearAnalysisResult" Collapsed="true">
     <Position X="18.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AgAECgkCAIQAAAhgAAAAQCCIAAQwABAABBAAgiAIJUg=</HashCode>
+      <HashCode>AgAECgkCAIQAAAhgAAAAQCCIAAQwABABBBAAgiBIJUg=</HashCode>
       <FileName>StaticLinearAnalysisResult.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -13,7 +13,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>ACBgBAAkEAQAECAAAAAAAEAgAACAAEAAAAtCBACAoAQ=</HashCode>
+      <HashCode>ACBgBAAEEQQAECAAAAgAAEAgAQCCAEIAAAtCAAAAoAQ=</HashCode>
       <FileName>Elements\Element.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -58,7 +58,7 @@
   <Class Name="BriefFiniteElementNet.Node" Collapsed="true">
     <Position X="10" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AIAAEAAAAAAAAAAACAIiAAgiAAAAAFAAAAFRAAAAAAA=</HashCode>
+      <HashCode>AKAAEAAAAAAAAEAACAIiAAgiAAAAAFAAAAFRAAAAAAA=</HashCode>
       <FileName>Node.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -73,7 +73,7 @@
   <Class Name="BriefFiniteElementNet.Model" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="18.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CCAgyIAAAEAAABAAAIgQAAAoAACCAnMAAgMAAAAgIAA=</HashCode>
+      <HashCode>CCAgyIAAAEAAABAAAIgSAAAoAQCCBnMAAgMAAAAgIAA=</HashCode>
       <FileName>Model.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -81,7 +81,7 @@
   <Class Name="BriefFiniteElementNet.StructurePart" Collapsed="true">
     <Position X="7.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACACAAEAAwABBAAAAAQAAiEADBAAAAAAAAgAAAAgA=</HashCode>
+      <HashCode>AAACACAAEAAwABBAAAAAQAAiAADAAAAAAAAAgAAAAgA=</HashCode>
       <FileName>StructurePart.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -130,9 +130,9 @@
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.Loads.PartialNonUniformLoad" Collapsed="true">
-    <Position X="3" Y="5.75" Width="1.5" />
+    <Position X="2.75" Y="5.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AQAAAQAAABAAAAAAACAAEAAIAAAAhAQAAAAIAAQBAgA=</HashCode>
+      <HashCode>AQAAAQAAABAAAAAAACAAEAAoAAAAhAQAAAAIAAQBAgA=</HashCode>
       <FileName>Loads\PartialNonUniformLoad.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -211,7 +211,7 @@
   <Class Name="BriefFiniteElementNet.MpcElements.VirtualConstraint" Collapsed="true">
     <Position X="5.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAEAAAAAEAAAAAAAAAAAAAAQAAAAAAAAADAAAAAAAAA=</HashCode>
+      <HashCode>AAEAAAAAEAAAAAAAAAAAAAAwAAAAAAAAADAAAAAAAAA=</HashCode>
       <FileName>MpcElements\VirtualSupport.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -264,7 +264,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAEAAAAAAAEAQIAk4EEIARAgASAEAIgQAAAEACAABiA=</HashCode>
+      <HashCode>AAEAAAAAAAEAQIAk4EEIBRAgASAEAIgQAAAEAGAABiA=</HashCode>
       <FileName>Displacement.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -276,7 +276,7 @@
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AAAQAgAAAAAAEAIE4BECAQAgAQAEAIBACAAEQAgIEiI=</HashCode>
+      <HashCode>AAAQAgAAAAAAEAIE4JECBQAgAQAEAIBACAAEQEgIEiI=</HashCode>
       <FileName>Force.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -378,7 +378,7 @@
   <Enum Name="BriefFiniteElementNet.BuiltInSolverType" Collapsed="true">
     <Position X="17" Y="6" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <HashCode>gAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAgAAAAgAAAAA=</HashCode>
       <FileName>BuiltInSolverType.cs</FileName>
     </TypeIdentifier>
   </Enum>

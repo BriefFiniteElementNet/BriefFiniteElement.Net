@@ -24,11 +24,6 @@ namespace BriefFiniteElementNet.MpcElements
         {
         }
 
-        [NonSerialized]
-        public Node Node1;
-        [NonSerialized]
-        public Node Node2;
-
         public override SparseMatrix GetExtraEquations()
         {
             throw new NotImplementedException();
@@ -51,8 +46,6 @@ namespace BriefFiniteElementNet.MpcElements
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
-            info.AddValue("Node1", Node1);
-            info.AddValue("Node2", Node2);
         }
 
         #endregion

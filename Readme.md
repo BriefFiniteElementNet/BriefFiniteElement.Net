@@ -42,11 +42,20 @@ This project is using/used these projects/files:
 ## Validation
 
 This library is developed regarding "Code Reuse" so the code will be somehow complicated. There are several types of validation for FE models in this library:
-	- Unit Test (in project ``BriefFiniteElementNet.Tests``)
-	- Validating the result with other well known and open source applications:
-		- Validating the result with OpenSees (the Open System for Earthquake Engineering Simulation) available at [opensees.berkeley.edu](http://opensees.berkeley.edu/)
-		- Validating the result with Frame3dd application available at [frame3dd.sourceforge.net](http://frame3dd.sourceforge.net)
+
+* Unit Test (in project ``BriefFiniteElementNet.Tests``)
+* Validating the result with other well known and open source applications:
+
+	*  Validating the result with OpenSees (the Open System for Earthquake Engineering Simulation) available at [opensees.berkeley.edu](http://opensees.berkeley.edu/)
+
+	*  Validating the result with Frame3dd application available at [frame3dd.sourceforge.net](http://frame3dd.sourceforge.net)
+
 for more information on validation please have a look at [Validation.md](Validation.md) file.
+
+## Known Issues
+
+for more information on known issues please have a look at [know-issues.md](know-issues.md) file.
+
 ## Donation
 
 

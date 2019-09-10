@@ -8,7 +8,7 @@ using System.Text;
 namespace BriefFiniteElementNet.Integration
 {
     /// <summary>
-    /// 
+    /// gets the helper and element, then gives Bt*d*B*|J| as result
     /// </summary>
     public class MultiplierMatrixFunction : IMatrixFunction
     {

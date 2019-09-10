@@ -21,6 +21,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             TargetElement = targetElement;
 
             {//loading condistions list pool from element's cache
+                /*
                 var listPoolKey = "98821744-2A0D-49F0-AAEF-F44DBCED700E";
 
                 object obj;
@@ -34,14 +35,15 @@ namespace BriefFiniteElementNet.ElementHelpers
                     if (targetElement != null)
                         targetElement.SetCache(listPoolKey, CondsListPool);
                 }
+                */
 
             }
         }
-
+        /*
         [NonSerialized]
         private ListPool<Condition> CondsListPool = new ListPool<Condition>();
 
-        internal class Condition
+        internal sealed class Condition
         {
             public Condition()
             {
@@ -103,7 +105,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 }
             }
         }
-
+        */
         /// <inheritdoc/>
         public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {

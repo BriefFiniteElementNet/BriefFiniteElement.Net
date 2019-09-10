@@ -24,15 +24,6 @@ namespace BriefFiniteElementNet.ElementHelpers
         Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords);
 
         /// <summary>
-        /// Gets the i'th B matrix at defined isometric coordinates (B is derivation of N regarding to local x or y or z, not regarding to ξ, η or γ -- it is ∂N/∂x or ..., it is not ∂N/∂ξ or ...).
-        /// </summary>
-        /// <param name="targetElement">The target element.</param>
-        /// <param name="isoCoords">The isometric coordinations.</param>
-        /// <returns></returns>
-        //[Obsolete("Bt D B implemented with higher performance")]
-        ///Matrix GetB_iMatrixAt(Element targetElement, int i, params double[] isoCoords);
-
-        /// <summary>
         /// Gets the compliance D matrix at defined isometric coordinates in local coordination system.
         /// </summary>
         /// <remarks>

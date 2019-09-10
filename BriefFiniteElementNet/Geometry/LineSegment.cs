@@ -11,19 +11,15 @@ namespace BriefFiniteElementNet.Geometry
 
         public LineSegment(Point p1, Point p2)
         {
-            P1 = p1;
-            P2 = p2;
+            p1 = p1;
+            p2 = p2;
         }
 
-        /// <summary>
-        /// The p1, starting point
-        /// </summary>
-        public Point P1;
+       
+        private Point p1;
 
-        /// <summary>
-        /// The p2, ending point
-        /// </summary>
-        public Point P2;
+       
+        private Point p2;
 
 
         /// <summary>
@@ -48,6 +44,29 @@ namespace BriefFiniteElementNet.Geometry
                 return (P2 - P1).Length;
             }
         }
-        
+
+        /// <summary>
+        /// The p1, starting point
+        /// </summary>
+        public Point P1
+        {
+            get { return p1; }
+            set
+            {
+                p1 = value;
+            }
+        }
+
+        /// <summary>
+        /// The p2, ending point
+        /// </summary>
+        public Point P2
+        {
+            get { return p2; }
+            set
+            {
+                p2 = value;
+            }
+        }
     }
 }

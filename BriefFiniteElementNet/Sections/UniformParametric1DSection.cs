@@ -23,8 +23,11 @@ namespace BriefFiniteElementNet.Sections
             info.AddValue("_iy", _iy);
             info.AddValue("_iz", _iz);
             info.AddValue("_j", _j);
+            info.AddValue("_ay", _ay);
+            info.AddValue("_az", _az);
 
             base.GetObjectData(info, context);
+    
         }
 
         protected UniformParametric1DSection(SerializationInfo info, StreamingContext context) : base(info, context)
@@ -33,6 +36,8 @@ namespace BriefFiniteElementNet.Sections
             _iy = info.GetDouble("_iy");
             _iz = info.GetDouble("_iz");
             _j = info.GetDouble("_j");
+            _ay = info.GetDouble("_ay");
+            _az = info.GetDouble("_az");
         }
 
         public UniformParametric1DSection()

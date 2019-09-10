@@ -12,6 +12,7 @@ using CSparse.Factorization;
 using CSparse.Ordering;
 using CCS = CSparse.Double.SparseMatrix;
 using Coord = CSparse.Storage.CoordinateStorage<double>;
+using System.Globalization;
 
 namespace BriefFiniteElementNet
 {
@@ -406,12 +407,14 @@ namespace BriefFiniteElementNet
                 case BuiltInSolverType.CholeskyDecomposition:
                     return new CholeskySolverFactory();
                     break;
+                    /*
                 case BuiltInSolverType.ConjugateGradient:
                     return new ConjugateGradientFactory();// PCG(new SSOR());
                     break;
                 case BuiltInSolverType.Lu:
                     return new ConjugateGradientFactory();// PCG(new SSOR());
                     break;
+                    /**/
                 default:
                     throw new ArgumentOutOfRangeException("type");
             }
@@ -1399,7 +1402,7 @@ namespace BriefFiniteElementNet
 
             for (var i = 0; i < model.Nodes.Count; i++)
             {
-                model.Nodes[i].Label = "N" + i.ToString();
+                model.Nodes[i].Label = "N" + i.ToString(CultureInfo.CurrentCulture);
             }
         }
 
@@ -1412,7 +1415,7 @@ namespace BriefFiniteElementNet
 
             for (var i = 0; i < model.Elements.Count; i++)
             {
-                model.Elements[i].Label = "E" + i.ToString();
+                model.Elements[i].Label = "E" + i.ToString(CultureInfo.CurrentCulture);
             }
         }
 

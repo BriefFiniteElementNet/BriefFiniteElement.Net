@@ -18,95 +18,10 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             TargetElement = targetElement;
 
-            {//loading condistions list pool from element's cache
-                var listPoolKey = "866E612A-438F-439A-A4B1-E51315279B71";
-
-                object obj;
-
-                targetElement.TryGetCache(listPoolKey, out CondsListPool);
-
-                if (CondsListPool == null)
-                {
-                    CondsListPool = new ListPool<Condition>();
-
-                    if (targetElement != null)
-                        targetElement.SetCache(listPoolKey, CondsListPool);
-                }
-
-            }
-        }
-
-        [NonSerialized]
-        private ListPool<Condition> CondsListPool = new ListPool<Condition>();
-
-        internal class Condition
-        {
-            public Condition()
-            {
-            }
-
-            public Condition(int nodeNumber, double xi, int differentialDegree, double value)
-            {
-                NodeNumber = nodeNumber;
-                Xi = xi;
-                DifferentialDegree = differentialDegree;
-                RightSide = value;
-            }
-
-            public int NodeNumber;
-
-            public double Xi;
-
-            public int DifferentialDegree;
-
-            public double RightSide;
-
-            public override string ToString()
-            {
-                var sb = new StringBuilder();
-
-                sb.Append("N");
-
-                sb.Append(NodeNumber);
-
-                for (int i = 0; i < DifferentialDegree; i++)
-                {
-                    sb.Append("'");
-                }
-
-                sb.AppendFormat("({0}) = {1}", Xi, RightSide);
-
-                return sb.ToString();
-            }
-
-            public class ConditionEqualityComparer : IComparer<Condition>
-            {
-                public int Compare(Condition x, Condition y)
-                {
-                    var t = 0;
-
-                    if ((t = x.NodeNumber.CompareTo(y.NodeNumber)) != 0)
-                        return t;
-
-                    if ((t = x.Xi.CompareTo(y.Xi)) != 0)
-                        return t;
-
-                    if ((t = x.DifferentialDegree.CompareTo(y.DifferentialDegree)) != 0)
-                        return t;
-
-                    if ((t = x.RightSide.CompareTo(y.RightSide)) != 0)
-                        return t;
-
-                    return t;
-                }
-
-
-            }
-
-
-
 
         }
+
+
         public Element TargetElement { get; set; }
 
         /// <inheritdoc/>

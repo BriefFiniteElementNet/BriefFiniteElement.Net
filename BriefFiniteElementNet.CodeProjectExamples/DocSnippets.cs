@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.CodeProjectExamples
 {
@@ -70,7 +71,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
 
             var d = n2.GetNodalDisplacement();
 
-            Console.WriteLine("displacement on node 2: " + d.DX.ToString());
+            Console.WriteLine("displacement on node 2: " + d.DX.ToString(CultureInfo.CurrentCulture));
 
             Console.ReadKey();
         }
@@ -107,7 +108,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             for (var i = 0; i < 20; i++)
             {
                 model.Nodes.Add(ns[i] = new Node(p[i]));
-                ns[i].Label = "n" + i.ToString();
+                ns[i].Label = "n" + i.ToString(CultureInfo.CurrentCulture);
                 ns[i].Constraints = Constraints.RotationFixed;
             }
 

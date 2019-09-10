@@ -7,15 +7,11 @@ namespace BriefFiniteElementNet.Geometry
     /// </summary>
     public struct Plane
     {
-        /// <summary>
-        /// The normal vector of plane
-        /// </summary>
-        public Vector Normal;
+        
+        private Vector normal;
 
-        /// <summary>
-        /// A points which exists on the surface of plane
-        /// </summary>
-        public Point P;
+       
+        private Point p;
 
         /// <summary>
         /// Moves the Plane with specified amount.
@@ -59,17 +55,41 @@ namespace BriefFiniteElementNet.Geometry
         /// <summary>
         /// The XY plane with Z = 0
         /// </summary>
-        public static Plane XYPlane = FromPointAndNormal(Vector.K, Point.Origins);
+        public static readonly Plane XYPlane = FromPointAndNormal(Vector.K, Point.Origins);
 
         /// <summary>
         /// The XZ plane with Y = 0
         /// </summary>
-        public static Plane XZPlane = FromPointAndNormal(Vector.J, Point.Origins);
+        public static readonly Plane XZPlane = FromPointAndNormal(Vector.J, Point.Origins);
 
         /// <summary>
         /// The YZ plane with X = 0
         /// </summary>
-        public static Plane YZPlane = FromPointAndNormal(Vector.I, Point.Origins);
+        public static readonly Plane YZPlane = FromPointAndNormal(Vector.I, Point.Origins);
+
+        /// <summary>
+        /// The normal vector of plane
+        /// </summary>
+        public Vector Normal
+        {
+            get { return normal; }
+            set
+            {
+                normal = value;
+            }
+        }
+
+        /// <summary>
+        /// A points which exists on the surface of plane
+        /// </summary>
+        public Point P
+        {
+            get { return p; }
+            set
+            {
+                p = value;
+            }
+        }
 
         /// <summary>
         /// Calculates the distance of defined point with this Plane.

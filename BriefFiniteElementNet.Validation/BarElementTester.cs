@@ -8,6 +8,7 @@ using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
 using HtmlTags;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.Validation
 {
@@ -755,11 +756,11 @@ namespace BriefFiniteElementNet.Validation
             var disp = res[0];
             var reac = res[1];
 
-            var dispAbsErrIdx = disp.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("absolute"));
-            var dispRelErrIdx = disp.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("relative"));
+            var dispAbsErrIdx = disp.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower(CultureInfo.CurrentCulture).Contains("absolute"));
+            var dispRelErrIdx = disp.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower(CultureInfo.CurrentCulture).Contains("relative"));
 
-            var reacAbsErrIdx = reac.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("absolute"));
-            var reacRelErrIdx = reac.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower().Contains("relative"));
+            var reacAbsErrIdx = reac.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower(CultureInfo.CurrentCulture).Contains("absolute"));
+            var reacRelErrIdx = reac.Columns.Cast<DataColumn>().ToList().FindIndex(i => i.ColumnName.ToLower(CultureInfo.CurrentCulture).Contains("relative"));
 
 
             var maxDispAbsError = disp.Rows.Cast<DataRow>().Max(ii => (double)ii.ItemArray[dispAbsErrIdx]);
@@ -856,7 +857,7 @@ namespace BriefFiniteElementNet.Validation
 
             span.Add("h3").Text("Model Definition");
 
-            span.Add("paragraph").Text(string.Format("A {0}x{1}x{2} grid, with {3} nodes and {4} bar elements.",nx,ny,nz,grd.Nodes.Count,grd.Elements.Count) ).AddClosedTag("br");
+            span.Add("paragraph").Text(string.Format(CultureInfo.CurrentCulture, "A {0}x{1}x{2} grid, with {3} nodes and {4} bar elements.",nx,ny,nz,grd.Nodes.Count,grd.Elements.Count) ).AddClosedTag("br");
 
             span.Add("paragraph").Text("Every node in the model have a random load on it, random displacement in original location.").AddClosedTag("br");
             span.Add("paragraph").Text("Every element in the model have a random uniform distributed load on it.").AddClosedTag("br");
@@ -872,12 +873,12 @@ namespace BriefFiniteElementNet.Validation
                .Text(string.Format("Validation output for nodal displacements:"));
 
 
-                span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxDispAbsError, maxDispRelError));
+                span.Add("p").AddClass("bg-info").AppendHtml(string.Format(CultureInfo.CurrentCulture, "-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxDispAbsError, maxDispRelError));
 
-                var id = "tbl_" + Guid.NewGuid().ToString("N").Substring(0, 5);
+                var id = "tbl_" + Guid.NewGuid().ToString("N", CultureInfo.CurrentCulture).Substring(0, 5);
 
                 span.Add("button").Attr("type", "button").Text("Toggle Details").AddClasses("btn btn-primary")
-                    .Attr("onclick", string.Format("$('#{0}').collapse('toggle');",id));
+                    .Attr("onclick", string.Format(CultureInfo.CurrentCulture, "$('#{0}').collapse('toggle');",id));
 
                 var div = span.Add("div").AddClasses("panel-collapse", "collapse", "out").Id(id);
 
@@ -916,15 +917,15 @@ namespace BriefFiniteElementNet.Validation
             {//nodal reactions
                 span.Add("h4").Text("Nodal Support Reactions");
                 span.Add("paragraph")
-               .Text(string.Format("Validation output for nodal support reactions:"));
+               .Text(string.Format(CultureInfo.CurrentCulture, "Validation output for nodal support reactions:"));
 
 
-                span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxReacAbsError, maxReacRelError));
+                span.Add("p").AddClass("bg-info").AppendHtml(string.Format(CultureInfo.CurrentCulture, "-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxReacAbsError, maxReacRelError));
 
-                var id = "tbl_" + Guid.NewGuid().ToString("N").Substring(0, 5);
+                var id = "tbl_" + Guid.NewGuid().ToString("N", CultureInfo.CurrentCulture).Substring(0, 5);
 
                 span.Add("button").Attr("type", "button").Text("Toggle Details").AddClasses("btn btn-primary")
-                    .Attr("onclick", string.Format("$('#{0}').collapse('toggle');",id));
+                    .Attr("onclick", string.Format(CultureInfo.CurrentCulture, "$('#{0}').collapse('toggle');",id));
 
                 var div = span.Add("div").AddClasses("panel-collapse", "collapse", "out").Id(id);
 
@@ -959,9 +960,9 @@ namespace BriefFiniteElementNet.Validation
 
                 span.Add("h4").Text("Internal Displacements");
                 span.Add("paragraph")
-                    .Text(string.Format("Validation output for internal displacements (Displacement at each end node of bar elements should be equal to bar element's internal displacement of bar element at that node)"));
+                    .Text(string.Format(CultureInfo.CurrentCulture, "Validation output for internal displacements (Displacement at each end node of bar elements should be equal to bar element's internal displacement of bar element at that node)"));
 
-                span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}", maxInternalDisplacementAbsErr));
+                span.Add("p").AddClass("bg-info").AppendHtml(string.Format(CultureInfo.CurrentCulture, "-Max ABSOLUTE Error: {0:e3}", maxInternalDisplacementAbsErr));
             }
             #endregion
 
@@ -970,9 +971,9 @@ namespace BriefFiniteElementNet.Validation
 
                 span.Add("h4").Text("Internal Force");
                 span.Add("paragraph")
-                    .Text(string.Format("Validation output for internal force (forces retrived by K.Δ formula should be in equiblirium with internal force of bar elements at any location within element):"));
+                    .Text(string.Format(CultureInfo.CurrentCulture, "Validation output for internal force (forces retrived by K.Δ formula should be in equiblirium with internal force of bar elements at any location within element):"));
 
-                span.Add("p").AddClass("bg-info").AppendHtml(string.Format("-Max ABSOLUTE Error: {0:e3}", maxInternalForceResidual));
+                span.Add("p").AddClass("bg-info").AppendHtml(string.Format(CultureInfo.CurrentCulture, "-Max ABSOLUTE Error: {0:e3}", maxInternalForceResidual));
             }
             #endregion
 
@@ -1110,7 +1111,7 @@ namespace BriefFiniteElementNet.Validation
 
             span.Add("h3").Text("Model Definition");
 
-            span.Add("paragraph").Text(string.Format("A {0}x{1}x{2} grid, with {3} nodes and {4} bar elements.",nx,ny,nz,grd.Nodes.Count,grd.Elements.Count)).AddClosedTag("br");
+            span.Add("paragraph").Text(string.Format(CultureInfo.CurrentCulture, "A {0}x{1}x{2} grid, with {3} nodes and {4} bar elements.",nx,ny,nz,grd.Nodes.Count,grd.Elements.Count)).AddClosedTag("br");
 
             span.Add("paragraph").Text("Every node in the model have a random load on it, random displacement in original location.").AddClosedTag("br");
 

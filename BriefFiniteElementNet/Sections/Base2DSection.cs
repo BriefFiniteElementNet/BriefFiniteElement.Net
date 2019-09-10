@@ -29,7 +29,7 @@ namespace BriefFiniteElementNet.Sections
             //base.GetObjectData(info, context);
         }
 
-        public Base2DSection()
+        protected Base2DSection()
         {
 
         }

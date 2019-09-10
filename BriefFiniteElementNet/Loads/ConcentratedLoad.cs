@@ -12,7 +12,7 @@ using System.Security.Permissions;
 namespace BriefFiniteElementNet.Loads
 {
     [Serializable]
-    [Obsolete("still in development")]
+    [Obsolete("still in development, have bugs")]
 
     public class ConcentratedLoad : Load
     {

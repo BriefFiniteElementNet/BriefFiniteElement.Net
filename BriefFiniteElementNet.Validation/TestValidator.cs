@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using HtmlTags;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.Validation
 {
@@ -45,7 +46,7 @@ namespace BriefFiniteElementNet.Validation
             span.Add("paragraph")
                 .Text("This is a temporary table");
 
-            var id = "tbl_" + Guid.NewGuid().ToString("N").Substring(0, 5);
+            var id = "tbl_" + Guid.NewGuid().ToString("N", CultureInfo.CurrentCulture).Substring(0, 5);
 
             span.Add("button").Attr("type", "button").Text("Toggle")
                 .Attr("onclick", string.Format("$('#{0}').collapse('toggle');", id));

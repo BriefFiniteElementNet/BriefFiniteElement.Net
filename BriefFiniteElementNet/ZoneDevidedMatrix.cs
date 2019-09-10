@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using CSparse.Double;
 using CSparse.Storage;
 using CCS = CSparse.Double.SparseMatrix;
 
@@ -22,22 +23,55 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// The released released part
         /// </summary>
-        public CCS ReleasedReleasedPart;
+        private CCS releasedReleasedPart;
 
         /// <summary>
         /// The released fixed part
         /// </summary>
-        public CCS ReleasedFixedPart;
+        private CCS releasedFixedPart;
 
         /// <summary>
         /// The fixed released part
         /// </summary>
-        public CCS FixedReleasedPart;
+        private CCS fixedReleasedPart;
 
         /// <summary>
         /// The fixed fixed part
         /// </summary>
-        public CCS FixedFixedPart;
+        private CCS fixedFixedPart;
+
+        public CCS ReleasedReleasedPart
+        {
+            get { return releasedReleasedPart; }
+            set
+            {
+                releasedReleasedPart = value;
+            }
+        }
+        public CCS ReleasedFixedPart
+        {
+            get { return releasedFixedPart; }
+            set
+            {
+                releasedFixedPart = value;
+            }
+        }
+        public CCS FixedReleasedPart
+        {
+            get { return fixedReleasedPart; }
+            set
+            {
+                fixedReleasedPart = value;
+            }
+        }
+        public CCS FixedFixedPart
+        {
+            get { return fixedFixedPart; }
+            set
+            {
+                fixedFixedPart = value;
+            }
+        }
 
         /*
         /// <summary>
@@ -58,6 +92,6 @@ namespace BriefFiniteElementNet
         /// </remarks>
         public int[] FixedMap;
         */
-        
+
     }
 }

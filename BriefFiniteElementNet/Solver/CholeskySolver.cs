@@ -6,6 +6,7 @@ using CSparse.Double;
 using CSparse.Double.Factorization;
 using CSparse.Factorization;
 using CSparse.Storage;
+using System.Globalization;
 
 
 namespace BriefFiniteElementNet.Solver
@@ -71,7 +72,7 @@ namespace BriefFiniteElementNet.Solver
 
             if (Target != null)
                 Target.Trace.Write(TraceRecord.Create(BriefFiniteElementNet.Common.TraceLevel.Info,
-                    string.Format("cholesky decomposition of matrix took about {0:#,##0} ms",
+                    string.Format(CultureInfo.CurrentCulture, "cholesky decomposition of matrix took about {0:#,##0} ms",
                         sp.ElapsedMilliseconds)));
         }
 

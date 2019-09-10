@@ -6,6 +6,7 @@ using System.Security.Cryptography;
 using System.Text;
 using BriefFiniteElementNet.Elements;
 using rnd=BriefFiniteElementNet.RandomStuff;
+using System.Globalization;
 
 
 namespace BriefFiniteElementNet
@@ -19,6 +20,15 @@ namespace BriefFiniteElementNet
                 foreach (var cse in cases)
                 {
                     nde.Loads.Add(new NodalLoad(RandomStuff.GetRandomForce(-1000, 1000), cse));
+                }
+        }
+
+        public static void AddRandomiseNodalLoads(Model mdl,double min,double max, params LoadCase[] cases)
+        {
+            foreach (var nde in mdl.Nodes)
+                foreach (var cse in cases)
+                {
+                    nde.Loads.Add(new NodalLoad(RandomStuff.GetRandomForce(min, max), cse));
                 }
         }
 
@@ -683,13 +693,13 @@ namespace BriefFiniteElementNet
         {
             for (int i = 0; i < mdl.Elements.Count; i++)
             {
-                mdl.Elements[i].Label = string.Format("e-{0}", i);
+                mdl.Elements[i].Label = string.Format(CultureInfo.CurrentCulture, "e-{0}", i);
             }
 
 
             for (int i = 0; i < mdl.Nodes.Count; i++)
             {
-                mdl.Nodes[i].Label = string.Format("n-{0}", i);
+                mdl.Nodes[i].Label = string.Format(CultureInfo.CurrentCulture, "n-{0}", i);
             }
         }
 

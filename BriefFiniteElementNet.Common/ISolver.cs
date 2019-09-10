@@ -51,5 +51,7 @@ namespace BriefFiniteElementNet.Common
         /// </returns>
         SolverResult Solve(double[] input, double[] result, out string message);
         */
+
+        
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using System.Globalization;
 
 namespace BriefFiniteElementNet
 {
@@ -146,7 +147,7 @@ namespace BriefFiniteElementNet
         /// </returns>
         public override string ToString()
         {
-            return string.Format("{0}, {1}, {2}", x, y, z);
+            return string.Format(CultureInfo.CurrentCulture, "{0}, {1}, {2}", x, y, z);
         }
 
 
@@ -323,7 +324,7 @@ namespace BriefFiniteElementNet
         /// </returns>
         public override string ToString()
         {
-            return string.Format("{0}, {1}, {2}", xi, eta, lambda);
+            return string.Format(CultureInfo.CurrentCulture, "{0}, {1}, {2}", xi, eta, lambda);
         }
 
 

@@ -5,6 +5,7 @@ using System.Windows.Media.Media3D;
 using BriefFiniteElementNet.Elements;
 using HelixToolkit;
 using HelixToolkit;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.Controls
 {
@@ -87,7 +88,7 @@ namespace BriefFiniteElementNet.Controls
             ctrl.VerticalAxisLabel = verticalValueLabel;
 
             var wnd = new Window();
-            wnd.Title = string.Format("Visualizing {0}", verticalValueLabel);
+            wnd.Title = string.Format(CultureInfo.CurrentCulture, "Visualizing {0}", verticalValueLabel);
             wnd.Content = ctrl;
             wnd.ShowDialog();
         }

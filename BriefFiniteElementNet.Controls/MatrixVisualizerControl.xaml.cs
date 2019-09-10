@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.Controls
 {
@@ -19,7 +20,7 @@ namespace BriefFiniteElementNet.Controls
 
         private void DataGrid_OnLoadingRow(object sender, DataGridRowEventArgs e)
         {
-            e.Row.Header = (e.Row.GetIndex()).ToString();
+            e.Row.Header = (e.Row.GetIndex()).ToString(CultureInfo.CurrentCulture);
         }
 
         private void DataGridCell_GotFocus(object sender, RoutedEventArgs e)
@@ -59,11 +60,12 @@ namespace BriefFiniteElementNet.Controls
         public void VisualizeMatrix(BriefFiniteElementNet.Matrix mtx)
         {
             var tbl = new DataTable();
+            tbl.Locale = CultureInfo.InvariantCulture;
             target = mtx;
 
             for (var j = 0; j < mtx.ColumnCount; j++)
             {
-                tbl.Columns.Add(j.ToString(), typeof(double));
+                tbl.Columns.Add(j.ToString(CultureInfo.CurrentCulture), typeof(double));
             }
 
             for (var i = 0; i < mtx.RowCount; i++)

@@ -124,10 +124,14 @@ namespace BriefFiniteElementNet.Controls
             src.SetXMapping(i => i.X);
             src.SetYMapping(i => i.Y);
 
-           
 
+            var gr = new LineGraph(src);
+            gr.Stroke = Brushes.Black;
+            gr.StrokeThickness = 2;
+            gr.Name = Context.Component.ToString();
 
-            plotter.AddLineGraph(src, Colors.Black, 2, Context.Component.ToString());
+            plotter.Children.Add(gr);
+            //plotter.AddLineGraph(src, Colors.Black, 2, Context.Component.ToString());
 
         }
 

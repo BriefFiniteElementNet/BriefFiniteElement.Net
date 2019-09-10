@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.Validation
 {
@@ -22,12 +23,12 @@ namespace BriefFiniteElementNet.Validation
 
         public static int ToInt(this object obj)
         {
-            return Convert.ToInt32(obj);
+            return Convert.ToInt32(obj, CultureInfo.CurrentCulture);
         }
 
         public static double ToDouble(this object obj)
         {
-            return Convert.ToDouble(obj);
+            return Convert.ToDouble(obj, CultureInfo.CurrentCulture);
         }
 
         public static object[] Union<T>(this object num, params T[] others)
@@ -64,12 +65,12 @@ namespace BriefFiniteElementNet.Validation
 
         public static void AppendLine(this StringBuilder sb, string format, params object[] args)
         {
-            sb.AppendLine(string.Format(format, args));
+            sb.AppendLine(string.Format(CultureInfo.CurrentCulture, format, args));
         }
 
         public static string ToScientificNotationString(this double dbl, int floatCount=4)
         {
-            var t = dbl.ToString("e" + floatCount);
+            var t = dbl.ToString("e" + floatCount, CultureInfo.CurrentCulture);
 
             if (dbl >= 0)
                 t = "+" + t;

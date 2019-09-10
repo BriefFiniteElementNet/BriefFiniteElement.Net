@@ -11,7 +11,7 @@ namespace BriefFiniteElementNet.Sections
     [Serializable]
     public abstract class Base1DSection:ISerializable
     {
-        public Base1DSection()
+        protected Base1DSection()
         {
 
         }
@@ -30,9 +30,10 @@ namespace BriefFiniteElementNet.Sections
         /// Will use for determining Gaussian sampling count.
         /// </remarks>
         /// <example>
-        /// for example if Iy is a*xi^2 + b*xi + c and A is d*xi + e, then max order will be 2.
+        /// for example if Iy in length is form of a*xi^2 + b*xi + c and A is d*xi + e, then max order will be 2.
+        /// if section is constant and uniform along the length and does not change, then Iy and other paramters do not vary then maximum order will be zero.
         /// </example>
-        /// <returns>the number of Gaussian integration points needed</returns>
+        /// <returns>the maximum order of variable function </returns>
         public abstract int[] GetMaxFunctionOrder();
 
 

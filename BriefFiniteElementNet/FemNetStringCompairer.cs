@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace BriefFiniteElementNet
 {
@@ -59,7 +60,7 @@ namespace BriefFiniteElementNet
                 if (!char.IsWhiteSpace(tmp))
                 {
                     if (char.IsUpper(tmp))
-                        newarr[j] = char.ToLower(tmp);
+                        newarr[j] = char.ToLower(tmp, CultureInfo.CurrentCulture);
                     else
                         newarr[j] = tmp;
 

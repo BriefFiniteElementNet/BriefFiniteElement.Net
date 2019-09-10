@@ -8,7 +8,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents the constraints on a single degree of freedom
     /// </summary>
-    public enum DofConstraint : byte
+    public enum DofConstraint 
     {
         /// <summary>
         /// Indicates the degree of freedom is released

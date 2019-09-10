@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Solver;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.Validation
 {
@@ -43,7 +44,7 @@ namespace BriefFiniteElementNet.Validation
             System.IO.File.WriteAllText(input, code);
 
             var start = new System.Diagnostics.ProcessStartInfo();
-            start.Arguments = string.Format(@"""{0}"" ""{1}"" ", input, output);
+            start.Arguments = string.Format(CultureInfo.CurrentCulture, @"""{0}"" ""{1}"" ", input, output);
             start.FileName = "frame3dd.exe";
             start.RedirectStandardOutput = true;
             start.RedirectStandardError = true;
@@ -90,7 +91,7 @@ and place frame3dd.exe beside this application.");
 
             //Process.Start(@"C:\Program Files (x86)\Notepad++\notepad++.exe", output);
             var cfg = new SolverConfiguration();
-            cfg.LoadCases = allCases;
+            cfg.LoadCases.AddRange(allCases);
             //cfg.SolverGenerator = i => new CholeskySolver(i);
             cfg.SolverFactory = new CholeskySolverFactory();
             model.Solve(cfg);
@@ -259,7 +260,7 @@ and place frame3dd.exe beside this application.");
             var notReleaseNodes = ndes.Where(i => i.Constraints != Constraint.Released).ToArray();
 
             sb.AppendLine();
-            sb.AppendLine(string.Format("{0}\t# number of nodes with reactions", notReleaseNodes.Length));
+            sb.AppendLine(string.Format(CultureInfo.CurrentCulture, "{0}\t# number of nodes with reactions", notReleaseNodes.Length));
             sb.AppendLine("#.n\tx\ty\tz\txx\tyy\tzz\t1=fixed, 0=free");
 
             foreach (var nde in notReleaseNodes)
@@ -275,7 +276,7 @@ and place frame3dd.exe beside this application.");
 
         private void WriteElementData(StringBuilder sb)
         {
-            sb.AppendLine(string.Format("{0}\t# number of frame elements", model.Elements.Count));
+            sb.AppendLine(string.Format(CultureInfo.CurrentCulture, "{0}\t# number of frame elements", model.Elements.Count));
             sb.AppendLine("#.e	n1	n2	Ax	Asy	Asz	Jxx	Iyy	Izz	E	G	roll	density");
             sb.AppendLine("#	.	.	m^2	m^2	m^2	m^4	m^4	m^4	MPa	MPa	deg	T/mm^3");
 
@@ -287,20 +288,20 @@ and place frame3dd.exe beside this application.");
 
                 var fr = elm as FrameElement2Node;
 
-                sb.AppendFormat("{0}\t", 1 + cnt++);
-                sb.AppendFormat("{0}\t", 1 + Index(fr.StartNode));
-                sb.AppendFormat("{0}\t", 1 + Index(fr.EndNode));
+                sb.AppendFormat(CultureInfo.CurrentCulture, "{0}\t", 1 + cnt++);
+                sb.AppendFormat(CultureInfo.CurrentCulture, "{0}\t", 1 + Index(fr.StartNode));
+                sb.AppendFormat(CultureInfo.CurrentCulture, "{0}\t", 1 + Index(fr.EndNode));
 
-                sb.AppendFormat("{0}\t", fr.A);
-                sb.AppendFormat("{0}\t", fr.Ay);
+                sb.AppendFormat(CultureInfo.CurrentCulture, "{0}\t", fr.A);
+                sb.AppendFormat(CultureInfo.CurrentCulture, "{0}\t", fr.Ay);
                 sb.AppendFormat("{0}\t", fr.Az);
                 sb.AppendFormat("{0}\t", fr.J);
-                sb.AppendFormat("{0}\t", fr.Iy);
-                sb.AppendFormat("{0}\t", fr.Iz);
-                sb.AppendFormat("{0}\t", fr.E);
-                sb.AppendFormat("{0}\t", fr.G);
-                sb.AppendFormat("{0}\t", fr.WebRotation);
-                sb.AppendFormat("{0}", fr.MassDensity);
+                sb.AppendFormat(CultureInfo.CurrentCulture, "{0}\t", fr.Iy);
+                sb.AppendFormat(CultureInfo.CurrentCulture, "{0}\t", fr.Iz);
+                sb.AppendFormat(CultureInfo.CurrentCulture, "{0}\t", fr.E);
+                sb.AppendFormat(CultureInfo.CurrentCulture, "{0}\t", fr.G);
+                sb.AppendFormat(CultureInfo.CurrentCulture, "{0}\t", fr.WebRotation);
+                sb.AppendFormat(CultureInfo.CurrentCulture, "{0}", fr.MassDensity);
 
                 sb.AppendLine();
             }

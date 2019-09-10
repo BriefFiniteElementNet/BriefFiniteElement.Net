@@ -5,6 +5,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Elements
 {
+    /*
     /// <summary>
     /// Represents the geometric properties of triangle element in specific point
     /// </summary>
@@ -25,4 +26,5 @@ namespace BriefFiniteElementNet.Elements
             set { _t = value; }
         }
     }
+    */
 }

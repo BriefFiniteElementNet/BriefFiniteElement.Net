@@ -59,7 +59,7 @@ namespace BriefFiniteElementNet.Solver
         }
 
         /// <inheritdoc />
-        public IterativeSolver()
+        protected IterativeSolver()
         {
             RelativeTolerance = 1e-8;
             AbsoluteTolerance = 0.0;

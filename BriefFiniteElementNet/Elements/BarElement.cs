@@ -8,6 +8,7 @@ using BriefFiniteElementNet.Integration;
 using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
 using System.Security.Permissions;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -499,11 +500,18 @@ namespace BriefFiniteElementNet.Elements
         {
             var local = GetLocalMassMatrix();
 
-            var t = GetTransformationMatrix();
+            //var t = GetTransformationMatrix();
 
-            CalcUtil.ApplyTransformMatrix(local, t);
+            var tr = this.GetTransformationManager();
 
-            return local;
+            //CalcUtil.ApplyTransformMatrix(local, t);
+
+            var global = tr.TransformLocalToGlobal(local);
+
+            tr.ReturnMatrixesToPool();
+            local.ReturnToPool();
+
+            return global;
         }
 
         public override Matrix GetGlobalStifnessMatrix()
@@ -944,7 +952,7 @@ namespace BriefFiniteElementNet.Elements
             foreach (var point in discretePoints)
             {
                 if (xi == point.Xi)
-                    throw new Exception(string.Format("Internal force is descrete at xi = {0}, thus have two values in this location. try to find internal force a little bit after or before this point", xi));
+                    throw new Exception(string.Format(CultureInfo.CurrentCulture, "Internal force is descrete at xi = {0}, thus have two values in this location. try to find internal force a little bit after or before this point", xi));
             }
 
             var approx = GetInternalForceAt(xi, loadCase);

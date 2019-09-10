@@ -10,6 +10,7 @@ using System.Text;
 using BriefFiniteElementNet.Common;
 using CSparse.Double;
 using BriefFiniteElementNet.Solver;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.BenchmarkApplication
 {
@@ -45,7 +46,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
             var sysInfo = GetSystemInfo();
             logger.Log("\tCPU Model: {0}", sysInfo[0]);
             logger.Log("\tCPU clock: {0} MHz", sysInfo[1]);
-            logger.Log("\tTotal RAM: {0:0.00} GB", double.Parse(sysInfo[2])/(1024.0*1024.0));
+            logger.Log("\tTotal RAM: {0:0.00} GB", double.Parse(sysInfo[2], CultureInfo.CurrentCulture)/(1024.0*1024.0));
 
             logger.Log("###############################################################################");
             logger.Log("");
@@ -94,10 +95,10 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
                     var paramerts = new string[]
                     {
-                        String.Format("Benchamrk Dimension: {0}", nm),
-                        String.Format("{0} elements", model.Elements.Count),
-                        String.Format("{0} nodes", model.Nodes.Count),
-                        String.Format("{0} free DoFs", Util.GetFreeDofsCount(model))
+                        String.Format(CultureInfo.CurrentCulture, "Benchamrk Dimension: {0}", nm),
+                        String.Format(CultureInfo.CurrentCulture, "{0} elements", model.Elements.Count),
+                        String.Format(CultureInfo.CurrentCulture, "{0} nodes", model.Nodes.Count),
+                        String.Format(CultureInfo.CurrentCulture, "{0} free DoFs", Util.GetFreeDofsCount(model))
                     };
 
 

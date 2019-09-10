@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace BriefFiniteElementNet
 {
@@ -19,7 +20,7 @@ namespace BriefFiniteElementNet
         [DebuggerHidden]
         public static void ThrowMemberWithSameLabelExistsException(string label)
         {
-            throw new InvalidLabelException(string.Format("Member with same label ({0}) exists in the Model", label));
+            throw new InvalidLabelException(string.Format(CultureInfo.CurrentCulture, "Member with same label ({0}) exists in the Model", label));
         }
 
 
@@ -46,7 +47,7 @@ namespace BriefFiniteElementNet
         /// <param name="issueId">The issue identifier.</param>
         public static void Throw(string issueId)
         {
-            var msg = string.Format("An error of number {0} is occurred.", issueId);
+            var msg = string.Format(CultureInfo.CurrentCulture, "An error of number {0} is occurred.", issueId);
 
             var ex = new BriefFiniteElementNetException(msg);
             ex.IssueId = issueId;

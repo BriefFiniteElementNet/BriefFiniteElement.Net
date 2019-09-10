@@ -6,7 +6,6 @@ using System.Security.Permissions;
 using System.Diagnostics;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.MpcElements;
-using __targetType__ = BriefFiniteElementNet.MpcElements.MpcElement;
 
 namespace BriefFiniteElementNet
 {
@@ -21,18 +20,18 @@ namespace BriefFiniteElementNet
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-base.GetObjectData(info,context);
+            base.GetObjectData(info, context);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BriefFiniteElementNet.MpcElementCollection" /> class.
         /// </summary>
         /// <param name="parent">The parent.</param>
-        internal MpcElementCollection(Model parent):base(parent)
+        internal MpcElementCollection(Model parent) : base(parent)
         {
         }
 
-        protected MpcElementCollection(SerializationInfo info, StreamingContext context):base(info,context)
+        protected MpcElementCollection(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
 

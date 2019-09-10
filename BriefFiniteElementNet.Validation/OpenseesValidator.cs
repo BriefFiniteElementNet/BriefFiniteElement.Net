@@ -9,6 +9,7 @@ using BriefFiniteElementNet.Validation.OpenseesTclGenerator;
 using System.Diagnostics;
 using System.Xml;
 using System.Data;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.Validation
 {
@@ -102,6 +103,7 @@ namespace BriefFiniteElementNet.Validation
             //var key = new Func<double[]>(() => (double[])absNodalDisp.Clone());
 
             var nodalDispTbl = new DataTable();
+            nodalDispTbl.Locale = CultureInfo.InvariantCulture;
             var nodalReactTbl = new DataTable();
             var elmFrcTbl = new DataTable();
 
@@ -248,7 +250,7 @@ namespace BriefFiniteElementNet.Validation
                     i =>
                         i.Split(' ')
                             .Where(j => !string.IsNullOrWhiteSpace(j))
-                            .Select(j => double.Parse(j))
+                            .Select(j => double.Parse(j, CultureInfo.CurrentCulture))
                             .ToArray())
                 .ToArray();
 

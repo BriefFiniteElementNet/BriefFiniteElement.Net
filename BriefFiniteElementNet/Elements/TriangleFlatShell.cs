@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Geometry;
 
 namespace BriefFiniteElementNet.Elements
@@ -12,7 +13,7 @@ namespace BriefFiniteElementNet.Elements
     /// Represents a triangle flat shell which internally consists of a membrane (CST) and plate bending (dkt) element.
     /// </summary>
     [Serializable]
-    public class TriangleFlatShell : Element2D
+    public class TriangleFlatShell : Element
     {
         #region field and properties
 
@@ -462,7 +463,14 @@ namespace BriefFiniteElementNet.Elements
             return new[] { p0, p1, p2 };
         }
 
-        
+        public override Matrix GetLambdaMatrix()
+        {
+            throw new NotImplementedException();
+        }
 
+        public override IElementHelper[] GetHelpers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

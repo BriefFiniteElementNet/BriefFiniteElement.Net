@@ -32,29 +32,60 @@ namespace BriefFiniteElementNet.Integration
         /// <summary>
         /// The Gaussian point count for integrating in ξ dimension.
         /// </summary>
-        public int XiPointCount;
+        public int XiPointCount
+        {
+            get { return xiPointCount; }
+            set
+            {
+                xiPointCount = value;
+            }
+        }
 
         /// <summary>
         /// The Gaussian point count for integrating in η dimension.
         /// </summary>
-        public int EtaPointCount;
+        public int EtaPointCount
+        {
+            get { return etaPointCount; }
+            set
+            {
+                etaPointCount = value;
+            }
+        }
 
         /// <summary>
         /// The Gaussian point count for integrating in γ dimension.
         /// </summary>
-        public int GammaPointCount;
-
-
+        public int GammaPointCount
+        {
+            get { return gammaPointCount; }
+            set
+            {
+                gammaPointCount = value;
+            }
+        }
         /// <summary>
         /// The G2 function, parameters: G2(η,γ)
         /// </summary>
-        public Func<double, double, double> G2;
-
+        public Func<double, double, double> G2
+        {
+            get { return g2; }
+            set
+            {
+                g2 = value;
+            }
+        }
         /// <summary>
         /// The G1 function, parameters: G1(η,γ)
         /// </summary>
-        public Func<double, double, double> G1;
-
+        public Func<double, double, double> G1
+        {
+            get { return g1; }
+            set
+            {
+                g1 = value;
+            }
+        }
 
         /// <summary>
         /// The F1 function, parameters: F1(γ)
@@ -62,41 +93,104 @@ namespace BriefFiniteElementNet.Integration
         /// <value>
         /// lower level of η integration
         /// </value>
-        public Func<double, double> F1;
-
+        public Func<double, double> F1
+        {
+            get { return f1; }
+            set
+            {
+                f1 = value;
+            }
+        }
         /// <summary>
         /// The F2 function, parameters: F2(γ)
         /// </summary>
         /// <value>
         /// upper level of η integration
         /// </value>
-        public Func<double, double> F2;
-
-
+        public Func<double, double> F2
+        {
+            get { return f2; }
+            set
+            {
+                f2 = value;
+            }
+        }
         /// <summary>
         /// The A1
         /// </summary>
         /// <value>
         /// lower level of Gamma integration
         /// </value>
-        public double A1;
-
+        public double A1
+        {
+            get { return a1; }
+            set
+            {
+                a1 = value;
+            }
+        }
         /// <summary>
         /// The A2
         /// </summary>
         /// <value>
         /// upper level of Gamma integration
         /// </value>
-        public double A2;
-
-
+        public double A2
+        {
+            get { return a2; }
+            set
+            {
+                a2 = value;
+            }
+        }
         /// <summary>
         /// The H function to be integrated
         /// </summary>
-        public IMatrixFunction H;
+        public IMatrixFunction H
+        {
+            get { return h; }
+            set
+            {
+                h = value;
+            }
+        }
+
+        private int xiPointCount;
+
+        
+        private int etaPointCount;
+
+        
+        private int gammaPointCount;
+
+
+     
+        private Func<double, double, double> g2;
+
+        
+        private Func<double, double, double> g1;
+
+
+        private Func<double, double> f1;
+
+        
+        private Func<double, double> f2;
+
+
+        
+        private double a1;
+
+       
+        private double a2;
+
+
+        
+        private IMatrixFunction h;
 
 
         public MatrixPool MatrixPool;
+
+       
 
 
         /// <summary>

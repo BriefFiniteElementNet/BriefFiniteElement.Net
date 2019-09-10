@@ -78,6 +78,9 @@ namespace BriefFiniteElementNet.MpcElements
 
         protected NodeList _nodes;
 
+        /// <summary>
+        /// Gets or sets the nodes
+        /// </summary>
         public NodeList Nodes
         {
             get { return _nodes; }

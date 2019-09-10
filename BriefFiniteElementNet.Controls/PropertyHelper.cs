@@ -111,7 +111,7 @@ namespace BriefFiniteElementNet.Controls
 
                 if (value is IEnumerable)
                 {
-                    return string.Format("Count = {0}", (value as IEnumerable).Cast<object>().Count());
+                    return string.Format(CultureInfo.CurrentCulture, "Count = {0}", (value as IEnumerable).Cast<object>().Count());
                 }
 
                 return value;

@@ -57,6 +57,7 @@ namespace BriefFiniteElementNet.Elements
         [NonSerialized]
         public int CacheMiss;
 
+        [NonSerialized]
         private Dictionary<string, object> cache = new Dictionary<string, object>();
 
         /// <summary>

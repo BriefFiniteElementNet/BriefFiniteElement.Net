@@ -19,7 +19,88 @@ namespace BriefFiniteElementNet
     /// </remarks>
     public struct BendingStressTensor
     {
-        public double M11, M12, M13, M21, M22, M23, M31, M32, M33;
+        private double m33;
+        private double m11;
+        private double m12;
+        private double m13;
+        private double m21;
+        private double m22;
+        private double m23;
+        private double m31;
+        private double m32;
+
+        public double M11
+        {
+            get { return m11; }
+            set
+            {
+                m11 = value;
+            }
+        }
+        public double M12
+        {
+            get { return m12; }
+            set
+            {
+                m12 = value;
+            }
+        }
+        public double M13
+        {
+            get { return m13; }
+            set
+            {
+                m13 = value;
+            }
+        }
+        public double M21
+        {
+            get { return m21; }
+            set
+            {
+                m21 = value;
+            }
+        }
+        public double M22
+        {
+            get { return m22; }
+            set
+            {
+                m22 = value;
+            }
+        }
+        public double M23
+        {
+            get { return m23; }
+            set
+            {
+                m23 = value;
+            }
+        }
+        public double M31
+        {
+            get { return m31; }
+            set
+            {
+                m31 = value;
+            }
+        }
+        public double M32
+        {
+            get { return m32; }
+            set
+            {
+                m32 = value;
+            }
+        }
+        public double M33
+        {
+            get { return m33; }
+            set
+            {
+                m33 = value;
+            }
+        }
 
         /// <summary>
         /// Transforms the specified tensor using transformation matrix.

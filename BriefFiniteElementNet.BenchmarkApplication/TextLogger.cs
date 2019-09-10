@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.BenchmarkApplication
 {
@@ -18,7 +19,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
         public void Log(string format, params object[] pars)
         {
-            Sb.AppendLine(string.Format(format, pars));
+            Sb.AppendLine(string.Format(CultureInfo.CurrentCulture, format, pars));
 
             if(WriteToConsole)
                 Console.WriteLine(format, pars);

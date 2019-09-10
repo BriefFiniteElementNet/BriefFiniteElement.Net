@@ -32,15 +32,25 @@ namespace BriefFiniteElementNet
             this.location = location;
         }
 
+        /// <summary>
+        /// Initiates a new node
+        /// </summary>
+        /// <param name="x">X component of node's location</param>
+        /// <param name="y">Y component of node's location</param>
+        /// <param name="z">Z component of node's location</param>
         public Node(double x, double y, double z) : this(new Point(x, y, z))
         {}
 
+        /// <summary>
+        /// Gets the index of node
+        /// </summary>
         public int Index
         {
             get { return _index; }
             internal set { _index = value; }
         }
 
+        [NonSerialized]
         private int _index;
 
         
@@ -396,6 +406,8 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="loadCombination">the load combintation</param>
         /// <returns></returns>
+        [Obsolete]
+
         public Force GetTotalApplyingForces(LoadCombination loadCombination)
         {
             var buf = new Force();
@@ -413,6 +425,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="loadCombination">the load combintation</param>
         /// <returns></returns>
+        [Obsolete]
         public Force GetTotalExternalForces(LoadCombination loadCombination)
         {
             var buf = new Force();

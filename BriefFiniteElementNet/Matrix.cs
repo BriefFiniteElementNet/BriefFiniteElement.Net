@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using System.Globalization;
 
 namespace BriefFiniteElementNet
 {
@@ -678,7 +679,9 @@ namespace BriefFiniteElementNet
             
         }
 
+        [NonSerialized]
         private bool Disposed = false;
+        [NonSerialized]
         private string GenerateCallStack_Temp;
 
         /// <summary>
@@ -1692,7 +1695,7 @@ namespace BriefFiniteElementNet
                 for (var j = 0; j < mtx.ColumnCount; j++)
                 {
                     if (System.Math.Abs(mtx[i, j]) < epsi1on)
-                        sb.AppendFormat("0\t", mtx[i, j]);
+                        sb.AppendFormat(CultureInfo.CurrentCulture, "0\t", mtx[i, j]);
                     else
                         sb.AppendFormat("{0:0.00}\t", mtx[i, j]);
                 }

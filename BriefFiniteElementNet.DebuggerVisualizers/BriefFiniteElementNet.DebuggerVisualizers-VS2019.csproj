@@ -96,7 +96,10 @@
     <PostBuildEvent>xcopy "BriefFiniteElementNet.DebuggerVisualizers.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
 xcopy "BriefFiniteElementNet.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
 xcopy "BriefFiniteElementNet.Controls.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
-xcopy "HelixToolkit.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y</PostBuildEvent>
+xcopy "BriefFiniteElementNet.Common.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
+xcopy "HelixToolkit.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
+xcopy "DynamicDataDisplay.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace BriefFiniteElementNet
 {
@@ -12,7 +13,7 @@ namespace BriefFiniteElementNet
             if (!val)
                 return;
 
-            var msg = string.Format(format, param);
+            var msg = string.Format(CultureInfo.CurrentCulture, format, param);
 
             throw new BriefFiniteElementNetException(msg);
         }

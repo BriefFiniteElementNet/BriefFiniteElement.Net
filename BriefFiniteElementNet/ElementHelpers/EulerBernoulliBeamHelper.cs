@@ -185,8 +185,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             public enum FunctionType
             {
-                M,
-                N
+                M = 0,
+                N = 1
             }
 
 
@@ -239,11 +239,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     return t;
                 }
-
-
             }
-
-
 
 
         }
@@ -413,7 +409,11 @@ namespace BriefFiniteElementNet.ElementHelpers
                         var epsilon = Math.Abs(pn.EvaluateDerivative(cnd.Xi, cnd.DifferentialDegree) - cnd.RightSide);
 
                         if (epsilon > 1e-10)
+                        {
                             flag = false;
+                            break;
+                        }
+                            
                     }
 
                     if (flag)
@@ -428,7 +428,10 @@ namespace BriefFiniteElementNet.ElementHelpers
                 }
 
                 if (cnds == null)
+                {
                     cnds = GetShapeFunctionConditions(bar);
+                }
+                    
             }
 
             
@@ -556,7 +559,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             #endregion
 
-            cnds.Sort(new Condition.ConditionEqualityComparer());
+            //cnds.Sort(new Condition.ConditionEqualityComparer());
 
             return cnds;
         }
@@ -1062,14 +1065,13 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 var frcX = br.IsoCoordsToLocalCoords(cns.ForceIsoLocation.Xi)[0];
 
-
                 frc = frc.Move(new Point(frcX, 0, 0), new Point(0, 0, 0));
                 frc = frc.Move(new Point(0, 0, 0), new Point(targetX, 0, 0));
 
                 var movedEnds = ends.Move(new Point(0, 0, 0), new Point(targetX, 0, 0));
 
                 var f2 = frc + movedEnds;
-                //f2 *= -1;
+                // f2 *= -1;
 
 
                 if(_direction == BeamDirection.Y)
@@ -1428,16 +1430,16 @@ namespace BriefFiniteElementNet.ElementHelpers
                         fi.Fy += localforce.Fy * ni;//concentrated force
                         fi.Mz += localforce.Fy * mi;//concentrated force
 
-                        fi.Fy += -localforce.Mz * nip;//concentrated moment
-                        fi.Mz += -localforce.Mz * mip;//concentrated moment
+                        fi.Fy += localforce.Mz * nip;//concentrated moment
+                        fi.Mz += localforce.Mz * mip;//concentrated moment
                     }
                     else
                     {
                         fi.Fz += localforce.Fz * ni;//concentrated force
                         fi.My += localforce.Fz * mi;//concentrated force
 
-                        fi.Fz += -localforce.My * nip;//concentrated moment
-                        fi.My += -localforce.My * mip;//concentrated moment
+                        fi.Fz += localforce.My * nip;//concentrated moment
+                        fi.My += localforce.My * -mip;//concentrated moment
                     }
 
                     buf[i] = fi;

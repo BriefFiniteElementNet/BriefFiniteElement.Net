@@ -8,6 +8,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
+using System.Globalization;
 
 namespace BriefFiniteElementNet
 {
@@ -28,15 +29,6 @@ namespace BriefFiniteElementNet
         protected string tag;
         [NonSerialized]
         protected Model parent;
-
-        /// <summary>
-        /// The temporal data, to store temporal or calculation sensitive data,
-        /// This field is readonly and is not serialized with the containing object.
-        /// </summary>
-       // [NonSerialized]
-        //protected readonly Dictionary<Array, object> TemporalData = new Dictionary<Array, object>(new ArrayEqualityComparer());
-
-        
 
         /// <summary>
         /// Gets the identifier.
@@ -66,7 +58,7 @@ namespace BriefFiniteElementNet
                     if (value != null)
                         if (parent != null)
                             if (!parent.IsValidLabel(value))
-                                throw new InvalidLabelException(string.Format("member with same label ({0}) exist in the structure", value));
+                                throw new InvalidLabelException(string.Format(CultureInfo.CurrentCulture, "member with same label ({0}) exist in the structure", value));
 
                 this.label = value;
             }
@@ -159,39 +151,6 @@ namespace BriefFiniteElementNet
         {
             
         }
-
-        /// <summary>
-        /// Gets the temporal data with specified key
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="key">The key, sesitive to order.</param>
-        /// <returns>true if value exists, false otherwise</returns>
-        /*
-        public bool GetTemporalData<T>(out T value,params object[] key)
-        {
-            if (!TemporalData.ContainsKey(key))
-            {
-                value = default(T);
-                return false;
-            }
-
-            var obj = TemporalData[key];
-
-            value = (T)obj;
-            return true;
-        }
-        
-
-        /// <summary>
-        /// Sets the temporal data with specified key.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="key">The key, sensitive to order.</param>
-        public void SetTemporalData(object value, params object[] key)
-        {
-            TemporalData[key] = value;
-        }
-        */
 
         /// <summary>
         /// Re assign s the node references. Used after deserialization

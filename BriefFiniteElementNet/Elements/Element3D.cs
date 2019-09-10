@@ -18,29 +18,6 @@ namespace BriefFiniteElementNet
 
 
 
-        #region Serialization stuff
-
-        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-        }
-
-        public override Matrix GetLambdaMatrix()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override IElementHelper[] GetHelpers()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected Element3D(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-
-        #endregion
+        
     }
 }

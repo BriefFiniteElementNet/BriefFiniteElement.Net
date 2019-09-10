@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.Mathh
 {
@@ -219,7 +220,7 @@ namespace BriefFiniteElementNet.Mathh
             {
                 var origPow = Coefficients.Length - 1 - i;
 
-                parts.Add(string.Format("{0} * x^{1}", Coefficients[i], origPow));
+                parts.Add(string.Format(CultureInfo.CurrentCulture, "{0} * x^{1}", Coefficients[i], origPow));
             }
 
             return string.Join(" + ", parts);

@@ -43,7 +43,7 @@ namespace BriefFiniteElementNet.Materials
         {
         }
 
-        public BaseMaterial()
+        protected BaseMaterial()
         {
         }
 

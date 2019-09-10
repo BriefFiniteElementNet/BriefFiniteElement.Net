@@ -12,6 +12,7 @@ using BriefFiniteElementNet.MpcElements;
 using CSparse.Double;
 using BriefFiniteElementNet.Solver;
 using CCS = CSparse.Double.SparseMatrix;
+using System.Globalization;
 
 namespace BriefFiniteElementNet
 {
@@ -1003,7 +1004,7 @@ namespace BriefFiniteElementNet
                 var rec = TraceRecords.GetRecord(30000, parent.Nodes[nodeNum].Label);
 
                 rec.TargetIdentifier = string.Format(
-                    "{0} DoF on node #{1} for load case with [name = '{2}'] and [nature = {3}]", dof, nodeNum,
+                    CultureInfo.CurrentCulture, "{0} DoF on node #{1} for load case with [name = '{2}'] and [nature = {3}]", dof, nodeNum,
                     currentCase.CaseName, currentCase.LoadType);
 
                 parent.Trace.Write(rec);

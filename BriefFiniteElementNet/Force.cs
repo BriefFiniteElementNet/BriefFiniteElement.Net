@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using System.Globalization;
 
 namespace BriefFiniteElementNet
 {
@@ -348,12 +349,54 @@ namespace BriefFiniteElementNet
 
         public override string ToString()
         {
-            var buf = string.Format("F: {0}, M: {1}", Forces, Moments);
+            var buf = string.Format(CultureInfo.CurrentCulture, "F: {0}, M: {1}", Forces, Moments);
 
             //MathUtil.Equals(X, 0) && X != 0 ? "~0" : (object)X,
             //MathUtil.Equals(Y, 0) && Y != 0 ? "~0" : (object)Y,
             //MathUtil.Equals(Z, 0) && Z != 0 ? "~0" : (object)Z);
             return buf;
+        }
+
+        /// <summary>
+        /// Gets the defined component of Force object
+        /// </summary>
+        /// <param name="dof"></param>
+        /// <returns></returns>
+        public double GetComponent(DoF dof)
+        {
+            switch (dof)
+            {
+                case DoF.Dx: return Fx;
+                case DoF.Dy: return Fy;
+                case DoF.Dz: return Fz;
+
+                case DoF.Rx: return Mx;
+                case DoF.Ry: return My;
+                case DoF.Rz: return Mz;
+
+                default: throw new ArgumentOutOfRangeException("dof");
+            }
+        }
+
+        /// <summary>
+        /// Sets the defined component of Force object
+        /// </summary>
+        /// <param name="dof"></param>
+        /// <returns></returns>
+        public void SetComponent(DoF dof,double value)
+        {
+            switch (dof)
+            {
+                case DoF.Dx: Fx = value; break;
+                case DoF.Dy: Fy = value; break;
+                case DoF.Dz: Fz = value; break;
+
+                case DoF.Rx: Mx = value; break;
+                case DoF.Ry: My = value; break;
+                case DoF.Rz: Mz = value; break;
+
+                default: throw new ArgumentOutOfRangeException("dof");
+            }
         }
     }
 }

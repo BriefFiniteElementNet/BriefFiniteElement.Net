@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Elements;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
 {
@@ -59,7 +60,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             TargetGenerator.SetCounter("element", eleTag + 1);
             TargetGenerator.SetCounter("geomTransf", transTag + 1);
 
-            elementTag = eleTag.ToString();
+            elementTag = eleTag.ToString(CultureInfo.CurrentCulture);
 
             return buf.ToArray();
         }

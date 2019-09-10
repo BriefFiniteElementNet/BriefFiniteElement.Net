@@ -436,17 +436,24 @@ namespace BriefFiniteElementNet.Controls
             var thickNess = 2.0;
             var pen = new Pen(new SolidColorBrush(GraphColor), thickNess);
 
+            LineGraph gr;
+
             if (string.IsNullOrEmpty(VerticalAxisLabel))
-                plotter.AddLineGraph(src, GraphColor,thickNess);
+                gr = new LineGraph(src) { LinePen = pen };
+            //plotter.AddLineGraph(src, GraphColor,thickNess);
             else
-                plotter.AddLineGraph(src, pen, new StandardDescription( VerticalAxisLabel == null ? "" : VerticalAxisLabel));
+                //plotter.AddLineGraph(src, pen, new StandardDescription( VerticalAxisLabel == null ? "" : VerticalAxisLabel));
+                gr = new LineGraph(src) { LinePen = pen, Name = VerticalAxisLabel == null ? "" : VerticalAxisLabel };
 
+            plotter.Children.Add(gr);
 
+            /*
             var src2 = new ObservableDataSource<Tuple<double, double>>(pts);
             src2.SetXMapping(i => i.Item1);
             src2.SetYMapping(i => 0);
 
             plotter.AddLineGraph(src2);
+            */
         }
 
         public static void VisualizeInNewWindow(Func<double, double> fnc, double s, double e)

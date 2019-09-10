@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using System.Globalization;
 
 namespace BriefFiniteElementNet
 {
@@ -404,15 +405,59 @@ namespace BriefFiniteElementNet
 
         public override string ToString()
         {
-            return string.Format("Δx : {0:e2}, Δy : {1:e2}, Δz : {2:e2}, θx : {3:e2}, θy : {4:e2}, θz : {5:e2}", this.dx, this.dy, this.dz, this.rx, this.ry, this.rz);
+            return string.Format(CultureInfo.CurrentCulture, "Δx : {0:e2}, Δy : {1:e2}, Δz : {2:e2}, θx : {3:e2}, θy : {4:e2}, θz : {5:e2}", this.dx, this.dy, this.dz, this.rx, this.ry, this.rz);
         }
 
         public string ToString(int decimalDigits)
         {
             var d = decimalDigits;
 
-            return string.Format("Δx : {0:e" + d + "}, Δy : {1:e" + d + "}, Δz : {2:e" + d + "}, θx : {3:e" + d + "}, θy : {4:e" + d + "}, θz : {5:e" + d + "}", this.dx, this.dy, this.dz, this.rx, this.ry, this.rz, decimalDigits);
+            return string.Format(CultureInfo.CurrentCulture, "Δx : {0:e" + d + "}, Δy : {1:e" + d + "}, Δz : {2:e" + d + "}, θx : {3:e" + d + "}, θy : {4:e" + d + "}, θz : {5:e" + d + "}", this.dx, this.dy, this.dz, this.rx, this.ry, this.rz, decimalDigits);
 
+        }
+
+
+
+        /// <summary>
+        /// Gets the defined component of Force object
+        /// </summary>
+        /// <param name="dof"></param>
+        /// <returns></returns>
+        public double GetComponent(DoF dof)
+        {
+            switch (dof)
+            {
+                case DoF.Dx: return dx;
+                case DoF.Dy: return dy;
+                case DoF.Dz: return dz;
+
+                case DoF.Rx: return rx;
+                case DoF.Ry: return ry;
+                case DoF.Rz: return rz;
+
+                default: throw new ArgumentOutOfRangeException("dof");
+            }
+        }
+
+        /// <summary>
+        /// Sets the defined component of Force object
+        /// </summary>
+        /// <param name="dof"></param>
+        /// <returns></returns>
+        public void SetComponent(DoF dof, double value)
+        {
+            switch (dof)
+            {
+                case DoF.Dx: dx = value; break;
+                case DoF.Dy: dy = value; break;
+                case DoF.Dz: dz = value; break;
+
+                case DoF.Rx: rx = value; break;
+                case DoF.Ry: ry = value; break;
+                case DoF.Rz: rz = value; break;
+
+                default: throw new ArgumentOutOfRangeException("dof");
+            }
         }
     }
 }

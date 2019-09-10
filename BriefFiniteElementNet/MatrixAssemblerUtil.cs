@@ -23,9 +23,9 @@ namespace BriefFiniteElementNet
         {
             model.ReIndexNodes();
 
-            var elements = model.Elements.ToArray();
+            var elements = model.Elements;
 
-            var maxNodePerElement = elements.Any() ? elements.Select(i => i.Nodes.Length).Max() : 1;
+            var maxNodePerElement = model.Elements.Any() ? model.Elements.Select(i => i.Nodes.Length).Max() : 1;
             var rElmMap = new int[maxNodePerElement*6];
 
             var c = model.Nodes.Count*6;
@@ -48,7 +48,7 @@ namespace BriefFiniteElementNet
                 }
 
                 var mtx = elm.GetGlobalStifnessMatrix();
-                var d = c2*6;
+                var d = c2 * 6;
 
                 for (var i = 0; i < d; i++)
                 {

@@ -788,7 +788,7 @@ namespace BriefFiniteElementNet
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
         /// <exception cref="System.NotImplementedException"></exception>
-        private FrameElement2Node(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected FrameElement2Node(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _a = info.GetDouble("_a");
             _ay = info.GetDouble("_ay");

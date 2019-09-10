@@ -54,7 +54,10 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="BarElementConcentratedLoadTests.cs" />
+    <Compile Include="BarELementPartialNonuniformLoadTests.cs" />
     <Compile Include="BarElementTests.cs" />
+    <Compile Include="BarElementUniformLoadsTests.cs" />
     <Compile Include="PolynomialTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnitTest1.cs" />

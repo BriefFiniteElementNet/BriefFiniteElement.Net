@@ -18,7 +18,88 @@ namespace BriefFiniteElementNet
     /// </remarks>
     public struct CauchyStressTensor
     {
-        public double S11, S12, S13, S21, S22, S23, S31, S32, S33;
+        private double s33;
+        private double s11;
+        private double s12;
+        private double s13;
+        private double s21;
+        private double s22;
+        private double s23;
+        private double s31;
+        private double s32;
+
+        public double S11
+        {
+            get { return s11; }
+            set
+            {
+                s11 = value;
+            }
+        }
+        public double S12
+        {
+            get { return s12; }
+            set
+            {
+                s12 = value;
+            }
+        }
+        public double S13
+        {
+            get { return s13; }
+            set
+            {
+                s13 = value;
+            }
+        }
+        public double S21
+        {
+            get { return s21; }
+            set
+            {
+                s21 = value;
+            }
+        }
+        public double S22
+        {
+            get { return s22; }
+            set
+            {
+                s22 = value;
+            }
+        }
+        public double S23
+        {
+            get { return s23; }
+            set
+            {
+                s23 = value;
+            }
+        }
+        public double S31
+        {
+            get { return s31; }
+            set
+            {
+                s31 = value;
+            }
+        }
+        public double S32
+        {
+            get { return s32; }
+            set
+            {
+                s32 = value;
+            }
+        }
+        public double S33
+        {
+            get { return s33; }
+            set
+            {
+                s33 = value;
+            }
+        }
 
         /// <summary>
         /// Transforms the specified tensor using transformation matrix.

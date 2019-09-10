@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.Common
 {
@@ -36,7 +37,7 @@ namespace BriefFiniteElementNet.Common
             foreach (var listener in _listeners)
             {
                 if (listener != null)
-                    listener.Write(TraceRecord.Create(level, string.Format(message, formats)));
+                    listener.Write(TraceRecord.Create(level, string.Format(CultureInfo.CurrentCulture, message, formats)));
             }
         }
 

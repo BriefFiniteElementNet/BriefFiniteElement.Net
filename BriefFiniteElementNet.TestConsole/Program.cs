@@ -24,6 +24,7 @@ using CSparse.Double.Factorization;
 using CSparse.Storage;
 using BriefFiniteElementNet.Common;
 using CSparse.Double;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.TestConsole
 {
@@ -130,8 +131,8 @@ namespace BriefFiniteElementNet.TestConsole
 
             model.Solve_MPC();
 
-            Console.WriteLine((model.Elements["r2"] as BarElement).GetInternalForceAt(1, LoadCase.DefaultLoadCase).My.ToString());
-            Console.WriteLine((model.Elements["r3"] as BarElement).GetInternalForceAt(-1, LoadCase.DefaultLoadCase).My.ToString());
+            Console.WriteLine((model.Elements["r2"] as BarElement).GetInternalForceAt(1, LoadCase.DefaultLoadCase).My.ToString(CultureInfo.CurrentCulture));
+            Console.WriteLine((model.Elements["r3"] as BarElement).GetInternalForceAt(-1, LoadCase.DefaultLoadCase).My.ToString(CultureInfo.CurrentCulture));
             Console.ReadKey();
         }
         /*
@@ -724,7 +725,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             var config = new SolverConfiguration();
             //config.SolverFactory = new IntelMklSolver.MklPardisoDirectSPDSolverFactory();
-            config.LoadCases = new List<LoadCase>() { LoadCase.DefaultLoadCase };
+            config.LoadCases.AddRange(new List<LoadCase>() { LoadCase.DefaultLoadCase });
 
             model.Solve_MPC(config);
             //model.Solve(config);
@@ -764,7 +765,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             var config = new SolverConfiguration();
             //config.SolverFactory = new CudaSolver.CuSparseDirectSpdSolverFactory();
-            config.LoadCases = new List<LoadCase>() { LoadCase.DefaultLoadCase };
+            config.LoadCases.AddRange(new List<LoadCase>() { LoadCase.DefaultLoadCase });
 
             model.Solve_MPC(config);
             //model.Solve(config);

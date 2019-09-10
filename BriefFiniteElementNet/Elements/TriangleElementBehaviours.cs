@@ -10,10 +10,16 @@ namespace BriefFiniteElementNet.Elements
         /// <summary>
         /// The full shell: bending + membrane + drilling dof
         /// </summary>
-        public static TriangleElementBehaviour Shell = TriangleElementBehaviour.DrillingDof | TriangleElementBehaviour.Membrane | TriangleElementBehaviour.Bending;
+        public static readonly TriangleElementBehaviour Shell = TriangleElementBehaviour.DrillingDof | TriangleElementBehaviour.Membrane | TriangleElementBehaviour.Bending;
 
-        public static TriangleElementBehaviour Membrane = TriangleElementBehaviour.Membrane;
+        /// <summary>
+        /// Only Membrane behaviour
+        /// </summary>
+        public static readonly TriangleElementBehaviour Membrane = TriangleElementBehaviour.Membrane;
 
-        public static TriangleElementBehaviour PlateBending = TriangleElementBehaviour.Bending;
+        /// <summary>
+        /// Only Plate Bending behaviour
+        /// </summary>
+        public static readonly TriangleElementBehaviour PlateBending = TriangleElementBehaviour.Bending;
     }
 }

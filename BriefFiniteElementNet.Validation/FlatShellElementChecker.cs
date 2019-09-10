@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Geometry;
+using System.Globalization;
 
 namespace BriefFiniteElementNet.Validation
 {
-    public class FlatShellElementChecker
+    public static class FlatShellElementChecker
     {
         public static void ShowSapResults()
         {
@@ -632,7 +633,7 @@ namespace BriefFiniteElementNet.Validation
 
             for (int i = 0; i < model.Elements.Count; i++)
             {
-                model.Elements[i].Label = i.ToString();
+                model.Elements[i].Label = i.ToString(CultureInfo.CurrentCulture);
             }
 
             var da = 1 / 0.0254 * A.GetNodalDisplacement().Displacements; // [inch]

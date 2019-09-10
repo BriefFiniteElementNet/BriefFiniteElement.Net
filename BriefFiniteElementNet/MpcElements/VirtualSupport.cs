@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CSparse.Double;
 using System.Runtime.Serialization;
+using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.MpcElements
 {
@@ -121,6 +122,7 @@ namespace BriefFiniteElementNet.MpcElements
 
         #region ISerialization Implementation
 
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

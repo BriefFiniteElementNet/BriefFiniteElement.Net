@@ -53,8 +53,8 @@ namespace BriefFiniteElementNet
         private StaticLinearAnalysisResult lastResult;
         [Obsolete("use MpcElements instead")]
         private RigidElementCollection rigidElements;
-        [Obsolete("use MpcElements instead")]
-        private TelepathyLinkCollection telepathyLinks;
+        //[Obsolete("use MpcElements instead")]
+        //private TelepathyLinkCollection telepathyLinks;
         
 
         private LoadCase settlementLoadCase;
@@ -341,7 +341,7 @@ namespace BriefFiniteElementNet
 
             cfg.SolverFactory = factory;
 
-            cfg.LoadCases = new List<LoadCase>() { LoadCase.DefaultLoadCase };
+            cfg.LoadCases.AddRange(new List<LoadCase>() { LoadCase.DefaultLoadCase });
 
             Solve(cfg);
         }
@@ -356,7 +356,7 @@ namespace BriefFiniteElementNet
 
             cfg.SolverFactory = new CholeskySolverFactory();//if not defined, Cholesky by default
 
-            cfg.LoadCases = new List<LoadCase>(cases);
+            cfg.LoadCases.AddRange(new List<LoadCase>(cases)   );
 
             Solve(cfg);
         }
@@ -412,10 +412,9 @@ namespace BriefFiniteElementNet
 
             cfg.SolverFactory = fact;
 
-            cfg.LoadCases = new List<LoadCase>() { LoadCase.DefaultLoadCase };
+            cfg.LoadCases.AddRange(new List<LoadCase>() { LoadCase.DefaultLoadCase });
 
             Solve_MPC(cfg);
-
         }
 
 
@@ -428,6 +427,9 @@ namespace BriefFiniteElementNet
                 this.Nodes[i].Index = i;
         }
 
+        /// <summary>
+        /// Re-indexes the elements and MPC elements incrementally.
+        /// </summary>
         public void ReIndexElements()
         {
             for (int i = 0; i < this.Elements.Count; i++)
@@ -436,6 +438,7 @@ namespace BriefFiniteElementNet
             for (int i = 0; i < this.MpcElements.Count; i++)
                 this.MpcElements[i].Index = i;
         }
+
         #endregion
 
         #region Serialization stuff
@@ -467,7 +470,7 @@ namespace BriefFiniteElementNet
             info.AddValue("nodes", nodes);
 
             info.AddValue("rigidElements", rigidElements);
-            info.AddValue("telepathyLinks", telepathyLinks);
+            //info.AddValue("telepathyLinks", telepathyLinks);
             info.AddValue("settlementLoadCase", settlementLoadCase);
         }
 
@@ -477,7 +480,7 @@ namespace BriefFiniteElementNet
             mpcElements = (MpcElementCollection)info.GetValue("mpcElements",typeof(MpcElementCollection));
 
             rigidElements = (RigidElementCollection)info.GetValue("rigidElements",typeof(RigidElementCollection));
-            telepathyLinks = (TelepathyLinkCollection)info.GetValue("telepathyLinks", typeof(TelepathyLinkCollection));
+            //telepathyLinks = (TelepathyLinkCollection)info.GetValue("telepathyLinks", typeof(TelepathyLinkCollection));
 
             nodes = (NodeCollection)info.GetValue("nodes",typeof(NodeCollection));
             settlementLoadCase = (LoadCase)info.GetValue("settlementLoadCase", typeof(LoadCase));
