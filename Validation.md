@@ -31,18 +31,22 @@ Two other applications are used for validation,
 
 To validate output result with OpenSEES software we should convert `BriefFiniteElement.Model` object into TCL command format, then feed it into opensees.exe and extract result and check with BFE output. This procedure can be automatically done with codes already in `BriefFiniteElementNet.Validation.Ui` which is a console project. This is a comparison between results of BFE and OpenSEES for a simple 3d grid containing `BarElement` with a random load (force+moment) applied to each of the nodes:
 
-!(Simple 3D Grid)[Validation/Simple3DGrid.png]
+![Simple 3D Grid](Validation/Simple3DGrid.png)
 
-!(Simple 3D Grid - With Loads)[Validation/Simple3DGrid-withloads.png]
+The model used for validation
+
+![Simple 3D Grid - With Loads](Validation/Simple3DGrid-withloads.png)
+
+The model used for validation, with random loads on each node
 
 Result:
 
 -------
 
-- Maximum Absolute Difference in Nodal Displacements: `5.029e-013`
+- Maximum Absolute Difference in Nodal Displacements: `4.998e-013`
 
 
-- Maximum Absolute Difference in Support Reactions: `4.398e-007`
+- Maximum Absolute Difference in Support Reactions: `4.997e-007`
 
 
 
