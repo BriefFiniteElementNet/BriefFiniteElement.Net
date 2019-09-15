@@ -4,9 +4,9 @@ will almost always change the result to something other than expected.
 
 This library is developed regarding "Code Reuse" so the code will be somehow complicated. There are several types of validation for FE models in this library:
 
-	- Unit Test (or integral test) (in project ``BriefFiniteElementNet.Tests``)
-	- Validating the result with OpenSees (the Open System for Earthquake Engineering Simulation) available at [opensees.berkeley.edu](http://opensees.berkeley.edu/)
-	- Validating the result with Frame3dd application available at [frame3dd.sourceforge.net](http://frame3dd.sourceforge.net)
+- Unit Test (or integral test) (in project ``BriefFiniteElementNet.Tests``)
+- Validating the result with OpenSees (the Open System for Earthquake Engineering Simulation) available at [opensees.berkeley.edu](http://opensees.berkeley.edu/)
+- Validating the result with Frame3dd application available at [frame3dd.sourceforge.net](http://frame3dd.sourceforge.net)
 
 	for more information on validation please have a look at [Validation.md](Validation.md) file.
 
@@ -27,17 +27,32 @@ Two other applications are used for validation,
 *  Validating the result with OpenSees (the Open System for Earthquake Engineering Simulation) available at [opensees.berkeley.edu](http://opensees.berkeley.edu/)
 *  Validating the result with Frame3dd application available at [frame3dd.sourceforge.net](http://frame3dd.sourceforge.net)
 
-To validate output result with OpenSEES software we should convert model into TCL command format, then feed it into opensees.exe and extract result and check with BFE output. This procedure can be automatically done with codes already in `BriefFiniteElementNet.Validation.Ui` which is a console project. This is a comparison between results of BFE and OpenSEES for a simple 3d grid containing `BarElement` with a random load (force+moment) applied to each of the nodes:
+### Validate with OpenSEES
 
-!(Simple 3D Grid)[Simple3DGrid.png]
-!(Simple 3D Grid - With Loads)[Simple3DGrid-withloads.png]
+To validate output result with OpenSEES software we should convert `BriefFiniteElement.Model` object into TCL command format, then feed it into opensees.exe and extract result and check with BFE output. This procedure can be automatically done with codes already in `BriefFiniteElementNet.Validation.Ui` which is a console project. This is a comparison between results of BFE and OpenSEES for a simple 3d grid containing `BarElement` with a random load (force+moment) applied to each of the nodes:
+
+!(Simple 3D Grid)[Validation/Simple3DGrid.png]
+
+!(Simple 3D Grid - With Loads)[Validation/Simple3DGrid-withloads.png]
 
 Result:
 
-Maximum Absolute Difference in Nodal Displacements: 
-Average Nodal Displacemenet:
-Maximum Absolute Difference in Support Reactions: 
-Average Support Reaction:
+-------
 
-opensees input tcl file: [validation1.in.tcl](validation1.in.tcl) 
-opensees output xml file: [validation1.out.xml](validation1.out.xml)
+- Maximum Absolute Difference in Nodal Displacements: `5.029e-013`
+
+
+- Maximum Absolute Difference in Support Reactions: `4.398e-007`
+
+
+
+------
+
+Opensees input tcl file: [validation1.in.tcl](Validation/validation1.in.tcl) 
+
+Opensees output xml file: [validation1.out.xml](Validation/validation1.out.xml)
+
+Validation Details: [validation1.details.xml](Validation/validation1.details.html)
+
+### Validate with frame3dd
+TODO
