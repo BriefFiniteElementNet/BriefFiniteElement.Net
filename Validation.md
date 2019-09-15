@@ -8,7 +8,6 @@ This library is developed regarding "Code Reuse" so the code will be somehow com
 - Validating the result with OpenSees (the Open System for Earthquake Engineering Simulation) available at [opensees.berkeley.edu](http://opensees.berkeley.edu/)
 - Validating the result with Frame3dd application available at [frame3dd.sourceforge.net](http://frame3dd.sourceforge.net)
 
-	for more information on validation please have a look at [Validation.md](Validation.md) file.
 
 ## Unit Tests
 Unit test is a test for very basic units of an application. For this library, there are several unit test implemented consist of:
@@ -48,13 +47,13 @@ Result:
 
 - Maximum Absolute Difference in Support Reactions: `4.997e-007`
 
-
-
 ------
 
 Opensees input tcl file: [validation1.in.tcl](Validation/validation1.in.tcl) 
 
-Opensees output xml file: [validation1.out.xml](Validation/validation1.out.xml)
+Opensees output xml file (for nodal displacements): [validation1.out.D.xml](Validation/validation1.out.D.xml)
+
+Opensees output xml file (for nodal support reaction): [validation1.out.R.xml](Validation/validation1.out.R.xml)
 
 Validation Details: [validation1.details.xml](Validation/validation1.details.html)
 
