@@ -10,7 +10,7 @@ namespace BriefFiniteElementNet.Tests
     [TestClass]
     public class BarELementPartialNonuniformLoadTests
     {
-        [TestMethod]
+        //[TestMethod]
         public void LoadInternalForce_trapezoidload_eulerbernoullybeam_dirY()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed

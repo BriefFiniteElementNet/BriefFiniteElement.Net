@@ -1192,19 +1192,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (bar == null)
                 throw new Exception();
 
+
             var n = GetNMatrixAt(targetElement, isoCoords);
-
-            /*
-            if (_direction == BeamDirection.Y)
-            {
-                for (var i = 0; i < n.ColumnCount; i++)
-                {
-                    if (i % 2 == 1)
-                        n.MultiplyColumnByConstant(i, -1);
-                }
-            }
-            */
-
 
             var d = GetDMatrixAt(targetElement, isoCoords);
 
@@ -1237,7 +1226,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             f.MultiplyRowByConstant(2, ei / (j * j));
             f.MultiplyRowByConstant(3, ei / (j * j * j));
 
-            f.MultiplyRowByConstant(2, -1);//m/ei = - n''*u
+            if (_direction == BeamDirection.Y)
+                f.MultiplyRowByConstant(2, -1);//m/ei = - n''*u , due to where? TODO
 
             if (_direction == BeamDirection.Y)
             {

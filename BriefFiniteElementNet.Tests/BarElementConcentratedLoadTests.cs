@@ -11,6 +11,9 @@ using BriefFiniteElementNet.Sections;
 
 namespace BriefFiniteElementNet.Tests
 {
+    /// <summary>
+    /// Tests for ConcentratedLoad applied on BarElement
+    /// </summary>
     [TestClass]
     public class BarElementConcentratedLoadTests
     {
@@ -20,14 +23,14 @@ namespace BriefFiniteElementNet.Tests
             //internal force of 2 node beam beam with uniform load and both ends fixed
 
 
-            //     ^z                       w
+            //     ^z                         /\
             //     |  /y                      ||
-            //     | /                       \/
+            //     | /                      w ||
             //      ====================================== --> x
             //
 
             var w = 2.0;
-            var a = 1.23456;
+            var a = 4;
 
             var nodes = new Node[2];
 
@@ -38,7 +41,7 @@ namespace BriefFiniteElementNet.Tests
 
             var u1 = new Loads.ConcentratedLoad(new Force(0, 0, -w, 0, 0, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y,elm);
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
 
             var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
@@ -47,8 +50,8 @@ namespace BriefFiniteElementNet.Tests
             var b = L - a;
 
 
-            var ma = w * a * b * b / (L * L);
-            var mb = w * a * a * b / (L * L);
+            var ma = -w * a * b * b / (L * L);
+            var mb = -w * a * a * b / (L * L);
 
             var ra = w * (3 * a + b) * b * b / (L * L * L);//1f
             var rb = w * (a + 3 * b) * a * a / (L * L * L);//1g
@@ -75,6 +78,66 @@ namespace BriefFiniteElementNet.Tests
         }
 
         [TestMethod]
+        public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirY_Fz_Start()
+        {
+            //concentrated load applies on location xi=-1, then equivalent nodal loads at start node should be same as concentrated load
+            var w = 2.0;
+            var a = 0;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad(new Force(0, 0, -w, 0, 0, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var d0 = loads[0] - u1.Force;
+            var d1 = Force.Zero;
+
+            Assert.IsTrue(Math.Abs(d0.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d0.Moments.Length) < 1e-5, "invalid value");
+
+            Assert.IsTrue(Math.Abs(d1.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
+        }
+
+        [TestMethod]
+        public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirY_Fz_End()
+        {
+            var l = 4;
+            var w = 2.0;
+            var a = l;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(l, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad(new Force(0, 0, -w, 0, 0, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var d0 = Force.Zero;
+            var d1 = loads[1] - u1.Force;
+
+            Assert.IsTrue(Math.Abs(d0.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d0.Moments.Length) < 1e-5, "invalid value");
+
+            Assert.IsTrue(Math.Abs(d1.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
+        }
+
+        [TestMethod]
         public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirY_My()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -88,7 +151,7 @@ namespace BriefFiniteElementNet.Tests
             //
 
             var w = 2.0;
-            var a = 1.23456789;
+            var a = 0.0001;
 
             var nodes = new Node[2];
 
@@ -126,6 +189,67 @@ namespace BriefFiniteElementNet.Tests
 
             var d0 = loads[0] + expectedR1;
             var d1 = loads[1] + expectedR2;
+
+
+            Assert.IsTrue(Math.Abs(d0.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d0.Moments.Length) < 1e-5, "invalid value");
+
+            Assert.IsTrue(Math.Abs(d1.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
+        }
+
+        [TestMethod]
+        public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirY_My_Start()
+        {
+            var w = 2.0;
+            var a = 0;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad(new Force(0, 0, 0, 0, w, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var d0 = loads[0] - u1.Force;
+            var d1 = Force.Zero;
+
+
+            Assert.IsTrue(Math.Abs(d0.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d0.Moments.Length) < 1e-5, "invalid value");
+
+            Assert.IsTrue(Math.Abs(d1.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
+        }
+
+        [TestMethod]
+        public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirY_My_End()
+        {
+            var l = 4.0;
+            var w = 2.0;
+            var a = l;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(l, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad(new Force(0, 0, 0, 0, w, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var d0 = Force.Zero;
+            var d1 = loads[1] - u1.Force;
 
 
             Assert.IsTrue(Math.Abs(d0.Forces.Length) < 1e-5, "invalid value");
@@ -199,6 +323,66 @@ namespace BriefFiniteElementNet.Tests
         }
 
         [TestMethod]
+        public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirZ_Mz_Start()
+        {
+            var w = 2.0;
+            var a = 0;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad(new Force(0, 0, 0, 0, 0, w), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z, elm);
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var d0 = loads[0] - u1.Force;
+            var d1 = Force.Zero;
+
+            Assert.IsTrue(Math.Abs(d0.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d0.Moments.Length) < 1e-5, "invalid value");
+
+            Assert.IsTrue(Math.Abs(d1.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
+        }
+
+        [TestMethod]
+        public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirZ_Mz_End()
+        {
+            var w = 2.0;
+            
+            var l = 4.0;
+            var a = l;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(l, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad(new Force(0, 0, 0, 0, 0, w), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z, elm);
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var d0 = Force.Zero;
+            var d1 = loads[1] - u1.Force;
+
+            Assert.IsTrue(Math.Abs(d0.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d0.Moments.Length) < 1e-5, "invalid value");
+
+            Assert.IsTrue(Math.Abs(d1.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
+        }
+
+        [TestMethod]
         public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirZ_Fy()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -212,7 +396,7 @@ namespace BriefFiniteElementNet.Tests
             //   /z
 
             var w = 2.0;
-            var a = 1.23456;
+            var a = 2;
 
             var nodes = new Node[2];
 
@@ -260,6 +444,71 @@ namespace BriefFiniteElementNet.Tests
         }
 
         [TestMethod]
+        public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirZ_Fy_Start()
+        {
+            var w = 2.0;
+            var a = 0;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad(new Force(0, -w, 0, 0, 0, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z, elm);
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var d0 = loads[0] - u1.Force;
+            var d1 = Force.Zero;
+
+            Assert.IsTrue(Math.Abs(d0.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d0.Moments.Length) < 1e-5, "invalid value");
+
+            Assert.IsTrue(Math.Abs(d1.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
+        }
+
+        [TestMethod]
+        public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirZ_Fy_End()
+        {
+            var w = 2.0;
+            
+            var l = 4.0;
+            var a = l;
+
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad(new Force(0, -w, 0, 0, 0, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z, elm);
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var d0 = Force.Zero;
+            var d1 = loads[1] - u1.Force;
+
+            Assert.IsTrue(Math.Abs(d0.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d0.Moments.Length) < 1e-5, "invalid value");
+
+            Assert.IsTrue(Math.Abs(d1.Forces.Length) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
+        }
+
+
+
+
+
+        [TestMethod]
         public void LoadInternalForce_concentratedLLoad_eulerbernoullybeam_dirY_fz()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -280,7 +529,7 @@ namespace BriefFiniteElementNet.Tests
             var u1 = new Loads.ConcentratedLoad();
 
             u1.Case = LoadCase.DefaultLoadCase;
-            u1.Force = new Force(0, 0, -w, 0, 0, 0);
+            u1.Force = new Force(0, 0, w, 0, 0, 0);
             u1.CoordinationSystem = CoordinationSystem.Global;
 
             u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
@@ -351,10 +600,10 @@ namespace BriefFiniteElementNet.Tests
 
                 var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi }).ToForce();
 
-                var exactFrc = new Force(fx: 0, fy: 0, fz: vi, mx: 0, my: -mi, mz: 0);
+                var exactFrc = new Force(fx: 0, fy: 0, fz: vi, mx: 0, my: mi, mz: 0);
 
                 var dm =  testFrc.My + exactFrc.My;
-                var df = testFrc.Fz - exactFrc.Fz;
+                var df = testFrc.Fz + exactFrc.Fz;
 
 
                 Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
@@ -548,11 +797,10 @@ namespace BriefFiniteElementNet.Tests
                     var ra = -6 * w * a / (L * L * L) * (L - a);//R1
                     var rb = -ra;//R2
 
-                    mi = ma + ra * x + ((x > forceLocation) ? -w : 0.0);
+                    mi = ma + ra * x + ((x > forceLocation) ? w : 0.0);
 
                     vi = ra;
                 }
-
 
                 var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
@@ -563,11 +811,8 @@ namespace BriefFiniteElementNet.Tests
                 var dm = testFrc.Mz + exactFrc.Mz;
                 var df = testFrc.Fy - exactFrc.Fy;
 
-
                 Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
                 Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
-
-
             }
 
             {
@@ -590,7 +835,7 @@ namespace BriefFiniteElementNet.Tests
             //internal force of 2 node beam beam with uniform load and both ends fixed
 
             var w = 2.0;
-            var forceLocation =2;//[m]
+            var forceLocation =2.123;//[m]
             var L = 4;//[m]
 
             //var model = new Model();
@@ -637,7 +882,7 @@ namespace BriefFiniteElementNet.Tests
                     var rb = 6 * w * a / (L * L * L) * (L - a);//R1
 
 
-                    mi = ma + ra * x + ((x > forceLocation) ? w : 0.0);
+                    mi = ma + ra * x - ((x > forceLocation) ? w : 0.0);
 
                     vi = ra;
                 }

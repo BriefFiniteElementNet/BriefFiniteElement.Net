@@ -37,7 +37,10 @@ namespace BriefFiniteElementNet.TestConsole
             //TestIssue20();
             //SimplySupportedBeamUDL();
             //BeamShapeFunction();
-            BarElementTester.TestEndReleaseStyiffness();
+            //BarElementTester.TestEndReleaseStyiffness();
+
+            TestIssue22();
+
             //TestGrid();
             //Test_P_Delta_matrix();
             //TestSparseRow();
@@ -95,6 +98,42 @@ namespace BriefFiniteElementNet.TestConsole
             model.Trace.Listeners.Add(new ConsoleTraceListener());
 
             model.Solve_MPC();
+        }
+
+        static void TestIssue22()
+        {
+            var model = new BriefFiniteElementNet.Model();
+
+            var n1 = new Node(-1, 0, 0) { Label = "n1", Constraints = BriefFiniteElementNet.Constraints.MovementFixed & BriefFiniteElementNet.Constraints.FixedRX };
+
+            var n2 = new Node(1, 0, 0) { Label = "n2", Constraints = BriefFiniteElementNet.Constraints.MovementFixed };
+
+            var loadPositionX = 0;
+
+            var e1 = new BarElement(n1, n2) { Label = "e1" };
+            e1.Section = new BriefFiniteElementNet.Sections.UniformGeometric1DSection(SectionGenerator.GetRectangularSection(0.1d, 0.2d));
+            e1.Material = BriefFiniteElementNet.Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
+            model.Nodes.Add(n1, n2);
+            model.Elements.Add(e1);
+
+            var force = new Force(0, 1, 1, 0, 0, 0);
+            var elementLoad = new BriefFiniteElementNet.Loads.ConcentratedLoad
+            {
+                CoordinationSystem = CoordinationSystem.Global,
+                Force = force,
+                ForceIsoLocation = new IsoPoint(loadPositionX)
+            };
+            e1.Loads.Add(elementLoad);
+            model.Solve();
+
+            var eqv = e1.GetGlobalEquivalentNodalLoads(elementLoad);
+
+            var data =
+                e1.GetExactInternalForceAt(-0.99999999999);
+                //e1.GetInternalForceAt(-0.99999999999);
+
+
+            //var d2 = e1.GetGlobalEquivalentNodalLoads(elementLoad);
         }
 
         /// <summary>
