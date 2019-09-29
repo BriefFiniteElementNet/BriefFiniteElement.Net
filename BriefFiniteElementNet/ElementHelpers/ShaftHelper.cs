@@ -6,6 +6,7 @@ using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
 using BriefFiniteElementNet.Loads;
 using BriefFiniteElementNet.Mathh;
+using CSparse.Storage;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
@@ -553,6 +554,11 @@ namespace BriefFiniteElementNet.ElementHelpers
                 return buf;
             }
 
+            throw new NotImplementedException();
+        }
+
+        public void AddStiffnessComponents(CoordinateStorage<double> global)
+        {
             throw new NotImplementedException();
         }
     }

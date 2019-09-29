@@ -35,9 +35,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CSparse, Version=3.2.3.19889, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CSparse.3.2.3\lib\net40\CSparse.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="CSparse, Version=3.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CSparse.3.4.0\lib\net45\CSparse.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

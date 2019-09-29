@@ -35,9 +35,8 @@
     <DocumentationFile>bin\Release\BriefFiniteElementNet.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CSparse, Version=3.2.3.19889, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CSparse.3.2.3\lib\net40\CSparse.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="CSparse, Version=3.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CSparse.3.4.0\lib\net40\CSparse.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -48,6 +47,7 @@
     <Compile Include="ArrayEqualityCompairer.cs" />
     <Compile Include="ArrayPool.cs" />
     <Compile Include="BendingStressTensor.cs" />
+    <Compile Include="ConcurrentArrayPool.cs" />
     <Compile Include="Constraints.cs" />
     <Compile Include="DoF.cs" />
     <Compile Include="ElementHelpers\Gt9Helper.cs" />
@@ -55,8 +55,10 @@
     <Compile Include="Elements\FlatShellBehaviours.cs" />
     <Compile Include="Elements\TriangleElementBehaviours.cs" />
     <Compile Include="Integration\MultiplierMatrixFunction.cs" />
+    <Compile Include="ListPool.cs" />
     <Compile Include="Loads\PartialNonUniformLoad.cs" />
     <Compile Include="Mathh\Polynomial.cs" />
+    <Compile Include="MatrixPool.cs" />
     <Compile Include="MpcElements\VirtualSupport.cs" />
     <Compile Include="Loads\ConcentratedLoad.cs" />
     <Compile Include="Mathh\SparseEqSystem.cs" />

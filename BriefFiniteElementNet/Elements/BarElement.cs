@@ -1102,7 +1102,7 @@ namespace BriefFiniteElementNet.Elements
         /// get the polynomial that takes iso coord as input and return local coord as output
         /// </summary>
         /// <returns>X(ξ) (ξ input, X output)</returns>
-        public Mathh.Polynomial GetIsoToLocalConverter()
+        public virtual Mathh.Polynomial GetIsoToLocalConverter()
         {
             var cachekey = "{54CEC6B2-F882-4505-9FC0-E7844C99F249}";
 

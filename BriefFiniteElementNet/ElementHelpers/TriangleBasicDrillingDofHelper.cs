@@ -1,4 +1,5 @@
 ﻿using BriefFiniteElementNet.Elements;
+using CSparse.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -115,6 +116,11 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddStiffnessComponents(CoordinateStorage<double> global)
         {
             throw new NotImplementedException();
         }

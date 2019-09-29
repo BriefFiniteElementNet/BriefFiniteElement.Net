@@ -205,6 +205,14 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <returns>The equivaled nodal load in local coordination system</returns>
         Force[] GetLocalEquivalentNodalLoads(Element targetElement, Load load);
 
-       
+
+        /// <summary>
+        /// Adds the stiffness components into the coordinated storage regarding node numbers
+        /// </summary>
+        /// <remarks>
+        /// Before calling this method, Model.ReindexNodex
+        /// </remarks>
+        /// <param name="global">the global stiffness matrix without any reduction, size: 6n*6n where n is node count</param>
+        //void AddStiffnessComponents(CSparse.Storage.CoordinateStorage<double> global);
     }
 }

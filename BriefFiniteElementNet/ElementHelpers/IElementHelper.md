@@ -28,6 +28,7 @@ Kg = t1 k11 t2		t1 k12 t2		t1 k13 t2   ...
 	 
 	 
 stiffness at each node is 6x6 but t1 and t2 are 3x3, so kij is 3x3 matrix starting from Dx dof or Rx dof
+this is used in TransformationManagerL2G for improving performance of transformation of stiffness matrixes
 
 High performance Integration of Bt*D*B*det(j) for stiffness
 ===

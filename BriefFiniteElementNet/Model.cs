@@ -17,6 +17,7 @@ using CSparse.Double.Factorization;
 using CSparse.Storage;
 using BriefFiniteElementNet.Solver;
 using Trace = BriefFiniteElementNet.Common.Trace;
+using System.Threading.Tasks;
 
 
 namespace BriefFiniteElementNet
@@ -402,6 +403,7 @@ namespace BriefFiniteElementNet
             {
                 lastResult.AddAnalysisResultIfNotExists_MPC(loadCase);
             }
+            
         }
 
         public void Solve_MPC()

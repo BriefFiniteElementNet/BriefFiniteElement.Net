@@ -104,24 +104,53 @@ namespace BriefFiniteElementNet.Mathh
         {
             var retVal = 0.0;
 
-            for (var i = 0; i < Coefficients.Length; i++)
+            var N = Coefficients.Length;
+
+            for (var i = 0; i < N; i++)
             {
-                var origPow = Coefficients.Length - 1 - i;
+                var origPow = N - 1 - i;
 
                 var nn = origPow;
                 var mm = n;
 
-                if (nn - mm >= 0)
+                var nm = nn - mm;
+
+                if (nm >= 0)
                 {
-                    var cff = Factorial(nn, nn - mm);
+                    var cff = Factorial(nn, nm);
 
                     var cf2 = Coefficients[i];
-                    var vari = Math.Pow(x, nn - mm);
+                    var vari = Power(x, nm);
                     retVal += vari * cff * cf2;
                 }
             }
 
             return retVal;
+        }
+
+
+
+        /// <summary>
+        /// computes Math.Pow(num,exp) in much faster way
+        /// </summary>
+        /// <param name="num"></param>
+        /// <param name="exp"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// based on this implementation: https://stackoverflow.com/a/101613/1106889
+        /// </remarks>
+        static double Power(double num, int exp)
+        {
+            double result = 1.0;
+            while (exp > 0)
+            {
+                if (exp % 2 == 1)
+                    result *= num;
+                exp >>= 1;
+                num *= num;
+            }
+
+            return result;
         }
 
         /*
@@ -172,7 +201,7 @@ namespace BriefFiniteElementNet.Mathh
             if (x == y)
                 return 1;
 
-            if (y > 1)
+            if (y > 1)// also x > 0 and x > y
             {
                 var buf = 1l;
 
@@ -182,6 +211,23 @@ namespace BriefFiniteElementNet.Mathh
                 return buf;
             }
 
+            if (y == 0 || y == 1)
+            {
+                var buf = 1l;
+
+                for (var i = x; i > 1; i--)
+                {
+                    buf *= i;
+                }
+
+                return buf;
+            }
+
+            if (y < 0)
+
+                throw new Exception();
+
+            throw new Exception();
             return Factorial(x) / Factorial(y);
         }
 

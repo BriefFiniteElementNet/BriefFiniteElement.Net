@@ -286,9 +286,9 @@ namespace BriefFiniteElementNet
         {
             var buf = new Model();
 
-            var dx = 1.0;
-            var dy = 1.0;
-            var dz = 1.0;
+            var dx = 5.0;
+            var dy = 5.0;
+            var dz = 5.0;
 
             var nodes = new Node[m, n, l];
 

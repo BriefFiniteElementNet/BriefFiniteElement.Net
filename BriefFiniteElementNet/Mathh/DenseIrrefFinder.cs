@@ -25,8 +25,8 @@ namespace BriefFiniteElementNet.Mathh
             if (singleMemberColumns == a.RowCount)
                 return a.Clonee();
 
-            var pat = new CoordinateStorage<double>(a.RowCount, a.ColumnCount - 1, 1, true);
-            var bCrd = new CoordinateStorage<double>(a.RowCount, a.ColumnCount - 1, 1, true);//a matrix without last column
+            var pat = new CoordinateStorage<double>(a.RowCount, a.ColumnCount - 1, 1);
+            var bCrd = new CoordinateStorage<double>(a.RowCount, a.ColumnCount - 1, 1);//a matrix without last column
 
             a.EnumerateMembers((row, col, val) =>
             {

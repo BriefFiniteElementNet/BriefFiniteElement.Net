@@ -9,7 +9,7 @@ using System.Globalization;
 namespace BriefFiniteElementNet
 {
     /// <summary>
-    /// Represents a general concentrated force in 3D (can also includ moments in addition to forces)
+    /// Represents a general concentrated force in 3D (can also include moments in addition to forces)
     /// </summary>
     [Serializable]
     public struct Force:ISerializable
@@ -195,6 +195,15 @@ namespace BriefFiniteElementNet
         #endregion
 
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fx">X component of force</param>
+        /// <param name="fy">Y component of force</param>
+        /// <param name="fz">Z component of force</param>
+        /// <param name="mx">X component of moment</param>
+        /// <param name="my">Y component of moment</param>
+        /// <param name="mz">Z component of moment</param>
         public Force(double fx, double fy, double fz, double mx, double my, double mz)
         {
             this.fx = fx;
@@ -205,6 +214,11 @@ namespace BriefFiniteElementNet
             this.mz = mz;
         }
 
+        /// <summary>
+        /// Initiates a new instance of <see cref="Force"/>.
+        /// </summary>
+        /// <param name="forces">Force vector</param>
+        /// <param name="moments">Moment vector</param>
         public Force(Vector forces,Vector moments) : this()
         {
             this.Forces = forces;
@@ -306,6 +320,7 @@ namespace BriefFiniteElementNet
         }
 
         #endregion
+
 
         public static Force DotDivide(Force f1, Force f2)
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Elements;
+using CSparse.Storage;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
@@ -135,6 +136,11 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         public Force[] GetLocalEquivalentNodalLoads(Element targetElement, Load load)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddStiffnessComponents(CoordinateStorage<double> global)
         {
             throw new NotImplementedException();
         }

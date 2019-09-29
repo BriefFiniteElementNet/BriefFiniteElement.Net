@@ -9,6 +9,7 @@ using BriefFiniteElementNet.Integration;
 using BriefFiniteElementNet.Loads;
 using ElementLocalDof = BriefFiniteElementNet.FluentElementPermuteManager.ElementLocalDof;
 using BriefFiniteElementNet.Mathh;
+using CSparse.Storage;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
@@ -47,7 +48,15 @@ namespace BriefFiniteElementNet.ElementHelpers
            
         }
 
+        /// <summary>
+        /// The target element
+        /// </summary>
         public Element TargetElement { get; set; }
+
+
+        /// <summary>
+        /// Gets the direction of Beam (rotation in Y or Z direction)
+        /// </summary>
         public BeamDirection Direction { get { return _direction; } }
 
         /// <inheritdoc/>
@@ -68,11 +77,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var buf =
                 targetElement.MatrixPool.Allocate(1, 2 * n);
 
-            for (var i = 0; i < n; i++)
-            {
-                if (nss[i] == null) nss[i] = new Polynomial();
-                if (mss[i] == null) mss[i] = new Polynomial();
-            }
+
 
             for (var i = 0; i < n; i++)
             {
@@ -91,6 +96,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var J = GetJMatrixAt(targetElement, isoCoords);
             var detJ = J.Determinant();
             J.ReturnToPool();
+
             buf.MultiplyRowByConstant(0, 1 / (detJ * detJ));
 
             return buf;
@@ -165,6 +171,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
+
+        
 
         #region partial end release stuff
 
@@ -365,14 +373,17 @@ namespace BriefFiniteElementNet.ElementHelpers
             return lst;
         }
 
+        //private readonly string mssKey = "82069A88-26BD-4902-9CA6-7AE324193FE3:X";
+        //private readonly string nssKey = "0EECCFF2-8CAE-4D65-935F-15E1AF31709B:X" ;
 
         public bool GetShapeFunctions(Element targetElement, out Polynomial[] nss, out Polynomial[] mss)
         {
             nss = null;
             mss = null;
 
-            var mssKey = "82069A88-26BD-4902-9CA6-7AE324193FE3:" + this.Direction;
-            var nssKey = "0EECCFF2-8CAE-4D65-935F-15E1AF31709B:" + this.Direction;
+            var mssKey = "7AE324193FE3:X"+this.Direction ;
+            var nssKey = "15E1AF31709B:X" + this.Direction;
+
 
             var sb = new StringBuilder();
 
@@ -406,7 +417,10 @@ namespace BriefFiniteElementNet.ElementHelpers
                     {
                         var pn = (cnd.Type == Condition.FunctionType.N) ? nss[cnd.NodeNumber] : mss[cnd.NodeNumber];
 
-                        var epsilon = Math.Abs(pn.EvaluateDerivative(cnd.Xi, cnd.DifferentialDegree) - cnd.RightSide);
+                        var epsilon = (pn.EvaluateDerivative(cnd.Xi, cnd.DifferentialDegree) - cnd.RightSide);
+
+                        if (epsilon < 0)
+                            epsilon *= -1;
 
                         if (epsilon > 1e-10)
                         {
@@ -645,6 +659,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var buf =
                 targetElement.MatrixPool.Allocate(4, 2 * n);
+
 
             for (var i = 0; i < n; i++)
             {
@@ -1443,6 +1458,11 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             #endregion
 
+            throw new NotImplementedException();
+        }
+
+        public void AddStiffnessComponents(CoordinateStorage<double> globalStiffness)
+        {
             throw new NotImplementedException();
         }
     }

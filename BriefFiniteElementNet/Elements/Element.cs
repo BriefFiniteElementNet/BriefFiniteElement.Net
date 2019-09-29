@@ -15,15 +15,20 @@ namespace BriefFiniteElementNet.Elements
     [DebuggerDisplay("{this.GetType().Name}, Label: {Label}")]
     public abstract class Element : StructurePart
     {
-        
+        /// <summary>
+        /// An index through all elements, sets incrementally when Model.ReIndexElements() called
+        /// </summary>
         [NonSerialized]
         internal int Index;
 
+        /// <summary>
+        /// Just obsoleted because of cannot add external element with new type
+        /// </summary>
         [Obsolete]
         protected ElementType elementType;
 
         /// <summary>
-        /// Gets the type of the element.
+        /// Gets the type of the element. 
         /// </summary>
         /// <value>
         /// The type of the element.
@@ -41,6 +46,9 @@ namespace BriefFiniteElementNet.Elements
         /// <summary>
         /// Gets the matrix pool
         /// </summary>
+        /// <remarks>
+        /// The reference to matrix pool.
+        /// </remarks>
         public MatrixPool MatrixPool
         {
             get
