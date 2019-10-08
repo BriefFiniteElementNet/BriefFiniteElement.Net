@@ -46,6 +46,7 @@ _ Calculate internal force of `BarElement` at any location of Element.
 ## Validation
 
 This library is developed regarding "Code Reuse" so the code will be somehow complicated. There are several types of validation for FE models in this library:
+Since it is not possible to validate all features with a single software, 
 
 * Unit Test (in project ``BriefFiniteElementNet.Tests``)
 * Validating the result with other well known and open source applications:
@@ -58,7 +59,7 @@ for more information on validation please have a look at [Validation.md](Validat
 
 ## Known Issues
 
-for more information on known issues please have a look at [know-issues.md](know-issues.md) file.
+for more information on known issues please have a look at [know-issues.md](know-issues.md) file and [issues](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) section.
 
 ## Donation
 
