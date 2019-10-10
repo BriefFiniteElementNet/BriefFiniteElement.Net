@@ -167,7 +167,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <remarks>
         /// This gives back internal force of element assuming no nodal displacements there are, and only the <see cref="load"/> is applied to it.
         /// </remarks>
-        IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, Load load, double[] isoLocation);
+        IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load, double[] isoLocation);
 
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <remarks>
         /// This gives back the displacement of element, if no nodal displacements there are, and only the <see cref="load"/> is applied to it.
         /// </remarks>
-        Displacement GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation);
+        Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation);
 
 
 
@@ -203,7 +203,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="targetElement">The target element.</param>
         /// <param name="load">The load.</param>
         /// <returns>The equivaled nodal load in local coordination system</returns>
-        Force[] GetLocalEquivalentNodalLoads(Element targetElement, Load load);
+        Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load);
 
 
         /// <summary>

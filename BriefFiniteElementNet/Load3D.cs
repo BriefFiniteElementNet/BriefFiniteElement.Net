@@ -8,7 +8,7 @@ using System.Text;
 namespace BriefFiniteElementNet
 {
     [Serializable]
-    public abstract class Load3D : Load
+    public abstract class Load3D : ElementalLoad
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Load3D"/> class.

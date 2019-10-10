@@ -6,7 +6,7 @@ using System.Windows.Media.Media3D;
 
 namespace BriefFiniteElementNet.Controls.ElementRenderers
 {
-    public interface IElementRenderer<T> where T : BriefFiniteElementNet.Elements.Element
+    public interface IElementRenderer<T> where T : BriefFiniteElementNet.Element
     {
         /// <summary>
         /// Renders the specified element.

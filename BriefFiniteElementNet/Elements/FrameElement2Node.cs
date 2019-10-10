@@ -1069,7 +1069,7 @@ namespace BriefFiniteElementNet
 
 
         ///<inheritdoc/>
-        public override Force[] GetGlobalEquivalentNodalLoads(Load load)
+        public override Force[] GetGlobalEquivalentNodalLoads(ElementalLoad load)
         {
             if (load is UniformLoad1D)
                 return (load as UniformLoad1D).GetGlobalEquivalentNodalLoads(this);

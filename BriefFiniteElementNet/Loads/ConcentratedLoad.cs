@@ -14,7 +14,7 @@ namespace BriefFiniteElementNet.Loads
     [Serializable]
     [Obsolete("still in development, have bugs")]
 
-    public class ConcentratedLoad : Load
+    public class ConcentratedLoad : ElementalLoad
     {
 
 

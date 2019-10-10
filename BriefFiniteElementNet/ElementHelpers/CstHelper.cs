@@ -281,13 +281,13 @@ namespace BriefFiniteElementNet.ElementHelpers
             return new int[] { 0, 0, 0 };
         }
 
-        public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, Load load,
+        public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load,
             double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
-        public Displacement GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation)
+        public Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
@@ -299,7 +299,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
 
-        public Force[] GetLocalEquivalentNodalLoads(Element targetElement, Load load)
+        public Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
         {
             throw new NotImplementedException();
         }

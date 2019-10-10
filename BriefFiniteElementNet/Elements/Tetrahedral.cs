@@ -527,7 +527,7 @@ namespace BriefFiniteElementNet.Elements
         #endregion
 
         ///<inheritdoc/>
-        public override Force[] GetGlobalEquivalentNodalLoads(Load load)
+        public override Force[] GetGlobalEquivalentNodalLoads(ElementalLoad load)
         {
             if (load is UniformBodyLoad3D)
             {

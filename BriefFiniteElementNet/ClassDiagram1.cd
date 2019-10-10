@@ -7,16 +7,6 @@
       <FileName>StaticLinearAnalysisResult.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="BriefFiniteElementNet.Elements.Element" Collapsed="true">
-    <Position X="13.5" Y="1.75" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>ACBgBAAEEQQAECAAAAgAAEAgAQCCAEIAAAtCAAAAoAQ=</HashCode>
-      <FileName>Elements\Element.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="BriefFiniteElementNet.ElementCollection" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="17" Y="0.5" Width="1.5" />
     <TypeIdentifier>
@@ -33,7 +23,7 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="BriefFiniteElementNet.Load" Collapsed="true">
+  <Class Name="BriefFiniteElementNet.ElementalLoad" Collapsed="true">
     <Position X="3" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AACAAAAAAAAAAAAAAAAAAAAgAAAAgAAAAAAAAQAAAAA=</HashCode>
@@ -56,7 +46,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.Node" Collapsed="true">
-    <Position X="10" Y="1.75" Width="1.5" />
+    <Position X="5.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AKAAEAAAAAAAAEAACAIiAAgiAAAAAFAAAAFRAAAAAAA=</HashCode>
       <FileName>Node.cs</FileName>
@@ -73,7 +63,7 @@
   <Class Name="BriefFiniteElementNet.Model" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="18.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CCAgyIAAAEAAABAAAIgSAAAoAQCCBnMAAgMAAAAgIAA=</HashCode>
+      <HashCode>CCAgyIAAAEAAABAAAIgSAAAoAQCCBnEAAgMAAAAgIAA=</HashCode>
       <FileName>Model.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -118,7 +108,7 @@
   <Class Name="BriefFiniteElementNet.SolverConfiguration" Collapsed="true">
     <Position X="17" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAACAAAAAAAAAAAAAAAAAAIAAAAAQAAAAEAAAQA=</HashCode>
+      <HashCode>AAABAAACAAAAAAAAAAAAAAAAAAIAAAAAQAAAAEAAAQA=</HashCode>
       <FileName>SolverConfiguration.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -144,23 +134,23 @@
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.Elements.BarElement" Collapsed="true">
-    <Position X="12.25" Y="3.25" Width="1.5" />
+    <Position X="10.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AUTEABIFkQAAECgECBIgAEghAAAEgIEACABCAIAJgAA=</HashCode>
       <FileName>Elements\BarElement.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.Elements.TriangleElement" Collapsed="true">
-    <Position X="14.5" Y="3.25" Width="1.5" />
+    <Position X="12.25" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AEAEAAAEEAAAECAECCAAAEAgAAAAAIAAGAACAIABgAA=</HashCode>
       <FileName>Elements\TriangleElement.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.Elements.Tetrahedral" Collapsed="true">
-    <Position X="20.5" Y="2.5" Width="1.5" />
+    <Position X="14" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IAAABAAEEABAACgCAAAAiEAgAAIAAACkKQACAgGAAAA=</HashCode>
+      <HashCode>IAAABAAEEABAECgCAAAAiEAgAAIAAACkKQACAgGAgAA=</HashCode>
       <FileName>Elements\Tetrahedral.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -188,7 +178,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BriefFiniteElementNet.MpcElements.MpcElement" Collapsed="true">
-    <Position X="4.5" Y="1.75" Width="1.5" />
+    <Position X="7.75" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAkABAAEAAAAAAAAAAACAAgEACAAAAABBEQiAAAAAQ=</HashCode>
       <FileName>MpcElements\MpcElement.cs</FileName>
@@ -197,7 +187,7 @@
   <Class Name="BriefFiniteElementNet.MpcElements.HingeLink" Collapsed="true">
     <Position X="3.25" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAEABAAAAAAAAgAAAgAAAAAAAAABAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAgAAAAAAAAABAAAAAAAAA=</HashCode>
       <FileName>MpcElements\HingeLink.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -244,6 +234,21 @@
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAABAACAAAAAAAAAAAA=</HashCode>
       <FileName>Solver\PCG.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.Element" Collapsed="true">
+    <Position X="10.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACBgBAAEEQQAECAAAAgAAEAgAQCCAEIAAAtCAAAAoAQ=</HashCode>
+      <FileName>Element.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.NodalLoad" Collapsed="true">
+    <Position X="6.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAiAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAQAIAAA=</HashCode>
+      <FileName>NodalLoad.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
   </Class>
   <Struct Name="BriefFiniteElementNet.Constraint" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="17" Y="3.75" Width="1.5" />
@@ -324,7 +329,7 @@
   <Struct Name="BriefFiniteElementNet.StrainTensor3D" Collapsed="true">
     <Position X="20.5" Y="4.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAABAAAAAAAAAAAACAAAAAAABAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>EAAAABAAAAAAAAAAAACAAAAAgABAAAAAQAAAAAAAAAA=</HashCode>
       <FileName>StrainTensor3D.cs</FileName>
       <NewMemberFileName>StressTensor3D.cs</NewMemberFileName>
     </TypeIdentifier>

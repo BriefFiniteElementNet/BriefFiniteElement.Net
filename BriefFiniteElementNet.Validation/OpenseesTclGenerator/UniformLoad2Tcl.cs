@@ -7,7 +7,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
 {
     public class UniformLoad2Tcl : ElementalLoadToTclTranslator
     {
-        public override bool CanTranslate(Load targetLoad, Elements.Element targetElement)
+        public override bool CanTranslate(ElementalLoad targetLoad, Element targetElement)
         {
             if (targetLoad is Loads.UniformLoad)
                 return true;
@@ -15,7 +15,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             return false;
         }
 
-        public override TclCommand[] Translate(Load ld, Elements.Element targetElement,string targetElementTag)
+        public override TclCommand[] Translate(ElementalLoad ld, Element targetElement,string targetElementTag)
         {
             var uld = (ld as Loads.UniformLoad);
 

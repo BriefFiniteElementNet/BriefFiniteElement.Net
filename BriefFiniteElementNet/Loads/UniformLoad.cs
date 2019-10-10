@@ -9,7 +9,7 @@ using System.Security.Permissions;
 namespace BriefFiniteElementNet.Loads
 {
     [Serializable]
-    public class UniformLoad:Load
+    public class UniformLoad:ElementalLoad
     {
         public UniformLoad(LoadCase @case) : base(@case)
         {

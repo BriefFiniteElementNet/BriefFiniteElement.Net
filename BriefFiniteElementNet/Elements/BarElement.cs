@@ -456,7 +456,7 @@ namespace BriefFiniteElementNet.Elements
 
         
 
-        public override Force[] GetGlobalEquivalentNodalLoads(Load load)
+        public override Force[] GetGlobalEquivalentNodalLoads(ElementalLoad load)
         {
             var helpers = GetElementHelpers();
 
@@ -669,6 +669,13 @@ namespace BriefFiniteElementNet.Elements
                 ki.ReturnToPool();
             }
 
+
+            for(var i=0;i<6*NodeCount;i++)
+            {
+                if (buf[i, i] < 0)
+                    Guid.NewGuid();
+
+            }
             return buf;
         }
 

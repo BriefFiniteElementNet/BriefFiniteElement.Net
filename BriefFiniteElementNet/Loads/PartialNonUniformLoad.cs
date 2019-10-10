@@ -14,7 +14,7 @@ namespace BriefFiniteElementNet.Loads
     /// </summary>
     [Serializable]
     [Obsolete("still in development, have bugs")]
-    public class PartialNonUniformLoad:Load
+    public class PartialNonUniformLoad:ElementalLoad
     {
         #region props, fields
 

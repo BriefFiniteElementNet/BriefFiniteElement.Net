@@ -35,7 +35,15 @@ namespace BriefFiniteElementNet
         {
         }
 
+        public LoadCombination Clone()
+        {
+            var buf = new LoadCombination();
 
+            foreach (var pair in this)
+                buf[pair.Key] = pair.Value;
+
+            return buf;
+        }
 
         #region Deserialization Constructor
 

@@ -190,7 +190,7 @@
     <Compile Include="LoadDirection.cs" />
     <Compile Include="Displacement.cs" />
     <Compile Include="DofConstraint.cs" />
-    <Compile Include="Elements\Element.cs" />
+    <Compile Include="Element.cs" />
     <Compile Include="Elements\Element1D.cs" />
     <Compile Include="Elements\Element2D.cs" />
     <Compile Include="Elements\Element3D.cs" />

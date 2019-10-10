@@ -809,7 +809,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
 
         /// <inheritdoc/>
-        public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, Load load,
+        public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load,
             double[] isoLocation)
         {
             var n = targetElement.Nodes.Length;
@@ -1113,7 +1113,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
 
         /// <inheritdoc/>
-        public Displacement GetLoadDisplacementAt(Element targetElement, Load load, double[] isoLocation)
+        public Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             var n = this.GetNMatrixAt(targetElement, isoLocation);
             
@@ -1259,7 +1259,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
 
-        public Force[] GetLocalEquivalentNodalLoads(Element targetElement, Load load)
+        public Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
         {
             var bar = targetElement as BarElement;
             var n = bar.Nodes.Length;

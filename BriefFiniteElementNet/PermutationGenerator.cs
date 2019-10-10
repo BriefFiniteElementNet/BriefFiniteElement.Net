@@ -62,7 +62,7 @@ namespace BriefFiniteElementNet
         /// <returns>displacement permutation matrix</returns>
         public CCS GetDisplacemenetPermutation()
         {
-            var buf = new Coord(6*_n, 6*_m, 0);
+            var buf = new Coord(6*_n, 6*_m, 1);
 
             for (var i = 0; i < _n; i++)
             {

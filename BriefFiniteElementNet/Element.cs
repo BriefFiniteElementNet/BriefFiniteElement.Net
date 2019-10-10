@@ -5,13 +5,13 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using BriefFiniteElementNet.ElementHelpers;
 
-namespace BriefFiniteElementNet.Elements
+namespace BriefFiniteElementNet
 {
     /// <summary>
     /// Represents an abstract class for a 'Finite Element' with physical properties.
     /// </summary>
     [Serializable]
-    [CLSCompliant(true)]
+    //[CLSCompliant(true)]
     [DebuggerDisplay("{this.GetType().Name}, Label: {Label}")]
     public abstract class Element : StructurePart
     {
@@ -19,7 +19,7 @@ namespace BriefFiniteElementNet.Elements
         /// An index through all elements, sets incrementally when Model.ReIndexElements() called
         /// </summary>
         [NonSerialized]
-        internal int Index;
+        private int index;
 
         /// <summary>
         /// Just obsoleted because of cannot add external element with new type
@@ -120,7 +120,7 @@ namespace BriefFiniteElementNet.Elements
 
 
 
-        protected List<Load> loads = new List<Load>();
+        protected List<ElementalLoad> loads = new List<ElementalLoad>();
 
         /// <summary>
         /// Gets or sets the loads.
@@ -128,7 +128,7 @@ namespace BriefFiniteElementNet.Elements
         /// <value>
         /// The loads.
         /// </value>
-        public List<Load> Loads
+        public List<ElementalLoad> Loads
         {
             get { return loads; }
         }
@@ -229,7 +229,7 @@ namespace BriefFiniteElementNet.Elements
             nodeNumbers = (int[]) info.GetValue("nodeNumbers", typeof(int[]));
 
             elementType = (ElementType)info.GetInt32("elementType");
-            loads = (List<Load>) info.GetValue("loads", typeof(List<Load>));
+            loads = (List<ElementalLoad>) info.GetValue("loads", typeof(List<ElementalLoad>));
 
 
             foreach (var pair in info)
@@ -259,7 +259,16 @@ namespace BriefFiniteElementNet.Elements
             set { _massFormulationType = value; }
         }
 
-        
+        public int Index
+        {
+            get { return index; }
+            internal set
+            {
+                index = value;
+            }
+        }
+
+
 
         #endregion
 
@@ -268,55 +277,7 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         /// <param name="load">The load.</param>
         /// <returns>Equivalent nodal loads in global coordinate system</returns>
-        public abstract Force[] GetGlobalEquivalentNodalLoads(Load load);
-
-
-        /// <summary>
-        /// Computes the B matrix (strain-displacement matrix).
-        /// </summary>
-        /// <param name="location">The location, in local coordination system (local means xi-eta things..., between -1 to 1).</param>
-        /// <remarks>B matrix can be in iso parametric coordination system, local coordinate system (linear transform from global) or global coordination system.
-        /// This will not be used expect by element itself!
-        /// For example B is ∂N / ∂x and is NOT ∂N / ∂ξ
-        /// </remarks>
-        /// <returns>The B matrix at specified <see cref="location"/></returns>
-        //[Obsolete]
-        //public abstract Matrix ComputeBMatrix(params double[] location);
-
-        /// <summary>
-        /// Gets the constitutive matrix in local coordination system at specified <see cref="location" />.
-        /// </summary>
-        /// <param name="location">The location, in local coordination system (local means xi-eta things..., between -1 to 1).</param>
-        /// <returns>
-        /// The constitutive matrix at specified <see cref="location" />
-        /// </returns>
-        //[Obsolete]
-        //public abstract Matrix ComputeDMatrixAt(params double[] location);
-
-        /// <summary>
-        /// Gets the N matrix (shape function) in local coordination system at specified <see cref="location" />.
-        /// </summary>
-        /// <param name="location">The location, in local coordination system (local means xi-eta things..., between -1 to 1).</param>
-        /// <returns>
-        /// The N matrix at specified <see cref="location" />
-        /// </returns>
-        //[Obsolete]
-        //public abstract Matrix ComputeNMatrixAt(params double[] location);
-
-        /// <summary>
-        /// Computes the J matrix at specified <see cref="location"/>.
-        /// </summary>
-        /// <remarks>
-        /// for 1D J is 1x1 matrix:
-        /// J =  ∂x / ∂ξ
-        /// 
-        /// for 2D:
-        /// ...
-        /// </remarks>
-        /// <param name="location">The location.</param>
-        /// <returns>the Jacobian matrix</returns>
-        //[Obsolete]
-        //public abstract Matrix ComputeJMatrixAt(params double[] location);
+        public abstract Force[] GetGlobalEquivalentNodalLoads(ElementalLoad load);
 
         /// <summary>
         /// Gets the lambda matrix of element (for transforming between local and global axis).
@@ -334,34 +295,9 @@ namespace BriefFiniteElementNet.Elements
         /// <returns>the trasformation manager related to this element</returns>
         public TransformManagerL2G GetTransformationManager()
         {
-            /*
-            if (this.lastNodalLocations == null)
-                lastNodalLocations = new Point[this.nodes.Length];
+            var lambda = GetLambdaMatrix();
 
-            var flag = true;
-
-            for (var i = 0; i < this.nodes.Length; i++)
-            {
-                if (lastNodalLocations[i] != nodes[i].Location)
-                {
-                    flag = false;
-                    break;
-                }
-            }
-
-            if (flag)
-                return TransformManagerL2G.MakeFromLambdaMatrix(lastLambdaMatrix);
-
-
-            else*/
-            {
-                //for (var i = 0; i < this.nodes.Length; i++)
-                //    lastNodalLocations[i] = nodes[i].Location;
-
-                var lambda = GetLambdaMatrix();
-
-                return TransformManagerL2G.MakeFromLambdaMatrix(lambda, MatrixPool);
-            }
+            return TransformManagerL2G.MakeFromLambdaMatrix(lambda, MatrixPool);
         }
 
         /// <summary>
@@ -371,15 +307,17 @@ namespace BriefFiniteElementNet.Elements
         /// <returns>The location in element's local system system</returns>
         public abstract double[] IsoCoordsToLocalCoords(params double[] isoCoords);
 
-
-        //[NonSerialized]
-        //private Point[] lastNodalLocations;
-        //[NonSerialized]
-        //private Matrix lastLambdaMatrix = Matrix.Eye(3);
-
+        /// <summary>
+        /// Gets the element helpers for the Element
+        /// </summary>
+        /// <returns></returns>
         public abstract IElementHelper[] GetHelpers();
 
 
+        /// <summary>
+        /// Used for reassigning nodes references after deserialization
+        /// </summary>
+        /// <param name="parent"></param>
         public override void ReAssignNodeReferences(Model parent)
         {
             var elm = this;
@@ -392,9 +330,6 @@ namespace BriefFiniteElementNet.Elements
 
             base.ReAssignNodeReferences(parent);
         }
-
-
-
         
     }
 }

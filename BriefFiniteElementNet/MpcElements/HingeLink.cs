@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using CSparse.Double;
 using System.Security.Permissions;
+using CSparse.Storage;
 
 namespace BriefFiniteElementNet.MpcElements
 {
@@ -26,12 +27,90 @@ namespace BriefFiniteElementNet.MpcElements
 
         public override SparseMatrix GetExtraEquations()
         {
-            throw new NotImplementedException();
+            var distinctNodes = Nodes.Distinct().Where(ii => !ReferenceEquals(ii, null)).ToList();
+            //Nodes.Select(i => i.Index).Distinct().ToList();
+
+
+            var modelDofCount = parent.Nodes.Count * 6;
+
+            var coord = new CoordinateStorage<double>((distinctNodes.Count - 1) * 6, modelDofCount + 1, 1);
+
+            var centralNode = distinctNodes.FirstOrDefault();
+
+            if (centralNode == null)
+                throw new Exception();
+
+            {
+                var i = 0;
+
+                var cDx = centralNode.Index * 6 + 0;
+                var cDy = centralNode.Index * 6 + 1;
+                var cDz = centralNode.Index * 6 + 2;
+
+                foreach (var nde in distinctNodes)
+                {
+
+                    if (ReferenceEquals(nde, centralNode))
+                    {
+
+                    }
+                    else
+                    {
+                        var iDx = nde.Index * 6 + 0;
+                        var iDy = nde.Index * 6 + 1;
+                        var iDz = nde.Index * 6 + 2;
+
+                        #region i'th Dx
+
+                        //hing link is Dxi = DxCenter, then Dxi - DxCenter = 0, or vice versa
+
+                        coord.At(i, cDx, 1);//Central.Dx
+                        coord.At(i, iDx, -1);//Nde.Dx
+
+                        #endregion
+
+                        i++;
+
+                        #region i'th Dy
+
+                        //hing link is Dyi = DyCenter, then Dyi - DyCenter = 0, or vice versa
+                        coord.At(i, cDy, 1);//Central.Dy
+                        coord.At(i, iDy, -1);//Nde.Dy
+
+                        #endregion
+
+                        i++;
+
+                        #region i'th Dz
+
+                        //hing link is Dzi = DzCenter, then Dzi - DzCenter = 0, or vice versa
+                        coord.At(i, cDz, 1);//Central.Dz 
+                        coord.At(i, iDz, -1);//Nde.Dz
+
+                        #endregion
+
+                        i++;
+                    }
+                }
+            }
+
+            var buf = coord.ToCCs();
+
+            var empties = buf.EmptyRowCount();
+
+            if (empties != 0)
+            {
+                throw new Exception();
+            }
+
+            return buf;
         }
 
         public override int GetExtraEquationsCount()
         {
-            throw new NotImplementedException();
+            //count is equal to slave DoFs
+            //except one node, all others are slaves.
+            return (Nodes.Count - 1) * 3;
         }
 
         #region ISerialization Implementation

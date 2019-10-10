@@ -798,7 +798,7 @@ namespace BriefFiniteElementNet.Elements
         }
 
         ///<inheritdoc/>
-        public override Force[] GetGlobalEquivalentNodalLoads(Load load)
+        public override Force[] GetGlobalEquivalentNodalLoads(ElementalLoad load)
         {
             if (load is UniformLoadForPlanarElements)
                 return GetEquivalentNodalLoad(load as UniformLoadForPlanarElements);

@@ -9,23 +9,23 @@ using BriefFiniteElementNet.Elements;
 namespace BriefFiniteElementNet
 {
     /// <summary>
-    /// Represents a base class for elemental loads.
+    /// Represents a base class for elemental loads (loads applying to elements)
     /// </summary>
     [Serializable]
-    public abstract class Load:ISerializable
+    public abstract class ElementalLoad:ISerializable
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Load"/> class.
+        /// Initializes a new instance of the <see cref="ElementalLoad"/> class.
         /// </summary>
-        protected Load()
+        protected ElementalLoad()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Load"/> class.
+        /// Initializes a new instance of the <see cref="ElementalLoad"/> class.
         /// </summary>
         /// <param name="case">The case.</param>
-        protected Load(LoadCase @case)
+        protected ElementalLoad(LoadCase @case)
         {
             _case = @case;
         }
@@ -36,7 +36,7 @@ namespace BriefFiniteElementNet
         /// Gets or sets the case.
         /// </summary>
         /// <value>
-        /// The LoadCase of <see cref="Load"/> object.
+        /// The LoadCase of <see cref="ElementalLoad"/> object.
         /// </value>
         public LoadCase Case
         {
@@ -45,11 +45,11 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Gets the equivalent nodal loads of this <see cref="Load"/> when applied to <see cref="element"/>.
+        /// Gets the equivalent nodal loads of this <see cref="ElementalLoad"/> when applied to <see cref="element"/>.
         /// </summary>
         /// <param name="element">The element.</param>
-        /// <remarks>Because of every <see cref="Load"/> on an <see cref="Element"/> body have to be converted to concentrated nodal loads, this method will be used to consider <see cref="Load"/> on <see cref="Element"/> body</remarks>
-        /// <returns>Concentrated loads appropriated with this <see cref="Load"/>.</returns>
+        /// <remarks>Because of every <see cref="ElementalLoad"/> on an <see cref="Element"/> body have to be converted to concentrated nodal loads, this method will be used to consider <see cref="ElementalLoad"/> on <see cref="Element"/> body</remarks>
+        /// <returns>Concentrated loads appropriated with this <see cref="ElementalLoad"/>.</returns>
         //[Obsolete("Use IElementHelper.Get")]
         //public abstract Force[] GetGlobalEquivalentNodalLoads(Element element);
 
@@ -67,11 +67,11 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Load"/> class.
+        /// Initializes a new instance of the <see cref="ElementalLoad"/> class.
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
-        protected Load(SerializationInfo info, StreamingContext context)
+        protected ElementalLoad(SerializationInfo info, StreamingContext context)
         {
 			this._case = (BriefFiniteElementNet.LoadCase)info.GetValue("_case", typeof(BriefFiniteElementNet.LoadCase));
         }

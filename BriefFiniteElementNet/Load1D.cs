@@ -11,7 +11,7 @@ namespace BriefFiniteElementNet
     /// Represents a base class for loads that are applicable to 1D elements like frame element
     /// </summary>
     [Serializable]
-    public abstract class Load1D : Load
+    public abstract class Load1D : ElementalLoad
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Load1D"/> class.

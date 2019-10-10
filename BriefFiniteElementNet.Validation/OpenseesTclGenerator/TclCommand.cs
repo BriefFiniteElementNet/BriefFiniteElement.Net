@@ -36,8 +36,8 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
     {
         public TclGenerator TargetGenerator;
 
-        public abstract TclCommand[] Translate(Load targetLoad, Elements.Element targetElement, string targetElementTag);
+        public abstract TclCommand[] Translate(ElementalLoad targetLoad, Element targetElement, string targetElementTag);
 
-        public abstract bool CanTranslate(Load targetLoad, Elements.Element targetElement);
+        public abstract bool CanTranslate(ElementalLoad targetLoad, Element targetElement);
     }
 }

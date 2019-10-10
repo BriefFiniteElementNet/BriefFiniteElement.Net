@@ -162,7 +162,9 @@ namespace BriefFiniteElementNet
 
                 var disps = parent.LastResult.Displacements[pair.Key];
 
-                buf += cf*Displacement.FromVector(disps, this.Index*6);
+                var dd = Displacement.FromVector(disps, this.Index * 6);
+
+                buf += cf*dd;
             }
 
             return buf;
