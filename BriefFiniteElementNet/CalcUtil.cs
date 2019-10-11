@@ -314,6 +314,12 @@ namespace BriefFiniteElementNet
         }
 
 
+        /// <summary>
+        /// divides the specified length into <see cref="pcs"/> parts.
+        /// </summary>
+        /// <param name="length"></param>
+        /// <param name="pcs"></param>
+        /// <returns>list of joints of parts</returns>
         public static double[] Divide(double length, int pcs)
         {
             if (pcs < 1)
