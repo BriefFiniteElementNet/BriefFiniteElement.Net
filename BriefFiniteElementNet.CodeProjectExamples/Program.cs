@@ -168,6 +168,8 @@ namespace BriefFiniteElementNet.CodeProjectExamples
             Console.WriteLine("{1}x{1}*{1}x{1} took {0} milisecs", sp.ElapsedMilliseconds,n);
         }
 
+       
+
         private static void TestConcLoad()
         {
             var model = new Model();

@@ -393,8 +393,15 @@ namespace BriefFiniteElementNet.Controls
 
         #endregion
 
+        private bool suspend = false;
+
+
         public void UpdateUi()
         {
+
+            if (suspend)
+                return;
+
             //plotter.Children.Clear();
 
 
@@ -456,18 +463,26 @@ namespace BriefFiniteElementNet.Controls
             */
         }
 
-        public static void VisualizeInNewWindow(Func<double, double> fnc, double s, double e)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fnc"></param>
+        /// <param name="x0">determines the minimum horizontal axis value</param>
+        /// <param name="x1">determines the maximum horizontal axis value</param>
+        public static void VisualizeInNewWindow(Func<double, double> fnc, double x0, double x1,int samplingCount=10)
         {
             var ctrl = new FunctionVisualizer();
+            ctrl.suspend = true;
 
-            ctrl.Min = s;
-            ctrl.Max = e;
-
+            ctrl.Min = x0;
+            ctrl.Max = x1;
+            ctrl.SamplingCount = samplingCount;
             ctrl.TargetFunction = fnc;
 
             var wnd = new Window();
 
             wnd.Content = ctrl;
+            ctrl.suspend = false;
             ctrl.UpdateUi();
 
             wnd.ShowDialog();

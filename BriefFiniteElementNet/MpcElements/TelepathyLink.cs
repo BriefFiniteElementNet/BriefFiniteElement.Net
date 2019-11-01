@@ -9,12 +9,20 @@ using CSparse.Double;
 namespace BriefFiniteElementNet.MpcElements
 {
     /// <summary>
-    /// Represents a telepathy link between DoF's of two nodes. connected DoF s will have equal displacement after analysis.
+    /// Represents a telepathy link between DoF's of two nodes. connected DoF s will have equal displacement after analysis (like equal dof)
     /// </summary>
     [Serializable]
     [Obsolete("Not usable yet, under development")]
     public class TelepathyLink : MpcElement
     {
+
+        public TelepathyLink(params Node[] nodes)
+        {
+            base.Nodes.AddRange(nodes);
+        }
+
+
+
         private bool _connectDx, _connectDy, _connectDz, _connectRx, _connectRy, _connectRz;
 
         /// <summary>
@@ -89,12 +97,88 @@ namespace BriefFiniteElementNet.MpcElements
 
         public override SparseMatrix GetExtraEquations()
         {
-            throw new NotImplementedException();
+            var n = parent.Nodes.Count;
+
+            var buf = new CSparse.Storage.CoordinateStorage<double>(GetExtraEquationsCount(), parent.Nodes.Count * 6 + 1, 10);
+
+            
+            var cnt = 0;
+
+            //for (var i = 0; i < Nodes.Count; i++)
+            {
+                var ndei = Nodes[0];
+                var stiIdx = ndei.Index * 6;
+
+                for (var j = 1; j < Nodes.Count; j++)
+                {
+                    var ndej = Nodes[j];
+                    var stjIdx = ndej.Index * 6;
+
+                    if (_connectDx)
+                    {
+                        buf.At(cnt, stiIdx, 1);
+                        buf.At(cnt, stjIdx,  -1);
+                        cnt++;
+                    }
+
+                    if (_connectDy)
+                    {
+                        buf.At(cnt, stiIdx + 1,  1);
+                        buf.At(cnt, stjIdx + 1,  -1);
+                        cnt++;
+                    }
+
+                    if (_connectDz)
+                    {
+                        buf.At(cnt, stiIdx + 2,  1);
+                        buf.At(cnt, stjIdx + 2,  -1);
+                        cnt++;
+                    }
+
+
+                    if (_connectRx)
+                    {
+                        buf.At(cnt, stiIdx + 3,  1);
+                        buf.At(cnt, stjIdx + 3,  -1);
+                        cnt++;
+                    }
+
+                    if (_connectRy)
+                    {
+                        buf.At(cnt, stiIdx + 4,  1);
+                        buf.At(cnt, stjIdx + 4,  -1);
+                        cnt++;
+                    }
+
+                    if (_connectRz)
+                    {
+                        buf.At(cnt, stiIdx + 5,  1);
+                        buf.At(cnt, stjIdx + 5,  -1);
+                        cnt++;
+                    }
+
+                }
+            }
+
+            var buf2 = buf.ToCCs();
+
+
+            return buf2;
         }
 
         public override int GetExtraEquationsCount()
         {
-            throw new NotImplementedException();
+            var n = Nodes.Count;
+
+            var buf = 0;
+
+            var lst = new bool[] { _connectDx, _connectDy, _connectDz, _connectRx, _connectRy, _connectRz };
+
+            foreach (var val in lst)
+                if (val)
+                    buf += (n - 1);
+
+            return buf;
         }
 
         protected TelepathyLink(SerializationInfo info, StreamingContext context) : base(info, context)

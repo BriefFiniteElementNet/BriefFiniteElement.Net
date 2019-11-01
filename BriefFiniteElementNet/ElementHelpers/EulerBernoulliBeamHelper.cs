@@ -508,6 +508,15 @@ namespace BriefFiniteElementNet.ElementHelpers
                 rightSide.ReturnToPool();
             }
 
+            for (var i = 0; i < n; i++)
+            {
+                if (nss[i] == null)
+                    nss[i] = new Polynomial();
+
+                if (mss[i] == null)
+                    mss[i] = new Polynomial();
+            }
+
             {
                 bar.SetCache(nssKey, nss);
                 bar.SetCache(mssKey, mss);

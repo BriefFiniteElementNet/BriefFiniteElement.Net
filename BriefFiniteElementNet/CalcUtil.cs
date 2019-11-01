@@ -1689,6 +1689,10 @@ namespace BriefFiniteElementNet
 
             #endregion
 
+
+            var tmpp = allEqs.ToDenseMatrix();
+
+
             var rref = rrefFinder.CalculateRref(allEqs);
 
             var rrefSys = SparseEqSystem.Generate(rref);

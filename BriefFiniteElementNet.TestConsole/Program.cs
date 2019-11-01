@@ -34,6 +34,9 @@ namespace BriefFiniteElementNet.TestConsole
         static void Main(string[] args)
         {
             Console.Title = "BFE tests & temporary codes";
+
+            //TestHingedInternalForce();
+
             //TestIssue20();
             //SimplySupportedBeamUDL();
             //BeamShapeFunction();
@@ -92,6 +95,31 @@ namespace BriefFiniteElementNet.TestConsole
             //Console.ReadKey();
         }
 
+        static void TestHingedInternalForce()
+        {
+            //test internal force of a beam with partially end release
+
+            var model = StructureGenerator.Generate3DBarElementGrid(2, 1, 1);
+
+            var bar = model.Elements[0] as BarElement;
+
+            bar.StartReleaseCondition = Constraints.MovementFixed & Constraints.FixedRX;
+            bar.EndReleaseCondition = Constraints.MovementFixed & Constraints.FixedRX;
+
+            //var ld = new Loads.UniformLoad() { Direction = Vector.K, Magnitude = -100 };
+
+            var ld = new Loads.ConcentratedLoad() { Force = new Force(0, 0, -1, 0, 0, 0), ForceIsoLocation = new IsoPoint(0.0) };
+
+            bar.Loads.Add(ld);
+
+            model.Solve_MPC();
+
+            var func = new Func<double, double>(xi => bar.GetExactInternalForceAt(xi).My);
+
+            FunctionVisualizer.VisualizeInNewWindow(func, -1 + 1e-10, 1 - 1e-10,100);
+        }
+
+       
         static void TestGrid()
         {
             var model = StructureGenerator.Generate3DBarElementGrid(10, 10, 10);
@@ -108,7 +136,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             var n2 = new Node(1, 0, 0) { Label = "n2", Constraints = BriefFiniteElementNet.Constraints.MovementFixed };
 
-            var loadPositionX = 0;
+            var loadPositionX = 0.5;
 
             var e1 = new BarElement(n1, n2) { Label = "e1" };
             e1.Section = new BriefFiniteElementNet.Sections.UniformGeometric1DSection(SectionGenerator.GetRectangularSection(0.1d, 0.2d));
@@ -130,10 +158,16 @@ namespace BriefFiniteElementNet.TestConsole
 
             var data =
                 e1.GetExactInternalForceAt(-0.99999999999);
-                //e1.GetInternalForceAt(-0.99999999999);
+            //e1.GetInternalForceAt(-0.99999999999);
 
 
-            //var d2 = e1.GetGlobalEquivalentNodalLoads(elementLoad);
+            var func = new Func<double, double>(xi => e1.GetExactInternalForceAt(xi).My);
+
+
+
+            FunctionVisualizer.VisualizeInNewWindow(func, -1 + 1e-10, 1 - 1e-10, 100);
+
+
         }
 
         /// <summary>

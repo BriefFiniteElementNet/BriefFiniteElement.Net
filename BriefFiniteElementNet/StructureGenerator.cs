@@ -287,8 +287,8 @@ namespace BriefFiniteElementNet
             var buf = new Model();
 
             var dx = 5.0;
-            var dy = 5.0;
-            var dz = 5.0;
+            var dy = 4.0;
+            var dz = 3.0;
 
             var nodes = new Node[m, n, l];
 

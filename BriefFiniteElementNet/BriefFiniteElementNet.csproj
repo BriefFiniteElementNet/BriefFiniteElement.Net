@@ -114,7 +114,6 @@
     <Compile Include="Elements\DktElement.cs" />
     <Compile Include="Sections\Base2DSection.cs" />
     <Compile Include="Sections\UniformParametric1DSection.cs" />
-    <Compile Include="Elements\SdofMass.cs" />
     <Compile Include="Elements\Spring1D.cs" />
     <Compile Include="Elements\TriangleElement.cs" />
     <Compile Include="Elements\TriangleElementBehaviour.cs" />
@@ -242,8 +241,6 @@
     <None Include="Elements\FrameElement2Node.md" />
     <None Include="ElementHelpers\IElementHelper.md" />
     <None Include="MpcElements\RigidElement.md" />
-    <None Include="Elements\SdofMass.md" />
-    <None Include="Elements\Spring1D.md" />
     <None Include="MpcElements\TelepathyLink.md" />
     <None Include="Elements\Tetrahedral.md" />
     <None Include="MpcElements\VirtualSupport.md" />

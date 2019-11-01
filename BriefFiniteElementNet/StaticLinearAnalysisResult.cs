@@ -807,6 +807,7 @@ namespace BriefFiniteElementNet
 
             var kt = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(parent);
 
+            
 
             var ft = new double[n];
 
@@ -824,6 +825,10 @@ namespace BriefFiniteElementNet
 
                 
                 var kr = pf.Multiply(kt).Multiply(pd);
+
+                //var tmp = kr.ToDenseMatrix();
+
+                //var tmp2 = kt.ToDenseMatrix();
 
                 var a1 = new double[n];
 
@@ -877,11 +882,6 @@ namespace BriefFiniteElementNet
 
             _forces[loadCase] = ft;
             _displacements[loadCase] = dt;
-
-            //var forcesRegenerated=
-
-
-            
 
             for (var i = 0; i < parent.Nodes.Count; i++)
             {
@@ -952,8 +952,8 @@ namespace BriefFiniteElementNet
 
                 if (finalConst.RZ == DofConstraint.Released)
                     fx[6 * i + 5] = 0;
-
             }
+
         }
 
         /// <summary>
