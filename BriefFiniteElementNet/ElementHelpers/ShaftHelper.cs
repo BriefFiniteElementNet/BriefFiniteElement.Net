@@ -474,6 +474,10 @@ namespace BriefFiniteElementNet.ElementHelpers
                 var frcX = br.IsoCoordsToLocalCoords(cns.ForceIsoLocation.Xi)[0];
 
                 frc = frc.Move(new Point(frcX, 0, 0), new Point(0, 0, 0));
+
+                if (br.StartReleaseCondition.RX == DofConstraint.Released)
+                    frc.Mx = 0;
+
                 frc = frc.Move(new Point(0, 0, 0), new Point(targetX, 0, 0));
 
                 var movedEnds = ends.Move(new Point(0, 0, 0), new Point(targetX, 0, 0));

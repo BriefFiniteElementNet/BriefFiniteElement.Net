@@ -663,6 +663,9 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     var f_i = integral[0, 0];
 
+                    if (br.StartReleaseCondition.DX == DofConstraint.Released)
+                        f_i = 0;
+
                     var movedEnds = ends.Move(new Point(), new Point());//no need to move as it is truss without moments
                     var fMoved = new Force(f_i, 00, 00, 0, 0, 0);
 

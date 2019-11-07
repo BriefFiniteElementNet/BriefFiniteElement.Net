@@ -859,29 +859,14 @@ namespace BriefFiniteElementNet.ElementHelpers
                     {
                         var frc_i = endForces[i];// new Force();
 
-                        /*
-                        if (this._direction == BeamDirection.Y)
-                        {
-                            frc_i.My = endForces[i].My;
-                            frc_i.Fz = endForces[i].Fz;
-                        }
-                        else
-                        {
-                            frc_i.Mz = endForces[i].Mz;
-                            frc_i.Fy = endForces[i].Fy;
-                        }*/
-
                         ends += frc_i.Move(new Point(x_s[i], 0, 0), Point.Origins);
                     }
-
                 }
             }
-            
 
             #endregion
 
             var to = Iso2Local(targetElement, isoLocation)[0];
-
             
 
             #region uniform & trapezoid, uses integration method
@@ -1036,10 +1021,24 @@ namespace BriefFiniteElementNet.ElementHelpers
                     }
 
 
-                    
+
                     //f = f.Move(new Point(0, 0, 0), new Point(x, 0, 0));
                     //frc = frc + ends;
                     //var movedEnds = ends.Move(new Point(0, 0, 0), new Point(x, 0, 0));
+
+                    if (br.StartReleaseCondition.DY == DofConstraint.Released)
+                        f.Fy = 0;
+
+                    if (br.StartReleaseCondition.DZ == DofConstraint.Released)
+                        f.Fz = 0;
+
+                    if (br.StartReleaseCondition.RY == DofConstraint.Released)
+                        f.My = 0;
+
+                    if (br.StartReleaseCondition.RZ == DofConstraint.Released)
+                        f.Mz = 0;
+
+
 
                     var f2 = f + ends;
 
