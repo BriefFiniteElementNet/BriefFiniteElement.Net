@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet.Loads
         /// <param name="case"></param>
         /// <param name="direction">the direction of load</param>
         /// <param name="magnitude">magnitude of load</param>
-        /// <param name="coordinationSystem">e coordination system that <see cref="Direction"/> is defined in</param>
+        /// <param name="coordinationSystem">e coordination system that <see cref="Direction"/> is defined in, either global or target element's local coordination system</param>
         public UniformLoad(LoadCase @case, Vector direction, double magnitude, CoordinationSystem coordinationSystem) : base(@case)
         {
             _direction = direction;
@@ -51,7 +51,6 @@ namespace BriefFiniteElementNet.Loads
             set { _magnitude = value; }
         }
 
-
         /// <summary>
         /// Gets or sets the coordination system that <see cref="Direction"/> is defined in.
         /// </summary>
@@ -71,9 +70,6 @@ namespace BriefFiniteElementNet.Loads
             }
         }
 
-
-
-
         #region Constructor
 
         public UniformLoad()
@@ -81,7 +77,6 @@ namespace BriefFiniteElementNet.Loads
         }
 
         #endregion
-
 
         #region Deserialization Constructor
 

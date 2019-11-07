@@ -1004,12 +1004,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                                 }
 
                                 var buf_ = new Matrix(new double[] { df, dm });
-                                //var detj = j.Determinant();
-
-                                //buf_[0, 0] = buf_[0, 0];// * detj;
-                                //buf_[1, 0] = buf_[1, 0];// * detj * detj;
-
-
+                                                               
                                 return buf_;
                             }, x0, x1, gpt);
 
@@ -1040,13 +1035,17 @@ namespace BriefFiniteElementNet.ElementHelpers
                         f.Mz = m_i;
                     }
 
-                    f = f.Move(new Point(0, 0, 0), new Point(x, 0, 0));
+
+                    
+                    //f = f.Move(new Point(0, 0, 0), new Point(x, 0, 0));
                     //frc = frc + ends;
-                    var movedEnds = ends.Move(new Point(0, 0, 0), new Point(x, 0, 0));
+                    //var movedEnds = ends.Move(new Point(0, 0, 0), new Point(x, 0, 0));
 
-                    var f2 = f + movedEnds;
+                    var f2 = f + ends;
 
-                    //f2 *= -1;
+                    f2 = f2.Move(new Point(0, 0, 0), new Point(x, 0, 0));
+
+                    f2 *= -1;
 
                     if (_direction == BeamDirection.Y)
                     {
@@ -1058,8 +1057,6 @@ namespace BriefFiniteElementNet.ElementHelpers
                         buff.Add(Tuple.Create(DoF.Rz, f2.Mz));
                         buff.Add(Tuple.Create(DoF.Dy, f2.Fy));
                     }
-
-
                   
 
                     return buff;
@@ -1255,12 +1252,12 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             if (_direction == BeamDirection.Y)
             {
-                buf.Add(Tuple.Create(DoF.Ry, -f[2, 0]));
+                buf.Add(Tuple.Create(DoF.Ry, f[2, 0]));
                 buf.Add(Tuple.Create(DoF.Dz, -f[3, 0]));
             }
             else
             {
-                buf.Add(Tuple.Create(DoF.Rz, -f[2, 0]));
+                buf.Add(Tuple.Create(DoF.Rz, f[2, 0]));
                 buf.Add(Tuple.Create(DoF.Dy, -f[3, 0]));
             }
 

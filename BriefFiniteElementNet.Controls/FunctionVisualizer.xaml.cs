@@ -424,7 +424,12 @@ namespace BriefFiniteElementNet.Controls
 
             for (var i = 0; i < SamplingCount; i++)
             {
-                vals.Add(Min + i*delta);
+                var t = Min + i * delta;
+
+                if (t > Max) t = Max;// floating point
+                if (t < Min) t = Min;// floating point
+
+                vals.Add(t);
             }
 
             var pts = new List<Tuple<double, double>>();

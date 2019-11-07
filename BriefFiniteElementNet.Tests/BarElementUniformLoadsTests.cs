@@ -91,7 +91,6 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(Math.Abs(loads[1].Mz - m2) < 1e-5, "invalid value");
         }
 
-
         [TestMethod]
         public void LoadEquivalentNodalLoads_uniformload_truss()
         {
@@ -124,7 +123,6 @@ namespace BriefFiniteElementNet.Tests
 
             Assert.IsTrue(Math.Abs(loads[1].Fx - f2) < 1e-5, "invalid value");
         }
-
 
         [TestMethod]
         public void LoadInternalForce_uniformload_eulerbernoullybeam_dirY()
@@ -159,7 +157,7 @@ namespace BriefFiniteElementNet.Tests
 
                 var exactFrc = new Force(fx: 0, fy: 0, fz: vi, mx: 0, my: mi, mz: 0);
 
-                var d = testFrc - exactFrc;
+                var d = testFrc + exactFrc;
 
                 var dm = d.My;
                 var df = d.Fz;
@@ -176,7 +174,7 @@ namespace BriefFiniteElementNet.Tests
 
                 var f0 = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -1 + 1e-9 }).ToForce(); ;
 
-                var sum = end1[0] + f0;
+                var sum = end1[0] - f0;
 
                 Assert.IsTrue(Math.Abs(sum.Forces.Length) < 1e-5, "invalid value");
                 Assert.IsTrue(Math.Abs(sum.Moments.Length) < 1e-5, "invalid value");
@@ -184,7 +182,6 @@ namespace BriefFiniteElementNet.Tests
 
             }
         }
-
 
         [TestMethod]
         public void LoadInternalForce_uniformload_eulerbernoullybeam_dirZ()
@@ -235,7 +232,7 @@ namespace BriefFiniteElementNet.Tests
 
                 var f0 = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -1 + 1e-9 }).ToForce(); ;
 
-                var sum = end1[0] + f0;
+                var sum = end1[0] - f0;
 
                 Assert.IsTrue(Math.Abs(sum.Forces.Length) < 1e-5, "invalid value");
                 Assert.IsTrue(Math.Abs(sum.Moments.Length) < 1e-5, "invalid value");
@@ -243,8 +240,6 @@ namespace BriefFiniteElementNet.Tests
 
             }
         }
-
-        
 
         [TestMethod]
         public void barelement_endrelease()

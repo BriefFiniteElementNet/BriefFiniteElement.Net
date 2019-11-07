@@ -34,6 +34,7 @@ namespace BriefFiniteElementNet.TestConsole
         static void Main(string[] args)
         {
             Console.Title = "BFE tests & temporary codes";
+            Validation.GithubIssues.Issue24.Run();
 
             //TestHingedInternalForce();
 
@@ -42,7 +43,7 @@ namespace BriefFiniteElementNet.TestConsole
             //BeamShapeFunction();
             //BarElementTester.TestEndReleaseStyiffness();
 
-            TestIssue22();
+            //TestIssue22();
 
             //TestGrid();
             //Test_P_Delta_matrix();
