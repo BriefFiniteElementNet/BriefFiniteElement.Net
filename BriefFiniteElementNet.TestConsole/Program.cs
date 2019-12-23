@@ -34,8 +34,15 @@ namespace BriefFiniteElementNet.TestConsole
         static void Main(string[] args)
         {
             Console.Title = "BFE tests & temporary codes";
-            Validation.GithubIssues.Issue24.Run();
+            //Validation.GithubIssues.Issue25.Run();
 
+            testRref2();
+            
+            //var stf = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(model);
+
+            //model.Solve_MPC();
+
+            Guid.NewGuid();
             //TestHingedInternalForce();
 
             //TestIssue20();
@@ -94,6 +101,51 @@ namespace BriefFiniteElementNet.TestConsole
             //Tst();
 
             //Console.ReadKey();
+        }
+
+        static void testRref()
+        {
+            var model = StructureGenerator.Generate3DBarElementGrid(10, 10, 10);
+
+            var t = new VirtualConstraint();
+
+            t.Nodes.Add(model.Nodes[0]);
+            t.UseForAllLoads = true;
+            t.Constraint = Constraints.FixedDX;
+            model.MpcElements.Add(t);
+
+            CalcUtil.GenerateP_Delta_Mpc(model, LoadCase.DefaultLoadCase, new Mathh.CsparsenetQrDisplacementPermutationCalculator());
+        }
+
+        static void testRref2()
+        {
+            var crd = new CoordinateStorage<double>(3, 8, 1);
+
+            crd.At(0, 2, 1);
+            crd.At(0, 3, 1);
+            crd.At(0, 4, 3);
+            crd.At(0, 6, 2);
+            crd.At(0, 7, 3);
+
+            crd.At(1, 2, 2);
+            crd.At(1, 3, 6);
+            crd.At(1, 4, 1);
+            crd.At(1, 6, 5);
+            crd.At(1, 7, 1);
+
+            crd.At(2, 2, 3);
+            crd.At(2, 3, 7);
+            crd.At(2, 4, 4);
+            crd.At(2, 6, 7);
+            crd.At(2, 7, 4);
+
+
+            var rref = new CsparsenetQrDisplacementPermutationCalculator();
+
+            var a = crd.ToCCs();
+
+            var t = rref.CalculateDisplacementPermutation(a).Item1.ToDenseMatrix();
+      
         }
 
         static void TestHingedInternalForce()

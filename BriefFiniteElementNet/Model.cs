@@ -282,6 +282,15 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+
+
+        /// <summary>
+        /// Loads the model from binary stream using a serialization binder
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="binder"></param>
+        /// <returns></returns>
+        /// <remarks>Usually used for loading Model in older versions of BFE in new versions where a class is renamed in new BFE</remarks>
         public static Model LoadWithBinder(Stream str,SerializationBinder binder)
         {
             var formatter = new BinaryFormatter() { Binder = binder };
@@ -297,6 +306,8 @@ namespace BriefFiniteElementNet
         {
             new ModelWarningChecker().CheckModel(this);
         }
+
+        
 
         #endregion
 

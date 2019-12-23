@@ -490,6 +490,8 @@ namespace BriefFiniteElementNet
             info.AddValue("loads", loads);
             info.AddValue("settlements", settlements);
             info.AddValue("constraints", constraints);
+
+            
         }
 
         /// <summary>
@@ -502,7 +504,11 @@ namespace BriefFiniteElementNet
             location = (Point) info.GetValue("location", typeof (Point));
             Index = (int) info.GetValue("Index", typeof (int));
             loads = (List<NodalLoad>) info.GetValue("loads", typeof (List<NodalLoad>));
-            settlements = info.GetValue<List<Settlement>>("settlements");
+            //settlements = info.GetValue<List<Settlement>>("settlements");
+
+            if (info.GetFieldType("settlements") == typeof(List<Settlement>))
+                settlements = info.GetValue<List<Settlement>>("settlements");
+
             constraints = (Constraint) info.GetValue("constraints", typeof (Constraint));
         }
 

@@ -64,7 +64,10 @@ namespace BriefFiniteElementNet.BenchmarkApplication
             var case1 = new LoadCase("c1", LoadType.Other);
             var case2 = new LoadCase("c2", LoadType.Other);
 
-            var benchs = new IBenchmarkCase[] {new Benchmark1() {Logger = logger}, new Benchmark2() {Logger = logger}};
+            var benchs = new IBenchmarkCase[] {
+                //new Benchmark1() {Logger = logger},
+                //new Benchmark2() {Logger = logger},
+                new Benchmark3() {Logger = logger}};
 
             //var bnchTypes = new Type[] {typeof(Benchmark1), typeof(Benchmark2)};// IBenchmarkCase[] { new Benchmark1() { Logger = logger }, new Benchmark2() { Logger = logger } };
 

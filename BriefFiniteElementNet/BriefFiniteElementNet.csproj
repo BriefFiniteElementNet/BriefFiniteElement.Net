@@ -57,6 +57,10 @@
     <Compile Include="Integration\MultiplierMatrixFunction.cs" />
     <Compile Include="ListPool.cs" />
     <Compile Include="Loads\PartialNonUniformLoad.cs" />
+    <Compile Include="Mathh\BuiltinGaussDisplacementPermutationFinder.cs" />
+    <Compile Include="Mathh\CsparsenetQrDisplacementPermutationCalculator.cs" />
+    <Compile Include="Mathh\IDisplacementPermutationCalculator.cs" />
+    <Compile Include="Mathh\IEquationSystemReducer.cs" />
     <Compile Include="Mathh\Polynomial.cs" />
     <Compile Include="MatrixPool.cs" />
     <Compile Include="MpcElements\VirtualSupport.cs" />

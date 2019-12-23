@@ -14,13 +14,21 @@ namespace BriefFiniteElementNet.Validation.Ui
         {
 
             //TestTri();
-            TestBar();
+            //TestBar();
+            //TestTelepaty();
             //TestTetra();
             //return;
             //BarElementTester.ValidateConsoleUniformLoad();
             //BarElementTester.TestEndReleaseStyiffness();
 
-            
+            GithubIssues.Issue29.Run();
+        }
+
+        static void TestTelepaty()
+        {
+            Validation.EqualDofValidator.Test1();
+
+            //var resss = new BarElementTester().DoValidation();
         }
 
         static void TestBar()
@@ -33,7 +41,6 @@ namespace BriefFiniteElementNet.Validation.Ui
 
             //var resss = new BarElementTester().DoValidation();
         }
-
 
         static void TestTetra()
         {

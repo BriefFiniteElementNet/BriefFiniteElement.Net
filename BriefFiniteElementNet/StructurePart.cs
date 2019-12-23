@@ -30,6 +30,24 @@ namespace BriefFiniteElementNet
         [NonSerialized]
         protected Model parent;
 
+
+        private bool isChanged;
+
+        /// <summary>
+        /// Determines wether this structural part is changed since last time.
+        /// </summary>
+        /// <remarks>Every time anything changes on this structural part that possibly can take effect into total stiffness matrix, then this field should set to true</remarks>
+        public bool IsChanged
+        {
+            get { return isChanged; }
+            set
+            {
+                isChanged = value;
+            }
+        }
+
+
+
         /// <summary>
         /// Gets the identifier.
         /// </summary>
@@ -87,6 +105,8 @@ namespace BriefFiniteElementNet
             get { return parent; }
             set { parent = value; }
         }
+
+    
 
         #region ISerializable
 

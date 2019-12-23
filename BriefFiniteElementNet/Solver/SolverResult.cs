@@ -5,19 +5,28 @@ namespace BriefFiniteElementNet.Solver
 {
     /*
     /// <summary>
-    /// Result of an iterative solver.
+    /// Result of a solver.
     /// </summary>
-    [Obsolete]
-    public enum SolverResult
+    public class SolverResult
     {
+        private string info;
+
         /// <summary>
-        /// General success case.
+        /// Extra information
         /// </summary>
-        Success,
-        /// <summary>
-        /// General failure case.
-        /// </summary>
-        Failure
+        public string Information
+        {
+            get
+            {
+                return info;
+            }
+            set
+            {
+                info = value;
+            }
+        }
+
+        
     }
     */
 }

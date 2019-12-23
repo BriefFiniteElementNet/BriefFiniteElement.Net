@@ -272,6 +272,15 @@ namespace BriefFiniteElementNet
             return (T) info.GetValue(name, typeof (T));
         }
 
+        public static Type GetFieldType(this SerializationInfo info, string name)
+        {
+            foreach (SerializationEntry entry in info)
+                if (name == entry.Name)
+                    return entry.ObjectType;
+
+            return null;
+        }
+
         public static Force Sum(this IEnumerable<Force> forces)
         {
             var buf = new Force();
@@ -334,12 +343,12 @@ namespace BriefFiniteElementNet
         {
             var buf = new Matrix(csr.RowCount, csr.ColumnCount);
 
-            for (int i = 0; i < csr.ColumnPointers.Length-1; i++)
+            for (int i = 0; i < csr.ColumnPointers.Length - 1; i++)
             {
                 var col = i;
 
                 var st = csr.ColumnPointers[i];
-                var en = csr.ColumnPointers[i+1];
+                var en = csr.ColumnPointers[i + 1];
 
                 for (int j = st; j < en; j++)
                 {
@@ -349,6 +358,17 @@ namespace BriefFiniteElementNet
             }
 
             return buf;
+        }
+
+        public static SparseMatrix ToSparseMatrix(this Matrix csr)
+        {
+            var buf = new CSparse.Storage.CoordinateStorage<double>(csr.RowCount, csr.ColumnCount, 1);
+
+            for (var i = 0; i < csr.RowCount; i++)
+                for (var j = 0; j < csr.ColumnCount; j++)
+                    buf.At(i, j, csr[i, j]);
+
+            return buf.ToCCs();
         }
 
         public static Matrix ToDenseMatrix(this CompressedColumnStorage<double> csr)
@@ -572,6 +592,18 @@ namespace BriefFiniteElementNet
             for (int i = 0; i < buf.Length; i++)
             {
                 buf[i] += y[i];
+            }
+
+            return buf;
+        }
+
+        public static double[] Plus(this double[] x, double[] y,double coef)
+        {
+            var buf = (double[])x.Clone();
+
+            for (int i = 0; i < buf.Length; i++)
+            {
+                buf[i] += coef*y[i];
             }
 
             return buf;

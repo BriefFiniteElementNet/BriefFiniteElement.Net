@@ -53,8 +53,11 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EqualDofValidator.cs" />
     <Compile Include="GithubIssues\Issue23.cs" />
     <Compile Include="GithubIssues\Issue24.cs" />
+    <Compile Include="GithubIssues\Issue25.cs" />
+    <Compile Include="GithubIssues\Issue29.cs" />
     <Compile Include="OpenseesTclGenerator\TetrahedronToTcl.cs" />
     <Compile Include="OpenseesTclGenerator\UniformLoad2Tcl.cs" />
     <Compile Include="TestValidator.cs" />

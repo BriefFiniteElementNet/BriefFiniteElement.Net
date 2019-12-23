@@ -306,14 +306,26 @@ namespace BriefFiniteElementNet
         /// </returns>
         public static Force operator -(Force f)
         {
-            return new Force(- f.fx, - f.fy, - f.fz, - f.mx, - f.my, - f.mz);
+            return new Force(-f.fx, -f.fy, -f.fz, -f.mx, -f.my, -f.mz);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="f1"></param>
+        /// <param name="f2"></param>
+        /// <returns></returns>
         public static bool operator ==(Force f1, Force f2)
         {
             return f1.Equals(f2);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="f1"></param>
+        /// <param name="f2"></param>
+        /// <returns></returns>
         public static bool operator !=(Force f1, Force f2)
         {
             return !f1.Equals(f2);
@@ -321,7 +333,12 @@ namespace BriefFiniteElementNet
 
         #endregion
 
-
+        /// <summary>
+        /// Dot divides the defined forces
+        /// </summary>
+        /// <param name="f1"></param>
+        /// <param name="f2"></param>
+        /// <returns>componentwise divide of two forces</returns>
         public static Force DotDivide(Force f1, Force f2)
         {
             var buf = new Force();

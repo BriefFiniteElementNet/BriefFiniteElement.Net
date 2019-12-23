@@ -60,8 +60,10 @@ namespace BriefFiniteElementNet
             }
         }
 
+        
         [NonSerialized]
         public int CacheHit;
+        
         [NonSerialized]
         public int CacheMiss;
 
@@ -148,6 +150,9 @@ namespace BriefFiniteElementNet
         [NonSerialized]
         protected Node[] nodes;
 
+        /// <summary>
+        /// node numbers for deserialization process
+        /// </summary>
         internal int[] nodeNumbers;
 
 

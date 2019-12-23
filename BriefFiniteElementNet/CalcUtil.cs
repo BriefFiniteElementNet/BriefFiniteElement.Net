@@ -21,6 +21,30 @@ namespace BriefFiniteElementNet
     /// </summary>
     public static class CalcUtil
     {
+        /// <summary>
+        /// linearly interpolates the value of <see cref="x"/> regard to other values
+        /// </summary>
+        /// <param name="x0"></param>
+        /// <param name="y0"></param>
+        /// <param name="x1"></param>
+        /// <param name="y1"></param>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static double LinearInterpolate(double x0,double y0,double x1,double y1,double x)
+        {
+            var m = (y1 - y0) / (x1 - x0);
+
+            var buf = m * (x - x0) + y0;
+
+            return buf;
+        }
+
+        /// <summary>
+        /// calculates the dot product of two same length vectors
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
         public static double DotProduct(double[] v1,double[] v2)
         {
             ThrowUtil.ThrowIf(v1.Length != v2.Length,"inconsistent sizes");
@@ -32,6 +56,13 @@ namespace BriefFiniteElementNet
 
             return buf;
         }
+
+        /// <summary>
+        /// calculates the bar transformation matrix (local to/from global)
+        /// </summary>
+        /// <param name="v">vector that connects strat to end</param>
+        /// <param name="_webRotation">rotation around local x axis</param>
+        /// <returns></returns>
         public static Matrix GetBarTransformationMatrix(Vector v, double _webRotation = 0)
         {
             var cxx = 0.0;
@@ -106,6 +137,12 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+        /// <summary>
+        /// calculates the bar transformation matrix (local to/from global) and fill to <see cref="output"/> parameter
+        /// </summary>
+        /// <param name="v">vector that connects strat to end</param>
+        /// <param name="_webRotation">rotation around local x axis</param>
+        /// <returns></returns>
         public static void GetBarTransformationMatrix(Vector v, double _webRotation ,Matrix output)
         {
             var cxx = 0.0;
@@ -182,6 +219,7 @@ namespace BriefFiniteElementNet
 
             //return buf;
         }
+
 
         public static Matrix GetBarTransformationMatrixnew(Vector v, double _webRotation = 0,MatrixPool pool=null)
         {
@@ -490,7 +528,7 @@ namespace BriefFiniteElementNet
                 case BuiltInSolverType.CholeskyDecomposition:
                     return new CholeskySolverFactory();
                     break;
-                    /*
+                    /**/
                 case BuiltInSolverType.ConjugateGradient:
                     return new ConjugateGradientFactory();// PCG(new SSOR());
                     break;
@@ -1041,7 +1079,7 @@ namespace BriefFiniteElementNet
             }
         }
 
-        internal static void EnumerateColumnMembers(this CCS matrix, int columnNumber,Action<int, int, double> action)
+        internal static IEnumerable<Tuple<int,double>> EnumerateColumnMembers(this CSparse.Storage.CompressedColumnStorage<double> matrix, int columnNumber)//,Action<int, int, double> action)
         {
             var n = matrix.ColumnCount;
 
@@ -1058,10 +1096,12 @@ namespace BriefFiniteElementNet
 
                     var val = matrix.Values[j];
 
-                    action(row, col, val);
+                    yield return Tuple.Create(row, val);
+                    //action(row, col, val);
                 }
             }
         }
+
 
         internal static void EnumerateColumnMembers(this CompressedColumnStorage<double> matrix, int columnNumber, Action<int, int, double> action)
         {
@@ -1575,38 +1615,36 @@ namespace BriefFiniteElementNet
                 if (mpcElm.AppliesForLoadCase(loadCase))
                     extraEqCount += mpcElm.GetExtraEquationsCount();
 
-            extraEqCount += boundaryConditions.RowCount;
+            //extraEqCount += boundaryConditions.RowCount;
 
-            var allEqsCrd = new CoordinateStorage<double>(extraEqCount, n * 6 + 1, 1);//rows: extra eqs, cols: 6*n+1 (+1 is for right hand side)
+
+            var totalEqCount = extraEqCount + boundaryConditions.RowCount;
+
+
+            var allEqsCrd = new CoordinateStorage<double>(totalEqCount, n * 6 + 1, 1);//rows: extra eqs, cols: 6*n+1 (+1 is for right hand side)
 
             foreach (var mpcElm in target.MpcElements)
             {
                 if (mpcElm.AppliesForLoadCase(loadCase))
-                {
-                    var extras = mpcElm.GetExtraEquations();
-
-                    if (extras.ColumnCount != totDofCount + 1)
-                        throw new Exception();
-
-                    foreach (var tuple in extras.EnumerateIndexed2())
+                    if (mpcElm.GetExtraEquationsCount() != 0)
                     {
-                        var row = tuple.Item1;
-                        var col = tuple.Item2;
-                        var val = tuple.Item3;
+                        var extras = mpcElm.GetExtraEquations();
+
+                        if (extras.ColumnCount != totDofCount + 1)
+                            throw new Exception();
+
+                        foreach (var tuple in extras.EnumerateIndexed2())
+                        {
+                            var row = tuple.Item1;
+                            var col = tuple.Item2;
+                            var val = tuple.Item3;
 
 
-                        allEqsCrd.At(row + lastRow, col, val);
+                            allEqsCrd.At(row + lastRow, col, val);
+                        }
+
+                        lastRow += extras.RowCount;
                     }
-
-                    /*
-                    extras.EnumerateMembers((row, col, val) =>
-                    {
-                        allEqsCrd.At(row + lastRow, col, val);
-                    });
-                    */
-
-                    lastRow += extras.RowCount;
-                }
             }
 
             {
@@ -1688,9 +1726,6 @@ namespace BriefFiniteElementNet
             */
 
             #endregion
-
-
-            var tmpp = allEqs.ToDenseMatrix();
 
 
             var rref = rrefFinder.CalculateRref(allEqs);
@@ -1809,7 +1844,99 @@ namespace BriefFiniteElementNet
 
         }
 
+        public static Tuple<CSparse.Double.SparseMatrix, double[]> GenerateP_Delta_Mpc(Model target, LoadCase loadCase, IDisplacementPermutationCalculator permFinder)
+        {
+            var totDofCount = target.Nodes.Count * 6;
 
+            target.ReIndexNodes();
+
+            var n = target.Nodes.Count;
+
+            var boundaryConditions = GetModelBoundaryConditions(target, loadCase);
+
+            var lastRow = 0;
+
+            #region step 1 - mpc elements
+            var extraEqCount = 0;
+
+            foreach (var mpcElm in target.MpcElements)
+                if (mpcElm.AppliesForLoadCase(loadCase))
+                    extraEqCount += mpcElm.GetExtraEquationsCount();
+
+            var totalEqCount = extraEqCount + boundaryConditions.RowCount;
+
+            var allEqsCrd = new CoordinateStorage<double>(totalEqCount, n * 6 + 1, 1);//rows: extra eqs, cols: 6*n+1 (+1 is for right hand side)
+
+            foreach (var mpcElm in target.MpcElements)
+            {
+                if (mpcElm.AppliesForLoadCase(loadCase))
+                    if (mpcElm.GetExtraEquationsCount() != 0)
+                    {
+                        var extras = mpcElm.GetExtraEquations();
+
+                        if (extras.ColumnCount != totDofCount + 1)
+                            throw new Exception();
+
+                        foreach (var tuple in extras.EnumerateIndexed2())
+                        {
+                            var row = tuple.Item1;
+                            var col = tuple.Item2;
+                            var val = tuple.Item3;
+
+
+                            allEqsCrd.At(row + lastRow, col, val);
+                        }
+
+                        lastRow += extras.RowCount;
+                    }
+            }
+
+            {
+                if (boundaryConditions.ColumnCount != totDofCount + 1)
+                    throw new Exception();
+
+                foreach (var tuple in boundaryConditions.EnumerateIndexed2())
+                {
+                    var row = tuple.Item1;
+                    var col = tuple.Item2;
+                    var val = tuple.Item3;
+
+
+                    allEqsCrd.At(row + lastRow, col, val);
+                }
+
+                lastRow += boundaryConditions.RowCount;
+            }
+
+            var allEqs = allEqsCrd.ToCCs();
+
+
+            var empties = allEqs.EmptyRowCount();
+
+            //var dns = allEqs.ToDenseMatrix();
+
+            #endregion
+
+            var res = permFinder.CalculateDisplacementPermutation(allEqs);
+
+            return res;
+            var buf = new CoordinateStorage<double>(res.Item1.RowCount, res.Item1.ColumnCount - 1, 1);
+
+
+            throw new NotImplementedException();
+            /*
+            foreach (var tpl in res.EnumerateIndexed2())
+            {
+                {
+                    buf.At(tpl.Item1, colNumPerm[tpl.Item2], tpl.Item3);
+                }
+            }
+
+            var p3 = p3Crd.ToCCs();
+
+            return Tuple.Create(p3, rightSide);
+            */
+        }
         /// <summary>
         /// Gets the boundary conditions of model (support conditions) as a extra eq system for using in master slave model.
         /// </summary>

@@ -20,11 +20,31 @@ namespace BriefFiniteElementNet
         /// <exception cref="System.NotImplementedException"></exception>
         public override Type BindToType(string assemblyName, string typeName)
         {
-            if (assemblyName.Contains("FAB"))
-                Guid.NewGuid();
+            Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            var tp = Type.GetType(typeName);
-            return tp;
+
+            if (typeName.Contains(".Elements.Element,"))
+                typeName = typeName.Replace(".Elements.Element,", ".Element,");
+
+            if (typeName.Contains("BriefFiniteElementNet.Load,"))
+                typeName = typeName.Replace("BriefFiniteElementNet.Load,", "BriefFiniteElementNet.ElementalLoad,");
+
+            if (typeName.Equals("BriefFiniteElementNet.Load"))
+                typeName = typeName.Replace("BriefFiniteElementNet.Load", "BriefFiniteElementNet.ElementalLoad");
+
+
+            if (typeName == "BriefFiniteElementNet.Elements.Element")
+                typeName = typeName.Replace(".Elements.Element", ".Element");
+
+            foreach (var asm in assemblies)
+            {
+                var tp = asm.GetType(typeName);
+
+                if (tp != null)
+                    return tp;
+            }
+
+            return null;
         }
     }
 

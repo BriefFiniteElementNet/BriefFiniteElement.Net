@@ -30,7 +30,7 @@ namespace BriefFiniteElementNet.Loads
 
 
         /// <summary>
-        /// The isoparametric (xi eta gamma) location of force inside element's boddy
+        /// The isoparametric (xi eta gamma) location of force inside element's body
         /// </summary>
         public IsoPoint ForceIsoLocation
         {
@@ -46,7 +46,7 @@ namespace BriefFiniteElementNet.Loads
         }
 
         /// <summary>
-        /// The force magnitude
+        /// The concentrated force amount
         /// </summary>
         public Force Force
         {

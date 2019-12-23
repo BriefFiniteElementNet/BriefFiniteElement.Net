@@ -13,6 +13,7 @@ using CSparse.Double;
 using BriefFiniteElementNet.Solver;
 using CCS = CSparse.Double.SparseMatrix;
 using System.Globalization;
+using BriefFiniteElementNet.Mathh;
 
 namespace BriefFiniteElementNet
 {
@@ -797,7 +798,14 @@ namespace BriefFiniteElementNet
 
             ISolver solver;
 
-            var perm = CalcUtil.GenerateP_Delta_Mpc(parent, loadCase, new Mathh.GaussRrefFinder());
+            var sp = System.Diagnostics.Stopwatch.StartNew();
+
+            var perm =
+                //CalcUtil.GenerateP_Delta_Mpc(parent, loadCase, new Mathh.GaussRrefFinder());
+                CalcUtil.GenerateP_Delta_Mpc(parent, loadCase, new CsparsenetQrDisplacementPermutationCalculator());
+
+
+            parent.Trace.Write(Common.TraceLevel.Info, "Calculating Permutation Matrix took {0} ms", sp.ElapsedMilliseconds);
 
             var np = perm.Item1.ColumnCount;//master count
 
@@ -805,9 +813,12 @@ namespace BriefFiniteElementNet
 
             var pd = perm.Item1;
 
-            var kt = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(parent);
+            sp.Restart();
 
-            
+            var kt = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(parent);//total stiffness matrix, same for all load cases
+
+
+            parent.Trace.Write(Common.TraceLevel.Info, "Assemble Full Stiffness Matrix took {0} ms", sp.ElapsedMilliseconds);
 
             var ft = new double[n];
 
@@ -823,16 +834,10 @@ namespace BriefFiniteElementNet
             {
                 var pf = pd.Transpose();
 
-                
+                sp.Restart();
                 var kr = pf.Multiply(kt).Multiply(pd);
 
-                //var tmp = kr.ToDenseMatrix();
-
-                //var tmp2 = kt.ToDenseMatrix();
-
                 var a1 = new double[n];
-
-                //a1.AddToSelf(rd);
 
                 kt.Multiply(rd, a1);
 
@@ -841,6 +846,8 @@ namespace BriefFiniteElementNet
                 var a2 = new double[np];
 
                 pf.Multiply(a1, a2);
+
+                parent.Trace.Write(Common.TraceLevel.Info, "Applying boundary conditions took {0} ms", sp.ElapsedMilliseconds);
 
                 var a3 = new double[np];
 
@@ -857,13 +864,14 @@ namespace BriefFiniteElementNet
                     Solvers_New[pd] = solver;
                 }
 
-
+                sp.Restart();
                 if (!solver.IsInitialized)
                     solver.Initialize();
 
                 #endregion
 
                 solver.Solve(a2, a3);
+                parent.Trace.Write(Common.TraceLevel.Info, "Solving EQ system took {0} ms", sp.ElapsedMilliseconds);
 
                 pd.Multiply(a3, dt);
             }

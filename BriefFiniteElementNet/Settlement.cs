@@ -7,6 +7,9 @@ using System.Text;
 
 namespace BriefFiniteElementNet
 {
+    /// <summary>
+    /// Represents a settlement of a node which have settlement amount and load case
+    /// </summary>
     [Serializable]
     public struct Settlement : IEquatable<Settlement>, ISerializable
     {
