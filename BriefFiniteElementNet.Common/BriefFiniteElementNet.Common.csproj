@@ -38,13 +38,48 @@
     <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayPool.cs" />
+    <Compile Include="BendingStressTensor.cs" />
+    <Compile Include="BriefFiniteElementNetException.cs" />
+    <Compile Include="CauchyStressTensor.cs" />
     <Compile Include="ConsoleTraceListener.cs" />
+    <Compile Include="Constraint.cs" />
+    <Compile Include="Constraints.cs" />
     <Compile Include="CoordinationAxis.cs" />
-    <Compile Include="Extensions.cs" />
+    <Compile Include="CoordinationSystem.cs" />
+    <Compile Include="Displacement.cs" />
+    <Compile Include="DoF.cs" />
+    <Compile Include="DofConstraint.cs" />
+    <Compile Include="FemNetStringCompairer.cs" />
+    <Compile Include="FlatShellStressTensor.cs" />
+    <Compile Include="Force.cs" />
+    <Compile Include="InvalidLabelException.cs" />
     <Compile Include="ISolver.cs" />
     <Compile Include="ISolverFactory.cs" />
+    <Compile Include="ListPool.cs" />
+    <Compile Include="LoadCase.cs" />
+    <Compile Include="LoadCaseCollection.cs" />
+    <Compile Include="LoadCombination.cs" />
+    <Compile Include="LoadDirection.cs" />
+    <Compile Include="LoadType.cs" />
+    <Compile Include="LoadTypeCollection.cs" />
+    <Compile Include="MassFormulation.cs" />
+    <Compile Include="Matrix.cs" />
+    <Compile Include="MatrixException.cs" />
+    <Compile Include="MatrixPool.cs" />
+    <Compile Include="MembraneFormulation.cs" />
+    <Compile Include="MembraneStressTensor.cs" />
+    <Compile Include="NotPositiveDefiniteException.cs" />
+    <Compile Include="Point.cs" />
+    <Compile Include="PointYz.cs" />
+    <Compile Include="PolygonYz.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settlement.cs" />
+    <Compile Include="SolverFailException.cs" />
+    <Compile Include="StrainTensor.cs" />
+    <Compile Include="StrainTensor3D.cs" />
     <Compile Include="Trace.cs" />
+    <Compile Include="Vector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

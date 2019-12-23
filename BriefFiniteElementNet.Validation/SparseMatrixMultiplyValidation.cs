@@ -30,7 +30,7 @@ namespace BriefFiniteElementNet.Validation
             var result1 = new Matrix(d1, d3);
 
             var sp = System.Diagnostics.Stopwatch.StartNew();
-            new SparseMatrixMultiplication() {M1 = m1, M2 = m2}.MultiplyM1M2(result1);
+            //new SparseMatrixMultiplication() {M1 = m1, M2 = m2}.MultiplyM1M2(result1);
             Console.WriteLine("Sparse multiply takes {0} ms", sp.ElapsedMilliseconds);
 
             sp.Restart();

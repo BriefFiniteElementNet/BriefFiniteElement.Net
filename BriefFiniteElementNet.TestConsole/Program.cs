@@ -36,7 +36,7 @@ namespace BriefFiniteElementNet.TestConsole
             Console.Title = "BFE tests & temporary codes";
             //Validation.GithubIssues.Issue25.Run();
 
-            testRref2();
+            testRrefTime();
             
             //var stf = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(model);
 
@@ -146,6 +146,18 @@ namespace BriefFiniteElementNet.TestConsole
 
             var t = rref.CalculateDisplacementPermutation(a).Item1.ToDenseMatrix();
       
+        }
+
+
+        static void testRrefTime()
+        {
+            var gen = StructureGenerator.Generate3DBarElementGrid(10, 10, 10);
+
+            gen.Trace.Listeners.Add(new ConsoleTraceListener());
+
+
+            gen.Solve_MPC();
+
         }
 
         static void TestHingedInternalForce()

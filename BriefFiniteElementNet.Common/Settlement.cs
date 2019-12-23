@@ -97,8 +97,8 @@ namespace BriefFiniteElementNet
         /// <param name="context">The context.</param>
         private Settlement(SerializationInfo info, StreamingContext context)
         {
-            loadCase = info.GetValue<LoadCase>("caseName");
-            displacement = info.GetValue<Displacement>("loadType");
+            loadCase = (LoadCase)info.GetValue("caseName", typeof(LoadCase));
+            displacement = (Displacement)info.GetValue("loadType",typeof(Displacement));
         }
 
         #endregion

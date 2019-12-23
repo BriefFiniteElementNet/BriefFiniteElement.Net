@@ -826,7 +826,7 @@ namespace BriefFiniteElementNet
         {
             for (int i = 0; i < this.rowCount; i++)
                 for (int j = i + 1; j < this.columnCount; j++)
-                    if (!MathUtil.Equals(this[i, j], this[j, i], 1e-3))
+                    if (Math.Abs(this[i, j] - this[j, i]) > 1e-3)
                     {
                         return false;
                     }

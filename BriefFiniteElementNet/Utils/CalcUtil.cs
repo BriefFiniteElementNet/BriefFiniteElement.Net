@@ -894,7 +894,7 @@ namespace BriefFiniteElementNet
         /// Fills the whole <see cref="array"/> with -1.
         /// </summary>
         /// <param name="array">The array.</param>
-        public static void FillWith<T>(this T[] array,T value)
+        public static void FillWith_old<T>(this T[] array,T value)
         {
             for (var i = array.Length - 1; i >= 0; i--)
             {
@@ -1856,7 +1856,7 @@ namespace BriefFiniteElementNet
 
             var lastRow = 0;
 
-            #region step 1 - mpc elements
+            #region mpc elements
             var extraEqCount = 0;
 
             foreach (var mpcElm in target.MpcElements)
@@ -1910,12 +1910,28 @@ namespace BriefFiniteElementNet
 
             var allEqs = allEqsCrd.ToCCs();
 
-
-            var empties = allEqs.EmptyRowCount();
-
             //var dns = allEqs.ToDenseMatrix();
 
             #endregion
+
+            {
+                var rowNnzs = new int[allEqs.RowCount];//nnz count of each row disregard last column which is right side
+
+                foreach (var tpl in allEqs.EnumerateIndexed2())
+                {
+                    if (tpl.Item3 != 0)
+                        if (tpl.Item2 != allEqs.ColumnCount - 1)
+                            rowNnzs[tpl.Item1]++;
+                }
+
+                if (rowNnzs.Max() < 2)//each row maximum have 1 nonzero
+                {
+                    //then no need to calculate rref by elimition etc. just a single permutation is needed
+                    
+                    //var mults
+                }
+            }
+
 
             var res = permFinder.CalculateDisplacementPermutation(allEqs);
 
@@ -1937,6 +1953,9 @@ namespace BriefFiniteElementNet
             return Tuple.Create(p3, rightSide);
             */
         }
+
+        
+
         /// <summary>
         /// Gets the boundary conditions of model (support conditions) as a extra eq system for using in master slave model.
         /// </summary>

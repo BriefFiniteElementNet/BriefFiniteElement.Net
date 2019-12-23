@@ -5,6 +5,9 @@ using System.Text;
 
 namespace BriefFiniteElementNet
 {
+    /// <summary>
+    /// represents a stress tensor for a flat shell which consists of a bending part and cauchy part
+    /// </summary>
     public struct FlatShellStressTensor
     {
         public FlatShellStressTensor(CauchyStressTensor membraneTensor, BendingStressTensor bendingTensor)

@@ -283,7 +283,9 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 CalcUtil.Bt_D_B(b, d, buf);
 
-                buf.MultiplyByConstant((j.Determinant()));
+                var detj = Math.Abs(j.Determinant());
+
+                buf.MultiplyByConstant(detj);
 
                 return buf;
             });

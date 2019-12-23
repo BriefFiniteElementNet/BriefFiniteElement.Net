@@ -9,7 +9,10 @@ using System.Text;
 
 namespace BriefFiniteElementNet
 {
-    public static class FluentElementPermuteManager
+    /// <summary>
+    /// 
+    /// </summary>
+    public static class ElementPermuteHelper
     {
         public static Matrix FullyExpand(Matrix originalMatrix, IEnumerable<ElementLocalDof>  src, int totalNodes)
         {
@@ -28,7 +31,7 @@ namespace BriefFiniteElementNet
                 permArr.Add(newLoc);
             }
 
-            var permute = SimplePermuteManager.Make(i => permArr[i], source.Length, totalNodes * 6);
+            var permute = SimplePermuteUtil.Make(i => permArr[i], source.Length, totalNodes * 6);
 
             var buf = permute.ApplyTo(originalMatrix);
 

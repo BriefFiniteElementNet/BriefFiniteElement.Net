@@ -5,11 +5,11 @@ using System.Text;
 
 namespace BriefFiniteElementNet
 {
-    public class SimplePermuteManager
+    public class SimplePermuteUtil
     {
-        public static SimplePermuteManager Make(Func<int, int> permute, int originalLength, int newLength)
+        public static SimplePermuteUtil Make(Func<int, int> permute, int originalLength, int newLength)
         {
-            var buf = new SimplePermuteManager();
+            var buf = new SimplePermuteUtil();
 
             buf.p = new int[originalLength];
             buf.ip = new int[newLength];

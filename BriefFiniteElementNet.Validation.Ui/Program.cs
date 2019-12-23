@@ -13,7 +13,7 @@ namespace BriefFiniteElementNet.Validation.Ui
         static void Main(string[] args)
         {
 
-            //TestTri();
+            TestTri();
             //TestBar();
             //TestTelepaty();
             //TestTetra();
@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet.Validation.Ui
             //BarElementTester.ValidateConsoleUniformLoad();
             //BarElementTester.TestEndReleaseStyiffness();
 
-            GithubIssues.Issue29.Run();
+            //GithubIssues.Issue29.Run();
         }
 
         static void TestTelepaty()

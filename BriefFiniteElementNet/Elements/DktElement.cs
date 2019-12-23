@@ -192,22 +192,22 @@ namespace BriefFiniteElementNet.Elements
             var kl = DktElement.GetStiffnessMatrix(xs, ys, this._thickness, this.ElasticModulus, this.PoissonRatio);
 
             //step 3
-            var currentOrder = new FluentElementPermuteManager.ElementLocalDof[]
+            var currentOrder = new ElementPermuteHelper.ElementLocalDof[]
             {
-                new FluentElementPermuteManager.ElementLocalDof(0, DoF.Dz),
-                new FluentElementPermuteManager.ElementLocalDof(0, DoF.Rx),
-                new FluentElementPermuteManager.ElementLocalDof(0, DoF.Ry),
+                new ElementPermuteHelper.ElementLocalDof(0, DoF.Dz),
+                new ElementPermuteHelper.ElementLocalDof(0, DoF.Rx),
+                new ElementPermuteHelper.ElementLocalDof(0, DoF.Ry),
 
-                new FluentElementPermuteManager.ElementLocalDof(1, DoF.Dz),
-                new FluentElementPermuteManager.ElementLocalDof(1, DoF.Rx),
-                new FluentElementPermuteManager.ElementLocalDof(1, DoF.Ry),
+                new ElementPermuteHelper.ElementLocalDof(1, DoF.Dz),
+                new ElementPermuteHelper.ElementLocalDof(1, DoF.Rx),
+                new ElementPermuteHelper.ElementLocalDof(1, DoF.Ry),
 
-                new FluentElementPermuteManager.ElementLocalDof(2, DoF.Dz),
-                new FluentElementPermuteManager.ElementLocalDof(2, DoF.Rx),
-                new FluentElementPermuteManager.ElementLocalDof(2, DoF.Ry),
+                new ElementPermuteHelper.ElementLocalDof(2, DoF.Dz),
+                new ElementPermuteHelper.ElementLocalDof(2, DoF.Rx),
+                new ElementPermuteHelper.ElementLocalDof(2, DoF.Ry),
             };
 
-            var kle = FluentElementPermuteManager.FullyExpand(kl, currentOrder, 3);
+            var kle = ElementPermuteHelper.FullyExpand(kl, currentOrder, 3);
 
             var lambda = GetTransformationMatrix();
 

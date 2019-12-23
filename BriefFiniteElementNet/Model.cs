@@ -575,7 +575,6 @@ namespace BriefFiniteElementNet
 
         #endregion
 
-
         #region pooling
 
         [NonSerialized]

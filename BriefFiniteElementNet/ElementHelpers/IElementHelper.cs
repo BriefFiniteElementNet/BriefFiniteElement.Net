@@ -108,7 +108,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// </summary>
         /// <param name="targetElement">The target element.</param>
         /// <returns></returns>
-        FluentElementPermuteManager.ElementLocalDof[] GetDofOrder(Element targetElement);
+        ElementPermuteHelper.ElementLocalDof[] GetDofOrder(Element targetElement);
 
         /// <summary>
         /// Gets the maximum degree of shape function members.

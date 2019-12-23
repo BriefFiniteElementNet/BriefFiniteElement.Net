@@ -15,7 +15,7 @@ namespace BriefFiniteElementNet.Validation
 {
     public static class OpenseesValidator
     {
-        private static readonly string openSeeslocation = @"C:\Opensees\Opensees.exe";
+        private static readonly string openSeeslocation = @"C:\opensees\OpenSees3.1.0-x64.exe\bin\Opensees.exe";
 
 
         public static DataTable[] OpenseesValidate(Model model, LoadCase loadcase, bool validateStiffness = false)
@@ -24,6 +24,8 @@ namespace BriefFiniteElementNet.Validation
 
             gen.ElementTranslators.Add(new BarElement2Tcl() { TargetGenerator = gen });
             gen.ElementTranslators.Add(new TetrahedronToTcl() { TargetGenerator = gen });
+            gen.ElementTranslators.Add(new TriangleElementToTri3Tcl() { TargetGenerator = gen });
+
             gen.ElementLoadTranslators.Add(new UniformLoad2Tcl() { TargetGenerator = gen });
 
             gen.ExportElementForces = false;
@@ -45,7 +47,7 @@ namespace BriefFiniteElementNet.Validation
             System.IO.File.WriteAllText(tclFile, tcl);
 
                 if (!System.IO.File.Exists(openSeeslocation))
-                throw new Exception("Opensees.exe not found, please put opensees.exe into 'C:\\Opensees\\Opensees.exe'");
+                throw new Exception("Opensees.exe not found, please put opensees.exe in this path: "+ openSeeslocation);
 
             var stInf = new ProcessStartInfo(openSeeslocation);
 

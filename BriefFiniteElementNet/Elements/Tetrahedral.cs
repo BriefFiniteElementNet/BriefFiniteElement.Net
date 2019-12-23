@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
-using Elo = BriefFiniteElementNet.FluentElementPermuteManager.ElementLocalDof;
+using Elo = BriefFiniteElementNet.ElementPermuteHelper.ElementLocalDof;
 using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.ElementHelpers;
 
@@ -221,7 +221,7 @@ namespace BriefFiniteElementNet.Elements
                 currentOrder[3 * i + 2] = new Elo(newOrder[i], DoF.Dz);
             }
 
-            var bufEx = FluentElementPermuteManager.FullyExpand(buf, currentOrder, 4);
+            var bufEx = ElementPermuteHelper.FullyExpand(buf, currentOrder, 4);
 
             return bufEx;
         }
@@ -401,7 +401,7 @@ namespace BriefFiniteElementNet.Elements
             }
 
 
-            var bufEx = FluentElementPermuteManager.FullyExpand(buf, currentOrder, 4);
+            var bufEx = ElementPermuteHelper.FullyExpand(buf, currentOrder, 4);
 
             var tmp2 = GetGlobalStifnessMatrix_old();
 

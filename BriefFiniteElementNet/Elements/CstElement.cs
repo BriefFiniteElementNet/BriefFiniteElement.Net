@@ -223,17 +223,17 @@ namespace BriefFiniteElementNet.Elements
             //step 3
             var currentOrder = new []
             {
-                new FluentElementPermuteManager.ElementLocalDof(0, DoF.Dx),
-                new FluentElementPermuteManager.ElementLocalDof(0, DoF.Dy),
+                new ElementPermuteHelper.ElementLocalDof(0, DoF.Dx),
+                new ElementPermuteHelper.ElementLocalDof(0, DoF.Dy),
 
-                new FluentElementPermuteManager.ElementLocalDof(1, DoF.Dx),
-                new FluentElementPermuteManager.ElementLocalDof(1, DoF.Dy),
+                new ElementPermuteHelper.ElementLocalDof(1, DoF.Dx),
+                new ElementPermuteHelper.ElementLocalDof(1, DoF.Dy),
 
-                new FluentElementPermuteManager.ElementLocalDof(2, DoF.Dx),
-                new FluentElementPermuteManager.ElementLocalDof(2, DoF.Dy),
+                new ElementPermuteHelper.ElementLocalDof(2, DoF.Dx),
+                new ElementPermuteHelper.ElementLocalDof(2, DoF.Dy),
             };
 
-            var kle = FluentElementPermuteManager.FullyExpand(kl, currentOrder, 3);
+            var kle = ElementPermuteHelper.FullyExpand(kl, currentOrder, 3);
 
             var lambda = GetTransformationMatrix();
 

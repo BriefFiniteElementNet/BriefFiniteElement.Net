@@ -416,15 +416,15 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public FluentElementPermuteManager.ElementLocalDof[] GetDofOrder(Element targetElement)
+        public ElementPermuteHelper.ElementLocalDof[] GetDofOrder(Element targetElement)
         {
             var n = targetElement.Nodes.Length;
 
-            var buf = new FluentElementPermuteManager.ElementLocalDof[n];
+            var buf = new ElementPermuteHelper.ElementLocalDof[n];
 
             for (int i = 0; i < n; i++)
             {
-                buf[i] = new FluentElementPermuteManager.ElementLocalDof(i, DoF.Dx);
+                buf[i] = new ElementPermuteHelper.ElementLocalDof(i, DoF.Dx);
             }
 
             return buf;

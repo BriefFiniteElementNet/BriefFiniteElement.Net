@@ -232,18 +232,18 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public FluentElementPermuteManager.ElementLocalDof[] GetDofOrder(Element targetElement)
+        public ElementPermuteHelper.ElementLocalDof[] GetDofOrder(Element targetElement)
         {
-            var buf = new FluentElementPermuteManager.ElementLocalDof[]
+            var buf = new ElementPermuteHelper.ElementLocalDof[]
             {
-                new FluentElementPermuteManager.ElementLocalDof(0, DoF.Dx),
-                new FluentElementPermuteManager.ElementLocalDof(0, DoF.Dy),
+                new ElementPermuteHelper.ElementLocalDof(0, DoF.Dx),
+                new ElementPermuteHelper.ElementLocalDof(0, DoF.Dy),
 
-                new FluentElementPermuteManager.ElementLocalDof(1, DoF.Dx),
-                new FluentElementPermuteManager.ElementLocalDof(1, DoF.Dy),
+                new ElementPermuteHelper.ElementLocalDof(1, DoF.Dx),
+                new ElementPermuteHelper.ElementLocalDof(1, DoF.Dy),
 
-                new FluentElementPermuteManager.ElementLocalDof(2, DoF.Dx),
-                new FluentElementPermuteManager.ElementLocalDof(2, DoF.Dy),
+                new ElementPermuteHelper.ElementLocalDof(2, DoF.Dx),
+                new ElementPermuteHelper.ElementLocalDof(2, DoF.Dy),
             };
 
             return buf;

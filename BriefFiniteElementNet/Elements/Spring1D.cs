@@ -108,19 +108,19 @@ namespace BriefFiniteElementNet.Elements
                     kl[2, 3] = kl[3, 2] =
                         kl[4, 5] = kl[5, 4] = -_k;
 
-                var currentOrder = new FluentElementPermuteManager.ElementLocalDof[]
+                var currentOrder = new ElementPermuteHelper.ElementLocalDof[]
                 {
-                    new FluentElementPermuteManager.ElementLocalDof(0, DoF.Dx),
-                    new FluentElementPermuteManager.ElementLocalDof(1, DoF.Dx),
+                    new ElementPermuteHelper.ElementLocalDof(0, DoF.Dx),
+                    new ElementPermuteHelper.ElementLocalDof(1, DoF.Dx),
 
-                    new FluentElementPermuteManager.ElementLocalDof(0, DoF.Dy),
-                    new FluentElementPermuteManager.ElementLocalDof(1, DoF.Dy),
+                    new ElementPermuteHelper.ElementLocalDof(0, DoF.Dy),
+                    new ElementPermuteHelper.ElementLocalDof(1, DoF.Dy),
 
-                    new FluentElementPermuteManager.ElementLocalDof(0, DoF.Dz),
-                    new FluentElementPermuteManager.ElementLocalDof(1, DoF.Dz),
+                    new ElementPermuteHelper.ElementLocalDof(0, DoF.Dz),
+                    new ElementPermuteHelper.ElementLocalDof(1, DoF.Dz),
                 };
 
-                var kle = FluentElementPermuteManager.FullyExpand(kl, currentOrder, 2);
+                var kle = ElementPermuteHelper.FullyExpand(kl, currentOrder, 2);
 
                 return kle;
             }

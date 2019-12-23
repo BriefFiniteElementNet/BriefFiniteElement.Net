@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using BriefFiniteElementNet.Elements;
-using rnd=BriefFiniteElementNet.RandomStuff;
+using rnd=BriefFiniteElementNet.RandomHelper;
 using System.Globalization;
 
 
@@ -19,7 +19,7 @@ namespace BriefFiniteElementNet
             foreach (var nde in mdl.Nodes)
                 foreach (var cse in cases)
                 {
-                    nde.Loads.Add(new NodalLoad(RandomStuff.GetRandomForce(-1000, 1000), cse));
+                    nde.Loads.Add(new NodalLoad(RandomHelper.GetRandomForce(-1000, 1000), cse));
                 }
         }
 
@@ -28,7 +28,7 @@ namespace BriefFiniteElementNet
             foreach (var nde in mdl.Nodes)
                 foreach (var cse in cases)
                 {
-                    nde.Loads.Add(new NodalLoad(RandomStuff.GetRandomForce(min, max), cse));
+                    nde.Loads.Add(new NodalLoad(RandomHelper.GetRandomForce(min, max), cse));
                 }
         }
 
@@ -39,13 +39,13 @@ namespace BriefFiniteElementNet
                 {
                     var ul = new Loads.UniformLoad();
 
-                    ul.Direction = RandomStuff.GetRandomVector(-10, 10);
+                    ul.Direction = RandomHelper.GetRandomVector(-10, 10);
 
-                    ul.CoordinationSystem = RandomStuff.GetRandomBool() ?
+                    ul.CoordinationSystem = RandomHelper.GetRandomBool() ?
                         CoordinationSystem.Local :
                         CoordinationSystem.Global;
 
-                    ul.Magnitude = RandomStuff.GetRandomNumber(-100, 100);
+                    ul.Magnitude = RandomHelper.GetRandomNumber(-100, 100);
 
                     elm.Loads.Add(ul);
                 }
@@ -59,7 +59,7 @@ namespace BriefFiniteElementNet
                 foreach (var nde in mdl.Nodes)
                     foreach (var cse in cases)
                     {
-                        nde.Loads.Add(new NodalLoad(RandomStuff.GetRandomForce(-1000, 1000), cse));
+                        nde.Loads.Add(new NodalLoad(RandomHelper.GetRandomForce(-1000, 1000), cse));
                     }
 
             if (addElementLoads)
@@ -100,8 +100,8 @@ namespace BriefFiniteElementNet
 
                     var sec = new Sections.UniformParametric1DSection();
 
-                    var b = RandomStuff.GetRandomNumber(0.03, 0.05);
-                    var h = RandomStuff.GetRandomNumber(0.03, 0.05);
+                    var b = RandomHelper.GetRandomNumber(0.03, 0.05);
+                    var h = RandomHelper.GetRandomNumber(0.03, 0.05);
 
                     sec.A = b * h;
                     sec.Iy = b * b * b * h / 12;
@@ -117,7 +117,7 @@ namespace BriefFiniteElementNet
 
                     var sec = new Sections.UniformParametric2DSection();
 
-                    var t = RandomStuff.GetRandomNumber(0.03, 0.05);
+                    var t = RandomHelper.GetRandomNumber(0.03, 0.05);
                     sec.T = t;
 
                     tri.Section = sec;
@@ -127,8 +127,8 @@ namespace BriefFiniteElementNet
 
         public static void SetRandomiseMaterial(Model mdl)
         {
-            var e = RandomStuff.GetRandomNumber(0.9, 1.1) * 210e9;
-            var nu = RandomStuff.GetRandomNumber(0.25, 0.3) ;
+            var e = RandomHelper.GetRandomNumber(0.9, 1.1) * 210e9;
+            var nu = RandomHelper.GetRandomNumber(0.25, 0.3) ;
             
             foreach (var ele in mdl.Elements)
             {
@@ -363,15 +363,15 @@ namespace BriefFiniteElementNet
                 framElm.Behavior = BarElementBehaviours.FullFrame;
 
 
-                var h = RandomStuff.GetRandomNumber(0.01, 0.1);
-                var w = RandomStuff.GetRandomNumber(0.01, 0.1);
+                var h = RandomHelper.GetRandomNumber(0.01, 0.1);
+                var w = RandomHelper.GetRandomNumber(0.01, 0.1);
 
                 var a = h * w;
                 var iy = h * h * h * w / 12;
                 var iz = w * w * w * h / 12;
                 var j = iy + iz;
-                var e= RandomStuff.GetRandomNumber(100e9, 200e9);
-                var nu = RandomStuff.GetRandomNumber(0.2, 0.3);
+                var e= RandomHelper.GetRandomNumber(100e9, 200e9);
+                var nu = RandomHelper.GetRandomNumber(0.2, 0.3);
 
                 var sec = (Sections.UniformParametric1DSection)(framElm.Section = new Sections.UniformParametric1DSection());
                 var mat = framElm.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(e, nu);
@@ -533,11 +533,11 @@ namespace BriefFiniteElementNet
 
 
 
-                var h = RandomStuff.GetRandomNumber(0.01, 0.1);
-                var w = RandomStuff.GetRandomNumber(0.01, 0.1);
+                var h = RandomHelper.GetRandomNumber(0.01, 0.1);
+                var w = RandomHelper.GetRandomNumber(0.01, 0.1);
 
-                var e = RandomStuff.GetRandomNumber(100e9, 200e9);
-                var nu = RandomStuff.GetRandomNumber(0.2, 0.3);
+                var e = RandomHelper.GetRandomNumber(100e9, 200e9);
+                var nu = RandomHelper.GetRandomNumber(0.2, 0.3);
 
                 var sec = (Sections.UniformParametric2DSection)(triElm.Section = new Sections.UniformParametric2DSection());
 

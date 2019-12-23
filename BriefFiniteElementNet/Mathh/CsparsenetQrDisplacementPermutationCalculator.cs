@@ -37,9 +37,14 @@ namespace BriefFiniteElementNet.Mathh
             var n = a.RowCount;
             var m = a.ColumnCount;
 
-            var order = ColumnOrdering.Natural;
+            var order = ColumnOrdering.MinimumDegreeAtA;
+
+            var sp = System.Diagnostics.Stopwatch.StartNew();
 
             var qr = SparseQR.Create(a, order);
+
+            var t2 = sp.ElapsedMilliseconds;
+
 
             var r = GetFactorR(qr);
             var q = GetFactorQ(qr);
@@ -105,7 +110,12 @@ namespace BriefFiniteElementNet.Mathh
 
                 var rinDep = p1.Multiply(r).Multiply(p2p);
 
+
+                
+
                 var qr2 = SparseQR.Create(rdep, order);
+
+                var t = sp.ElapsedMilliseconds;
 
                 var right = new double[rinDep.RowCount];
                 var sol = new double[rinDep.RowCount];
@@ -143,7 +153,7 @@ namespace BriefFiniteElementNet.Mathh
                 buf = bufCrd.ToCCs();
             }
 
-            var top = buf.ToDenseMatrix();
+            //var top = buf.ToDenseMatrix();
 
             var buft = buf.Transpose();
 

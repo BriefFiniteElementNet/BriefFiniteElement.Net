@@ -7,7 +7,7 @@ using System.Threading;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
 using BriefFiniteElementNet.Loads;
-using ElementLocalDof = BriefFiniteElementNet.FluentElementPermuteManager.ElementLocalDof;
+using ElementLocalDof = BriefFiniteElementNet.ElementPermuteHelper.ElementLocalDof;
 using BriefFiniteElementNet.Mathh;
 using CSparse.Storage;
 
@@ -776,7 +776,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public FluentElementPermuteManager.ElementLocalDof[] GetDofOrder(Element targetElement)
+        public ElementPermuteHelper.ElementLocalDof[] GetDofOrder(Element targetElement)
         {
             var buf = new List<ElementLocalDof>();
 

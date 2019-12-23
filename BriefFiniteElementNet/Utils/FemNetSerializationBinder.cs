@@ -7,6 +7,9 @@ using System.Text;
 
 namespace BriefFiniteElementNet
 {
+    /// <summary>
+    /// Usually used to deserialize files containing older models into up to date classes
+    /// </summary>
     public class FemNetSerializationBinder : SerializationBinder
     {
         /// <summary>

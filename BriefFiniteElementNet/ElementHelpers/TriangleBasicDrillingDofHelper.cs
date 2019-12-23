@@ -56,15 +56,15 @@ namespace BriefFiniteElementNet.ElementHelpers
             throw new NotImplementedException();
         }
 
-        public FluentElementPermuteManager.ElementLocalDof[] GetDofOrder(Element targetElement)
+        public ElementPermuteHelper.ElementLocalDof[] GetDofOrder(Element targetElement)
         {
-            return new FluentElementPermuteManager.ElementLocalDof[]
+            return new ElementPermuteHelper.ElementLocalDof[]
             {
-                new FluentElementPermuteManager.ElementLocalDof(0, DoF.Rz),
+                new ElementPermuteHelper.ElementLocalDof(0, DoF.Rz),
 
-                new FluentElementPermuteManager.ElementLocalDof(1, DoF.Rz),
+                new ElementPermuteHelper.ElementLocalDof(1, DoF.Rz),
 
-                new FluentElementPermuteManager.ElementLocalDof(2, DoF.Rz),
+                new ElementPermuteHelper.ElementLocalDof(2, DoF.Rz),
             };
         }
 

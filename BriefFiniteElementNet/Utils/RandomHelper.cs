@@ -9,7 +9,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents a class that provides random stuff like random force rtc.
     /// </summary>
-    public static class RandomStuff
+    public static class RandomHelper
     {
 
         private static Random NumRnd = new Random(1);

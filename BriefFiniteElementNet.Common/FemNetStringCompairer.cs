@@ -10,7 +10,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents a string comparer which ignores case and white-space characters (Space, tab, linefeed, carriage-return, formfeed, vertical-tab and newline)
     /// </summary>
-    internal class FemNetStringCompairer : IEqualityComparer<string>
+    public class FemNetStringCompairer : IEqualityComparer<string>
     {
         /// <summary>
         /// Determines whether the specified objects are equal.
