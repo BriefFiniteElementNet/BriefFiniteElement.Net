@@ -12,7 +12,7 @@ namespace BriefFiniteElementNet
     /// Represents a base class for elemental loads (loads applying to elements)
     /// </summary>
     [Serializable]
-    public abstract class ElementalLoad:ISerializable
+    public abstract class ElementalLoad : ISerializable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ElementalLoad"/> class.
@@ -73,7 +73,7 @@ namespace BriefFiniteElementNet
         /// <param name="context">The context.</param>
         protected ElementalLoad(SerializationInfo info, StreamingContext context)
         {
-			this._case = (BriefFiniteElementNet.LoadCase)info.GetValue("_case", typeof(BriefFiniteElementNet.LoadCase));
+            this._case = (BriefFiniteElementNet.LoadCase)info.GetValue("_case", typeof(BriefFiniteElementNet.LoadCase));
         }
 
         #endregion
@@ -82,6 +82,7 @@ namespace BriefFiniteElementNet
         /// Gets the iso location of points that internal force in those points are discrete.
         /// </summary>
         /// <returns>list of iso locations</returns>
+        /// <remarks>Exact Internal Force of the element that contains an ElementalLoad can be not continous only due to elemental loads</remarks>
         public abstract IsoPoint[] GetInternalForceDiscretationPoints();
 
     }

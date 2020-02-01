@@ -617,6 +617,20 @@ namespace BriefFiniteElementNet.Elements
             return new double[] { pl };
         }
 
+        public Point IsoCoordsToGlobalCoords(params double[] isoCoords)
+        {
+            var localA = IsoCoordsToLocalCoords(isoCoords);
+            var local = new Vector(localA[0], 0, 0);
+
+            var tr = GetTransformationManager();
+
+            var global = tr.TransformLocalToGlobal(local);
+
+            var globalP = this.StartNode.Location + global;
+
+            return globalP;
+        }
+
         public double[] LocalCoordsToIsoCoords(params double[] localCoords)
         {
             var pl = GetIsoToLocalConverter();
@@ -962,7 +976,9 @@ namespace BriefFiniteElementNet.Elements
                     throw new Exception(string.Format(CultureInfo.CurrentCulture, "Internal force is descrete at xi = {0}, thus have two values in this location. try to find internal force a little bit after or before this point", xi));
             }
 
-            var approx = GetInternalForceAt(xi, loadCase);
+            var approx =
+                GetInternalForceAt(xi, loadCase);
+            //Force.Zero;
 
             var fcs = new Dictionary<DoF, double>();
 
@@ -986,7 +1002,7 @@ namespace BriefFiniteElementNet.Elements
                 }
 
             var buff = new Force();
-            buff += approx;
+            buff += approx;//TODO: maybe += approx !
 
             if (fcs.ContainsKey(DoF.Dx))
                 buff.Fx += fcs[DoF.Dx];

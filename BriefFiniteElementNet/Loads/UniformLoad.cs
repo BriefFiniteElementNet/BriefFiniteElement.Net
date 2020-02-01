@@ -8,6 +8,10 @@ using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.Loads
 {
+
+    /// <summary>
+    /// Represents a uniform load which applies to the element's body.
+    /// </summary>
     [Serializable]
     public class UniformLoad:ElementalLoad
     {

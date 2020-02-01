@@ -11,6 +11,9 @@ using System.Security.Permissions;
 
 namespace BriefFiniteElementNet.Loads
 {
+    /// <summary>
+    /// Represents an concentrated load which applies in the element's body.
+    /// </summary>
     [Serializable]
     [Obsolete("still in development, have bugs")]
 

@@ -150,14 +150,14 @@ namespace BriefFiniteElementNet.Tests
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 
-                var mi = w / 12 * (6 * length * x - 6 * x * x - length * length);
-                var vi = w * (length / 2 - x);
+                var mi = -w / 12 * (6 * length * x - 6 * x * x - length * length);
+                var vi = -w * (length / 2 - x);
 
                 var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) }).ToForce();
 
                 var exactFrc = new Force(fx: 0, fy: 0, fz: vi, mx: 0, my: mi, mz: 0);
 
-                var d = testFrc + exactFrc;
+                var d = testFrc - exactFrc;
 
                 var dm = d.My;
                 var df = d.Fz;
@@ -169,7 +169,7 @@ namespace BriefFiniteElementNet.Tests
             }
 
 
-            {
+            {//at the very start points, GetLocalEquivalentNodalLoads in equal to inverse of GetLoadInternalForceAt
                 var end1 = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
                 var f0 = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -1 + 1e-9 }).ToForce(); ;
@@ -218,13 +218,11 @@ namespace BriefFiniteElementNet.Tests
 
                 var exactFrc = new Force(fx: 0, fy: vi, fz: 0, mx: 0, my: 0, mz: mi);
 
-                var dm = Math.Abs(testFrc.Mz) - Math.Abs(exactFrc.Mz);
-                var df = Math.Abs(testFrc.Fy) - Math.Abs(exactFrc.Fy);
-
+                var dm = testFrc.Mz - exactFrc.Mz;
+                var df = testFrc.Fy - exactFrc.Fy;
 
                 Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
                 Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
-
             }
 
             {
@@ -236,8 +234,6 @@ namespace BriefFiniteElementNet.Tests
 
                 Assert.IsTrue(Math.Abs(sum.Forces.Length) < 1e-5, "invalid value");
                 Assert.IsTrue(Math.Abs(sum.Moments.Length) < 1e-5, "invalid value");
-
-
             }
         }
 

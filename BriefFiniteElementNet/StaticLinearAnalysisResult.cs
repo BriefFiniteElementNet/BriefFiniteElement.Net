@@ -805,7 +805,7 @@ namespace BriefFiniteElementNet
                 CalcUtil.GenerateP_Delta_Mpc(parent, loadCase, new CsparsenetQrDisplacementPermutationCalculator());
 
 
-            parent.Trace.Write(Common.TraceLevel.Info, "Calculating Permutation Matrix took {0} ms", sp.ElapsedMilliseconds);
+            parent.Trace.Write(Common.TraceLevel.Info, "Calculating Displacement Permutation Matrix took {0} ms", sp.ElapsedMilliseconds);
 
             var np = perm.Item1.ColumnCount;//master count
 

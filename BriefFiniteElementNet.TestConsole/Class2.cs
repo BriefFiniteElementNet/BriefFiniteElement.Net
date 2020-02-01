@@ -13,7 +13,7 @@ namespace BriefFiniteElementNet.TestConsole
     {
         public void Check()
         {
-            var model=new Model();
+            var model = new Model();
 
             var wnd = WpfTraceListener.CreateModelTrace(model);
             PosdefChecker.CheckModel(model, LoadCase.DefaultLoadCase);

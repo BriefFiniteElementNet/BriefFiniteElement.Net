@@ -10,7 +10,8 @@ namespace BriefFiniteElementNet.Loads
 {
 
     /// <summary>
-    /// Represents a nonuniform load over rectangular area of element in 1d, or 2d or 3d
+    /// Represents a nonuniform load on an element's body. Partial means not covering whole element's body and nonuniform means load severity changes along any location.
+    /// The partial part of element is defined in iso parametric coordination system
     /// </summary>
     [Serializable]
     [Obsolete("still in development, have bugs")]
@@ -18,13 +19,16 @@ namespace BriefFiniteElementNet.Loads
     {
         #region props, fields
 
-        private double[] _magnitudesAtNodes;
+        //private double[] _magnitudesAtNodes;
         private IsoPoint _startLocation;
         public IsoPoint _endLocation;
-        public double _startMagnitude;
-        public double _endMagnitude;
+        //public double _startMagnitude;
+        //public double _endMagnitude;
         private Vector _direction;
         private CoordinationSystem _coordinationSystem;
+        //private Func<IsoPoint, double> severityFunction;
+
+        private Mathh.Polynomial _severityFunction;
 
         /// <summary>
         /// Sets or gets the direction of load
@@ -71,119 +75,30 @@ namespace BriefFiniteElementNet.Loads
             set { _endLocation = value; }
         }
 
-        /*
-        /// <summary>
-        /// Gets or sets the magnitude(s) at start location
-        /// </summary>
-        /// <value>
-        /// the severities at start of trapezoidal load</value>
-        public double StartMagnitude
-        {
-            get { return _startMagnitude; }
-            set { _startMagnitude = value; }
-        }
 
         /// <summary>
-        /// Gets or sets the magnitude(s) at end location
+        /// Gets or sets the severity function
         /// </summary>
-        /// <value>
-        /// the severities at end of trapezoidal load</value>
-        public double EndMagnitude
+        public Mathh.Polynomial SeverityFunction
         {
-            get { return _endMagnitude; }
-            set { _endMagnitude = value; }
-        }
-        */
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <value>
-        /// gets or sets the load magnitude at each element's node
-        /// </value>
-        public double[] MagnitudesAtNodes
-        {
-            get { return _magnitudesAtNodes; }
-            set { _magnitudesAtNodes = value; }
+            get { return _severityFunction; }
+            set
+            {
+                _severityFunction = value;
+            }
         }
 
         #endregion
 
 
 
-        public double[] GetMagnitudesAt(Element targetelement, IsoPoint location)
+        public double GetMagnitudeAt(Element targetelement, IsoPoint location)
         {
-            //var buf = 0.0;//new double[EndMagnitude.Length];
+            return _severityFunction.Evaluate(location.Xi);
 
-            //var dims = StartMagnitude.Length;
-
-            //var n = Math.Min(dims, isoCoords.Length);
 
             throw new NotImplementedException();
-            /*
-            //for (var i = 0; i < n; i++)
-            {
-                //var startOffset = this.StartLocation[0];
-                //var endOffset = this.EndLocation[0];
-                var startMag = this.StartMagnitude;
-                var endMag = this.EndMagnitude;
-
-                var p0 = new Point(StartLocation.Xi, StartLocation.Eta, StartLocation.Lambda);
-                var p1 = new Point(EndLocation.Xi, EndLocation.Eta, EndLocation.Lambda);
-
-                var v = (p1 - p0);
-
-
-                //var 
-
-                var xi0 = -1 + startOffset;
-                var xi1 = 1 - endOffset;
-
-                var q0 = startMag;
-                var q1 = endMag;
-
-                var m = (q0 - q1) / (xi0 - xi1);
-
-                var magnitude = q0 + m * (isoCoords[i] - xi0);
-                buf[i] = magnitude;
-            }
-
-            return buf;
-            */
         }
-
-        /*
-        public double[] GetMagnitudesAt(params double[] isoCoords)
-        {
-            var buf = new double[EndMagnitude.Length];
-
-            var dims = StartMagnitude.Length;
-
-            var n = Math.Min(dims, isoCoords.Length);
-
-            for (var i = 0; i < n; i++)
-            {
-                var startOffset = this.StartLocation[0];
-                var endOffset = this.EndLocation[0];
-                var startMag = this.StartMagnitude[0];
-                var endMag = this.EndMagnitude[0];
-
-                var xi0 = -1 + startOffset;
-                var xi1 = 1 - endOffset;
-
-                var q0 = startMag;
-                var q1 = endMag;
-
-                var m = (q0 - q1) / (xi0 - xi1);
-
-                var magnitude = q0 + m * (isoCoords[i] - xi0);
-                buf[i] = magnitude;
-            }
-
-            return buf;
-
-        }
-        */
 
         public override IsoPoint[] GetInternalForceDiscretationPoints()
         {
@@ -197,12 +112,11 @@ namespace BriefFiniteElementNet.Loads
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
-            info.AddValue("_magnitudesAtNodes", _magnitudesAtNodes);
             info.AddValue("_startLocation", _startLocation);
             info.AddValue("_endLocation", _endLocation);
-            info.AddValue("_startMagnitude", _startMagnitude);
-            info.AddValue("_endMagnitude", _endMagnitude);
+            info.AddValue("_coordinationSystem", (int)_coordinationSystem);
             info.AddValue("_direction", _direction);
+            info.AddValue("_severityFunction", _severityFunction);
         }
 
         #endregion
@@ -221,12 +135,11 @@ namespace BriefFiniteElementNet.Loads
 
         protected PartialNonUniformLoad(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            _magnitudesAtNodes = (double[])info.GetValue("_magnitudesAtNodes", typeof(double[]));
+            _coordinationSystem = (CoordinationSystem)(int)info.GetValue("_coordinationSystem", typeof(int));
             _startLocation = (IsoPoint)info.GetValue("_startLocation", typeof(IsoPoint));
             _endLocation = (IsoPoint)info.GetValue("_endLocation", typeof(IsoPoint));
-            _startMagnitude = (double)info.GetValue("_startMagnitude", typeof(double));
-            _endMagnitude = (double)info.GetValue("_endMagnitude", typeof(double));
             _direction = (Vector)info.GetValue("_direction", typeof(Vector));
+            _severityFunction = (Mathh.Polynomial)info.GetValue("_direction", typeof(Mathh.Polynomial));
         }
 
         #endregion

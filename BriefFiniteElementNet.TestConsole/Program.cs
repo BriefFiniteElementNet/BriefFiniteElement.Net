@@ -36,8 +36,12 @@ namespace BriefFiniteElementNet.TestConsole
             Console.Title = "BFE tests & temporary codes";
             //Validation.GithubIssues.Issue25.Run();
 
-            testRrefTime();
-            
+            //TestHingedInternalForce();
+            //TestBinModel();
+            //testRrefTime();
+
+            testMultySpan();
+
             //var stf = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(model);
 
             //model.Solve_MPC();
@@ -103,6 +107,104 @@ namespace BriefFiniteElementNet.TestConsole
             //Console.ReadKey();
         }
 
+        private static void testMultySpan()
+        {
+            var model = StructureGenerator.Generate3DBarElementGrid(3, 1, 1);
+
+            var bar1 = model.Elements[0] as BarElement;
+            var bar2 = model.Elements[1] as BarElement;
+
+            model.Nodes[0].Constraints = Constraints.MovementFixed;
+            model.Nodes[1].Constraints = Constraints.MovementFixed & Constraints.FixedRY;
+            model.Nodes[2].Constraints = Constraints.MovementFixed;
+
+
+            var l = (model.Nodes[2].Location - model.Nodes[0].Location).Length;
+
+
+            //bar.StartReleaseCondition = Constraints.MovementFixed & Constraints.FixedRX;
+            //bar.EndReleaseCondition = Constraints.MovementFixed & Constraints.FixedRX;
+
+            //var ld = new Loads.UniformLoad() { Direction = Vector.K, Magnitude = -100 };
+
+            var ld = new Loads.ConcentratedLoad() { Force = new Force(0, 0, -1, 0, 0, 0), CoordinationSystem = CoordinationSystem.Global, ForceIsoLocation = new IsoPoint(0.0) };
+            var ld2 = new Loads.UniformLoad() { Direction =- Vector.K, Magnitude = 1 , CoordinationSystem = CoordinationSystem.Global, };
+
+            bar1.Material = bar2.Material;
+            bar1.Section = bar2.Section;
+
+
+            bar1.Loads.Add(ld);
+            //bar2.Loads.Add(ld2);
+
+
+            model.Solve_MPC();
+
+            var r0 = model.Nodes[0].GetSupportReaction();
+
+
+            var st = model.Nodes[0].Location;
+            var mid = model.Nodes[1].Location;
+            var en = model.Nodes[2].Location;
+
+
+            var ss = model.Nodes.Select(ii => ii.GetSupportReaction()).ToArray();
+
+            var pts = new List<Tuple<double, double>>();
+
+            foreach(var elm in model.Elements)
+            {
+                var b = elm as BarElement;
+
+                if (b == null)
+                    continue;
+
+                for (var ii = -1.0; ii <= 1; ii+=0.001)
+                {
+                    var global = b.IsoCoordsToGlobalCoords(ii);
+
+                    try
+                    {
+                        var f1 = b.GetExactInternalForceAt(ii);
+                        var f2 = b.GetInternalForceAt(ii);
+
+                        var f = f1 - 0*f2;
+
+                        pts.Add(Tuple.Create(global.Y,- f.Fz));
+                    }
+                    catch { }
+                }
+            }
+
+
+            pts.Sort((i, j) => i.Item1.CompareTo(j.Item1));
+
+
+            FunctionVisualizer.VisualizeInNewWindow((x =>
+            {
+                var tt = pts.LastOrDefault(j => j.Item1 <= x);
+
+                if (tt != null)
+                    return tt.Item2;
+
+                return 0;
+                
+            }), 0, l, 1000);
+
+            throw new NotImplementedException();
+        }
+
+        static void TestBinModel()
+        {
+            var model = Model.Load(@"C:\temp\model.txt");
+
+            model.Solve();
+
+            var bar = new BarElement();
+
+            bar.StartReleaseCondition = bar.EndReleaseCondition;
+
+        }
         static void testRref()
         {
             var model = StructureGenerator.Generate3DBarElementGrid(10, 10, 10);

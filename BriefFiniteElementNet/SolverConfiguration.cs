@@ -58,25 +58,9 @@ namespace BriefFiniteElementNet
             get { return loadCases; }
             private set { loadCases = value; }
         }
-
-        /// <summary>
-        /// Gets or sets the solver generator.
-        /// </summary>
-        /// <value>
-        /// The solver generator that generates a <see cref="ISolver"/> for every <see cref="CompressedColumnStorage"/> matrix.
-        /// </value>
-        [Obsolete("use SolverConfiguration.SolverFactory instead")]
-        public Func<SparseMatrix, ISolver> SolverGenerator
-        {
-            get { return _solverGenerator; }
-            set { _solverGenerator = value; }
-        }
-
       
         [Obsolete("use SolverConfiguration.SolverFactory instead")]
         private Func<SparseMatrix, ISolver> _solverGenerator;
-
-
        
         private ISolverFactory solverFactory;
 
