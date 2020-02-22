@@ -592,5 +592,46 @@ namespace BriefFiniteElementNet
             MatrixPool = new MatrixPool(ArrayPool);
         }
         #endregion
+
+        #region peace add 
+        /// <summary>
+        /// 获得具有某label的node
+        /// </summary>
+        /// <param name="label"></param>
+        /// <returns></returns>
+        public Node NodeWithLabel(string label)
+        {
+            Node node = null;
+            foreach (Node nd in nodes)
+            {
+                if (nd.Label == label)
+                {
+                    node = nd;
+                    break;
+                }
+            }
+
+            return node;
+        }
+        /// <summary>
+        /// 获得具有某label的element
+        /// </summary>
+        /// <param name="label"></param>
+        /// <returns></returns>
+        public Element ElementWithLabel(string label)
+        {
+            Element element = null;
+            foreach (Element elm in elements)
+            {
+                if (elm.Label == label)
+                {
+                    element = elm;
+                    break;
+                }
+            }
+
+            return element;
+        }
+        #endregion
     }
 }
