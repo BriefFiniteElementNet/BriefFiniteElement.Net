@@ -62,10 +62,7 @@ namespace BriefFiniteElementNet.Sections
                 if (lastPoint != _geometry[0])
                     throw new InvalidOperationException("First point and last point ot PolygonYz should put on each other");
 
-
-
-                double a = 0.0, iz = 0.0, iy = 0.0, ixy = 0.0;
-
+                double a = 0, iy = 0, iz = 0, ixy = 0, sy = 0, sz = 0, yc = 0, zc = 0;
 
                 var x = new double[this._geometry.Length];
                 var y = new double[this._geometry.Length];
@@ -77,38 +74,47 @@ namespace BriefFiniteElementNet.Sections
                 }
 
                 var l = _geometry.Length - 1;
-
-                var ai = 0.0;
-
                 for (var i = 0; i < l; i++)
                 {
-                    ai = x[i] * y[i + 1] - x[i + 1] * y[i];
-                    a += ai;
-                    iy += (y[i] * y[i] + y[i] * y[i + 1] + y[i + 1] * y[i + 1]) * ai;
-                    iz += (x[i] * x[i] + x[i] * x[i + 1] + x[i + 1] * x[i + 1]) * ai;
-
-                    ixy += (x[i] * y[i + 1] + 2 * x[i] * y[i] + 2 * x[i + 1] * y[i + 1] + x[i + 1] * y[i]) * ai;
-
+                    a += (x[i] - x[i + 1]) * (y[i] + y[i + 1]) / 2.0;
+                    iy += (y[i] * y[i] + y[i + 1] * y[i + 1]) * (x[i] - x[i + 1]) * (y[i] + y[i + 1]) / 12.0;
+                    iz += (x[i] * x[i] + x[i + 1] * x[i + 1]) * (y[i + 1] - y[i]) * (x[i] + x[i + 1]) / 12.0;
+                    ixy += (iy + iz);
+                    sy += (x[i] - x[i + 1]) * (y[i] * y[i] + y[i] * y[i + 1] + y[i + 1] * y[i + 1]) / 6;
+                    sz += -(y[i] - y[i + 1]) * (x[i] * x[i] + x[i] * x[i + 1] + x[i + 1] * x[i + 1]) / 6;
                 }
-
-                a = a * 0.5;
-                iz = iz * 1 / 12.0;
-                iy = iy * 1 / 12.0;
-                ixy = ixy * 1 / 24.0;
-                var j = iy + iz;
-                //not sure which one is correct j = ix + iy or j = ixy >:)~ 
-
+                yc = sz / a;
+                zc = sy / a;
+                //if the base axis is not the centroid axis, all the point need move
+                if (Math.Abs(yc) > 0.00001 || Math.Abs(zc) > 0.00001)
+                {
+                    for (int i = 0; i < _geometry.Length; i++)
+                    {
+                        x[i] = _geometry[i].Y - yc;
+                        y[i] = _geometry[i].Z - zc;
+                    }
+                    iy = 0;
+                    iz = 0;
+                    ixy = 0;
+                    for (var i = 0; i < l; i++)
+                    {
+                        iy += (y[i] * y[i] + y[i + 1] * y[i + 1]) * (x[i] - x[i + 1]) * (y[i] + y[i + 1]) / 12.0;
+                        iz += (x[i] * x[i] + x[i + 1] * x[i + 1]) * (y[i + 1] - y[i]) * (x[i] + x[i + 1]) / 12.0;
+                        ixy += (iy + iz);
+                    }
+                }
+                
                 buf.A = Math.Abs(a);
                 buf.Iz = Math.Abs(iz);
                 buf.Iy = Math.Abs(iy);
-                buf.J = Math.Abs(j);
+                buf.J = Math.Abs(ixy);
                 buf.Ay = Math.Abs(a);//TODO: Ay is not equal to A, this is temporary fix
                 buf.Az = Math.Abs(a);//TODO: Az is not equal to A, this is temporary fix
-
             }
 
             return buf;
         }
+
 
         public override int[] GetMaxFunctionOrder()
         {
