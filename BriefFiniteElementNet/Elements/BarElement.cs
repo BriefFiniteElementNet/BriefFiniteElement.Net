@@ -1290,5 +1290,29 @@ namespace BriefFiniteElementNet.Elements
 
             return b2.ToArray();
         }
+
+        #region peace add methods
+        /// <summary>
+        /// get the global displacement at xi
+        /// </summary>
+        /// <param name="xi"></param>
+        /// <param name="loadCase"></param>
+        /// <returns></returns>
+        public Displacement GetGlobalDisplacementAt(double xi, LoadCase loadCase)
+        {
+            var localDisp = GetInternalDisplacementAt(xi, loadCase);
+            var trMgr = GetTransformationManager();
+            return trMgr.TransformLocalToGlobal(localDisp);
+        }
+        /// <summary>
+        /// get the global displacement at xi for DefaultLoadCase
+        /// </summary>
+        /// <param name="xi"></param>
+        /// <returns></returns>
+        public Displacement GetGlobalDisplacementAt(double xi)
+        {
+            return GetGlobalDisplacementAt(xi, LoadCase.DefaultLoadCase);
+        }
+        #endregion
     }
 }
