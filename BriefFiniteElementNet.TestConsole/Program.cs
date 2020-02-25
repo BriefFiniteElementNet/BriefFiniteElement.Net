@@ -671,7 +671,7 @@ namespace BriefFiniteElementNet.TestConsole
             var iy = 0.03;
             var iz = 0.02;
             var a = 0.01;
-            var j = 0.05;
+            var j = iy + iz;
 
             var e = 7;
             var g = 11;
@@ -699,7 +699,7 @@ namespace BriefFiniteElementNet.TestConsole
 
 
             //barElement.Material = new UniformBarMaterial(e, g, rho);
-            barElement.Section = new UniformParametric1DSection() {Iy = iy, Iz = iz, A = a,J=j};
+            barElement.Section = new UniformParametric1DSection() {Iy = iy, Iz = iz, A = a};
 
             frameElement.MassFormulationType = MassFormulation.Consistent;
 
