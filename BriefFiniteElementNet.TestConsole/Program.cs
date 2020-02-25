@@ -109,44 +109,27 @@ namespace BriefFiniteElementNet.TestConsole
 
         private static void testMultySpan()
         {
-            var model = StructureGenerator.Generate3DBarElementGrid(3, 1, 1);
+            var model = StructureGenerator.Generate3DBarElementGrid(5, 1, 1);
 
-            var bar1 = model.Elements[0] as BarElement;
-            var bar2 = model.Elements[1] as BarElement;
+            var bars = model.Elements.Cast<BarElement>().ToList();
 
-            model.Nodes[0].Constraints = Constraints.MovementFixed;
-            model.Nodes[1].Constraints = Constraints.MovementFixed & Constraints.FixedRY;
-            model.Nodes[2].Constraints = Constraints.MovementFixed;
+            foreach(var nde in model.Nodes)
+                nde.Constraints = Constraints.MovementFixed & Constraints.FixedRY;
 
+            var l = (model.Nodes.Last().Location - model.Nodes.First().Location).Length;
 
-            var l = (model.Nodes[2].Location - model.Nodes[0].Location).Length;
+            var ld = new Loads.UniformLoad() { Direction =- Vector.K, Magnitude = 1 , CoordinationSystem = CoordinationSystem.Global, };
 
+            foreach (var b in bars)
+                b.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
 
-            //bar.StartReleaseCondition = Constraints.MovementFixed & Constraints.FixedRX;
-            //bar.EndReleaseCondition = Constraints.MovementFixed & Constraints.FixedRX;
+            foreach (var b in bars)
+                b.Section = new UniformGeometric1DSection(SectionGenerator.GetRectangularSection(0.2, 0.2));
 
-            //var ld = new Loads.UniformLoad() { Direction = Vector.K, Magnitude = -100 };
-
-            var ld = new Loads.ConcentratedLoad() { Force = new Force(0, 0, -1, 0, 0, 0), CoordinationSystem = CoordinationSystem.Global, ForceIsoLocation = new IsoPoint(0.0) };
-            var ld2 = new Loads.UniformLoad() { Direction =- Vector.K, Magnitude = 1 , CoordinationSystem = CoordinationSystem.Global, };
-
-            bar1.Material = bar2.Material;
-            bar1.Section = bar2.Section;
-
-
-            bar1.Loads.Add(ld);
-            //bar2.Loads.Add(ld2);
-
+            bars[0].Loads.Add(ld);
+            bars[2].Loads.Add(ld);
 
             model.Solve_MPC();
-
-            var r0 = model.Nodes[0].GetSupportReaction();
-
-
-            var st = model.Nodes[0].Location;
-            var mid = model.Nodes[1].Location;
-            var en = model.Nodes[2].Location;
-
 
             var ss = model.Nodes.Select(ii => ii.GetSupportReaction()).ToArray();
 
@@ -170,7 +153,7 @@ namespace BriefFiniteElementNet.TestConsole
 
                         var f = f1 - 0*f2;
 
-                        pts.Add(Tuple.Create(global.Y,- f.Fz));
+                        pts.Add(Tuple.Create(global.Y,- f.My));
                     }
                     catch { }
                 }
@@ -699,7 +682,7 @@ namespace BriefFiniteElementNet.TestConsole
 
 
             //barElement.Material = new UniformBarMaterial(e, g, rho);
-            barElement.Section = new UniformParametric1DSection() {Iy = iy, Iz = iz, A = a,J=j};
+            barElement.Section = new UniformParametric1DSection() {Iy = iy, Iz = iz, A = a,Iyz=j};
 
             frameElement.MassFormulationType = MassFormulation.Consistent;
 

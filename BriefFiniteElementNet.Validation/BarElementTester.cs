@@ -720,7 +720,7 @@ namespace BriefFiniteElementNet.Validation
             frameElement.ConsiderShearDeformation = false;
 
             //barElement.Material = new UniformBarMaterial(e, g, rho);
-            barElement.Section = new UniformParametric1DSection() { Iy = iy, Iz = iz, A = a, J = j };
+            barElement.Section = new UniformParametric1DSection() { Iy = iy, Iz = iz, A = a, Iyz = j };
 
             var frK = frameElement.GetGlobalStifnessMatrix();
             var barK = barElement.GetGlobalStifnessMatrix();
@@ -1270,7 +1270,7 @@ namespace BriefFiniteElementNet.Validation
             FrameElement2Node frmelm;
 
             belm = new BarElement(ndes[0], ndes[1]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame };
-            frmelm = new FrameElement2Node(ndes[0], ndes[1]) { Iz = sec.Iz, Iy = sec.Iy, A = sec.A, J = sec.J, E = e, G = g };
+            frmelm = new FrameElement2Node(ndes[0], ndes[1]) { Iz = sec.Iz, Iy = sec.Iy, A = sec.A, J = sec.Iyz, E = e, G = g };
 
             var bk = belm.GetGlobalStifnessMatrix();
             var fk = frmelm.GetGlobalStifnessMatrix();

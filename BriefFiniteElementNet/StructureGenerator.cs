@@ -106,7 +106,7 @@ namespace BriefFiniteElementNet
                     sec.A = b * h;
                     sec.Iy = b * b * b * h / 12;
                     sec.Iz = h * h * h * b / 12;
-                    sec.J = (sec.Iy + sec.Iz) / 2;//!!! 
+                    sec.Iyz = (sec.Iy + sec.Iz) / 2;//!!! 
 
                     br.Section = sec;
                 }
@@ -379,7 +379,7 @@ namespace BriefFiniteElementNet
                 sec.A = a;
                 sec.Iy = iy;
                 sec.Iz = iz;
-                sec.J = j;
+                sec.Iyz = j;
 
             }
 

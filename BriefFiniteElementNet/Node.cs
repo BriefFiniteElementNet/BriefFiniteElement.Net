@@ -127,23 +127,6 @@ namespace BriefFiniteElementNet
             set { constraints = value; }
         }
 
-        /*
-        /// <summary>
-        /// Gets or sets the member loads.
-        /// </summary>
-        /// <value>
-        /// The concentrated loads who come from distributed loads from members.
-        /// </value>
-        /// <remarks>
-        /// For creating forces load, distributed loads should convert to nodal load, the <see cref="MembersLoads"/> is the nodal loads resulting from <see cref="Load"/>s applied to members.
-        /// These loads are in global coordination system</remarks>
-        [Obsolete("See comments in StaticLinearAnalysisResult.GetTotalForceVector()")]
-        internal List<NodalLoad> MembersLoads
-        {
-            get { return memberLoads; }
-            private set { memberLoads = value; }
-        }
-        */
 
         /// <summary>
         /// Gets the nodal displacement regarding specified <see cref="LoadCombination"/> <see cref="cmb"/>.
@@ -158,13 +141,9 @@ namespace BriefFiniteElementNet
             {
                 var cf = pair.Value;
 
-                parent.LastResult.AddAnalysisResultIfNotExists(pair.Key);
+                var disp = GetNodalDisplacement(pair.Key);
 
-                var disps = parent.LastResult.Displacements[pair.Key];
-
-                var dd = Displacement.FromVector(disps, this.Index * 6);
-
-                buf += cf*dd;
+                buf += cf * disp;
             }
 
             return buf;
@@ -177,7 +156,11 @@ namespace BriefFiniteElementNet
         /// <returns></returns>
         public Displacement GetNodalDisplacement(LoadCase cse)
         {
+            if (parent.LastResult == null)
+                return Displacement.Zero;
+
             parent.LastResult.AddAnalysisResultIfNotExists(cse);
+
             var disps = parent.LastResult.Displacements[cse];
 
             var buf = Displacement.FromVector(disps, this.Index * 6);
@@ -191,9 +174,7 @@ namespace BriefFiniteElementNet
         /// <returns></returns>
         public Displacement GetNodalDisplacement()
         {
-            var cmb = new LoadCombination();
-            cmb[new LoadCase()] = 1;
-            return GetNodalDisplacement(cmb);
+            return GetNodalDisplacement(LoadCombination.DefaultLoadCombination);
         }
 
         /// <summary>

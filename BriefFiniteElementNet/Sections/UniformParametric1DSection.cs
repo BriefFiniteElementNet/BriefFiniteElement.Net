@@ -25,6 +25,7 @@ namespace BriefFiniteElementNet.Sections
             info.AddValue("_j", _j);
             info.AddValue("_ay", _ay);
             info.AddValue("_az", _az);
+            info.AddValue("_iyz", _iyz);
 
             base.GetObjectData(info, context);
     
@@ -38,6 +39,9 @@ namespace BriefFiniteElementNet.Sections
             _j = info.GetDouble("_j");
             _ay = info.GetDouble("_ay");
             _az = info.GetDouble("_az");
+
+            if (info.GetFieldType("_iyz") != null)
+                _iyz = info.GetDouble("_iyz");
         }
 
         public UniformParametric1DSection()
@@ -74,6 +78,7 @@ namespace BriefFiniteElementNet.Sections
         private double _iy;
         private double _iz;
         private double _j;
+        private double _iyz;
 
         /// <summary>
         /// Gets or sets a.
@@ -146,20 +151,20 @@ namespace BriefFiniteElementNet.Sections
         }
 
         /// <summary>
-        /// Gets or sets the j.
+        /// Gets or sets the Iyz.
         /// </summary>
         /// <value>
-        /// The polar moment of inertial.
+        /// The Product Moment of Area of section
         /// </value>
         /// <remarks>
-        ///     /          /
-        /// J= | ρ². dA = | (y²+z²).dA = <see cref="Iy"/> + <see cref="Iz"/> 
-        ///    /A         /A
+        ///      /
+        /// Iyz= | Y . Z . dA
+        ///      /A
         /// </remarks>
-        public double J
+        public double Iyz
         {
-            get { return _j; }
-            set { _j = value; }
+            get { return _iyz; }
+            set { _iyz = value; }
         }
 
         public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi)
@@ -171,7 +176,7 @@ namespace BriefFiniteElementNet.Sections
             buf.Az = this._az;
             buf.Iy = this._iy;
             buf.Iz = this._iz;
-            buf.J = this._j;
+            buf.Iyz = this._iyz;
 
             return buf;
         }

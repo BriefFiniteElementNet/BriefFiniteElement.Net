@@ -15,7 +15,9 @@ namespace BriefFiniteElementNet.Elements
         private double _az;
         private double _iy;
         private double _iz;
-        private double _j;
+        private double _qy;
+        private double _qz;
+        private double _iyz;
 
         /// <summary>
         /// Gets or sets a.
@@ -87,8 +89,43 @@ namespace BriefFiniteElementNet.Elements
             set { _iz = value; }
         }
 
+
         /// <summary>
-        /// Gets or sets the j.
+        /// Gets or sets the Qy.
+        /// </summary>
+        /// <value>
+        /// The first Moment of Area of section regard to Z axis.
+        /// </value>
+        /// <remarks>
+        ///     /
+        /// Iy= | Z . dA
+        ///    /A
+        /// </remarks>
+        public double Qy
+        {
+            get { return _qy; }
+            set { _qy = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the Qz.
+        /// </summary>
+        /// <value>
+        /// The first Moment of Area of section regard to Y axis
+        /// </value>
+        /// <remarks>
+        ///     /
+        /// Iz= | Y . dA
+        ///    /A
+        /// </remarks>
+        public double Qz
+        {
+            get { return _qz; }
+            set { _qz = value; }
+        }
+
+        /// <summary>
+        /// Gets the polar moment of inertia (J).
         /// </summary>
         /// <value>
         /// The polar moment of inertial.
@@ -100,8 +137,24 @@ namespace BriefFiniteElementNet.Elements
         /// </remarks>
         public double J
         {
-            get { return _j; }
-            set { _j = value; }
+            get { return _iy+_iz; }
+        }
+
+        /// <summary>
+        /// Gets or sets the Iyz.
+        /// </summary>
+        /// <value>
+        /// The Product Moment of Area of section
+        /// </value>
+        /// <remarks>
+        ///      /
+        /// Iyz= | Y . Z . dA
+        ///      /A
+        /// </remarks>
+        public double Iyz
+        {
+            get { return _iyz; }
+            set { _iyz = value; }
         }
     }
 }

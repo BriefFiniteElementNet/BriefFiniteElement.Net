@@ -86,6 +86,8 @@ namespace BriefFiniteElementNet.Sections
                     throw new InvalidOperationException("First point and last point ot PolygonYz should put on each other");
 
                 double a = 0.0, iz = 0.0, iy = 0.0, ixy = 0.0;
+                double qz = 0.0, qy = 0.0;
+
 
                 var x = new double[_geometry.Length];
                 var y = new double[_geometry.Length];
@@ -102,26 +104,38 @@ namespace BriefFiniteElementNet.Sections
 
                 for (var i = 0; i < l; i++)
                 {
+                    //formulation: https://apps.dtic.mil/dtic/tr/fulltext/u2/a183444.pdf
+
                     ai = x[i] * y[i + 1] - x[i + 1] * y[i];
                     a += ai;
                     iy += (y[i] * y[i] + y[i] * y[i + 1] + y[i + 1] * y[i + 1]) * ai;
                     iz += (x[i] * x[i] + x[i] * x[i + 1] + x[i + 1] * x[i + 1]) * ai;
+                    qy += (x[i] + x[i + 1]) * ai;
+                    qz += (y[i] + y[i + 1]) * ai;
 
                     ixy += (x[i] * y[i + 1] + 2 * x[i] * y[i] + 2 * x[i + 1] * y[i + 1] + x[i + 1] * y[i]) * ai;
 
                 }
 
-                a = a * 0.5;
+                a = a * 1 / 2.0;
+                qz = qz * 1 / 6.0;
+                qy = qy * 1 / 6.0;
                 iz = iz * 1 / 12.0;
                 iy = iy * 1 / 12.0;
-                ixy = ixy * 1 / 24.0;
-                var j = iy + iz;
-                //not sure which one is correct j = ix + iy or j = ixy >:)~ 
 
-                buf.A = Math.Abs(a);
-                buf.Iz = Math.Abs(iz);
-                buf.Iy = Math.Abs(iy);
-                buf.J = Math.Abs(j);
+                ixy = ixy * 1 / 24.0;
+
+
+
+                var sign = Math.Sign(a);
+
+                buf.A = sign * a;
+                buf.Qy = sign * qy;
+                buf.Qz = sign * qz;
+                buf.Iz = sign * iz;
+                buf.Iy = sign * iy;
+                buf.Iyz = sign * ixy;
+
                 buf.Ay = Math.Abs(a);//TODO: Ay is not equal to A, this is temporary fix
                 buf.Az = Math.Abs(a);//TODO: Az is not equal to A, this is temporary fix
 
