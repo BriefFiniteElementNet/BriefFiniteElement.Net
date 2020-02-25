@@ -50,7 +50,24 @@ namespace BriefFiniteElementNet.Sections
             }
         }
 
+        /// <summary>
+        /// If sets to true, all geometric properties are calculated based on centroid, not coordination system origins.
+        /// for more info see pull request #34
+        /// </summary>
+        /// <remarks>
+        /// If set to true, then all properties are calculated based on centroid, not coordination system origins. In this case <see cref="Qy"/> and <see cref="Qz"/> are zeros,
+        /// <see cref="Iy"/> and <see cref="Iz"/> and <see cref="Iyz"/> are calculated based on the section centroid. <see cref="A"/> do not change.
+        /// </remarks>
+        public bool ResetCentroid
+        {
+            get { return _resetCentroid; }
+            set
+            {
+                _resetCentroid = value;
+            }
+        }
 
+        private bool _resetCentroid;
 
         public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi)
         {
@@ -75,73 +92,9 @@ namespace BriefFiniteElementNet.Sections
                 target[i] = pt;
             }
 
-
             var _geometry = target;
-            var buf = new _1DCrossSectionGeometricProperties();
 
-            {
-                var lastPoint = _geometry[_geometry.Length - 1];
-
-                if (lastPoint != _geometry[0])
-                    throw new InvalidOperationException("First point and last point ot PolygonYz should put on each other");
-
-                double a = 0.0, iz = 0.0, iy = 0.0, ixy = 0.0;
-                double qz = 0.0, qy = 0.0;
-
-
-                var x = new double[_geometry.Length];
-                var y = new double[_geometry.Length];
-
-                for (int i = 0; i < _geometry.Length; i++)
-                {
-                    x[i] = _geometry[i].Y;
-                    y[i] = _geometry[i].Z;
-                }
-
-                var l = _geometry.Length - 1;
-
-                var ai = 0.0;
-
-                for (var i = 0; i < l; i++)
-                {
-                    //formulation: https://apps.dtic.mil/dtic/tr/fulltext/u2/a183444.pdf
-
-                    ai = x[i] * y[i + 1] - x[i + 1] * y[i];
-                    a += ai;
-                    iy += (y[i] * y[i] + y[i] * y[i + 1] + y[i + 1] * y[i + 1]) * ai;
-                    iz += (x[i] * x[i] + x[i] * x[i + 1] + x[i + 1] * x[i + 1]) * ai;
-                    qy += (x[i] + x[i + 1]) * ai;
-                    qz += (y[i] + y[i + 1]) * ai;
-
-                    ixy += (x[i] * y[i + 1] + 2 * x[i] * y[i] + 2 * x[i + 1] * y[i + 1] + x[i + 1] * y[i]) * ai;
-
-                }
-
-                a = a * 1 / 2.0;
-                qz = qz * 1 / 6.0;
-                qy = qy * 1 / 6.0;
-                iz = iz * 1 / 12.0;
-                iy = iy * 1 / 12.0;
-
-                ixy = ixy * 1 / 24.0;
-
-
-
-                var sign = Math.Sign(a);
-
-                buf.A = sign * a;
-                buf.Qy = sign * qy;
-                buf.Qz = sign * qz;
-                buf.Iz = sign * iz;
-                buf.Iy = sign * iy;
-                buf.Iyz = sign * ixy;
-
-                buf.Ay = Math.Abs(a);//TODO: Ay is not equal to A, this is temporary fix
-                buf.Az = Math.Abs(a);//TODO: Az is not equal to A, this is temporary fix
-
-            }
-
-            return buf;
+            return _1DCrossSectionGeometricProperties.Calculate(target, this._resetCentroid);
         }
 
 

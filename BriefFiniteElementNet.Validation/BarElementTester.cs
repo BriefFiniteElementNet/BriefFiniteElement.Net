@@ -690,7 +690,8 @@ namespace BriefFiniteElementNet.Validation
             var iy = 0.02;
             var iz = 0.02;
             var a = 0.01;
-            var j = 0.05;
+
+            var j = iy + iz;
 
             var e = 210e9;
             var g = 70e9;
@@ -720,7 +721,7 @@ namespace BriefFiniteElementNet.Validation
             frameElement.ConsiderShearDeformation = false;
 
             //barElement.Material = new UniformBarMaterial(e, g, rho);
-            barElement.Section = new UniformParametric1DSection() { Iy = iy, Iz = iz, A = a, Iyz = j };
+            barElement.Section = new UniformParametric1DSection() { Iy = iy, Iz = iz, A = a };
 
             var frK = frameElement.GetGlobalStifnessMatrix();
             var barK = barElement.GetGlobalStifnessMatrix();
@@ -845,7 +846,7 @@ namespace BriefFiniteElementNet.Validation
             }
             #endregion
 
-
+            
             var span = new HtmlTag("span");
             span.Add("p").Text("Validate 3D frame nodal displacement and reactions");
             span.Add("h3").Text("Validate with");
@@ -1270,7 +1271,7 @@ namespace BriefFiniteElementNet.Validation
             FrameElement2Node frmelm;
 
             belm = new BarElement(ndes[0], ndes[1]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame };
-            frmelm = new FrameElement2Node(ndes[0], ndes[1]) { Iz = sec.Iz, Iy = sec.Iy, A = sec.A, J = sec.Iyz, E = e, G = g };
+            frmelm = new FrameElement2Node(ndes[0], ndes[1]) { Iz = sec.Iz, Iy = sec.Iy, A = sec.A, J = sec.J, E = e, G = g };
 
             var bk = belm.GetGlobalStifnessMatrix();
             var fk = frmelm.GetGlobalStifnessMatrix();

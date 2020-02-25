@@ -106,7 +106,6 @@ namespace BriefFiniteElementNet
                     sec.A = b * h;
                     sec.Iy = b * b * b * h / 12;
                     sec.Iz = h * h * h * b / 12;
-                    sec.Iyz = (sec.Iy + sec.Iz) / 2;//!!! 
 
                     br.Section = sec;
                 }
@@ -369,7 +368,7 @@ namespace BriefFiniteElementNet
                 var a = h * w;
                 var iy = h * h * h * w / 12;
                 var iz = w * w * w * h / 12;
-                var j = iy + iz;
+                //var j = iy + iz;
                 var e= RandomHelper.GetRandomNumber(100e9, 200e9);
                 var nu = RandomHelper.GetRandomNumber(0.2, 0.3);
 
@@ -379,7 +378,7 @@ namespace BriefFiniteElementNet
                 sec.A = a;
                 sec.Iy = iy;
                 sec.Iz = iz;
-                sec.Iyz = j;
+                //sec.J = j;
 
             }
 
