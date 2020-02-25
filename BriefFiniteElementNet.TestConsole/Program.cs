@@ -109,17 +109,19 @@ namespace BriefFiniteElementNet.TestConsole
 
         private static void testMultySpan()
         {
-            var model = StructureGenerator.Generate3DBarElementGrid(3, 1, 1);
+            var model = StructureGenerator.Generate3DBarElementGrid(4, 1, 1);
 
             var bar1 = model.Elements[0] as BarElement;
             var bar2 = model.Elements[1] as BarElement;
+            var bar3 = model.Elements[2] as BarElement;
 
-            model.Nodes[0].Constraints = Constraints.MovementFixed;
-            model.Nodes[1].Constraints = Constraints.MovementFixed & Constraints.FixedRY;
-            model.Nodes[2].Constraints = Constraints.MovementFixed;
+            model.Nodes[0].Constraints = Constraints.MovementFixed & Constraints.FixedRY;
+            model.Nodes[1].Constraints = Constraints.MovementFixed;// & Constraints.FixedRY;
+            model.Nodes[2].Constraints = Constraints.MovementFixed;// MovementFixed & Constraints.FixedRY;
+            model.Nodes[3].Constraints = Constraints.MovementFixed & Constraints.FixedRY;
 
 
-            var l = (model.Nodes[2].Location - model.Nodes[0].Location).Length;
+            var l = (model.Nodes.Last().Location - model.Nodes[0].Location).Length;
 
 
             //bar.StartReleaseCondition = Constraints.MovementFixed & Constraints.FixedRX;
@@ -130,12 +132,14 @@ namespace BriefFiniteElementNet.TestConsole
             var ld = new Loads.ConcentratedLoad() { Force = new Force(0, 0, -1, 0, 0, 0), CoordinationSystem = CoordinationSystem.Global, ForceIsoLocation = new IsoPoint(0.0) };
             var ld2 = new Loads.UniformLoad() { Direction =- Vector.K, Magnitude = 1 , CoordinationSystem = CoordinationSystem.Global, };
 
-            bar1.Material = bar2.Material;
-            bar1.Section = bar2.Section;
+            bar1.Material = bar2.Material = bar3.Material;
+            bar1.Section = bar2.Section= bar3.Section;
 
 
-            bar1.Loads.Add(ld);
+            bar1.Loads.Add(ld2);
             //bar2.Loads.Add(ld2);
+            bar3.Loads.Add(ld2);
+
 
 
             model.Solve_MPC();
@@ -168,9 +172,9 @@ namespace BriefFiniteElementNet.TestConsole
                         var f1 = b.GetExactInternalForceAt(ii);
                         var f2 = b.GetInternalForceAt(ii);
 
-                        var f = f1 - 0*f2;
+                        var f = f2 - f1;
 
-                        pts.Add(Tuple.Create(global.Y,- f.Fz));
+                        pts.Add(Tuple.Create(global.Y,- f1.My));
                     }
                     catch { }
                 }

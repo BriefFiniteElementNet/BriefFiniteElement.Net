@@ -617,6 +617,14 @@ namespace BriefFiniteElementNet.Elements
             return new double[] { pl };
         }
 
+
+
+        /// <summary>
+        /// returns the coordinates of defined location on iso coord system in the global coordination system
+        /// Note that this is not vector conversion, but is point conversion so StartNode.Location is taken into account
+        /// </summary>
+        /// <param name="isoCoords"></param>
+        /// <returns></returns>
         public Point IsoCoordsToGlobalCoords(params double[] isoCoords)
         {
             var localA = IsoCoordsToLocalCoords(isoCoords);
