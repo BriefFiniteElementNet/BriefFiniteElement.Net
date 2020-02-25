@@ -596,6 +596,7 @@ namespace BriefFiniteElementNet
         #region peace add 
         /// <summary>
         /// 获得具有某label的node
+        /// Find and returns the node with certain label
         /// </summary>
         /// <param name="label"></param>
         /// <returns></returns>
@@ -615,6 +616,7 @@ namespace BriefFiniteElementNet
         }
         /// <summary>
         /// 获得具有某label的element
+        /// Find and returns the element with certain label
         /// </summary>
         /// <param name="label"></param>
         /// <returns></returns>

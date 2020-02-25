@@ -690,7 +690,8 @@ namespace BriefFiniteElementNet.Validation
             var iy = 0.02;
             var iz = 0.02;
             var a = 0.01;
-            var j = 0.05;
+
+            var j = iy + iz;
 
             var e = 210e9;
             var g = 70e9;
@@ -720,7 +721,7 @@ namespace BriefFiniteElementNet.Validation
             frameElement.ConsiderShearDeformation = false;
 
             //barElement.Material = new UniformBarMaterial(e, g, rho);
-            barElement.Section = new UniformParametric1DSection() { Iy = iy, Iz = iz, A = a, J = j };
+            barElement.Section = new UniformParametric1DSection() { Iy = iy, Iz = iz, A = a };
 
             var frK = frameElement.GetGlobalStifnessMatrix();
             var barK = barElement.GetGlobalStifnessMatrix();
@@ -845,7 +846,7 @@ namespace BriefFiniteElementNet.Validation
             }
             #endregion
 
-
+            
             var span = new HtmlTag("span");
             span.Add("p").Text("Validate 3D frame nodal displacement and reactions");
             span.Add("h3").Text("Validate with");
