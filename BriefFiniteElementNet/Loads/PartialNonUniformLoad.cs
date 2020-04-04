@@ -10,7 +10,7 @@ namespace BriefFiniteElementNet.Loads
 {
 
     /// <summary>
-    /// Represents a nonuniform load on an element's body. Partial means not covering whole element's body and nonuniform means load severity changes along any location.
+    /// Represents a nonuniform load on an element's body. Partial means not covering whole element's body, but only one region and nonuniform means load severity changes along any location.
     /// The partial part of element is defined in iso parametric coordination system
     /// </summary>
     [Serializable]
@@ -88,6 +88,7 @@ namespace BriefFiniteElementNet.Loads
             }
         }
 
+       
         #endregion
 
 

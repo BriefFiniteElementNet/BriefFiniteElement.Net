@@ -19,9 +19,9 @@ namespace BriefFiniteElementNet.Tests
             var b = 2.0;
             var h = 4.0;
 
-
             var iy = b * h * h * h / 12.0;
             var iz = h * b * b * b / 12.0;
+
             var qy = 0;
             var qz = 0;
             var a = b * h;

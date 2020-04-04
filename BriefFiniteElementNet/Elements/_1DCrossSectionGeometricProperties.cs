@@ -51,16 +51,17 @@ namespace BriefFiniteElementNet.Elements
                 for (var i = 0; i < l; i++)
                 {
                     //formulation: https://apps.dtic.mil/dtic/tr/fulltext/u2/a183444.pdf
+                    //also https://en.wikipedia.org/wiki/Second_moment_of_area#Any_polygon
 
                     ai = x[i] * y[i + 1] - x[i + 1] * y[i];
 
                     a += ai;
 
-                    ix += (x[i] * x[i] + x[i] * x[i + 1] + x[i + 1] * x[i + 1]) * ai;
-                    iy += (y[i] * y[i] + y[i] * y[i + 1] + y[i + 1] * y[i + 1]) * ai;
+                    iy += (x[i] * x[i] + x[i] * x[i + 1] + x[i + 1] * x[i + 1]) * ai;
+                    ix += (y[i] * y[i] + y[i] * y[i + 1] + y[i + 1] * y[i + 1]) * ai;
 
-                    qx += (x[i] + x[i + 1]) * ai;
-                    qy += (y[i] + y[i + 1]) * ai;
+                    qy += (x[i] + x[i + 1]) * ai;
+                    qx += (y[i] + y[i + 1]) * ai;
 
                     ixy += (x[i] * y[i + 1] + 2 * x[i] * y[i] + 2 * x[i + 1] * y[i + 1] + x[i + 1] * y[i]) * ai;
                 }

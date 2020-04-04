@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BriefFiniteElementNet.Mathh;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -59,10 +60,11 @@ namespace BriefFiniteElementNet.Validation
         {
             var n = model.Nodes.Count * 6;
 
-            //model.ReIndexNodes();
+            model.ReIndexNodes();
+            model.ReIndexElements();
             //LoadCase.DefaultLoadCase
 
-            var perm = CalcUtil.GenerateP_Delta_Mpc(model, lc, new Mathh.GaussRrefFinder());
+            var perm = CalcUtil.GenerateP_Delta_Mpc(model, lc, new CsparsenetQrDisplacementPermutationCalculator());
 
             var np = perm.Item1.ColumnCount;//master count
 
@@ -84,7 +86,7 @@ namespace BriefFiniteElementNet.Validation
 
                 for (int i = 0; i < nr; i++)
                 {
-
+                    //model.Solve_MPC
                     //two conditions: 
                     // 1 - DoF[i] in reduced structure is a member of bounded dof group with MPC equations
                     // 2 - DoF[i] in reduced structure is not in first condition, it is standalone and not related to any other DoF or Fixed Value
@@ -94,14 +96,41 @@ namespace BriefFiniteElementNet.Validation
                     if (t > 0)
                         continue;
 
-                    
+                    var nums = pd.EnumerateColumnMembers(i);
 
-                    var nodeNum = 6.0 / 6;
 
-                    if (t == 0)
-                        model.Trace.Write(Common.TraceLevel.Warning, "DoF {0} of Node {1} not properly constrained", 7 % 6, nodeNum);
-                    else//t < 0
-                        model.Trace.Write(Common.TraceLevel.Warning, "DoF {0} of Node {1} not member", 7 % 6, nodeNum);
+                    foreach(var num in nums)
+                    {
+                        var dofT = num.Item1;
+                        
+                        var nodeNum = dofT / 6;
+                        var dof = (DoF)(dofT % 6);
+
+
+                        if (double.IsNaN(t))
+                        {
+                            var connectedElements = model.Elements.Where(ii => ii.Nodes.Any(jj => jj.Index == nodeNum));
+
+                            var susps = "";
+
+                            foreach (var elm in connectedElements)
+                            {
+                                var stf = elm.GetGlobalStifnessMatrix();
+
+                                if (stf.CoreArray.Any(ii => double.IsNaN(ii)))
+                                    susps += elm.Index + ",";
+                            }
+
+                            model.Trace.Write(Common.TraceLevel.Warning, "DoF {0} of Node with index {1} have Nan in stifness matrix, suspecious connected elements with Nan in stiffness matrix are {2}", dof, nodeNum, susps);
+                        }
+                            
+
+                        if (t == 0)
+                            model.Trace.Write(Common.TraceLevel.Warning, "DoF {0} of Node with index {1} not properly constrained", dof, nodeNum);
+                        else//t < 0
+                            model.Trace.Write(Common.TraceLevel.Warning, "DoF {0} of Node #{1} not member", dof, nodeNum);
+                    }
+
                 }
 
             }

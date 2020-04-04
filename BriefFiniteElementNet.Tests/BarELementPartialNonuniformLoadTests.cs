@@ -62,5 +62,52 @@ namespace BriefFiniteElementNet.Tests
 
             }
         }
+
+        [TestMethod]
+        public void LoadEquivalentNodalLoads_partialnonuniformload_eulerbernoullybeam_dirY()
+        {
+            //internal force of 2 node beam beam with uniform load and both ends fixed
+
+            var w = 2.0;
+
+            var x1 = -1;
+            var x2 = 1;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.PartialNonUniformLoad();
+
+            u1.Direction = -Vector.K;
+            u1.CoordinationSystem = CoordinationSystem.Global;
+            u1.SeverityFunction = Mathh.Polynomial.FromPoints(1.0, w);
+            u1.StartLocation = new IsoPoint(x1);
+            u1.EndLocation = new IsoPoint(x2);
+
+            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var L = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
+
+            var m1 = w * L * L / 12;
+            var m2 = -w * L * L / 12;
+
+            var v1 = -w * L / 2;
+            var v2 = -w * L / 2;
+
+            Assert.IsTrue(Math.Abs(loads[0].Fz - v1) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(loads[0].My - m1) < 1e-5, "invalid value");
+
+            Assert.IsTrue(Math.Abs(loads[1].Fz - v2) < 1e-5, "invalid value");
+            Assert.IsTrue(Math.Abs(loads[1].My - m2) < 1e-5, "invalid value");
+
+
+
+        }
     }
 }

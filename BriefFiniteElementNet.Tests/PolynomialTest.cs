@@ -32,5 +32,24 @@ namespace BriefFiniteElementNet.Tests
             Assert.AreEqual(p1_2, p1_1, "");
         }
 
+        [TestMethod]
+        public void interpolation_test()
+        {
+            var tpls = new Tuple<double, double>[]{ Tuple.Create(-5.0, 3.0), Tuple.Create(-4.0, 4.0), Tuple.Create(-3.0, 7.0), Tuple.Create(1.0, 0.0), Tuple.Create(5.0, 0.0) };
+
+            var p = Polynomial.FromPoints(tpls);
+
+            var epsilon = 1e-10;
+
+            foreach (var tpl in tpls)
+            {
+                var diff = Math.Abs(p.Evaluate(tpl.Item1) - tpl.Item2);
+
+                Assert.IsTrue(diff < epsilon);
+            }
+
+            
+        }
+
     }
 }

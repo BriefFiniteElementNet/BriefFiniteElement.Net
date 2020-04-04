@@ -40,7 +40,23 @@ namespace BriefFiniteElementNet.TestConsole
             //TestBinModel();
             //testRrefTime();
 
-            testMultySpan();
+            //testMultySpan();
+
+            {
+
+                var model = Model.Load(@"C:\Users\epsi1on\Documents\unsolved-model-wcl.bin");
+
+                model.Trace.Listeners.Add(new ConsoleTraceListener());
+
+                PosdefChecker.CheckModel_mpc(model, LoadCase.DefaultLoadCase);
+
+                model.Solve_MPC();
+
+                ModelVisualizerControl.VisualizeInNewWindow(model);
+
+                
+            }
+
 
             //var stf = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(model);
 

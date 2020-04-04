@@ -9,12 +9,49 @@ namespace BriefFiniteElementNet.Mathh
     [Serializable]
     public class Polynomial
     {
+        public static Polynomial FromPoints(double x1, double y1)
+        {
+            return FromPoints(Tuple.Create(x1, y1));
+        }
+
+        public static Polynomial FromPoints(double x1, double y1, double x2, double y2)
+        {
+            return FromPoints(Tuple.Create(x1, y1), Tuple.Create(x2, y2));
+        }
+
+        public static Polynomial FromPoints(params Tuple<double,double>[] points)
+        {
+            var n = points.Length;
+
+            var mtx = new Matrix(n , n);
+
+            var b = new Matrix(n, 1);
+
+
+            for (var i = 0; i < n; i++)
+            {
+                for (var j = 0; j < n; j++)
+                {
+                    var xi = points[i].Item1;
+                    var pow = n - j - 1;
+
+                    mtx[i, j] = pow == 0 ? 1.0 : Math.Pow(xi, pow);
+                }
+
+                b[i, 0] = points[i].Item2;
+            }
+
+            var coefs = mtx.Solve(b.CoreArray);
+
+            return new Polynomial(coefs);
+        }
+
         public Polynomial(params double[] coefs)
         {
             Coefficients = (double[])coefs.Clone();
         }
 
-        double[] Coefficients;
+        public double[] Coefficients;
 
         public Polynomial Clone()
         {

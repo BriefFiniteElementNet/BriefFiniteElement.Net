@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("BriefFiniteElementNet.Common")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Common part of BriefFiniteElementNet")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("BriefFiniteElementNet.Common")]
-[assembly: AssemblyCopyright("Copyright ©  2017")]
+[assembly: AssemblyCopyright("Copyleft ©  2020 Ehsan Mohammad Ali")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

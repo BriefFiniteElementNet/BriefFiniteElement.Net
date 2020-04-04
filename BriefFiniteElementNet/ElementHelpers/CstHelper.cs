@@ -91,22 +91,10 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 //http://www.efunda.com/formulae/solid_mechanics/mat_mechanics/hooke_orthotropic.cfm
 
-                /*
-                d[0, 0] = d[1, 1] = 1 - nu;
-                d[1, 0] = d[0, 1] = nu;
-                d[2, 2] = (1 - 2 * nu) / 2;
-
-                d.MultiplyByConstant(cf);
-                */
-
                 d[0, 0] = (1 - mat.NuYz * mat.NuZy) / (mat.Ey * mat.Ez * delta);
                 d[0, 1] = (mat.NuYx + mat.NuZx * mat.NuYz) / (mat.Ey * mat.Ez * delta);
                 d[1, 0] = (mat.NuXy + mat.NuXz * mat.NuZy) / (mat.Ez * mat.Ex * delta);
                 d[1, 1] = (1 - mat.NuZx * mat.NuXz) / (mat.Ez * mat.Ex * delta);
-
-                /**/
-
-                throw new NotImplementedException("PlaneStrain");
             }
 
             return d;

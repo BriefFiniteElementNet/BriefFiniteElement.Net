@@ -14,12 +14,12 @@ namespace BriefFiniteElementNet.CodeProjectExamples
         [STAThread]
         static void Main(string[] args)
         {
-
+            PartialTrapezoidalLoadExamples.test1();
             //InternalForceExample.Run();
-            new BarIncliendFrameExample().Run();
+            //new BarIncliendFrameExample().Run();
             //new UniformLoadCoordSystem().run();
             //DocSnippets.Test2();
-
+            //new UniformLoadCoordSystem().run();
             //Example1();
             //Example2();
             //DocSnippets.Test1();

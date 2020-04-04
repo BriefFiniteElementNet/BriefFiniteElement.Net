@@ -583,7 +583,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             #region uniform & trapezoid
 
-            if (load is UniformLoad)
+            if (load is UniformLoad || load is PartialNonUniformLoad)
             {
 
                 Func<double, double> magnitude;
@@ -593,6 +593,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 int degree;//polynomial degree of magnitude function
 
                 #region inits
+
                 if (load is UniformLoad)
                 {
                     var uld = (load as UniformLoad);
@@ -606,26 +607,29 @@ namespace BriefFiniteElementNet.ElementHelpers
                     localDir = localDir.GetUnit();
 
                     xi0 = -1;
-                    //xi1 = 1;
+                    //xi1 = to;
                     degree = 0;
                 }
-                else
+                else if (load is PartialNonUniformLoad)
                 {
-                    throw new NotImplementedException();
-                    /*
-                    var tld = (load as NonUniformlLoad);
+                    var uld = (load as PartialNonUniformLoad);
 
-                    magnitude = (xi => (load as NonUniformlLoad).GetMagnitudesAt(xi, 0, 0)[0]);
-                    localDir = tld.Direction;
+                    magnitude = (xi => uld.GetMagnitudeAt(targetElement, new IsoPoint(xi)));
+                    localDir = uld.Direction;
 
-                    if (tld.CoordinationSystem == CoordinationSystem.Global)
+                    if (uld.CoordinationSystem == CoordinationSystem.Global)
                         localDir = tr.TransformGlobalToLocal(localDir);
 
-                    xi0 = tld.StartLocation[0];
-                    xi1 = tld.EndLocation[0];
-                    degree = 1;
-                    */
+                    localDir = localDir.GetUnit();
+
+                    xi0 = uld.StartLocation.Xi;
+
+                    to = Math.Min(to, uld.EndLocation.Xi);
+
+                    degree = uld.SeverityFunction.Coefficients.Length;
                 }
+                else
+                    throw new NotImplementedException();
 
                 localDir = localDir.GetUnit();
                 #endregion
@@ -747,7 +751,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             #region uniform & trapezoid
 
-            if (load is UniformLoad)
+            if (load is UniformLoad || load is PartialNonUniformLoad)
             {
 
                 Func<double, double> magnitude;
@@ -773,23 +777,25 @@ namespace BriefFiniteElementNet.ElementHelpers
                     xi1 = 1;
                     degree = 0;
                 }
-                else
+                else if (load is PartialNonUniformLoad)
                 {
-                    throw new NotImplementedException();
+                    var uld = (load as PartialNonUniformLoad);
 
-                    /*
-                    var tld = (load as NonUniformlLoad);
+                    magnitude = (xi => uld.GetMagnitudeAt(targetElement, new IsoPoint(xi)));
+                    localDir = uld.Direction;
 
-                    magnitude = (xi => (load as NonUniformlLoad).GetMagnitudesAt(xi, 0, 0)[0]);
-                    localDir = tld.Direction;
-
-                    if (tld.CoordinationSystem == CoordinationSystem.Global)
+                    if (uld.CoordinationSystem == CoordinationSystem.Global)
                         localDir = tr.TransformGlobalToLocal(localDir);
 
-                    xi0 = tld.StartLocation[0];
-                    xi1 = tld.EndLocation[0];
-                    degree = 1;*/
+                    localDir = localDir.GetUnit();
+
+                    xi0 = uld.StartLocation.Xi;
+                    xi1 = uld.EndLocation.Xi;
+
+                    degree = uld.SeverityFunction.Coefficients.Length; 
                 }
+                else
+                    throw new NotImplementedException();
 
                 localDir = localDir.GetUnit();
                 #endregion

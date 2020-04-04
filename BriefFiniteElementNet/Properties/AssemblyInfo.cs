@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("BriefFiniteElementNet")]
 [assembly: AssemblyDescription("A brief finite element library for analyzing solids and structures in .NET released under the GNU General Public License")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("BriefFiniteElementNet")]
-[assembly: AssemblyCopyright("Copyright ©  2014 Ehsan Mohammad Ali")]
+[assembly: AssemblyCompany("N/A")]
+[assembly: AssemblyProduct("Brief Finite Element .Net")]
+[assembly: AssemblyCopyright("Copyleft ©  2020 Ehsan Mohammad Ali ehsan.ma@gmx.com")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: InternalsVisibleTo("BriefFiniteElementNet.Controls")]
@@ -37,5 +37,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyFileVersion("2.0.0.0")]
