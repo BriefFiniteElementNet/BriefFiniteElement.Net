@@ -6,6 +6,7 @@ using System.Security.Permissions;
 using System.Text;
 using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Integration;
+using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -88,7 +89,7 @@ namespace BriefFiniteElementNet.Elements
         public CstElement()
             : base(3)
         {
-            this.elementType = ElementType.Cst;
+           // this.elementType = ElementType.Cst;
         }
 
         /// <summary>

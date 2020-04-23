@@ -5,6 +5,7 @@ using System.Text;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
 using CSparse.Storage;
+using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {

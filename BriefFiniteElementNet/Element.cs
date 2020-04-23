@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using BriefFiniteElementNet.ElementHelpers;
+using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet
 {
@@ -20,7 +21,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         [NonSerialized]
         private int index;
-
+        /*
         /// <summary>
         /// Just obsoleted because of cannot add external element with new type
         /// </summary>
@@ -39,7 +40,7 @@ namespace BriefFiniteElementNet
         {
             get { return elementType; }
             private set { elementType = value; }
-        }
+        }*/
 
         #region pooling and caching
 
@@ -215,7 +216,7 @@ namespace BriefFiniteElementNet
             }
                 
 
-            info.AddValue("elementType", (int)elementType);
+            //info.AddValue("elementType", (int)elementType);
             info.AddValue("loads", loads);
             info.AddValue("nodeNumbers", nodeNumbers);
             info.AddValue("_massFormulationType", (int) _massFormulationType);
@@ -233,7 +234,7 @@ namespace BriefFiniteElementNet
         {
             nodeNumbers = (int[]) info.GetValue("nodeNumbers", typeof(int[]));
 
-            elementType = (ElementType)info.GetInt32("elementType");
+            //elementType = (ElementType)info.GetInt32("elementType");
             loads = (List<ElementalLoad>) info.GetValue("loads", typeof(List<ElementalLoad>));
 
 

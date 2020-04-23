@@ -9,6 +9,7 @@ using CSparse.Double.Factorization;
 using CSparse.Factorization;
 using CSparse.Storage;
 using CCS = CSparse.Double.SparseMatrix;
+using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet.Mathh
 {

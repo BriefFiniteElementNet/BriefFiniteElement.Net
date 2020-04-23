@@ -554,7 +554,7 @@ namespace BriefFiniteElementNet.Elements
 
             var v = this.EndNode.Location - this.StartNode.Location;
 
-            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
+            if (Common.MathUtil.Equals(0, v.X) && Common.MathUtil.Equals(0, v.Y))
             {
                 if (v.Z > 0)
                 {

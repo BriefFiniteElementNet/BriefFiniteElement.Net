@@ -10,6 +10,7 @@ using BriefFiniteElementNet.Geometry;
 using CSparse.Storage;
 using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet
 {

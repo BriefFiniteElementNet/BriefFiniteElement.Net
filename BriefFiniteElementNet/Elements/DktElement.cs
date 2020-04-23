@@ -8,6 +8,7 @@ using System.Security.Permissions;
 using System.Text;
 using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Integration;
+using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -87,7 +88,7 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         public DktElement() : base(3)
         {
-            this.elementType = ElementType.Dkt;
+            //this.elementType = ElementType.Dkt;
         }
 
         /// <summary>

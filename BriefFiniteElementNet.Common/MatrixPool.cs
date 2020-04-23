@@ -1,6 +1,8 @@
 ﻿///Copyright http://geekswithblogs.net/
 ///
 
+using BriefFiniteElementNet.Common;
+
 
 namespace BriefFiniteElementNet
 {

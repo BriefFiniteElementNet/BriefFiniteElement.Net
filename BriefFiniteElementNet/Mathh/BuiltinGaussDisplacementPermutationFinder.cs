@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CCS = CSparse.Double.SparseMatrix;
-
+using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet.Mathh
 {

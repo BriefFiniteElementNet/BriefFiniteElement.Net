@@ -19,7 +19,7 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         public ConcentratedMass():base(1)
          {
-             this.elementType = ElementType.ConcentratedMass;
+             //this.elementType = ElementType.ConcentratedMass;
          }
 
         /// <inheritdoc/>
@@ -36,7 +36,7 @@ namespace BriefFiniteElementNet.Elements
             : base(1)
         {
             nodes[0] = targetNode;
-            this.elementType = ElementType.ConcentratedMass;
+           // this.elementType = ElementType.ConcentratedMass;
         }
 
         /// <inheritdoc />

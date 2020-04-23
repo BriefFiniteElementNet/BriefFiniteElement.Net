@@ -872,14 +872,14 @@ namespace BriefFiniteElementNet
 
             if (buf == -1)
                 foreach (var node in nodes)
-                    if (model.Nodes[node].Constraints != Constraint.Released)
+                    if (model.Nodes[node].Constraints != Constraints.Released)
                     {
                         buf = node;
                         break;
                     }
 
             foreach (var node in nodes)
-                if (model.Nodes[node].Constraints != Constraint.Released)
+                if (model.Nodes[node].Constraints != Constraints.Released)
                     if (node != buf)
                         ExceptionHelper.Throw("MA20000");
 

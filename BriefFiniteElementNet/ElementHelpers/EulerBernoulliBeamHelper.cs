@@ -10,6 +10,7 @@ using BriefFiniteElementNet.Loads;
 using ElementLocalDof = BriefFiniteElementNet.ElementPermuteHelper.ElementLocalDof;
 using BriefFiniteElementNet.Mathh;
 using CSparse.Storage;
+using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
@@ -637,7 +638,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
             else
             {
-                var buf = 1l;
+                var buf = 1L;
 
                 for (var i = 1; i <= x; i++)
                     buf = buf * i;

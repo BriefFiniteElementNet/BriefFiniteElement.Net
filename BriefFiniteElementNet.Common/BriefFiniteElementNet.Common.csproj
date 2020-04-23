@@ -50,6 +50,7 @@
     <Compile Include="Displacement.cs" />
     <Compile Include="DoF.cs" />
     <Compile Include="DofConstraint.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="FemNetStringCompairer.cs" />
     <Compile Include="FlatShellStressTensor.cs" />
     <Compile Include="Force.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="LoadType.cs" />
     <Compile Include="LoadTypeCollection.cs" />
     <Compile Include="MassFormulation.cs" />
+    <Compile Include="MathUtil.cs" />
     <Compile Include="Matrix.cs" />
     <Compile Include="MatrixException.cs" />
     <Compile Include="MatrixPool.cs" />

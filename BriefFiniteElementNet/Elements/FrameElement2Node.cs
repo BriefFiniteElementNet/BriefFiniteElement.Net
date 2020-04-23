@@ -14,6 +14,7 @@ using System.Management.Instrumentation;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet
 {
@@ -29,7 +30,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         public FrameElement2Node() : base(2)
         {
-            elementType = ElementType.FrameElement2Node;
+            //elementType = ElementType.FrameElement2Node;
         }
 
         /// <summary>
@@ -43,7 +44,7 @@ namespace BriefFiniteElementNet
             this.nodes[0] = start;
             this.nodes[1] = end;
 
-            elementType = ElementType.FrameElement2Node;
+            //elementType = ElementType.FrameElement2Node;
         }
 
         #region Field & Properties
@@ -304,7 +305,7 @@ namespace BriefFiniteElementNet
                 }
             }
 
-            MathUtil.FillLowerTriangleFromUpperTriangle(k);
+            Common.MathUtil.FillLowerTriangleFromUpperTriangle(k);
 
             /** /
             #region Tests
@@ -448,7 +449,7 @@ namespace BriefFiniteElementNet
                     baseArr[i] *= alfa;
             }
 
-            MathUtil.FillLowerTriangleFromUpperTriangle(buf);
+            Common.MathUtil.FillLowerTriangleFromUpperTriangle(buf);
 
             if (_hingedAtStart || _hingedAtEnd)
                 buf = GetReleaseMatrix() * buf; 
@@ -679,7 +680,7 @@ namespace BriefFiniteElementNet
             var v = this.EndNode.Location - this.StartNode.Location;
 
 
-            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
+            if (Common.MathUtil.Equals(0, v.X) && Common.MathUtil.Equals(0, v.Y))
             {
                 if (v.Z > 0)
                 {
@@ -906,7 +907,7 @@ namespace BriefFiniteElementNet
                 }
             }
 
-            MathUtil.FillLowerTriangleFromUpperTriangle(m);
+            Common.MathUtil.FillLowerTriangleFromUpperTriangle(m);
 
 
             return m;

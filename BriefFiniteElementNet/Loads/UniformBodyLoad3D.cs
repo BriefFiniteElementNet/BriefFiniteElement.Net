@@ -56,7 +56,7 @@ namespace BriefFiniteElementNet
         }
 
         public Force[] GetGlobalEquivalentNodalLoads(Element element)
-        {
+        {/*
             switch (element.ElementType)
             {
                 case ElementType.Undefined:
@@ -74,7 +74,7 @@ namespace BriefFiniteElementNet
                     element.GetGlobalEquivalentNodalLoads(this);
                     throw new ArgumentOutOfRangeException();
             }
-
+            */
             return element.GetGlobalEquivalentNodalLoads(this);
             throw new NotImplementedException();
         }

@@ -240,7 +240,7 @@ namespace BriefFiniteElementNet.Mathh
 
             if (y > 1)// also x > 0 and x > y
             {
-                var buf = 1l;
+                var buf = 1L;
 
                 for (var i = y + 1; i <= x; i++)
                     buf *= i;
@@ -250,7 +250,7 @@ namespace BriefFiniteElementNet.Mathh
 
             if (y == 0 || y == 1)
             {
-                var buf = 1l;
+                var buf = 1L;
 
                 for (var i = x; i > 1; i--)
                 {

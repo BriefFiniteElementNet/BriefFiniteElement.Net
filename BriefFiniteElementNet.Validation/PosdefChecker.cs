@@ -172,23 +172,23 @@ namespace BriefFiniteElementNet.Validation
                 switch (targetDof)
                 {
                     case DoF.Dx:
-                        nde.Constraints = nde.Constraints & Constraint.FixedDX;
+                        nde.Constraints = nde.Constraints & Constraints.FixedDX;
                         break;
                     case DoF.Dy:
-                        nde.Constraints = nde.Constraints & Constraint.FixedDY;
+                        nde.Constraints = nde.Constraints & Constraints.FixedDY;
                         break;
                     case DoF.Dz:
-                        nde.Constraints = nde.Constraints & Constraint.FixedDZ;
+                        nde.Constraints = nde.Constraints & Constraints.FixedDZ;
                         break;
 
                     case DoF.Rx:
-                        nde.Constraints = nde.Constraints & Constraint.FixedRX;
+                        nde.Constraints = nde.Constraints & Constraints.FixedRX;
                         break;
                     case DoF.Ry:
-                        nde.Constraints = nde.Constraints & Constraint.FixedRY;
+                        nde.Constraints = nde.Constraints & Constraints.FixedRY;
                         break;
                     case DoF.Rz:
-                        nde.Constraints = nde.Constraints & Constraint.FixedRZ;
+                        nde.Constraints = nde.Constraints & Constraints.FixedRZ;
                         break;
                 }
                

@@ -6,73 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BriefFiniteElementNet
+namespace BriefFiniteElementNet.Common
 {
-    public static class MathUtil
-    {
-        /// <summary>
-        /// Fills the array with specified value
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="arr"></param>
-        /// <param name="val"></param>
-        public static void FillWith<T>(this T[] arr,T val)
-        {
-            if (arr != null)
-                for (var i = 0; i < arr.Length; i++)
-                    arr[i] = val;
-        }
-
-        public static int FirstIndexOf<T>(this T[] arr, T val) 
-        {
-
-            if (arr != null)
-                for (var i = 0; i < arr.Length; i++)
-                    if (SafeEquals(arr[i], val))
-                        return i;
-
-            return -1;
-        }
-
-
-        public static bool SafeEquals(object o1,object o2)
-        {
-            if (ReferenceEquals(o1, o2))
-                return true;
-
-            if (ReferenceEquals(o1, null) || ReferenceEquals(o2, null))
-                return false;
-
-            return o1.Equals(o2);
-        }
-
-
-
-        /// <summary>
-        /// Multiplies the <see cref="matrix"/> by a constant value.
-        /// </summary>
-        /// <param name="matrix">The Matrix</param>
-        /// <param name="constant">The constant value</param>
-        public static void MultiplyByConstant(this Matrix matrix, double constant)
-        {
-            for (var i = 0; i < matrix.CoreArray.Length; i++)
-            {
-                matrix.CoreArray[i] *= constant;
-            }
-        }
-
-        public static void MultiplyRowByConstant(this Matrix matrix, int row, double constant)
-        {
-            for (int j = 0; j < matrix.ColumnCount; j++)
-                matrix[row, j] *= constant;
-        }
-
-        public static void MultiplyColumnByConstant(this Matrix matrix, int column, double constant)
-        {
-            for (int i = 0; i < matrix.RowCount; i++)
-                matrix[i, column] *= constant;
-        }
-    }
 
     public class ArrayPool<T>
     {

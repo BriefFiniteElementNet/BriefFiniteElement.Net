@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
+using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {

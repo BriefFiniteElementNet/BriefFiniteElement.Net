@@ -16,7 +16,7 @@ namespace BriefFiniteElementNet
     {
         /// <inheritdoc />
         public Force[] GetGlobalEquivalentNodalLoads(Element element)
-        {
+        {/*
             switch (element.ElementType)
             {
                 case ElementType.Undefined:
@@ -30,7 +30,7 @@ namespace BriefFiniteElementNet
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
-            }
+            }*/
             throw new NotImplementedException();
         }
 

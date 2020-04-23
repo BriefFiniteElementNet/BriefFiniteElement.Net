@@ -7,6 +7,8 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
 using System.Globalization;
+using BriefFiniteElementNet.Common;
+
 
 namespace BriefFiniteElementNet
 {
@@ -681,8 +683,8 @@ namespace BriefFiniteElementNet
 
         [NonSerialized]
         private bool Disposed = false;
-        [NonSerialized]
-        private string GenerateCallStack_Temp;
+        //[NonSerialized]
+        //private string GenerateCallStack_Temp;
 
         /// <summary>
         /// Gets or sets a value indicating whether pool is used for this object or not.
@@ -1327,6 +1329,7 @@ namespace BriefFiniteElementNet
                     pivoted[pivot] = j;
 
                     buf[pivot] *= 1 / clone[pivot, j];
+
                     clone.MultiplyRowByConstant(pivot, 1 / clone[pivot, j]);
                     
 

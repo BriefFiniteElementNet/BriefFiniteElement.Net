@@ -82,7 +82,7 @@ namespace BriefFiniteElementNet.Elements
         {
             this.nodes[0] = start;
             this.nodes[1] = end;
-            this.elementType = ElementType.TrussElement2Noded;
+            //this.elementType = ElementType.TrussElement2Noded;
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace BriefFiniteElementNet.Elements
                 }
             }
 
-            MathUtil.FillLowerTriangleFromUpperTriangle(k);
+            Common.MathUtil.FillLowerTriangleFromUpperTriangle(k);
 
             return k;
         }
@@ -272,7 +272,7 @@ namespace BriefFiniteElementNet.Elements
 
             var v = this.EndNode.Location - this.StartNode.Location;
 
-            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
+            if (Common.MathUtil.Equals(0, v.X) && Common.MathUtil.Equals(0, v.Y))
             {
                 if (v.Z > 0)
                 {

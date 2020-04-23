@@ -863,7 +863,7 @@ namespace BriefFiniteElementNet.Controls
                 var tx = tb.Child as TextBlock;
 
                 if (tx != null)
-                    tx.Text = "ELEMENT: " + elm.ElementType + " : " + elm.Label;
+                    tx.Text = "ELEMENT: " + elm.GetType().Name + " : " + elm.Label;
 
                 var geo = model.Model as GeometryModel3D;
 

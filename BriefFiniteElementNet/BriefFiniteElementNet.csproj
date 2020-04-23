@@ -112,7 +112,7 @@
     <Compile Include="Elements\TriangleElement.cs" />
     <Compile Include="Elements\TriangleElementBehaviour.cs" />
     <Compile Include="Elements\TriangleFlatShell.cs" />
-    <Compile Include="Utils\Extensions.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Utils\CalcUtil.cs" />
     <Compile Include="Mathh\CustomGaussianIntegrator.cs" />
     <Compile Include="Utils\ElementPermuteHelper.cs" />

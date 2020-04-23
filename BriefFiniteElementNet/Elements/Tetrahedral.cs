@@ -4,6 +4,7 @@ using System.Security.Permissions;
 using Elo = BriefFiniteElementNet.ElementPermuteHelper.ElementLocalDof;
 using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.ElementHelpers;
+using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -193,7 +194,7 @@ namespace BriefFiniteElementNet.Elements
         public Tetrahedral()
             : base(4)
         {
-            this.elementType = ElementType.TetrahedralIso;
+            //this.elementType = ElementType.TetrahedralIso;
         }
 
         /// <inheritdoc />

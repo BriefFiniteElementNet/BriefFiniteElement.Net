@@ -7,6 +7,7 @@ using BriefFiniteElementNet.Integration;
 using BriefFiniteElementNet.Loads;
 using BriefFiniteElementNet.Mathh;
 using CSparse.Storage;
+using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
