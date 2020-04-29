@@ -97,6 +97,8 @@ namespace BriefFiniteElementNet.Elements
                     buf.Qy = 0;
                     buf.Qz = 0;
                 }
+
+                buf.J = buf.Iy + buf.Iz;//we assume torsion constant equal to polar area moment, but this is only right for 
             }
 
             return buf;
@@ -107,6 +109,7 @@ namespace BriefFiniteElementNet.Elements
         private double _az;
         private double _iy;
         private double _iz;
+        private double _j;
         private double _qy;
         private double _qz;
         private double _iyz;
@@ -189,7 +192,7 @@ namespace BriefFiniteElementNet.Elements
         /// </value>
         /// <remarks>
         ///     /
-        /// Iy= | Z . dA
+        /// Qy= | Z . dA
         ///    /A
         /// </remarks>
         public double Qy
@@ -206,7 +209,7 @@ namespace BriefFiniteElementNet.Elements
         /// </value>
         /// <remarks>
         ///     /
-        /// Iz= | Y . dA
+        /// Qz= | Y . dA
         ///    /A
         /// </remarks>
         public double Qz
@@ -223,10 +226,10 @@ namespace BriefFiniteElementNet.Elements
         /// </value>
         /// <remarks>
         ///     /          /
-        /// J= | ρ². dA = | (y²+z²).dA = <see cref="Iy"/> + <see cref="Iz"/> 
+        /// Jx = | ρ². dA = | (y²+z²).dA = <see cref="Iy"/> + <see cref="Iz"/> 
         ///    /A         /A
         /// </remarks>
-        public double J
+        public double Jx
         {
             get { return _iy + _iz; }
         }
@@ -246,6 +249,22 @@ namespace BriefFiniteElementNet.Elements
         {
             get { return _iyz; }
             set { _iyz = value; }
+        }
+
+
+        /// <summary>
+        /// Gets the torsional constant.
+        /// </summary>
+        /// <value>
+        /// Torsion Constant which is involved in the relationship between angle of twist and applied torque
+        /// </value>
+        /// <remarks>
+        /// Note that polar moment of area is not same as torsional constant J. have a look at issue #38 in github or https://en.wikipedia.org/wiki/Torsion_constant#cite_note-1
+        /// </remarks>
+        public double J
+        {
+            get { return _j; }
+            set { _j = value; }
         }
     }
 }

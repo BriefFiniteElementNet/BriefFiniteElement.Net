@@ -24,6 +24,7 @@ namespace BriefFiniteElementNet.Sections
             info.AddValue("_iz", _iz);
             info.AddValue("_ay", _ay);
             info.AddValue("_az", _az);
+            info.AddValue("_j", _j);
 
             base.GetObjectData(info, context);
     
@@ -36,6 +37,7 @@ namespace BriefFiniteElementNet.Sections
             _iz = info.GetDouble("_iz");
             _ay = info.GetDouble("_ay");
             _az = info.GetDouble("_az");
+            _j = info.GetDouble("_j");
         }
 
         public UniformParametric1DSection()
@@ -49,12 +51,12 @@ namespace BriefFiniteElementNet.Sections
         /// <param name="iy">The Second Moment of Area of section regard to Z axis.</param>
         /// <param name="iz">The Second Moment of Area of section regard to Y axis.</param>
         /// <param name="j">The polar moment of inertial.</param>\
-        [Obsolete("param J not being used. use UniformParametric1DSection(double a, double iy, double iz) instead")]
         public UniformParametric1DSection(double a, double iy, double iz, double j)
         {
             _a = a;
             _iy = iy;
             _iz = iz;
+            _j = j;
         }
 
         /// <summary>
@@ -84,6 +86,7 @@ namespace BriefFiniteElementNet.Sections
         private double _az;
         private double _iy;
         private double _iz;
+        private double _j;
 
         /// <summary>
         /// Gets or sets a.
@@ -156,22 +159,19 @@ namespace BriefFiniteElementNet.Sections
         }
 
         /// <summary>
-        /// Gets the polar moment of inertia (J).
+        /// Gets the torsional constant.
         /// </summary>
         /// <value>
-        /// The polar moment of inertial.
+        /// Torsion Constant which is involved in the relationship between angle of twist and applied torque
         /// </value>
         /// <remarks>
-        /// this is read only property, to change it set either <see cref="Iy"/> or <see cref="Iz"/> as J=Iy+Iz
-        ///     /          /
-        /// J= | ρ². dA = | (y²+z²).dA = <see cref="Iy"/> + <see cref="Iz"/> 
-        ///    /A         /A
+        /// Note that polar moment of area is not same as torsional constant J. have a look at issue #38 in github or https://en.wikipedia.org/wiki/Torsion_constant#cite_note-1
         /// </remarks>
         public double J
         {
-            get { return _iy + _iz; }
+            get { return _j; }
+            set { _j = value; }
         }
-
 
         public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi)
         {
@@ -182,6 +182,8 @@ namespace BriefFiniteElementNet.Sections
             buf.Az = this._az;
             buf.Iy = this._iy;
             buf.Iz = this._iz;
+            buf.J = this.J;
+
 
             return buf;
         }
