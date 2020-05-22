@@ -15,7 +15,7 @@ namespace BriefFiniteElementNet.Validation
 {
     public static class OpenseesValidator
     {
-        private static readonly string openSeeslocation = @"C:\opensees\OpenSees3.1.0-x64.exe\bin\Opensees.exe";
+        private static readonly string openSeeslocation = @"C:\opensees\Opensees.exe";
 
 
         public static DataTable[] OpenseesValidate(Model model, LoadCase loadcase, bool validateStiffness = false)
@@ -257,7 +257,7 @@ namespace BriefFiniteElementNet.Validation
                 .ToArray();
 
 
-            return new Matrix(openseesStfArr);
+            return Matrix.FromJaggedArray(openseesStfArr);
         }
 
     }

@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet.Loads
 
         //private double[] _magnitudesAtNodes;
         private IsoPoint _startLocation;
-        public IsoPoint _endLocation;
+        private IsoPoint _endLocation;
         //public double _startMagnitude;
         //public double _endMagnitude;
         private Vector _direction;

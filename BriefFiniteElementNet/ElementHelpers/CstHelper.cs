@@ -297,5 +297,58 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             throw new NotImplementedException();
         }
+
+        public GeneralStressTensor GetLocalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        {
+            //Note: membrane internal force is constant
+
+            //step 1 : get transformation matrix
+            //step 2 : convert globals points to locals
+            //step 3 : convert global displacements to locals
+            //step 4 : calculate B matrix and D matrix
+            //step 5 : M=D*B*U
+            //Note : Steps changed...
+
+            //var trans = this.GetTransformationMatrix();
+
+            //var lp = GetLocalPoints();
+
+            //var g2l = new Func<Vector, Vector>(glob => (trans.Transpose() * glob.ToMatrix()).ToVector());
+            //var l2g = new Func<Vector, Vector>(local => (trans*local.ToMatrix()).ToPoint());
+
+
+            //var d1g = this.nodes[0].GetNodalDisplacement(combination);
+            //var d2g = this.nodes[1].GetNodalDisplacement(combination);
+            //var d3g = this.nodes[2].GetNodalDisplacement(combination);
+
+            //step 3
+            var d1l = localDisplacements[0];// new Displacement(g2l(d1g.Displacements), g2l(d1g.Rotations));
+            var d2l = localDisplacements[1];//new Displacement(g2l(d2g.Displacements), g2l(d2g.Rotations));
+            var d3l = localDisplacements[2];//new Displacement(g2l(d3g.Displacements), g2l(d3g.Rotations));
+
+            var u =
+                   new Matrix(new[]
+                   {d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY});
+
+            var d = this.GetDMatrixAt(targetElement, isoCoords);
+            
+            var b = this.GetBMatrixAt(targetElement, isoCoords);
+
+
+            var sCst = d * b * u;
+
+            var buf = new MembraneStressTensor();
+
+            buf.Sx = sCst[0, 0];
+            buf.Sy = sCst[1, 0];
+            buf.Txy = sCst[2, 0];
+
+            return new GeneralStressTensor(buf);
+        }
+
+        public GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -11,6 +11,7 @@ using ElementLocalDof = BriefFiniteElementNet.ElementPermuteHelper.ElementLocalD
 using BriefFiniteElementNet.Mathh;
 using CSparse.Storage;
 using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
@@ -1467,6 +1468,16 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         public void AddStiffnessComponents(CoordinateStorage<double> globalStiffness)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GeneralStressTensor GetLocalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }

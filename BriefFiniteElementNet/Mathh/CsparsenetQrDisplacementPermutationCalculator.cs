@@ -18,6 +18,8 @@ namespace BriefFiniteElementNet.Mathh
         public Tuple<CCS, double[]> CalculateDisplacementPermutation(CCS a)
         {
 
+            
+
             //based on this solution : https://github.com/wo80/CSparse.NET/issues/7#issuecomment-317268696
 
             if (a.RowCount < a.ColumnCount)
@@ -25,7 +27,7 @@ namespace BriefFiniteElementNet.Mathh
                 //For a matrix A with rows < columns, SparseQR does a factorization of the transpose A'
                 //so we add zero rows to A and make it rectangular!
 
-                var a2 = new CoordinateStorage<double>(a.ColumnCount, a.ColumnCount, a.NonZerosCount);
+                var a2 = new CoordinateStorage<double>(a.ColumnCount , a.ColumnCount, a.NonZerosCount);
 
                 foreach (var t in a.EnumerateIndexed())
                     a2.At(t.Item1, t.Item2, t.Item3);
@@ -33,12 +35,14 @@ namespace BriefFiniteElementNet.Mathh
                 a = a2.ToCCs();
             }
 
+            //var adense = a.ToDenseMatrix();
+
             SparseMatrix buf;
 
             var n = a.RowCount;
             var m = a.ColumnCount;
 
-            var order = ColumnOrdering.MinimumDegreeAtA;
+            var order = ColumnOrdering.Natural;
 
             var sp = System.Diagnostics.Stopwatch.StartNew();
 
@@ -49,22 +53,40 @@ namespace BriefFiniteElementNet.Mathh
 
             var r = GetFactorR(qr);
             var q = GetFactorQ(qr);
+            var s = GetSymbolicFactorization(qr);
 
             var leads = new int[a.RowCount];
             leads.FillWith(-1);
+            //leads[i] = columnIndex of first nonzero in i'th row of r fasctor
+            //if leads[i] == -1, then there is no nonzero in row[i] then i'th equation in original a matrix in non usable
+            //this will be used for rdep and rindep
 
             var epsilon = 1e-8;
 
-            foreach (var t in r.EnumerateIndexed())
+            
+            foreach (var r_item in r.EnumerateIndexed())
             {
-                if (Math.Abs(t.Item3) > epsilon)
+                var rowNum = r_item.Item1;
+                var colNum = r_item.Item2;
+                var val = r_item.Item3;
+
+
+                if (Math.Abs(val) <= epsilon)
+                    ;//then row at 
+
+                if (Math.Abs(val) > epsilon) //Then, if abs(R[i, i]) > tol, you found an independent row
+                    //Make sure to take row permutations into account (again, you can get the SymbolicFactorization containing row and column permutations using reflection)
                 {
-                    if (leads[t.Item1] ==-1)
-                        leads[t.Item1] = t.Item2;
+                    if (leads[rowNum] == -1)
+                        leads[rowNum] = colNum;
                     else
-                        leads[t.Item1] = Math.Min(leads[t.Item1], t.Item2);
+                        leads[rowNum] = Math.Min(leads[rowNum], colNum);
                 }
             }
+            
+            
+           
+            //throw new NotImplementedException("above section not right");
 
             var leadCount = leads.Count(i => i != -1);
 
@@ -111,9 +133,6 @@ namespace BriefFiniteElementNet.Mathh
 
                 var rinDep = p1.Multiply(r).Multiply(p2p);
 
-
-                
-
                 var qr2 = SparseQR.Create(rdep, order);
 
                 var t = sp.ElapsedMilliseconds;
@@ -147,8 +166,7 @@ namespace BriefFiniteElementNet.Mathh
 
                     qr2.Solve(right, sol);
 
-                    for (var i = 0; i < rdep.RowCount; i++)
-                        bufCrd.At(i, j, sol[i]);
+                    for (var i = 0; i < rdep.RowCount; i++) bufCrd.At(i, j, sol[i]);
                 }
 
                 buf = bufCrd.ToCCs();
@@ -193,16 +211,26 @@ namespace BriefFiniteElementNet.Mathh
 
                         var right = 0.0;
 
+                        //var rowNum = s.pinv[i];
+
                         foreach (var t in buft.EnumerateColumnMembers(cnt))//enumerate column members of transposed matrix
                         {
+                            var rowNum = i;
+                            var colNum = t.Item1;
+
+                            
+                            //var colNum = s.q[t.Item1];
+
+                            var value = t.Item2;
 
                             if (t.Item1 != p_d.ColumnCount )
-                                p_d.At(i, t.Item1, -t.Item2);
+                                p_d.At(rowNum, colNum, -value);
                             else
-                                right = t.Item2;
+                                right = value;
                         }
 
                         rightSide[i] = -right;
+                        //rightSide[rowNum] = -right;
                     }
 
                    
@@ -210,12 +238,12 @@ namespace BriefFiniteElementNet.Mathh
                 }
                 else
                 {
-                    {
-                        var t = cnt3++;
-                        //p_d_dense[i, t] = 1;
-                        p_d.At(i, t, 1);
-                    }
-                    
+                    var t = cnt3++;
+
+                    var rowNum = i;// s.pinv[ i];
+                    var colNum = t;// s.q[ t];
+
+                    p_d.At(rowNum, colNum, 1);
                 }
             }
 

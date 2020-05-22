@@ -30,8 +30,8 @@ namespace BriefFiniteElementNet
         }
         
 
-        protected double e;
-        protected double g;
+        protected internal double e;
+        protected internal double g;
 
         /// <summary>
         /// Gets or sets the elastic module of section.

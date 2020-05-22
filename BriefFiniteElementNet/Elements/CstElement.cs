@@ -192,7 +192,7 @@ namespace BriefFiniteElementNet.Elements
             var lamY = vy.GetUnit();//Lambda_y
             var lamZ = vz.GetUnit();//Lambda_z
 
-            var lambda = new Matrix(new[]
+            var lambda = Matrix.FromJaggedArray(new[]
             {
                 new[] {lamX.X, lamY.X, lamZ.X},
                 new[] {lamX.Y, lamY.Y, lamZ.Y},
@@ -366,7 +366,7 @@ namespace BriefFiniteElementNet.Elements
 
             //eq 3.24 page 29 of thesis pdf
 
-            var buf2 = new Matrix(new double[][]
+            var buf2 = Matrix.FromJaggedArray(new double[][]
             {
                 new [] {y23, 0, y31, 0, y12, 0},
                 new [] {0, x32, 0, x13, 0, x21},
@@ -401,7 +401,7 @@ namespace BriefFiniteElementNet.Elements
 
             //eq 3.24 page 29 of thesis pdf
 
-            var buf2 = new Matrix(new double[][]
+            var buf2 = Matrix.FromJaggedArray(new double[][]
             {
                 new [] {y23, 0, y31, 0, y12, 0},
                 new [] {0, x32, 0, x13, 0, x21},

@@ -813,6 +813,8 @@ namespace BriefFiniteElementNet
 
             var pd = perm.Item1;
 
+            //var todo = pd.ToDenseMatrix();
+
             sp.Restart();
 
             var kt = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(parent);//total stiffness matrix, same for all load cases
@@ -839,7 +841,8 @@ namespace BriefFiniteElementNet
 
                 var a1 = new double[n];
 
-                kt.Multiply(rd, a1);
+                kt.Multiply(rd,
+                    a1);
 
                 a1.AddToSelf(ft);
 
@@ -876,7 +879,7 @@ namespace BriefFiniteElementNet
                 pd.Multiply(a3, dt);
             }
 
-            dt.AddToSelf(rd, -1);
+            //dt.AddToSelf(rd, -1);
 
             ft.FillWith(0);
 

@@ -32,7 +32,7 @@ namespace BriefFiniteElementNet.MpcElements
             set { _settlement = value; }
         }
 
-        public Constraint _constraint;
+        private Constraint _constraint;
 
         /// <summary>
         /// Gets or sets the constraint.

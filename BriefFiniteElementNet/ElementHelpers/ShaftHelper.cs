@@ -566,5 +566,15 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             throw new NotImplementedException();
         }
+
+        public GeneralStressTensor GetLocalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

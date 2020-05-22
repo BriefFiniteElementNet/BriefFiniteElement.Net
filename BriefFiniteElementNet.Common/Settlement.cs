@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         public LoadCase LoadCase 
         {
-            get         {            return loadCase;}
+            get { return loadCase; }
             set { loadCase = value; }
         }
 
@@ -97,8 +97,8 @@ namespace BriefFiniteElementNet
         /// <param name="context">The context.</param>
         private Settlement(SerializationInfo info, StreamingContext context)
         {
-            loadCase = (LoadCase)info.GetValue("caseName", typeof(LoadCase));
-            displacement = (Displacement)info.GetValue("loadType",typeof(Displacement));
+            loadCase = (LoadCase)info.GetValue("loadCase", typeof(LoadCase));
+            displacement = (Displacement)info.GetValue("displacement", typeof(Displacement));
         }
 
         #endregion
@@ -123,5 +123,6 @@ namespace BriefFiniteElementNet
         {
         }
 
+      
     }
 }

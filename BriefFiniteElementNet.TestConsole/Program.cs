@@ -30,6 +30,109 @@ namespace BriefFiniteElementNet.TestConsole
 {
     class Program
     {
+
+        static public void test0()
+        {
+            var model = new Model();
+
+            var n1 = new Node() { Constraints = Constraints.Fixed };
+            var n2 = new Node(5, 0, 0) { Constraints = Constraints.Fixed };
+
+            var old = n1.Constraints;
+            old.DY = DofConstraint.Released;
+            n1.Constraints = old;
+
+            var elm = new BarElement(n1, n2);
+
+            var sec = SectionGenerator.GetRectangularSection(0.1, 0.1);
+
+            elm.Section = new UniformGeometric1DSection(sec);
+            elm.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
+
+            n1.Settlements.Add(new Settlement(new Displacement(0, 0, 0.01)));
+
+            model.Nodes.Add(n1);
+            
+            model.Nodes.Add(n2);
+            model.Elements.Add(elm);
+
+            model.Solve_MPC();
+
+            var d = n1.GetNodalDisplacement();
+        }
+
+        static public void test1()
+        {
+            // Two span beam of 20m overall length with elements of 1m length
+
+            List<Node> nodeList = new List<Node>();
+            List<BarElement> elementList = new List<BarElement>();
+
+            var model = new BriefFiniteElementNet.Model();
+
+            for (double n = 0; n <= 20; n = n + 1)
+            {
+                nodeList.Add(new Node(x: n, y: 0.0, z: 0.0) { Label = "N" + n });
+            }
+
+            nodeList[0].Constraints = Constraints.MovementFixed & Constraints.FixedRX;
+            nodeList[10].Constraints = Constraints.FixedDZ & Constraints.FixedDY;  // z = vertical
+            nodeList[nodeList.Count - 1].Constraints = Constraints.FixedDZ & Constraints.FixedDY;  // z = vertical
+
+            model.Nodes.AddRange(nodeList);
+
+            model.Nodes[10].Settlements.Add(new Settlement(LoadCase.DefaultLoadCase, new Displacement(0, 0, -0.0000000000010, 0, 0, 0)));  // This does not seem to be working correctly based on the reported displacement at Node 10
+
+            var load1 = new BriefFiniteElementNet.Loads.UniformLoad(LoadCase.DefaultLoadCase, new Vector(0, 0, 1), -6000, CoordinationSystem.Global);  // Load in N/m
+
+            var a = 0.1;                            // m²
+            var iy = 0.008333;                      // m4
+            var iz = 8.333e-5;                      // m4
+            var j = 0.1 * 0.1 * 0.1 * 1 / 12.0;     // m4
+            var e = 205e9;                          // N/m²
+            var nu = 0.3;                           // Poisson's ratio
+            var secAA = new BriefFiniteElementNet.Sections.UniformParametric1DSection(a, iy, iz, j);
+
+            var mat = BriefFiniteElementNet.Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(e, nu);
+
+            for (int m = 0; m <= 19; m++)
+            {
+                BarElement el = new BarElement(nodeList[m], nodeList[m + 1]);
+                el.Section = secAA;
+                el.Material = mat;
+                el.Loads.Add(load1);
+                elementList.Add(el);
+            }
+
+            model.Elements.Add(elementList.ToArray());
+
+            model.Solve_MPC();//or model.Solve();
+
+            model.Trace.Listeners.Add(new ConsoleTraceListener());
+
+            PosdefChecker.CheckModel_mpc(model, LoadCase.DefaultLoadCase);
+
+
+            var nde = nodeList[10];
+            var disp = nde.GetNodalDisplacement();
+            Console.WriteLine("Node 10 displacement in Z direction is {0:0.000} m", disp.DZ);
+            Console.WriteLine("Node 10 rotation in YY direction is {0:0.000} rads\n", disp.RY);
+
+            foreach (BarElement elem in elementList)
+            {
+                Force f1 = elem.GetExactInternalForceAt(-0.999999);  // -1 = start, 0 = mid, 1 = end, exact solver takes UDL on member into account, doesn't then accept -1 or 1
+                Console.WriteLine("Element BMyy is {0:0.000} kNm", f1.My / 1000);
+            }
+
+
+            var str = new MemoryStream();
+            Model.Save(str, model);
+
+                str.Position = 0;
+            var m2 = Model.Load(str);
+            Console.WriteLine("Element BMyy is {0:0.000} kNm", elementList[19].GetExactInternalForceAt(0.999999).My / 1000);
+        }
+
         [STAThread]
         static void Main(string[] args)
         {
@@ -40,6 +143,7 @@ namespace BriefFiniteElementNet.TestConsole
             //TestBinModel();
             //testRrefTime();
 
+            test0();
             //testMultySpan();
 
             {

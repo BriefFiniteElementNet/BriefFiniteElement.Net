@@ -24,13 +24,13 @@ namespace BriefFiniteElementNet.Elements
             throw new NotImplementedException();
         }
 
-        public BaseMaterial _material;
+        private BaseMaterial _material;
 
-        public Base2DSection _section;
+        private Base2DSection _section;
 
-        public TriangleElementBehaviour _behavior;
+        private TriangleElementBehaviour _behavior;
 
-        public MembraneFormulation _formulation;
+        private MembraneFormulation _formulation;
 
 
 
@@ -121,7 +121,7 @@ namespace BriefFiniteElementNet.Elements
             var lamY = vy.GetUnit();//Lambda_Y
             var lamZ = vz.GetUnit();//Lambda_Z
 
-            var lambda = new Matrix(new[]
+            var lambda = Matrix.FromJaggedArray(new[]
             {
                 new[] {lamX.X, lamY.X, lamZ.X},
                 new[] {lamX.Y, lamY.Y, lamZ.Y},
@@ -138,7 +138,6 @@ namespace BriefFiniteElementNet.Elements
             {
                 if ((this._behavior & TriangleElementBehaviour.Bending) != 0)
                 {
-                    //helpers.Add(new Q4DkqHelper());
                     helpers.Add(new DktHelper());
                 }
 
@@ -151,23 +150,6 @@ namespace BriefFiniteElementNet.Elements
                 {
                     helpers.Add(new TriangleBasicDrillingDofHelper());
                 }
-
-                /*
-                if ((this._behavior & TriangleElementBehaviour.Membrane) != 0 && (this._behavior & TriangleElementBehaviour.DrillingDof) != 0)
-                {
-                    helpers.Add(new Gt9Helper());
-                }
-
-                if ((this._behavior & TriangleElementBehaviour.Membrane) != 0 && (this._behavior & TriangleElementBehaviour.DrillingDof) == 0)
-                {
-                    helpers.Add(new CstHelper());
-                }
-
-                if ((this._behavior & TriangleElementBehaviour.Membrane) == 0 && (this._behavior & TriangleElementBehaviour.DrillingDof) != 0)
-                {
-                    throw new Exception("cant use DrillingDof without Membrane");
-                }*/
-
             }
 
 

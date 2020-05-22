@@ -332,30 +332,52 @@ namespace BriefFiniteElementNet
             this.CoreArray = new double[n*n];
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Matrix"/> class with a 2-d double array.
-        /// </summary>
-        /// <param name="vals">The values.</param>
-        public Matrix(double[,] vals) : this()
+
+        public static Matrix From2DArray(double[,] vals)
         {
+            
             var rows = vals.GetLength(0);
             var cols = vals.GetLength(1);
 
-            //var buf = new Matrix(rows, cols);
-            this.rowCount = rows;
-            this.columnCount = cols;
+            var buf = new Matrix(rows, cols);
+            buf.rowCount = rows;
+            buf.columnCount = cols;
 
-            this.coreArray = new double[rows*cols];
+            buf.coreArray = new double[rows * cols];
 
             for (int i = 0; i < rows; i++)
                 for (int j = 0; j < cols; j++)
-                    this.CoreArray[j*rows + i] = vals[i, j];
+                    buf.CoreArray[j * rows + i] = vals[i, j];
+
+
+            return buf;
         }
 
+        public static Matrix FromJaggedArray(double[][] vals)
+        {
+            var rows = vals.Length;
+            var cols = vals.Select(i => i.Length).Max();
+
+            var buf = new Matrix(rows, cols);
+            buf.rowCount = rows;
+            buf.columnCount = cols;
+
+            buf.coreArray = new double[rows * cols];
+
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < cols; j++)
+                    if (vals[i].Length > j)
+                        buf.CoreArray[j * rows + i] = vals[i][j];
+
+            return buf;
+        }
+
+        /*
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix"/> class with a 2-d double array.
         /// </summary>
         /// <param name="vals">The values.</param>
+        [Obsolete("use static Matrix.FromJaggedArray instead")]
         public Matrix(double[][] vals) : this()
         {
             var rows = vals.Length;
@@ -372,6 +394,7 @@ namespace BriefFiniteElementNet
                     if (vals[i].Length > j)
                         this.CoreArray[j*rows + i] = vals[i][j];
         }
+        */
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix"/> class as a column vector.

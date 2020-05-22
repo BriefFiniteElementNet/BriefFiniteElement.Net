@@ -3,26 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BriefFiniteElementNet
+namespace BriefFiniteElementNet.Common
 {
     /// <summary>
-    /// represents a stress tensor for a flat shell which consists of a bending part and cauchy part
+    /// represents a stress general stress tensor which consists of a bending part and cauchy part, the most general stress tensor.
     /// </summary>
-    public struct FlatShellStressTensor
+    public struct GeneralStressTensor
     {
-        public FlatShellStressTensor(CauchyStressTensor membraneTensor, BendingStressTensor bendingTensor)
+        public GeneralStressTensor(CauchyStressTensor membraneTensor, BendingStressTensor bendingTensor)
         {
             MembraneTensor = membraneTensor;
             BendingTensor = bendingTensor;
         }
 
-        public FlatShellStressTensor(BendingStressTensor bendingTensor)
+        public GeneralStressTensor(BendingStressTensor bendingTensor)
         {
             MembraneTensor = new CauchyStressTensor();
             BendingTensor = bendingTensor;
         }
 
-        public FlatShellStressTensor(CauchyStressTensor membraneTensor)
+        public GeneralStressTensor(CauchyStressTensor membraneTensor)
         {
             MembraneTensor = membraneTensor;
             BendingTensor = new BendingStressTensor();
@@ -32,9 +32,9 @@ namespace BriefFiniteElementNet
 
         public BendingStressTensor BendingTensor;
 
-        public static FlatShellStressTensor operator +(FlatShellStressTensor left, FlatShellStressTensor right)
+        public static GeneralStressTensor operator +(GeneralStressTensor left, GeneralStressTensor right)
         {
-            var buf = new FlatShellStressTensor
+            var buf = new GeneralStressTensor
             {
                 BendingTensor = left.BendingTensor + right.BendingTensor,
                 MembraneTensor = left.MembraneTensor + right.MembraneTensor
@@ -45,9 +45,9 @@ namespace BriefFiniteElementNet
         }
 
 
-        public static FlatShellStressTensor operator -(FlatShellStressTensor left, FlatShellStressTensor right)
+        public static GeneralStressTensor operator -(GeneralStressTensor left, GeneralStressTensor right)
         {
-            var buf = new FlatShellStressTensor
+            var buf = new GeneralStressTensor
             {
                 BendingTensor = left.BendingTensor - right.BendingTensor,
                 MembraneTensor = left.MembraneTensor - right.MembraneTensor
@@ -57,20 +57,9 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static FlatShellStressTensor Multiply(double coef, FlatShellStressTensor tensor)
+        public static GeneralStressTensor Multiply(double coef, GeneralStressTensor tensor)
         {
-            var buf = new FlatShellStressTensor
-            {
-                BendingTensor = coef*tensor.BendingTensor,
-                MembraneTensor = coef*tensor.MembraneTensor
-            };
-
-            return buf;
-        }
-
-        public static FlatShellStressTensor Multiply(FlatShellStressTensor tensor,double coef )
-        {
-            var buf = new FlatShellStressTensor
+            var buf = new GeneralStressTensor
             {
                 BendingTensor = coef * tensor.BendingTensor,
                 MembraneTensor = coef * tensor.MembraneTensor
@@ -79,9 +68,20 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static FlatShellStressTensor Transform(FlatShellStressTensor tensor, Matrix transformationMatrix)
+        public static GeneralStressTensor Multiply(GeneralStressTensor tensor, double coef)
         {
-            var buf = new FlatShellStressTensor
+            var buf = new GeneralStressTensor
+            {
+                BendingTensor = coef * tensor.BendingTensor,
+                MembraneTensor = coef * tensor.MembraneTensor
+            };
+
+            return buf;
+        }
+
+        public static GeneralStressTensor Transform(GeneralStressTensor tensor, Matrix transformationMatrix)
+        {
+            var buf = new GeneralStressTensor
             {
                 MembraneTensor = CauchyStressTensor.Transform(tensor.MembraneTensor, transformationMatrix),
                 BendingTensor = BendingStressTensor.Transform(tensor.BendingTensor, transformationMatrix)
@@ -90,9 +90,9 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static FlatShellStressTensor operator *(double coef, FlatShellStressTensor tensor)
+        public static GeneralStressTensor operator *(double coef, GeneralStressTensor tensor)
         {
-            var buf = new FlatShellStressTensor
+            var buf = new GeneralStressTensor
             {
                 BendingTensor = coef * tensor.BendingTensor,
                 MembraneTensor = coef * tensor.MembraneTensor

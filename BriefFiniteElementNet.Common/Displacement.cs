@@ -211,6 +211,24 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// Initializes a new instance of the <see cref="Displacement"/> struct.
         /// </summary>
+        /// <param name="dx">The displacement in x direction.</param>
+        /// <param name="dy">The displacement in y direction.</param>
+        /// <param name="dz">The displacement in z direction.</param>
+        public Displacement(double dx, double dy, double dz)
+        {
+            this.dx = dx;
+            this.dy = dy;
+            this.dz = dz;
+
+            this.rx = 0;
+            this.ry = 0;
+            this.rz = 0;
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Displacement"/> struct.
+        /// </summary>
         /// <param name="displacements">The displacements.</param>
         /// <param name="rotations">The rotations.</param>
         public Displacement(Vector displacements, Vector rotations) : this()

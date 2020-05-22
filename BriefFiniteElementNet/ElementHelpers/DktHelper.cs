@@ -155,7 +155,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (tri == null)
                 throw new Exception();
 
-            var mat = tri._material.GetMaterialPropertiesAt(isoCoords);
+            var mat = tri.Material.GetMaterialPropertiesAt(isoCoords);
             var t = tri.Section.GetThicknessAt(isoCoords);
 
             var d = new Matrix(3, 3);
@@ -278,6 +278,50 @@ namespace BriefFiniteElementNet.ElementHelpers
         public IEnumerable<Tuple<DoF, double>> GetLocalInternalForceAt(Element targetElement,
             Displacement[] globalDisplacements, params double[] isoCoords)
         {
+            //step 1 : get transformation matrix
+            //step 2 : convert globals points to locals
+            //step 3 : convert global displacements to locals
+            //step 4 : calculate B matrix and D matrix
+            //step 5 : M=D*B*U
+            //Note : Steps changed...
+
+            var tr = targetElement.GetTransformationManager();
+
+            var locals = tr.TransformGlobalToLocal(globalDisplacements);
+
+            var b = GetBMatrixAt(targetElement, isoCoords);
+
+            var d = GetDMatrixAt(targetElement, isoCoords);
+
+            var u1l = locals[0];
+            var u2l = locals[1];
+            var u3l = locals[2];
+
+            var uDkt =
+                   new Matrix(new[]
+                   {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY});
+
+
+            var mDkt = d * b * uDkt; //eq. 32, batoz article
+
+            //var buf = new PlateBendingStressTensor();
+
+            //buf.Mx = mDkt[0, 0];
+            //buf.My = mDkt[1, 0];
+            //buf.Mxy = mDkt[2, 0];
+
+            //return buf;
+
+            var bTensor = new BendingStressTensor();
+
+            //var buf = new List<Tuple<DoF, double>>();
+
+            bTensor.M11 = mDkt[0, 0];
+            bTensor.M22 = mDkt[1, 0];
+            bTensor.M21 = bTensor.M12 = mDkt[2, 0];
+
+            var buf = new FlatShellStressTensor(bTensor);
+
             throw new NotImplementedException();
         }
 
@@ -322,6 +366,49 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         public void AddStiffnessComponents(CoordinateStorage<double> global)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GeneralStressTensor GetLocalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        {
+            //step 1 : get transformation matrix
+            //step 2 : convert globals points to locals
+            //step 3 : convert global displacements to locals
+            //step 4 : calculate B matrix and D matrix
+            //step 5 : M=D*B*U
+            //Note : Steps changed...
+
+            var tr = targetElement.GetTransformationManager();
+
+            var locals = localDisplacements;// tr.TransformGlobalToLocal(globalDisplacements);
+
+            var b = GetBMatrixAt(targetElement, isoCoords);
+
+            var d = GetDMatrixAt(targetElement, isoCoords);
+
+            var u1l = locals[0];
+            var u2l = locals[1];
+            var u3l = locals[2];
+
+            var uDkt =
+                   new Matrix(new[]
+                   {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY});
+
+
+            var mDkt = d * b * uDkt; //eq. 32, batoz article
+
+            var bTensor = new BendingStressTensor();
+
+            bTensor.M11 = mDkt[0, 0];
+            bTensor.M22 = mDkt[1, 0];
+            bTensor.M21 = bTensor.M12 = mDkt[2, 0];
+
+            var buf = new GeneralStressTensor(bTensor);
+            return buf;
+        }
+
+        public GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }

@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CSparse, Version=3.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CSparse.3.4.0\lib\net40\CSparse.dll</HintPath>
+    <Reference Include="CSparse, Version=3.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CSparse.3.4.2\lib\net40\CSparse.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -81,6 +81,7 @@
     <Compile Include="StrainTensor.cs" />
     <Compile Include="StrainTensor3D.cs" />
     <Compile Include="Trace.cs" />
+    <Compile Include="GeneralStressTensor.cs" />
     <Compile Include="Vector.cs" />
   </ItemGroup>
   <ItemGroup>

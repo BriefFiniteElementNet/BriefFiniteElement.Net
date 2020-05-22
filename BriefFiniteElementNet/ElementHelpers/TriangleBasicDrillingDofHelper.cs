@@ -8,7 +8,7 @@ using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
-    public class TriangleBasicDrillingDofHelper:IElementHelper
+    public class TriangleBasicDrillingDofHelper : IElementHelper
     {
         public Element TargetElement { get; set; }
 
@@ -122,6 +122,16 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         public void AddStiffnessComponents(CoordinateStorage<double> global)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GeneralStressTensor GetLocalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }

@@ -423,7 +423,7 @@ namespace BriefFiniteElementNet.Elements
                    var b3 =
                        (-x31 * hx_xi(xi, eta) - x12 * hx_eta(xi, eta) + y31 * hy_xi(xi, eta) + y12 * hy_eta(xi, eta));
 
-                   var buf = new Matrix(new[] { b1.CoreArray, b2.CoreArray, b3.CoreArray });
+                   var buf = Matrix.FromJaggedArray(new[] { b1.CoreArray, b2.CoreArray, b3.CoreArray });
 
                    buf.MultiplyByConstant(1 / (2 * a));
 
@@ -604,7 +604,7 @@ namespace BriefFiniteElementNet.Elements
             } //eq 4.26 p. 46
 
 
-            var buf = new Matrix(new[] { H_x_x, H_y_y, H_xy_yx });
+            var buf = Matrix.FromJaggedArray(new[] { H_x_x, H_y_y, H_xy_yx });
 
             buf.MultiplyByConstant(1 / (2 * a));
 
@@ -670,7 +670,7 @@ namespace BriefFiniteElementNet.Elements
             var lamY = vy.GetUnit();//Lambda_x
             var lamZ = vz.GetUnit();//Lambda_x
 
-            var lambda = new Matrix(new[]
+            var lambda = Matrix.FromJaggedArray(new[]
             {
                 new[] {lamX.X, lamY.X, lamZ.X},
                 new[] {lamX.Y, lamY.Y, lamZ.Y},

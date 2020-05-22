@@ -23,10 +23,10 @@ namespace BriefFiniteElementNet
         /// Represents the hash code of ID, used for better performance (probably!)
         /// Anytime id is changed, it should change accordingly to hash code of new value
         /// </summary>
-        protected int idHashCode;
-        protected Guid id;
-        protected string label;
-        protected string tag;
+        protected internal int idHashCode;
+        protected internal Guid id;
+        protected internal string label;
+        protected internal string tag;
         [NonSerialized]
         protected Model parent;
 

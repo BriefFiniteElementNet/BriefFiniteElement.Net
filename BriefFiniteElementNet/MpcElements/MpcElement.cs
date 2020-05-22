@@ -76,7 +76,7 @@ namespace BriefFiniteElementNet.MpcElements
             _nodes = new NodeList();
         }
 
-        protected NodeList _nodes;
+        private NodeList _nodes;
 
         /// <summary>
         /// Gets or sets the nodes

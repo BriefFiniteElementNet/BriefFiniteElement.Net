@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet.Elements;
 using CSparse.Storage;
 
@@ -139,6 +140,16 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         public void AddStiffnessComponents(CoordinateStorage<double> global)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GeneralStressTensor GetLocalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
+
+        public GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }

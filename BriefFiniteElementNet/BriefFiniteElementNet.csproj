@@ -35,8 +35,8 @@
     <DocumentationFile>bin\Release\BriefFiniteElementNet.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CSparse, Version=3.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CSparse.3.4.0\lib\net40\CSparse.dll</HintPath>
+    <Reference Include="CSparse, Version=3.4.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CSparse.3.4.2\lib\net40\CSparse.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -199,6 +199,9 @@
     <Compile Include="ZoneDevidedMatrix.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="CsparsenetQrDisplacementPermutationCalculator.md" />
+    <None Include="ElementHelpers\DktHelper.md" />
+    <None Include="packages.config" />
     <None Include="Utils\CalcUtil.md" />
     <None Include="ClassDiagram1.cd" />
     <None Include="Documents\SupportReactions.mkd" />
@@ -210,7 +213,6 @@
     <None Include="Elements\Tetrahedral.md" />
     <None Include="MpcElements\VirtualSupport.md" />
     <None Include="Mathh\IRrefFinder.md" />
-    <None Include="packages.config" />
     <None Include="TransformManagerL2G.md" />
     <None Include="Elements\TriangleFlatShell.md" />
     <None Include="Elements\TriangleFlatShellExtensions.md" />

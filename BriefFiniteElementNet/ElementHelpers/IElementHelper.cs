@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet.Elements;
 
 namespace BriefFiniteElementNet.ElementHelpers
@@ -153,6 +154,18 @@ namespace BriefFiniteElementNet.ElementHelpers
         IEnumerable<Tuple<DoF, double>> GetLocalInternalForceAt(Element targetElement,
             Displacement[] localDisplacements, params double[] isoCoords);
 
+        /// <summary>
+        /// Gets the internal force at defined location in local coordination system.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="localDisplacements"></param>
+        /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
+        /// <param name="globalDisplacements">The local displacements on nodes.</param>
+        /// <returns>Internal stress at defined iso coordination</returns>
+        /// 
+        GeneralStressTensor GetLocalStressAt(Element targetElement,
+            Displacement[] localDisplacements, params double[] isoCoords);
+
 
         /// <summary>
         /// Gets the strain at defined location in local coordination system.
@@ -169,6 +182,20 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// </remarks>
         IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load, double[] isoLocation);
 
+        /// <summary>
+        /// Gets the strain at defined location in local coordination system.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="load">The load.</param>
+        /// <param name="isoLocation">The iso location.</param>
+        /// <returns>load internal force at defined iso coordination</returns>
+        /// <summary>
+        /// Gets the internal force of element, only due to applying specified load.
+        /// </summary>
+        /// <remarks>
+        /// This gives back internal force of element assuming no nodal displacements there are, and only the <see cref="load"/> is applied to it.
+        /// </remarks>
+        GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation);
 
         /// <summary>
         /// Gets the displacement at specified location in local coordination system.

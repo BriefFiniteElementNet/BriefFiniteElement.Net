@@ -1854,6 +1854,8 @@ namespace BriefFiniteElementNet
 
             var boundaryConditions = GetModelBoundaryConditions(target, loadCase);
 
+            //var ttt = boundaryConditions.ToDenseMatrix();
+
             var lastRow = 0;
 
             #region mpc elements
