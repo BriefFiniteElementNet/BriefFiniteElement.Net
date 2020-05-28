@@ -33,8 +33,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CSparse, Version=3.4.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CSparse.3.4.2\lib\net45\CSparse.dll</HintPath>
+    <Reference Include="CSparse, Version=3.4.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CSparse.3.4.3\lib\net45\CSparse.dll</HintPath>
     </Reference>
     <Reference Include="HtmlTags, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlTags.3.0.0.186\lib\4.0\HtmlTags.dll</HintPath>
@@ -58,6 +58,7 @@
     <Compile Include="GithubIssues\Issue24.cs" />
     <Compile Include="GithubIssues\Issue25.cs" />
     <Compile Include="GithubIssues\Issue29.cs" />
+    <Compile Include="GithubIssues\Issue41.cs" />
     <Compile Include="OpenseesTclGenerator\TetrahedronToTcl.cs" />
     <Compile Include="OpenseesTclGenerator\TriangleElementToTcl.cs" />
     <Compile Include="OpenseesTclGenerator\UniformLoad2Tcl.cs" />

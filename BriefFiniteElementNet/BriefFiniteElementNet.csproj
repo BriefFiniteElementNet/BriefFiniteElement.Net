@@ -35,8 +35,8 @@
     <DocumentationFile>bin\Release\BriefFiniteElementNet.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CSparse, Version=3.4.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CSparse.3.4.2\lib\net40\CSparse.dll</HintPath>
+    <Reference Include="CSparse, Version=3.4.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CSparse.3.4.3\lib\net40\CSparse.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

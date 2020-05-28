@@ -149,7 +149,7 @@ namespace BriefFiniteElementNet
             }
         }
 
-        public static void AddRandomDisplacements(Model mdl,double max)
+        public static void AddRandomDisplacements(Model mdl, double max)
         {
 
 
@@ -158,6 +158,30 @@ namespace BriefFiniteElementNet
                 var disp = rnd.GetRandomDisplacement(0, max);
 
                 nde.Location = nde.Location + disp.Displacements;
+            }
+        }
+
+        public static void AddRandomSettlements(Model mdl, double max)
+        {
+
+
+            foreach (var nde in mdl.Nodes)
+            {
+                var disp = rnd.GetRandomDisplacement(0, max);
+
+                var c = nde.Constraints;
+
+                if (c.DX == DofConstraint.Released) disp.DX = 0;
+                if (c.DY == DofConstraint.Released) disp.DY = 0;
+                if (c.DZ == DofConstraint.Released) disp.DZ = 0;
+
+                if (c.RX == DofConstraint.Released) disp.RX = 0;
+                if (c.RY == DofConstraint.Released) disp.RY = 0;
+                if (c.RZ == DofConstraint.Released) disp.RZ = 0;
+
+
+                if (c != Constraints.Released)
+                    nde.Settlements.Add(new Settlement(disp));
             }
         }
 

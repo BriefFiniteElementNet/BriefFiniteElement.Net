@@ -746,6 +746,8 @@ namespace BriefFiniteElementNet.Validation
             StructureGenerator.AddRandomiseNodalLoads(grd, LoadCase.DefaultLoadCase);//random nodal loads
             StructureGenerator.AddRandomiseBeamUniformLoads(grd, LoadCase.DefaultLoadCase);//random elemental loads
             StructureGenerator.AddRandomDisplacements(grd, 0.1);
+
+            //StructureGenerator.AddRandomSettlements(grd, 0.01);
             #endregion
 
             grd.Solve_MPC();

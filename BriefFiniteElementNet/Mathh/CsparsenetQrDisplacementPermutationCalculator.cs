@@ -229,8 +229,8 @@ namespace BriefFiniteElementNet.Mathh
                                 right = value;
                         }
 
+                        //rightSide[s.cp[i]] = -right;
                         rightSide[i] = -right;
-                        //rightSide[rowNum] = -right;
                     }
 
                    

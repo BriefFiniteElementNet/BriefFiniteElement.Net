@@ -21,7 +21,10 @@ namespace BriefFiniteElementNet.Validation.Ui
             //BarElementTester.ValidateConsoleUniformLoad();
             //BarElementTester.TestEndReleaseStyiffness();
 
-            //GithubIssues.Issue29.Run();
+            //GithubIssues.Issue41.Run();
+
+
+            Console.ReadKey();
         }
 
         static void TestTelepaty()

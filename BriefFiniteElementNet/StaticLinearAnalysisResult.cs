@@ -800,9 +800,12 @@ namespace BriefFiniteElementNet
 
             var sp = System.Diagnostics.Stopwatch.StartNew();
 
+
+            var permCalculator = new CsparsenetQrDisplacementPermutationCalculator();
+
             var perm =
                 //CalcUtil.GenerateP_Delta_Mpc(parent, loadCase, new Mathh.GaussRrefFinder());
-                CalcUtil.GenerateP_Delta_Mpc(parent, loadCase, new CsparsenetQrDisplacementPermutationCalculator());
+                CalcUtil.GenerateP_Delta_Mpc(parent, loadCase, permCalculator);
 
 
             parent.Trace.Write(Common.TraceLevel.Info, "Calculating Displacement Permutation Matrix took {0} ms", sp.ElapsedMilliseconds);
@@ -879,7 +882,7 @@ namespace BriefFiniteElementNet
                 pd.Multiply(a3, dt);
             }
 
-            //dt.AddToSelf(rd, -1);
+            dt.AddToSelf(rd, -1);
 
             ft.FillWith(0);
 
