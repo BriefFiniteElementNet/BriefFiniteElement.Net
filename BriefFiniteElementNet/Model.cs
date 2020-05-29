@@ -417,6 +417,20 @@ namespace BriefFiniteElementNet
             
         }
 
+        public void Solve_MPC(params LoadCase[] cases)
+        {
+            var fact = CalcUtil.CreateBuiltInSolverFactory(BuiltInSolverType.CholeskyDecomposition);
+
+            var cfg = new SolverConfiguration();
+
+            cfg.SolverFactory = fact;
+
+            cfg.LoadCases.AddRange(cases);
+
+            Solve_MPC(cfg);
+
+        }
+
         public void Solve_MPC()
         {
             var fact = CalcUtil.CreateBuiltInSolverFactory(BuiltInSolverType.CholeskyDecomposition);

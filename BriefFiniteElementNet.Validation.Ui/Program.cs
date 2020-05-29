@@ -14,14 +14,14 @@ namespace BriefFiniteElementNet.Validation.Ui
         {
 
             //TestTri();
-            TestBar();
+            //TestBar();
             //TestTelepaty();
             //TestTetra();
             //return;
             //BarElementTester.ValidateConsoleUniformLoad();
             //BarElementTester.TestEndReleaseStyiffness();
 
-            //GithubIssues.Issue41.Run();
+            GithubIssues.Issue41.Run();
 
 
             Console.ReadKey();

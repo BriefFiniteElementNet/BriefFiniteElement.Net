@@ -16,7 +16,7 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
 
             List<Node> nodeList = new List<Node>();
             List<BarElement> elementList = new List<BarElement>();
-            LoadCase loadCase1 = LoadCase.DefaultLoadCase;  // new LoadCase("L1", LoadType.Dead);
+            LoadCase loadCase1 = new LoadCase("test", LoadType.Other);// LoadCase.DefaultLoadCase;  // new LoadCase("L1", LoadType.Dead);
 
             var model = new BriefFiniteElementNet.Model();
 
@@ -29,7 +29,7 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             nodeList.Add(new Node(x: 10, y: 0.0, z: -2.0) { Label = "N22" });
             nodeList.Add(new Node(x: 20, y: 0.0, z: -2.0) { Label = "N23" });
 
-            var load1 = new BriefFiniteElementNet.Loads.UniformLoad(loadCase1, new Vector(0, 0, 1), 0, CoordinationSystem.Global);  // Load in N/m (UDL = 0 N/m)
+            //var load1 = new BriefFiniteElementNet.Loads.UniformLoad(loadCase1, new Vector(0, 0, 1), 0, CoordinationSystem.Global);  // Load in N/m (UDL = 0 N/m)
 
             var a = 0.1;                            // m²
             var iy = 0.008333
@@ -47,7 +47,7 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
                 BarElement el = new BarElement(nodeList[m], nodeList[m + 1]);
                 el.Section = secAA;
                 el.Material = mat;
-                el.Loads.Add(load1);
+                //el.Loads.Add(load1);
                 elementList.Add(el);
             }
 
@@ -65,8 +65,9 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             model.Elements.Add(elementList.ToArray());
             model.Nodes.AddRange(nodeList);
 
-            model.Solve_MPC();//or model.Solve();
+            model.Solve_MPC(loadCase1);//or model.Solve();
 
+            
             var disp = nodeList[10].GetNodalDisplacement(loadCase1);
             Console.WriteLine("Node 10 displacement in Z direction is {0:0.000} m", disp.DZ);
             Console.WriteLine("Node 10 rotation in YY direction is {0:0.000} rads\n", disp.RY);
