@@ -18,6 +18,7 @@ using System.Runtime.InteropServices;
 [assembly: InternalsVisibleTo("BriefFiniteElementNet.StructuralExample")]
 [assembly: InternalsVisibleTo("BriefFiniteElementNet.StructuralExtension")]
 [assembly: InternalsVisibleTo("BriefFiniteElementNet.Validation")]
+[assembly: InternalsVisibleTo("BriefFiniteElementNet.CustomElements")]
 [assembly: InternalsVisibleTo("BriefFiniteElementNet.XmlSerialization")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

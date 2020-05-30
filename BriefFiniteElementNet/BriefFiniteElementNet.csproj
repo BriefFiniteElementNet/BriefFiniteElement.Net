@@ -44,9 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ElementHelpers\DkqHelper.cs" />
     <Compile Include="Elements\Extensions.cs" />
-    <Compile Include="Elements\QuadrilaturalElement.cs" />
     <Compile Include="Utils\ArrayEqualityCompairer.cs" />
     <Compile Include="ElementHelpers\Gt9Helper.cs" />
     <Compile Include="ElementHelpers\TriangleBasicDrillingDofHelper.cs" />
