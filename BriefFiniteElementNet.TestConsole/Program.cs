@@ -137,7 +137,7 @@ namespace BriefFiniteElementNet.TestConsole
         static void Main(string[] args)
         {
             Console.Title = "BFE tests & temporary codes";
-            //Validation.GithubIssues.Issue25.Run();
+            Validation.GithubIssues.Issue41.Run3();
 
             //TestHingedInternalForce();
             //TestBinModel();

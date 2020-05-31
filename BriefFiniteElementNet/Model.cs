@@ -400,10 +400,14 @@ namespace BriefFiniteElementNet
         public void Solve_MPC(SolverConfiguration config)
         {
             //new version
-            lastResult = new StaticLinearAnalysisResult();
-            lastResult.Parent = this;
 
-            lastResult.SolverFactory = config.SolverFactory;
+            if (lastResult == null)
+            {
+                lastResult = new StaticLinearAnalysisResult();
+                lastResult.Parent = this;
+                lastResult.SolverFactory = config.SolverFactory;
+            }
+                
 
             //if(elements.Any(i=>i is RigidElement))
             //    throw new Exception("Invalid solve for MPC element");// Model with RigidElement element should call Model.Solve()

@@ -1,4 +1,5 @@
-﻿using BriefFiniteElementNet.Elements;
+﻿using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.Elements;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -138,6 +139,100 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
 
 
             Console.ReadKey();
+        }
+
+        static public void Run3()
+        {
+            // 2 x 20m spans with elements of 1m length
+            // Test of running model with 4 loadcases - 2 with vertical loads and 2 with settlements
+            // It can be seen that results for loadCase3 are only correct if it uses the DefaultLoadCase
+
+            List<Node> nodeList = new List<Node>();
+            List<BarElement> elementList = new List<BarElement>();
+
+            var model = new BriefFiniteElementNet.Model();
+
+            for (double n = 0; n <= 40; n = n + 1)
+                nodeList.Add(new Node(x: n, y: 0.0, z: 0.0) { Label = "N" + n });
+
+            nodeList[0].Constraints = Constraints.MovementFixed & Constraints.FixedRX; // Constraints.FixedDX & Constraints.FixedDY & Constraints.FixedDZ & Constraints.FixedRY & Constraints.FixedRZ;
+            nodeList[20].Constraints = Constraints.FixedDZ & Constraints.FixedDY;  // z = vertical
+            nodeList[nodeList.Count - 1].Constraints = Constraints.FixedDZ & Constraints.FixedDY;  // z = vertical
+
+            model.Nodes.AddRange(nodeList);
+
+            model.Trace.Listeners.Add(new ConsoleTraceListener());
+
+            List<LoadCase> loadCases = new List<LoadCase>();
+
+            LoadCase loadCase1 = new LoadCase("L1", LoadType.Dead);
+            LoadCase loadCase2 = new LoadCase("L2", LoadType.Dead);
+            LoadCase loadCase3 = new LoadCase("L3", LoadType.Other);  // using LoadCase.DefaultLoadCase gives correct loadCase3 results 
+            LoadCase loadCase4 = new LoadCase("L4", LoadType.Other);
+
+            loadCases.Add(loadCase1);
+            loadCases.Add(loadCase2);
+            loadCases.Add(loadCase3);
+            loadCases.Add(loadCase4);
+
+            var load1 = new BriefFiniteElementNet.Loads.UniformLoad(loadCase1, new Vector(0, 0, 1), -6000, CoordinationSystem.Global);  // Load in N/m
+            var load2 = new BriefFiniteElementNet.Loads.UniformLoad(loadCase2, new Vector(0, 0, 1), -6000, CoordinationSystem.Global);  // Load in N/m
+
+            var a = 0.1;                            // m²
+            var iy = 0.008333;                      // m4
+            var iz = 8.333e-5;                      // m4
+            var j = 0.1 * 0.1 * 0.1 * 1 / 12.0;     // m4
+            var e = 205e9;                          // N/m²
+            var nu = 0.3;                           // Poisson's ratio
+            var secAA = new BriefFiniteElementNet.Sections.UniformParametric1DSection(a, iy, iz, j);
+
+            var mat = BriefFiniteElementNet.Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(e, nu);
+
+            for (int m = 0; m < 40; m++)
+            {
+                BarElement el = new BarElement(nodeList[m], nodeList[m + 1]);
+                el.Section = secAA;
+                el.Material = mat;
+                el.Loads.Add(load1);
+                el.Loads.Add(load2);
+                elementList.Add(el);
+            }
+
+            model.Elements.Add(elementList.ToArray());
+
+            model.Nodes[20].Settlements.Add(new Settlement(loadCase3, new Displacement(0, 0, -0.010, 0, 0, 0)));  // -10mm settlement
+            model.Nodes[20].Settlements.Add(new Settlement(loadCase4, new Displacement(0, 0, -0.010, 0, 0, 0)));  // +10mm settlement
+
+            foreach (LoadCase loadCase in loadCases) model.Solve_MPC(loadCase);
+
+            //model.Solve_MPC(loadCase1,loadCase2,loadCase3,loadCase4);
+
+            BarElement elem = (BarElement)model.Elements[9];
+
+            for (int load = 0; load < loadCases.Count; load++)
+            {
+                //BarElement elem = (BarElement)model.Elements[9];
+                // For settlement loadcases GetExactInternalForce does not return the correct results
+                
+                Force f = (load < 2) ? 
+                    elem.GetExactInternalForceAt(+0.999999, loadCases[load]) :
+                    elem.GetInternalForceAt(+0.999999, loadCases[load]);
+
+                Console.WriteLine("Element 10 BMyy is {0:0.000} kNm at end", f.My / 1000);
+            }
+
+            var d = model.Nodes[20].GetNodalDisplacement(loadCase3);
+
+
+            var c1 = elem.GetInternalForceAt(+0.999999, loadCase3);
+            var c2 = elem.GetInternalForceAt(+0.999999, loadCase4);
+
+            // Results: Element 10 BMyy is -149.500 kNm at end (correct)
+            //          Element 10 BMyy is -149.500 kNm at end (correct)
+            //          Element 10 BMyy is 0.000 kNm at end (incorrect, should be -64.060)
+            //          Element 10 BMyy is 64.060 kNm at end (correct)
+
+
         }
     }
 }

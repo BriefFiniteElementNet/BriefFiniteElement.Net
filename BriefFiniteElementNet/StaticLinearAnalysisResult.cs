@@ -195,10 +195,7 @@ namespace BriefFiniteElementNet
             var f1 = _displacements.ContainsKey(cse);
             var f2 = _forces.ContainsKey(cse);
 
-            if (f1 != f2)
-                throw new Exception("!");
-
-            if (f1)
+            if (f1 || f2)
                 return;
 
             AddAnalysisResult(cse);
@@ -210,13 +207,9 @@ namespace BriefFiniteElementNet
             var f1 = _displacements.ContainsKey(cse);
             var f2 = _forces.ContainsKey(cse);
 
-            if (f1 != f2)
-                throw new Exception("!");
-
-            if (f1)
+            if (f1 || f2)
                 return;
 
-            //AddAnalysisResult(cse);
             AddAnalysisResult_MPC(cse);
         }
 
@@ -798,13 +791,12 @@ namespace BriefFiniteElementNet
 
             ISolver solver;
 
-            var sp = System.Diagnostics.Stopwatch.StartNew();
+            var sp = Stopwatch.StartNew();
 
 
             var permCalculator = new CsparsenetQrDisplacementPermutationCalculator();
 
             var perm =
-                //CalcUtil.GenerateP_Delta_Mpc(parent, loadCase, new Mathh.GaussRrefFinder());
                 CalcUtil.GenerateP_Delta_Mpc(parent, loadCase, permCalculator);
 
 
