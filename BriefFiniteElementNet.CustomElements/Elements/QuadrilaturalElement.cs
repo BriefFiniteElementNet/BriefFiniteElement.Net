@@ -7,12 +7,7 @@ using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
-
-using BriefFiniteElementNet.ElementHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using BriefFiniteElementNet.Elements.ElementHelpers;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -26,7 +21,7 @@ namespace BriefFiniteElementNet.Elements
 
         private Base2DSection _section;
 
-        private TriangleElementBehaviour _behavior;
+        private QuadElementBehaviour _behavior;
 
         private MembraneFormulation _formulation;
 
@@ -44,7 +39,7 @@ namespace BriefFiniteElementNet.Elements
             set { _section = value; }
         }
 
-        public TriangleElementBehaviour Behavior
+        public QuadElementBehaviour Behavior 
         {
             get { return _behavior; }
             set { _behavior = value; }
@@ -86,23 +81,21 @@ namespace BriefFiniteElementNet.Elements
             var helpers = new List<IElementHelper>();
 
             {
-                if ((this._behavior & TriangleElementBehaviour.Bending) != 0)
+                if ((this._behavior & QuadElementBehaviour.Bending) != 0)
                 {
                     helpers.Add(new DkqHelper());
                 }
 
-                if ((this._behavior & TriangleElementBehaviour.Membrane) != 0)
+                if ((this._behavior & QuadElementBehaviour.Membrane) != 0)
                 {
-                    //helpers.Add(new CstHelper());
-                    throw new NotImplementedException();
+                    helpers.Add(new Q4MembraneHelper());
                 }
 
-                if ((this._behavior & TriangleElementBehaviour.DrillingDof) != 0)
+                if ((this._behavior & QuadElementBehaviour.DrillingDof) != 0)
                 {
-                    helpers.Add(new TriangleBasicDrillingDofHelper());
+                    helpers.Add(new QuadBasicDrillingDofHelper());
                 }
             }
-
 
             return helpers.ToArray();
         }
