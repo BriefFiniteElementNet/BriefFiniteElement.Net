@@ -468,7 +468,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             throw new NotImplementedException();
         }
 
-        public int Ng = 1;//right value is 3 i think
+        public int Ng = 1;
 
         public int[] GetBMaxOrder(Element targetElement)
         {
