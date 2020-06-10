@@ -30,7 +30,7 @@ namespace BriefFiniteElementNet.Elements
 {
     [Serializable]
     [Obsolete("not fully implemented yet")]
-    public class QuadrilaturalElement : Element
+    public class QuadrilaturalElement : Element     // based on the BFE.Net TriangleElement-Class
     {
 
         #region properties
@@ -41,7 +41,6 @@ namespace BriefFiniteElementNet.Elements
         private QuadElementBehaviour _behavior;
 
         private MembraneFormulation _formulation;
-
 
 
         public BaseMaterial Material
