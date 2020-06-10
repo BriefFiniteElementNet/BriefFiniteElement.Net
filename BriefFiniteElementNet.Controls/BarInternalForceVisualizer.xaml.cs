@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -31,8 +32,14 @@ namespace BriefFiniteElementNet.Controls
 
             Context.ComponentChanged += (a, b) => UpdateUi();
             Context.TypeChanged += (a, b) => UpdateUi();
-            Context.TargetElementChanged += (a, b) => UpdateUi();
+            Context.TargetElementChanged += (a, b) =>
+            {
+                UpdateUi();
+                Context.ReloadLoadCases();
+            };
 
+            Context.SelectedLoadCaseChanged += (a, b) => UpdateUi();
+            Context.init();
         }
 
         public void UpdateUi()
@@ -77,7 +84,8 @@ namespace BriefFiniteElementNet.Controls
 
             var pts = new List<Point>();
 
-            
+            var lc = Context.SelectedLoadCase;
+
             for (var i = 0; i < l2.Length; i++)
             {
                 var xi = l2[i];
@@ -86,9 +94,9 @@ namespace BriefFiniteElementNet.Controls
                 Force frc;
 
                 if (Context.Type == BarInternalForceContext.ForceType.Approximate)
-                    frc = bar.GetInternalForceAt(xi);
+                    frc = bar.GetInternalForceAt(xi, lc);
                 else
-                    frc = bar.GetExactInternalForceAt(xi);
+                    frc = bar.GetExactInternalForceAt(xi, lc);
 
                 var y = 0.0;
 
@@ -126,13 +134,14 @@ namespace BriefFiniteElementNet.Controls
 
 
             var gr = new LineGraph(src);
+            
             gr.Stroke = Brushes.Black;
             gr.StrokeThickness = 2;
             gr.Name = Context.Component.ToString();
 
             plotter.Children.Add(gr);
             //plotter.AddLineGraph(src, Colors.Black, 2, Context.Component.ToString());
-
+            Microsoft.Research.DynamicDataDisplay.Charts.Legend.SetDescription(gr, Context.Component.ToString());
         }
 
         private BarInternalForceContext Context;
@@ -280,6 +289,77 @@ namespace BriefFiniteElementNet.Controls
 
             #endregion
 
+            #region AllLoadCases Property and field
+
+            [Obfuscation(Exclude = true, ApplyToMembers = false)]
+            public ObservableCollection<LoadCase> AllLoadCases
+            {
+                get { return _AllLoadCases; }
+                set
+                {
+                    if (AreEqualObjects(_AllLoadCases, value))
+                        return;
+
+                    var _fieldOldValue = _AllLoadCases;
+
+                    _AllLoadCases = value;
+
+                    BarInternalForceContext.OnAllLoadCasesChanged(this, new PropertyValueChangedEventArgs<ObservableCollection<LoadCase>>(_fieldOldValue, value));
+
+                    this.OnPropertyChanged("AllLoadCases");
+                }
+            }
+
+            private ObservableCollection<LoadCase> _AllLoadCases;
+
+            public EventHandler<PropertyValueChangedEventArgs<ObservableCollection<LoadCase>>> AllLoadCasesChanged;
+
+            public static void OnAllLoadCasesChanged(object sender, PropertyValueChangedEventArgs<ObservableCollection<LoadCase>> e)
+            {
+                var obj = sender as BarInternalForceContext;
+
+                if (obj.AllLoadCasesChanged != null)
+                    obj.AllLoadCasesChanged(obj, e);
+            }
+
+            #endregion
+
+            #region SelectedLoadCase Property and field
+
+            [Obfuscation(Exclude = true, ApplyToMembers = false)]
+            public LoadCase SelectedLoadCase
+            {
+                get { return _SelectedLoadCase; }
+                set
+                {
+                    if (AreEqualObjects(_SelectedLoadCase, value))
+                        return;
+
+                    var _fieldOldValue = _SelectedLoadCase;
+
+                    _SelectedLoadCase = value;
+
+                    BarInternalForceContext.OnSelectedLoadCaseChanged(this, new PropertyValueChangedEventArgs<LoadCase>(_fieldOldValue, value));
+
+                    this.OnPropertyChanged("SelectedLoadCase");
+                }
+            }
+
+            private LoadCase _SelectedLoadCase;
+
+            public EventHandler<PropertyValueChangedEventArgs<LoadCase>> SelectedLoadCaseChanged;
+
+            public static void OnSelectedLoadCaseChanged(object sender, PropertyValueChangedEventArgs<LoadCase> e)
+            {
+                var obj = sender as BarInternalForceContext;
+
+                if (obj.SelectedLoadCaseChanged != null)
+                    obj.SelectedLoadCaseChanged(obj, e);
+            }
+
+            #endregion
+
+
             public enum ForceComponent
             {
                 Fx,
@@ -294,6 +374,32 @@ namespace BriefFiniteElementNet.Controls
             {
                 Approximate,
                 Exact
+            }
+
+
+            public void init()
+            {
+                ReloadLoadCases();
+            }
+
+            public void ReloadLoadCases()
+            {
+                if (AllLoadCases == null)
+                    AllLoadCases = new ObservableCollection<LoadCase>();
+                else
+                    AllLoadCases.Clear();
+
+
+                AllLoadCases.Add(LoadCase.DefaultLoadCase);
+
+                if(targetElement!=null)
+                {
+                    foreach (var l in targetElement.Loads)
+                        if (!AllLoadCases.Contains(l.Case))
+                            AllLoadCases.Add(l.Case);
+                }
+
+                SelectedLoadCase = LoadCase.DefaultLoadCase;
             }
         }
 

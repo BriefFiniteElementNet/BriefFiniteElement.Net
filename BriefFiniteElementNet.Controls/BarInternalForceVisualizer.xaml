@@ -35,13 +35,29 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>    
             <RowDefinition Height="30"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <d3:ChartPlotter Name="plotter" Margin="10" Grid.Row="2" Grid.ColumnSpan="2" />
+        <d3:ChartPlotter Name="plotter" Margin="10" Grid.Row="3" Grid.ColumnSpan="2" />
         <TextBlock Margin="5" TextWrapping="Wrap" Text="Force Component"/>
-        <TextBlock Margin="5" Grid.Row="1" TextWrapping="Wrap" Text="Force Type"/>
+        <TextBlock Margin="5" Grid.Row="1" TextWrapping="Wrap" Text="Force Type [?]" ToolTip="Exact: BarElement.GetExactInternalForceAt(), Approximate: BarElement.GetInternalForceAt()"/>
+        <TextBlock Margin="5" Grid.Row="2" TextWrapping="Wrap" Text="Load Case [?]" ToolTip="The case of load"/>
+        
         <ComboBox Grid.Column="1" Margin="5" ItemsSource="{Binding Source={StaticResource components}}" SelectedItem="{Binding Component}"/>
         <ComboBox Grid.Column="1" Margin="5" Grid.Row="1" ItemsSource="{Binding Source={StaticResource types}}" SelectedItem="{Binding Type}"/>
+        <ComboBox Grid.Column="1" Margin="5" Grid.Row="2" ItemsSource="{Binding AllLoadCases}" SelectedItem="{Binding SelectedLoadCase}" ItemTemplate="{DynamicResource DataTemplate1}">
+            <ComboBox.Resources>
+                <DataTemplate x:Key="DataTemplate1">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding CaseName}"/>
+                        <TextBlock Text="(" Foreground="Gray"/>
+                        <TextBlock Text="{Binding LoadType}" Foreground="Gray"/>
+                        <TextBlock Text=")" Foreground="Gray"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ComboBox.Resources>
+        </ComboBox>
+
     </Grid>
 </UserControl>
