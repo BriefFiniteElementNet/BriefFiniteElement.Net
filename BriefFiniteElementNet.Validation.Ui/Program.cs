@@ -22,7 +22,7 @@ namespace BriefFiniteElementNet.Validation.Ui
             //BarElementTester.ValidateConsoleUniformLoad();
             //BarElementTester.TestEndReleaseStyiffness();
 
-            GithubIssues.Issue48.Run1();
+            GithubIssues.Issue50.Run1();
 
 
             Console.ReadKey();
