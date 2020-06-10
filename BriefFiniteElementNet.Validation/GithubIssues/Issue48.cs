@@ -49,23 +49,9 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             Console.WriteLine("support reaction of n0: {0}, n1: {1}", n0Force, n1Force);
 
             var elm = model.Elements[0] as BarElement;
-            var fnc = new Func<double, double>(x =>
-            {
-                try
-                {
-                    var xi = elm.LocalCoordsToIsoCoords(x);
-                    var frc = elm.GetExactInternalForceAt(xi[0]);
-                    return frc.My;
-                }
-                catch
-                {
 
-                    return 0;
-                }
+            BarInternalForceVisualizer.VisualizeInNewWindow(elm);
 
-            });
-
-            FunctionVisualizer.VisualizeInNewWindow(fnc, 1E-6, l - 1E-6, 11);
         }
     }
 }
