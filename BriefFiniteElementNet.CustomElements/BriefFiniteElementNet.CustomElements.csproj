@@ -40,8 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="ElementHelpers\DkqHelper.cs" />
+    <Compile Include="ElementHelpers\ElementHelperExtensions.cs" />
     <Compile Include="ElementHelpers\Q4MembraneHelper.cs" />
     <Compile Include="ElementHelpers\QuadBasicDrillingDofHelper.cs" />
     <Compile Include="Elements\QuadrilaturalElement.cs" />

@@ -8,7 +8,6 @@ using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
 using static BriefFiniteElementNet.ElementPermuteHelper;
-using CSparse.Storage;
 using System.Xml.XPath;
 
 namespace BriefFiniteElementNet.Elements.ElementHelpers
@@ -391,7 +390,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public virtual Matrix CalcLocalKMatrix(Element targetElement)
         {
-            return                           CalcLocalKMatrix_Quad(this, targetElement); // !!!!!!
+            return ElementHelperExtensions.CalcLocalKMatrix_Quad(this, targetElement);
         }
 
         public Matrix CalcLocalMMatrix(Element targetElement)
@@ -549,9 +548,12 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             #region non uniform
 
-            if (load is DistributedNonUniformLoad)
+            if (load is Loads.PartialNonUniformLoad)
             {
-                var ul = load as DistributedNonUniformLoad;
+
+                throw new NotImplementedException();
+
+                var ul = load as Loads.PartialNonUniformLoad;
 
                 var localDir = ul.Direction.GetUnit();
 
@@ -562,7 +564,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 {
                     var shp = GetNMatrixAt(targetElement, xi, eta, 0).Transpose();
                     var frc = new Matrix(4, 1);
-                    frc.FillColumn(0, ul.NodalMagnitudes);
+                    //frc.FillColumn(0, ul.NodalMagnitudes);
                     var mult = shp * frc;
 
                     return mult[0, 0];
