@@ -18,6 +18,9 @@ namespace BriefFiniteElementNet.Mathh
         public Tuple<CCS, double[]> CalculateDisplacementPermutation(CCS a)
         {
 
+
+
+
             
 
             //based on this solution : https://github.com/wo80/CSparse.NET/issues/7#issuecomment-317268696
