@@ -6,7 +6,7 @@ using System.Text;
 namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
-    /// Utility class for PlateElementBehaviour s
+    /// Utility class for PlateElementBehaviour 
     /// </summary>
     public static class PlateElementBehaviours
     {
