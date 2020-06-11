@@ -9,9 +9,11 @@ using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
 using static BriefFiniteElementNet.ElementPermuteHelper;
 using CSparse.Storage;
+using System.Xml.XPath;
 
-namespace BriefFiniteElementNet.ElementHelpers
+namespace BriefFiniteElementNet.Elements.ElementHelpers
 {
+    // not working so far
     public class DkqHelper:IElementHelper
     {
         public Element TargetElement { get; set; }
@@ -389,7 +391,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public virtual Matrix CalcLocalKMatrix(Element targetElement)
         {
-            return ElementHelperExtensions.CalcLocalKMatrix_Quad(this, targetElement);
+            return                           CalcLocalKMatrix_Quad(this, targetElement); // !!!!!!
         }
 
         public Matrix CalcLocalMMatrix(Element targetElement)

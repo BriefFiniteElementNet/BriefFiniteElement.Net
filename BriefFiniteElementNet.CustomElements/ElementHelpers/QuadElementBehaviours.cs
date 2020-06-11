@@ -2,17 +2,17 @@
 //
 // Project: VIT-V
 //
-// Program: BriefFiniteElement.Net (Quadrilateral Elements)
+// Program: BriefFiniteElement.Net - QuadElementBehaviours.cs
 //
 // Revision History
 //
 // Date          Author          	            Description
-// 10.06.2020    T.Thaler, M.Mischke     	    v1.0  
+// 11.06.2020    T.Thaler, M.Mischke     	    v1.0  
 // 
 //---------------------------------------------------------------------------------------
-// Copyright 2017-2020 by Brandenburg University of Technology. All rights reserved.
-// This work is a research work and trade secret of the Brandenburg University of Technology. 
-// Unauthorized use or copying requires an indication of the authors reference.
+// Copyleft 2017-2020 by Brandenburg University of Technology. Intellectual proprerty 
+// rights reserved in terms of LGPL license. This work is a research work of Brandenburg
+// University of Technology. Use or copying requires an indication of the authors reference.
 //---------------------------------------------------------------------------------------
 
 using System;
