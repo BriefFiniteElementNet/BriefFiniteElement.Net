@@ -9,7 +9,7 @@ namespace BriefFiniteElementNet.Elements
     /// Represents the possible behaviors of Triangle Element
     /// </summary>
     [Flags]
-    public enum TriangleElementBehaviour
+    public enum PlateElementBehaviour
     {
         /// <summary>
         /// The plate bending behavior.
