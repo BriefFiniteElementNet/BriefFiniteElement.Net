@@ -6,7 +6,7 @@ using System.Text;
 namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
-    /// Represents the possible behaviors of Triangle Element
+    /// Represents the possible behaviors of 2d Plate Elements (like triangle)
     /// </summary>
     [Flags]
     public enum PlateElementBehaviour
@@ -15,19 +15,6 @@ namespace BriefFiniteElementNet.Elements
         /// The plate bending behavior.
         /// </summary>
         Bending = 1,
-
-        /*
-        /// <summary>
-        /// The membrane behavior with Plane Stress assumption. based on CST (Constant Stress/Strain Triangle) element.
-        /// </summary>
-        PlaneStressMembrane = 2,
-
-
-        /// <summary>
-        /// The membrane behavior with Plane Strain assumption. based on CST (Constant Stress/Strain Triangle) element.
-        /// </summary>
-        PlaneStrainMembrane = 4,
-        */
 
         /// <summary>
         /// The membrane behavior.

@@ -5,6 +5,9 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Elements
 {
+    /// <summary>
+    /// Utility class for PlateElementBehaviour s
+    /// </summary>
     public static class PlateElementBehaviours
     {
         /// <summary>

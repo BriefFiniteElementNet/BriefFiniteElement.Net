@@ -7,12 +7,7 @@ using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
-
-using BriefFiniteElementNet.ElementHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using BriefFiniteElementNet.Elements.ElementHelpers;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -93,16 +88,14 @@ namespace BriefFiniteElementNet.Elements
 
                 if ((this._behavior & PlateElementBehaviour.Membrane) != 0)
                 {
-                    //helpers.Add(new CstHelper());
-                    throw new NotImplementedException();
+                    helpers.Add(new Q4MembraneHelper());
                 }
 
                 if ((this._behavior & PlateElementBehaviour.DrillingDof) != 0)
                 {
-                    helpers.Add(new TriangleBasicDrillingDofHelper());
+                    helpers.Add(new QuadBasicDrillingDofHelper());
                 }
             }
-
 
             return helpers.ToArray();
         }
