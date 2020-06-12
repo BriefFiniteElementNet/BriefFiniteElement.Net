@@ -313,6 +313,11 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
         {
+            //TODO: this is shape function maybe for Q4 element, not for quad element.
+            //shape function is used in calculating equivalent nodal loads and internal displacements
+            //both of these should takes the nodal rotations into account.
+            //as dqk have 12 dof, shape function matrix should be 12 column matrix.
+
             //used for distributed load, 8.26 of http://what-when-how.com/the-finite-element-method/fem-for-plates-and-shells-finite-element-method-part-1/
 
             //N from 7.54 of http://what-when-how.com/the-finite-element-method/fem-for-two-dimensional-solids-finite-element-method-part-2/
