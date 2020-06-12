@@ -18,7 +18,7 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             double h = 5;
 
             Node n1 = new Node(0, 0, 0);
-            Node n2 = new Node(0, 0, h);
+            Node n2 = new Node(h, 0, 0);
             n1.Constraints = Constraints.Fixed;
 
             var section = new UniformGeometric1DSection(SectionGenerator.GetRectangularSection(1, 0.5));
@@ -31,19 +31,24 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             };
             e.Behavior = BarElementBehaviours.FullFrame;
 
+            var lc1 = new LoadCase("C1", LoadType.Dead);
+            var lc2 = new LoadCase("C2", LoadType.Live);
 
             var load = new UniformLoad()
             {
                 Direction = Vector.FromXYZ(0, 0, -1),
                 CoordinationSystem = CoordinationSystem.Global,
-                Magnitude = 1
+                Magnitude = 1,
+                Case = lc1
             };
             var load2 = new UniformLoad()
             {
                 Direction = Vector.FromXYZ(1, 0, 0),
                 CoordinationSystem = CoordinationSystem.Global,
                 Magnitude = 10,
+                Case = lc2
             };
+
             e.Loads.Add(load);
             e.Loads.Add(load2);
 
@@ -53,28 +58,8 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             model.Elements.Add(e);
             model.Solve_MPC();
 
-
             BarInternalForceVisualizer.VisualizeInNewWindow(e);
-            {
-                var elm = model.Elements[0] as BarElement;
-                var fnc = new Func<double, double>(x =>
-                {
-                    try
-                    {
-                        var xi = elm.LocalCoordsToIsoCoords(x);
-                        var frc = elm.GetExactInternalForceAt(xi[0]);
-                        return frc.My;
-                    }
-                    catch
-                    {
-
-                        return 0;
-                    }
-
-                });
-
-                FunctionVisualizer.VisualizeInNewWindow(fnc, 0, elm.GetElementLength(), 11);
-            }
+            
         }
     }
 }
