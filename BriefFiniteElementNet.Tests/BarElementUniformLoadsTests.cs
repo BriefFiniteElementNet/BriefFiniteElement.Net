@@ -324,5 +324,44 @@ namespace BriefFiniteElementNet.Tests
 
             }
         }
+
+        [TestMethod]
+        public void LoadInternalForce_uniformload_truss()
+        {
+            //internal force of 2 node beam beam with uniform load and both ends fixed
+
+            var w = 2.0;
+
+            var nodes = new Node[2];
+
+            var l = 4;
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+
+            var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, Vector.I, w, CoordinationSystem.Global);
+
+            var hlpr = new ElementHelpers.TrussHelper(elm);
+
+
+            for (var x = 0.0+1e-6; x <= l-1e-6; x += 0.1)
+            {
+                var local = x;
+                var iso = elm.LocalCoordsToIsoCoords(x);
+
+                var test = hlpr.GetLoadInternalForceAt(elm, u1, iso).FirstOrDefault(i => i.Item1 == DoF.Dx).Item2;
+
+
+                var exact = (w * l - x * l)/2.0;
+
+                Assert.IsTrue(test.FEquals(exact, 1e-5), "invalid value");
+            }
+
+
+
+        }
     }
 }

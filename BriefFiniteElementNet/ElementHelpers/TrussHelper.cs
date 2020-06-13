@@ -566,7 +566,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 for (var i = 0; i < n; i++)
                 {
-                    if (xi_s[i] < isoLocation[0])
+                    if (xi_s[i] <= isoLocation[0])
                     {
                         var frc_i = endForces[i];// new Force();
                         ends += frc_i.Move(new Point(x_s[i], 0, 0), Point.Origins);
@@ -667,19 +667,39 @@ namespace BriefFiniteElementNet.ElementHelpers
                         integral = intgV.Integrate();
                     }
 
+                    var X = Iso2Local(targetElement, isoLocation)[0];
+
                     var f_i = integral[0, 0];
 
-                    if (br.StartReleaseCondition.DX == DofConstraint.Released)
-                        f_i = 0;
+                    var f = new Force();
 
+                    f.Fx = f_i;
+
+
+                    //this block is commented to fix the issue #48 on github
+                    //when this block is commented out, then issue 48 is fixed
+                    {
+
+                        //if (br.StartReleaseCondition.DX == DofConstraint.Released)
+                        //    f_i = 0;
+                    }
+
+                    var f2 = f + ends;
+
+                    f2 = f2.Move(new Point(0, 0, 0), new Point(X, 0, 0));
+
+                    f2 *= -1;
+
+                    /*
                     var movedEnds = ends.Move(new Point(), new Point());//no need to move as it is truss without moments
                     var fMoved = new Force(f_i, 00, 00, 0, 0, 0);
 
                     var ft = movedEnds + fMoved;
+                    */
 
                     //ft *= -1;
 
-                    buff.Add(Tuple.Create(DoF.Dx, ft.Fx));
+                    buff.Add(Tuple.Create(DoF.Dx, f2.Fx));
                     
                 }
 
