@@ -26,10 +26,9 @@ using BriefFiniteElementNet.ElementHelpers;
 
 namespace BriefFiniteElementNet.Elements.ElementHelpers
 {
-    // not working so far
     public static class ElementHelperExtensions
     {
-        public static Matrix CalcLocalKMatrix_Quad(IElementHelper helper, Element targetElement)    // function is not recognized 
+        public static Matrix CalcLocalKMatrix_Quad(IElementHelper helper, Element targetElement)
         {
             var qq = targetElement as QuadrilaturalElement; 
 

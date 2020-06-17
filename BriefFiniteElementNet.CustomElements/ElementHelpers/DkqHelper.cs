@@ -13,7 +13,6 @@ using System.Xml.XPath;
 
 namespace BriefFiniteElementNet.Elements.ElementHelpers
 {
-    // not working so far
     public class DkqHelper:IElementHelper
     {
         public Element TargetElement { get; set; }
