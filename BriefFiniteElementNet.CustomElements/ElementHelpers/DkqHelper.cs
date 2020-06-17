@@ -391,7 +391,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public virtual Matrix CalcLocalKMatrix(Element targetElement)
         {
-            return                           CalcLocalKMatrix_Quad(this, targetElement); // !!!!!!
+            return ElementHelperExtensions.CalcLocalKMatrix_Quad(this, targetElement); 
         }
 
         public Matrix CalcLocalMMatrix(Element targetElement)
@@ -549,7 +549,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             #region non uniform
 
-            if (load is DistributedNonUniformLoad)
+            if (load is DistributedNonUniformLoad)  // missing??
             {
                 var ul = load as DistributedNonUniformLoad;
 

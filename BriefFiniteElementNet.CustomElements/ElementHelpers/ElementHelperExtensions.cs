@@ -7,7 +7,7 @@
 // Revision History
 //
 // Date          Author          	            Description
-// 11.06.2020    T.Thaler, M.Mischke     	    v1.0  
+// 17.06.2020    T.Thaler, M.Mischke     	    v1.0  
 // 
 //---------------------------------------------------------------------------------------
 // Copyleft 2017-2020 by Brandenburg University of Technology. Intellectual proprerty 
@@ -22,15 +22,16 @@ using System.Text;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
 using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.ElementHelpers;
 
-namespace BriefFiniteElementNet.ElementHelpers
+namespace BriefFiniteElementNet.Elements.ElementHelpers
 {
     // not working so far
     public static class ElementHelperExtensions
     {
-        public static Matrix CalcLocalKMatrix_Quad(IElementHelper helper, Element targetElement)    // Matrix wird nicht erkannt!!!!!!
+        public static Matrix CalcLocalKMatrix_Quad(IElementHelper helper, Element targetElement)    // function is not recognized 
         {
-            var qq = targetElement as TriangleElement; 
+            var qq = targetElement as QuadrilaturalElement; 
 
             if (qq == null)
                 throw new Exception();
