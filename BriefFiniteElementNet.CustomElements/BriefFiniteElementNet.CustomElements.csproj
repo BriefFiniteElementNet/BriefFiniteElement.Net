@@ -31,6 +31,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CSparse, Version=3.4.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CSparse.3.4.3\lib\net40\CSparse.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -50,10 +53,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\..\Documents\Bewerbung+Uni\Uni-Job\Vernetzer\BriefFiniteElement.Net-master\CSparse.NET-master\CSparse\CSparse.csproj">
-      <Project>{3891e243-271f-42d9-b4fa-9dd4d3b1ec49}</Project>
-      <Name>CSparse</Name>
-    </ProjectReference>
     <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj">
       <Project>{82c63c6b-651a-4308-8b89-b4c643f3a7c2}</Project>
       <Name>BriefFiniteElementNet.Common</Name>
@@ -69,6 +68,7 @@
     <None Include="ElementHelpers\Q4MembraneHelper.md" />
     <None Include="ElementHelpers\QuadBasicDrillingDofHelper.md" />
     <None Include="Elements\QuadrilaturalElement.md" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
