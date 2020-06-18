@@ -8,8 +8,6 @@ using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
 using static BriefFiniteElementNet.ElementPermuteHelper;
-using CSparse.Storage;
-using System.Xml.XPath;
 
 namespace BriefFiniteElementNet.Elements.ElementHelpers
 {
@@ -548,15 +546,15 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             #region non uniform
 
-            if (load is DistributedNonUniformLoad)  // missing??
+            if (load is BriefFiniteElementNet.Loads.PartialNonUniformLoad)  // missing??
             {
-                var ul = load as DistributedNonUniformLoad;
+                var ul = load as BriefFiniteElementNet.Loads.PartialNonUniformLoad;
 
                 var localDir = ul.Direction.GetUnit();
 
                 if (ul.CoordinationSystem == CoordinationSystem.Global)
                     localDir = tr.TransformGlobalToLocal(localDir);
-
+                /*
                 var interpolator = new Func<double, double, double>((xi,eta)=>
                 {
                     var shp = GetNMatrixAt(targetElement, xi, eta, 0).Transpose();
@@ -570,7 +568,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 var ux = new Func<double, double, double>((xi, eta) => localDir.X * interpolator(xi, eta));
                 var uy = new Func<double, double, double>((xi, eta) => localDir.Y * interpolator(xi, eta));
                 var uz = new Func<double, double, double>((xi, eta) => localDir.Z * interpolator(xi, eta));
-
+                */
 
                 var intg = new GaussianIntegrator();
 
@@ -585,6 +583,8 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
                 intg.GammaPointCount = 1;
                 intg.XiPointCount = intg.EtaPointCount = 2;
+                
+                throw new Exception();
 
                 intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
                 {
@@ -592,9 +592,9 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                     var j = GetJMatrixAt(targetElement, xi, eta, 0);
                     shp.MultiplyByConstant(j.Determinant());
 
-                    var uzm = uz(xi, eta);
+                    //var uzm = ul.SeverityFunction.Evaluate(xi, eta);
 
-                    shp.MultiplyByConstant(uzm);
+                    //shp.MultiplyByConstant(uzm);
 
                     return shp;
                 }

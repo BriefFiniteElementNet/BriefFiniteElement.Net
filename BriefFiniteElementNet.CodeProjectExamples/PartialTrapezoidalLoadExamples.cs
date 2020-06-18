@@ -13,7 +13,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
         public static void test1()
         {
             var load = new PartialNonUniformLoad();            //creating new instance of load
-            load.SeverityFunction = Mathh.Polynomial.FromPoints(-1, 5, 1, 7);
+            load.SeverityFunction = Mathh.SingleVariablePolynomial.FromPoints(-1, 5, 1, 7);
 
             load.StartLocation = new IsoPoint(-0.5);      //set locations of trapezoidal load
             load.EndLocation = new IsoPoint(0.5);         //set locations of trapezoidal load

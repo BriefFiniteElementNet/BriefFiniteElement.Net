@@ -12,7 +12,7 @@ using BriefFiniteElementNet.Controls;
 using BriefFiniteElementNet.DebuggerVisualizers;
 using BriefFiniteElementNet.Mathh;
 
-[assembly: System.Diagnostics.DebuggerVisualizer(typeof(PolynomialVisualizer), typeof(VisualizerObjectSource), Target = typeof(Polynomial), Description = "Epsi1on polynomial Visualizer!")]
+[assembly: System.Diagnostics.DebuggerVisualizer(typeof(PolynomialVisualizer), typeof(VisualizerObjectSource), Target = typeof(SingleVariablePolynomial), Description = "Epsi1on polynomial Visualizer!")]
 namespace BriefFiniteElementNet.DebuggerVisualizers
 {
 
@@ -40,7 +40,7 @@ namespace BriefFiniteElementNet.DebuggerVisualizers
             //VisualizerDevelopmentHost visualizerHost = new VisualizerDevelopmentHost(objectToVisualize, typeof(MatrixVisualizer));
             //visualizerHost.ShowVisualizer();
 
-            var pl = objectToVisualize as Polynomial;
+            var pl = objectToVisualize as SingleVariablePolynomial;
 
             if (pl == null)
                 return;

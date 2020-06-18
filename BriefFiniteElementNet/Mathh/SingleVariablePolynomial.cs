@@ -7,19 +7,19 @@ using System.Globalization;
 namespace BriefFiniteElementNet.Mathh
 {
     [Serializable]
-    public class Polynomial
+    public class SingleVariablePolynomial
     {
-        public static Polynomial FromPoints(double x1, double y1)
+        public static SingleVariablePolynomial FromPoints(double x1, double y1)
         {
             return FromPoints(Tuple.Create(x1, y1));
         }
 
-        public static Polynomial FromPoints(double x1, double y1, double x2, double y2)
+        public static SingleVariablePolynomial FromPoints(double x1, double y1, double x2, double y2)
         {
             return FromPoints(Tuple.Create(x1, y1), Tuple.Create(x2, y2));
         }
 
-        public static Polynomial FromPoints(params Tuple<double,double>[] points)
+        public static SingleVariablePolynomial FromPoints(params Tuple<double,double>[] points)
         {
             var n = points.Length;
 
@@ -43,21 +43,21 @@ namespace BriefFiniteElementNet.Mathh
 
             var coefs = mtx.Solve(b.CoreArray);
 
-            return new Polynomial(coefs);
+            return new SingleVariablePolynomial(coefs);
         }
 
-        public Polynomial(params double[] coefs)
+        public SingleVariablePolynomial(params double[] coefs)
         {
             Coefficients = (double[])coefs.Clone();
         }
 
         public double[] Coefficients;
 
-        public Polynomial Clone()
+        public SingleVariablePolynomial Clone()
         {
             var c2 = Coefficients == null ? (double[])null : (double[])Coefficients.Clone();
 
-            var buf = new Polynomial(c2);
+            var buf = new SingleVariablePolynomial(c2);
 
             return buf;
         }
@@ -86,16 +86,16 @@ namespace BriefFiniteElementNet.Mathh
         /// </summary>
         /// <param name="deg">derivation degree</param>
         /// <returns>derivation</returns>
-        public Polynomial GetDerivative(int deg)
+        public SingleVariablePolynomial GetDerivative(int deg)
         {
             if (deg == 0)
-                return (Polynomial)this.MemberwiseClone();
+                return (SingleVariablePolynomial)this.MemberwiseClone();
 
             if (Coefficients.Length == 0)
                 return this.Clone();
 
             if (deg >= Coefficients.Length)
-                return new Polynomial();
+                return new SingleVariablePolynomial();
 
             var dic = new Dictionary<int, double>();
 
@@ -126,7 +126,7 @@ namespace BriefFiniteElementNet.Mathh
                 buf[i] = dic[origPow];
             }
 
-            var pBuf = new Polynomial(buf);
+            var pBuf = new SingleVariablePolynomial(buf);
             return pBuf;
             /**/
         }
@@ -309,7 +309,7 @@ namespace BriefFiniteElementNet.Mathh
             return string.Join(" + ", parts);
         }
 
-        protected bool Equals(Polynomial other)
+        protected bool Equals(SingleVariablePolynomial other)
         {
             if (ReferenceEquals(Coefficients, null) && ReferenceEquals(other.Coefficients, null))
                 return true;
@@ -337,12 +337,64 @@ namespace BriefFiniteElementNet.Mathh
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Polynomial) obj);
+            return Equals((SingleVariablePolynomial) obj);
         }
 
         public override int GetHashCode()
         {
             return (Coefficients != null ? Coefficients.GetHashCode() : 0);
         }
+    }
+
+
+    /// <summary>
+    /// Represents an internface for single or multy-variable polynomial
+    /// it is a function with one output and one or multiple inputs
+    /// </summary>
+    /// <remarks>
+    /// Example of multy variable polynomials are 'y*x^2 + 2 y − 4x + 7'
+    /// </remarks>
+    public interface IPolynomial
+    {
+        /// <summary>
+        /// Evaluates the value of polynomial at specified <see cref="x"/>
+        /// </summary>
+        /// <param name="x">evaluation point coordinates</param>
+        /// <returns>P(<see cref="x"/>)</returns>
+        double Evaluate(params double[] x);
+
+        /// <summary>
+        /// Evaluates the <see cref="n"/>'th derivation of current polynomial at specified <see cref="x"/>.
+        /// </summary>
+        /// <param name="n">derivation degree</param>
+        /// <param name="x">evaluation location</param>
+        /// <returns>evaluation of derivation</returns>
+        /// <remarks>
+        /// 
+        /// </remarks>
+        Matrix EvaluateNthDerivative(int n, params double[] x);
+
+        /// <summary>
+        /// Gets the derivative of polynomial as another polynomial
+        /// </summary>
+        /// <param name="deg">derivation degree</param>
+        /// <returns>derivation</returns>
+        double EvaluateDerivative(params double[] x);
+
+        /// <summary>
+        /// The number of variables
+        /// </summary>
+        /// <remarks>
+        /// for example two for 'y*x^2 + 2 y − 4x + 7' and one for 'x^3+2x+1'
+        /// </remarks>
+        int VariableCount { get; }
+
+        /// <summary>
+        /// Gets the max degree of polynomial
+        /// </summary>
+        /// <remarks>
+        /// example for 'y*x^2 + 2 y − 4x + 7' is y degree is 1, and x degree is 2
+        /// </remarks>
+        int[] Degree { get; }
     }
 }

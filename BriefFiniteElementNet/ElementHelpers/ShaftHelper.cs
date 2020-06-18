@@ -187,7 +187,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             var xi = isoCoords[0];
 
-            Polynomial[] ns = null;
+            SingleVariablePolynomial[] ns = null;
 
             /**/
             {//retrieve or generate shapefunctions
@@ -199,7 +199,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 if (ns == null)
                 {
-                    ns = new Polynomial[targetElement.Nodes.Length];
+                    ns = new SingleVariablePolynomial[targetElement.Nodes.Length];
 
                     for (var i = 0; i < ns.Length; i++)
                         ns[i] = GetN_i(targetElement, i);
@@ -224,7 +224,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
-        public Polynomial GetN_i(Element targetElement, int ith)
+        public SingleVariablePolynomial GetN_i(Element targetElement, int ith)
         {
             var bar = targetElement as BarElement;
 
@@ -270,7 +270,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
 
             var res = condMtx.Inverse() * rMtx;
-            var buf = new Polynomial(res.CoreArray);
+            var buf = new SingleVariablePolynomial(res.CoreArray);
 
             { //test
                 var epsilon = 0.0;

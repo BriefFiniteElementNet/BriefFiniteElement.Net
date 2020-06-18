@@ -64,8 +64,8 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
-            Polynomial[] nss = null;
-            Polynomial[] mss = null;
+            SingleVariablePolynomial[] nss = null;
+            SingleVariablePolynomial[] mss = null;
 
             var bar = targetElement as BarElement;
 
@@ -378,7 +378,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         //private readonly string mssKey = "82069A88-26BD-4902-9CA6-7AE324193FE3:X";
         //private readonly string nssKey = "0EECCFF2-8CAE-4D65-935F-15E1AF31709B:X" ;
 
-        public bool GetShapeFunctions(Element targetElement, out Polynomial[] nss, out Polynomial[] mss)
+        public bool GetShapeFunctions(Element targetElement, out SingleVariablePolynomial[] nss, out SingleVariablePolynomial[] mss)
         {
             nss = null;
             mss = null;
@@ -455,8 +455,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             CondsListPool.Free(cnds);
 
-            mss = new Polynomial[n];
-            nss = new Polynomial[n];
+            mss = new SingleVariablePolynomial[n];
+            nss = new SingleVariablePolynomial[n];
 
             foreach (var grp in grpd)
             {
@@ -483,7 +483,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                     rightSide.SetRow(i, itm.RightSide);
                 }
 
-                Polynomial pl;
+                SingleVariablePolynomial pl;
 
                 if (arr.Length != 0)
                 {
@@ -491,11 +491,11 @@ namespace BriefFiniteElementNet.ElementHelpers
                     //var cfs = mtx.Inverse2() * rightSide;
                     var cfs = mtx.Solve(rightSide.CoreArray);//.Inverse2() * rightSide;
 
-                    pl = new Polynomial(cfs);
+                    pl = new SingleVariablePolynomial(cfs);
                 }
                 else
                 {
-                    pl = new Polynomial();
+                    pl = new SingleVariablePolynomial();
                 }
 
                 //bar.ReturnMatrixToPool(rightSide, mtx);
@@ -513,10 +513,10 @@ namespace BriefFiniteElementNet.ElementHelpers
             for (var i = 0; i < n; i++)
             {
                 if (nss[i] == null)
-                    nss[i] = new Polynomial();
+                    nss[i] = new SingleVariablePolynomial();
 
                 if (mss[i] == null)
-                    mss[i] = new Polynomial();
+                    mss[i] = new SingleVariablePolynomial();
             }
 
             {
@@ -656,8 +656,8 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             //note: this method gives the shape function on variable node count beam with variable constraint on each node 
 
-            Polynomial[] nss = null;
-            Polynomial[] mss = null;
+            SingleVariablePolynomial[] nss = null;
+            SingleVariablePolynomial[] mss = null;
 
             var bar = targetElement as BarElement;
 
@@ -674,8 +674,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             for (var i = 0; i < n; i++)
             {
-                if (nss[i] == null) nss[i] = new Polynomial();
-                if (mss[i] == null) mss[i] = new Polynomial();
+                if (nss[i] == null) nss[i] = new SingleVariablePolynomial();
+                if (mss[i] == null) mss[i] = new SingleVariablePolynomial();
             }
 
             for (var i = 0; i < n; i++)

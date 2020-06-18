@@ -1133,11 +1133,11 @@ namespace BriefFiniteElementNet.Elements
         /// get the polynomial that takes iso coord as input and return local coord as output
         /// </summary>
         /// <returns>X(ξ) (ξ input, X output)</returns>
-        public virtual Mathh.Polynomial GetIsoToLocalConverter()
+        public virtual Mathh.SingleVariablePolynomial GetIsoToLocalConverter()
         {
             var cachekey = "{54CEC6B2-F882-4505-9FC0-E7844C99F249}";
 
-            Mathh.Polynomial chd;
+            Mathh.SingleVariablePolynomial chd;
 
             if (this.TryGetCache(cachekey, out chd))//prevent double calculation
                 if (IsValidIsoToLocalConverter(chd))//Validation of chached polynomial to see if is outdated due to change in node locations
@@ -1148,7 +1148,7 @@ namespace BriefFiniteElementNet.Elements
             var targetElement = this;
             var bar = this;
 
-            Mathh.Polynomial x_xi = null;//x(ξ)
+            Mathh.SingleVariablePolynomial x_xi = null;//x(ξ)
 
             var n = targetElement.Nodes.Length;
 
@@ -1201,7 +1201,7 @@ namespace BriefFiniteElementNet.Elements
                 //var as_ = mtx.Inverse() * right;
                 var as_ = mtx.Solve(right.CoreArray);
 
-                x_xi = new Mathh.Polynomial(as_);
+                x_xi = new Mathh.SingleVariablePolynomial(as_);
 
 
                 right.ReturnToPool();
@@ -1218,7 +1218,7 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         /// <param name="converter"></param>
         /// <returns></returns>
-        private bool IsValidIsoToLocalConverter(Mathh.Polynomial converter)
+        private bool IsValidIsoToLocalConverter(Mathh.SingleVariablePolynomial converter)
         {
             return true;
             var bar = this;
