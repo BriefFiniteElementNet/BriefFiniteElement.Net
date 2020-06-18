@@ -10,9 +10,9 @@ using BriefFiniteElementNet.Integration;
 using static BriefFiniteElementNet.ElementPermuteHelper;
 using System.Xml.XPath;
 
+
 namespace BriefFiniteElementNet.Elements.ElementHelpers
 {
-    // not working so far
     public class DkqHelper:IElementHelper
     {
         public Element TargetElement { get; set; }
@@ -395,7 +395,9 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public virtual Matrix CalcLocalKMatrix(Element targetElement)
         {
-            return ElementHelperExtensions.CalcLocalKMatrix_Quad(this, targetElement);
+
+            return ElementHelperExtensions.CalcLocalKMatrix_Quad(this, targetElement); 
+
         }
 
         public Matrix CalcLocalMMatrix(Element targetElement)
@@ -552,19 +554,18 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             #endregion
 
             #region non uniform
-
-            if (load is Loads.PartialNonUniformLoad)
+            if (load is BriefFiniteElementNet.Loads.PartialNonUniformLoad)  // missing??
             {
-
+                //TODO
                 throw new NotImplementedException();
 
-                var ul = load as Loads.PartialNonUniformLoad;
+                var ul = load as BriefFiniteElementNet.Loads.PartialNonUniformLoad;
 
                 var localDir = ul.Direction.GetUnit();
 
                 if (ul.CoordinationSystem == CoordinationSystem.Global)
                     localDir = tr.TransformGlobalToLocal(localDir);
-
+                /*
                 var interpolator = new Func<double, double, double>((xi,eta)=>
                 {
                     var shp = GetNMatrixAt(targetElement, xi, eta, 0).Transpose();
@@ -578,21 +579,28 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 var ux = new Func<double, double, double>((xi, eta) => localDir.X * interpolator(xi, eta));
                 var uy = new Func<double, double, double>((xi, eta) => localDir.Y * interpolator(xi, eta));
                 var uz = new Func<double, double, double>((xi, eta) => localDir.Z * interpolator(xi, eta));
+                */
 
+                var st = ul.StartLocation;
+                var en = ul.EndLocation;
 
                 var intg = new GaussianIntegrator();
 
                 intg.A1 = 0;
                 intg.A2 = 1;
 
-                intg.F1 = gama => -1;
-                intg.F2 = gama => 1;
+                intg.F1 = gama => st.Eta;
+                intg.F2 = gama => en.Eta;
+                
+                intg.G1 = (eta, gama) => st.Xi;
+                intg.G2 = (eta, gama) => en.Xi;
 
-                intg.G1 = (eta, gama) => -1;
-                intg.G2 = (eta, gama) => 1;
+                var order = ul.SeverityFunction.Degree;
 
                 intg.GammaPointCount = 1;
                 intg.XiPointCount = intg.EtaPointCount = 2;
+                
+                throw new Exception();
 
                 intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
                 {
@@ -600,9 +608,9 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                     var j = GetJMatrixAt(targetElement, xi, eta, 0);
                     shp.MultiplyByConstant(j.Determinant());
 
-                    var uzm = uz(xi, eta);
+                    //var uzm = ul.SeverityFunction.Evaluate(xi, eta);
 
-                    shp.MultiplyByConstant(uzm);
+                    //shp.MultiplyByConstant(uzm);
 
                     return shp;
                 }

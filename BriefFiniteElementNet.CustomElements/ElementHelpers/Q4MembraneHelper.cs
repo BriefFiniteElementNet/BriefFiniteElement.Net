@@ -9,7 +9,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 {
     class Q4MembraneHelper : IElementHelper
     {
-        public Element TargetElement { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public Element TargetElement { get; set; }
 
         public Matrix CalcLocalDampMatrix(Element targetElement)
         {

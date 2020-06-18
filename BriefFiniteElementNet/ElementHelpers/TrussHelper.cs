@@ -268,7 +268,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var xi = isoCoords[0];
 
-            Polynomial[] ns = null;
+            SingleVariablePolynomial[] ns = null;
 
             {//retrieve or generate shapefunctions
                 var nsKey = "011F9D96-6398-4126-BC4E-FFDA7F91D6E3";//a random unified key for store truss shape functions for bar element
@@ -279,7 +279,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 if (ns == null)
                 {
-                    ns = new Polynomial[targetElement.Nodes.Length];
+                    ns = new SingleVariablePolynomial[targetElement.Nodes.Length];
 
                     for (var i = 0; i < ns.Length; i++)
                         ns[i] = GetN_i(targetElement, i);
@@ -306,7 +306,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
-        public Polynomial GetN_i(Element targetElement,int ith)
+        public SingleVariablePolynomial GetN_i(Element targetElement,int ith)
         {
             var bar = targetElement as BarElement;
 
@@ -352,7 +352,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
 
             var res = condMtx.Inverse() * rMtx;
-            var buf = new Polynomial(res.CoreArray);
+            var buf = new SingleVariablePolynomial(res.CoreArray);
 
             { //test
                 var epsilon = 0.0;
@@ -628,7 +628,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     to = Math.Min(to, uld.EndLocation.Xi);
 
-                    degree = uld.SeverityFunction.Coefficients.Length;
+                    degree = uld.SeverityFunction.Degree[0];
                 }
                 else
                     throw new NotImplementedException();
@@ -814,7 +814,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                     xi0 = uld.StartLocation.Xi;
                     xi1 = uld.EndLocation.Xi;
 
-                    degree = uld.SeverityFunction.Coefficients.Length; 
+                    degree = uld.SeverityFunction.Degree[0];// Coefficients.Length; 
                 }
                 else
                     throw new NotImplementedException();

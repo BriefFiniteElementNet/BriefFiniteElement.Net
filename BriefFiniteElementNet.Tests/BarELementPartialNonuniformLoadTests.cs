@@ -84,7 +84,7 @@ namespace BriefFiniteElementNet.Tests
 
             u1.Direction = -Vector.K;
             u1.CoordinationSystem = CoordinationSystem.Global;
-            u1.SeverityFunction = Mathh.Polynomial.FromPoints(1.0, w);
+            u1.SeverityFunction = Mathh.SingleVariablePolynomial.FromPoints(1.0, w);
             u1.StartLocation = new IsoPoint(x1);
             u1.EndLocation = new IsoPoint(x2);
 

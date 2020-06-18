@@ -5,6 +5,7 @@ using System.Text;
 using BriefFiniteElementNet.Elements;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using BriefFiniteElementNet.Mathh;
 
 namespace BriefFiniteElementNet.Loads
 {
@@ -28,7 +29,7 @@ namespace BriefFiniteElementNet.Loads
         private CoordinationSystem _coordinationSystem;
         //private Func<IsoPoint, double> severityFunction;
 
-        private Mathh.Polynomial _severityFunction;
+        
 
         /// <summary>
         /// Sets or gets the direction of load
@@ -75,11 +76,11 @@ namespace BriefFiniteElementNet.Loads
             set { _endLocation = value; }
         }
 
-
+        /**/
         /// <summary>
         /// Gets or sets the severity function
         /// </summary>
-        public Mathh.Polynomial SeverityFunction
+        public IPolynomial SeverityFunction
         {
             get { return _severityFunction; }
             set
@@ -88,14 +89,32 @@ namespace BriefFiniteElementNet.Loads
             }
         }
 
-       
+        private IPolynomial _severityFunction;
+        /**/
+
+
+        /// <summary>
+        /// Gets or sets the severity function
+        /// </summary>
+        public IPolynomial SeverityFunction_old
+        {
+            get { return _severityFunction_old; }
+            set
+            {
+                _severityFunction_old = value;
+            }
+        }
+
+        private IPolynomial _severityFunction_old;
+
+
         #endregion
 
 
 
         public double GetMagnitudeAt(Element targetelement, IsoPoint location)
         {
-            return _severityFunction.Evaluate(location.Xi);
+            //return _severityFunction(location);
 
 
             throw new NotImplementedException();
@@ -140,7 +159,7 @@ namespace BriefFiniteElementNet.Loads
             _startLocation = (IsoPoint)info.GetValue("_startLocation", typeof(IsoPoint));
             _endLocation = (IsoPoint)info.GetValue("_endLocation", typeof(IsoPoint));
             _direction = (Vector)info.GetValue("_direction", typeof(Vector));
-            _severityFunction = (Mathh.Polynomial)info.GetValue("_direction", typeof(Mathh.Polynomial));
+            _severityFunction = (Mathh.SingleVariablePolynomial)info.GetValue("_direction", typeof(Mathh.SingleVariablePolynomial));
         }
 
         #endregion

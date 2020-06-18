@@ -7,19 +7,19 @@ using System.Globalization;
 namespace BriefFiniteElementNet.Mathh
 {
     [Serializable]
-    public class Polynomial
+    public class SingleVariablePolynomial:IPolynomial
     {
-        public static Polynomial FromPoints(double x1, double y1)
+        public static SingleVariablePolynomial FromPoints(double x1, double y1)
         {
             return FromPoints(Tuple.Create(x1, y1));
         }
 
-        public static Polynomial FromPoints(double x1, double y1, double x2, double y2)
+        public static SingleVariablePolynomial FromPoints(double x1, double y1, double x2, double y2)
         {
             return FromPoints(Tuple.Create(x1, y1), Tuple.Create(x2, y2));
         }
 
-        public static Polynomial FromPoints(params Tuple<double,double>[] points)
+        public static SingleVariablePolynomial FromPoints(params Tuple<double,double>[] points)
         {
             var n = points.Length;
 
@@ -43,21 +43,25 @@ namespace BriefFiniteElementNet.Mathh
 
             var coefs = mtx.Solve(b.CoreArray);
 
-            return new Polynomial(coefs);
+            return new SingleVariablePolynomial(coefs);
         }
 
-        public Polynomial(params double[] coefs)
+        public SingleVariablePolynomial(params double[] coefs)
         {
             Coefficients = (double[])coefs.Clone();
         }
 
         public double[] Coefficients;
 
-        public Polynomial Clone()
+        public int VariableCount => throw new NotImplementedException();
+
+        public int[] Degree => throw new NotImplementedException();
+
+        public SingleVariablePolynomial Clone()
         {
             var c2 = Coefficients == null ? (double[])null : (double[])Coefficients.Clone();
 
-            var buf = new Polynomial(c2);
+            var buf = new SingleVariablePolynomial(c2);
 
             return buf;
         }
@@ -67,7 +71,7 @@ namespace BriefFiniteElementNet.Mathh
         /// </summary>
         /// <param name="x">evaluation point</param>
         /// <returns>P(<see cref="x"/>)</returns>
-        public double Evaluate(double x)
+        private double Evaluate_internal(double x)
         {
             var buf = 0.0;
 
@@ -86,16 +90,16 @@ namespace BriefFiniteElementNet.Mathh
         /// </summary>
         /// <param name="deg">derivation degree</param>
         /// <returns>derivation</returns>
-        public Polynomial GetDerivative(int deg)
+        public SingleVariablePolynomial GetDerivative(int deg)
         {
             if (deg == 0)
-                return (Polynomial)this.MemberwiseClone();
+                return (SingleVariablePolynomial)this.MemberwiseClone();
 
             if (Coefficients.Length == 0)
                 return this.Clone();
 
             if (deg >= Coefficients.Length)
-                return new Polynomial();
+                return new SingleVariablePolynomial();
 
             var dic = new Dictionary<int, double>();
 
@@ -126,7 +130,7 @@ namespace BriefFiniteElementNet.Mathh
                 buf[i] = dic[origPow];
             }
 
-            var pBuf = new Polynomial(buf);
+            var pBuf = new SingleVariablePolynomial(buf);
             return pBuf;
             /**/
         }
@@ -309,7 +313,7 @@ namespace BriefFiniteElementNet.Mathh
             return string.Join(" + ", parts);
         }
 
-        protected bool Equals(Polynomial other)
+        protected bool Equals(SingleVariablePolynomial other)
         {
             if (ReferenceEquals(Coefficients, null) && ReferenceEquals(other.Coefficients, null))
                 return true;
@@ -337,12 +341,27 @@ namespace BriefFiniteElementNet.Mathh
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Polynomial) obj);
+            return Equals((SingleVariablePolynomial) obj);
         }
 
         public override int GetHashCode()
         {
             return (Coefficients != null ? Coefficients.GetHashCode() : 0);
+        }
+
+        public double Evaluate(params double[] x)
+        {
+            return Evaluate_internal(x[0]);
+        }
+
+        public double[] EvaluateNthDerivative(int n, params double[] x)
+        {
+            throw new NotImplementedException();
+        }
+
+        public double[] EvaluateDerivative(params double[] x)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Elements\Extensions.cs" />
+    <Compile Include="Mathh\IPolynomial.cs" />
     <Compile Include="Utils\ArrayEqualityCompairer.cs" />
     <Compile Include="ElementHelpers\Gt9Helper.cs" />
     <Compile Include="ElementHelpers\TriangleBasicDrillingDofHelper.cs" />
@@ -56,7 +57,7 @@
     <Compile Include="Mathh\CsparsenetQrDisplacementPermutationCalculator.cs" />
     <Compile Include="Mathh\IDisplacementPermutationCalculator.cs" />
     <Compile Include="Mathh\IEquationSystemReducer.cs" />
-    <Compile Include="Mathh\Polynomial.cs" />
+    <Compile Include="Mathh\SingleVariablePolynomial.cs" />
     <Compile Include="MpcElements\VirtualSupport.cs" />
     <Compile Include="Loads\ConcentratedLoad.cs" />
     <Compile Include="Mathh\SparseEqSystem.cs" />
@@ -201,6 +202,7 @@
   <ItemGroup>
     <None Include="CsparsenetQrDisplacementPermutationCalculator.md" />
     <None Include="ElementHelpers\DktHelper.md" />
+    <None Include="Mathh\IPolynomial.md" />
     <None Include="packages.config" />
     <None Include="Utils\CalcUtil.md" />
     <None Include="ClassDiagram1.cd" />

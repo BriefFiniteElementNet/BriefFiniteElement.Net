@@ -20,7 +20,7 @@ namespace BriefFiniteElementNet.Tests
         [TestMethod]
         public void derivation_test()
         {
-            var p = new Polynomial(9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
+            var p = new SingleVariablePolynomial(9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
 
             var p1_1 = p.GetDerivative(2);
 
@@ -34,7 +34,7 @@ namespace BriefFiniteElementNet.Tests
         {
             var tpls = new Tuple<double, double>[]{ Tuple.Create(-5.0, 3.0), Tuple.Create(-4.0, 4.0), Tuple.Create(-3.0, 7.0), Tuple.Create(1.0, 0.0), Tuple.Create(5.0, 0.0) };
 
-            var p = Polynomial.FromPoints(tpls);
+            var p = SingleVariablePolynomial.FromPoints(tpls);
 
             var epsilon = 1e-10;
 

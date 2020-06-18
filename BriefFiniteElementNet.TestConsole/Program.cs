@@ -532,7 +532,7 @@ namespace BriefFiniteElementNet.TestConsole
             
             var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y,beam1);
 
-            Polynomial[] ns, ms;
+            SingleVariablePolynomial[] ns, ms;
 
             hlpr.GetShapeFunctions(beam1, out ns, out ms);
 
