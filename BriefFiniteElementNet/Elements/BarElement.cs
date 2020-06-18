@@ -967,21 +967,25 @@ namespace BriefFiniteElementNet.Elements
         /// </remarks>
         public Force GetExactInternalForceAt(double xi, LoadCase loadCase)
         {
-            var discretePoints = new List<IsoPoint>();
-
-            discretePoints.AddRange(this.GetInternalForceDiscretationPoints());
-
-
-            foreach (var load in Loads)
             {
-                if (load.Case == loadCase)
-                    discretePoints.AddRange(load.GetInternalForceDiscretationPoints());
-            }
+                //check to see if xi is exactly on any discrete points, for example shear exactly under a a concentrated force point is not a single value so exception must thrown
 
-            foreach (var point in discretePoints)
-            {
-                if (xi == point.Xi)
-                    throw new Exception(string.Format(CultureInfo.CurrentCulture, "Internal force is descrete at xi = {0}, thus have two values in this location. try to find internal force a little bit after or before this point", xi));
+                var discretePoints = new List<IsoPoint>();
+
+                discretePoints.AddRange(this.GetInternalForceDiscretationPoints());
+
+
+                foreach (var load in Loads)
+                {
+                    if (load.Case == loadCase)
+                        discretePoints.AddRange(load.GetInternalForceDiscretationPoints());
+                }
+
+                foreach (var point in discretePoints)
+                {
+                    if (xi == point.Xi)
+                        throw new Exception(string.Format(CultureInfo.CurrentCulture, "Internal force is descrete at xi = {0}, thus have two values in this location. try to find internal force a little bit after or before this point", xi));
+                }
             }
 
             var approx =
@@ -995,19 +999,20 @@ namespace BriefFiniteElementNet.Elements
             var helpers = GetHelpers();
 
             foreach (var load in this.Loads)
-                foreach (var helper in helpers)
-                {
-                    var tns = helper.GetLoadInternalForceAt(this, load, new[] { xi });
-
-                    foreach(var fc in tns)
+                if (load.Case == loadCase)
+                    foreach (var helper in helpers)
                     {
-                        double existing;
+                        var tns = helper.GetLoadInternalForceAt(this, load, new[] { xi });
 
-                        fcs.TryGetValue(fc.Item1, out existing);
+                        foreach (var fc in tns)
+                        {
+                            double existing;
 
-                        fcs[fc.Item1] = existing + fc.Item2;
+                            fcs.TryGetValue(fc.Item1, out existing);
+
+                            fcs[fc.Item1] = existing + fc.Item2;
+                        }
                     }
-                }
 
             var buff = new Force();
             buff += approx;//TODO: maybe += approx !

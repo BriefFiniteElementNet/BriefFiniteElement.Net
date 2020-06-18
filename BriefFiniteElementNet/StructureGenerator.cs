@@ -552,7 +552,7 @@ namespace BriefFiniteElementNet
                 if (triElm == null)
                     continue;
 
-                triElm.Behavior = TriangleElementBehaviours.Shell;
+                triElm.Behavior = PlateElementBehaviours.Shell;
 
 
 

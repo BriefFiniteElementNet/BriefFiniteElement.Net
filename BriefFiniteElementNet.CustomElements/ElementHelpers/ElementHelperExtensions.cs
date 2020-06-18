@@ -74,7 +74,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 var j = helper.GetJMatrixAt(qq, xi, eta);
                 var detj = Math.Abs(j.Determinant());
 
-                var buf = new Matrix(b.ColumnCount, b.ColumnCount); // result matrix
+                var buf = new Matrix(b.ColumnCount, b.ColumnCount); // result matrix , TODO: use matrix pool
 
                 CalcUtil.Bt_D_B(b, d, buf);                         // multiplicates three matrices
 

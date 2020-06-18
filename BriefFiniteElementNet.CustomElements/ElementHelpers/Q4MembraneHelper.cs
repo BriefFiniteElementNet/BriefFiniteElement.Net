@@ -43,12 +43,62 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var tri = targetElement as TriangleElement;
+
+            if (tri == null)
+                throw new Exception();
+
+            var d = new Matrix(3, 3);
+
+            var mat = tri.Material.GetMaterialPropertiesAt(isoCoords);
+
+
+            if (tri.MembraneFormulation == MembraneFormulation.PlaneStress)
+            {
+                //http://help.solidworks.com/2013/english/SolidWorks/cworks/c_linear_elastic_orthotropic.htm
+                //orthotropic material
+                d[0, 0] = mat.Ex / (1 - mat.NuXy * mat.NuYx);
+                d[1, 1] = mat.Ey / (1 - mat.NuXy * mat.NuYx);
+                d[1, 0] = d[0, 1] = mat.NuXy * mat.Ey / (1 - mat.NuXy * mat.NuYx);
+
+                d[2, 2] = mat.Ex * mat.Ey / (mat.Ex + mat.Ey + 2 * mat.Ey * mat.NuXy);
+            }
+            else
+            {
+                var delta = 1 - mat.NuXy * mat.NuYx - mat.NuZy * mat.NuYz - mat.NuZx * mat.NuXz - 2 * mat.NuXy * mat.NuYz * mat.NuZx;
+
+                delta /= mat.Ex * mat.Ey * mat.Ez;
+
+                //http://www.efunda.com/formulae/solid_mechanics/mat_mechanics/hooke_orthotropic.cfm
+
+                d[0, 0] = (1 - mat.NuYz * mat.NuZy) / (mat.Ey * mat.Ez * delta);
+                d[0, 1] = (mat.NuYx + mat.NuZx * mat.NuYz) / (mat.Ey * mat.Ez * delta);
+                d[1, 0] = (mat.NuXy + mat.NuXz * mat.NuZy) / (mat.Ez * mat.Ex * delta);
+                d[1, 1] = (1 - mat.NuZx * mat.NuXz) / (mat.Ez * mat.Ex * delta);
+            }
+
+            return d;
+
         }
 
         public ElementPermuteHelper.ElementLocalDof[] GetDofOrder(Element targetElement)
         {
-            throw new NotImplementedException();
+            var buf = new ElementPermuteHelper.ElementLocalDof[]
+            {
+                new ElementPermuteHelper.ElementLocalDof(0, DoF.Dx),
+                new ElementPermuteHelper.ElementLocalDof(0, DoF.Dy),
+
+                new ElementPermuteHelper.ElementLocalDof(1, DoF.Dx),
+                new ElementPermuteHelper.ElementLocalDof(1, DoF.Dy),
+
+                new ElementPermuteHelper.ElementLocalDof(2, DoF.Dx),
+                new ElementPermuteHelper.ElementLocalDof(2, DoF.Dy),
+
+                new ElementPermuteHelper.ElementLocalDof(3, DoF.Dx),
+                new ElementPermuteHelper.ElementLocalDof(3, DoF.Dy),
+            };
+
+            return buf;
         }
 
         public Matrix GetJMatrixAt(Element targetElement, params double[] isoCoords)

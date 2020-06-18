@@ -8,6 +8,8 @@ using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
 using static BriefFiniteElementNet.ElementPermuteHelper;
+using System.Xml.XPath;
+
 
 namespace BriefFiniteElementNet.Elements.ElementHelpers
 {
@@ -311,6 +313,11 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
         {
+            //TODO: this is shape function maybe for Q4 element, not for quad element.
+            //shape function is used in calculating equivalent nodal loads and internal displacements
+            //both of these should takes the nodal rotations into account.
+            //as dqk have 12 dof, shape function matrix should be 12 column matrix.
+
             //used for distributed load, 8.26 of http://what-when-how.com/the-finite-element-method/fem-for-plates-and-shells-finite-element-method-part-1/
 
             //N from 7.54 of http://what-when-how.com/the-finite-element-method/fem-for-two-dimensional-solids-finite-element-method-part-2/
@@ -388,7 +395,9 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public virtual Matrix CalcLocalKMatrix(Element targetElement)
         {
+
             return ElementHelperExtensions.CalcLocalKMatrix_Quad(this, targetElement); 
+
         }
 
         public Matrix CalcLocalMMatrix(Element targetElement)
@@ -545,7 +554,6 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             #endregion
 
             #region non uniform
-
             if (load is BriefFiniteElementNet.Loads.PartialNonUniformLoad)  // missing??
             {
                 //TODO
@@ -562,7 +570,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 {
                     var shp = GetNMatrixAt(targetElement, xi, eta, 0).Transpose();
                     var frc = new Matrix(4, 1);
-                    frc.FillColumn(0, ul.NodalMagnitudes);
+                    //frc.FillColumn(0, ul.NodalMagnitudes);
                     var mult = shp * frc;
 
                     return mult[0, 0];

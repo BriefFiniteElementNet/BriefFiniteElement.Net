@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet.Controls
     /// </summary>
     public partial class FunctionVisualizer : UserControl
     {
-        public FunctionVisualizer()
+            public FunctionVisualizer()
         {
             InitializeComponent();
         }

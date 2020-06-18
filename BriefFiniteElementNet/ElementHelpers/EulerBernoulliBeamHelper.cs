@@ -1024,22 +1024,23 @@ namespace BriefFiniteElementNet.ElementHelpers
 
 
 
-                    //f = f.Move(new Point(0, 0, 0), new Point(x, 0, 0));
-                    //frc = frc + ends;
-                    //var movedEnds = ends.Move(new Point(0, 0, 0), new Point(x, 0, 0));
+                    {
+                        //this block is commented to fix the issue #48 on github
+                        //when this block is commented out, then issue 48 is fixed
+                        /*
+                        if (br.StartReleaseCondition.DY == DofConstraint.Released)
+                            f.Fy = 0;
 
-                    if (br.StartReleaseCondition.DY == DofConstraint.Released)
-                        f.Fy = 0;
+                        if (br.StartReleaseCondition.DZ == DofConstraint.Released)
+                            f.Fz = 0;
 
-                    if (br.StartReleaseCondition.DZ == DofConstraint.Released)
-                        f.Fz = 0;
+                        if (br.StartReleaseCondition.RY == DofConstraint.Released)
+                            f.My = 0;
 
-                    if (br.StartReleaseCondition.RY == DofConstraint.Released)
-                        f.My = 0;
-
-                    if (br.StartReleaseCondition.RZ == DofConstraint.Released)
-                        f.Mz = 0;
-
+                        if (br.StartReleaseCondition.RZ == DofConstraint.Released)
+                            f.Mz = 0;
+                        */
+                    }
 
 
                     var f2 = f + ends;

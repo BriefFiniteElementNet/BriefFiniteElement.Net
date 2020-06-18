@@ -10,6 +10,7 @@ namespace BriefFiniteElementNet.Validation.Ui
 {
     internal static class Program
     {
+        [STAThread]
         static void Main(string[] args)
         {
 
@@ -21,7 +22,7 @@ namespace BriefFiniteElementNet.Validation.Ui
             //BarElementTester.ValidateConsoleUniformLoad();
             //BarElementTester.TestEndReleaseStyiffness();
 
-            GithubIssues.Issue41.Run();
+            GithubIssues.Issue50.Run1();
 
 
             Console.ReadKey();

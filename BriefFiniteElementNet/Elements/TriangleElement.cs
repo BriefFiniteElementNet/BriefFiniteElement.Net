@@ -28,7 +28,7 @@ namespace BriefFiniteElementNet.Elements
 
         private Base2DSection _section;
 
-        private TriangleElementBehaviour _behavior;
+        private PlateElementBehaviour _behavior;
 
         private MembraneFormulation _formulation;
 
@@ -46,7 +46,7 @@ namespace BriefFiniteElementNet.Elements
             set { _section = value; }
         }
 
-        public TriangleElementBehaviour Behavior
+        public PlateElementBehaviour Behavior
         {
             get { return _behavior; }
             set { _behavior = value; }
@@ -136,17 +136,17 @@ namespace BriefFiniteElementNet.Elements
             var helpers = new List<IElementHelper>();
 
             {
-                if ((this._behavior & TriangleElementBehaviour.Bending) != 0)
+                if ((this._behavior & PlateElementBehaviour.Bending) != 0)
                 {
                     helpers.Add(new DktHelper());
                 }
 
-                if ((this._behavior & TriangleElementBehaviour.Membrane) != 0 )
+                if ((this._behavior & PlateElementBehaviour.Membrane) != 0 )
                 {
                     helpers.Add(new CstHelper());
                 }
 
-                if ((this._behavior & TriangleElementBehaviour.DrillingDof) != 0)
+                if ((this._behavior & PlateElementBehaviour.DrillingDof) != 0)
                 {
                     helpers.Add(new TriangleBasicDrillingDofHelper());
                 }
@@ -191,7 +191,7 @@ namespace BriefFiniteElementNet.Elements
         {
             var helpers = new List<IElementHelper>();
 
-            if ((this._behavior & TriangleElementBehaviour.Bending) != 0)
+            if ((this._behavior & PlateElementBehaviour.Bending) != 0)
             {
                 helpers.Add(new DktHelper());
             }
@@ -226,7 +226,7 @@ namespace BriefFiniteElementNet.Elements
         {
             var helpers = new List<IElementHelper>();
 
-            if ((this._behavior & TriangleElementBehaviour.Bending) != 0)
+            if ((this._behavior & PlateElementBehaviour.Bending) != 0)
             {
                 helpers.Add(new DktHelper());
             }
@@ -263,7 +263,7 @@ namespace BriefFiniteElementNet.Elements
         {
             _material = (BaseMaterial)info.GetValue("_material", typeof(BaseMaterial));
             _section = (Base2DSection)info.GetValue("_section", typeof(Base2DSection));
-            _behavior = (TriangleElementBehaviour)info.GetInt32("_behavior");
+            _behavior = (PlateElementBehaviour)info.GetInt32("_behavior");
             _formulation = (MembraneFormulation)info.GetInt32("_behavior");
         }
 

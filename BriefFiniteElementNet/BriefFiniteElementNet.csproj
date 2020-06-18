@@ -50,7 +50,7 @@
     <Compile Include="ElementHelpers\Gt9Helper.cs" />
     <Compile Include="ElementHelpers\TriangleBasicDrillingDofHelper.cs" />
     <Compile Include="Elements\FlatShellBehaviours.cs" />
-    <Compile Include="Elements\TriangleElementBehaviours.cs" />
+    <Compile Include="Elements\PlateElementBehaviours.cs" />
     <Compile Include="Integration\MultiplierMatrixFunction.cs" />
     <Compile Include="Loads\PartialNonUniformLoad.cs" />
     <Compile Include="Mathh\BuiltinGaussDisplacementPermutationFinder.cs" />
@@ -111,7 +111,7 @@
     <Compile Include="Sections\UniformParametric1DSection.cs" />
     <Compile Include="Elements\Spring1D.cs" />
     <Compile Include="Elements\TriangleElement.cs" />
-    <Compile Include="Elements\TriangleElementBehaviour.cs" />
+    <Compile Include="Elements\PlateElementBehaviour.cs" />
     <Compile Include="Elements\TriangleFlatShell.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Utils\CalcUtil.cs" />
