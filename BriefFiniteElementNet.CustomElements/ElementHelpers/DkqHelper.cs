@@ -548,6 +548,9 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             if (load is BriefFiniteElementNet.Loads.PartialNonUniformLoad)  // missing??
             {
+                //TODO
+                throw new NotImplementedException();
+
                 var ul = load as BriefFiniteElementNet.Loads.PartialNonUniformLoad;
 
                 var localDir = ul.Direction.GetUnit();
@@ -570,16 +573,21 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 var uz = new Func<double, double, double>((xi, eta) => localDir.Z * interpolator(xi, eta));
                 */
 
+                var st = ul.StartLocation;
+                var en = ul.EndLocation;
+
                 var intg = new GaussianIntegrator();
 
                 intg.A1 = 0;
                 intg.A2 = 1;
 
-                intg.F1 = gama => -1;
-                intg.F2 = gama => 1;
+                intg.F1 = gama => st.Eta;
+                intg.F2 = gama => en.Eta;
+                
+                intg.G1 = (eta, gama) => st.Xi;
+                intg.G2 = (eta, gama) => en.Xi;
 
-                intg.G1 = (eta, gama) => -1;
-                intg.G2 = (eta, gama) => 1;
+                var order = ul.SeverityFunction.Degree;
 
                 intg.GammaPointCount = 1;
                 intg.XiPointCount = intg.EtaPointCount = 2;

@@ -80,7 +80,7 @@ namespace BriefFiniteElementNet.Loads
         /// <summary>
         /// Gets or sets the severity function
         /// </summary>
-        public Mathh.SingleVariablePolynomial SeverityFunction
+        public IPolynomial SeverityFunction
         {
             get { return _severityFunction; }
             set
@@ -89,7 +89,7 @@ namespace BriefFiniteElementNet.Loads
             }
         }
 
-        private Mathh.SingleVariablePolynomial _severityFunction;
+        private IPolynomial _severityFunction;
         /**/
 
 

@@ -914,7 +914,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                     xi0 = uld.StartLocation.Xi;
                     xi1 = uld.EndLocation.Xi;
 
-                    degree = uld.SeverityFunction.Coefficients.Length;
+                    degree = uld.SeverityFunction.Degree[0];
                 }
                 else
                     throw new NotImplementedException();
@@ -1316,7 +1316,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                     xi0 = uld.StartLocation.Xi;
                     xi1 = uld.EndLocation.Xi;
 
-                    degree = uld.SeverityFunction.Coefficients.Length;
+                    degree = uld.SeverityFunction.Degree[0];// Coefficients.Length;
                 }
                 else
                     throw new NotImplementedException();

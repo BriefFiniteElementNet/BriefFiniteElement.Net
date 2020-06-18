@@ -7,7 +7,7 @@ using System.Globalization;
 namespace BriefFiniteElementNet.Mathh
 {
     [Serializable]
-    public class SingleVariablePolynomial
+    public class SingleVariablePolynomial:IPolynomial
     {
         public static SingleVariablePolynomial FromPoints(double x1, double y1)
         {
@@ -53,6 +53,10 @@ namespace BriefFiniteElementNet.Mathh
 
         public double[] Coefficients;
 
+        public int VariableCount => throw new NotImplementedException();
+
+        public int[] Degree => throw new NotImplementedException();
+
         public SingleVariablePolynomial Clone()
         {
             var c2 = Coefficients == null ? (double[])null : (double[])Coefficients.Clone();
@@ -67,7 +71,7 @@ namespace BriefFiniteElementNet.Mathh
         /// </summary>
         /// <param name="x">evaluation point</param>
         /// <returns>P(<see cref="x"/>)</returns>
-        public double Evaluate(double x)
+        private double Evaluate_internal(double x)
         {
             var buf = 0.0;
 
@@ -344,57 +348,20 @@ namespace BriefFiniteElementNet.Mathh
         {
             return (Coefficients != null ? Coefficients.GetHashCode() : 0);
         }
-    }
 
+        public double Evaluate(params double[] x)
+        {
+            return Evaluate_internal(x[0]);
+        }
 
-    /// <summary>
-    /// Represents an internface for single or multy-variable polynomial
-    /// it is a function with one output and one or multiple inputs
-    /// </summary>
-    /// <remarks>
-    /// Example of multy variable polynomials are 'y*x^2 + 2 y − 4x + 7'
-    /// </remarks>
-    public interface IPolynomial
-    {
-        /// <summary>
-        /// Evaluates the value of polynomial at specified <see cref="x"/>
-        /// </summary>
-        /// <param name="x">evaluation point coordinates</param>
-        /// <returns>P(<see cref="x"/>)</returns>
-        double Evaluate(params double[] x);
+        public double[] EvaluateNthDerivative(int n, params double[] x)
+        {
+            throw new NotImplementedException();
+        }
 
-        /// <summary>
-        /// Evaluates the <see cref="n"/>'th derivation of current polynomial at specified <see cref="x"/>.
-        /// </summary>
-        /// <param name="n">derivation degree</param>
-        /// <param name="x">evaluation location</param>
-        /// <returns>evaluation of derivation</returns>
-        /// <remarks>
-        /// 
-        /// </remarks>
-        Matrix EvaluateNthDerivative(int n, params double[] x);
-
-        /// <summary>
-        /// Gets the derivative of polynomial as another polynomial
-        /// </summary>
-        /// <param name="deg">derivation degree</param>
-        /// <returns>derivation</returns>
-        double EvaluateDerivative(params double[] x);
-
-        /// <summary>
-        /// The number of variables
-        /// </summary>
-        /// <remarks>
-        /// for example two for 'y*x^2 + 2 y − 4x + 7' and one for 'x^3+2x+1'
-        /// </remarks>
-        int VariableCount { get; }
-
-        /// <summary>
-        /// Gets the max degree of polynomial
-        /// </summary>
-        /// <remarks>
-        /// example for 'y*x^2 + 2 y − 4x + 7' is y degree is 1, and x degree is 2
-        /// </remarks>
-        int[] Degree { get; }
+        public double[] EvaluateDerivative(params double[] x)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
