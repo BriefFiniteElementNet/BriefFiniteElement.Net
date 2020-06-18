@@ -554,7 +554,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             #endregion
 
             #region non uniform
-            if (load is BriefFiniteElementNet.Loads.PartialNonUniformLoad)  // missing??
+            if (load is BriefFiniteElementNet.Loads.PartialNonUniformLoad)  // TODO
             {
                 //TODO
                 throw new NotImplementedException();
