@@ -99,8 +99,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
 
             return d;
-
-            throw new NotImplementedException();
         }
 
         public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
