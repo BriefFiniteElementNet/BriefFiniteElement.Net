@@ -1304,6 +1304,45 @@ namespace BriefFiniteElementNet.Elements
             return b2.ToArray();
         }
 
-        
+        /// <summary>
+        /// Gets the iso location of points that internal force in those points are discrete only due to element.
+        /// </summary>
+        /// <returns>list of iso locations</returns>
+        public IsoPoint[] GetInternalForceDiscretationPoints(LoadCase loadCase)
+        {
+            var buf = new List<IsoPoint>();
+
+            foreach (var node in nodes)
+            {
+                var x = (node.Location - nodes[0].Location).Length;
+
+                var xi = LocalCoordsToIsoCoords(x)[0];
+
+                buf.Add(new IsoPoint(xi));
+            }
+
+            //Note: internal loads are not accounted
+            foreach (var load in this.loads)
+            {
+                if (load.Case != loadCase)
+                    continue;
+
+                var pts = load.GetInternalForceDiscretationPoints();
+
+                buf.AddRange(pts);
+            }
+            var b2 = new List<IsoPoint>();
+
+
+            foreach (var point in buf.OrderBy(i => i.Xi))
+            {
+                var pt = new IsoPoint(point.Xi);
+
+                if (!b2.Contains(pt))
+                    b2.Add(pt);
+            }
+
+            return b2.ToArray();
+        }
     }
 }

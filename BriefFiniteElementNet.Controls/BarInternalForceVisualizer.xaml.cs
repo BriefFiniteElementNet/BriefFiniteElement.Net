@@ -53,17 +53,17 @@ namespace BriefFiniteElementNet.Controls
             if (bar == null)
                 return;
 
-            var discPonits = Context.TargetElement.GetInternalForceDiscretationPoints().Select(i=>i.Xi).ToArray();
+            var elementDiscPonits = Context.TargetElement.GetInternalForceDiscretationPoints(Context.SelectedLoadCase).Select(i => i.Xi).ToArray();
 
             var samples = 100;
 
-            var lst = new List<double>(discPonits);
+            var lst = new List<double>(elementDiscPonits);
 
             //remove discrete points and add a little before and after
 
             var eps = 1e-10;
 
-            foreach (var discPonit in discPonits)
+            foreach (var discPonit in elementDiscPonits)
             {
                 lst.Add(discPonit - eps);
                 lst.Add(discPonit + eps);
@@ -78,7 +78,7 @@ namespace BriefFiniteElementNet.Controls
                 lst.Add(xi);
             }
 
-            var l2 = lst.Where(i => i >= -1 && i <= 1).Where(i => !discPonits.Contains(i)).Distinct().ToArray();
+            var l2 = lst.Where(i => i >= -1 && i <= 1).Where(i => !elementDiscPonits.Contains(i)).Distinct().ToArray();
 
             Array.Sort(l2);
 

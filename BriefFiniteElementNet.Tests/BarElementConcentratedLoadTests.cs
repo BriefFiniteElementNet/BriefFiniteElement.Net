@@ -977,7 +977,7 @@ namespace BriefFiniteElementNet.Tests
 
                 var exactFrc = new Force(fx: mi, fy: 0, fz: vi, mx: 0, my: 0, mz: 0);
 
-                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dx).Item2 + exactFrc.Fx;
+                var df = testFrc.FirstOrDefault(i => i.Item1 == DoF.Dx).Item2 - exactFrc.Fx;
 
 
                 Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
@@ -988,7 +988,7 @@ namespace BriefFiniteElementNet.Tests
 
                 var f0 = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -1 + 1e-9 }).ToForce(); ;
 
-                var sum = end1[0] + f0;
+                var sum = end1[0] - f0;
 
                 Assert.IsTrue(Math.Abs(sum.Forces.Length) < 1e-5, "invalid value");
                 Assert.IsTrue(Math.Abs(sum.Moments.Length) < 1e-5, "invalid value");
@@ -1064,7 +1064,7 @@ namespace BriefFiniteElementNet.Tests
 
                 var f0 = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -1 + 1e-9 }).ToForce(); ;
 
-                var sum = end1[0] + f0;
+                var sum = end1[0] - f0;
 
                 Assert.IsTrue(Math.Abs(sum.Forces.Length) < 1e-5, "invalid value");
                 Assert.IsTrue(Math.Abs(sum.Moments.Length) < 1e-5, "invalid value");

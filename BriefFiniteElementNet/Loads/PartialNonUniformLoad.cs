@@ -114,7 +114,23 @@ namespace BriefFiniteElementNet.Loads
 
         public double GetMagnitudeAt(Element targetelement, IsoPoint location)
         {
-            //return _severityFunction(location);
+
+            var afterStart =
+                location.Xi <= _startLocation.Xi &&
+                location.Eta <= _startLocation.Eta &&
+                location.Lambda <= _startLocation.Lambda;
+
+            var beforeEnd =
+                location.Xi >= _endLocation.Xi &&
+                location.Eta >= _endLocation.Eta &&
+                location.Lambda >= _endLocation.Lambda;
+
+            if (afterStart && beforeEnd)
+            {
+                return _severityFunction.Evaluate(location.Xi, location.Eta, location.Lambda);
+            }
+
+            return 0;
 
 
             throw new NotImplementedException();

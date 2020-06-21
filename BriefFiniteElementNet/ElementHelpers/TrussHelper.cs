@@ -734,7 +734,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 var movedEnds = ends.Move(new Point(0, 0, 0), new Point(targetX, 0, 0));
 
                 var f2 = frc + movedEnds;
-                //f2 *= -1;
+                f2 *= -1;
 
                 buff.Add(Tuple.Create(DoF.Dx, f2.Fx));
 
