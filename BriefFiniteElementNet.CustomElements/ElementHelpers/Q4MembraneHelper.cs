@@ -133,16 +133,14 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             return Matrix.Multiply(A, G); 
         }
 
-        public int Ng = 2;  // what is Ng? Is it the mx. polynomial degree of the elements in matrix?
-
         public int[] GetBMaxOrder(Element targetElement)
         {
-            return new int[] { Ng, Ng, 0 };     // depends on b (not implemented yet) --> check
+            return new int[] { 2, 2, 0 }; // xi, eta, gamma -> max. order
         }
 
         public int[] GetDetJOrder(Element targetElement)
         {
-            return new int[] { 0, 0, 0 };
+            return new int[] { 1, 1, 0 };
         }
 
         public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords) // source is CST-Element --> stays the same (made by epsi1on)
@@ -317,7 +315,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public int[] GetNMaxOrder(Element targetElement)
         {
-            return new int[] { Ng, Ng, 0 }; // check
+            return new int[] {1, 1, 0 };
         }
 
         public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
