@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using HtmlTags;
+using BriefFiniteElementNet.Validation;
 
 namespace BriefFiniteElementNet.Validation.Ui
 {
@@ -13,7 +14,7 @@ namespace BriefFiniteElementNet.Validation.Ui
         [STAThread]
         static void Main(string[] args)
         {
-
+            TestQuad();
             //TestTri();
             //TestBar();
             //TestTelepaty();
@@ -22,10 +23,18 @@ namespace BriefFiniteElementNet.Validation.Ui
             //BarElementTester.ValidateConsoleUniformLoad();
             //BarElementTester.TestEndReleaseStyiffness();
 
-            GithubIssues.Issue50.Run1();
+            //GithubIssues.Issue50.Run1();
 
 
             Console.ReadKey();
+        }
+
+        static void TestQuad()
+        {
+            Console.WriteLine("Quad Element Test - Start");
+
+            //ExportToHtmFile("c:\\temp\\quad-validation.html", new BriefFiniteElementNet.Validation.QuadElementTester());
+            QuadElementTester.TestSingleElement();
         }
 
         static void TestTelepaty()

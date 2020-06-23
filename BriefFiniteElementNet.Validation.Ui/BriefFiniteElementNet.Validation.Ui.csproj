@@ -56,6 +56,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BriefFiniteElementNet.CustomElements\BriefFiniteElementNet.CustomElements.csproj">
+      <Project>{aae8c9d8-3978-4bbd-a256-b67a1e4d5648}</Project>
+      <Name>BriefFiniteElementNet.CustomElements</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BriefFiniteElementNet.Validation\BriefFiniteElementNet.Validation.csproj">
       <Project>{7a20ce01-552e-457a-a9c3-18bed244d897}</Project>
       <Name>BriefFiniteElementNet.Validation</Name>
