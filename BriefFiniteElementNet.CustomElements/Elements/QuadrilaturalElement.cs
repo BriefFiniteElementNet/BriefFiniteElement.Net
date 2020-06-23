@@ -87,9 +87,44 @@ namespace BriefFiniteElementNet.Elements
             throw new NotImplementedException();
         }
 
-        public override Matrix GetGlobalStifnessMatrix()
+        public override Matrix GetGlobalStifnessMatrix()    // made by epsi1on
         {
-            throw new NotImplementedException();
+            var local = GetLocalStifnessMatrix();
+            var tr = GetTransformationManager();
+
+            var buf = tr.TransformLocalToGlobal(local);
+
+            return buf;
+        }
+
+        public Matrix GetLocalStifnessMatrix()  // throws an error!
+        {
+            var helpers = GetHelpers();
+
+            var buf = new Matrix(24, 24); // 6*nodecount x 6*nodecount
+
+            for (var i = 0; i < helpers.Length; i++)    // error within first helper
+            {
+                var helper = helpers[i];
+
+                var ki = helper.CalcLocalStiffnessMatrix(this); // 12x12 matrix as a result
+
+                var dofs = helper.GetDofOrder(this);    // 12 dofs as a result
+
+                for (var ii = 0; ii < dofs.Length; ii++)
+                {
+                    var bi = dofs[ii].NodeIndex * 6 + (int)dofs[ii].Dof;
+
+                    for (var jj = 0; jj < dofs.Length; jj++)
+                    {
+                        var bj = dofs[jj].NodeIndex * 6 + (int)dofs[jj].Dof;
+
+                        buf[bi, bj] += ki[ii, jj];
+                    }
+                }
+            }
+
+            return buf;
         }
 
         public override IElementHelper[] GetHelpers()
@@ -118,7 +153,38 @@ namespace BriefFiniteElementNet.Elements
 
         public override Matrix GetLambdaMatrix()
         {
-            throw new NotImplementedException();
+            var p1 = nodes[0].Location;
+            var p2 = nodes[1].Location;
+            var p3 = nodes[2].Location;
+            var p4 = nodes[3].Location;
+
+            var v1 = p1 - Point.Origins;
+            var v2 = p2 - Point.Origins;
+            var v3 = p3 - Point.Origins;
+            var v4 = p4 - Point.Origins;
+
+            var ii = (v1 + v2) / 2; // midpoints
+            var jj = (v2 + v3) / 2;
+            var kk = (v3 + v4) / 2;
+            var ll = (v4 + v1) / 2;
+
+            var vx = (jj - ll).GetUnit();//ref [1] eq. 5.8
+            var vr = (kk - ii).GetUnit();//eq. 5.10
+            var vz = Vector.Cross(vx, vr);//eq. 5.11
+            var vy = Vector.Cross(vz, vx);//eq. 5.12
+
+            var lamX = vx.GetUnit();//Lambda_X -> eq. 5.9
+            var lamY = vy.GetUnit();//Lambda_Y
+            var lamZ = vz.GetUnit();//Lambda_Z
+
+            var lambda = Matrix.FromJaggedArray(new[]
+            {
+                new[] {lamX.X, lamY.X, lamZ.X},
+                new[] {lamX.Y, lamY.Y, lamZ.Y},
+                new[] {lamX.Z, lamY.Z, lamZ.Z}
+            });
+
+            return lambda;
         }
 
         public override double[] IsoCoordsToLocalCoords(params double[] isoCoords)
