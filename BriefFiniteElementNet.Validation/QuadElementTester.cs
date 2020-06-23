@@ -23,8 +23,8 @@ namespace BriefFiniteElementNet.Validation
             {
                 new Node(1, 1, 0),
                 new Node(4, 1, 0),
-                new Node(1, 4, 0),
                 new Node(4, 4, 0),
+                new Node(1, 4, 0),
             };
 
             arr.CopyTo(elm.Nodes, 0);
@@ -32,7 +32,7 @@ namespace BriefFiniteElementNet.Validation
             model.Nodes.AddRange(arr);
             model.Elements.Add(elm);
 
-            model.Nodes[3].Loads.Add(new NodalLoad(new Force(1, 1, 1, 0, 0, 0) * -5000));
+            model.Nodes[2].Loads.Add(new NodalLoad(new Force(1, 1, 1, 0, 0, 0) * -5000));
 
             model.Nodes[0].Constraints = model.Nodes[1].Constraints = Constraints.Fixed;
 
@@ -43,7 +43,7 @@ namespace BriefFiniteElementNet.Validation
 
             model.Solve();
 
-            Console.WriteLine(model.Nodes[3].GetNodalDisplacement().ToString(5));
+            Console.WriteLine(model.Nodes[2].GetNodalDisplacement().ToString(5));
 
             //var force = elm.GetLocalInternalForceAt(LoadCase.DefaultLoadCase, -0.57735, -0.57735);
 
