@@ -82,8 +82,8 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
         {
             var xi = isoCoords[0];
             var eta = isoCoords[1];
-            Matrix j = GetJMatrixAt(targetElement, xi, eta);
-            var detJ = j.Determinant();
+            Matrix j = GetJMatrixAt(targetElement, xi, eta);    
+            var detJ = j.Determinant(); 
 
             var buf = new Matrix(3, 4);
             buf.FillRow(0, j[1, 1], -j[0, 1], 0, 0);
@@ -241,11 +241,28 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var xi_m = xi - 1;
             var xi_p = xi + 1;
 
-            buf[0, 0] = (1 / 4) * (x1 * eta_m - x2 * eta_m + x3 * eta_p - x4 * eta_p);  // δx/δxi ; x(xi, eta) = N1*x1 + N2*x2 + N3*x3 + N4*x4 ; y(xi, eta) = N1*y1 + N2*y2 + N3*y3 + N4*y4 (N1, N2, N3, N4 from 3.32)
-            buf[0, 1] = (1 / 4) * (y1 * eta_m - y2 * eta_m + y3 * eta_p - y4 * eta_p);  // δy/δxi
-            buf[1, 0] = (1 / 4) * (x1 * xi_m - x2 * xi_p + x3 * xi_p - x4 * xi_m);      // δx/δeta
-            buf[1, 1] = (1 / 4) * (y1 * xi_m - y2 * xi_p + y3 * xi_p - y4 * xi_m);      // δy/δeta
+            var q = 0.25;
 
+            #region Test
+            /*
+            var j00 = q * ((x1 * eta_m) - (x2 * eta_m) + (x3 * eta_p) - (x4 * eta_p));
+            var j01 = q * ((y1 * eta_m) - (y2 * eta_m) + (y3 * eta_p) - (y4 * eta_p));
+            var j10 = q * ((x1 * xi_m) - (x2 * xi_p) + (x3 * xi_p) - (x4 * xi_m));
+            var j11 = q * ((y1 * xi_m) - (y2 * xi_p) + (y3 * xi_p) - (y4 * xi_m));
+            */
+            #endregion
+
+            buf[0, 0] = q * ((x1 * eta_m) - (x2 * eta_m) + (x3 * eta_p) - (x4 * eta_p));  // δx/δxi ; x(xi, eta) = N1*x1 + N2*x2 + N3*x3 + N4*x4 ; y(xi, eta) = N1*y1 + N2*y2 + N3*y3 + N4*y4 (N1, N2, N3, N4 from 3.32)
+            buf[0, 1] = q * ((y1 * eta_m) - (y2 * eta_m) + (y3 * eta_p) - (y4 * eta_p)); // δy/δxi
+            buf[1, 0] = q * ((x1 * xi_m) - (x2 * xi_p) + (x3 * xi_p) - (x4 * xi_m));      // δx/δeta
+            buf[1, 1] = q * ((y1 * xi_m) - (y2 * xi_p) + (y3 * xi_p) - (y4 * xi_m));      // δy/δeta
+
+            #region Test
+            /*
+            buf.FillRow(0, (1 / 4) * (x1 * eta_m - x2 * eta_m + x3 * eta_p - x4 * eta_p), (1 / 4) * (y1 * eta_m - y2 * eta_m + y3 * eta_p - y4 * eta_p));
+            buf.FillRow(1, (1 / 4) * (x1 * xi_m - x2 * xi_p + x3 * xi_p - x4 * xi_m), (1 / 4) * (y1 * xi_m - y2 * xi_p + y3 * xi_p - y4 * xi_m));
+            */
+            #endregion
             return buf;
         }
 

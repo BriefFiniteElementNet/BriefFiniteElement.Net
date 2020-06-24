@@ -97,19 +97,19 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
-        public Matrix GetLocalStifnessMatrix()  // throws an error!
+        public Matrix GetLocalStifnessMatrix()  
         {
             var helpers = GetHelpers();
 
             var buf = new Matrix(24, 24); // 6*nodecount x 6*nodecount
 
-            for (var i = 0; i < helpers.Length; i++)    // error within first helper
+            for (var i = 0; i < helpers.Length; i++)    
             {
                 var helper = helpers[i];
 
-                var ki = helper.CalcLocalStiffnessMatrix(this); // 12x12 matrix as a result
+                var ki = helper.CalcLocalStiffnessMatrix(this);
 
-                var dofs = helper.GetDofOrder(this);    // 12 dofs as a result
+                var dofs = helper.GetDofOrder(this);    
 
                 for (var ii = 0; ii < dofs.Length; ii++)
                 {
@@ -142,10 +142,12 @@ namespace BriefFiniteElementNet.Elements
                     helpers.Add(new Q4MembraneHelper());
                 }
 
+                /* // not implemented yet
                 if ((this._behavior & PlateElementBehaviour.DrillingDof) != 0)
                 {
                     helpers.Add(new QuadBasicDrillingDofHelper());
                 }
+                */
             }
 
             return helpers.ToArray();
