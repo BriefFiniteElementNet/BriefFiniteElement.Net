@@ -142,12 +142,12 @@ namespace BriefFiniteElementNet.Elements
                     helpers.Add(new Q4MembraneHelper());
                 }
 
-                /* // not implemented yet
+                
                 if ((this._behavior & PlateElementBehaviour.DrillingDof) != 0)
                 {
                     helpers.Add(new QuadBasicDrillingDofHelper());
                 }
-                */
+                
             }
 
             return helpers.ToArray();
