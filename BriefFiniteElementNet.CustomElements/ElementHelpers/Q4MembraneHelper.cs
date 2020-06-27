@@ -7,7 +7,7 @@
 // Revision History
 //
 // Date          Author          	            Description
-// 18.06.2020    T.Thaler, M.Mischke     	    v1.0  
+// 22.06.2020    T.Thaler, M.Mischke     	    v1.0  
 // 
 //---------------------------------------------------------------------------------------
 // Copyleft 2017-2020 by Brandenburg University of Technology. Intellectual proprerty 
@@ -78,58 +78,69 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             return res;
         }
 
-        public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
+        public Matrix GetAMatrix(Element targetElement, params double[] isoCoords) // ref [1]: following eq. 3.41
         {
-            var quad = targetElement as QuadrilaturalElement;
+            var xi = isoCoords[0];
+            var eta = isoCoords[1];
+            Matrix j = GetJMatrixAt(targetElement, xi, eta);    
+            var detJ = j.Determinant(); 
 
-            var tmgr = targetElement.GetTransformationManager();
+            var buf = new Matrix(3, 4);
+            buf.FillRow(0, j[1, 1], -j[0, 1], 0, 0);
+            buf.FillRow(1, 0, 0, -j[1, 0], j[0, 0]);
+            buf.FillRow(2, -j[1, 0], j[0, 0], j[1, 1], -j[0, 1]);
 
-            if (quad == null)
-                throw new Exception();
-
-            var p1g = quad.Nodes[0].Location;
-            var p2g = quad.Nodes[1].Location;
-            var p3g = quad.Nodes[2].Location;
-            var p4g = quad.Nodes[3].Location;
-
-            var p1l = tmgr.TransformGlobalToLocal(p1g);
-            var p2l = tmgr.TransformGlobalToLocal(p2g);
-            var p3l = tmgr.TransformGlobalToLocal(p3g);
-            var p4l = tmgr.TransformGlobalToLocal(p4g);
-
-            var x1 = p1l.X;
-            var x2 = p2l.X;
-            var x3 = p3l.X;
-            var x4 = p4l.X;
-
-            var y1 = p1l.Y;
-            var y2 = p2l.Y;
-            var y3 = p3l.Y;
-            var y4 = p4l.Y;
-
-            var buf = new Matrix(3, 8);
-
-            /*// needs to be finished
-            buf.FillRow(); 
-            buf.FillRow();
-            buf.FillRow();
-            */
-
-
+            buf.MultiplyByConstant(detJ);
 
             return buf;
         }
 
-        public int Ng = 2;  // what is Ng? Is it the mx. polynomial degree of the elements in matrix?
+        public Matrix GetGMatrix(Element targetElement, params double[] isoCoords) // ref [1]: following eq. 3.45 and using N1, N1, N3, N4 from eq. 3.32
+        {
+            var xi = isoCoords[0];
+            var eta = isoCoords[1];
+            var eta_m = eta - 1;
+            var eta_p = eta + 1;
+            var xi_m = xi - 1;
+            var xi_p = xi + 1;
+
+            var q = (1 / 4);
+
+            var N1_xi = q * eta_m; // δN1/δxi
+            var N1_eta = q * xi_m; // δN1/δeta
+            var N2_xi = -q * eta_m;
+            var N2_eta = -q * xi_p;
+            var N3_xi = q * eta_p;
+            var N3_eta = q * xi_p;
+            var N4_xi = -q * eta_p;
+            var N4_eta = -q * xi_m;
+
+            var buf = new Matrix(4, 8); //ref [1] eq. 3.45
+            buf.FillRow(0, N1_xi, 0, N2_xi, 0, N3_xi, 0, N4_xi, 0);
+            buf.FillRow(1, N1_eta, 0, N2_eta, 0, N3_eta, 0, N4_eta, 0);
+            buf.FillRow(2, 0, N1_xi, 0, N2_xi, 0, N3_xi, 0, N4_xi);
+            buf.FillRow(3, 0, N1_eta, 0, N2_eta, 0, N3_eta, 0, N4_eta);
+            
+            return buf;
+        }
+
+
+        public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords) // ref [1]: eq. 3.47: B = A * G
+        {
+            Matrix A = GetAMatrix(targetElement, isoCoords);
+            Matrix G = GetGMatrix(targetElement, isoCoords);
+
+            return Matrix.Multiply(A, G); 
+        }
 
         public int[] GetBMaxOrder(Element targetElement)
         {
-            return new int[] { Ng, Ng, 0 };     // depends on b (not implemented yet) --> check
+            return new int[] { 2, 2, 0 }; // xi, eta, gamma -> max. order
         }
 
         public int[] GetDetJOrder(Element targetElement)
         {
-            return new int[] { 0, 0, 0 };
+            return new int[] { 1, 1, 0 };
         }
 
         public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords) // source is CST-Element --> stays the same (made by epsi1on)
@@ -223,12 +234,35 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var y3 = p3l.Y;
             var y4 = p4l.Y;
 
-            var buf = new Matrix(2, 2);
+            var buf = new Matrix(2, 2); //ref [1] eq. 3.36 and 3.28/3.29
 
+            var eta_m = eta - 1;
+            var eta_p = eta + 1;
+            var xi_m = xi - 1;
+            var xi_p = xi + 1;
 
-            // needs to be finished!
+            var q = 0.25;
 
+            #region Test
+            /*
+            var j00 = q * ((x1 * eta_m) - (x2 * eta_m) + (x3 * eta_p) - (x4 * eta_p));
+            var j01 = q * ((y1 * eta_m) - (y2 * eta_m) + (y3 * eta_p) - (y4 * eta_p));
+            var j10 = q * ((x1 * xi_m) - (x2 * xi_p) + (x3 * xi_p) - (x4 * xi_m));
+            var j11 = q * ((y1 * xi_m) - (y2 * xi_p) + (y3 * xi_p) - (y4 * xi_m));
+            */
+            #endregion
 
+            buf[0, 0] = q * ((x1 * eta_m) - (x2 * eta_m) + (x3 * eta_p) - (x4 * eta_p));  // δx/δxi ; x(xi, eta) = N1*x1 + N2*x2 + N3*x3 + N4*x4 ; y(xi, eta) = N1*y1 + N2*y2 + N3*y3 + N4*y4 (N1, N2, N3, N4 from 3.32)
+            buf[0, 1] = q * ((y1 * eta_m) - (y2 * eta_m) + (y3 * eta_p) - (y4 * eta_p)); // δy/δxi
+            buf[1, 0] = q * ((x1 * xi_m) - (x2 * xi_p) + (x3 * xi_p) - (x4 * xi_m));      // δx/δeta
+            buf[1, 1] = q * ((y1 * xi_m) - (y2 * xi_p) + (y3 * xi_p) - (y4 * xi_m));      // δy/δeta
+
+            #region Test
+            /*
+            buf.FillRow(0, (1 / 4) * (x1 * eta_m - x2 * eta_m + x3 * eta_p - x4 * eta_p), (1 / 4) * (y1 * eta_m - y2 * eta_m + y3 * eta_p - y4 * eta_p));
+            buf.FillRow(1, (1 / 4) * (x1 * xi_m - x2 * xi_p + x3 * xi_p - x4 * xi_m), (1 / 4) * (y1 * xi_m - y2 * xi_p + y3 * xi_p - y4 * xi_m));
+            */
+            #endregion
             return buf;
         }
 
@@ -276,11 +310,12 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             var sQ4 = d * b * u;
 
-            var buf = new MembraneStressTensor();
-
-            buf.Sx = sQ4[0, 0];
-            buf.Sy = sQ4[1, 0];
-            buf.Txy = sQ4[2, 0];
+            var buf = new MembraneStressTensor()
+            { 
+                Sx = sQ4[0, 0],
+                Sy = sQ4[1, 0],
+                Txy = sQ4[2, 0]
+            };
 
             return new GeneralStressTensor(buf);
         }
@@ -297,7 +332,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public int[] GetNMaxOrder(Element targetElement)
         {
-            return new int[] { Ng, Ng, 0 }; // check
+            return new int[] {1, 1, 0 };
         }
 
         public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
