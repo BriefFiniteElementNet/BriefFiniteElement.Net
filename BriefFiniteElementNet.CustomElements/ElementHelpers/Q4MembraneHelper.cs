@@ -7,7 +7,7 @@
 // Revision History
 //
 // Date          Author          	            Description
-// 22.06.2020    T.Thaler, M.Mischke     	    v1.0  
+// 30.06.2020    T.Thaler, M.Mischke     	    v1.0  
 // 
 //---------------------------------------------------------------------------------------
 // Copyleft 2017-2020 by Brandenburg University of Technology. Intellectual proprerty 
@@ -104,7 +104,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var xi_m = xi - 1;
             var xi_p = xi + 1;
 
-            var q = (1 / 4);
+            var q = 0.25;
 
             var N1_xi = q * eta_m; // δN1/δxi
             var N1_eta = q * xi_m; // δN1/δeta
