@@ -118,7 +118,9 @@ namespace BriefFiniteElementNet
         public static CauchyStressTensor GetPrincipalStresses(CauchyStressTensor t, out Matrix transformationMatrix)
         {
             //better to do with eigenvalue and eigen vector
-            //more info here
+            //more info here https://www.continuummechanics.org/principalstress.html
+            //maybe simple to implement 3x3 eigen vector and value to Matrix class and use it here
+
             throw new NotImplementedException();
         }
 
