@@ -28,6 +28,11 @@ namespace BriefFiniteElementNet
         private double s31;
         private double s32;
 
+        //Principal stresses
+        private double s1;
+        private double s2;
+        private double tau;
+
         public double S11
         {
             get { return s11; }
@@ -99,6 +104,53 @@ namespace BriefFiniteElementNet
             {
                 s33 = value;
             }
+        }
+        /// <summary>
+        /// Principal stresses - no external set!
+        /// </summary>
+        public double S1
+        {
+            get { return s1; }
+        }
+        public double S2
+        {
+            get { return s2; }
+        }
+        public double Tau
+        {
+            get { return tau; }
+        }
+
+        /// <summary>
+        /// Updates the principal stresses based on the tensor 
+        /// </summary>
+        public void UpdatePrincipalStresses()
+        {
+            var c1 = (this.S11 + this.S22) / 2.0;
+            var c2 = Math.Sqrt(Math.Pow((this.S11 - this.S22) / 2.0, 2) + Math.Pow(this.S12, 2));
+
+            this.s1 = c1 + c2;
+            this.s2 = c1 - c2;
+            this.tau = c2;
+        }
+
+        /// <summary>
+        /// Returns the von Mises stress 
+        /// </summary>
+        /// <returns>The von Mises stress</returns>
+        public double GetVonMises()
+        {
+            double temp = 1.0 / Math.Sqrt(2.0);
+            double tempXXYY = Math.Pow(s11 - s22, 2);
+            double tempYYZZ = Math.Pow(s22 - s33, 2);
+            double tempZZXX = Math.Pow(s33 - s11, 2);
+
+            double tempXY2 = Math.Pow(s12, 2);
+            double tempYZ2 = Math.Pow(s23, 2);
+            double tempZX2 = Math.Pow(s31, 2);
+
+            double squared = tempXXYY + tempYYZZ + tempZZXX + 6.0 * (tempXY2 + tempYZ2 + tempZX2);
+            return temp * Math.Sqrt(squared);
         }
 
         /// <summary>
@@ -287,5 +339,5 @@ namespace BriefFiniteElementNet
 
     }
 
-    
+
 }
