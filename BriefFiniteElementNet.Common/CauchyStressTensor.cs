@@ -28,11 +28,6 @@ namespace BriefFiniteElementNet
         private double s31;
         private double s32;
 
-        //Principal stresses
-        private double s1;
-        private double s2;
-        private double tau;
-
         public double S11
         {
             get { return s11; }
@@ -105,49 +100,85 @@ namespace BriefFiniteElementNet
                 s33 = value;
             }
         }
+
         /// <summary>
-        /// Principal stresses - no external set!
+        /// Updates the principal stresses based on the tensor 
         /// </summary>
-        public double S1
+        public static CauchyStressTensor GetPrincipalStresses(CauchyStressTensor t)
         {
-            get { return s1; }
-        }
-        public double S2
-        {
-            get { return s2; }
-        }
-        public double Tau
-        {
-            get { return tau; }
+            //based on https://www.ecourses.ou.edu/cgi-bin/eBook.cgi?doc=&topic=me&chap_sec=07.2&page=theory
+
+            var i1 = t.s11 + t.s22 + t.s33;
+            var i2 = t.s11 * t.s22 + t.s22 * t.s33 + t.s11 * t.s33 - t.s12 * t.s12 - t.s23 * t.s23 - t.s31 * t.s31;
+            var i3 = t.s11 * t.s22 * t.s33 +
+                2 * t.s12 * t.s23 * t.s31
+                - t.s11 * t.s23 * t.s23
+                - t.s22 * t.s31 * t.s31
+                - t.s33 * t.s12 * t.s12;
+
+            var a = 1;
+            var b = -i1;
+            var c = i2;
+            var d = -i3;
+
+            var delta = 18 * a * b * c * d - 4 * b * b * b * d + b * b * c * c - 4 * a * c * c * c - 27 * a * a * d * d;
+
+            //for having three different root delta should be >= 0
+            if (delta <= 0)
+                throw new Exception();
+
+            var d0 = b * b - 3 * a * c;
+            var d1 = 2 * b * b * b - 9 * a * b * c + 27 * a * a * d;
+
+            throw new NotImplementedException();
         }
 
         /// <summary>
         /// Updates the principal stresses based on the tensor 
         /// </summary>
-        public void UpdatePrincipalStresses()
+        public static CauchyStressTensor GetPrincipalStresses(CauchyStressTensor t,out Matrix transformationMatrix)
         {
-            var c1 = (this.S11 + this.S22) / 2.0;
-            var c2 = Math.Sqrt(Math.Pow((this.S11 - this.S22) / 2.0, 2) + Math.Pow(this.S12, 2));
+            //based on https://www.ecourses.ou.edu/cgi-bin/eBook.cgi?doc=&topic=me&chap_sec=07.2&page=theory
 
-            this.s1 = c1 + c2;
-            this.s2 = c1 - c2;
-            this.tau = c2;
+            var i1 = t.s11 + t.s22 + t.s33;
+            var i2 = t.s11 * t.s22 + t.s22 * t.s33 + t.s11 * t.s33 - t.s12 * t.s12 - t.s23 * t.s23 - t.s31 * t.s31;
+            var i3 = t.s11 * t.s22 * t.s33 +
+                2 * t.s12 * t.s23 * t.s31
+                - t.s11 * t.s23 * t.s23
+                - t.s22 * t.s31 * t.s31
+                - t.s33 * t.s12 * t.s12;
+
+            var a = 1;
+            var b = -i1;
+            var c = i2;
+            var d = -i3;
+
+            var delta = 18 * a * b * c * d - 4 * b * b * b * d + b * b * c * c - 4 * a * c * c * c - 27 * a * a * d * d;
+
+            //for having three different root delta should be >= 0
+            if (delta <= 0)
+                throw new Exception();
+
+            var d0 = b * b - 3 * a * c;
+            var d1 = 2 * b * b * b - 9 * a * b * c + 27 * a * a * d;
+
+            throw new NotImplementedException();
         }
 
         /// <summary>
         /// Returns the von Mises stress 
         /// </summary>
         /// <returns>The von Mises stress</returns>
-        public double GetVonMises()
+        public static double GetVonMisesStress(CauchyStressTensor t)
         {
             double temp = 1.0 / Math.Sqrt(2.0);
-            double tempXXYY = Math.Pow(s11 - s22, 2);
-            double tempYYZZ = Math.Pow(s22 - s33, 2);
-            double tempZZXX = Math.Pow(s33 - s11, 2);
+            double tempXXYY = Math.Pow(t.s11 - t.s22, 2);
+            double tempYYZZ = Math.Pow(t.s22 - t.s33, 2);
+            double tempZZXX = Math.Pow(t.s33 - t.s11, 2);
 
-            double tempXY2 = Math.Pow(s12, 2);
-            double tempYZ2 = Math.Pow(s23, 2);
-            double tempZX2 = Math.Pow(s31, 2);
+            double tempXY2 = Math.Pow(t.s12, 2);
+            double tempYZ2 = Math.Pow(t.s23, 2);
+            double tempZX2 = Math.Pow(t.s31, 2);
 
             double squared = tempXXYY + tempYYZZ + tempZZXX + 6.0 * (tempXY2 + tempYZ2 + tempZX2);
             return temp * Math.Sqrt(squared);
