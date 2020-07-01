@@ -394,6 +394,100 @@ namespace BriefFiniteElementNet.Elements
 
         #endregion
 
+        #region strains
+        public StrainTensor3D GetMembraneInternalStrain(LoadCombination combination)
+        {
+            //Note: membrane internal force is constant
+
+            //step 1 : get transformation matrix
+            //step 2 : convert globals points to locals
+            //step 3 : convert global displacements to locals
+            //step 4 : calculate B matrix
+            //step 5 : e=B*U
+            //Note : Steps changed...
+
+            var trans = this.GetTransformationMatrix();
+
+            var lp = GetLocalPoints();
+
+            var g2l = new Func<Vector, Vector>(glob => (trans.Transpose() * glob.ToMatrix()).ToVector());
+            //var l2g = new Func<Vector, Vector>(local => (trans*local.ToMatrix()).ToPoint());
+
+
+            var d1g = this.nodes[0].GetNodalDisplacement(combination);
+            var d2g = this.nodes[1].GetNodalDisplacement(combination);
+            var d3g = this.nodes[2].GetNodalDisplacement(combination);
+
+            //step 3
+            var d1l = new Displacement(g2l(d1g.Displacements), g2l(d1g.Rotations));
+            var d2l = new Displacement(g2l(d2g.Displacements), g2l(d2g.Rotations));
+            var d3l = new Displacement(g2l(d3g.Displacements), g2l(d3g.Rotations));
+
+            var uCst =
+                   new Matrix(new[]
+                   {d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY});
+
+            var bCst = CstElement.GetBMatrix(lp.Select(i => i.X).ToArray(),
+                lp.Select(i => i.Y).ToArray());
+
+            var ECst = bCst * uCst;
+
+            var buf = new StrainTensor3D();
+
+            buf.S11 = ECst[0, 0];
+            buf.S22 = ECst[1, 0];
+            buf.S12 = ECst[2, 0];
+
+            return buf;
+        }
+        public StrainTensor3D GetBendingInternalStrain(double localX, double localY, LoadCombination cmb)
+        {
+            //step 1 : get transformation matrix
+            //step 2 : convert globals points to locals
+            //step 3 : convert global displacements to locals
+            //step 4 : calculate B matrix 
+            //step 5 : e=B*U
+            //Note : Steps changed...
+
+            var trans = this.GetTransformationMatrix();
+
+            var lp = GetLocalPoints();
+
+            var g2l = new Func<Vector, Vector>(glob => (trans.Transpose() * glob.ToMatrix()).ToVector());
+            //var l2g = new Func<Vector, Vector>(local => (trans*local.ToMatrix()).ToPoint());
+
+
+            var d1g = this.nodes[0].GetNodalDisplacement(cmb);
+            var d2g = this.nodes[1].GetNodalDisplacement(cmb);
+            var d3g = this.nodes[2].GetNodalDisplacement(cmb);
+
+            //step 3
+            var d1l = new Displacement(g2l(d1g.Displacements), g2l(d1g.Rotations));
+            var d2l = new Displacement(g2l(d2g.Displacements), g2l(d2g.Rotations));
+            var d3l = new Displacement(g2l(d3g.Displacements), g2l(d3g.Rotations));
+
+            var uDkt =
+                   new Matrix(new[]
+                   {d1l.DZ, d1l.RX, d1l.RY, /**/ d2l.DZ, d2l.RX, d2l.RY, /**/ d3l.DZ, d3l.RX, d3l.RY});
+
+
+
+            var b = DktElement.GetBMatrix(localX, localY,
+                lp.Select(i => i.X).ToArray(),
+                lp.Select(i => i.Y).ToArray());
+
+            var mDkt = b * uDkt;
+
+            var buf = new StrainTensor3D();
+
+            buf.S11 = mDkt[0, 0];
+            buf.S22 = mDkt[1, 0];
+            buf.S12 = mDkt[2, 0];
+
+            return buf;
+        }
+        #endregion
+
         public override Matrix GetGlobalMassMatrix()
         {
             throw new NotImplementedException();
