@@ -106,8 +106,8 @@ namespace BriefFiniteElementNet
         /// </summary>
         public static CauchyStressTensor GetPrincipalStresses(CauchyStressTensor t)
         {
-            //better to do with eigenvalue and eigen vector
-            throw new NotImplementedException();
+            Matrix tmpTrans;
+            return GetPrincipalStresses(t, out tmpTrans);
         }
 
         /// <summary>
@@ -118,6 +118,7 @@ namespace BriefFiniteElementNet
         public static CauchyStressTensor GetPrincipalStresses(CauchyStressTensor t, out Matrix transformationMatrix)
         {
             //better to do with eigenvalue and eigen vector
+            //more info here
             throw new NotImplementedException();
         }
 
