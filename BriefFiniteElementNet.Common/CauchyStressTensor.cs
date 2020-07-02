@@ -121,6 +121,39 @@ namespace BriefFiniteElementNet
             //more info here https://www.continuummechanics.org/principalstress.html
             //maybe simple to implement 3x3 eigen vector and value to Matrix class and use it here
 
+            //Principal stresses according to https://www.continuummechanics.org/principalstress.html
+            double I1 = t.s11 + t.s22 + t.s33;
+
+            double temp1 = t.s11 * t.s22 + t.s22 * t.s33 + t.s33 * t.s11;
+            double I2 = temp1 - Math.Pow(t.s12, 2) - Math.Pow(t.s13, 2) - Math.Pow(t.s23, 2);
+
+            double temp2 = t.s11 * t.s22 * t.s33;
+            double temp3 = t.s11 * Math.Pow(t.s23, 2);
+            double temp4 = t.s22 * Math.Pow(t.s13, 2);
+            double temp5 = t.s33 * Math.Pow(t.s12, 2);
+            double temp6 = 2.0 * t.s12 * t.s13 * t.s23;
+            double I3 = temp2 - temp3 - temp4 - temp5 + temp6;
+
+            //Q/R/theta
+            double Q = 3.0 * I2 - Math.Pow(I1, 2);
+            Q /= 9.0;
+
+            double R = 2.0 * Math.Pow(I1, 3) - 9.0 * I1 * I2 + 27 * I3;
+            R /= 54.0;
+
+            double thetaTemp = Math.Sqrt(-1.0 * Math.Pow(Q, 3));
+            double theta = Math.Acos(R / thetaTemp);
+
+            //principal values:
+            double constant = 2.0 * Math.Sqrt(-1.0 * Q);
+
+            double e1 = constant * Math.Cos(theta / 3.0) + 1.0 / 3.0 * I1;
+            double e2 = constant * Math.Cos((theta + 2.0 * Math.PI) / 3.0) + 1.0 / 3.0 * I1;
+            double e3 = constant * Math.Cos((theta + 4.0 * Math.PI) / 3.0) + 1.0 / 3.0 * I1;
+
+            //yet to be assigned!!!
+            transformationMatrix = new Matrix(3, 3);
+            return new CauchyStressTensor() { s11 = e1, s22 = e2, s33 = e3 };
             throw new NotImplementedException();
         }
 
