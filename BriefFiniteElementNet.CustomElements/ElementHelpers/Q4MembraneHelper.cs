@@ -44,15 +44,16 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
         public Matrix CalcLocalStiffnessMatrix(Element targetElement)
         {
             var intg = new BriefFiniteElementNet.Integration.GaussianIntegrator(); // using eq. 3.50 [1] / eq 8 [3]
+            var quad = targetElement as QuadrilaturalElement;
 
-            intg.A2 = 1;
-            intg.A1 = 0;
+            intg.A2 = 1.0;
+            intg.A1 = 0.0;
 
-            intg.F2 = (gama => +1);
-            intg.F1 = (gama => -1);
+            intg.F2 = (gama => +1.0);
+            intg.F1 = (gama => -1.0);
 
-            intg.G2 = (eta, gama) => +1;
-            intg.G1 = (eta, gama) => -1;
+            intg.G2 = (eta, gama) => +1.0;
+            intg.G1 = (eta, gama) => -1.0;
 
             intg.XiPointCount = intg.EtaPointCount = 3; // ref [2]
             intg.GammaPointCount = 1;
@@ -70,6 +71,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 var ki = b.Transpose() * d * b;
 
                 ki.MultiplyByConstant(Math.Abs(j.Determinant()));
+                ki.MultiplyByConstant(quad.Section.GetThicknessAt(new double[] { xi, eta }));
 
                 return ki;
             });
@@ -90,7 +92,9 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             buf.FillRow(1, 0, 0, -j[1, 0], j[0, 0]);
             buf.FillRow(2, -j[1, 0], j[0, 0], j[1, 1], -j[0, 1]);
 
-            buf.MultiplyByConstant(detJ);
+            //buf.MultiplyByConstant(detJ);
+            //should be 1.0/detJ? See 3.41
+            buf.MultiplyByConstant(1.0 / detJ);
 
             return buf;
         }
@@ -99,10 +103,10 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
         {
             var xi = isoCoords[0];
             var eta = isoCoords[1];
-            var eta_m = eta - 1;
-            var eta_p = eta + 1;
-            var xi_m = xi - 1;
-            var xi_p = xi + 1;
+            var eta_m = eta - 1.0;
+            var eta_p = eta + 1.0;
+            var xi_m = xi - 1.0;
+            var xi_p = xi + 1.0;
 
             var q = 0.25;
 
@@ -159,24 +163,24 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             {
                 //http://help.solidworks.com/2013/english/SolidWorks/cworks/c_linear_elastic_orthotropic.htm
                 //orthotropic material
-                d[0, 0] = mat.Ex / (1 - mat.NuXy * mat.NuYx);
-                d[1, 1] = mat.Ey / (1 - mat.NuXy * mat.NuYx);
-                d[1, 0] = d[0, 1] = mat.NuXy * mat.Ey / (1 - mat.NuXy * mat.NuYx);
+               d[0, 0] = mat.Ex / (1.0 - mat.NuXy * mat.NuYx);
+                d[1, 1] = mat.Ey / (1.0 - mat.NuXy * mat.NuYx);
+                d[1, 0] = d[0, 1] = mat.NuXy * mat.Ey / (1.0 - mat.NuXy * mat.NuYx);
 
-                d[2, 2] = mat.Ex * mat.Ey / (mat.Ex + mat.Ey + 2 * mat.Ey * mat.NuXy);
+                d[2, 2] = mat.Ex * mat.Ey / (mat.Ex + mat.Ey + 2.0 * mat.Ey * mat.NuXy);
             }
             else
             {
-                var delta = 1 - mat.NuXy * mat.NuYx - mat.NuZy * mat.NuYz - mat.NuZx * mat.NuXz - 2 * mat.NuXy * mat.NuYz * mat.NuZx;
+                var delta = 1.0 - mat.NuXy * mat.NuYx - mat.NuZy * mat.NuYz - mat.NuZx * mat.NuXz - 2.0* mat.NuXy * mat.NuYz * mat.NuZx;
 
                 delta /= mat.Ex * mat.Ey * mat.Ez;
 
                 //http://www.efunda.com/formulae/solid_mechanics/mat_mechanics/hooke_orthotropic.cfm
 
-                d[0, 0] = (1 - mat.NuYz * mat.NuZy) / (mat.Ey * mat.Ez * delta);
+                d[0, 0] = (1.0 - mat.NuYz * mat.NuZy) / (mat.Ey * mat.Ez * delta);
                 d[0, 1] = (mat.NuYx + mat.NuZx * mat.NuYz) / (mat.Ey * mat.Ez * delta);
                 d[1, 0] = (mat.NuXy + mat.NuXz * mat.NuZy) / (mat.Ez * mat.Ex * delta);
-                d[1, 1] = (1 - mat.NuZx * mat.NuXz) / (mat.Ez * mat.Ex * delta);
+                d[1, 1] = (1.0 - mat.NuZx * mat.NuXz) / (mat.Ez * mat.Ex * delta);
             }
 
             return d;
@@ -236,10 +240,10 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             var buf = new Matrix(2, 2); //ref [1] eq. 3.36 and 3.28/3.29
 
-            var eta_m = eta - 1;
-            var eta_p = eta + 1;
-            var xi_m = xi - 1;
-            var xi_p = xi + 1;
+            var eta_m = eta - 1.0;
+            var eta_p = eta + 1.0;
+            var xi_m = xi - 1.0;
+            var xi_p = xi + 1.0;
 
             var q = 0.25;
 

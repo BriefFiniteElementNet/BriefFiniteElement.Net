@@ -165,10 +165,10 @@ namespace BriefFiniteElementNet.Elements
             var v3 = p3 - Point.Origins;
             var v4 = p4 - Point.Origins;
 
-            var ii = (v1 + v2) / 2; // midpoints
-            var jj = (v2 + v3) / 2;
-            var kk = (v3 + v4) / 2;
-            var ll = (v4 + v1) / 2;
+            var ii = (v1 + v2) / 2.0; // midpoints
+            var jj = (v2 + v3) / 2.0;
+            var kk = (v3 + v4) / 2.0;
+            var ll = (v4 + v1) / 2.0;
 
             var vx = (jj - ll).GetUnit();//ref [1] eq. 5.8
             var vr = (kk - ii).GetUnit();//eq. 5.10

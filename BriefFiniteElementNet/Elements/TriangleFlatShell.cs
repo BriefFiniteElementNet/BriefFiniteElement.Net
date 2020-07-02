@@ -394,6 +394,35 @@ namespace BriefFiniteElementNet.Elements
 
         #endregion
 
+        #region stresses
+        /// <summary>
+        /// Gets the internal stress at defined location.
+        /// tensor is in local coordinate system. 
+        /// </summary>
+        /// <param name="localX">The X in local coordinate system (see remarks).</param>
+        /// <param name="localY">The Y in local coordinate system (see remarks).</param>
+        /// <param name="combination">The load combination.</param>
+        /// <param name="probeLocation">The probe location for the stress.</param>
+        /// <param name="thickness">The location for the bending stress. Maximum at the shell thickness</param>
+        /// <returns>Stress tensor of flat shell, in local coordination system</returns>
+        /// <remarks>
+        /// for more info about local coordinate of flat shell see page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara freely available on the web
+        /// </remarks>
+        public FlatShellStressTensor GetInternalStress(double localX, double localY, LoadCombination combination, double thickness, SectionPoints probeLocation)
+        {
+            var buf = new FlatShellStressTensor();
+
+            if ((this._behaviour & FlatShellBehaviour.ThinPlate) != 0)
+                buf.MembraneTensor = GetMembraneInternalForce(combination);
+
+            if ((this._behaviour & FlatShellBehaviour.Membrane) != 0)
+                buf.BendingTensor = GetBendingInternalForce(localX, localY, combination);
+
+            buf.UpdateTotalStress(thickness, probeLocation);
+            return buf;
+        }
+        #endregion
+
         #region strains
         public StrainTensor3D GetMembraneInternalStrain(LoadCombination combination)
         {
