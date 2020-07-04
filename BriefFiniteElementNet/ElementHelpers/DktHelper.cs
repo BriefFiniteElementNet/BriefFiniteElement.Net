@@ -161,14 +161,14 @@ namespace BriefFiniteElementNet.ElementHelpers
             var d = new Matrix(3, 3);
 
             {
-                var cf = t*t*t/12;
+                var cf = t*t*t/12.0;
 
                 d[0, 0] = mat.Ex / (1 - mat.NuXy * mat.NuYx);
                 d[1, 1] = mat.Ey / (1 - mat.NuXy * mat.NuYx);
                 d[0, 1] = d[1, 0] =
                     mat.Ex*mat.NuYx/(1 - mat.NuXy*mat.NuYx);
 
-                d[2, 2] = mat.Ex/(2*(1 + mat.NuXy));
+                d[2, 2] = mat.Ex/(2.0*(1.0 + mat.NuXy));
 
                 //p55 http://www.code-aster.org/doc/v11/en/man_r/r3/r3.07.03.pdf
 
@@ -324,7 +324,59 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             throw new NotImplementedException();
         }
+        public FlatShellStressTensor GetLocalInternalForce(Element targetElement, LoadCase loadCase, params double[] isoCoords)
+        {
+            //step 1 : get transformation matrix
+            //step 2 : convert globals points to locals
+            //step 3 : convert global displacements to locals
+            //step 4 : calculate B matrix and D matrix
+            //step 5 : M=D*B*U
+            //Note : Steps changed...
+            var lds = new Displacement[targetElement.Nodes.Length];
+            var tr = targetElement.GetTransformationManager();
 
+            for (var i = 0; i < targetElement.Nodes.Length; i++)
+            {
+                var globalD = targetElement.Nodes[i].GetNodalDisplacement(loadCase);
+                var local = tr.TransformGlobalToLocal(globalD);
+                lds[i] = local;
+            }
+
+            var b = GetBMatrixAt(targetElement, isoCoords);
+
+            var d = GetDMatrixAt(targetElement, isoCoords);
+
+            var u1l = lds[0];
+            var u2l = lds[1];
+            var u3l = lds[2];
+
+            var uDkt =
+                   new Matrix(new[]
+                   {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY});
+
+
+            var mDkt = d * b * uDkt; //eq. 32, batoz article
+
+            //var buf = new PlateBendingStressTensor();
+
+            //buf.Mx = mDkt[0, 0];
+            //buf.My = mDkt[1, 0];
+            //buf.Mxy = mDkt[2, 0];
+
+            //return buf;
+
+            var bTensor = new BendingStressTensor();
+
+            //var buf = new List<Tuple<DoF, double>>();
+
+            bTensor.M11 = mDkt[0, 0];
+            bTensor.M22 = mDkt[1, 0];
+            bTensor.M21 = bTensor.M12 = mDkt[2, 0];
+
+            var buf = new FlatShellStressTensor(bTensor);
+
+            return buf;
+        }
         public int Ng = 2;
 
         /// <inheritdoc/>

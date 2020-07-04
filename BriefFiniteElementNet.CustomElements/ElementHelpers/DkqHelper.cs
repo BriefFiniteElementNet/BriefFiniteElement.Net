@@ -240,7 +240,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 //page 64 of pdf
 
                 var cf = e * t * t * t /
-                         (12 * (1 - nu * nu)); //TODO: maybe TYPO in PDF, should be same as page 50, but is not
+                         (12 * (1 - nu * nu)); //TODO: maybe TYPO in PDF, should be same as page 50, but is not -> should be correct like this
 
                 d[0, 0] = d[1, 1] = 1;
                 d[1, 0] = d[0, 1] = nu;
