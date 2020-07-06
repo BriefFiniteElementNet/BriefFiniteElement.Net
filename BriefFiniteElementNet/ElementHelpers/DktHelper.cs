@@ -460,8 +460,9 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
-        public GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
+        public CauchyStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
+            
             throw new NotImplementedException();
         }
     }

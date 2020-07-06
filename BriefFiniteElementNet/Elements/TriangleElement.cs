@@ -224,16 +224,11 @@ namespace BriefFiniteElementNet.Elements
 
         public Matrix GetLocalDampMatrix()
         {
-            var helpers = new List<IElementHelper>();
-
-            if ((this._behavior & PlateElementBehaviour.Bending) != 0)
-            {
-                helpers.Add(new DktHelper());
-            }
+            var helpers = GetHelpers();
 
             var buf = new Matrix(18, 18);
 
-            for (var i = 0; i < helpers.Count; i++)
+            for (var i = 0; i < helpers.Length; i++)
             {
                 var helper = helpers[i];
 
@@ -283,5 +278,47 @@ namespace BriefFiniteElementNet.Elements
         }
 
         #endregion
+
+
+        public CauchyStressTensor GetLocalInternalForce(IsoPoint location,LoadCase loadCase)
+        {
+
+            //membrane creates constant cauchy stress throught the thickness
+            //bending causes variable cauchy stress throught the thickness
+            
+            var helpers = GetHelpers();
+
+            var buf = new Matrix(18, 18);
+
+            var disps = this.nodes.Select(i => i.GetNodalDisplacement(loadCase)).ToArray();
+
+            var tr = this.GetTransformationManager();
+
+            var lDisp = tr.TransformGlobalToLocal(disps);
+
+            for (var i = 0; i < helpers.Length; i++)
+            {
+                var helper = helpers[i];
+
+                var frc = helper.GetLocalInternalForceAt(this, lDisp, location.Xi, location.Eta, location.Lambda);
+                
+
+                var dofs = helper.GetDofOrder(this);
+
+                for (var ii = 0; ii < dofs.Length; ii++)
+                {
+                    var bi = dofs[ii].NodeIndex * 6 + (int)dofs[ii].Dof;
+
+                    for (var jj = 0; jj < dofs.Length; jj++)
+                    {
+                        var bj = dofs[jj].NodeIndex * 6 + (int)dofs[jj].Dof;
+
+                        buf[bi, bj] += ki[ii, jj];
+                    }
+                }
+            }
+
+            return buf;
+        }
     }
 }

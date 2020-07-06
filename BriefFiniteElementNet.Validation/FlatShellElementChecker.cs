@@ -74,7 +74,7 @@ namespace BriefFiniteElementNet.Validation
                         ElasticModulus = e,
                         PoissonRatio = no,
                         Thickness = t,
-                        Behavior = FlatShellBehaviour.Membrane,
+                        Behavior = PlaneElementBehaviour.Membrane,
                         MembraneFormulationType = tp
                     };
 
@@ -90,7 +90,7 @@ namespace BriefFiniteElementNet.Validation
                         ElasticModulus = e,
                         PoissonRatio = no,
                         Thickness = t,
-                        Behavior = FlatShellBehaviour.Membrane,
+                        Behavior = PlaneElementBehaviour.Membrane,
                         MembraneFormulationType = tp
                     };
 
@@ -781,7 +781,7 @@ namespace BriefFiniteElementNet.Validation
                         ElasticModulus = e,
                         PoissonRatio = no,
                         Thickness = t,
-                        Behavior = FlatShellBehaviour.ThinPlate
+                        Behavior = PlaneElementBehaviour.ThinPlate
                     };
 
                     elm1.Nodes[0] = nodes[i][j];
@@ -796,7 +796,7 @@ namespace BriefFiniteElementNet.Validation
                         ElasticModulus = e,
                         PoissonRatio = no,
                         Thickness = t,
-                        Behavior = FlatShellBehaviour.ThinPlate
+                        Behavior = PlaneElementBehaviour.ThinPlate
                     };
 
                     elm2.Nodes[0] = nodes[i + 1][j + 1];

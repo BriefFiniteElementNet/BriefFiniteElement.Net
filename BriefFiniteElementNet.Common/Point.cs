@@ -227,7 +227,7 @@ namespace BriefFiniteElementNet
         private double lambda;
 
         /// <summary>
-        /// Gets or sets the ξ.
+        /// Gets or sets the ξ. first dimension.
         /// </summary>
         /// <value>
         /// The ξ.
@@ -239,7 +239,7 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Gets or sets the η.
+        /// Gets or sets the η. second dimension.
         /// </summary>
         /// <value>
         /// The η.
@@ -251,7 +251,7 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Gets or sets the γ.
+        /// Gets or sets the γ. third dimension.
         /// </summary>
         /// <value>
         /// The γ.
