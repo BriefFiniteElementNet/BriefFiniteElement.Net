@@ -19,6 +19,11 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public virtual Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
+            var quad = targetElement as QuadrilaturalElement;
+
+            if (quad == null)
+                throw new Exception();
+
             var lpts =
                 targetElement.GetTransformationManager()
                     .TransformGlobalToLocal(targetElement.Nodes.Select(i => i.Location));
@@ -225,26 +230,28 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
         {
             var f = targetElement as QuadrilaturalElement;
 
+            if (f == null)
+                throw new Exception();
+
             var mat = f.Material.GetMaterialPropertiesAt(isoCoords);
 
             if (!CalcUtil.IsIsotropicMaterial(mat))
                 throw new Exception();
 
-            var e = mat.Ex;
             var t = f.Section.GetThicknessAt(isoCoords);
-            var nu = mat.NuXy;
 
             var d = new Matrix(3, 3);
-
             {
-                //page 64 of pdf
+                var cf = t * t * t / 12.0;
 
-                var cf = e * t * t * t /
-                         (12 * (1 - nu * nu)); //TODO: maybe TYPO in PDF, should be same as page 50, but is not -> should be correct like this
+                d[0, 0] = mat.Ex / (1.0 - mat.NuXy * mat.NuYx);
+                d[1, 1] = mat.Ey / (1.0 - mat.NuXy * mat.NuYx);
+                d[0, 1] = d[1, 0] =
+                    mat.Ex * mat.NuYx / (1.0 - mat.NuXy * mat.NuYx);
 
-                d[0, 0] = d[1, 1] = 1;
-                d[1, 0] = d[0, 1] = nu;
-                d[2, 2] = (1 - nu) / 2;
+                d[2, 2] = mat.Ex / (2.0 * (1.0 + mat.NuXy));
+
+                //p55 http://www.code-aster.org/doc/v11/en/man_r/r3/r3.07.03.pdf
 
                 d.MultiplyByConstant(cf);
             }

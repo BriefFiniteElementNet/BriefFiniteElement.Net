@@ -74,9 +74,47 @@ namespace BriefFiniteElementNet.Elements
 
         public override Matrix GetGlobalDampingMatrix()
         {
-            throw new NotImplementedException();
-        }
+            var local = GetLocalDampMatrix();
+            var tr = GetTransformationManager();
 
+            var buf = tr.TransformLocalToGlobal(local);
+
+            return buf;
+        }
+        public Matrix GetLocalDampMatrix()
+        {
+            var helpers = new List<IElementHelper>();
+
+            if ((this._behavior & PlateElementBehaviour.Bending) != 0)
+            {
+                helpers.Add(new DkqHelper());
+            }
+
+            var buf = new Matrix(24, 24);
+
+            for (var i = 0; i < helpers.Count; i++)
+            {
+                var helper = helpers[i];
+
+                var ki = helper.CalcLocalDampMatrix(this);// ComputeK(helper, transMatrix);
+
+                var dofs = helper.GetDofOrder(this);
+
+                for (var ii = 0; ii < dofs.Length; ii++)
+                {
+                    var bi = dofs[ii].NodeIndex * 6 + (int)dofs[ii].Dof;
+
+                    for (var jj = 0; jj < dofs.Length; jj++)
+                    {
+                        var bj = dofs[jj].NodeIndex * 6 + (int)dofs[jj].Dof;
+
+                        buf[bi, bj] += ki[ii, jj];
+                    }
+                }
+            }
+
+            return buf;
+        }
         public override Force[] GetGlobalEquivalentNodalLoads(ElementalLoad load)
         {
             throw new NotImplementedException();
@@ -89,14 +127,47 @@ namespace BriefFiniteElementNet.Elements
 
         public override Matrix GetGlobalStifnessMatrix()    // made by epsi1on
         {
-            var local = GetLocalStifnessMatrix();
+            var local = GetLocalMassMatrix();
             var tr = GetTransformationManager();
 
             var buf = tr.TransformLocalToGlobal(local);
 
             return buf;
         }
+        public Matrix GetLocalMassMatrix()
+        {
+            var helpers = new List<IElementHelper>();
 
+            if ((this._behavior & PlateElementBehaviour.Bending) != 0)
+            {
+                helpers.Add(new DkqHelper());
+            }
+
+            var buf = new Matrix(24, 24);
+
+            for (var i = 0; i < helpers.Count; i++)
+            {
+                var helper = helpers[i];
+
+                var ki = helper.CalcLocalMassMatrix(this);// ComputeK(helper, transMatrix);
+
+                var dofs = helper.GetDofOrder(this);
+
+                for (var ii = 0; ii < dofs.Length; ii++)
+                {
+                    var bi = dofs[ii].NodeIndex * 6 + (int)dofs[ii].Dof;
+
+                    for (var jj = 0; jj < dofs.Length; jj++)
+                    {
+                        var bj = dofs[jj].NodeIndex * 6 + (int)dofs[jj].Dof;
+
+                        buf[bi, bj] += ki[ii, jj];
+                    }
+                }
+            }
+
+            return buf;
+        }
         public Matrix GetLocalStifnessMatrix()  
         {
             var helpers = GetHelpers();
@@ -193,5 +264,31 @@ namespace BriefFiniteElementNet.Elements
         {
             throw new NotImplementedException();
         }
+        #region Deserialization Constructor
+
+        protected QuadrilaturalElement(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            _material = (BaseMaterial)info.GetValue("_material", typeof(BaseMaterial));
+            _section = (Base2DSection)info.GetValue("_section", typeof(Base2DSection));
+            _behavior = (PlateElementBehaviour)info.GetInt32("_behavior");
+            _formulation = (MembraneFormulation)info.GetInt32("_behavior");
+        }
+
+        #endregion
+
+        #region ISerialization Implementation
+
+        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("_material", _material);
+            info.AddValue("_section", _section);
+            info.AddValue("_behavior", (int)_behavior);
+            info.AddValue("_formulation", (int)_formulation);
+
+        }
+
+        #endregion
     }
 }
