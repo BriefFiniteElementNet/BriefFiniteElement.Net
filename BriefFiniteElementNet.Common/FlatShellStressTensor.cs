@@ -14,23 +14,69 @@ namespace BriefFiniteElementNet
         {
             MembraneTensor = membraneTensor;
             BendingTensor = bendingTensor;
+            TotalStressTensor = new CauchyStressTensor();
         }
 
         public FlatShellStressTensor(BendingStressTensor bendingTensor)
         {
             MembraneTensor = new CauchyStressTensor();
             BendingTensor = bendingTensor;
+            TotalStressTensor = new CauchyStressTensor();
         }
 
         public FlatShellStressTensor(CauchyStressTensor membraneTensor)
         {
             MembraneTensor = membraneTensor;
             BendingTensor = new BendingStressTensor();
+            TotalStressTensor = new CauchyStressTensor();
         }
 
+        //Stress due to membrane action -> inplane
         public CauchyStressTensor MembraneTensor;
 
+        //Bending stress due to bending action -> dependent on location (best at integration points)
         public BendingStressTensor BendingTensor;
+
+        //Total stress = membrane + bending stress. Determine the bending tensor + specify a thickness where you want the stress
+        public CauchyStressTensor TotalStressTensor;
+
+        /// <summary>
+        /// Gets the stress of a shell element (combination of a membrane + bending element) as the combination of both stresses
+        /// </summary>
+        /// <param name="shellThickness">The location where you want to calculate the bending stress (max at shellthickness)</param>
+        /// <param name="probeLocation">The location of the stress probe. Top of thickness/shell, bottom or envelope (max abs of both). </param>
+        public void UpdateTotalStress(double shellThickness, SectionPoints probeLocation)
+        {
+            switch (probeLocation)
+            {
+                case SectionPoints.Envelope:
+                    {
+                        CauchyStressTensor top = MembraneTensor + BendingTensor.ConvertBendingStressToCauchyTensor(shellThickness);
+                        CauchyStressTensor bottom = MembraneTensor - BendingTensor.ConvertBendingStressToCauchyTensor(shellThickness);
+                        if (Math.Abs(CauchyStressTensor.GetVonMisesStress(top)) > Math.Abs(CauchyStressTensor.GetVonMisesStress(bottom)))
+                        {
+                            this.TotalStressTensor = top;
+                        }
+                        else
+                        {
+                            this.TotalStressTensor = bottom;
+                        }
+                        break;
+                    }
+                case SectionPoints.Top:
+                    {
+                        this.TotalStressTensor = MembraneTensor + BendingTensor.ConvertBendingStressToCauchyTensor(shellThickness);
+                        break;
+                    }
+                case SectionPoints.Bottom:
+                    {
+                        this.TotalStressTensor = MembraneTensor - BendingTensor.ConvertBendingStressToCauchyTensor(shellThickness);
+                        break;
+                    }
+                default:
+                    break;
+            }
+        }
 
         public static FlatShellStressTensor operator +(FlatShellStressTensor left, FlatShellStressTensor right)
         {
@@ -100,5 +146,18 @@ namespace BriefFiniteElementNet
 
             return buf;
         }
+    }
+
+    /// <summary>
+    /// Location where you want to probe the stress
+    /// </summary>
+    public enum SectionPoints
+    {
+        //max abs of both top/bottom
+        Envelope,
+        //top of the shell
+        Top,
+        //bottom of the shell
+        Bottom
     }
 }

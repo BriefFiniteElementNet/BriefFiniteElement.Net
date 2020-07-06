@@ -7,7 +7,7 @@
 // Revision History
 //
 // Date          Author          	            Description
-// 22.06.2020    T.Thaler, M.Mischke     	    v1.0  
+// 30.06.2020    T.Thaler, M.Mischke     	    v1.0  
 // 
 //---------------------------------------------------------------------------------------
 // Copyleft 2017-2020 by Brandenburg University of Technology. Intellectual proprerty 
@@ -44,15 +44,16 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
         public Matrix CalcLocalStiffnessMatrix(Element targetElement)
         {
             var intg = new BriefFiniteElementNet.Integration.GaussianIntegrator(); // using eq. 3.50 [1] / eq 8 [3]
+            var quad = targetElement as QuadrilaturalElement;
 
-            intg.A2 = 1;
-            intg.A1 = 0;
+            intg.A2 = 1.0;
+            intg.A1 = 0.0;
 
-            intg.F2 = (gama => +1);
-            intg.F1 = (gama => -1);
+            intg.F2 = (gama => +1.0);
+            intg.F1 = (gama => -1.0);
 
-            intg.G2 = (eta, gama) => +1;
-            intg.G1 = (eta, gama) => -1;
+            intg.G2 = (eta, gama) => +1.0;
+            intg.G1 = (eta, gama) => -1.0;
 
             intg.XiPointCount = intg.EtaPointCount = 3; // ref [2]
             intg.GammaPointCount = 1;
@@ -70,6 +71,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 var ki = b.Transpose() * d * b;
 
                 ki.MultiplyByConstant(Math.Abs(j.Determinant()));
+                ki.MultiplyByConstant(quad.Section.GetThicknessAt(new double[] { xi, eta }));
 
                 return ki;
             });
@@ -90,7 +92,9 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             buf.FillRow(1, 0, 0, -j[1, 0], j[0, 0]);
             buf.FillRow(2, -j[1, 0], j[0, 0], j[1, 1], -j[0, 1]);
 
-            buf.MultiplyByConstant(detJ);
+            //buf.MultiplyByConstant(detJ);
+            //should be 1.0/detJ? See 3.41
+            buf.MultiplyByConstant(1.0 / detJ);
 
             return buf;
         }
@@ -99,12 +103,12 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
         {
             var xi = isoCoords[0];
             var eta = isoCoords[1];
-            var eta_m = eta - 1;
-            var eta_p = eta + 1;
-            var xi_m = xi - 1;
-            var xi_p = xi + 1;
+            var eta_m = eta - 1.0;
+            var eta_p = eta + 1.0;
+            var xi_m = xi - 1.0;
+            var xi_p = xi + 1.0;
 
-            var q = (1 / 4);
+            var q = 0.25;
 
             var N1_xi = q * eta_m; // δN1/δxi
             var N1_eta = q * xi_m; // δN1/δeta
@@ -159,24 +163,24 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             {
                 //http://help.solidworks.com/2013/english/SolidWorks/cworks/c_linear_elastic_orthotropic.htm
                 //orthotropic material
-                d[0, 0] = mat.Ex / (1 - mat.NuXy * mat.NuYx);
-                d[1, 1] = mat.Ey / (1 - mat.NuXy * mat.NuYx);
-                d[1, 0] = d[0, 1] = mat.NuXy * mat.Ey / (1 - mat.NuXy * mat.NuYx);
+               d[0, 0] = mat.Ex / (1.0 - mat.NuXy * mat.NuYx);
+                d[1, 1] = mat.Ey / (1.0 - mat.NuXy * mat.NuYx);
+                d[1, 0] = d[0, 1] = mat.NuXy * mat.Ey / (1.0 - mat.NuXy * mat.NuYx);
 
-                d[2, 2] = mat.Ex * mat.Ey / (mat.Ex + mat.Ey + 2 * mat.Ey * mat.NuXy);
+                d[2, 2] = mat.Ex * mat.Ey / (mat.Ex + mat.Ey + 2.0 * mat.Ey * mat.NuXy);
             }
             else
             {
-                var delta = 1 - mat.NuXy * mat.NuYx - mat.NuZy * mat.NuYz - mat.NuZx * mat.NuXz - 2 * mat.NuXy * mat.NuYz * mat.NuZx;
+                var delta = 1.0 - mat.NuXy * mat.NuYx - mat.NuZy * mat.NuYz - mat.NuZx * mat.NuXz - 2.0* mat.NuXy * mat.NuYz * mat.NuZx;
 
                 delta /= mat.Ex * mat.Ey * mat.Ez;
 
                 //http://www.efunda.com/formulae/solid_mechanics/mat_mechanics/hooke_orthotropic.cfm
 
-                d[0, 0] = (1 - mat.NuYz * mat.NuZy) / (mat.Ey * mat.Ez * delta);
+                d[0, 0] = (1.0 - mat.NuYz * mat.NuZy) / (mat.Ey * mat.Ez * delta);
                 d[0, 1] = (mat.NuYx + mat.NuZx * mat.NuYz) / (mat.Ey * mat.Ez * delta);
                 d[1, 0] = (mat.NuXy + mat.NuXz * mat.NuZy) / (mat.Ez * mat.Ex * delta);
-                d[1, 1] = (1 - mat.NuZx * mat.NuXz) / (mat.Ez * mat.Ex * delta);
+                d[1, 1] = (1.0 - mat.NuZx * mat.NuXz) / (mat.Ez * mat.Ex * delta);
             }
 
             return d;
@@ -236,10 +240,10 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             var buf = new Matrix(2, 2); //ref [1] eq. 3.36 and 3.28/3.29
 
-            var eta_m = eta - 1;
-            var eta_p = eta + 1;
-            var xi_m = xi - 1;
-            var xi_p = xi + 1;
+            var eta_m = eta - 1.0;
+            var eta_p = eta + 1.0;
+            var xi_m = xi - 1.0;
+            var xi_p = xi + 1.0;
 
             var q = 0.25;
 
@@ -310,11 +314,59 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             var sQ4 = d * b * u;
 
-            var buf = new MembraneStressTensor()
-            { 
-                Sx = sQ4[0, 0],
-                Sy = sQ4[1, 0],
-                Txy = sQ4[2, 0]
+            var buf = new CauchyStressTensor()
+            {
+                S11 = sQ4[0, 0],
+                S22 = sQ4[1, 0],
+                S12 = sQ4[2, 0],
+                S21 = sQ4[2, 0]
+            };
+
+            return new GeneralStressTensor(buf);
+        }
+        /// <summary>
+        /// Gets the stresses for a single element
+        /// </summary>
+        /// <param name="targetElement"></param>
+        /// <param name="loadCase"></param>
+        /// <param name="isoCoords"></param>
+        /// <returns></returns>
+        public GeneralStressTensor GetLocalInternalStress(Element targetElement, LoadCase loadCase, params double[] isoCoords)
+        {
+            //step 1 : get transformation matrix
+            //step 2 : convert globals points to locals
+            //step 3 : convert global displacements to locals
+            //step 4 : calculate B matrix and D matrix
+            //step 5 : M=D*B*U
+            //Note : Steps changed...
+            var lds = new Displacement[targetElement.Nodes.Length];
+            var tr = targetElement.GetTransformationManager();
+
+            for (var i = 0; i < targetElement.Nodes.Length; i++)
+            {
+                var globalD = targetElement.Nodes[i].GetNodalDisplacement(loadCase);
+                var local = tr.TransformGlobalToLocal(globalD);
+                lds[i] = local;
+            }
+
+            var d1l = lds[0];
+            var d2l = lds[1];
+            var d3l = lds[2];
+            var d4l = lds[3];
+
+            var u = new Matrix(new[] { d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY });
+            var d = this.GetDMatrixAt(targetElement, isoCoords);
+            var b = this.GetBMatrixAt(targetElement, isoCoords);
+
+            var sQ4 = d * b * u;
+
+            //new type of stress tensor
+            var buf = new CauchyStressTensor()
+            {
+                S11 = sQ4[0, 0],
+                S22 = sQ4[1, 0],
+                S12 = sQ4[2, 0],
+                S21 = sQ4[2,0]
             };
 
             return new GeneralStressTensor(buf);
@@ -339,5 +391,51 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
         {
             throw new NotImplementedException();
         }
+
+        #region strain
+        public StrainTensor3D GetMembraneInternalStrain(Element targetElement, LoadCase loadCase, params double[] isoCoords)
+        {
+            //Note: membrane internal force is constant
+
+            //step 1 : get transformation matrix
+            //step 2 : convert globals points to locals
+            //step 3 : convert global displacements to locals
+            //step 4 : calculate B matrix
+            //step 5 : e=B*U
+            //Note : Steps changed...
+            var lds = new Displacement[targetElement.Nodes.Length];
+            var tr = targetElement.GetTransformationManager();
+
+            for (var i = 0; i < targetElement.Nodes.Length; i++)
+            {
+                var globalD = targetElement.Nodes[i].GetNodalDisplacement(loadCase);
+                var local = tr.TransformGlobalToLocal(globalD);
+                lds[i] = local;
+            }
+
+            // var locals = tr.TransformGlobalToLocal(globalDisplacements);
+
+            var b = GetBMatrixAt(targetElement, isoCoords);
+
+            var u1l = lds[0];
+            var u2l = lds[1];
+            var u3l = lds[2];
+            var u4l = lds[3];
+
+            var uQ4 =
+                   new Matrix(new[]
+                   {u1l.DX, u1l.DY, /**/ u2l.DX, u2l.DY, /**/ u3l.DX, u3l.DY, u4l.DX, u4l.DY});
+
+            var EQ4 = b * uQ4;
+
+            var buf = new StrainTensor3D();
+
+            buf.S11 = EQ4[0, 0];
+            buf.S22 = EQ4[1, 0];
+            buf.S12 = EQ4[2, 0];
+
+            return buf;
+        }
+        #endregion
     }
 }

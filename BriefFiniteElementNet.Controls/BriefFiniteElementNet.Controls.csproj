@@ -34,6 +34,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BriefFiniteElementNet.CustomElements">
+      <HintPath>..\..\Base\BriefFiniteElementNet.CustomElements\bin\Debug\BriefFiniteElementNet.CustomElements.dll</HintPath>
+    </Reference>
     <Reference Include="CSparse, Version=3.4.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CSparse.3.4.3\lib\net45\CSparse.dll</HintPath>
     </Reference>

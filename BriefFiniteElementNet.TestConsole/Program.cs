@@ -861,7 +861,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             var dkt = new TriangleFlatShell()
             {
-                Behavior = FlatShellBehaviour.ThinPlate,
+                Behavior = PlaneElementBehaviour.ThinPlate,
                 PoissonRatio = nu,
                 ElasticModulus = e,
                 Thickness=t
