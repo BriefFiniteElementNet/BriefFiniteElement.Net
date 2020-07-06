@@ -19,23 +19,37 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public virtual Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
+            // new version:
             var quad = targetElement as QuadrilaturalElement;
+            var tmgr = targetElement.GetTransformationManager();
 
             if (quad == null)
                 throw new Exception();
 
-            var lpts =
-                targetElement.GetTransformationManager()
-                    .TransformGlobalToLocal(targetElement.Nodes.Select(i => i.Location));
+            var xi = isoCoords[0];
+            var eta = isoCoords[1];
+
+            var p1g = quad.Nodes[0].Location;
+            var p2g = quad.Nodes[1].Location;
+            var p3g = quad.Nodes[2].Location;
+            var p4g = quad.Nodes[3].Location;
+
+            var n1 = tmgr.TransformGlobalToLocal(p1g);
+            var n2 = tmgr.TransformGlobalToLocal(p2g);
+            var n3 = tmgr.TransformGlobalToLocal(p3g);
+            var n4 = tmgr.TransformGlobalToLocal(p4g);
+
+            /* old version
+            var lpts = targetElement.GetTransformationManager().TransformGlobalToLocal(targetElement.Nodes.Select(i => i.Location));
 
             var xi = isoCoords[0];
             var eta = isoCoords[1];
 
-            var n1 = lpts[0];
+            var n1 = lpts[0]; // local points
             var n2 = lpts[1];
             var n3 = lpts[2];
             var n4 = lpts[3];
-
+            */
 
             var x1 = n1.X;
             var x2 = n2.X;
@@ -87,8 +101,6 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var e7 = -y34 / l34_2;
             var e8 = -y41 / l41_2;
 
-
-
             var n_xi = new double[] //4.51 p69
             {
                 0, //I've added this 0 at first element for indexing issue
@@ -115,8 +127,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 -eta*(1 - xi),
             };
 
-
-            var hx_xi = new double[] //4.45 p67
+            var hx_xi = new double[] //4.45 p67 (using 4.51 p69)
             {
                 1.5*(c5*n_xi[5] - c8*n_xi[8]),
                 a5*n_xi[5] + a8*n_xi[8],
@@ -153,7 +164,6 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 a8*n_eta[8] + a7*n_eta[7],
                 -n_eta[4] - b8*n_eta[8] - b7*n_eta[7],
             };
-
 
             var hy_xi = new double[] //4.51 p69
             {
@@ -193,21 +203,15 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 -a8*n_eta[8] - a7*n_eta[7],
             };
 
-
             var jacob = GetJMatrixAt(targetElement, isoCoords);
-
             var invJ = jacob.Inverse();
 
             double j11, j12, j21, j22;
 
-
-            {
-                j11 = invJ[0, 0];
-                j12 = invJ[0, 1];
-                j21 = invJ[1, 0];
-                j22 = invJ[1, 1];
-            }
-
+            j11 = invJ[0, 0];   // terms of the inverse JMatrix
+            j12 = invJ[0, 1];
+            j21 = invJ[1, 0];
+            j22 = invJ[1, 1];
 
             var buf = new Matrix(3, 12);
 
