@@ -314,11 +314,59 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             var sQ4 = d * b * u;
 
-            var buf = new MembraneStressTensor()
-            { 
-                Sx = sQ4[0, 0],
-                Sy = sQ4[1, 0],
-                Txy = sQ4[2, 0]
+            var buf = new CauchyStressTensor()
+            {
+                S11 = sQ4[0, 0],
+                S22 = sQ4[1, 0],
+                S12 = sQ4[2, 0],
+                S21 = sQ4[2, 0]
+            };
+
+            return new GeneralStressTensor(buf);
+        }
+        /// <summary>
+        /// Gets the stresses for a single element
+        /// </summary>
+        /// <param name="targetElement"></param>
+        /// <param name="loadCase"></param>
+        /// <param name="isoCoords"></param>
+        /// <returns></returns>
+        public GeneralStressTensor GetLocalInternalStress(Element targetElement, LoadCase loadCase, params double[] isoCoords)
+        {
+            //step 1 : get transformation matrix
+            //step 2 : convert globals points to locals
+            //step 3 : convert global displacements to locals
+            //step 4 : calculate B matrix and D matrix
+            //step 5 : M=D*B*U
+            //Note : Steps changed...
+            var lds = new Displacement[targetElement.Nodes.Length];
+            var tr = targetElement.GetTransformationManager();
+
+            for (var i = 0; i < targetElement.Nodes.Length; i++)
+            {
+                var globalD = targetElement.Nodes[i].GetNodalDisplacement(loadCase);
+                var local = tr.TransformGlobalToLocal(globalD);
+                lds[i] = local;
+            }
+
+            var d1l = lds[0];
+            var d2l = lds[1];
+            var d3l = lds[2];
+            var d4l = lds[3];
+
+            var u = new Matrix(new[] { d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY });
+            var d = this.GetDMatrixAt(targetElement, isoCoords);
+            var b = this.GetBMatrixAt(targetElement, isoCoords);
+
+            var sQ4 = d * b * u;
+
+            //new type of stress tensor
+            var buf = new CauchyStressTensor()
+            {
+                S11 = sQ4[0, 0],
+                S22 = sQ4[1, 0],
+                S12 = sQ4[2, 0],
+                S21 = sQ4[2,0]
             };
 
             return new GeneralStressTensor(buf);
@@ -343,5 +391,51 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
         {
             throw new NotImplementedException();
         }
+
+        #region strain
+        public StrainTensor3D GetMembraneInternalStrain(Element targetElement, LoadCase loadCase, params double[] isoCoords)
+        {
+            //Note: membrane internal force is constant
+
+            //step 1 : get transformation matrix
+            //step 2 : convert globals points to locals
+            //step 3 : convert global displacements to locals
+            //step 4 : calculate B matrix
+            //step 5 : e=B*U
+            //Note : Steps changed...
+            var lds = new Displacement[targetElement.Nodes.Length];
+            var tr = targetElement.GetTransformationManager();
+
+            for (var i = 0; i < targetElement.Nodes.Length; i++)
+            {
+                var globalD = targetElement.Nodes[i].GetNodalDisplacement(loadCase);
+                var local = tr.TransformGlobalToLocal(globalD);
+                lds[i] = local;
+            }
+
+            // var locals = tr.TransformGlobalToLocal(globalDisplacements);
+
+            var b = GetBMatrixAt(targetElement, isoCoords);
+
+            var u1l = lds[0];
+            var u2l = lds[1];
+            var u3l = lds[2];
+            var u4l = lds[3];
+
+            var uQ4 =
+                   new Matrix(new[]
+                   {u1l.DX, u1l.DY, /**/ u2l.DX, u2l.DY, /**/ u3l.DX, u3l.DY, u4l.DX, u4l.DY});
+
+            var EQ4 = b * uQ4;
+
+            var buf = new StrainTensor3D();
+
+            buf.S11 = EQ4[0, 0];
+            buf.S22 = EQ4[1, 0];
+            buf.S12 = EQ4[2, 0];
+
+            return buf;
+        }
+        #endregion
     }
 }

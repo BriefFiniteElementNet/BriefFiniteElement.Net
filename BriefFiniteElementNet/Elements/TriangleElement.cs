@@ -64,6 +64,38 @@ namespace BriefFiniteElementNet.Elements
 
         public override Force[] GetGlobalEquivalentNodalLoads(ElementalLoad load)
         {
+            if (load is UniformLoadForPlanarElements)
+            {
+                //lumped approach is used as used in several references
+                var ul = load as UniformLoadForPlanarElements;
+
+                var u = new Vector();
+
+                u.X = ul.Ux;
+                u.Y = ul.Uy;
+                u.Z = ul.Uz;
+
+                if (ul.CoordinationSystem == CoordinationSystem.Local)
+                {
+                    var trans = GetTransformationManager();
+                    u = trans.TransformLocalToGlobal(u); //local to global
+                }
+
+                if (_behavior == PlateElementBehaviour.Membrane)
+                    u.Z = 0;//remove one for plate bending
+
+                if (_behavior == PlateElementBehaviour.Bending)
+                    u.Y = u.X = 0;//remove those for membrane
+
+
+                var area = CalcUtil.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
+
+                var f = u * (area / 3);
+                var frc = new Force(f, Vector.Zero);
+                return new[] { frc, frc, frc };
+            }
+
+
             throw new NotImplementedException();
         }
 
@@ -257,6 +289,14 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
+        #region stress
+
+        #endregion
+
+        #region strain
+
+        #endregion
+
         #region Deserialization Constructor
 
         protected TriangleElement(SerializationInfo info, StreamingContext context) : base(info, context)
@@ -281,6 +321,48 @@ namespace BriefFiniteElementNet.Elements
             info.AddValue("_formulation", (int)_formulation);
 
         }
+
+        #endregion
+        #region stresses
+        /// <summary>
+        /// Gets the internal stress at defined location.
+        /// tensor is in local coordinate system. 
+        /// </summary>
+        /// <param name="localX">The X in local coordinate system (see remarks).</param>
+        /// <param name="localY">The Y in local coordinate system (see remarks).</param>
+        /// <param name="combination">The load combination.</param>
+        /// <param name="probeLocation">The probe location for the stress.</param>
+        /// <param name="localZ">The location for the bending stress. Maximum at the shell thickness (1). Must be withing 0 and 1</param>
+        /// <returns>Stress tensor of flat shell, in local coordination system</returns>
+        /// <remarks>
+        /// for more info about local coordinate of flat shell see page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara freely available on the web
+        /// </remarks>
+        public FlatShellStressTensor GetInternalStress(double localX, double localY, double localZ, LoadCombination combination, SectionPoints probeLocation)
+        {
+            if (localZ < 0 || localZ > 1.0)
+            {
+                throw new Exception("z must be between 0 and 1. 0 is the centre of the plate and 1 is on the plate surface. Use the section points to get the top/bottom.") { };
+            }
+            var helpers = GetHelpers();
+
+            var buf = new FlatShellStressTensor();
+            for (var i = 0; i < helpers.Count(); i++)
+            {
+                if (helpers[i] is CstHelper)
+                {
+                    buf.MembraneTensor = ((CstHelper)helpers[i]).GetMembraneInternalStress(this, combination);
+                }
+                else if (helpers[i] is DktHelper)
+                {
+                    buf.BendingTensor = ((DktHelper)helpers[i]).GetBendingInternalStress(this, combination, new double[] { localX, localY }).BendingTensor;
+                }
+            }
+            buf.UpdateTotalStress(_section.GetThicknessAt(new double[] { localX, localY }) * localZ, probeLocation);
+            return buf;
+        }
+        #endregion
+
+        #region strains
 
         #endregion
     }
