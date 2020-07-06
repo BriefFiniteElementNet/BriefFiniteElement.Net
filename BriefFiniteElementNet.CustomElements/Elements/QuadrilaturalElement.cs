@@ -127,7 +127,7 @@ namespace BriefFiniteElementNet.Elements
 
         public override Matrix GetGlobalStifnessMatrix()    // made by epsi1on
         {
-            var local = GetLocalStiffnessMatrix();
+            var local = GetLocalStifnessMatrix();
             var tr = GetTransformationManager();
 
             var buf = tr.TransformLocalToGlobal(local);
@@ -140,7 +140,7 @@ namespace BriefFiniteElementNet.Elements
 
             var buf = new Matrix(24, 24);
 
-            for (var i = 0; i < helpers.Count; i++)
+            for (var i = 0; i < helpers.Length; i++)
             {
                 var helper = helpers[i];
 

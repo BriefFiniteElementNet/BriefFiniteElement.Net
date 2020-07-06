@@ -610,8 +610,8 @@ namespace BriefFiniteElementNet.Controls
                         AddTetrahedronElement(builder, elm as Tetrahedral);
                     else if (elm is TriangleFlatShell)
                         AddFlatshellElement(builder, elm as TriangleFlatShell);
-                    else if (elm is QuadrilaturalElement)
-                        AddQuadrilaturalElement(builder, elm as QuadrilaturalElement);
+                    else if (elm.GetType().Name == "QuadrilaturalElement")
+                        AddQuadrilaturalElement(builder, elm);
                     else if (elm is CstElement)
                         AddCstElement(builder, elm as CstElement);
                     else if (elm is Element2D)
@@ -1657,7 +1657,9 @@ namespace BriefFiniteElementNet.Controls
 
             bldr.AddTriangle(p1, p3, p2);
         }
-        private void AddQuadrilaturalElement(MeshBuilder bldr, QuadrilaturalElement elm)
+
+
+        private void AddQuadrilaturalElement(MeshBuilder bldr, Element elm)
         {
             //PolygonYz section = null;
 
@@ -1672,6 +1674,8 @@ namespace BriefFiniteElementNet.Controls
 
             bldr.AddQuad(p1, p2, p3, p4);
         }
+
+
         private void AddElement2d(MeshBuilder bldr, Element2D elm)
         {
 

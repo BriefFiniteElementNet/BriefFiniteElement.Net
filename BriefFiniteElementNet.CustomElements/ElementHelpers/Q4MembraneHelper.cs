@@ -27,7 +27,7 @@ using CSparse.Storage;
 
 namespace BriefFiniteElementNet.Elements.ElementHelpers
 {
-    class Q4MembraneHelper : IElementHelper
+    public class Q4MembraneHelper : IElementHelper
     {
         public Element TargetElement { get; set; }
 
