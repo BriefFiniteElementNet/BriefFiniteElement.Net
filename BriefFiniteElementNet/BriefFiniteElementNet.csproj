@@ -49,7 +49,7 @@
     <Compile Include="Utils\ArrayEqualityCompairer.cs" />
     <Compile Include="ElementHelpers\Gt9Helper.cs" />
     <Compile Include="ElementHelpers\TriangleBasicDrillingDofHelper.cs" />
-    <Compile Include="Elements\FlatShellBehaviours.cs" />
+    <Compile Include="Elements\PlaneElementBehaviours.cs" />
     <Compile Include="Elements\PlateElementBehaviours.cs" />
     <Compile Include="Integration\MultiplierMatrixFunction.cs" />
     <Compile Include="Loads\PartialNonUniformLoad.cs" />
@@ -88,7 +88,7 @@
     <Compile Include="DofMappingManager.cs" />
     <Compile Include="Elements\BarElement.cs" />
     <Compile Include="Elements\BarElementBehaviour.cs" />
-    <Compile Include="Elements\FlatShellBehaviour.cs" />
+    <Compile Include="Elements\PlaneElementBehaviour.cs" />
     <Compile Include="MpcElements\RigidElement.cs" />
     <Compile Include="MpcElements\TelepathyLink.cs" />
     <Compile Include="Elements\TriangleCoordinatedMechanicalProperties.cs" />
@@ -202,6 +202,7 @@
   <ItemGroup>
     <None Include="CsparsenetQrDisplacementPermutationCalculator.md" />
     <None Include="ElementHelpers\DktHelper.md" />
+    <None Include="Elements\TriangleElement.md" />
     <None Include="Mathh\IPolynomial.md" />
     <None Include="packages.config" />
     <None Include="Utils\CalcUtil.md" />

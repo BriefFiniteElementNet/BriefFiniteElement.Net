@@ -3,25 +3,25 @@
     /// <summary>
     /// /// represents some predefined most used behaviors of triangle element
     /// </summary>
-    public static class FlatShellBehaviours
+    public static class PlaneElementBehaviours
     {
         /// <summary>
         /// The plate bending behavior
         /// </summary>
-        public static FlatShellBehaviour PlateBending = FlatShellBehaviour.ThinPlate;
+        public static PlaneElementBehaviour PlateBending = PlaneElementBehaviour.ThinPlate;
 
         /// <summary>
         /// The membrane behavior
         /// </summary>
-        public static FlatShellBehaviour Membrane = FlatShellBehaviour.Membrane;
+        public static PlaneElementBehaviour Membrane = PlaneElementBehaviour.Membrane;
 
         /// <summary>
         /// The full thin shell, membrane + thin plate + drilling DoF
         /// </summary>
-        public static FlatShellBehaviour FullThinShell =
-            FlatShellBehaviour.Membrane |
-            FlatShellBehaviour.ThinPlate |
-            FlatShellBehaviour.DrillingDof;
+        public static PlaneElementBehaviour FullThinShell =
+            PlaneElementBehaviour.Membrane |
+            PlaneElementBehaviour.ThinPlate |
+            PlaneElementBehaviour.DrillingDof;
     }
 
 }

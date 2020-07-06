@@ -6,7 +6,7 @@ namespace BriefFiniteElementNet.Elements
     /// Represents the possible behaviors of shell element
     /// </summary>
     [Flags]
-    public enum FlatShellBehaviour
+    public enum PlaneElementBehaviour
     {
 
         /// <summary>

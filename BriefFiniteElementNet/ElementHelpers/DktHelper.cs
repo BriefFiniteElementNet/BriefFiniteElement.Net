@@ -431,6 +431,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             //step 5 : M=D*B*U
             //Note : Steps changed...
 
+            var pt = new IsoPoint(isoCoords);
+
             var tr = targetElement.GetTransformationManager();
 
             var locals = localDisplacements;// tr.TransformGlobalToLocal(globalDisplacements);
@@ -457,12 +459,98 @@ namespace BriefFiniteElementNet.ElementHelpers
             bTensor.M21 = bTensor.M12 = mDkt[2, 0];
 
             var buf = new GeneralStressTensor(bTensor);
+
+
+            return buf;
+        }
+        public FlatShellStressTensor GetBendingInternalStress(Element targetElement, LoadCombination cmb, params double[] isoCoords)
+        {
+            var lds = new Displacement[targetElement.Nodes.Length];
+            var tr = targetElement.GetTransformationManager();
+
+            for (var i = 0; i < targetElement.Nodes.Length; i++)
+            {
+                var globalD = targetElement.Nodes[i].GetNodalDisplacement(cmb);
+                var local = tr.TransformGlobalToLocal(globalD);
+                lds[i] = local;
+            }
+
+            var b = GetBMatrixAt(targetElement, isoCoords);
+
+            var d = GetDMatrixAt(targetElement, isoCoords);
+
+            var u1l = lds[0];
+            var u2l = lds[1];
+            var u3l = lds[2];
+
+            var uDkt =
+                   new Matrix(new[]
+                   {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY});
+
+
+            var mDkt = d * b * uDkt; //eq. 32, batoz article
+
+
+            var bTensor = new BendingStressTensor();
+
+            bTensor.M11 = mDkt[0, 0];
+            bTensor.M22 = mDkt[1, 0];
+            bTensor.M21 = bTensor.M12 = mDkt[2, 0];
+
+            var buf = new FlatShellStressTensor(bTensor);
+
             return buf;
         }
 
+       
         public GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
+        #region strain
+        public StrainTensor3D GetMembraneInternalStrain(Element targetElement, LoadCase loadCase, params double[] isoCoords)
+        {
+            //Note: membrane internal force is constant
+
+            //step 1 : get transformation matrix
+            //step 2 : convert globals points to locals
+            //step 3 : convert global displacements to locals
+            //step 4 : calculate B matrix
+            //step 5 : e=B*U
+            //Note : Steps changed...
+            var lds = new Displacement[targetElement.Nodes.Length];
+            var tr = targetElement.GetTransformationManager();
+
+            for (var i = 0; i < targetElement.Nodes.Length; i++)
+            {
+                var globalD = targetElement.Nodes[i].GetNodalDisplacement(loadCase);
+                var local = tr.TransformGlobalToLocal(globalD);
+                lds[i] = local;
+            }
+
+            // var locals = tr.TransformGlobalToLocal(globalDisplacements);
+
+            var b = GetBMatrixAt(targetElement, isoCoords);
+
+            var u1l = lds[0];
+            var u2l = lds[1];
+            var u3l = lds[2];
+
+            var uDkt =
+                   new Matrix(new[]
+                    {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY});
+
+            var ECst = b * uDkt;
+
+            var buf = new StrainTensor3D();
+
+            buf.S11 = ECst[0, 0];
+            buf.S22 = ECst[1, 0];
+            buf.S12 = ECst[2, 0];
+
+            return buf;
+        }
+        #endregion
+
     }
 }
