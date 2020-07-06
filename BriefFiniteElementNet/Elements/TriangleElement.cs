@@ -343,6 +343,8 @@ namespace BriefFiniteElementNet.Elements
 
                 foreach (var component in frc)
                 {
+					
+					
                     switch (component.Item1)
                     {
                         case DoF.Dx:
@@ -356,13 +358,17 @@ namespace BriefFiniteElementNet.Elements
                             break;
 
                         case DoF.Rx:
+							throw new NotImplementedException();
                             break;
-                        case DoF.Ry:
+                        case DoF.Ry:	
+							throw new NotImplementedException();
                             break;
                         case DoF.Rz:
+							throw new NotImplementedException();
                             break;
 
                         default:
+							throw new NotImplementedException();
                             break;
                     }
                 }
