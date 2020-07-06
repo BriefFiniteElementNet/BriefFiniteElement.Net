@@ -984,7 +984,7 @@ namespace BriefFiniteElementNet.Elements
                 foreach (var point in discretePoints)
                 {
                     if (xi == point.Xi)
-                        throw new Exception(string.Format(CultureInfo.CurrentCulture, "Internal force is descrete at xi = {0}, thus have two values in this location. try to find internal force a little bit after or before this point", xi));
+                        throw new Exception(string.Format(CultureInfo.CurrentCulture, "Internal force diagram and value is descrete at xi = {0}, thus have no value in this location. try to find internal force a little bit after or before this point", xi));
                 }
             }
 
