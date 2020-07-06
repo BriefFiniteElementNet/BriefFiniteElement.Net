@@ -23,7 +23,6 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var tmgr = targetElement.GetTransformationManager();
 
-
             if (tri == null)
                 throw new Exception();
 
@@ -31,9 +30,9 @@ namespace BriefFiniteElementNet.ElementHelpers
             var p2g = tri.Nodes[1].Location;
             var p3g = tri.Nodes[2].Location;
 
-            var p1l = tmgr.TransformGlobalToLocal(p1g);// p1g.TransformBack(transformMatrix);
-            var p2l = tmgr.TransformGlobalToLocal(p2g);// p2g.TransformBack(transformMatrix);
-            var p3l = tmgr.TransformGlobalToLocal(p3g);// p3g.TransformBack(transformMatrix);
+            var p1l = tmgr.TransformGlobalToLocal(p1g);
+            var p2l = tmgr.TransformGlobalToLocal(p2g);
+            var p3l = tmgr.TransformGlobalToLocal(p3g);
 
             var x1 = p1l.X;
             var x2 = p2l.X;
