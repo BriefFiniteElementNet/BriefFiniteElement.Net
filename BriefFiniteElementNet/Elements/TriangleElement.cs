@@ -288,7 +288,7 @@ namespace BriefFiniteElementNet.Elements
             
             var helpers = GetHelpers();
 
-            var buf = new Matrix(18, 18);
+            var buf = new CauchyStressTensor();
 
             var disps = this.nodes.Select(i => i.GetNodalDisplacement(loadCase)).ToArray();
 
@@ -301,19 +301,30 @@ namespace BriefFiniteElementNet.Elements
                 var helper = helpers[i];
 
                 var frc = helper.GetLocalInternalForceAt(this, lDisp, location.Xi, location.Eta, location.Lambda);
-                
 
-                var dofs = helper.GetDofOrder(this);
-
-                for (var ii = 0; ii < dofs.Length; ii++)
+                foreach (var component in frc)
                 {
-                    var bi = dofs[ii].NodeIndex * 6 + (int)dofs[ii].Dof;
-
-                    for (var jj = 0; jj < dofs.Length; jj++)
+                    switch (component.Item1)
                     {
-                        var bj = dofs[jj].NodeIndex * 6 + (int)dofs[jj].Dof;
+                        case DoF.Dx:
+                            buf.S11 += component.Item2;
+                            break;
+                        case DoF.Dy:
+                            buf.S22 += component.Item2;
+                            break;
+                        case DoF.Dz:
+                            buf.S11 += component.Item2;
+                            break;
 
-                        buf[bi, bj] += ki[ii, jj];
+                        case DoF.Rx:
+                            break;
+                        case DoF.Ry:
+                            break;
+                        case DoF.Rz:
+                            break;
+
+                        default:
+                            break;
                     }
                 }
             }

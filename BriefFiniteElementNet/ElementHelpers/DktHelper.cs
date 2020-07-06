@@ -431,6 +431,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             //step 5 : M=D*B*U
             //Note : Steps changed...
 
+            var pt = new IsoPoint(isoCoords);
+
             var tr = targetElement.GetTransformationManager();
 
             var locals = localDisplacements;// tr.TransformGlobalToLocal(globalDisplacements);
@@ -457,13 +459,11 @@ namespace BriefFiniteElementNet.ElementHelpers
             bTensor.M21 = bTensor.M12 = mDkt[2, 0];
 
             var buf = new GeneralStressTensor(bTensor);
+
+
             return buf;
         }
 
-        public CauchyStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
-        {
-            
-            throw new NotImplementedException();
-        }
+        
     }
 }
