@@ -127,7 +127,7 @@ namespace BriefFiniteElementNet.Elements
 
         public override Matrix GetGlobalStifnessMatrix()    // made by epsi1on
         {
-            var local = GetLocalStiffnessMatrix();
+            var local = GetLocalStifnessMatrix();
             var tr = GetTransformationManager();
 
             var buf = tr.TransformLocalToGlobal(local);
@@ -140,7 +140,7 @@ namespace BriefFiniteElementNet.Elements
 
             var buf = new Matrix(24, 24);
 
-            for (var i = 0; i < helpers.Count; i++)
+            for (var i = 0; i < helpers.Count(); i++)
             {
                 var helper = helpers[i];
 
@@ -257,7 +257,34 @@ namespace BriefFiniteElementNet.Elements
 
         public override double[] IsoCoordsToLocalCoords(params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var tr = GetTransformationManager();
+            List<Node> Nodes = new List<Node>();
+            for (int i = 0; i < this.Nodes.Count(); i++)
+            {
+                Vector p = tr.TransformGlobalToLocal(new Vector() { X = this.Nodes[i].Location.X - this.Nodes[0].Location.X, Y = this.Nodes[i].Location.Y - this.Nodes[0].Location.Y, Z = this.Nodes[i].Location.Z - this.Nodes[0].Location.Z });
+                Nodes.Add(new Node() { Location = new Point() { X = p.X, Y = p.Y, Z = p.Z } });
+            }
+            double N1 = 0.25 * (1 - isoCoords[0]) * (1 - isoCoords[1]);
+            double N2 = 0.25 * (1 + isoCoords[0]) * (1 - isoCoords[1]);
+            double N3 = 0.25 * (1 + isoCoords[0]) * (1 + isoCoords[1]);
+            double N4 = 0.25 * (1 - isoCoords[0]) * (1 + isoCoords[1]);
+            double x = Nodes[0].Location.X * N1 + Nodes[1].Location.X * N2 + Nodes[2].Location.X * N3 + Nodes[3].Location.X * N4;
+            double y = Nodes[0].Location.Y * N1 + Nodes[1].Location.Y * N2 + Nodes[2].Location.Y * N3 + Nodes[3].Location.Y * N4;
+
+            return new double[] { x, y };
+        }
+        public Point IsoCoordsToGlobalCoords(params double[] isoCoords)
+        {
+            var tr = GetTransformationManager();
+
+            var localA = IsoCoordsToLocalCoords(isoCoords);
+            var local = new Vector(localA[0], localA[1], 0);
+
+            var global = tr.TransformLocalToGlobal(local);
+
+            var globalP = this.Nodes[0].Location + global;
+
+            return globalP;
         }
         #region Deserialization Constructor
 
@@ -284,6 +311,45 @@ namespace BriefFiniteElementNet.Elements
 
         }
 
+        #endregion
+
+        #region stresses
+        /// <summary>
+        /// Gets the internal stress at defined location.
+        /// tensor is in local coordinate system. 
+        /// </summary>
+        /// <param name="localX">The X in local coordinate system (see remarks).</param>
+        /// <param name="localY">The Y in local coordinate system (see remarks).</param>
+        /// <param name="combination">The load combination.</param>
+        /// <param name="probeLocation">The probe location for the stress.</param>
+        /// <param name="localZ">The location for the bending stress. Maximum at the shell thickness (1). Must be withing 0 and 1</param>
+        /// <returns>Stress tensor of flat shell, in local coordination system</returns>
+        /// <remarks>
+        /// for more info about local coordinate of flat shell see page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara freely available on the web
+        /// </remarks>
+        public FlatShellStressTensor GetInternalStress(double localX, double localY, double localZ, LoadCombination combination, SectionPoints probeLocation)
+        {
+            if (localZ < 0 || localZ > 1.0)
+            {
+                throw new Exception("z must be between 0 and 1. 0 is the centre of the plate and 1 is on the plate surface. Use the section points to get the top/bottom.") { };
+            }
+            var helpers = GetHelpers();
+
+            var buf = new FlatShellStressTensor();
+            for (var i = 0; i < helpers.Count(); i++)
+            {
+                if (helpers[i] is Q4MembraneHelper)
+                {
+                    buf.MembraneTensor = ((Q4MembraneHelper)helpers[i]).GetLocalInternalStress(this, combination, new double[] { localX, localY }).MembraneTensor;
+                }
+                else if (helpers[i] is DkqHelper)
+                {
+                    buf.BendingTensor = ((DkqHelper)helpers[i]).GetBendingInternalStress(this, combination, new double[] { localX, localY }).BendingTensor;
+                }
+            }
+            buf.UpdateTotalStress(_section.GetThicknessAt(new double[] { localX, localY }) * localZ, probeLocation);
+            return buf;
+        }
         #endregion
     }
 }

@@ -19,9 +19,36 @@ namespace BriefFiniteElementNet.Elements
         }
 
         /// <inheritdoc/>
+        //iso coord -> local coords versus Node[0]!
         public override double[] IsoCoordsToLocalCoords(params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var tr = GetTransformationManager();
+            List<Node> Nodes = new List<Node>();
+            for (int i = 0; i < this.Nodes.Count(); i++)
+            {
+                Vector p = tr.TransformGlobalToLocal(new Vector() { X = this.Nodes[i].Location.X - this.Nodes[0].Location.X, Y = this.Nodes[i].Location.Y - this.Nodes[0].Location.Y, Z = this.Nodes[i].Location.Z - this.Nodes[0].Location.Z });
+                Nodes.Add(new Node() { Location = new Point() { X = p.X, Y = p.Y, Z = p.Z } });
+            }
+            double N1 = isoCoords[0];
+            double N2 = isoCoords[1];
+            double N3 = 1.0 - isoCoords[0] - isoCoords[1];
+            double x = Nodes[0].Location.X * N1 + Nodes[1].Location.X * N2 + Nodes[2].Location.X * N3;
+            double y = Nodes[0].Location.Y * N1 + Nodes[1].Location.Y * N2 + Nodes[2].Location.Y * N3;
+
+            return new double[] { x, y };
+        }
+        public Point IsoCoordsToGlobalCoords(params double[] isoCoords)
+        {
+            var tr = GetTransformationManager();
+
+            var localA = IsoCoordsToLocalCoords(isoCoords);
+            var local = new Vector(localA[0], localA[1], 0);
+
+            var global = tr.TransformLocalToGlobal(local);
+
+            var globalP = this.Nodes[0].Location + global;
+
+            return globalP;
         }
 
         private BaseMaterial _material;
