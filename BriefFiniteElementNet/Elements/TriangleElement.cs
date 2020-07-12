@@ -445,15 +445,13 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
+
         /// <summary>
-        /// Gets the internal stress at defined location.
+        /// Gets the internal stress at defined <see cref="isoLocation"/>.
         /// tensor is in local coordinate system. 
         /// </summary>
-        /// <param name="localX">The X in local coordinate system (see remarks).</param>
-        /// <param name="localY">The Y in local coordinate system (see remarks).</param>
-        /// <param name="combination">The load combination.</param>
-        /// <param name="probeLocation">The probe location for the stress.</param>
-        /// <param name="localZ">The location for the bending stress. Maximum at the shell thickness (1). Must be withing 0 and 1</param>
+        /// <param name="loadCase">the load case </param>
+        /// <param name="isoLocation"></param>
         /// <returns>Stress tensor of flat shell, in local coordination system</returns>
         /// <remarks>
         /// for more info about local coordinate of flat shell see page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara freely available on the web
