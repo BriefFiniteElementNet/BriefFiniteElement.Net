@@ -488,7 +488,7 @@ namespace BriefFiniteElementNet.Elements
 
                 var thickness = Section.GetThicknessAt(isoLocation);
 
-                var z = thickness * lambda;//measure in [m]
+                var z = thickness * lambda;//distance from plate center, measure in [m]
 
                 throw new NotImplementedException();
             }
