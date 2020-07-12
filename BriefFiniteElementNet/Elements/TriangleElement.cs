@@ -476,11 +476,24 @@ namespace BriefFiniteElementNet.Elements
             var buf = new CauchyStressTensor();
 
             buf += gst.MembraneTensor;
+            
+            {
+                //step2: update Cauchy based on bending,
+                //bending tensor also affects the Cauchy tensor regarding how much distance between desired location and center of plate.
+                
+                //old code: buf.UpdateTotalStress(_section.GetThicknessAt(new double[] { localX, localY }) * localZ, probeLocation);
 
-            //step2: update Cauchy based on bending,
-            //old code: buf.UpdateTotalStress(_section.GetThicknessAt(new double[] { localX, localY }) * localZ, probeLocation);
+                var lambda = 0.0;
 
-            throw new NotImplementedException();
+                if (isoLocation.Length == 3)
+                    lambda = isoLocation[2];
+
+                var thickness = Section.GetThicknessAt(isoLocation);
+
+                var z = thickness * lambda;//measure in [m]
+
+                throw new NotImplementedException();
+            }
 
             return buf;
         }
