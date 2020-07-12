@@ -64,7 +64,8 @@
     <Compile Include="PolynomialTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UniformGeoSection.cs" />
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="DenseMatrixTest.cs" />
+    <Compile Include="TriangleElementTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj">

@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Solve
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.CustomElements", "BriefFiniteElementNet.CustomElements\BriefFiniteElementNet.CustomElements.csproj", "{AAE8C9D8-3978-4BBD-A256-B67A1E4D5648}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.CustomElements.Test", "BriefFiniteElementNet.CustomElements.Test\BriefFiniteElementNet.CustomElements.Test.csproj", "{F4921DD6-AC8F-41F2-A7EF-C60BEFBBF271}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{AAE8C9D8-3978-4BBD-A256-B67A1E4D5648}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAE8C9D8-3978-4BBD-A256-B67A1E4D5648}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAE8C9D8-3978-4BBD-A256-B67A1E4D5648}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4921DD6-AC8F-41F2-A7EF-C60BEFBBF271}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4921DD6-AC8F-41F2-A7EF-C60BEFBBF271}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4921DD6-AC8F-41F2-A7EF-C60BEFBBF271}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4921DD6-AC8F-41F2-A7EF-C60BEFBBF271}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -33,6 +33,7 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
 
             var lc1 = new LoadCase("C1", LoadType.Dead);
             var lc2 = new LoadCase("C2", LoadType.Live);
+            var lc3 = new LoadCase("C3", LoadType.Live);
 
             var load = new UniformLoad()
             {
@@ -49,8 +50,12 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
                 Case = lc2
             };
 
+            var load3 = new ConcentratedLoad(new Force(0, 0, 0, 00, 10, 00), new IsoPoint(0.50), CoordinationSystem.Local);
+            load3.Case = lc3;
+
             e.Loads.Add(load);
             e.Loads.Add(load2);
+            e.Loads.Add(load3);
 
             Model model = new Model();
             model.Nodes.Add(n1);

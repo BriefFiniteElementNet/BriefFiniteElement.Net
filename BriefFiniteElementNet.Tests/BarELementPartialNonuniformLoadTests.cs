@@ -63,7 +63,7 @@ namespace BriefFiniteElementNet.Tests
             }
         }
 
-        [TestMethod]
+        //[TestMethod]
         public void LoadEquivalentNodalLoads_partialnonuniformload_eulerbernoullybeam_dirY()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
