@@ -324,7 +324,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             throw new NotImplementedException();
         }
-        public FlatShellStressTensor GetLocalInternalForce(Element targetElement, LoadCase loadCase, params double[] isoCoords)
+        public GeneralStressTensor GetLocalInternalForce(Element targetElement, LoadCase loadCase, params double[] isoCoords)
         {
             //step 1 : get transformation matrix
             //step 2 : convert globals points to locals
@@ -373,10 +373,11 @@ namespace BriefFiniteElementNet.ElementHelpers
             bTensor.M22 = mDkt[1, 0];
             bTensor.M21 = bTensor.M12 = mDkt[2, 0];
 
-            var buf = new FlatShellStressTensor(bTensor);
+            var buf = new GeneralStressTensor(bTensor);
 
             return buf;
         }
+
         public int Ng = 2;
 
         /// <inheritdoc/>
@@ -549,6 +550,11 @@ namespace BriefFiniteElementNet.ElementHelpers
             buf.S12 = ECst[2, 0];
 
             return buf;
+        }
+
+        public GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        {
+            throw new NotImplementedException();
         }
         #endregion
 

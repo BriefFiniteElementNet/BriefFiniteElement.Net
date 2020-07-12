@@ -732,6 +732,11 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             return buf;
         }
+
+        public GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
         //test
     }
 }
