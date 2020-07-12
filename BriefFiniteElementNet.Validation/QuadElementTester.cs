@@ -5,17 +5,22 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.Elements.ElementHelpers;
 using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
 using HtmlTags;
+using BriefFiniteElementNet.Elements.ElementHelpers;
+using System.Diagnostics;
 
 namespace BriefFiniteElementNet.Validation
 {
     public class QuadElementTester : IValidator
     {
-        public static void TestSingleElement()
+        public static void TestPlateBending()
         {
-            var model = new Model();
+            //small testing plate bending local stiffness matrix
+            //there should not be zny zero on main diagonal of either local or global stiffness matrix,
+            //otherwise we get not positive definite exception error
 
             var elm = new QuadrilaturalElement();
 
@@ -29,27 +34,86 @@ namespace BriefFiniteElementNet.Validation
 
             arr.CopyTo(elm.Nodes, 0);
 
-            model.Nodes.AddRange(arr);
-            model.Elements.Add(elm);
-
-            model.Nodes[2].Loads.Add(new NodalLoad(new Force(1, 1, 1, 0, 0, 0) * -5000));
-
-            model.Nodes[0].Constraints = model.Nodes[1].Constraints = Constraints.Fixed;
-
-            elm.Behavior = PlateElementBehaviours.Shell;
-            elm.MembraneFormulation = MembraneFormulation.PlaneStress;
+            var dkq = new DkqHelper();
+            
             elm.Material = new UniformIsotropicMaterial(2100, 0.3);
             elm.Section = new UniformParametric2DSection(0.2);
 
-            model.Solve();
+            var k = dkq.CalcLocalStiffnessMatrix(elm);
 
-            Console.WriteLine(model.Nodes[2].GetNodalDisplacement().ToString(5));
+            var n = k.RowCount;
 
-            //var force = elm.GetLocalInternalForceAt(LoadCase.DefaultLoadCase, -0.57735, -0.57735);
+            for (var i = 0; i < n; i++)
+                if (k[i, i] <= 0)
+                    Console.WriteLine("non positive entry on diagonal of DkqHelper stiffness");
+        }
+
+        public static void TestMembrane()
+        {
+            //small testing main diagonal of membrane local stiffness matrix 
+            //there should not be zny zero on main diagonal of either local or global stiffness matrix,
+            //otherwise we get not positive definite exception error
+
+            var elm = new QuadrilaturalElement();
+
+            var arr = new[]
+            {
+                new Node(1, 1, 0),
+                new Node(4, 1, 0),
+                new Node(4, 4, 0),
+                new Node(1, 4, 0),
+            };
+
+            arr.CopyTo(elm.Nodes, 0);
+
+            var dkq = new Q4MembraneHelper();
+
+            elm.Material = new UniformIsotropicMaterial(2100, 0.3);
+            elm.Section = new UniformParametric2DSection(0.2);
+
+            var k = dkq.CalcLocalStiffnessMatrix(elm);
+
+            var n = k.RowCount;
+
+            for (var i = 0; i < n; i++)
+                if (k[i, i] <= 0)
+                    Console.WriteLine("non positive entry on diagonal of Q4MembraneHelper stiffness");
 
         }
 
-        
+        public static void TestDrillingDof()
+        {
+            //small testing main diagonal of drilling dof local stiffness matrix 
+            //there should not be zny zero on main diagonal of either local or global stiffness matrix,
+            //otherwise we get not positive definite exception error
+
+            var elm = new QuadrilaturalElement();
+
+            var arr = new[]
+            {
+                new Node(1, 1, 0),
+                new Node(4, 1, 0),
+                new Node(4, 4, 0),
+                new Node(1, 4, 0),
+            };
+
+            arr.CopyTo(elm.Nodes, 0);
+
+            var dkq = new QuadBasicDrillingDofHelper();
+
+            elm.Material = new UniformIsotropicMaterial(2100, 0.3);
+            elm.Section = new UniformParametric2DSection(0.2);
+
+            var k = dkq.CalcLocalStiffnessMatrix(elm);
+
+            var n = k.RowCount;
+
+            for (var i = 0; i < n; i++)
+                if (k[i, i] <= 0)
+                    Console.WriteLine("non positive entry on diagonal of QuadBasicDrillingDofHelper stiffness");
+
+        }
+
         public ValidationResult[] DoAllValidation()
         {
             var buf = new List<ValidationResult>();

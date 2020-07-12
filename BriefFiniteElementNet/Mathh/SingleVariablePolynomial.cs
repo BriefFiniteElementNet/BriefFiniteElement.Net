@@ -53,9 +53,27 @@ namespace BriefFiniteElementNet.Mathh
 
         public double[] Coefficients;
 
-        public int VariableCount => throw new NotImplementedException();
+        public int VariableCount
+        {
+            get
+            {
+                return 1;
+            }
+        }
 
-        public int[] Degree => throw new NotImplementedException();
+        public int[] Degree
+        {
+            get
+            {
+                var lastNonzero = 0;
+
+                for (var i = 0; i < Coefficients.Length; i++)
+                    if (Coefficients[i] != 0)
+                        lastNonzero = i;
+
+                return new int[] { lastNonzero };
+            }
+        }
 
         public SingleVariablePolynomial Clone()
         {

@@ -1001,14 +1001,12 @@ namespace BriefFiniteElementNet.ElementHelpers
                     #endregion
 
 
-                    var v_i = integral[0, 0];
-                    var m_i = integral[1, 0];
-
-                    var frc = new Force();
+                    var v_i = integral[0, 0];//total shear
+                    var m_i = integral[1, 0];//total moment of load about the start node
 
                     var x = Iso2Local(targetElement, isoLocation)[0];
 
-                    var f = new Force();
+                    var f = new Force();//total moment about start node, total shear 
 
 
                     if (this._direction == BeamDirection.Y)
@@ -1088,8 +1086,11 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 var frcX = br.IsoCoordsToLocalCoords(cns.ForceIsoLocation.Xi)[0];
 
-                frc = frc.Move(new Point(frcX, 0, 0), new Point(0, 0, 0));
-                frc = frc.Move(new Point(0, 0, 0), new Point(targetX, 0, 0));
+                if (frc != Force.Zero)
+                {
+                    frc = frc.Move(new Point(frcX, 0, 0), new Point(0, 0, 0));
+                    frc = frc.Move(new Point(0, 0, 0), new Point(targetX, 0, 0));
+                }
 
                 var movedEnds = ends.Move(new Point(0, 0, 0), new Point(targetX, 0, 0));
 

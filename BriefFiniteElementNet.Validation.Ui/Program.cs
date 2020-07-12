@@ -34,7 +34,9 @@ namespace BriefFiniteElementNet.Validation.Ui
             Console.WriteLine("Quad Element Test - Start");
 
             //ExportToHtmFile("c:\\temp\\quad-validation.html", new BriefFiniteElementNet.Validation.QuadElementTester());
-            QuadElementTester.TestSingleElement();
+            QuadElementTester.TestPlateBending();
+            QuadElementTester.TestMembrane();
+            QuadElementTester.TestDrillingDof();
         }
 
         static void TestTelepaty()
