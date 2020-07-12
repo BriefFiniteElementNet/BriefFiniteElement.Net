@@ -7,6 +7,7 @@ using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -345,7 +346,7 @@ namespace BriefFiniteElementNet.Elements
 
         #endregion
 
-
+        [Obsolete("use GetLocalInternalStress instead")]
         public CauchyStressTensor GetLocalInternalForce(IsoPoint location,LoadCase loadCase)
         {
 
@@ -418,6 +419,7 @@ namespace BriefFiniteElementNet.Elements
         /// <remarks>
         /// for more info about local coordinate of flat shell see page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara freely available on the web
         /// </remarks>
+        [Obsolete("use GetLocalInternalStress instead")]
         public FlatShellStressTensor GetInternalStress(double localX, double localY, double localZ, LoadCombination combination, SectionPoints probeLocation)
         {
             if (localZ < 0 || localZ > 1.0)
@@ -427,6 +429,7 @@ namespace BriefFiniteElementNet.Elements
             var helpers = GetHelpers();
 
             var buf = new FlatShellStressTensor();
+
             for (var i = 0; i < helpers.Count(); i++)
             {
                 if (helpers[i] is CstHelper)
@@ -441,6 +444,47 @@ namespace BriefFiniteElementNet.Elements
             buf.UpdateTotalStress(_section.GetThicknessAt(new double[] { localX, localY }) * localZ, probeLocation);
             return buf;
         }
+
+        /// <summary>
+        /// Gets the internal stress at defined location.
+        /// tensor is in local coordinate system. 
+        /// </summary>
+        /// <param name="localX">The X in local coordinate system (see remarks).</param>
+        /// <param name="localY">The Y in local coordinate system (see remarks).</param>
+        /// <param name="combination">The load combination.</param>
+        /// <param name="probeLocation">The probe location for the stress.</param>
+        /// <param name="localZ">The location for the bending stress. Maximum at the shell thickness (1). Must be withing 0 and 1</param>
+        /// <returns>Stress tensor of flat shell, in local coordination system</returns>
+        /// <remarks>
+        /// for more info about local coordinate of flat shell see page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara freely available on the web
+        /// </remarks>
+        public CauchyStressTensor GetLocalInternalStress(LoadCase loadCase,double[] isoLocation)
+        {
+            var helpers = GetHelpers();
+
+            var gst = new GeneralStressTensor();
+            var tr = this.GetTransformationManager();
+
+            var ld = this.Nodes.Select(i => tr.TransformGlobalToLocal(i.GetNodalDisplacement(loadCase))).ToArray();
+
+            for (var i = 0; i < helpers.Count(); i++)
+            {
+                var st = helpers[i].GetLocalInternalStressAt(this, ld, isoLocation);
+                gst += st;
+            }
+
+            var buf = new CauchyStressTensor();
+
+            buf += gst.MembraneTensor;
+
+            //step2: update Cauchy based on bending,
+            //old code: buf.UpdateTotalStress(_section.GetThicknessAt(new double[] { localX, localY }) * localZ, probeLocation);
+
+            throw new NotImplementedException();
+
+            return buf;
+        }
+
         #endregion
 
         #region strains
