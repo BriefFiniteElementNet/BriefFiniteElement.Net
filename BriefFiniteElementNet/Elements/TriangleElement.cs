@@ -371,8 +371,6 @@ namespace BriefFiniteElementNet.Elements
 
                 foreach (var component in frc)
                 {
-					
-					
                     switch (component.Item1)
                     {
                         case DoF.Dx:
@@ -419,7 +417,7 @@ namespace BriefFiniteElementNet.Elements
         /// <remarks>
         /// for more info about local coordinate of flat shell see page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara freely available on the web
         /// </remarks>
-        [Obsolete("use GetLocalInternalStress instead")]
+        [Obsolete("use GetLocalInternalStress instead")] // I'd prefer to keep this method since the section points always give you the results you'd expect. 
         public FlatShellStressTensor GetInternalStress(double localX, double localY, double localZ, LoadCombination combination, SectionPoints probeLocation)
         {
             if (localZ < 0 || localZ > 1.0)
@@ -486,13 +484,24 @@ namespace BriefFiniteElementNet.Elements
                 if (isoLocation.Length == 3)
                     lambda = isoLocation[2];
 
+                if (lambda > 1.0 || lambda < -1.0)
+                {
+                    throw new Exception("lambda must be between -1 and +1") { };
+                }
                 var thickness = Section.GetThicknessAt(isoLocation);
 
                 var z = thickness * lambda;//distance from plate center, measure in [m]
-
-                throw new NotImplementedException();
+                if (lambda > 0)
+                {
+                    //top -> add bending stress
+                    buf += gst.BendingTensor.ConvertBendingStressToCauchyTensor(z);
+                }
+                else
+                {
+                    //bottom -> subtract bending stress
+                    buf -= gst.BendingTensor.ConvertBendingStressToCauchyTensor(z);
+                }
             }
-
             return buf;
         }
 
