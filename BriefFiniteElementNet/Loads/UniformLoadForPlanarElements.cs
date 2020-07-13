@@ -91,7 +91,7 @@ namespace BriefFiniteElementNet
             var glob = element.TranformLocalToGlobal(local);
 
             var buf = new Force[]
-            {new Force(glob*a/3, Vector.Zero), new Force(glob*a/3, Vector.Zero), new Force(glob*a/3, Vector.Zero)};
+            {new Force(glob*a/3.0, Vector.Zero), new Force(glob*a/3.0, Vector.Zero), new Force(glob*a/3.0, Vector.Zero)};
 
             return buf;
         }
