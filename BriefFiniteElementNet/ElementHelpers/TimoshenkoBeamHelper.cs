@@ -153,5 +153,10 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             throw new NotImplementedException();
         }
+
+        public GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

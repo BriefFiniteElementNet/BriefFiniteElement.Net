@@ -349,33 +349,10 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             throw new NotImplementedException();
         }
+
         #region stress
-        public GeneralStressTensor GetLocalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
-        {
-            //Note: membrane internal force is constant
-            var d1l = localDisplacements[0];
-            var d2l = localDisplacements[1];
-            var d3l = localDisplacements[2];
+      
 
-            var u =
-                   new Matrix(new[]
-                   {d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY});
-
-            var d = this.GetDMatrixAt(targetElement, isoCoords);
-
-            var b = this.GetBMatrixAt(targetElement, isoCoords);
-
-
-            var sCst = d * b * u;
-
-            var buf = new MembraneStressTensor();
-
-            buf.Sx = sCst[0, 0];
-            buf.Sy = sCst[1, 0];
-            buf.Txy = sCst[2, 0];
-
-            return new GeneralStressTensor(buf);
-        }
         /// <summary>
         /// Gets the stress due to the membrane action. Needs to be combined with bending stress!!!
         /// </summary>
@@ -384,6 +361,8 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <returns>The stress in the element due to the membrane action. Needs to be combined with the stress due to bending!</returns>
         public MembraneStressTensor GetMembraneInternalStress(Element targetElement, LoadCombination combination)
         {
+            //code moved to GetLocalInternalStressAt()
+
             //Note: membrane internal force is constant
 
             //step 1 : get transformation matrix
@@ -479,6 +458,43 @@ namespace BriefFiniteElementNet.ElementHelpers
             buf.S12 = ECst[2, 0];
 
             return buf;
+        }
+
+        public GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        {
+            //Note: membrane internal force is constant
+
+            //step 1 : get transformation matrix
+            //step 2 : convert globals points to locals
+            //step 3 : convert global displacements to locals
+            //step 4 : calculate B matrix and D matrix
+            //step 5 : M=D*B*U
+
+
+            var lds = localDisplacements;
+            //step 3
+            var d1l = lds[0];
+            var d2l = lds[1];
+            var d3l = lds[2];
+
+            var uCst =
+                   new Matrix(new[]
+                   {d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY});
+
+            //cst -> constant over entire element -> provide random values for local
+            var dbCst = this.GetDMatrixAt(targetElement, new double[] { 0, 0 });
+
+            var bCst = this.GetBMatrixAt(targetElement, new double[] { 0, 0 });
+
+            var sCst = dbCst * bCst * uCst;
+
+            var buf = new MembraneStressTensor();
+
+            buf.Sx = sCst[0, 0];
+            buf.Sy = sCst[1, 0];
+            buf.Txy = sCst[2, 0];
+
+            return new GeneralStressTensor(buf);
         }
         #endregion
     }
