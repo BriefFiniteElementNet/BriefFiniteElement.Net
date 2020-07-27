@@ -50,6 +50,7 @@
     <Compile Include="ElementHelpers\QuadBasicDrillingDofHelper.cs" />
     <Compile Include="ElementHelpers\QuadElementBehaviour.cs" />
     <Compile Include="ElementHelpers\QuadElementBehaviours.cs" />
+    <Compile Include="Elements\Hexahedral.cs" />
     <Compile Include="Elements\QuadrilaturalElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

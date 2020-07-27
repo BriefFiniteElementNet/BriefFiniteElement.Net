@@ -1311,6 +1311,22 @@ namespace BriefFiniteElementNet
             return cross.Length / 2;
         }
 
+        /// <summary>
+        /// Gets the area of a random convex polygon according to https://math.stackexchange.com/questions/3207981/caculate-area-of-polygon-in-3d
+        /// </summary>
+        /// <returns>The area</returns>
+        public static double GetConvexPolygonArea(List<Point> Points)
+        {
+            double area = 0.0;
+            for (int i = 1; i < Points.Count - 1; i++)
+            {
+                var v1 = Points[i] - Points[0];
+                var v2 = Points[i + 1] - Points[0];
+                var n = Vector.Cross(v1, v2);
+                area += 0.5 * n.Length;
+            }
+            return area;
+        }
 
         /// <summary>
         /// Applies the lambda matrix to transform from local to global.

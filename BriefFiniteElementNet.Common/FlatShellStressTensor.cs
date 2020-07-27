@@ -8,6 +8,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// represents a stress tensor for a flat shell which consists of a bending part and cauchy part
     /// </summary>
+    [Obsolete("Use general stress tensor insted")]
     public struct FlatShellStressTensor
     {
         public FlatShellStressTensor(CauchyStressTensor membraneTensor, BendingStressTensor bendingTensor)

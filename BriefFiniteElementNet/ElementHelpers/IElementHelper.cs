@@ -150,10 +150,21 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
         /// <param name="globalDisplacements">The local displacements on nodes.</param>
         /// <returns>Internal force at defined iso coordination</returns>
-        /// 
+        [Obsolete("use GetLocalInternalStressAt instead")]
         IEnumerable<Tuple<DoF, double>> GetLocalInternalForceAt(Element targetElement,
             Displacement[] localDisplacements, params double[] isoCoords);
 
+        /// <summary>
+        /// Gets the internal stress at defined location in local coordination system.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="localDisplacements"></param>
+        /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
+        /// <param name="globalDisplacements">The local displacements on nodes.</param>
+        /// <returns>Internal force at defined iso coordination</returns>
+        GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords);
+
+        /*
         /// <summary>
         /// Gets the internal force at defined location in local coordination system.
         /// </summary>
@@ -165,7 +176,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// 
         GeneralStressTensor GetLocalStressAt(Element targetElement,
             Displacement[] localDisplacements, params double[] isoCoords);
-
+        */
 
         /// <summary>
         /// Gets the strain at defined location in local coordination system.
