@@ -144,6 +144,30 @@ namespace BriefFiniteElementNet.Elements
         #region loading
         public override Force[] GetGlobalEquivalentNodalLoads(ElementalLoad load)
         {
+            var helpers = GetHelpers();
+
+            var buf = new Force[nodes.Length];
+
+            var t = GetTransformationManager();
+
+            foreach (var helper in helpers)
+            {
+                var forces = helper.GetLocalEquivalentNodalLoads(this, load);
+
+                for (var i = 0; i < buf.Length; i++)
+                {
+                    buf[i] = buf[i] + forces[i];
+                }
+            }
+
+
+            for (var i = 0; i < buf.Length; i++)
+                buf[i] = t.TransformLocalToGlobal(buf[i]);
+
+
+            return buf;
+
+            //this should be moved to helpers
             if (load is UniformLoadForPlanarElements)
             {
                 //lumped approach is used as used in several references
@@ -201,18 +225,14 @@ namespace BriefFiniteElementNet.Elements
             }
             return helpers.ToArray();
         }
+
         public Matrix GetLocalDampMatrix()
         {
-            var helpers = new List<IElementHelper>();
+            var helpers = this.GetHelpers();
 
-            if ((this._behavior & PlateElementBehaviour.Bending) != 0)
-            {
-                helpers.Add(new DkqHelper());
-            }
+            var buf = MatrixPool.Allocate(24, 24);
 
-            var buf = new Matrix(24, 24);
-
-            for (var i = 0; i < helpers.Count; i++)
+            for (var i = 0; i < helpers.Count(); i++)
             {
                 var helper = helpers[i];
 
@@ -247,7 +267,7 @@ namespace BriefFiniteElementNet.Elements
         {
             var helpers = GetHelpers();
 
-            var buf = new Matrix(24, 24);
+            var buf = MatrixPool.Allocate(24, 24);
 
             for (var i = 0; i < helpers.Count(); i++)
             {
@@ -284,7 +304,7 @@ namespace BriefFiniteElementNet.Elements
         {
             var helpers = GetHelpers();
 
-            var buf = new Matrix(24, 24); // 6*nodecount x 6*nodecount
+            var buf = MatrixPool.Allocate(24, 24); // 6*nodecount x 6*nodecount
 
             for (var i = 0; i < helpers.Length; i++)
             {
@@ -306,6 +326,7 @@ namespace BriefFiniteElementNet.Elements
                     }
                 }
             }
+
             return buf;
         }
         public override Matrix GetGlobalStifnessMatrix()

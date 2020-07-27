@@ -61,6 +61,29 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
+        /// extracts a matrix from pool or creates a new one and associate with current pool and return it.
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
+        /// <returns></returns>
+        public Matrix Clone(Matrix mtx)
+        {
+            var arr = Pool.Allocate(mtx.CoreArray.Length);
+
+            for (var i = 0; i < arr.Length; i++)
+                arr[i] = mtx.CoreArray[i];
+
+            var buf = new Matrix(mtx.RowCount, mtx.ColumnCount, ref arr);
+
+            buf.UsePool = true;
+            buf.Pool = this;
+
+            TotalRents++;
+
+            return buf;
+        }
+
+        /// <summary>
         /// Returns the matrix to the pool
         /// </summary>
         /// <param name="matrices"></param>
