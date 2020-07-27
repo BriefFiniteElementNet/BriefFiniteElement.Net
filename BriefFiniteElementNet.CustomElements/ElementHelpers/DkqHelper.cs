@@ -13,6 +13,9 @@ using System.Xml.XPath;
 
 namespace BriefFiniteElementNet.Elements.ElementHelpers
 {
+    /// <summary>
+    /// Represents a class for DKQ (Discrete Kirchoff Quadrilatural) plate bending behaviour for <see cref="QuadrilaturalElement"/>.
+    /// </summary>
     public class DkqHelper:IElementHelper
     {
         public Element TargetElement { get; set; }
