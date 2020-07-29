@@ -105,14 +105,18 @@ namespace BriefFiniteElementNet
         /// The bending stress tensor needs to be converted into a cauchy stress tensor. Best to get the bending stresses at the integration points
         /// </summary>
         /// <param name="shellThickness">The thickness of the shell (for maximum bending stress)</param>
+        /// <param name="lambda">Thickness coordinate. Must be between -1 (bottom) and 1 (top). A value of 0 results in 0 stress (bendings stress is equal to zero for all components on the mid-fibre) </param>
         /// <returns>The stress due to the bending of the plate. Add/subtract this stress with the membrame stress to get the total stress</returns>
-        public CauchyStressTensor ConvertBendingStressToCauchyTensor(double shellThickness)
+        public CauchyStressTensor ConvertBendingStressToCauchyTensor(double shellThickness, double lambda)
         {
             CauchyStressTensor cauchyStressTensor = new CauchyStressTensor();
-            cauchyStressTensor.S11 = this.M11 * 6 / Math.Pow(shellThickness, 2);
-            cauchyStressTensor.S22 = this.M22 * 6 / Math.Pow(shellThickness, 2);
-            cauchyStressTensor.S12 = this.M12 * 6 / Math.Pow(shellThickness, 2);
-            cauchyStressTensor.S21 = this.M21 * 6 / Math.Pow(shellThickness, 2);
+            if (lambda!=0.0)
+            {
+                cauchyStressTensor.S11 = this.M11 * 12 / Math.Pow(shellThickness, 3) * shellThickness / 2.0 * lambda;
+                cauchyStressTensor.S22 = this.M22 * 12 / Math.Pow(shellThickness, 3) * shellThickness / 2.0 * lambda;
+                cauchyStressTensor.S12 = this.M12 * 12 / Math.Pow(shellThickness, 3) * shellThickness / 2.0 * lambda;
+                cauchyStressTensor.S21 = this.M21 * 12 / Math.Pow(shellThickness, 3) * shellThickness / 2.0 * lambda;
+            }
             //all other components are 0 since it is a shell according to Kirchoff plate theory -> no 3-components!
             return cauchyStressTensor;
         }

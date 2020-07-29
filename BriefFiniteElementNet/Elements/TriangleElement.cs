@@ -408,16 +408,16 @@ namespace BriefFiniteElementNet.Elements
                 }
                 var thickness = Section.GetThicknessAt(isoLocation);
 
-                var z = thickness * lambda;//distance from plate center, measure in [m]
+                //var z = thickness * lambda;//distance from plate center, measure in [m]
                 if (lambda > 0)
                 {
                     //top -> add bending stress
-                    buf += gst.BendingTensor.ConvertBendingStressToCauchyTensor(z);
+                    buf += gst.BendingTensor.ConvertBendingStressToCauchyTensor(thickness, lambda);
                 }
                 else
                 {
                     //bottom -> subtract bending stress
-                    buf -= gst.BendingTensor.ConvertBendingStressToCauchyTensor(z);
+                    buf -= gst.BendingTensor.ConvertBendingStressToCauchyTensor(thickness, lambda);
                 }
             }
             return buf;
