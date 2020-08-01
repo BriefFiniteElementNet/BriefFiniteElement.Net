@@ -420,23 +420,29 @@ namespace BriefFiniteElementNet.Elements
 
                 if (isoLocation.Length == 3)
                     lambda = isoLocation[2];
+
+
                 if (lambda > 1.0 || lambda < -1.0)
-                {
                     throw new Exception("lambda must be between -1 and +1") { };
-                }
+                
                 var thickness = Section.GetThicknessAt(isoLocation);
 
                 //var z = thickness * lambda;//distance from plate center, measure in [m]
+
+                buf += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, lambda);
+
+                 /*epsi1on: no need to subtract, only need to add because negativeness of lambda taken into account in ConvertBendingStressToCauchyTensor
                 if (lambda > 0)
                 {
                     //top -> add bending stress
-                    buf += gst.BendingTensor.ConvertBendingStressToCauchyTensor(thickness, lambda);
+                    buf += gst.BendingTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, lambda);
                 }
                 else
                 {
                     //bottom -> subtract bending stress
-                    buf -= gst.BendingTensor.ConvertBendingStressToCauchyTensor(thickness, lambda);
+                    buf -= gst.BendingTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor,thickness, lambda);
                 }
+                 */
             }
             return buf;
         }

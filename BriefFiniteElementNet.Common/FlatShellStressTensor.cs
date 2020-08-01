@@ -52,8 +52,8 @@ namespace BriefFiniteElementNet
             {
                 case SectionPoints.Envelope:
                     {
-                        CauchyStressTensor top = MembraneTensor + BendingTensor.ConvertBendingStressToCauchyTensor(shellThickness, 1);
-                        CauchyStressTensor bottom = MembraneTensor + BendingTensor.ConvertBendingStressToCauchyTensor(shellThickness,-1);
+                        CauchyStressTensor top = MembraneTensor + BendingStressTensor.ConvertBendingStressToCauchyTensor(BendingTensor, shellThickness, 1);
+                        CauchyStressTensor bottom = MembraneTensor + BendingStressTensor.ConvertBendingStressToCauchyTensor(BendingTensor, shellThickness,-1);
                         if (Math.Abs(CauchyStressTensor.GetVonMisesStress(top)) > Math.Abs(CauchyStressTensor.GetVonMisesStress(bottom)))
                         {
                             this.TotalStressTensor = top;
@@ -66,12 +66,12 @@ namespace BriefFiniteElementNet
                     }
                 case SectionPoints.Top:
                     {
-                        this.TotalStressTensor = MembraneTensor + BendingTensor.ConvertBendingStressToCauchyTensor(shellThickness,1);
+                        this.TotalStressTensor = MembraneTensor + BendingStressTensor.ConvertBendingStressToCauchyTensor(BendingTensor,shellThickness, 1);
                         break;
                     }
                 case SectionPoints.Bottom:
                     {
-                        this.TotalStressTensor = MembraneTensor + BendingTensor.ConvertBendingStressToCauchyTensor(shellThickness,-1);
+                        this.TotalStressTensor = MembraneTensor + BendingStressTensor.ConvertBendingStressToCauchyTensor(BendingTensor,shellThickness, -1);
                         break;
                     }
                 default:

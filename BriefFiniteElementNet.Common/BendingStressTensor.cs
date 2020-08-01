@@ -101,25 +101,36 @@ namespace BriefFiniteElementNet
                 m33 = value;
             }
         }
+
         /// <summary>
         /// The bending stress tensor needs to be converted into a cauchy stress tensor. Best to get the bending stresses at the integration points
         /// </summary>
         /// <param name="shellThickness">The thickness of the shell (for maximum bending stress)</param>
         /// <param name="lambda">Thickness coordinate. Must be between -1 (bottom) and 1 (top). A value of 0 results in 0 stress (bendings stress is equal to zero for all components on the mid-fibre) </param>
         /// <returns>The stress due to the bending of the plate. Add/subtract this stress with the membrame stress to get the total stress</returns>
-        public CauchyStressTensor ConvertBendingStressToCauchyTensor(double shellThickness, double lambda)
+        public static CauchyStressTensor ConvertBendingStressToCauchyTensor(BendingStressTensor tensor, double shellThickness, double lambda)
         {
+            //follows same logic as bending of the beams
+            //sigma = M . z / I
+
             CauchyStressTensor cauchyStressTensor = new CauchyStressTensor();
-            if (lambda!=0.0)
-            {
-                cauchyStressTensor.S11 = this.M11 * 12 / Math.Pow(shellThickness, 3) * shellThickness / 2.0 * lambda;
-                cauchyStressTensor.S22 = this.M22 * 12 / Math.Pow(shellThickness, 3) * shellThickness / 2.0 * lambda;
-                cauchyStressTensor.S12 = this.M12 * 12 / Math.Pow(shellThickness, 3) * shellThickness / 2.0 * lambda;
-                cauchyStressTensor.S21 = this.M21 * 12 / Math.Pow(shellThickness, 3) * shellThickness / 2.0 * lambda;
-            }
-            //all other components are 0 since it is a shell according to Kirchoff plate theory -> no 3-components!
+
+            var z = shellThickness / 2.0 * lambda;
+
+            var I = Math.Pow(shellThickness, 3) / 12;
+
+            //cauchyStressTensor.S11 = tensor.M11 * z / I;
+            //cauchyStressTensor.S22 = tensor.M22 * z / I;
+
+            cauchyStressTensor.S11 = tensor.M13 * z / I;//due to naming on bending stress components defined here: https://www.scielo.br/scielo.php?script=sci_arttext&pid=S1679-78252014000900010#fig1
+            cauchyStressTensor.S22 = tensor.M31 * z / I;//due to naming on bending stress components defined here: https://www.scielo.br/scielo.php?script=sci_arttext&pid=S1679-78252014000900010#fig1
+
+            //cauchyStressTensor.S12 = tensor.M12 * z / I;//are you sure?
+            //cauchyStressTensor.S21 = tensor.M21 * z / I;//are you sure?
+
             return cauchyStressTensor;
         }
+
         /// <summary>
         /// Transforms the specified tensor using transformation matrix.
         /// </summary>
