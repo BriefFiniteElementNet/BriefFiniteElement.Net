@@ -392,6 +392,7 @@ namespace BriefFiniteElementNet.Elements
 
             buf += gst.MembraneTensor;
 
+
             if (isoLocation.Length == 3)// it means local Z and bending tensor does affect on cauchy tensor, only on center of plate where lambda=0 bending tensor have to effect on cauchy
             {
                 //step2: update Cauchy based on bending,
@@ -411,16 +412,26 @@ namespace BriefFiniteElementNet.Elements
 
                 var z = thickness * lambda;//distance from plate center, measure in [m]
                 
+
+                var thickness = Section.GetThicknessAt(isoLocation);
+
+                //var z = thickness * lambda;//distance from plate center, measure in [m]
+
+                buf += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor,thickness, lambda);
+
+                /*epsi1on: no need to subtract, only need to add because negativeness of lambda taken into account in ConvertBendingStressToCauchyTensor
+
                 if (lambda > 0)
                 {
                     //top -> add bending stress
-                    buf += gst.BendingTensor.ConvertBendingStressToCauchyTensor(z);
+                    buf += gst.BendingTensor.ConvertBendingStressToCauchyTensor(thickness, lambda);
                 }
                 else
                 {
                     //bottom -> subtract bending stress
-                    buf -= gst.BendingTensor.ConvertBendingStressToCauchyTensor(z);
+                    buf -= gst.BendingTensor.ConvertBendingStressToCauchyTensor(thickness, lambda);
                 }
+                */
             }
             return buf;
         }
