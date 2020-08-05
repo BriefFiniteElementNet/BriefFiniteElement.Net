@@ -510,7 +510,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
         #region strain
 
-        public StrainTensor3D GetMembraneInternalStrain(Element targetElement, LoadCase loadCase, params double[] isoCoords)
+        public StrainTensor GetMembraneInternalStrain(Element targetElement, LoadCase loadCase, params double[] isoCoords)
         {
             //dkt have no membrane 
 
@@ -547,7 +547,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var ECst = b * uDkt;
 
-            var buf = new StrainTensor3D();
+            var buf = new StrainTensor();
 
             buf.S11 = ECst[0, 0];
             buf.S22 = ECst[1, 0];

@@ -417,7 +417,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="loadCase">Loadcase for strain determination</param>
         /// <param name="isoCoords">The location - doesn't matter since it is constant in the CST element</param>
         /// <returns></returns>
-        public StrainTensor3D GetMembraneInternalStrain(Element targetElement, LoadCase loadCase, params double[] isoCoords)
+        public StrainTensor GetMembraneInternalStrain(Element targetElement, LoadCase loadCase, params double[] isoCoords)
         {
             //Note: membrane internal force is constant
 
@@ -451,7 +451,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var ECst = b * uCst;
 
-            var buf = new StrainTensor3D();
+            var buf = new StrainTensor();
 
             buf.S11 = ECst[0, 0];
             buf.S22 = ECst[1, 0];

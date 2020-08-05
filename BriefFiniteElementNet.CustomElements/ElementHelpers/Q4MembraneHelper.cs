@@ -441,7 +441,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
         }
 
         #region strain
-        public StrainTensor3D GetMembraneInternalStrain(Element targetElement, LoadCase loadCase, params double[] isoCoords)
+        public StrainTensor GetMembraneInternalStrain(Element targetElement, LoadCase loadCase, params double[] isoCoords)
         {
             //Note: membrane internal force is constant
 
@@ -476,7 +476,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             var EQ4 = b * uQ4;
 
-            var buf = new StrainTensor3D();
+            var buf = new StrainTensor();
 
             buf.S11 = EQ4[0, 0];
             buf.S22 = EQ4[1, 0];
