@@ -413,8 +413,6 @@ namespace BriefFiniteElementNet.Elements
                 var z = thickness * lambda;//distance from plate center, measure in [m]
                 
 
-                var thickness = Section.GetThicknessAt(isoLocation);
-
                 //var z = thickness * lambda;//distance from plate center, measure in [m]
 
                 buf += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor,thickness, lambda);
