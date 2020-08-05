@@ -183,33 +183,6 @@ namespace BriefFiniteElementNet.Elements
 
 
 
-            if(load is UniformLoad)
-            {
-                //lumped approach is used as used in several references
-                var ul = load as UniformLoad;
-
-                var u = ul.Direction;// new Vector();
-
-              
-                if (ul.CoordinationSystem == CoordinationSystem.Local)
-                {
-                    var trans = GetTransformationManager();
-                    u = trans.TransformLocalToGlobal(u); //local to global
-                }
-
-                if (_behavior == PlateElementBehaviour.Membrane)
-                    u.Z = 0;//remove one for plate bending
-
-                if (_behavior == PlateElementBehaviour.Bending)
-                    u.Y = u.X = 0;//remove those for membrane
-
-
-                var area = CalcUtil.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
-
-                var f = u * (area / 3.0);
-                var frc = new Force(f, Vector.Zero);
-                return new[] { frc, frc, frc };
-            }    
 
             throw new NotImplementedException();
         }

@@ -6,6 +6,7 @@ using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
 using CSparse.Storage;
 using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.Loads;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
@@ -342,6 +343,30 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
         {
+
+            if (load is UniformLoad)
+            {
+                var ul = load as UniformLoad;
+
+                var u = ul.Direction;// new Vector();
+
+
+                if (ul.CoordinationSystem == CoordinationSystem.Local)
+                {
+                    var trans = targetElement.GetTransformationManager();
+                    u = trans.TransformLocalToGlobal(u); //local to global
+                }
+
+                var nodes = targetElement.Nodes;
+
+                var area = CalcUtil.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
+
+                var f = u * (area / 3.0);
+
+                f.Z = 0;//force component in z directions
+                var frc = new Force(f, Vector.Zero);
+                return new[] { frc, frc, frc };
+            }
             throw new NotImplementedException();
         }
 
