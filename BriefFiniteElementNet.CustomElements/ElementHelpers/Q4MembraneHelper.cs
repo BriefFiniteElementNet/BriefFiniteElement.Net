@@ -292,6 +292,146 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
         {
+            var tr = targetElement.GetTransformationManager();
+
+            #region uniform
+
+            if (load is BriefFiniteElementNet.Loads.UniformLoad)
+            {
+                var ul = load as BriefFiniteElementNet.Loads.UniformLoad;
+
+                var localDir = ul.Direction.GetUnit();
+
+                if (ul.CoordinationSystem == CoordinationSystem.Global)
+                {
+
+                    localDir = tr.TransformGlobalToLocal(localDir);
+                }
+
+                var ux = localDir.X * ul.Magnitude;
+                var uy = localDir.Y * ul.Magnitude;
+                var uz = localDir.Z * ul.Magnitude;
+
+                var intg = new GaussianIntegrator();
+                
+                intg.A1 = -1;
+                intg.A2 = 1;
+
+                intg.F1 = gama => -1;
+                intg.F2 = gama => 1;
+
+                intg.G1 = (eta, gama) => 0;
+                intg.G2 = (eta, gama) => 1;
+
+                intg.GammaPointCount = 1;
+                intg.XiPointCount = intg.EtaPointCount = 2;
+
+                intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
+                {
+                    var shp = GetNMatrixAt(targetElement, xi, eta, 0);
+                    var j = GetJMatrixAt(targetElement, xi, eta, 0);
+                    shp.MultiplyByConstant(j.Determinant());
+                    shp.MultiplyByConstant(uz);
+
+                    return shp;
+                }
+                );
+
+
+                var res = intg.Integrate();
+
+                var localForces = new Force[4];
+
+                for (var i = 0; i < 4; i++)
+                {
+                    localForces[i] = new Force(0, 0, res[i, 0], 0, 0, 0);
+                }
+
+                throw new NotImplementedException();
+                var globalForces = localForces.Select(i => tr.TransformLocalToGlobal(i)).ToArray();
+
+                return globalForces;
+            }
+
+            #endregion
+
+            #region non uniform
+            if (load is BriefFiniteElementNet.Loads.PartialNonUniformLoad)  // TODO
+            {
+                //TODO
+                throw new NotImplementedException();
+
+                var ul = load as BriefFiniteElementNet.Loads.PartialNonUniformLoad;
+
+                var localDir = ul.Direction.GetUnit();
+
+                if (ul.CoordinationSystem == CoordinationSystem.Global)
+                    localDir = tr.TransformGlobalToLocal(localDir);
+                /*
+                var interpolator = new Func<double, double, double>((xi,eta)=>
+                {
+                    var shp = GetNMatrixAt(targetElement, xi, eta, 0).Transpose();
+                    var frc = new Matrix(4, 1);
+                    //frc.FillColumn(0, ul.NodalMagnitudes);
+                    var mult = shp * frc;
+
+                    return mult[0, 0];
+                });
+
+                var ux = new Func<double, double, double>((xi, eta) => localDir.X * interpolator(xi, eta));
+                var uy = new Func<double, double, double>((xi, eta) => localDir.Y * interpolator(xi, eta));
+                var uz = new Func<double, double, double>((xi, eta) => localDir.Z * interpolator(xi, eta));
+                */
+
+                var st = ul.StartLocation;
+                var en = ul.EndLocation;
+
+                var intg = new GaussianIntegrator();
+
+                intg.A1 = 0;
+                intg.A2 = 1;
+
+                intg.F1 = gama => st.Eta;
+                intg.F2 = gama => en.Eta;
+
+                intg.G1 = (eta, gama) => st.Xi;
+                intg.G2 = (eta, gama) => en.Xi;
+
+                var order = ul.SeverityFunction.Degree;
+
+                intg.GammaPointCount = 1;
+                intg.XiPointCount = intg.EtaPointCount = 2;
+
+                throw new Exception();
+
+                intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
+                {
+                    var shp = GetNMatrixAt(targetElement, xi, eta, 0);
+                    var j = GetJMatrixAt(targetElement, xi, eta, 0);
+                    shp.MultiplyByConstant(j.Determinant());
+
+                    //var uzm = ul.SeverityFunction.Evaluate(xi, eta);
+
+                    //shp.MultiplyByConstant(uzm);
+
+                    return shp;
+                }
+                );
+
+                var res = intg.Integrate();
+
+                var localForces = new Force[4];
+
+                for (var i = 0; i < 4; i++)
+                {
+                    localForces[i] = new Force(0, 0, res[i, 0], 0, 0, 0);
+                }
+
+                return localForces;
+            }
+
+            #endregion
+
             throw new NotImplementedException();
         }
 
@@ -427,7 +567,23 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            //used for distributed load, 8.26 of http://what-when-how.com/the-finite-element-method/fem-for-plates-and-shells-finite-element-method-part-1/
+
+            //N from 7.54 of http://what-when-how.com/the-finite-element-method/fem-for-two-dimensional-solids-finite-element-method-part-2/
+            var xi = isoCoords[0];
+            var eta = isoCoords[1];
+
+            var buf = targetElement.MatrixPool.Allocate(4, 1);
+
+            var xis = new double[] { -1, 1, 1, -1 };//for each node
+            var etas = new double[] { -1, -1, 1, 1 };//for each node
+
+            for (var i = 0; i < 4; i++)
+            {
+                buf[i, 0] = 0.25 * (1 + xis[i] * xi) * (1 + etas[i] * eta);
+            }
+
+            return buf;
         }
 
         public int[] GetNMaxOrder(Element targetElement)

@@ -8,6 +8,7 @@ using BriefFiniteElementNet.Sections;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.Loads;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -124,6 +125,31 @@ namespace BriefFiniteElementNet.Elements
         #region loading
         public override Force[] GetGlobalEquivalentNodalLoads(ElementalLoad load)
         {
+            var helpers = GetHelpers();
+
+            var buf = new Force[nodes.Length];
+
+            var t = GetTransformationManager();
+
+            foreach (var helper in helpers)
+            {
+                var forces = helper.GetLocalEquivalentNodalLoads(this, load);
+
+                for (var i = 0; i < buf.Length; i++)
+                {
+                    buf[i] = buf[i] + forces[i];
+                }
+            }
+
+
+            for (var i = 0; i < buf.Length; i++)
+                buf[i] = t.TransformLocalToGlobal(buf[i]);
+
+
+            return buf;
+
+
+
             if (load is UniformLoadForPlanarElements)
             {
                 //lumped approach is used as used in several references
@@ -156,6 +182,35 @@ namespace BriefFiniteElementNet.Elements
             }
 
 
+
+            if(load is UniformLoad)
+            {
+                //lumped approach is used as used in several references
+                var ul = load as UniformLoad;
+
+                var u = ul.Direction;// new Vector();
+
+              
+                if (ul.CoordinationSystem == CoordinationSystem.Local)
+                {
+                    var trans = GetTransformationManager();
+                    u = trans.TransformLocalToGlobal(u); //local to global
+                }
+
+                if (_behavior == PlateElementBehaviour.Membrane)
+                    u.Z = 0;//remove one for plate bending
+
+                if (_behavior == PlateElementBehaviour.Bending)
+                    u.Y = u.X = 0;//remove those for membrane
+
+
+                var area = CalcUtil.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
+
+                var f = u * (area / 3.0);
+                var frc = new Force(f, Vector.Zero);
+                return new[] { frc, frc, frc };
+            }    
+
             throw new NotImplementedException();
         }
         #endregion
@@ -183,6 +238,7 @@ namespace BriefFiniteElementNet.Elements
             }
             return helpers.ToArray();
         }
+
         public Matrix GetLocalDampMatrix()
         {
             var helpers = GetHelpers();
@@ -341,6 +397,7 @@ namespace BriefFiniteElementNet.Elements
         /// </remarks>
         public FlatShellStressTensor GetInternalStress(double[] isoLocation, LoadCombination combination, SectionPoints probeLocation)
         {
+            //added by rubsy92
             if (isoLocation[2] < 0 || isoLocation[2] > 1.0)
             {
                 throw new Exception("z must be between 0 and 1. 0 is the centre of the plate and 1 is on the plate surface. Use the section points to get the top/bottom.") { };

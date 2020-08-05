@@ -228,12 +228,8 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             return buf;
         }
 
-        public Matrix GetB_iMatrixAt(Element targetElement, int i, params double[] isoCoords)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
+        public Matrix GetDMatrixAt_Ortho(Element targetElement, params double[] isoCoords)
         {
             var f = targetElement as QuadrilaturalElement;
 
@@ -266,7 +262,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             return d;
         }
 
-        public Matrix GetDMatrixAt2(Element targetElement, params double[] isoCoords)
+        public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
         {
             //based on https://github.com/lge88/OpenSees/blob/1048cad190b8192cdd55448242ce4dea58246742/SRC/material/section/ElasticPlateSection.cpp
             var f = targetElement as QuadrilaturalElement;
@@ -274,7 +270,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var mat = f.Material.GetMaterialPropertiesAt(isoCoords);
 
             if (!CalcUtil.IsIsotropicMaterial(mat))
-                throw new Exception();
+                return GetDMatrixAt_Ortho(targetElement, isoCoords);
 
             var e = mat.Ex;
             var t = f.Section.GetThicknessAt(isoCoords);
@@ -310,7 +306,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             tangent.MultiplyByConstant(-1);
 
-            var diff = (tangent - GetDMatrixAt2(targetElement, isoCoords)).Max(ii=>Math.Abs(ii));//= 1e-9
+            var diff = (tangent - GetDMatrixAt(targetElement, isoCoords)).Max(ii=>Math.Abs(ii));//= 1e-9
             
             return d;
         }
