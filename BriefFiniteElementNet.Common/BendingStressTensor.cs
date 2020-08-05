@@ -101,6 +101,7 @@ namespace BriefFiniteElementNet
                 m33 = value;
             }
         }
+
         /// <summary>
         /// The bending stress tensor needs to be converted into a cauchy stress tensor. Best to get the bending stresses at the integration points
         /// </summary>
@@ -116,6 +117,27 @@ namespace BriefFiniteElementNet
             //all other components are 0 since it is a shell according to Kirchoff plate theory -> no 3-components!
             return cauchyStressTensor;
         }
+
+        /// <summary>
+        /// The bending stress tensor needs to be converted into a cauchy stress tensor. Best to get the bending stresses at the integration points
+        /// </summary>
+        /// <param name="t">The thickness of the shell (for maximum bending stress)</param>
+        /// <param name="z">The Z, measures from center of thickness, measures in [m]</param>
+        /// <returns>The stress due to the bending of the plate. Add/subtract this stress with the membrame stress to get the total stress</returns>
+        public CauchyStressTensor ConvertBendingStressToCauchyTensor(double t, double z)
+        {
+            CauchyStressTensor cauchyStressTensor = new CauchyStressTensor();
+            
+            cauchyStressTensor.S11 = z*this.M11 * 12 / Math.Pow(t, 3);
+            cauchyStressTensor.S22 = z*this.M22 * 12 / Math.Pow(t, 3);
+
+            cauchyStressTensor.S12 = z*this.M12 * 12 / Math.Pow(t, 3);//not sure about this line
+            cauchyStressTensor.S21 = z*this.M21 * 12 / Math.Pow(t, 3);//not sure about this line
+            //all other components are 0 since it is a shell according to Kirchoff plate theory -> no 3-components!
+            return cauchyStressTensor;
+        }
+
+
         /// <summary>
         /// Transforms the specified tensor using transformation matrix.
         /// </summary>

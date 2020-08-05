@@ -26,7 +26,7 @@ namespace BriefFiniteElementNet.Elements
 
         private Base2DSection _section;
 
-        private PlateElementBehaviour _behavior;
+        private PlateElementBehaviour _behavior = PlateElementBehaviours.Shell;
 
         private MembraneFormulation _formulation;
 
@@ -373,7 +373,7 @@ namespace BriefFiniteElementNet.Elements
         /// <remarks>
         /// for more info about local coordinate of flat shell see page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara freely available on the web
         /// </remarks>
-        public CauchyStressTensor GetLocalInternalStress(LoadCase loadCase, double[] isoLocation)
+        public CauchyStressTensor GetLocalInternalStress(LoadCase loadCase, params double[] isoLocation)
         {
             var helpers = GetHelpers();
 
@@ -392,6 +392,7 @@ namespace BriefFiniteElementNet.Elements
 
             buf += gst.MembraneTensor;
 
+            if (isoLocation.Length == 3)// it means local Z and bending tensor does affect on cauchy tensor, only on center of plate where lambda=0 bending tensor have to effect on cauchy
             {
                 //step2: update Cauchy based on bending,
                 //bending tensor also affects the Cauchy tensor regarding how much distance between desired location and center of plate.
@@ -402,13 +403,14 @@ namespace BriefFiniteElementNet.Elements
 
                 if (isoLocation.Length == 3)
                     lambda = isoLocation[2];
+
                 if (lambda > 1.0 || lambda < -1.0)
-                {
                     throw new Exception("lambda must be between -1 and +1") { };
-                }
+                
                 var thickness = Section.GetThicknessAt(isoLocation);
 
                 var z = thickness * lambda;//distance from plate center, measure in [m]
+                
                 if (lambda > 0)
                 {
                     //top -> add bending stress
