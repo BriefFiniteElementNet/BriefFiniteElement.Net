@@ -119,14 +119,14 @@ namespace BriefFiniteElementNet
 
             var I = Math.Pow(shellThickness, 3) / 12;
 
-            //cauchyStressTensor.S11 = tensor.M11 * z / I;
-            //cauchyStressTensor.S22 = tensor.M22 * z / I;
+            cauchyStressTensor.S11 = tensor.M11 * z / I;
+            cauchyStressTensor.S22 = tensor.M22 * z / I;
 
-            cauchyStressTensor.S11 = tensor.M13 * z / I;//due to naming on bending stress components defined here: https://www.scielo.br/scielo.php?script=sci_arttext&pid=S1679-78252014000900010#fig1
-            cauchyStressTensor.S22 = tensor.M31 * z / I;//due to naming on bending stress components defined here: https://www.scielo.br/scielo.php?script=sci_arttext&pid=S1679-78252014000900010#fig1
+            //cauchyStressTensor.S11 = tensor.M13 * z / I;//due to naming on bending stress components defined here: https://www.scielo.br/scielo.php?script=sci_arttext&pid=S1679-78252014000900010#fig1
+            //cauchyStressTensor.S22 = tensor.M31 * z / I;//due to naming on bending stress components defined here: https://www.scielo.br/scielo.php?script=sci_arttext&pid=S1679-78252014000900010#fig1
 
-            //cauchyStressTensor.S12 = tensor.M12 * z / I;//are you sure?
-            //cauchyStressTensor.S21 = tensor.M21 * z / I;//are you sure?
+            cauchyStressTensor.S12 = tensor.M12 * z / I;//are you sure?
+            cauchyStressTensor.S21 = tensor.M21 * z / I;//are you sure?
 
             return cauchyStressTensor;
         }

@@ -116,7 +116,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            return new GeneralStressTensor();
         }
 
         public GeneralStressTensor GetLocalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
