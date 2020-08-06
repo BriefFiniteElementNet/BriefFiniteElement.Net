@@ -216,7 +216,7 @@ namespace BriefFiniteElementNet.Elements
         {
             var helpers = GetHelpers();
 
-            var buf = new Matrix(18, 18);
+            var buf = MatrixPool.Allocate(18, 18);
 
             for (var i = 0; i < helpers.Length; i++)
             {
@@ -258,7 +258,7 @@ namespace BriefFiniteElementNet.Elements
                 helpers.Add(new DktHelper());
             }
 
-            var buf = new Matrix(18, 18);
+            var buf = MatrixPool.Allocate(18, 18);
 
             for (var i = 0; i < helpers.Count; i++)
             {
@@ -295,7 +295,7 @@ namespace BriefFiniteElementNet.Elements
         {
             var helpers = GetHelpers();
 
-            var buf = new Matrix(18, 18);
+            var buf = MatrixPool.Allocate(18, 18);
 
             for (var i = 0; i < helpers.Length; i++)
             {

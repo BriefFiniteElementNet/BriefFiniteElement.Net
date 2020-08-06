@@ -87,7 +87,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             Matrix j = GetJMatrixAt(targetElement, xi, eta);    
             var detJ = j.Determinant(); 
 
-            var buf = new Matrix(3, 4);
+            var buf = targetElement.MatrixPool.Allocate(3, 4);
             buf.FillRow(0, j[1, 1], -j[0, 1], 0, 0);
             buf.FillRow(1, 0, 0, -j[1, 0], j[0, 0]);
             buf.FillRow(2, -j[1, 0], j[0, 0], j[1, 1], -j[0, 1]);
@@ -119,7 +119,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var N4_xi = -q * eta_p;
             var N4_eta = -q * xi_m;
 
-            var buf = new Matrix(4, 8); //ref [1] eq. 3.45
+            var buf = targetElement.MatrixPool.Allocate(4, 8); //ref [1] eq. 3.45
             buf.FillRow(0, N1_xi, 0, N2_xi, 0, N3_xi, 0, N4_xi, 0);
             buf.FillRow(1, N1_eta, 0, N2_eta, 0, N3_eta, 0, N4_eta, 0);
             buf.FillRow(2, 0, N1_xi, 0, N2_xi, 0, N3_xi, 0, N4_xi);
@@ -154,7 +154,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             if (quad == null)
                 throw new Exception();
 
-            var d = new Matrix(3, 3);
+            var d = targetElement.MatrixPool.Allocate(3, 3);
 
             var mat = quad.Material.GetMaterialPropertiesAt(isoCoords);
 
@@ -238,7 +238,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var y3 = p3l.Y;
             var y4 = p4l.Y;
 
-            var buf = new Matrix(2, 2); //ref [1] eq. 3.36 and 3.28/3.29
+            var buf = targetElement.MatrixPool.Allocate(2, 2); //ref [1] eq. 3.36 and 3.28/3.29
 
             var eta_m = eta - 1.0;
             var eta_p = eta + 1.0;
@@ -448,7 +448,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var d3l = localDisplacements[2];
             var d4l = localDisplacements[3];
 
-            var u = new Matrix(new[] {d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY});
+            var u = targetElement.MatrixPool.Allocate(new[] {d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY});
             var d = this.GetDMatrixAt(targetElement, isoCoords);
             var b = this.GetBMatrixAt(targetElement, isoCoords);
 
@@ -494,7 +494,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var d3l = lds[2];
             var d4l = lds[3];
 
-            var u = new Matrix(new[] { d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY });
+            var u = targetElement.MatrixPool.Allocate(new[] { d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY });
             var d = this.GetDMatrixAt(targetElement, isoCoords);
             var b = this.GetBMatrixAt(targetElement, isoCoords);
 
@@ -541,7 +541,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var d3l = lds[2];
             var d4l = lds[3];
 
-            var u = new Matrix(new[] { d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY });
+            var u = targetElement.MatrixPool.Allocate(new[] { d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY });
             var d = this.GetDMatrixAt(targetElement, isoCoords);
             var b = this.GetBMatrixAt(targetElement, isoCoords);
 
@@ -627,7 +627,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var u4l = lds[3];
 
             var uQ4 =
-                   new Matrix(new[]
+                   targetElement.MatrixPool.Allocate(new[]
                    {u1l.DX, u1l.DY, /**/ u2l.DX, u2l.DY, /**/ u3l.DX, u3l.DY, u4l.DX, u4l.DY});
 
             var EQ4 = b * uQ4;

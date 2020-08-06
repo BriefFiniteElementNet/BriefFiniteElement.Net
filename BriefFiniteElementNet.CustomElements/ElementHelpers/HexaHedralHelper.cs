@@ -26,7 +26,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var j = GetJMatrixAt(targetElement, new double[] { 0, 0, 0 });
             var v = Math.Abs(j.Determinant());
 
-            var buf = new Matrix(8, 8);
+            var buf = targetElement.MatrixPool.Allocate(8, 8);
 
             for (var i = 0; i < 8; i++)
             {
@@ -97,7 +97,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 var d = this.GetDMatrixAt(targetElement, new double[] { xi, eta, gamma });
                 var j = this.GetJMatrixAt(targetElement, new double[] { xi, eta, gamma });
 
-                var buf = new Matrix(b.ColumnCount, b.ColumnCount);
+                var buf = targetElement.MatrixPool.Allocate(b.ColumnCount, b.ColumnCount);
 
                 CalcUtil.Bt_D_B(b, d, buf);
 
@@ -194,35 +194,35 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var J37 = 1.0 / 8.0 * (-1.0 - xi + eta - eta * xi);
             var J38 = 1.0 / 8.0 * (-1.0 - xi + eta + eta * xi);
 
-            var B10 = new Matrix(3, 1);
+            var B10 = targetElement.MatrixPool.Allocate(3, 1);
             B10.FillMatrixRowise(J11, J21, J31);
             var B1 = J.Inverse() * B10;
 
-            var B20 = new Matrix(3, 1);
+            var B20 = targetElement.MatrixPool.Allocate(3, 1);
             B20.FillMatrixRowise(J12, J22, J32);
             var B2 = J.Inverse() * B20;
 
-            var B30 = new Matrix(3, 1);
+            var B30 = targetElement.MatrixPool.Allocate(3, 1);
             B30.FillMatrixRowise(J13, J23, J33);
             var B3 = J.Inverse() * B30;
 
-            var B40 = new Matrix(3, 1);
+            var B40 = targetElement.MatrixPool.Allocate(3, 1);
             B40.FillMatrixRowise(J14, J24, J34);
             var B4 = J.Inverse() * B40;
 
-            var B50 = new Matrix(3, 1);
+            var B50 = targetElement.MatrixPool.Allocate(3, 1);
             B50.FillMatrixRowise(J15, J25, J35);
             var B5 = J.Inverse() * B50;
 
-            var B60 = new Matrix(3, 1);
+            var B60 = targetElement.MatrixPool.Allocate(3, 1);
             B60.FillMatrixRowise(J16, J26, J36);
             var B6 = J.Inverse() * B60;
 
-            var B70 = new Matrix(3, 1);
+            var B70 = targetElement.MatrixPool.Allocate(3, 1);
             B70.FillMatrixRowise(J17, J27, J37);
             var B7 = J.Inverse() * B70;
 
-            var B80 = new Matrix(3, 1);
+            var B80 = targetElement.MatrixPool.Allocate(3, 1);
             B80.FillMatrixRowise(J18, J28, J38);
             var B8 = J.Inverse() * B80;
 
@@ -235,7 +235,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             double a7 = B1[0, 0]; double b7 = B1[1, 0]; double c7 = B1[2, 0];
             double a8 = B1[0, 0]; double b8 = B1[1, 0]; double c8 = B1[2, 0];
 
-            var b = new Matrix(6, 24);//transpose of b
+            var b = targetElement.MatrixPool.Allocate(6, 24);//transpose of b
 
             b.FillMatrixRowise(
                 a1, 0, 0, a2, 0, 0, a3, 0, 0, a4, 0, 0, a5, 0, 0, a6, 0, 0, a7, 0, 0, a8, 0, 0,
@@ -268,7 +268,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var e = props.Ex;
 
             var s = (1 - miu);
-            var D = new Matrix(6, 6);
+            var D = targetElement.MatrixPool.Allocate(6, 6);
 
             D.FillMatrixRowise(1, miu / s, miu / s, 0, 0, 0, miu / s, 1, miu / s, 0, 0, 0, miu / s, miu / s, 1, 0, 0, 0, 0, 0, 0,
                 (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s));
@@ -376,7 +376,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var J37 = 1.0 / 8.0 * (-1.0 - xi + eta - eta * xi);
             var J38 = 1.0 / 8.0 * (-1.0 - xi + eta + eta * xi);
 
-            var buf = new Matrix(3, 3);
+            var buf = targetElement.MatrixPool.Allocate(3, 3);
 
             buf.FillRow(0, (J11 * x1 + J12 * x2 + J13 * x3 + J14 * x4 + J15 * x5 + J16 * x6 + J17 * x7 + J18 * x8),
                            (J11 * y1 + J12 * y2 + J13 * y3 + J14 * y4 + J15 * y5 + J16 * y6 + J17 * y7 + J18 * y8),

@@ -129,7 +129,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             #endregion
 
-            var buf = new Matrix(3, 9);
+            var buf = targetElement.MatrixPool.Allocate(3, 9);
 
             for (var i = 0; i < 9; i++)
             {
@@ -159,7 +159,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var mat = tri.Material.GetMaterialPropertiesAt(isoCoords);
             var t = tri.Section.GetThicknessAt(isoCoords);
 
-            var d = new Matrix(3, 3);
+            var d = targetElement.MatrixPool.Allocate(3, 3);
 
             {
                 var cf = t*t*t/12.0;
@@ -227,7 +227,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var y31 = p31.Y;
             var y12 = p12.Y;
 
-            var buf = new Matrix(2, 2);
+            var buf = targetElement.MatrixPool.Allocate(2, 2);
 
             buf[0, 0] = x31;
             buf[1, 1] = y12;
@@ -299,7 +299,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var u3l = locals[2];
 
             var uDkt =
-                   new Matrix(new[]
+                   targetElement.MatrixPool.Allocate(new[]
                    {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY});
 
 
@@ -352,7 +352,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var u3l = lds[2];
 
             var uDkt =
-                   new Matrix(new[]
+                   targetElement.MatrixPool.Allocate(new[]
                    {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY});
 
 
@@ -473,7 +473,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var u3l = locals[2];
 
             var uDkt =
-                   new Matrix(new[]
+                   targetElement.MatrixPool.Allocate(new[]
                    {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY});
 
 
@@ -511,7 +511,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var u3l = lds[2];
 
             var uDkt =
-                   new Matrix(new[]
+                   targetElement.MatrixPool.Allocate(new[]
                    {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY});
 
 
@@ -568,7 +568,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var u3l = lds[2];
 
             var uDkt =
-                   new Matrix(new[]
+                   targetElement.MatrixPool.Allocate(new[]
                     {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY});
 
             var ECst = b * uDkt;
@@ -603,7 +603,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var u3l = lds[2];
 
             var uDkt =
-                   new Matrix(new[]
+                   targetElement.MatrixPool.Allocate(new[]
                    {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY});
 
 

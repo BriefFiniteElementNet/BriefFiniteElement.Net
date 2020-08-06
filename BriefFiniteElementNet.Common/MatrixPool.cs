@@ -2,7 +2,7 @@
 ///
 
 using BriefFiniteElementNet.Common;
-
+using System;
 
 namespace BriefFiniteElementNet
 {
@@ -51,6 +51,28 @@ namespace BriefFiniteElementNet
                 arr[i] = 0.0;
 
             var buf = new Matrix(rows, columns, ref arr);
+
+            buf.UsePool = true;
+            buf.Pool = this;
+
+            TotalRents++;
+
+            return buf;
+        }
+
+        /// <summary>
+        /// extracts a matrix from pool or creates a new one and associate with current pool and return it.
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
+        /// <returns></returns>
+        public Matrix Allocate(params double[] values)
+        {
+            var arr = Pool.Allocate(values.Length);
+
+            Array.Copy(values, arr, values.Length);
+
+            var buf = new Matrix(1, values.Length, ref arr);
 
             buf.UsePool = true;
             buf.Pool = this;
