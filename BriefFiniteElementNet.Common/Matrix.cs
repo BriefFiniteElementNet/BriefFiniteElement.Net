@@ -426,7 +426,7 @@ namespace BriefFiniteElementNet
 
             this.CoreArray = coreArray;
 
-            CreateCount--;
+            //CreateCount--;
         }
 
         #endregion

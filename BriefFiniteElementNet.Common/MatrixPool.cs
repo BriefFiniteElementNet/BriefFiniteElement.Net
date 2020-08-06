@@ -60,6 +60,27 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+        /*
+        /// <summary>
+        /// extracts a matrix from pool or creates a new one and associate with current pool and return it.
+        /// </summary>
+        /// <param name="rows"></param>
+        /// <param name="columns"></param>
+        /// <returns></returns>
+        public DisposableDenseMatrix AllocateDense(int rows, int columns)
+        {
+            var arr = Pool.Allocate(rows * columns);
+
+            for (var i = 0; i < arr.Length; i++)
+                arr[i] = 0.0;
+
+            var buf =  new DisposableDenseMatrix(rows, columns, arr, Pool);
+
+            TotalRents++;
+
+            return buf;
+        }*/
+
         /// <summary>
         /// extracts a matrix from pool or creates a new one and associate with current pool and return it.
         /// </summary>
@@ -111,13 +132,31 @@ namespace BriefFiniteElementNet
         /// <param name="matrices"></param>
         public void Free(params Matrix[] matrices)
         {
-            foreach(var mtx in matrices)
+            foreach (var mtx in matrices)
             {
                 if (mtx.CoreArray == null)
                     continue;
 
                 Pool.Free(mtx.CoreArray);
                 mtx.CoreArray = null;
+                TotalReturns++;
+            }
+        }
+
+
+        /// <summary>
+        /// Returns the matrix to the pool
+        /// </summary>
+        /// <param name="matrices"></param>
+        public void Free(params CSparse.Double.DenseMatrix[] matrices)
+        {
+            foreach (var mtx in matrices)
+            {
+                if (mtx.Values == null)
+                    continue;
+
+                Pool.Free(mtx.Values);
+                mtx.Values = null;
                 TotalReturns++;
             }
         }

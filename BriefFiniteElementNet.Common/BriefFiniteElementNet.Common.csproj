@@ -48,6 +48,7 @@
     <Compile Include="CoordinationAxis.cs" />
     <Compile Include="CoordinationSystem.cs" />
     <Compile Include="Displacement.cs" />
+    <Compile Include="DisposableDenseMatrix.cs" />
     <Compile Include="DoF.cs" />
     <Compile Include="DofConstraint.cs" />
     <Compile Include="Extensions.cs" />
