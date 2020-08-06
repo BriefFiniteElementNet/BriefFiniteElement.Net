@@ -30,6 +30,103 @@ namespace BriefFiniteElementNet.TestConsole
 {
     class Program
     {
+ [STAThread]
+        static void Main(string[] args)
+        {
+            Console.Title = "BFE tests & temporary codes";
+
+
+            TestGrid();
+            return;
+            Validation.GithubIssues.Issue41.Run3();
+
+            //TestHingedInternalForce();
+            //TestBinModel();
+            //testRrefTime();
+
+            test0();
+            //testMultySpan();
+
+            {
+
+                var model = Model.Load(@"C:\Users\epsi1on\Documents\unsolved-model-wcl.bin");
+
+                model.Trace.Listeners.Add(new ConsoleTraceListener());
+
+                PosdefChecker.CheckModel_mpc(model, LoadCase.DefaultLoadCase);
+
+                model.Solve_MPC();
+
+                ModelVisualizerControl.VisualizeInNewWindow(model);
+
+                
+            }
+
+
+            //var stf = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(model);
+
+            //model.Solve_MPC();
+
+            Guid.NewGuid();
+            //TestHingedInternalForce();
+
+            //TestIssue20();
+            //SimplySupportedBeamUDL();
+            //BeamShapeFunction();
+            //BarElementTester.TestEndReleaseStyiffness();
+
+            //TestIssue22();
+
+            //TestGrid();
+            //Test_P_Delta_matrix();
+            //TestSparseRow();
+            /*
+            var pl = new Polynomial(1, 1, 1, 1);
+
+            var ctrl = new FunctionVisualizer();
+
+            ctrl.GraphColor = Colors.Black;
+            //ctrl.HorizontalAxisLabel = "X";
+            //ctrl.VerticalAxisLabel = "Y";
+            ctrl.Min = -1;
+            ctrl.Max = 1;
+            ctrl.SamplingCount = 100;
+            ctrl.TargetFunction = new Func<double, double>(i => pl.Evaluate(i));
+
+            ctrl.UpdateUi();
+            ctrl.InitializeComponent();
+
+            new Window() { Content = ctrl, Title = "polynomial Visualizer!", Width = 500, Height = 300 }
+                .ShowDialog();
+            */
+            //BarElementTester.ValidateConsoleUniformLoad();
+            //BarElementTester.TestEndreleaseInternalForce();
+            //SingleSpanBeamWithOverhang();
+            //SingleSpanBeamWithOverhang();
+            //TestTrussShapeFunction();
+            //new BriefFiniteElementNet.Tests.BarElementTests().barelement_endrelease();
+            //new BarElementTester.Test_Trapezoid_1
+            //TestMultinodeBar1();
+
+
+            //var grd = StructureGenerator.Generate3DTriangleElementGrid(5, 6, 7);
+            //ModelVisualizerControl.VisualizeInNewWindow(grd);
+
+            ////QrTest();
+            //TstMtx();
+
+            //TestCuda();
+            //TestIntelMkl();
+            //StiffnessCenterTest();
+
+            //TestWithOpensees();
+
+            //Validation.TriangleElementTester.TestSingleElement();
+
+            //Tst();
+
+            //Console.ReadKey();
+        }
 
         static public void test0()
         {
@@ -133,100 +230,8 @@ namespace BriefFiniteElementNet.TestConsole
             Console.WriteLine("Element BMyy is {0:0.000} kNm", elementList[19].GetExactInternalForceAt(0.999999).My / 1000);
         }
 
-        [STAThread]
-        static void Main(string[] args)
-        {
-            Console.Title = "BFE tests & temporary codes";
-            Validation.GithubIssues.Issue41.Run3();
 
-            //TestHingedInternalForce();
-            //TestBinModel();
-            //testRrefTime();
-
-            test0();
-            //testMultySpan();
-
-            {
-
-                var model = Model.Load(@"C:\Users\epsi1on\Documents\unsolved-model-wcl.bin");
-
-                model.Trace.Listeners.Add(new ConsoleTraceListener());
-
-                PosdefChecker.CheckModel_mpc(model, LoadCase.DefaultLoadCase);
-
-                model.Solve_MPC();
-
-                ModelVisualizerControl.VisualizeInNewWindow(model);
-
-                
-            }
-
-
-            //var stf = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(model);
-
-            //model.Solve_MPC();
-
-            Guid.NewGuid();
-            //TestHingedInternalForce();
-
-            //TestIssue20();
-            //SimplySupportedBeamUDL();
-            //BeamShapeFunction();
-            //BarElementTester.TestEndReleaseStyiffness();
-
-            //TestIssue22();
-
-            //TestGrid();
-            //Test_P_Delta_matrix();
-            //TestSparseRow();
-            /*
-            var pl = new Polynomial(1, 1, 1, 1);
-
-            var ctrl = new FunctionVisualizer();
-
-            ctrl.GraphColor = Colors.Black;
-            //ctrl.HorizontalAxisLabel = "X";
-            //ctrl.VerticalAxisLabel = "Y";
-            ctrl.Min = -1;
-            ctrl.Max = 1;
-            ctrl.SamplingCount = 100;
-            ctrl.TargetFunction = new Func<double, double>(i => pl.Evaluate(i));
-
-            ctrl.UpdateUi();
-            ctrl.InitializeComponent();
-
-            new Window() { Content = ctrl, Title = "polynomial Visualizer!", Width = 500, Height = 300 }
-                .ShowDialog();
-            */
-            //BarElementTester.ValidateConsoleUniformLoad();
-            //BarElementTester.TestEndreleaseInternalForce();
-            //SingleSpanBeamWithOverhang();
-            //SingleSpanBeamWithOverhang();
-            //TestTrussShapeFunction();
-            //new BriefFiniteElementNet.Tests.BarElementTests().barelement_endrelease();
-            //new BarElementTester.Test_Trapezoid_1
-            //TestMultinodeBar1();
-
-
-            //var grd = StructureGenerator.Generate3DTriangleElementGrid(5, 6, 7);
-            //ModelVisualizerControl.VisualizeInNewWindow(grd);
-
-            ////QrTest();
-            //TstMtx();
-
-            //TestCuda();
-            //TestIntelMkl();
-            //StiffnessCenterTest();
-
-            //TestWithOpensees();
-
-            //Validation.TriangleElementTester.TestSingleElement();
-
-            //Tst();
-
-            //Console.ReadKey();
-        }
-
+       
         private static void testMultySpan()
         {
             var model = StructureGenerator.Generate3DBarElementGrid(4, 1, 1);
@@ -417,6 +422,12 @@ namespace BriefFiniteElementNet.TestConsole
             model.Trace.Listeners.Add(new ConsoleTraceListener());
 
             model.Solve_MPC();
+
+            Console.WriteLine("Total matrix rents: {0}", model.MatrixPool.TotalRents);
+            Console.WriteLine("Total matrix creates: {0}", Matrix.CreateCount);
+            Console.WriteLine("Total matrix destructs: {0}", Matrix.DistructCount);
+
+            Console.ReadKey();
         }
 
         static void TestIssue22()

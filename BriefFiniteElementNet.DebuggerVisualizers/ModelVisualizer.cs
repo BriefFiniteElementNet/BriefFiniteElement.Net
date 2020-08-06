@@ -44,6 +44,9 @@ namespace BriefFiniteElementNet.DebuggerVisualizers
 
             var ctrl = new ModelVisualizerControl();
 
+            model2.ReIndexElements();
+            model2.ReIndexNodes();
+
             ctrl.ModelToVisualize = model2;
 
             var wnd = new Window() {Content = ctrl, Title = "BriefFiniteElement.NET Model Visualizer!"};

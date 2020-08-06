@@ -8,6 +8,7 @@ using BriefFiniteElementNet.Sections;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.Loads;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -26,7 +27,7 @@ namespace BriefFiniteElementNet.Elements
 
         private Base2DSection _section;
 
-        private PlateElementBehaviour _behavior;
+        private PlateElementBehaviour _behavior = PlateElementBehaviours.Shell;
 
         private MembraneFormulation _formulation;
 
@@ -124,6 +125,31 @@ namespace BriefFiniteElementNet.Elements
         #region loading
         public override Force[] GetGlobalEquivalentNodalLoads(ElementalLoad load)
         {
+            var helpers = GetHelpers();
+
+            var buf = new Force[nodes.Length];
+
+            var t = GetTransformationManager();
+
+            foreach (var helper in helpers)
+            {
+                var forces = helper.GetLocalEquivalentNodalLoads(this, load);
+
+                for (var i = 0; i < buf.Length; i++)
+                {
+                    buf[i] = buf[i] + forces[i];
+                }
+            }
+
+
+            for (var i = 0; i < buf.Length; i++)
+                buf[i] = t.TransformLocalToGlobal(buf[i]);
+
+
+            return buf;
+
+
+
             if (load is UniformLoadForPlanarElements)
             {
                 //lumped approach is used as used in several references
@@ -156,6 +182,8 @@ namespace BriefFiniteElementNet.Elements
             }
 
 
+
+
             throw new NotImplementedException();
         }
         #endregion
@@ -183,11 +211,12 @@ namespace BriefFiniteElementNet.Elements
             }
             return helpers.ToArray();
         }
+
         public Matrix GetLocalDampMatrix()
         {
             var helpers = GetHelpers();
 
-            var buf = new Matrix(18, 18);
+            var buf = MatrixPool.Allocate(18, 18);
 
             for (var i = 0; i < helpers.Length; i++)
             {
@@ -229,7 +258,7 @@ namespace BriefFiniteElementNet.Elements
                 helpers.Add(new DktHelper());
             }
 
-            var buf = new Matrix(18, 18);
+            var buf = MatrixPool.Allocate(18, 18);
 
             for (var i = 0; i < helpers.Count; i++)
             {
@@ -266,7 +295,7 @@ namespace BriefFiniteElementNet.Elements
         {
             var helpers = GetHelpers();
 
-            var buf = new Matrix(18, 18);
+            var buf = MatrixPool.Allocate(18, 18);
 
             for (var i = 0; i < helpers.Length; i++)
             {
@@ -341,6 +370,13 @@ namespace BriefFiniteElementNet.Elements
         /// </remarks>
         public CauchyStressTensor GetInternalStress(double[] isoLocation, LoadCombination combination, SectionPoints probeLocation)
         {
+
+            //added by rubsy92
+            if (isoLocation[2] < 0 || isoLocation[2] > 1.0)
+            {
+                throw new Exception("z must be between 0 and 1. 0 is the centre of the plate and 1 is on the plate surface. Use the section points to get the top/bottom.") { };
+            }
+
             var helpers = GetHelpers();
 
             var gst = new GeneralStressTensor();
@@ -415,7 +451,7 @@ namespace BriefFiniteElementNet.Elements
         /// <remarks>
         /// for more info about local coordinate of flat shell see page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara freely available on the web
         /// </remarks>
-        public CauchyStressTensor GetLocalInternalStress(LoadCase loadCase, double[] isoLocation)
+        public CauchyStressTensor GetLocalInternalStress(LoadCase loadCase, params double[] isoLocation)
         {
             var helpers = GetHelpers();
 
@@ -434,7 +470,8 @@ namespace BriefFiniteElementNet.Elements
 
             buf += gst.MembraneTensor;
 
-            if(isoLocation.Length ==3)// it means local Z and bending tensor does affect on cauchy tensor, only on center of plate where lambda=0 bending tensor have to effect on cauchy
+
+            if (isoLocation.Length == 3)// it means local Z and bending tensor does affect on cauchy tensor, only on center of plate where lambda=0 bending tensor have to effect on cauchy
             {
                 //step2: update Cauchy based on bending,
                 //bending tensor also affects the Cauchy tensor regarding how much distance between desired location and center of plate.
@@ -448,14 +485,18 @@ namespace BriefFiniteElementNet.Elements
 
                 if (lambda > 1.0 || lambda < -1.0)
                     throw new Exception("lambda must be between -1 and +1") { };
-
+                
                 var thickness = Section.GetThicknessAt(isoLocation);
+
+                var z = thickness * lambda;//distance from plate center, measure in [m]
+                
 
                 //var z = thickness * lambda;//distance from plate center, measure in [m]
 
                 buf += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor,thickness, lambda);
 
                 /*epsi1on: no need to subtract, only need to add because negativeness of lambda taken into account in ConvertBendingStressToCauchyTensor
+
                 if (lambda > 0)
                 {
                     //top -> add bending stress

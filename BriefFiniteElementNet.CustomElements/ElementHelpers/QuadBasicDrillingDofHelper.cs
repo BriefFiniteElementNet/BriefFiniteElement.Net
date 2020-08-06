@@ -24,6 +24,13 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Elements.ElementHelpers 
 {
+
+    /// <summary>
+    /// Represents a class for drilling DOF behaviour for <see cref="QuadrilaturalElement"/>.
+    /// </summary>
+    /// <remarks>
+    /// neither dkq nor q4 membrane cause stiffness in local z rotation DOF of element, this will add a rough temporary stiffness to those DoFs in order to prevent global stiffness matrix from being not positive definite (convert zeros on dagonal into nonzeros)
+    /// </remarks>
     public class QuadBasicDrillingDofHelper : IElementHelper    // based on the BFE.Net TriangleBasicDrillingDofHelper-Class
     {
         public Element TargetElement { get; set; }

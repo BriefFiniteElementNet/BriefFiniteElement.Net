@@ -298,10 +298,11 @@ namespace BriefFiniteElementNet.Integration
             buf.GammaPointCount = sampling;
             buf.XiPointCount = buf.EtaPointCount = 1;
 
-            buf.H = new FunctionMatrixFunction((xi, eta, gama) => new Matrix(new[] {function(gama)}));
+            buf.H = new FunctionMatrixFunction((xi, eta, gama) => new Matrix(new[] { function(gama) }));
 
             return buf;
         }
+
 
         public static GaussianIntegrator CreateFor1DProblem(Func<double, Matrix> function, double x0, double x1,
             int sampling)

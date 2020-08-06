@@ -14,9 +14,9 @@ namespace BriefFiniteElementNet.Validation.Ui
         [STAThread]
         static void Main(string[] args)
         {
-            TestQuad();
+            //TestQuad();
             //TestTri();
-            //TestBar();
+            TestBar();
             //TestTelepaty();
             //TestTetra();
             //return;

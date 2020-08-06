@@ -22,6 +22,7 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Elements
 {
+    [Obsolete("use PlateElementBehaviours instead")]
     public static class QuadElementBehaviours
     {
         /// <summary>

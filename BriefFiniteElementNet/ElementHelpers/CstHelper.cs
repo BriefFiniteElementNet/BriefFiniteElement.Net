@@ -6,6 +6,7 @@ using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
 using CSparse.Storage;
 using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.Loads;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
@@ -42,7 +43,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var y2 = p2l.Y;
             var y3 = p3l.Y;
 
-            var buf = new Matrix(3, 6);
+            var buf = targetElement.MatrixPool.Allocate(3, 6);
 
             buf.FillRow(0, y2 - y3, 0, y3 - y1, 0, y1 - y2, 0);
             buf.FillRow(1, 0, x3 - x2, 0, x1 - x3, 0, x2 - x1);
@@ -68,7 +69,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (tri == null)
                 throw new Exception();
 
-            var d = new Matrix(3, 3);
+            var d = targetElement.MatrixPool.Allocate(3, 3);
 
             var mat = tri.Material.GetMaterialPropertiesAt(isoCoords);
 
@@ -145,7 +146,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var y2 = p2l.Y;
             var y3 = p3l.Y;
 
-            var buf = new Matrix(2, 2);
+            var buf = targetElement.MatrixPool.Allocate(2, 2);
 
             var x12 = x1 - x2;
             var x31 = x3 - x1;
@@ -278,10 +279,9 @@ namespace BriefFiniteElementNet.ElementHelpers
             var u2l = lds[1];
             var u3l = lds[2];
 
-            var uDkt =
-                   new Matrix(new[]
-                   {u1l.DX, u1l.DY, /**/ u2l.DX, u2l.DY, /**/ u3l.DX, u3l.DY});
+            var uDkt = targetElement.MatrixPool.Allocate(6, 1);
 
+            uDkt.FillColumn(1, u1l.DX, u1l.DY, /**/ u2l.DX, u2l.DY, /**/ u3l.DX, u3l.DY);
 
             var mDkt = d * b * uDkt; //eq. 32, batoz article
 
@@ -342,6 +342,30 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
         {
+
+            if (load is UniformLoad)
+            {
+                var ul = load as UniformLoad;
+
+                var u = ul.Direction;// new Vector();
+
+
+                if (ul.CoordinationSystem == CoordinationSystem.Local)
+                {
+                    var trans = targetElement.GetTransformationManager();
+                    u = trans.TransformLocalToGlobal(u); //local to global
+                }
+
+                var nodes = targetElement.Nodes;
+
+                var area = CalcUtil.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
+
+                var f = u * (area / 3.0);
+
+                f.Z = 0;//force component in z directions
+                var frc = new Force(f, Vector.Zero);
+                return new[] { frc, frc, frc };
+            }
             throw new NotImplementedException();
         }
 
@@ -385,9 +409,9 @@ namespace BriefFiniteElementNet.ElementHelpers
             var d2l = lds[1];
             var d3l = lds[2];
 
-            var uCst =
-                   new Matrix(new[]
-                   {d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY});
+            var uCst = targetElement.MatrixPool.Allocate(6, 1);
+
+            uCst.FillColumn(1, d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY);
 
             //cst -> constant over entire element -> provide random values for local
             var dbCst = this.GetDMatrixAt(targetElement, new double[] { 0, 0 });
@@ -446,7 +470,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var u3l = lds[2];
 
             var uCst =
-                   new Matrix(new[]
+                   targetElement.MatrixPool.Allocate(new[]
                    {u1l.DX, u1l.DY, /**/ u2l.DX, u2l.DY, /**/ u3l.DX, u3l.DY});
 
             var ECst = b * uCst;
@@ -478,7 +502,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var d3l = lds[2];
 
             var uCst =
-                   new Matrix(new[]
+                   targetElement.MatrixPool.Allocate(new[]
                    {d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY});
 
             //cst -> constant over entire element -> provide random values for local
