@@ -379,27 +379,69 @@ namespace BriefFiniteElementNet.Elements
         /// <remarks>
         /// for more info about local coordinate of flat shell see page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara freely available on the web
         /// </remarks>
-        public FlatShellStressTensor GetInternalStress(double[] isoLocation, LoadCombination combination, SectionPoints probeLocation)
+        public CauchyStressTensor GetInternalStress(double[] isoLocation, LoadCombination combination, SectionPoints probeLocation)
         {
-            if (isoLocation[2] < 0 || isoLocation[2] > 1.0)
-            {
-                throw new Exception("z must be between 0 and 1. 0 is the centre of the plate and 1 is on the plate surface. Use the section points to get the top/bottom.") { };
-            }
             var helpers = GetHelpers();
 
-            var buf = new FlatShellStressTensor();
+            var gst = new GeneralStressTensor();
+            var tr = this.GetTransformationManager();
+
+            var ld = this.Nodes.Select(i => tr.TransformGlobalToLocal(i.GetNodalDisplacement(combination))).ToArray();
+
             for (var i = 0; i < helpers.Count(); i++)
             {
-                if (helpers[i] is Q4MembraneHelper)
+                var st = helpers[i].GetLocalInternalStressAt(this, ld, isoLocation);
+                gst += st;
+            }
+
+            var buf = new CauchyStressTensor();
+
+            buf += gst.MembraneTensor;
+            {
+                var lambda = 0.0;
+                switch (probeLocation)
                 {
-                    buf.MembraneTensor = ((Q4MembraneHelper)helpers[i]).GetLocalInternalStress(this, combination, isoLocation).MembraneTensor;
-                }
-                else if (helpers[i] is DkqHelper)
-                {
-                    buf.BendingTensor = ((DkqHelper)helpers[i]).GetBendingInternalStress(this, combination, isoLocation).BendingTensor;
+                    case SectionPoints.Envelope:
+                        {
+                            var thickness = Section.GetThicknessAt(isoLocation);
+                            //top
+                            var bufTop = new CauchyStressTensor();
+                            bufTop += gst.MembraneTensor;
+                            bufTop += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, 1.0);
+
+                            //bottom
+                            var bufBottom = new CauchyStressTensor();
+                            bufBottom += gst.MembraneTensor;
+                            bufBottom += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, -1.0);
+
+                            if (Math.Abs(CauchyStressTensor.GetVonMisesStress(bufTop)) > Math.Abs(CauchyStressTensor.GetVonMisesStress(bufBottom)))
+                            {
+                                buf = bufTop;
+                            }
+                            else
+                            {
+                                buf = bufBottom;
+                            }
+                            break;
+                        }
+                    case SectionPoints.Top:
+                        {
+                            lambda = 1.0;
+                            var thickness = Section.GetThicknessAt(isoLocation);
+                            buf += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, lambda);
+                            break;
+                        }
+                    case SectionPoints.Bottom:
+                        {
+                            lambda = -1.0;
+                            var thickness = Section.GetThicknessAt(isoLocation);
+                            buf += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, lambda);
+                            break;
+                        }
+                    default:
+                        break;
                 }
             }
-            buf.UpdateTotalStress(_section.GetThicknessAt(new double[] { isoLocation[0], isoLocation[1] }) * isoLocation[2], probeLocation);
             return buf;
         }
         /// <summary>

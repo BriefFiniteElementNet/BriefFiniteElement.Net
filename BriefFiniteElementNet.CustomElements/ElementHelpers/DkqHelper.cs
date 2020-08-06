@@ -732,10 +732,31 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             return buf;
         }
 
-        public GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        public GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] lds, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var b = GetBMatrixAt(targetElement, isoCoords);
+            var d = GetDMatrixAt(targetElement, isoCoords);
+            var u1l = lds[0];
+            var u2l = lds[1];
+            var u3l = lds[2];
+            var u4l = lds[3];
+
+            var uDkt =
+                   new Matrix(new[]
+                   {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY, /**/ u4l.DZ, u4l.RX, u4l.RY});
+
+
+            var mDkt = d * b * uDkt; //eq. 32, batoz article
+
+            var bTensor = new BendingStressTensor();
+
+            bTensor.M11 = mDkt[0, 0];
+            bTensor.M22 = mDkt[1, 0];
+            bTensor.M21 = bTensor.M12 = mDkt[2, 0];
+
+            var buf = new GeneralStressTensor(bTensor);
+
+            return buf;
         }
-        //test
     }
 }
