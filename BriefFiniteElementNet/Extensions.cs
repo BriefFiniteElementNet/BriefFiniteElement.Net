@@ -16,6 +16,21 @@ namespace BriefFiniteElementNet
 {
     public static class Extensions
     {
+        /// <summary>
+        /// Allocates new dense matrix from parent's pool
+        /// </summary>
+        /// <param name="element"></param>
+        /// <param name="row"></param>
+        /// <param name="cols"></param>
+        /// <returns></returns>
+        public static DisposableDenseMatrix AllocateFromPool(this Element element,int row,int cols)
+        {
+            if (element.Parent == null)
+                return new DisposableDenseMatrix(row, cols);
+            else
+                return new DisposableDenseMatrix(row, cols, element.MatrixPool.Pool);
+        }
+
         public static CSparse.Double.SparseMatrix CloneMatrix(this CSparse.Double.SparseMatrix matrix)
         {
             var buf = new CSparse.Double.SparseMatrix(matrix.RowCount, matrix.ColumnCount, matrix.NonZerosCount);

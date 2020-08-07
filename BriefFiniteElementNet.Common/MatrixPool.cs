@@ -34,7 +34,7 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// The actual pool for keeping the corearrays
         /// </summary>
-        private ArrayPool<double> Pool;//= new ArrayPool<double>();
+        public ArrayPool<double> Pool;//= new ArrayPool<double>();
 
 
         /// <summary>

@@ -37,6 +37,10 @@ namespace BriefFiniteElementNet.Common
             this.Pool = pool;
         }
 
+
+        /// <summary>
+        /// Returns the array into pool
+        /// </summary>
         public void Dispose()
         {
             if (Pool != null)
