@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace BriefFiniteElementNet.Tests
 {
-    [TestClass]
+
     public class DenseMatrixTest
     {
-        [TestMethod]
+        [Test]
         public void TestGaussElimination()
         {
             var n = 4;
@@ -33,7 +33,7 @@ namespace BriefFiniteElementNet.Tests
 
             }
 
-        [TestMethod]
+        [Test]
         public void TestInverse2()
         {
             var n = 4;

@@ -1,70 +1,28 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{AAE8C9D8-3978-4BBD-A256-B67A1E4D5648}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BriefFiniteElementNet.Elements</RootNamespace>
+    <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <PackageId>BriefFiniteElementNet.CustomElements</PackageId>
+    <Description>A Finite Element library for static and linear analysis of solids and structures.</Description>
+    <Version>2.0.0-pre</Version>
+    <PackageTags>finite elements static linear analysis</PackageTags>
+    <Product>BriefFiniteElementNet.CustomElements</Product>
+    <Company />
+    <Copyright>copyleft © 2020 Ehsan Mohammad Ali ehsan.ma@gmx.com</Copyright>
+    <Authors>Ehsan Mohammad Ali</Authors>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
     <AssemblyName>BriefFiniteElementNet.CustomElements</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <RootNamespace>BriefFiniteElementNet.Elements</RootNamespace>
+    <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="CSparse, Version=3.4.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CSparse.3.4.3\lib\net40\CSparse.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ElementHelpers\DkqHelper.cs" />
-    <Compile Include="ElementHelpers\ElementHelperExtensions.cs" />
-    <Compile Include="ElementHelpers\HexaHedralHelper.cs" />
-    <Compile Include="ElementHelpers\Q4MembraneHelper.cs" />
-    <Compile Include="ElementHelpers\QuadBasicDrillingDofHelper.cs" />
-    <Compile Include="ElementHelpers\QuadElementBehaviour.cs" />
-    <Compile Include="ElementHelpers\QuadElementBehaviours.cs" />
-    <Compile Include="Elements\HexahedralElement.cs" />
-    <Compile Include="Elements\QuadrilaturalElement.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj">
-      <Project>{82c63c6b-651a-4308-8b89-b4c643f3a7c2}</Project>
-      <Name>BriefFiniteElementNet.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj">
-      <Project>{7cda20d4-9bc8-4bc3-9f22-cb86cd4dc3e1}</Project>
-      <Name>BriefFiniteElementNet</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup />
+
   <ItemGroup>
     <None Include="ElementHelpers\DkqHelper.md" />
     <None Include="ElementHelpers\Q4MembraneHelper.md" />
@@ -72,5 +30,14 @@
     <None Include="Elements\QuadrilaturalElement.md" />
     <None Include="packages.config" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
+  <ItemGroup>
+    <PackageReference Include="CSparse" Version="3.4.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj" />
+    <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj" />
+  </ItemGroup>
+
 </Project>

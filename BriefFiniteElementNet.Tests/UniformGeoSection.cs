@@ -1,13 +1,13 @@
 ﻿using System;
 using BriefFiniteElementNet.Sections;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace BriefFiniteElementNet.Tests
 {
-    [TestClass]
+
     public class UniformGeoSection
     {
-        [TestMethod]
+        [Test]
         public void test_calculate_properties()
         {
             var sec = new UniformGeometric1DSection();
@@ -38,7 +38,7 @@ namespace BriefFiniteElementNet.Tests
 
         }
 
-        [TestMethod]
+        [Test]
         public void test_reset_centroid()
         {
             var sec = new UniformGeometric1DSection();

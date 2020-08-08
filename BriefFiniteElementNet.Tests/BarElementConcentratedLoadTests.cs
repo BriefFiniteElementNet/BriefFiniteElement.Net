@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using BriefFiniteElementNet;
 using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Elements;
@@ -14,10 +14,10 @@ namespace BriefFiniteElementNet.Tests
     /// <summary>
     /// Tests for ConcentratedLoad applied on BarElement
     /// </summary>
-    [TestClass]
+
     public class BarElementConcentratedLoadTests
     {
-        [TestMethod]
+        [Test]
         public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirY_Fz()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -77,7 +77,7 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
         }
 
-        [TestMethod]
+        [Test]
         public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirY_Fz_Start()
         {
             //concentrated load applies on location xi=-1, then equivalent nodal loads at start node should be same as concentrated load
@@ -107,7 +107,7 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
         }
 
-        [TestMethod]
+        [Test]
         public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirY_Fz_End()
         {
             var l = 4;
@@ -137,7 +137,7 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
         }
 
-        [TestMethod]
+        [Test]
         public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirY_My()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -198,7 +198,7 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
         }
 
-        [TestMethod]
+        [Test]
         public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirY_My_Start()
         {
             var w = 2.0;
@@ -228,7 +228,7 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
         }
 
-        [TestMethod]
+        [Test]
         public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirY_My_End()
         {
             var l = 4.0;
@@ -259,7 +259,7 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
         }
 
-        [TestMethod]
+        [Test]
         public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirZ_Mz()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -322,7 +322,7 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
         }
 
-        [TestMethod]
+        [Test]
         public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirZ_Mz_Start()
         {
             var w = 2.0;
@@ -351,7 +351,7 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
         }
 
-        [TestMethod]
+        [Test]
         public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirZ_Mz_End()
         {
             var w = 2.0;
@@ -382,7 +382,7 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
         }
 
-        [TestMethod]
+        [Test]
         public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirZ_Fy()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -443,7 +443,7 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
         }
 
-        [TestMethod]
+        [Test]
         public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirZ_Fy_Start()
         {
             var w = 2.0;
@@ -472,7 +472,7 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(Math.Abs(d1.Moments.Length) < 1e-5, "invalid value");
         }
 
-        [TestMethod]
+        [Test]
         public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirZ_Fy_End()
         {
             var w = 2.0;
@@ -508,7 +508,7 @@ namespace BriefFiniteElementNet.Tests
 
 
 
-        [TestMethod]
+        [Test]
         public void LoadInternalForce_concentratedLLoad_eulerbernoullybeam_dirY_fz()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -627,7 +627,7 @@ namespace BriefFiniteElementNet.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void LoadInternalForce_concentratedLLoad_eulerbernoullybeam_dirZ_fy()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -741,7 +741,7 @@ namespace BriefFiniteElementNet.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void LoadInternalForce_concentratedLLoad_eulerbernoullybeam_dirZ_Mz()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -833,7 +833,7 @@ namespace BriefFiniteElementNet.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void LoadInternalForce_concentratedLLoad_eulerbernoullybeam_dirY_My()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -919,7 +919,7 @@ namespace BriefFiniteElementNet.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void LoadInternalForce_concentratedLLoad_truss_Fx()
         {
             //internal force of 2 node truss with concentrated load and both ends fixed
@@ -997,7 +997,7 @@ namespace BriefFiniteElementNet.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void LoadInternalForce_concentratedLLoad_Shaft_Mx()
         {
             //internal force of 2 node truss with concentrated load and both ends fixed

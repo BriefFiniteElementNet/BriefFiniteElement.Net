@@ -2,14 +2,14 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace BriefFiniteElementNet.Tests
 {
     /// <summary>
     /// Summary description for BarElementTests
     /// </summary>
-    [TestClass]
+
     public class BarElementTests
     {
         public BarElementTests()
@@ -61,7 +61,7 @@ namespace BriefFiniteElementNet.Tests
         //
         #endregion
 
-        [TestMethod]
+        [Test]
         public void TestMethod1()
         {
             //
