@@ -1,14 +1,13 @@
 ﻿using System;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Elements.ElementHelpers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace BriefFiniteElementNet.CustomElements.Test
 {
-    [TestClass]
     public class QuadrilaturalElementTests
     {
-        [TestMethod]
+        [Test]
         public void Q4Membrane_GetBMatrix()
         {
             var elm = new QuadrilaturalElement();
@@ -26,7 +25,7 @@ namespace BriefFiniteElementNet.CustomElements.Test
             //todo: fill the exact
         }
 
-        [TestMethod]
+        [Test]
         public void Dkq_GetBMatrix()
         {
             var elm = new QuadrilaturalElement();

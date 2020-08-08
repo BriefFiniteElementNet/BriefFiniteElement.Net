@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using BriefFiniteElementNet;
 using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Elements;
@@ -11,10 +11,10 @@ using BriefFiniteElementNet.Sections;
 
 namespace BriefFiniteElementNet.Tests
 {
-    [TestClass]
+
     public class BarElementUniformLoadsTests
     {
-        [TestMethod]
+        [Test]
         public void LoadEquivalentNodalLoads_uniformload_eulerbernoullybeam_dirY()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -53,7 +53,7 @@ namespace BriefFiniteElementNet.Tests
 
         }
 
-        [TestMethod]
+        [Test]
         public void LoadEquivalentNodalLoads_uniformload_eulerbernoullybeam_dirZ()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -91,7 +91,7 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(Math.Abs(loads[1].Mz - m2) < 1e-5, "invalid value");
         }
 
-        [TestMethod]
+        [Test]
         public void LoadEquivalentNodalLoads_uniformload_truss()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -124,7 +124,7 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(Math.Abs(loads[1].Fx - f2) < 1e-5, "invalid value");
         }
 
-        [TestMethod]
+        [Test]
         public void LoadInternalForce_uniformload_eulerbernoullybeam_dirY()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -183,7 +183,7 @@ namespace BriefFiniteElementNet.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void LoadInternalForce_uniformload_eulerbernoullybeam_dirZ()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -237,7 +237,7 @@ namespace BriefFiniteElementNet.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void barelement_endrelease()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -277,7 +277,7 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(ratio.FEquals(1, 1e-5));
         }
 
-        [TestMethod]
+        [Test]
         public void LoadInternalForce_uniformload_eulerbernoullybeam_endrelease()
         {
             //load internal force of beam with hinged ends should match the end releases
@@ -325,7 +325,7 @@ namespace BriefFiniteElementNet.Tests
             }
         }
 
-        [TestMethod]
+        [Test]
         public void LoadInternalForce_uniformload_truss()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed

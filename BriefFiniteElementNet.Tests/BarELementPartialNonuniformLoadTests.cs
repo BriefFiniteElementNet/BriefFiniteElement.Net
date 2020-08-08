@@ -1,5 +1,5 @@
 ﻿using BriefFiniteElementNet.Elements;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,10 +7,10 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Tests
 {
-    [TestClass]
+
     public class BarELementPartialNonuniformLoadTests
     {
-        //[TestMethod]
+        //[Test]
         public void LoadInternalForce_trapezoidload_eulerbernoullybeam_dirY()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -63,7 +63,7 @@ namespace BriefFiniteElementNet.Tests
             }
         }
 
-        //[TestMethod]
+        //[Test]
         public void LoadEquivalentNodalLoads_partialnonuniformload_eulerbernoullybeam_dirY()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed

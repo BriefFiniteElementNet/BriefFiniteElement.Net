@@ -1,14 +1,14 @@
 ﻿using System;
 using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Elements;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace BriefFiniteElementNet.Tests
 {
-    [TestClass]
+
     public class TriangleElementTest
     {
-        [TestMethod]
+        [Test]
         public void Cst_GetBMatrix()
         {
             var element = new TriangleElement();
@@ -24,7 +24,7 @@ namespace BriefFiniteElementNet.Tests
             var exact = new Matrix(3, 6);
         }
 
-        [TestMethod]
+        [Test]
         public void Dkt_GetBMatrix()
         {
             var element = new TriangleElement();

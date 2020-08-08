@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Mathh;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using BriefFiniteElementNet;
 using BriefFiniteElementNet.ElementHelpers;
 using BriefFiniteElementNet.Elements;
@@ -14,10 +14,10 @@ using BriefFiniteElementNet.Sections;
 
 namespace BriefFiniteElementNet.Tests
 {
-    [TestClass]
+
     public class PolynomialTest
     {
-        [TestMethod]
+        [Test]
         public void derivation_test()
         {
             var p = new SingleVariablePolynomial(9, 8, 7, 6, 5, 4, 3, 2, 1, 0);
@@ -29,7 +29,7 @@ namespace BriefFiniteElementNet.Tests
             Assert.AreEqual(p1_2, p1_1, "");
         }
 
-        [TestMethod]
+        [Test]
         public void interpolation_test()
         {
             var tpls = new Tuple<double, double>[]{ Tuple.Create(-5.0, 3.0), Tuple.Create(-4.0, 4.0), Tuple.Create(-3.0, 7.0), Tuple.Create(1.0, 0.0), Tuple.Create(5.0, 0.0) };
