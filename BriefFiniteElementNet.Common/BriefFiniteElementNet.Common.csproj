@@ -1,98 +1,30 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{82C63C6B-651A-4308-8B89-B4C643F3A7C2}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BriefFiniteElementNet.Common</RootNamespace>
+    <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <PackageId>BriefFiniteElementNet.Common</PackageId>
+    <Description>A Finite Element library for static and linear analysis of solids and structures.</Description>
+    <Version>2.0.0-pre</Version>
+    <PackageTags>finite elements static linear analysis</PackageTags>
+    <Product>BriefFiniteElementNet.Common</Product>
+    <Company />
+    <Copyright>copyleft © 2020 Ehsan Mohammad Ali ehsan.ma@gmx.com</Copyright>
+    <Authors>Ehsan Mohammad Ali</Authors>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
     <AssemblyName>BriefFiniteElementNet.Common</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
+    <RootNamespace>BriefFiniteElementNet</RootNamespace>
+    <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes></PackageReleaseNotes>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="CSparse, Version=3.4.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CSparse.3.4.3\lib\net40\CSparse.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
+    <PackageReference Include="CSparse" Version="3.4.6" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ArrayPool.cs" />
-    <Compile Include="BendingStressTensor.cs" />
-    <Compile Include="BriefFiniteElementNetException.cs" />
-    <Compile Include="CauchyStressTensor.cs" />
-    <Compile Include="ConsoleTraceListener.cs" />
-    <Compile Include="Constraint.cs" />
-    <Compile Include="Constraints.cs" />
-    <Compile Include="CoordinationAxis.cs" />
-    <Compile Include="CoordinationSystem.cs" />
-    <Compile Include="Displacement.cs" />
-    <Compile Include="DisposableDenseMatrix.cs" />
-    <Compile Include="DoF.cs" />
-    <Compile Include="DofConstraint.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="FemNetStringCompairer.cs" />
-    <Compile Include="FlatShellStressTensor.cs" />
-    <Compile Include="Force.cs" />
-    <Compile Include="InvalidLabelException.cs" />
-    <Compile Include="ISolver.cs" />
-    <Compile Include="ISolverFactory.cs" />
-    <Compile Include="ListPool.cs" />
-    <Compile Include="LoadCase.cs" />
-    <Compile Include="LoadCaseCollection.cs" />
-    <Compile Include="LoadCombination.cs" />
-    <Compile Include="LoadDirection.cs" />
-    <Compile Include="LoadType.cs" />
-    <Compile Include="LoadTypeCollection.cs" />
-    <Compile Include="MassFormulation.cs" />
-    <Compile Include="MathUtil.cs" />
-    <Compile Include="Matrix.cs" />
-    <Compile Include="MatrixException.cs" />
-    <Compile Include="MatrixPool.cs" />
-    <Compile Include="MembraneFormulation.cs" />
-    <Compile Include="MembraneStressTensor.cs" />
-    <Compile Include="NotPositiveDefiniteException.cs" />
-    <Compile Include="Point.cs" />
-    <Compile Include="PointYz.cs" />
-    <Compile Include="PolygonYz.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settlement.cs" />
-    <Compile Include="SolverFailException.cs" />
-    <Compile Include="StrainTensor.cs" />
-    <Compile Include="Trace.cs" />
-    <Compile Include="GeneralStressTensor.cs" />
-    <Compile Include="Vector.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>
