@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net40;net45;netstandard2.0;netcoreapp2.0</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <PackageId>BriefFiniteElementNet</PackageId>
@@ -9,8 +9,8 @@
     <Version>2.0.0-pre</Version>
     <PackageTags>finite elements static linear analysis</PackageTags>
     <Product>BriefFiniteElementNet</Product>
-    <Company />
-    <Copyright>copyleft © 2020 Ehsan Mohammad Ali ehsan.ma@gmx.com</Copyright>
+    <Company>Ehsan Mohammad Ali</Company>
+    <Copyright>Copyleft © 2020 Ehsan Mohammad Ali ehsan.ma@gmx.com</Copyright>
     <Authors>Ehsan Mohammad Ali</Authors>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <FileVersion>2.0.0.0</FileVersion>
@@ -21,6 +21,9 @@
     <RepositoryUrl>https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReleaseNotes></PackageReleaseNotes>
+
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    
   </PropertyGroup>
 
   <ItemGroup>
@@ -67,7 +70,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj" />
+    <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj" >
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <IncludeAssets>BriefFiniteElementNet.Common.dll</IncludeAssets>
+    </ProjectReference>
   </ItemGroup>
 
+  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))"/>
+    </ItemGroup>
+  </Target>
+  
 </Project>
