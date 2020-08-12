@@ -210,6 +210,10 @@ namespace BriefFiniteElementNet.Validation.Data.FlatShell___triangle.IBeamTorsio
                 var e2 = GetError(bt, abacus_at);
                 var e3 = GetError(ct, abacus_bt);
 
+                Console.WriteLine("Err at p1 element 81 (stress): {0:0.00}%", e1);
+                Console.WriteLine("Err at p2 element 81 (stress): {0:0.00}%", e2);
+                Console.WriteLine("Err at p3 element 81 (stress): {0:0.00}%", e3);
+
                 //in abaqus e81 connected to 8-12-41
                 //in bfe e85 connected to 57-56-50
             }
