@@ -30,13 +30,15 @@ namespace BriefFiniteElementNet.TestConsole
 {
     class Program
     {
- [STAThread]
+        
+        [STAThread]
         static void Main(string[] args)
         {
             Console.Title = "BFE tests & temporary codes";
 
+            Validation.GithubIssues.Issue50.Run1();
 
-            TestGrid();
+            //TestGrid();
             return;
             Validation.GithubIssues.Issue41.Run3();
 

@@ -93,7 +93,7 @@ namespace BriefFiniteElementNet
 
             Array.Copy(values, arr, values.Length);
 
-            var buf = new Matrix(1, values.Length, ref arr);
+            var buf = new Matrix(values.Length,1, ref arr);
 
             buf.UsePool = true;
             buf.Pool = this;

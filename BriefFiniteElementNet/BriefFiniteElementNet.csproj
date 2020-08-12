@@ -1,17 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;net45;netstandard2.0;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
-    <PackageId>BriefFiniteElementNet</PackageId>
+    <PackageId>BriefFiniteElement.Net</PackageId>
     <Description>A Finite Element library for static and linear analysis of solids and structures.</Description>
     <Version>2.0.0-pre</Version>
     <PackageTags>finite elements static linear analysis</PackageTags>
-    <Product>BriefFiniteElementNet</Product>
-    <Company>Ehsan Mohammad Ali</Company>
+    <Product>BriefFiniteElement.Net</Product>
+    <Company>Ehsan M.A.</Company>
     <Copyright>Copyleft © 2020 Ehsan Mohammad Ali ehsan.ma@gmx.com</Copyright>
-    <Authors>Ehsan Mohammad Ali</Authors>
+    <Authors>Ehsan M.A.</Authors>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <FileVersion>2.0.0.0</FileVersion>
     <AssemblyName>BriefFiniteElementNet</AssemblyName>
@@ -43,7 +43,6 @@
     <None Include="ElementHelpers\DktHelper.md" />
     <None Include="Elements\TriangleElement.md" />
     <None Include="Mathh\IPolynomial.md" />
-    <None Include="packages.config" />
     <None Include="Utils\CalcUtil.md" />
     <None Include="ClassDiagram1.cd" />
     <None Include="Documents\SupportReactions.mkd" />
@@ -70,7 +69,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj" >
+    <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj">
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <IncludeAssets>BriefFiniteElementNet.Common.dll</IncludeAssets>
     </ProjectReference>
@@ -78,7 +77,7 @@
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
     <ItemGroup>
-      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))"/>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
     </ItemGroup>
   </Target>
   
