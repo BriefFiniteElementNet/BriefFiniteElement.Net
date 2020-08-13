@@ -1,6 +1,6 @@
 ﻿This example is about solving same model as "Test Example 13" in Thesis pdf file from Kaushalkumar Kansara with abaqus (with STRI3 element).
 
-![mesh3](https://raw.githubusercontent.com/BriefFiniteElementNet/BriefFiniteElement.Net/master/BriefFiniteElementNet.Validation/Data/FlatShell%20-%20triangle/IBeamTorsion/example13.png)
+![mesh3](https://raw.githubusercontent.com/BriefFiniteElementNet/BriefFiniteElement.Net/master/BriefFiniteElementNet.Validation/Data/FlatShell%20-%20triangle/IBeamTorsion/example 13.png)
 
 A  cantilever  I  –  beam  is  analyzed. The length of the I – beam is 40 in., the height is 5 in. and the flange widths are 10 in.  A  load  of  1.6  kips  is  applied  at  the  top  and  bottom  flanges  of  the  I  -  beam  in  two  opposite  directions  as  shown  in  Fig.  7.16.  This  example  is  one  of  the  verification examples  presented  in  Alladin  v.  1.0.  A  finite  element  model  of  the  cantilever  beam  consists of 96 three node triangular shell elements. 
 
