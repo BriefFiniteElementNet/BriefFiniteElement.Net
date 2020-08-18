@@ -1,18 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using Microsoft.Research.DynamicDataDisplay;
-using Microsoft.Research.DynamicDataDisplay.DataSources;
+using OxyPlot;
+using OxyPlot.Series;
 
 namespace BriefFiniteElementNet.Controls
 {
@@ -402,13 +395,6 @@ namespace BriefFiniteElementNet.Controls
             if (suspend)
                 return;
 
-            //plotter.Children.Clear();
-
-
-            for (var i = plotter.Children.Count - 1; i >= 0; i--)
-                if (plotter.Children[i] is LineGraph)
-                    plotter.Children.RemoveAt(i);
-
             if (Min >= Max)
                 return;
 
@@ -418,46 +404,41 @@ namespace BriefFiniteElementNet.Controls
             if (TargetFunction == null)
                 return;
 
-            var vals = new List<double>();
+            var fnc = TargetFunction;
 
-            var delta = (Max - Min)/(SamplingCount - 1);
+            double delta = (Max - Min)/(SamplingCount - 1);
 
-            for (var i = 0; i < SamplingCount; i++)
+            var data = new List<DataPoint>();
+
+            for (int i = 0; i < SamplingCount; i++)
             {
-                var t = Min + i * delta;
+                double t = Min + i * delta;
 
                 if (t > Max) t = Max;// floating point
                 if (t < Min) t = Min;// floating point
 
-                vals.Add(t);
+                data.Add(new DataPoint(t, fnc(t)));
             }
 
-            var pts = new List<Tuple<double, double>>();
-            var fnc = TargetFunction;
+            var model = new PlotModel();
 
-            foreach (var val in vals)
+            var series = new LineSeries()
             {
-                pts.Add(Tuple.Create(val, fnc(val)));
+                Title = "Series 1",
+                MarkerType = MarkerType.Circle,
+                Color = OxyColor.FromArgb(GraphColor.A, GraphColor.R, GraphColor.G, GraphColor.B),
+                StrokeThickness = 2.0
+            };
+
+            series.Points.AddRange(data);
+
+            if (!string.IsNullOrEmpty(VerticalAxisLabel))
+            {
             }
 
-            var src = new ObservableDataSource<Tuple<double, double>>(pts);
+            model.Series.Add(series);
 
-            src.SetXMapping(i => i.Item1);
-            src.SetYMapping(i => i.Item2);
-
-            var thickNess = 2.0;
-            var pen = new Pen(new SolidColorBrush(GraphColor), thickNess);
-
-            LineGraph gr;
-
-            if (string.IsNullOrEmpty(VerticalAxisLabel))
-                gr = new LineGraph(src) { LinePen = pen };
-            //plotter.AddLineGraph(src, GraphColor,thickNess);
-            else
-                //plotter.AddLineGraph(src, pen, new StandardDescription( VerticalAxisLabel == null ? "" : VerticalAxisLabel));
-                gr = new LineGraph(src) { LinePen = pen, Name = VerticalAxisLabel == null ? "" : VerticalAxisLabel };
-
-            plotter.Children.Add(gr);
+            plotter.Model = model;
 
             /*
             var src2 = new ObservableDataSource<Tuple<double, double>>(pts);

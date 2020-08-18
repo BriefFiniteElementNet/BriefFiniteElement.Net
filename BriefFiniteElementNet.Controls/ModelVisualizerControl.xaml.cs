@@ -1919,7 +1919,7 @@ namespace BriefFiniteElementNet.Controls
 
         private void btnInternalForce_OnClick(object sender, RoutedEventArgs e)
         {
-            throw new NotImplementedException();
+            MessageBox.Show("Not implemented.");
         }
     }
 }
