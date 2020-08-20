@@ -39,8 +39,6 @@ namespace BriefFiniteElementNet.Controls
         {
             var bar = Context.TargetElement;
 
-            //plotter.Children.Clear();
-
             if (bar == null)
                 return;
 
@@ -72,7 +70,6 @@ namespace BriefFiniteElementNet.Controls
             var l2 = lst.Where(i => i >= -1 && i <= 1).Where(i => !elementDiscPonits.Contains(i)).Distinct().ToArray();
 
             Array.Sort(l2);
-
 
             var data = new List<DataPoint>();
 
@@ -120,8 +117,6 @@ namespace BriefFiniteElementNet.Controls
             }
 
             var model = new PlotModel();
-
-            model.Series.Clear();
 
             var series = new LineSeries()
             {

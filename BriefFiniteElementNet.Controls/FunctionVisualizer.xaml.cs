@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using OxyPlot;
+using OxyPlot.Axes;
 using OxyPlot.Series;
 
 namespace BriefFiniteElementNet.Controls
@@ -388,10 +389,8 @@ namespace BriefFiniteElementNet.Controls
 
         private bool suspend = false;
 
-
         public void UpdateUi()
         {
-
             if (suspend)
                 return;
 
@@ -434,19 +433,17 @@ namespace BriefFiniteElementNet.Controls
 
             if (!string.IsNullOrEmpty(VerticalAxisLabel))
             {
+                model.Axes.Add(new LinearAxis { Position = AxisPosition.Left, Title = VerticalAxisLabel });
+            }
+
+            if (!string.IsNullOrEmpty(HorizontalAxisLabel))
+            {
+                model.Axes.Add(new LinearAxis { Position = AxisPosition.Bottom, Title = HorizontalAxisLabel });
             }
 
             model.Series.Add(series);
 
             plotter.Model = model;
-
-            /*
-            var src2 = new ObservableDataSource<Tuple<double, double>>(pts);
-            src2.SetXMapping(i => i.Item1);
-            src2.SetYMapping(i => 0);
-
-            plotter.AddLineGraph(src2);
-            */
         }
 
         /// <summary>
