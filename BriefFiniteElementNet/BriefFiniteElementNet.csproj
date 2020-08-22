@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Elements\Extensions.cs" />
+    <Compile Include="Loads\PressureLoadForPlanarElements.cs" />
     <Compile Include="Mathh\IPolynomial.cs" />
     <Compile Include="Utils\ArrayEqualityCompairer.cs" />
     <Compile Include="ElementHelpers\Gt9Helper.cs" />

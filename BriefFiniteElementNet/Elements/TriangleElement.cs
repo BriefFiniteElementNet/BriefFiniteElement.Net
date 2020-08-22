@@ -8,6 +8,7 @@ using BriefFiniteElementNet.Sections;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.Loads;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -154,7 +155,32 @@ namespace BriefFiniteElementNet.Elements
                 var frc = new Force(f, Vector.Zero);
                 return new[] { frc, frc, frc };
             }
+            if (load is PressureLoadForPlanarElements)
+            {
+                //lumped approach is used as used in several references
+                var pl = load as PressureLoadForPlanarElements;
 
+                var u = new Vector();
+
+                u.X = 0.0;
+                u.Y = 0.0;
+                u.Z = pl.Magnitude;
+
+                var trans = GetTransformationManager();
+                u = trans.TransformLocalToGlobal(u); //local to global
+
+                if (_behavior == PlateElementBehaviour.Membrane)
+                    u.Z = 0;//remove one for plate bending
+
+                if (_behavior == PlateElementBehaviour.Bending)
+                    u.Y = u.X = 0;//remove those for membrane
+
+                var area = CalcUtil.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
+
+                var f = u * (area / 3.0);
+                var frc = new Force(f, Vector.Zero);
+                return new[] { frc, frc, frc };
+            }
 
             throw new NotImplementedException();
         }

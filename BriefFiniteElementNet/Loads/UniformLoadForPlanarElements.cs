@@ -9,7 +9,7 @@ using System.Security.Permissions;
 namespace BriefFiniteElementNet
 {
     /// <summary>
-    /// Represents a uniform load for shells
+    /// Represents a uniform load for shells - always in a uniform direction
     /// </summary>
     [Serializable]
     public class UniformLoadForPlanarElements : ElementalLoad
@@ -39,7 +39,7 @@ namespace BriefFiniteElementNet
             _ux = info.GetDouble("_ux");
             _uy = info.GetDouble("_uy");
             _uz = info.GetDouble("_uz");
-            _coordinationSystem = (CoordinationSystem) info.GetInt32("_coordinationSystem");
+            _coordinationSystem = (CoordinationSystem)info.GetInt32("_coordinationSystem");
         }
 
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
@@ -48,7 +48,7 @@ namespace BriefFiniteElementNet
             info.AddValue("_ux", _ux);
             info.AddValue("_uy", _uy);
             info.AddValue("_uz", _uz);
-            info.AddValue("_coordinationSystem", (int) _coordinationSystem);
+            info.AddValue("_coordinationSystem", (int)_coordinationSystem);
 
             base.GetObjectData(info, context);
         }
