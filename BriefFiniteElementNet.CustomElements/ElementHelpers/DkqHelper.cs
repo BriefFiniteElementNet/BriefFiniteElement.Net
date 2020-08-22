@@ -13,6 +13,9 @@ using System.Xml.XPath;
 
 namespace BriefFiniteElementNet.Elements.ElementHelpers
 {
+    /// <summary>
+    /// Represents a class for DKQ (Discrete Kirchoff Quadrilatural) plate bending behaviour for <see cref="QuadrilaturalElement"/>.
+    /// </summary>
     public class DkqHelper:IElementHelper
     {
         public Element TargetElement { get; set; }
@@ -213,7 +216,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             j21 = invJ[1, 0];
             j22 = invJ[1, 1];
 
-            var buf = new Matrix(3, 12);
+            var buf = targetElement.MatrixPool.Allocate(3, 12);
 
             for (int i = 0; i < 12; i++)
             {
@@ -225,12 +228,8 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             return buf;
         }
 
-        public Matrix GetB_iMatrixAt(Element targetElement, int i, params double[] isoCoords)
-        {
-            throw new NotImplementedException();
-        }
 
-        public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
+        public Matrix GetDMatrixAt_Ortho(Element targetElement, params double[] isoCoords)
         {
             var f = targetElement as QuadrilaturalElement;
 
@@ -244,7 +243,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             var t = f.Section.GetThicknessAt(isoCoords);
 
-            var d = new Matrix(3, 3);
+            var d = targetElement.MatrixPool.Allocate(3, 3);
             {
                 var cf = t * t * t / 12.0;
 
@@ -263,7 +262,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             return d;
         }
 
-        public Matrix GetDMatrixAt2(Element targetElement, params double[] isoCoords)
+        public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
         {
             //based on https://github.com/lge88/OpenSees/blob/1048cad190b8192cdd55448242ce4dea58246742/SRC/material/section/ElasticPlateSection.cpp
             var f = targetElement as QuadrilaturalElement;
@@ -271,13 +270,13 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var mat = f.Material.GetMaterialPropertiesAt(isoCoords);
 
             if (!CalcUtil.IsIsotropicMaterial(mat))
-                throw new Exception();
+                return GetDMatrixAt_Ortho(targetElement, isoCoords);
 
             var e = mat.Ex;
             var t = f.Section.GetThicknessAt(isoCoords);
             var nu = mat.NuXy;
 
-            var d = new Matrix(3, 3);
+            var d = targetElement.MatrixPool.Allocate(3, 3);
 
             var tangent = d;
 
@@ -307,7 +306,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             tangent.MultiplyByConstant(-1);
 
-            var diff = (tangent - GetDMatrixAt2(targetElement, isoCoords)).Max(ii=>Math.Abs(ii));//= 1e-9
+            var diff = (tangent - GetDMatrixAt(targetElement, isoCoords)).Max(ii=>Math.Abs(ii));//= 1e-9
             
             return d;
         }
@@ -335,7 +334,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var xi = isoCoords[0];
             var eta = isoCoords[1];
 
-            var buf = new Matrix(4, 1);
+            var buf = targetElement.MatrixPool.Allocate(4, 1);
 
             var xis = new double[] {-1,1,1,-1 };//for each node
             var etas = new double[] {-1,-1,1,1 };//for each node
@@ -396,7 +395,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var J21 = 0.25 * (x32 + x41 + xi * (x12 + x34));
             var J22 = 0.25 * (y32 + y41 + xi * (y12 + y34));
 
-            var buf = new Matrix(2, 2);
+            var buf = targetElement.MatrixPool.Allocate(2, 2);
 
             buf.FillRow(0, J11, J12);
             buf.FillRow(1, J21, J22);
@@ -454,7 +453,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             var lc = globalDisplacements.Select(i => tr.TransformGlobalToLocal(i)).ToArray();
 
-            var u = new Matrix(12, 1);
+            var u = targetElement.MatrixPool.Allocate(12, 1);
 
             for (var i = 0; i < lc.Length; i++)
             {
@@ -715,7 +714,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var u4l = lds[3];
 
             var uDkt =
-                   new Matrix(new[]
+                   targetElement.MatrixPool.Allocate(new[]
                    {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY, /**/ u4l.DZ, u4l.RX, u4l.RY});
 
 
@@ -733,10 +732,31 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             return buf;
         }
 
-        public GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        public GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] lds, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var b = GetBMatrixAt(targetElement, isoCoords);
+            var d = GetDMatrixAt(targetElement, isoCoords);
+            var u1l = lds[0];
+            var u2l = lds[1];
+            var u3l = lds[2];
+            var u4l = lds[3];
+
+            var uDkt =
+                   new Matrix(new[]
+                   {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY, /**/ u4l.DZ, u4l.RX, u4l.RY});
+
+
+            var mDkt = d * b * uDkt; //eq. 32, batoz article
+
+            var bTensor = new BendingStressTensor();
+
+            bTensor.M11 = mDkt[0, 0];
+            bTensor.M22 = mDkt[1, 0];
+            bTensor.M21 = bTensor.M12 = mDkt[2, 0];
+
+            var buf = new GeneralStressTensor(bTensor);
+
+            return buf;
         }
-        //test
     }
 }

@@ -48,6 +48,7 @@
     <Compile Include="CoordinationAxis.cs" />
     <Compile Include="CoordinationSystem.cs" />
     <Compile Include="Displacement.cs" />
+    <Compile Include="DisposableDenseMatrix.cs" />
     <Compile Include="DoF.cs" />
     <Compile Include="DofConstraint.cs" />
     <Compile Include="Extensions.cs" />
@@ -79,7 +80,6 @@
     <Compile Include="Settlement.cs" />
     <Compile Include="SolverFailException.cs" />
     <Compile Include="StrainTensor.cs" />
-    <Compile Include="StrainTensor3D.cs" />
     <Compile Include="Trace.cs" />
     <Compile Include="GeneralStressTensor.cs" />
     <Compile Include="Vector.cs" />

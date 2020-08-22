@@ -45,11 +45,12 @@
   <ItemGroup>
     <Compile Include="ElementHelpers\DkqHelper.cs" />
     <Compile Include="ElementHelpers\ElementHelperExtensions.cs" />
+    <Compile Include="ElementHelpers\HexaHedralHelper.cs" />
     <Compile Include="ElementHelpers\Q4MembraneHelper.cs" />
     <Compile Include="ElementHelpers\QuadBasicDrillingDofHelper.cs" />
     <Compile Include="ElementHelpers\QuadElementBehaviour.cs" />
     <Compile Include="ElementHelpers\QuadElementBehaviours.cs" />
-    <Compile Include="Elements\Hexahedral.cs" />
+    <Compile Include="Elements\HexahedralElement.cs" />
     <Compile Include="Elements\QuadrilaturalElement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

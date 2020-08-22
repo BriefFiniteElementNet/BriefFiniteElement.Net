@@ -87,7 +87,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             Matrix j = GetJMatrixAt(targetElement, xi, eta);    
             var detJ = j.Determinant(); 
 
-            var buf = new Matrix(3, 4);
+            var buf = targetElement.MatrixPool.Allocate(3, 4);
             buf.FillRow(0, j[1, 1], -j[0, 1], 0, 0);
             buf.FillRow(1, 0, 0, -j[1, 0], j[0, 0]);
             buf.FillRow(2, -j[1, 0], j[0, 0], j[1, 1], -j[0, 1]);
@@ -119,7 +119,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var N4_xi = -q * eta_p;
             var N4_eta = -q * xi_m;
 
-            var buf = new Matrix(4, 8); //ref [1] eq. 3.45
+            var buf = targetElement.MatrixPool.Allocate(4, 8); //ref [1] eq. 3.45
             buf.FillRow(0, N1_xi, 0, N2_xi, 0, N3_xi, 0, N4_xi, 0);
             buf.FillRow(1, N1_eta, 0, N2_eta, 0, N3_eta, 0, N4_eta, 0);
             buf.FillRow(2, 0, N1_xi, 0, N2_xi, 0, N3_xi, 0, N4_xi);
@@ -154,7 +154,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             if (quad == null)
                 throw new Exception();
 
-            var d = new Matrix(3, 3);
+            var d = targetElement.MatrixPool.Allocate(3, 3);
 
             var mat = quad.Material.GetMaterialPropertiesAt(isoCoords);
 
@@ -238,7 +238,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var y3 = p3l.Y;
             var y4 = p4l.Y;
 
-            var buf = new Matrix(2, 2); //ref [1] eq. 3.36 and 3.28/3.29
+            var buf = targetElement.MatrixPool.Allocate(2, 2); //ref [1] eq. 3.36 and 3.28/3.29
 
             var eta_m = eta - 1.0;
             var eta_p = eta + 1.0;
@@ -292,6 +292,146 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
         {
+            var tr = targetElement.GetTransformationManager();
+
+            #region uniform
+
+            if (load is BriefFiniteElementNet.Loads.UniformLoad)
+            {
+                var ul = load as BriefFiniteElementNet.Loads.UniformLoad;
+
+                var localDir = ul.Direction.GetUnit();
+
+                if (ul.CoordinationSystem == CoordinationSystem.Global)
+                {
+
+                    localDir = tr.TransformGlobalToLocal(localDir);
+                }
+
+                var ux = localDir.X * ul.Magnitude;
+                var uy = localDir.Y * ul.Magnitude;
+                var uz = localDir.Z * ul.Magnitude;
+
+                var intg = new GaussianIntegrator();
+                
+                intg.A1 = -1;
+                intg.A2 = 1;
+
+                intg.F1 = gama => -1;
+                intg.F2 = gama => 1;
+
+                intg.G1 = (eta, gama) => 0;
+                intg.G2 = (eta, gama) => 1;
+
+                intg.GammaPointCount = 1;
+                intg.XiPointCount = intg.EtaPointCount = 2;
+
+                intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
+                {
+                    var shp = GetNMatrixAt(targetElement, xi, eta, 0);
+                    var j = GetJMatrixAt(targetElement, xi, eta, 0);
+                    shp.MultiplyByConstant(j.Determinant());
+                    shp.MultiplyByConstant(uz);
+
+                    return shp;
+                }
+                );
+
+
+                var res = intg.Integrate();
+
+                var localForces = new Force[4];
+
+                for (var i = 0; i < 4; i++)
+                {
+                    localForces[i] = new Force(0, 0, res[i, 0], 0, 0, 0);
+                }
+
+                throw new NotImplementedException();
+                var globalForces = localForces.Select(i => tr.TransformLocalToGlobal(i)).ToArray();
+
+                return globalForces;
+            }
+
+            #endregion
+
+            #region non uniform
+            if (load is BriefFiniteElementNet.Loads.PartialNonUniformLoad)  // TODO
+            {
+                //TODO
+                throw new NotImplementedException();
+
+                var ul = load as BriefFiniteElementNet.Loads.PartialNonUniformLoad;
+
+                var localDir = ul.Direction.GetUnit();
+
+                if (ul.CoordinationSystem == CoordinationSystem.Global)
+                    localDir = tr.TransformGlobalToLocal(localDir);
+                /*
+                var interpolator = new Func<double, double, double>((xi,eta)=>
+                {
+                    var shp = GetNMatrixAt(targetElement, xi, eta, 0).Transpose();
+                    var frc = new Matrix(4, 1);
+                    //frc.FillColumn(0, ul.NodalMagnitudes);
+                    var mult = shp * frc;
+
+                    return mult[0, 0];
+                });
+
+                var ux = new Func<double, double, double>((xi, eta) => localDir.X * interpolator(xi, eta));
+                var uy = new Func<double, double, double>((xi, eta) => localDir.Y * interpolator(xi, eta));
+                var uz = new Func<double, double, double>((xi, eta) => localDir.Z * interpolator(xi, eta));
+                */
+
+                var st = ul.StartLocation;
+                var en = ul.EndLocation;
+
+                var intg = new GaussianIntegrator();
+
+                intg.A1 = 0;
+                intg.A2 = 1;
+
+                intg.F1 = gama => st.Eta;
+                intg.F2 = gama => en.Eta;
+
+                intg.G1 = (eta, gama) => st.Xi;
+                intg.G2 = (eta, gama) => en.Xi;
+
+                var order = ul.SeverityFunction.Degree;
+
+                intg.GammaPointCount = 1;
+                intg.XiPointCount = intg.EtaPointCount = 2;
+
+                throw new Exception();
+
+                intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
+                {
+                    var shp = GetNMatrixAt(targetElement, xi, eta, 0);
+                    var j = GetJMatrixAt(targetElement, xi, eta, 0);
+                    shp.MultiplyByConstant(j.Determinant());
+
+                    //var uzm = ul.SeverityFunction.Evaluate(xi, eta);
+
+                    //shp.MultiplyByConstant(uzm);
+
+                    return shp;
+                }
+                );
+
+                var res = intg.Integrate();
+
+                var localForces = new Force[4];
+
+                for (var i = 0; i < 4; i++)
+                {
+                    localForces[i] = new Force(0, 0, res[i, 0], 0, 0, 0);
+                }
+
+                return localForces;
+            }
+
+            #endregion
+
             throw new NotImplementedException();
         }
 
@@ -308,7 +448,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var d3l = localDisplacements[2];
             var d4l = localDisplacements[3];
 
-            var u = new Matrix(new[] {d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY});
+            var u = targetElement.MatrixPool.Allocate(new[] {d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY});
             var d = this.GetDMatrixAt(targetElement, isoCoords);
             var b = this.GetBMatrixAt(targetElement, isoCoords);
 
@@ -354,7 +494,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var d3l = lds[2];
             var d4l = lds[3];
 
-            var u = new Matrix(new[] { d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY });
+            var u = targetElement.MatrixPool.Allocate(new[] { d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY });
             var d = this.GetDMatrixAt(targetElement, isoCoords);
             var b = this.GetBMatrixAt(targetElement, isoCoords);
 
@@ -401,7 +541,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var d3l = lds[2];
             var d4l = lds[3];
 
-            var u = new Matrix(new[] { d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY });
+            var u = targetElement.MatrixPool.Allocate(new[] { d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY });
             var d = this.GetDMatrixAt(targetElement, isoCoords);
             var b = this.GetBMatrixAt(targetElement, isoCoords);
 
@@ -427,7 +567,23 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
         public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            //used for distributed load, 8.26 of http://what-when-how.com/the-finite-element-method/fem-for-plates-and-shells-finite-element-method-part-1/
+
+            //N from 7.54 of http://what-when-how.com/the-finite-element-method/fem-for-two-dimensional-solids-finite-element-method-part-2/
+            var xi = isoCoords[0];
+            var eta = isoCoords[1];
+
+            var buf = targetElement.MatrixPool.Allocate(4, 1);
+
+            var xis = new double[] { -1, 1, 1, -1 };//for each node
+            var etas = new double[] { -1, -1, 1, 1 };//for each node
+
+            for (var i = 0; i < 4; i++)
+            {
+                buf[i, 0] = 0.25 * (1 + xis[i] * xi) * (1 + etas[i] * eta);
+            }
+
+            return buf;
         }
 
         public int[] GetNMaxOrder(Element targetElement)
@@ -441,7 +597,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
         }
 
         #region strain
-        public StrainTensor3D GetMembraneInternalStrain(Element targetElement, LoadCase loadCase, params double[] isoCoords)
+        public StrainTensor GetMembraneInternalStrain(Element targetElement, LoadCase loadCase, params double[] isoCoords)
         {
             //Note: membrane internal force is constant
 
@@ -471,12 +627,12 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var u4l = lds[3];
 
             var uQ4 =
-                   new Matrix(new[]
+                   targetElement.MatrixPool.Allocate(new[]
                    {u1l.DX, u1l.DY, /**/ u2l.DX, u2l.DY, /**/ u3l.DX, u3l.DY, u4l.DX, u4l.DY});
 
             var EQ4 = b * uQ4;
 
-            var buf = new StrainTensor3D();
+            var buf = new StrainTensor();
 
             buf.S11 = EQ4[0, 0];
             buf.S22 = EQ4[1, 0];
@@ -485,9 +641,36 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             return buf;
         }
 
-        public GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        public GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] lds, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            //step 1 : get transformation matrix
+            //step 2 : convert globals points to locals
+            //step 3 : convert global displacements to locals
+            //step 4 : calculate B matrix and D matrix
+            //step 5 : M=D*B*U
+            //Note : Steps changed...
+
+            var d1l = lds[0];
+            var d2l = lds[1];
+            var d3l = lds[2];
+            var d4l = lds[3];
+
+            var u = new Matrix(new[] { d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY });
+            var d = this.GetDMatrixAt(targetElement, isoCoords);
+            var b = this.GetBMatrixAt(targetElement, isoCoords);
+
+            var sQ4 = d * b * u;
+
+            //new type of stress tensor
+            var buf = new CauchyStressTensor()
+            {
+                S11 = sQ4[0, 0],
+                S22 = sQ4[1, 0],
+                S12 = sQ4[2, 0],
+                S21 = sQ4[2, 0]
+            };
+
+            return new GeneralStressTensor(buf);
         }
         #endregion
     }

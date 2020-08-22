@@ -146,7 +146,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var geo = elm.Section.GetCrossSectionPropertiesAt(xi);
             var mech = elm.Material.GetMaterialPropertiesAt(xi);
 
-            var buf = new Matrix(1, 1);
+            var buf = targetElement.MatrixPool.Allocate(1, 1);
 
             buf[0, 0] = geo.A*mech.Rho;
 
@@ -166,7 +166,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var geo = elm.Section.GetCrossSectionPropertiesAt(xi);
             var mech = elm.Material.GetMaterialPropertiesAt(xi);
 
-            var buf = new Matrix(1, 1);
+            var buf = targetElement.MatrixPool.Allocate(1, 1);
 
             buf[0, 0] = geo.A * mech.Mu;
 
@@ -960,7 +960,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                     {
                         if (i1 == i0)
                         {
-                            integral = new Matrix(2, 1);
+                            integral = targetElement.MatrixPool.Allocate(2, 1);
                         }
                         else
                         {
@@ -990,7 +990,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                                     dm = q_.Y * xx;
                                 }
 
-                                var buf_ = new Matrix(new double[] { df, dm });
+                                var buf_ = targetElement.MatrixPool.Allocate(new double[] { df, dm });
                                                                
                                 return buf_;
                             }, x0, x1, gpt);
@@ -1134,7 +1134,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var ld = localDisplacements;
 
-            Matrix B = new Matrix(2, 4);
+            Matrix B = targetElement.MatrixPool.Allocate(2, 4);
 
             var xi = isoCoords[0];
 
@@ -1150,7 +1150,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             //var d = GetDMatrixAt(targetElement, isoCoords);
 
-            var u = new Matrix(2 * nc, 1);
+            var u = targetElement.MatrixPool.Allocate(2 * nc, 1);
 
             var j = GetJMatrixAt(targetElement, isoCoords).Determinant();
 
@@ -1188,7 +1188,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var ld = localDisplacements;
 
-            Matrix B = new Matrix(2, 4);
+            Matrix B = targetElement.MatrixPool.Allocate(2, 4);
 
             var xi = isoCoords[0];
 
@@ -1218,7 +1218,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var d = GetDMatrixAt(targetElement, isoCoords);
 
-            var u = new Matrix(2 * nc, 1);
+            var u = targetElement.MatrixPool.Allocate(2 * nc, 1);
 
             var j = GetJMatrixAt(targetElement, isoCoords).Determinant();
 

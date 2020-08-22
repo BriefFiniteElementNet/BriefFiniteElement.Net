@@ -63,7 +63,11 @@ namespace BriefFiniteElementNet.Validation
         {
             var buf = new List<ValidationResult>();
 
+            buf.AddRange(new BriefFiniteElementNet.Validation.Data.FlatShell___triangle.IBeamTorsion.Validator().DoPopularValidation());
+
             buf.Add(Validation_2());
+
+
 
             return buf.ToArray();
         }

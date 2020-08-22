@@ -145,6 +145,30 @@ namespace BriefFiniteElementNet.Elements
         #region loading
         public override Force[] GetGlobalEquivalentNodalLoads(ElementalLoad load)
         {
+            var helpers = GetHelpers();
+
+            var buf = new Force[nodes.Length];
+
+            var t = GetTransformationManager();
+
+            foreach (var helper in helpers)
+            {
+                var forces = helper.GetLocalEquivalentNodalLoads(this, load);
+
+                for (var i = 0; i < buf.Length; i++)
+                {
+                    buf[i] = buf[i] + forces[i];
+                }
+            }
+
+
+            for (var i = 0; i < buf.Length; i++)
+                buf[i] = t.TransformLocalToGlobal(buf[i]);
+
+
+            return buf;
+
+            //this should be moved to helpers
             if (load is UniformLoadForPlanarElements)
             {
                 //lumped approach is used as used in several references
@@ -228,18 +252,14 @@ namespace BriefFiniteElementNet.Elements
             }
             return helpers.ToArray();
         }
+
         public Matrix GetLocalDampMatrix()
         {
-            var helpers = new List<IElementHelper>();
+            var helpers = this.GetHelpers();
 
-            if ((this._behavior & PlateElementBehaviour.Bending) != 0)
-            {
-                helpers.Add(new DkqHelper());
-            }
+            var buf = MatrixPool.Allocate(24, 24);
 
-            var buf = new Matrix(24, 24);
-
-            for (var i = 0; i < helpers.Count; i++)
+            for (var i = 0; i < helpers.Count(); i++)
             {
                 var helper = helpers[i];
 
@@ -274,7 +294,7 @@ namespace BriefFiniteElementNet.Elements
         {
             var helpers = GetHelpers();
 
-            var buf = new Matrix(24, 24);
+            var buf = MatrixPool.Allocate(24, 24);
 
             for (var i = 0; i < helpers.Count(); i++)
             {
@@ -311,7 +331,7 @@ namespace BriefFiniteElementNet.Elements
         {
             var helpers = GetHelpers();
 
-            var buf = new Matrix(24, 24); // 6*nodecount x 6*nodecount
+            var buf = MatrixPool.Allocate(24, 24); // 6*nodecount x 6*nodecount
 
             for (var i = 0; i < helpers.Length; i++)
             {
@@ -333,6 +353,7 @@ namespace BriefFiniteElementNet.Elements
                     }
                 }
             }
+
             return buf;
         }
         public override Matrix GetGlobalStifnessMatrix()
@@ -385,27 +406,69 @@ namespace BriefFiniteElementNet.Elements
         /// <remarks>
         /// for more info about local coordinate of flat shell see page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara freely available on the web
         /// </remarks>
-        public FlatShellStressTensor GetInternalStress(double[] isoLocation, LoadCombination combination, SectionPoints probeLocation)
+        public CauchyStressTensor GetInternalStress(double[] isoLocation, LoadCombination combination, SectionPoints probeLocation)
         {
-            if (isoLocation[2] < 0 || isoLocation[2] > 1.0)
-            {
-                throw new Exception("z must be between 0 and 1. 0 is the centre of the plate and 1 is on the plate surface. Use the section points to get the top/bottom.") { };
-            }
             var helpers = GetHelpers();
 
-            var buf = new FlatShellStressTensor();
+            var gst = new GeneralStressTensor();
+            var tr = this.GetTransformationManager();
+
+            var ld = this.Nodes.Select(i => tr.TransformGlobalToLocal(i.GetNodalDisplacement(combination))).ToArray();
+
             for (var i = 0; i < helpers.Count(); i++)
             {
-                if (helpers[i] is Q4MembraneHelper)
+                var st = helpers[i].GetLocalInternalStressAt(this, ld, isoLocation);
+                gst += st;
+            }
+
+            var buf = new CauchyStressTensor();
+
+            buf += gst.MembraneTensor;
+            {
+                var lambda = 0.0;
+                switch (probeLocation)
                 {
-                    buf.MembraneTensor = ((Q4MembraneHelper)helpers[i]).GetLocalInternalStress(this, combination, isoLocation).MembraneTensor;
-                }
-                else if (helpers[i] is DkqHelper)
-                {
-                    buf.BendingTensor = ((DkqHelper)helpers[i]).GetBendingInternalStress(this, combination, isoLocation).BendingTensor;
+                    case SectionPoints.Envelope:
+                        {
+                            var thickness = Section.GetThicknessAt(isoLocation);
+                            //top
+                            var bufTop = new CauchyStressTensor();
+                            bufTop += gst.MembraneTensor;
+                            bufTop += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, 1.0);
+
+                            //bottom
+                            var bufBottom = new CauchyStressTensor();
+                            bufBottom += gst.MembraneTensor;
+                            bufBottom += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, -1.0);
+
+                            if (Math.Abs(CauchyStressTensor.GetVonMisesStress(bufTop)) > Math.Abs(CauchyStressTensor.GetVonMisesStress(bufBottom)))
+                            {
+                                buf = bufTop;
+                            }
+                            else
+                            {
+                                buf = bufBottom;
+                            }
+                            break;
+                        }
+                    case SectionPoints.Top:
+                        {
+                            lambda = 1.0;
+                            var thickness = Section.GetThicknessAt(isoLocation);
+                            buf += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, lambda);
+                            break;
+                        }
+                    case SectionPoints.Bottom:
+                        {
+                            lambda = -1.0;
+                            var thickness = Section.GetThicknessAt(isoLocation);
+                            buf += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, lambda);
+                            break;
+                        }
+                    default:
+                        break;
                 }
             }
-            buf.UpdateTotalStress(_section.GetThicknessAt(new double[] { isoLocation[0], isoLocation[1] }) * isoLocation[2], probeLocation);
             return buf;
         }
         /// <summary>
@@ -447,23 +510,29 @@ namespace BriefFiniteElementNet.Elements
 
                 if (isoLocation.Length == 3)
                     lambda = isoLocation[2];
+
+
                 if (lambda > 1.0 || lambda < -1.0)
-                {
                     throw new Exception("lambda must be between -1 and +1") { };
-                }
+                
                 var thickness = Section.GetThicknessAt(isoLocation);
 
                 //var z = thickness * lambda;//distance from plate center, measure in [m]
+
+                buf += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, lambda);
+
+                 /*epsi1on: no need to subtract, only need to add because negativeness of lambda taken into account in ConvertBendingStressToCauchyTensor
                 if (lambda > 0)
                 {
                     //top -> add bending stress
-                    buf += gst.BendingTensor.ConvertBendingStressToCauchyTensor(thickness, lambda);
+                    buf += gst.BendingTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, lambda);
                 }
                 else
                 {
                     //bottom -> subtract bending stress
-                    buf -= gst.BendingTensor.ConvertBendingStressToCauchyTensor(thickness, lambda);
+                    buf -= gst.BendingTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor,thickness, lambda);
                 }
+                 */
             }
             return buf;
         }

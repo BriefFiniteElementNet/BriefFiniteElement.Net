@@ -32,6 +32,7 @@ namespace BriefFiniteElementNet.Elements
     /// Represents the possible behaviors of Quad Element
     /// </summary>
     [Flags]
+    [Obsolete("Use PlateElementBehaviour instead")]
     public enum QuadElementBehaviour
     {
         /// <summary>

@@ -424,7 +424,7 @@ namespace BriefFiniteElementNet.Elements
         #endregion
 
         #region strains
-        public StrainTensor3D GetMembraneInternalStrain(LoadCombination combination)
+        public StrainTensor GetMembraneInternalStrain(LoadCombination combination)
         {
             //Note: membrane internal force is constant
 
@@ -461,7 +461,7 @@ namespace BriefFiniteElementNet.Elements
 
             var ECst = bCst * uCst;
 
-            var buf = new StrainTensor3D();
+            var buf = new StrainTensor();
 
             buf.S11 = ECst[0, 0];
             buf.S22 = ECst[1, 0];
@@ -469,7 +469,7 @@ namespace BriefFiniteElementNet.Elements
 
             return buf;
         }
-        public StrainTensor3D GetBendingInternalStrain(double localX, double localY, LoadCombination cmb)
+        public StrainTensor GetBendingInternalStrain(double localX, double localY, LoadCombination cmb)
         {
             //step 1 : get transformation matrix
             //step 2 : convert globals points to locals
@@ -507,7 +507,7 @@ namespace BriefFiniteElementNet.Elements
 
             var mDkt = b * uDkt;
 
-            var buf = new StrainTensor3D();
+            var buf = new StrainTensor();
 
             buf.S11 = mDkt[0, 0];
             buf.S22 = mDkt[1, 0];
