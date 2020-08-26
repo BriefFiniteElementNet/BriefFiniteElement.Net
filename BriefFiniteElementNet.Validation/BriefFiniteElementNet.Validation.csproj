@@ -97,7 +97,7 @@
     <Compile Include="TriangleElementTester.cs" />
     <Compile Include="UnitConverter.cs" />
     <None Include="Data\FlatShell - triangle\FlatPlate\Intro.md" />
-    <None Include="Data\FlatShell - triangle\FlatPlate\Model1_BFE_Abaqus.xlsx" />
+    <None Include="Data\FlatShell - triangle\FlatPlate\Model1_BFE_Abaqus.csv" />
     <None Include="OpenseesTclGenerator\Readme.md" />
     <None Include="packages.config" />
     <None Include="Template\Readme.md" />
