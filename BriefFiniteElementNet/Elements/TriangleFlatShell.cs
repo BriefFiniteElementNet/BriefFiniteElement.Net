@@ -13,6 +13,7 @@ namespace BriefFiniteElementNet.Elements
     /// Represents a triangle flat shell which internally consists of a membrane (CST) and plate bending (dkt) element.
     /// </summary>
     [Serializable]
+    [Obsolete("use TriangleElement instead")]
     public class TriangleFlatShell : Element
     {
         #region field and properties

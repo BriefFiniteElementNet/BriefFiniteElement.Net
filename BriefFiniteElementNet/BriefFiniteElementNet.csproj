@@ -28,6 +28,8 @@
 
   <ItemGroup>
     <Compile Remove="Elements\SdofMass.cs" />
+    <Compile Remove="Elements\TriangleCoordinatedGeometricProperties.cs" />
+    <Compile Remove="Elements\TriangleCoordinatedMechanicalProperties.cs" />
     <Compile Remove="Materials\BaseBarMaterial.cs" />
     <Compile Remove="Materials\BaseTriangleMaterial.cs" />
     <Compile Remove="Materials\UniformBarMaterial.cs" />
