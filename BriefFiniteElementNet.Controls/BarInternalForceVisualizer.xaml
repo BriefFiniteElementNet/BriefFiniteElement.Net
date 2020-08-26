@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BriefFiniteElementNet.Controls"
-             xmlns:d3="http://research.microsoft.com/DynamicDataDisplay/1.0"
+             xmlns:oxy="http://oxyplot.org/wpf" 
              xmlns:System="clr-namespace:System;assembly=mscorlib"
              xmlns:bvis="clr-namespace:BriefFiniteElementNet.Controls"
     
@@ -39,7 +39,7 @@
             <RowDefinition Height="30"/>
             <RowDefinition />
         </Grid.RowDefinitions>
-        <d3:ChartPlotter Name="plotter" Margin="10" Grid.Row="3" Grid.ColumnSpan="2" />
+        <oxy:PlotView Name="plotter" Margin="10" Grid.Row="3" Grid.ColumnSpan="2" />
         <TextBlock Margin="5" TextWrapping="Wrap" Text="Force Component"/>
         <TextBlock Margin="5" Grid.Row="1" TextWrapping="Wrap" Text="Force Type [?]" ToolTip="Exact: BarElement.GetExactInternalForceAt(), Approximate: BarElement.GetInternalForceAt()"/>
         <TextBlock Margin="5" Grid.Row="2" TextWrapping="Wrap" Text="Load Case [?]" ToolTip="The case of load"/>
