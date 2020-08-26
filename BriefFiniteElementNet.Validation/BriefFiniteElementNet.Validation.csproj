@@ -40,6 +40,7 @@
       <HintPath>..\packages\HtmlTags.3.0.0.186\lib\4.0\HtmlTags.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.DebuggerVisualizers, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -53,6 +54,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\FlatShell - triangle\FlatPlate\Validator.cs" />
     <Compile Include="Data\FlatShell - triangle\IBeamTorsion\Validator.cs" />
     <Compile Include="EqualDofValidator.cs" />
     <Compile Include="GithubIssues\Issue23.cs" />
@@ -94,6 +96,8 @@
     <Compile Include="TransformValidator.cs" />
     <Compile Include="TriangleElementTester.cs" />
     <Compile Include="UnitConverter.cs" />
+    <None Include="Data\FlatShell - triangle\FlatPlate\Intro.md" />
+    <None Include="Data\FlatShell - triangle\FlatPlate\Model1_BFE_Abaqus.xlsx" />
     <None Include="OpenseesTclGenerator\Readme.md" />
     <None Include="packages.config" />
     <None Include="Template\Readme.md" />
@@ -110,6 +114,10 @@
     <ProjectReference Include="..\BriefFiniteElementNet.CustomElements\BriefFiniteElementNet.CustomElements.csproj">
       <Project>{aae8c9d8-3978-4bbd-a256-b67a1e4d5648}</Project>
       <Name>BriefFiniteElementNet.CustomElements</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BriefFiniteElementNet.DebuggerVisualizers\BriefFiniteElementNet.DebuggerVisualizers-VS2019.csproj">
+      <Project>{E12A7AD9-780B-4ADC-8C08-C7D5FD63C18B}</Project>
+      <Name>BriefFiniteElementNet.DebuggerVisualizers-VS2019</Name>
     </ProjectReference>
     <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj">
       <Project>{7cda20d4-9bc8-4bc3-9f22-cb86cd4dc3e1}</Project>

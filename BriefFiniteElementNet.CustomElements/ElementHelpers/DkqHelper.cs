@@ -306,7 +306,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             tangent.MultiplyByConstant(-1);
 
-            var diff = (tangent - GetDMatrixAt(targetElement, isoCoords)).Max(ii=>Math.Abs(ii));//= 1e-9
+           // var diff = (tangent - GetDMatrixAt(targetElement, isoCoords)).Max(ii=>Math.Abs(ii));//= 1e-9
             
             return d;
         }
