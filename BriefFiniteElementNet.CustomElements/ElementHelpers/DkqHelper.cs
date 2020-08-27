@@ -293,22 +293,20 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 tangent[0, 0] = -D;
                 tangent[1, 1] = -D;
 
-                tangent[0, 1] = -nu * D;
-                tangent[1, 0] = tangent[0, 1];
+                tangent[1, 0] = tangent[0, 1] = -nu * D;
 
                 tangent[2, 2] = -0.5 * D * (1.0 - nu);
 
                 //tangent[3, 3] = 5.0 / 6.0 * G * h;
-
                 //tangent[4, 4] = tangent[3, 3];
 
             }
 
             tangent.MultiplyByConstant(-1);
 
-           // var diff = (tangent - GetDMatrixAt(targetElement, isoCoords)).Max(ii=>Math.Abs(ii));//= 1e-9
-            
-            return d;
+
+           // var diff = (tangent - GetDMatrixAt(targetElement, isoCoords)).Max(ii=>Math.Abs(ii));//= 1e-
+           return d;
         }
 
         public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)

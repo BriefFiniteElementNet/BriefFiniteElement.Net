@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Permissions;
@@ -32,7 +33,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             TargetElement = targetElement;
 
             {//loading condistions list pool from element's cache
-                var listPoolKey = "26167C0A-1E58-4FA5-950D-5464ED6F264A";
+                var listPoolKey = "26167C0A-1E58-4FA5-950D-5464ED6F264A" + this.Direction;
 
                 object obj;
 
@@ -49,6 +50,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
            
         }
+
 
         /// <summary>
         /// The target element
@@ -375,6 +377,10 @@ namespace BriefFiniteElementNet.ElementHelpers
             return lst;
         }
 
+
+
+
+        public static int hit, miss;
         //private readonly string mssKey = "82069A88-26BD-4902-9CA6-7AE324193FE3:X";
         //private readonly string nssKey = "0EECCFF2-8CAE-4D65-935F-15E1AF31709B:X" ;
 
@@ -383,7 +389,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             nss = null;
             mss = null;
 
-            var mssKey = "7AE324193FE3:X"+this.Direction ;
+            var mssKey = "7AE324193FE3:X" + this.Direction;
             var nssKey = "15E1AF31709B:X" + this.Direction;
 
 
@@ -394,7 +400,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             var n = bar.NodeCount;
 
 
-            List<Condition> cnds = null;
 
             {
                 var xis = new Func<int, double>(i =>
@@ -408,49 +413,12 @@ namespace BriefFiniteElementNet.ElementHelpers
                 bar.TryGetCache(nssKey, out nss);
 
                 if (nss != null && mss != null)
-                {
-                    //return true;
-
-                    cnds = GetShapeFunctionConditions(bar);
-
-                    var flag = true;
-
-                    foreach (var cnd in cnds)
-                    {
-                        var pn = (cnd.Type == Condition.FunctionType.N) ? nss[cnd.NodeNumber] : mss[cnd.NodeNumber];
-
-                        var epsilon = (pn.EvaluateDerivative(cnd.Xi, cnd.DifferentialDegree) - cnd.RightSide);
-
-                        if (epsilon < 0)
-                            epsilon *= -1;
-
-                        if (epsilon > 1e-10)
-                        {
-                            flag = false;
-                            break;
-                        }
-                            
-                    }
-
-                    if (flag)
-                    {
-                        CondsListPool.Free(cnds);
-                        return true;
-                    }
-                    else
-                    {
-                        mss = nss = null;
-                    }
-                }
-
-                if (cnds == null)
-                {
-                    cnds = GetShapeFunctionConditions(bar);
-                }
-                    
+                    return true;
             }
 
-            
+
+            var cnds = GetShapeFunctionConditions(bar);
+
             var grpd = cnds.GroupBy(i => Tuple.Create(i.NodeNumber, i.Type)).ToArray();
 
             CondsListPool.Free(cnds);

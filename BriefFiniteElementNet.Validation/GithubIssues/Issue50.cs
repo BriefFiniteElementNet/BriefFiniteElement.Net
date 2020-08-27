@@ -50,8 +50,14 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
                 Case = lc2
             };
 
-            var load3 = new ConcentratedLoad(new Force(0, 0, 0, 00, 10, 00), new IsoPoint(0.50), CoordinationSystem.Local);
-            load3.Case = lc3;
+            var load3 = new ConcentratedLoad()
+            {
+                Force = new Force(10, 10, 10, 10, 0, 0),
+                ForceIsoLocation = new IsoPoint(0.50),
+                CoordinationSystem = CoordinationSystem.Local,
+                Case = lc3
+            };
+
 
             e.Loads.Add(load);
             e.Loads.Add(load2);
@@ -66,5 +72,8 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             BarInternalForceVisualizer.VisualizeInNewWindow(e);
             
         }
+
+
+       
     }
 }

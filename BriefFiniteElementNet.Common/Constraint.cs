@@ -8,7 +8,7 @@ using System.Text;
 namespace BriefFiniteElementNet
 {
     /// <summary>
-    /// Represents the constraints with 6 independent degrees of freedom (3 movement and 3 rotational).
+    /// Represents the constraints with 6 independent degrees of freedom (3 movement and 3 rotational) for a node.
     /// </summary>
     [Serializable]
     public struct Constraint :ISerializable, IEquatable<Constraint>

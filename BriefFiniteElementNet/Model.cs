@@ -1,23 +1,12 @@
-﻿using System;
-using System.Collections;
+﻿using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.Solver;
+using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Security.Permissions;
-using System.Text;
-using System.Xml.Serialization;
-using BriefFiniteElementNet.Common;
-using CSparse;
-using CSparse.Double;
-using CSparse.Double.Factorization;
-using CSparse.Storage;
-using BriefFiniteElementNet.Solver;
 using Trace = BriefFiniteElementNet.Common.Trace;
-using System.Threading.Tasks;
 
 
 namespace BriefFiniteElementNet

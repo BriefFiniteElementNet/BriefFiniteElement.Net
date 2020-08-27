@@ -17,7 +17,7 @@ Unit test is a test for very basic units of an application. For this library, th
 Unit tests implemented here are not so unit test, and somehow they can be called integral test as each unit test here is engaging more than one method in library.
 
 Unit Test are located in project ``BriefFiniteElementNet.Tests``, and they will be validated on each push and if any fail, appveyor icon here (or in main readme.md file) will show the fail:
-[![Build status](https://ci.appveyor.com/api/projects/status/q5an94f88kofefm9?svg=true)](https://ci.appveyor.com/project/epsi1on/bfe-net)  
+[![Build status](https://ci.appveyor.com/api/projects/status/var3sx7nxa309tmo?svg=true)](https://ci.appveyor.com/project/epsi1on/brieffiniteelement-net)
 If it is showing the 'Passing' then unit tests are good.
 
 ## Validate result with other well known applications
