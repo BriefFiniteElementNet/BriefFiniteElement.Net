@@ -1,5 +1,4 @@
-﻿using BriefFiniteElementNet.DebuggerVisualizers;
-using BriefFiniteElementNet.Elements;
+﻿using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
 using System;
@@ -21,7 +20,7 @@ namespace BriefFiniteElementNet.Validation.Data.FlatShell___triangle.FlatPlate
             var grd = Generate3DTriangleElementGridTest(nx, ny, nz);
             var model = grd;
             //Display
-            ModelVisualizer.TestShowVisualizer(model);
+            //ModelVisualizer.TestShowVisualizer(model);
             grd.Solve_MPC();
 
             writeDataTriangleElement(model, LoadCase.DefaultLoadCase);
@@ -174,6 +173,7 @@ namespace BriefFiniteElementNet.Validation.Data.FlatShell___triangle.FlatPlate
             return buf;
         }
         #endregion
+
         #region output
         public static void writeDataTriangleElement(Model model, LoadCase testCase)
         {
