@@ -304,7 +304,9 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             tangent.MultiplyByConstant(-1);
 
-            return d;
+
+           // var diff = (tangent - GetDMatrixAt(targetElement, isoCoords)).Max(ii=>Math.Abs(ii));//= 1e-
+           return d;
         }
 
         public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)

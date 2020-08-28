@@ -53,6 +53,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\FlatShell - triangle\FlatPlate\Validator.cs" />
     <Compile Include="Data\FlatShell - triangle\IBeamTorsion\Validator.cs" />
     <Compile Include="EqualDofValidator.cs" />
     <Compile Include="GithubIssues\Issue23.cs" />
@@ -94,6 +95,8 @@
     <Compile Include="TransformValidator.cs" />
     <Compile Include="TriangleElementTester.cs" />
     <Compile Include="UnitConverter.cs" />
+    <None Include="Data\FlatShell - triangle\FlatPlate\Intro.md" />
+    <None Include="Data\FlatShell - triangle\FlatPlate\Model1_BFE_Abaqus.csv" />
     <None Include="OpenseesTclGenerator\Readme.md" />
     <None Include="packages.config" />
     <None Include="Template\Readme.md" />
