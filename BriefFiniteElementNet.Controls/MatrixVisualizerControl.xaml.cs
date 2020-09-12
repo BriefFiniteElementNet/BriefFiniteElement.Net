@@ -71,7 +71,7 @@ namespace BriefFiniteElementNet.Controls
 
             for (var i = 0; i < mtx.RowCount; i++)
             {
-                tbl.Rows.Add(mtx.ExtractRow(i).Values.Cast<object>().ToArray());
+                tbl.Rows.Add(mtx.Row(i));
             }
 
             DataGrid.ItemsSource = tbl.DefaultView;

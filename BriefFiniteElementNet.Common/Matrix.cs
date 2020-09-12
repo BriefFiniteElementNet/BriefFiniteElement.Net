@@ -481,17 +481,6 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Retrieves the matrix row vector at specfifed index.
-        /// </summary>
-        /// <param name="matrix">The matrix.</param>
-        /// <param name="i">The row index.</param>
-        /// <returns>Row vector.</returns>
-        public static Matrix ExtractRow(this DenseColumnMajorStorage<double> matrix, int i)
-        {
-            return new Matrix(1, matrix.ColumnCount, matrix.Row(i));
-        }
-
-        /// <summary>
         /// Gets the determinant of the matrix.
         /// </summary>
         /// <returns></returns>
