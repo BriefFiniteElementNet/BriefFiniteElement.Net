@@ -52,7 +52,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var a = 0.5*Math.Abs((x3 - x1)*(y1 - y2) - (x1 - x2)*(y3 - y1));
 
-            buf.MultiplyByConstant(1/(2*a));
+            buf.Scale(1/(2*a));
 
             return buf;
         }
@@ -200,9 +200,9 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 var ki = b.Transpose() * d * b;
 
-                ki.MultiplyByConstant(Math.Abs(j.Determinant()));
+                ki.Scale(Math.Abs(j.Determinant()));
                 //eq 3.27: thickness* bT * d * b;
-                ki.MultiplyByConstant(tri.Section.GetThicknessAt(new double[] { xi, eta }));
+                ki.Scale(tri.Section.GetThicknessAt(new double[] { xi, eta }));
 
                 return ki;
             });

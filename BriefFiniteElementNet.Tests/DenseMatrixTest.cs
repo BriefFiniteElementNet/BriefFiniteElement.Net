@@ -45,7 +45,7 @@ namespace BriefFiniteElementNet.Tests
             for (var i = 0; i < n * n; i++)
                 matrix.Values[i] = i + Math.Sqrt(i);
 
-            var inverse = matrix.Inverse2();//find inverse by target method
+            var inverse = matrix.Inverse();//find inverse by target method
 
             var eye1 = inverse * matrix;//should be I
             var eye2 = matrix * inverse;//should be I too

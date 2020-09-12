@@ -3,12 +3,12 @@ namespace BriefFiniteElementNet
 {
     using CSparse.Double;
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
     using System.Globalization;
-    using BriefFiniteElementNet.Common;
+    using CSparse.Double.Factorization;
+    using CSparse.Storage;
 
     /// <summary>
     /// Represents a dense real matrix
@@ -100,27 +100,35 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+        #endregion
+
         #region Operators
 
-        public static Matrix operator *(
-            Matrix m1, Matrix m2)
+        public static Matrix operator *(Matrix m1, Matrix m2)
         {
-            return m1.Multiply(m2);
+            return m1.Multiply(m2).AsMatrix();
         }
 
-        public static double[] operator *(
-            Matrix m1, double[] vec)
+        public static Matrix operator *(DenseColumnMajorStorage<double> m1, Matrix m2)
+        {
+            return m1.Multiply(m2).AsMatrix();
+        }
+
+        public static Matrix operator *(Matrix m1, DenseColumnMajorStorage<double> m2)
+        {
+            return m1.Multiply(m2).AsMatrix();
+        }
+
+        public static double[] operator *(Matrix m1, double[] vec)
         {
             var res = m1.Multiply(vec);
 
             return res;
         }
 
-        public static Matrix operator *(
-            double coeff, Matrix mat)
+        public static Matrix operator *(double coeff, Matrix mat)
         {
             var newMat = new double[mat.RowCount * mat.ColumnCount];
-
 
             for (int i = 0; i < newMat.Length; i++)
             {
@@ -133,11 +141,9 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static Matrix operator -(
-            Matrix mat)
+        public static Matrix operator -(Matrix mat)
         {
             var buf = new Matrix(mat.RowCount, mat.ColumnCount);
-            ;
 
             for (int i = 0; i < buf.Values.Length; i++)
             {
@@ -147,8 +153,7 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static Matrix operator +(
-            Matrix mat1, Matrix mat2)
+        public static Matrix operator +(Matrix mat1, Matrix mat2)
         {
             MatrixException.ThrowIf(mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount,
                 "Inconsistent matrix sizes");
@@ -163,8 +168,7 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static Matrix operator -(
-            Matrix mat1, Matrix mat2)
+        public static Matrix operator -(Matrix mat1, Matrix mat2)
         {
             MatrixException.ThrowIf(mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount,
                 "Inconsistent matrix sizes");
@@ -178,8 +182,6 @@ namespace BriefFiniteElementNet
 
             return buf;
         }
-
-        #endregion
 
         #endregion
 
@@ -217,680 +219,13 @@ namespace BriefFiniteElementNet
 
         #endregion
 
-        public Matrix RepeatDiagonally(int n)
-        {
-            var buf = new Matrix(rows * n, columns * n);
-
-            RepeatDiagonally(n, new Matrix(rows * n, columns * n));
-
-            return buf;
-        }
-
-        public void RepeatDiagonally(int n, Matrix target)
-        {
-            var r = rows;
-            var c = columns;
-
-            if (target.rows != n * r || target.columns != n * c)
-            {
-                throw new ArgumentException("Dimensions don't match.");
-            }
-
-            var buf = new Matrix(r * n, c * n);
-
-            for (var i = 0; i < n; i++)
-            {
-                for (var ii = 0; ii < r; ii++)
-                {
-                    for (var jj = 0; jj < c; jj++)
-                    {
-                        // TODO: MAT - direct access
-                        buf[i * r + ii, i * c + jj] = this[ii, jj];
-                    }
-                }
-            }
-        }
-
-        public Matrix PointwiseDivide(Matrix a2)
-        {
-            if (rows != a2.rows || columns != a2.columns)
-                throw new Exception();
-
-            var buf = new Matrix(rows, columns);
-
-            for (int i = 0; i < Values.Length; i++)
-            {
-                buf.Values[i] = Values[i] / a2.Values[i];
-            }
-
-            return buf;
-        }
-
-        public Matrix PointwiseMultiply(Matrix a2)
-        {
-            if (rows != a2.rows || columns != a2.columns)
-                throw new Exception();
-
-            var buf = new Matrix(rows, columns);
-
-            for (int i = 0; i < Values.Length; i++)
-            {
-                buf.Values[i] = Values[i] * a2.Values[i];
-            }
-
-            return buf;
-        }
-
-        public void Add(Matrix mat2, Matrix result)
-        {
-            MatrixException.ThrowIf(
-                rows != mat2.rows || mat2.rows != result.rows ||
-                columns != mat2.columns ||  mat2.columns != result.columns,
-                "Inconsistent matrix sizes");
-
-            var n = rows * columns;
-
-            for (int i = 0; i < n; i++)
-            {
-                result.Values[i] = Values[i] + mat2.Values[i];
-            }
-        }
-
-
-        /// <summary>
-        /// mat1 = mat1 + mat2
-        /// </summary>
-        /// <param name="mat2"></param>
-        public void AddToThis(Matrix mat2)
-        {
-            MatrixException.ThrowIf(rows != mat2.rows || columns != mat2.columns , "Inconsistent matrix sizes");
-
-            var n = rows * columns;
-
-            for (int i = 0; i < n; i++)
-            {
-                Values[i] = Values[i] + mat2.Values[i];
-            }
-        }
-
-        /// <summary>
-        /// mat1 = mat1 + mat2 * coefficient
-        /// </summary>
-        /// <param name="mat1"></param>
-        /// <param name="mat2"></param>
-        /// <param name="coefficient"></param>
-        public void AddToThis(Matrix mat2, double coefficient)
-        {
-            MatrixException.ThrowIf(rows != mat2.rows || columns != mat2.columns , "Inconsistent matrix sizes");
-
-            var n = rows * columns;
-
-            for (int i = 0; i < n; i++)
-                Values[i] = Values[i] + mat2.Values[i] * coefficient;
-        }
-
-        /// <summary>
-        /// Multiplies the specified <see cref="Matrix"/> with specified Vector <see cref="vec"/>.
-        /// </summary>
-        /// <param name="m">The m.</param>
-        /// <param name="vec">The vec.</param>
-        /// <returns></returns>
-        /// <exception cref="BriefFiniteElementNet.MatrixException"></exception>
-        public double[] Multiply(double[] vec)
-        {
-            if (columns != vec.Length)
-                throw new MatrixException();
-
-            var c = columns;
-            var r = rows;
-
-            var buf = new double[vec.Length];
-
-            for (var i = 0; i < r; i++)
-            {
-                var tmp = 0.0;
-
-                for (var j = 0; j < c; j++)
-                {
-                    // TODO: MAT - direct access
-                    tmp += this[i, j] * vec[j];
-                }
-
-                buf[i] = tmp;
-            }
-
-            return buf;
-        }
-
-        public Matrix Multiply(Matrix other)
-        {
-            if (columns != other.RowCount)
-                throw new InvalidOperationException("No consistent dimensions");
-
-            var res = new Matrix(rows, other.columns);
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < other.columns; j++)
-                    for (int k = 0; k < columns; k++)
-                    {
-                        res.Values[j * res.rows + i] +=
-                            Values[k * rows + i] *
-                            other.Values[j * other.rows + k];
-                    }
-
-
-            return res;
-        }
-
-        /// <summary>
-        /// calculates the [this.transpose] * [other] and stores the value into result.
-        /// </summary>
-        /// <param name="other">The m2.</param>
-        /// <param name="result">The result.</param>
-        /// <returns></returns>
-        public void TransposeMultiply(Matrix other, Matrix result)
-        {
-            if (rows != other.rows)
-                throw new InvalidOperationException("No consistent dimensions");
-
-            var res = result;
-
-            if (res.rows != columns || res.columns != other.columns)
-            {
-                throw new Exception("result dimension mismatch");
-            }
-
-            var ax = this.Values;
-            var bx = other.Values;
-
-            var vecLength = rows;
-
-            for (var i = 0; i < columns; i++)
-                for (var j = 0; j < other.columns; j++)
-                {
-                    var t = 0.0;
-
-                    var a_st = i * rows;
-                    var b_st = j * other.rows;
-
-                    for (var k = 0; k < vecLength; k++)
-                        t += ax[a_st + k] * bx[b_st + k];
-
-                    // TODO: MAT - direct access
-                    res[i, j] = t;
-                }
-
-        }
-
-        #region Dynamic Functions
-
-        public void InPlaceTranspose()
-        {
-            //var buf = new Matrix(this.ColumnCount, this.RowCount);
-
-            //var newMatrix = buf.CoreArray;
-
-            for (int row = 0; row < this.RowCount; row++)
-                for (int column = row; column < this.ColumnCount; column++)
-                {
-                    var tmp = this[row, column];
-
-                    this[row, column] = this[column, row];
-
-                    this[column, row] = tmp;
-                }
-
-            //buf.CoreArray = newMatrix;
-            //return buf;
-        }
-
-        /// <summary>
-        /// Checks if number of rows equals number of columns.
-        /// </summary>
-        /// <returns>True iff matrix is n by n.</returns>
-        public bool IsSquare()
-        {
-            return (this.columns == this.rows);
-        }
-
-        /// <summary>
-        /// Swaps rows at specified indices. The latter do not have to be ordered.
-        /// When equal, nothing is done.
-        /// </summary>
-        /// <param name="i1">One-based index of first row.</param>
-        /// <param name="i2">One-based index of second row.</param>        
-        public void SwapRows(int i1, int i2)
-        {
-            if (i1 < 0 || i1 >= rows || i2 < 0 || i2 >= rows)
-                throw new ArgumentException("Indices must be positive and <= number of rows.");
-
-            if (i1 == i2)
-                return;
-
-            for (int i = 0; i < columns; i++)
-            {
-                var tmp = this[i1, i];
-
-                this[i1, i] = this[i2, i];
-                this[i2, i] = tmp;
-            }
-        }
-
-        /// <summary>
-        /// Retrieves row vector at specfifed index and deletes it from matrix.
-        /// </summary>
-        /// <param name="i">One-based index at which to extract.</param>
-        /// <returns>Row vector.</returns>
-        public Matrix ExtractRow(int i)
-        {
-            if (i >= this.RowCount || i < 0)
-                throw new ArgumentOutOfRangeException("i");
-
-            var mtx = new Matrix(1, this.ColumnCount);
-
-
-            for (int j = 0; j < this.ColumnCount; j++)
-            {
-                mtx.Values[j] = this.Values[j*this.RowCount + i];
-            }
-
-            return mtx;
-        }
-
-        /// <summary>
-        /// Gets the determinant of matrix
-        /// </summary>
-        /// <returns></returns>
-        public double Determinant()
-        {
-            if (rows == columns && columns == 1)
-                return this[0, 0];
-            //Seems working good!
-
-            if (!IsSquare())
-                throw new InvalidOperationException();
-
-            var clone = this.Clone();
-
-            var n = this.rows;
-
-            var sign = 1.0;
-
-            var epsi1on = 1e-10*clone.Values.Select(System.Math.Abs).Min();
-
-            if (epsi1on == 0)
-                epsi1on = 1e-9;
-
-
-            //this[row,column] = this.CoreArray[column*this.rowCount + row]
-            for (var i = 0; i < n - 1; i++)
-            {
-                if (System.Math.Abs(clone[i, i]) < epsi1on)
-                {
-                    var firstNonZero = -1;
-
-                    for (var k = i + 1; k < n; k++)
-                        if (System.Math.Abs(clone[k, i]) > epsi1on)
-                            firstNonZero = k;
-
-                    if (firstNonZero == -1)
-                        throw new OperationCanceledException();
-                    else
-                    {
-                        clone.SwapRows(firstNonZero, i);
-                        sign = -sign;
-                    }
-                }
-
-
-                for (var j = i + 1; j < n; j++)
-                {
-                    var alfa = (clone.Values[j*n + i]/clone.Values[i*n + i]);
-
-                    for (var k = i; k < n; k++)
-                    {
-                        clone.Values[j*n + k] -= alfa*clone.Values[i*n + k];
-                    }
-                }
-            }
-
-            var buf = sign;
-
-            var arr = new double[n];
-
-            for (var i = 0; i < n; i++)
-                arr[i] = clone.Values[i*n + i];
-
-            Array.Sort(arr);
-
-            for (var i = 0; i < n; i++)
-                buf = buf*arr[n - i - 1];
-
-            return buf;
-        }
-
-        /// <summary>
-        /// Gets the inverse of matrix
-        /// </summary>
-        /// <returns></returns>
-        public Matrix Inverse()
-        {
-            if (!IsSquare())
-                throw new InvalidOperationException();
-
-            //seems working good!
-            var n = this.rows;
-            var clone = this.Clone();
-            var eye = Eye(n);
-
-            var epsi1on = 1e-10*clone.Values.Select(System.Math.Abs).Min();
-
-            if (epsi1on == 0)
-                epsi1on = 1e-9;
-
-            /**/
-
-            var perm = new List<int>();
-
-            for (var j = 0; j < n - 1; j++)
-            {
-                for (var i = j + 1; i < n; i++)
-                {
-                    if (System.Math.Abs(clone[j, j]) < epsi1on)
-                    {
-                        var firstNonZero = -1;
-
-                        for (var k = j + 1; k < n; k++)
-                            if (System.Math.Abs(clone[k, j]) > epsi1on)
-                                firstNonZero = k;
-
-                        if (firstNonZero == -1)
-                            throw new OperationCanceledException();
-                        else
-                        {
-                            clone.SwapRows(firstNonZero, j);
-                            eye.SwapRows(firstNonZero, j);
-
-                            perm.Add(j);
-                            perm.Add(firstNonZero);
-                        }
-                    }
-
-                    var alfa = clone[i, j]/clone[j, j];
-
-                    for (var k = 0; k < n; k++)
-                    {
-                        clone[i, k] -= alfa*clone[j, k];
-                        eye[i, k] -= alfa*eye[j, k];
-                    }
-                }
-            }
-
-            /**/
-
-            for (var j = n - 1; j > 0; j--)
-            {
-                for (var i = j - 1; i >= 0; i--)
-                {
-                    if (System.Math.Abs(clone[j, j]) < epsi1on)
-                    {
-                        var firstNonZero = -1;
-
-                        for (var k = j - 1; k >= 0; k--)
-                            if (System.Math.Abs(clone[k, j]) > epsi1on)
-                                firstNonZero = k;
-
-                        if (firstNonZero == -1)
-                            throw new OperationCanceledException();
-                        else
-                        {
-                            clone.SwapRows(firstNonZero, j);
-                            eye.SwapRows(firstNonZero, j);
-
-                            perm.Add(j);
-                            perm.Add(firstNonZero);
-                        }
-                    }
-
-                    var alfa = clone[i, j]/clone[j, j];
-
-                    for (var k = n - 1; k >= 0; k--)
-                    {
-                        clone[i, k] -= alfa*clone[j, k];
-                        eye[i, k] -= alfa*eye[j, k];
-                    }
-                }
-            }
-
-            /**/
-
-            for (var i = 0; i < n; i++)
-            {
-                var alfa = 1/clone[i, i];
-
-                for (var j = 0; j < n; j++)
-                {
-                    clone[i, j] *= alfa;
-                    eye[i, j] *= alfa;
-                }
-            }
-
-            /**/
-
-            return eye;
-        }
-
-
-        public Matrix Inverse2()
-        {
-            if (!IsSquare())
-                throw new InvalidOperationException();
-
-            //seems working good!
-            var n = this.rows;
-            var clone = this.Clone();
-            var eye = Eye(n);
-
-            var epsi1on = 1e-10*clone.Values.Select(System.Math.Abs).Min();
-
-            if (epsi1on == 0)
-                epsi1on = 1e-9;
-
-            /**/
-
-            var perm = new List<int>();
-
-            var clonea = clone.Values;
-            var eyea = eye.Values;
-
-            for (var j = 0; j < n - 1; j++)
-            {
-                for (var i = j + 1; i < n; i++)
-                {
-                    if (System.Math.Abs(clonea[j + j*n]) < epsi1on)
-                    {
-                        var firstNonZero = -1;
-
-                        for (var k = j + 1; k < n; k++)
-                            if (System.Math.Abs(clonea[k + j*n]) > epsi1on)
-                                firstNonZero = k;
-
-                        if (firstNonZero == -1)
-                            throw new OperationCanceledException();
-                        else
-                        {
-                            clone.SwapRows(firstNonZero, j);
-                            eye.SwapRows(firstNonZero, j);
-
-                            perm.Add(j);
-                            perm.Add(firstNonZero);
-                        }
-                    }
-
-                    var alfa = clonea[i + j*n]/clonea[j + j*n];
-
-                    for (var k = 0; k < n; k++)
-                    {
-                        clonea[i + k*n] -= alfa*clonea[j + k*n];
-                        eyea[i + k*n] -= alfa*eyea[j + k*n];
-                    }
-                }
-            }
-
-            /**/
-
-            for (var j = n - 1; j > 0; j--)
-            {
-                for (var i = j - 1; i >= 0; i--)
-                {
-                    if (System.Math.Abs(clonea[j + j*n]) < epsi1on)
-                    {
-                        var firstNonZero = -1;
-
-                        for (var k = j - 1; k >= 0; k--)
-                            if (System.Math.Abs(clonea[k + j*n]) > epsi1on)
-                                firstNonZero = k;
-
-                        if (firstNonZero == -1)
-                            throw new OperationCanceledException();
-                        else
-                        {
-                            clone.SwapRows(firstNonZero, j);
-                            eye.SwapRows(firstNonZero, j);
-
-                            perm.Add(j);
-                            perm.Add(firstNonZero);
-                        }
-                    }
-
-                    var alfa = clonea[i + j*n]/clonea[j + j*n];
-
-                    for (var k = n - 1; k >= 0; k--)
-                    {
-                        clonea[i + k*n] -= alfa*clonea[j + k*n];
-                        eyea[i + k*n] -= alfa*eyea[j + k*n];
-                    }
-                }
-            }
-
-            /**/
-
-            for (var i = 0; i < n; i++)
-            {
-                var alfa = 1/clonea[i + i*n];
-
-                for (var j = 0; j < n; j++)
-                {
-                    clonea[i + j*n] *= alfa;
-                    eyea[i + j*n] *= alfa;
-                }
-            }
-
-            /**/
-
-            return eye;
-        }
-
-        /// <summary>
-        /// return the value that this * value = rightSide
-        /// </summary>
-        /// <param name="rightSide"></param>
-        /// <returns></returns>
-        public double[] Solve(double[] rightSide)
-        {
-            if (!IsSquare())
-                throw new Exception("Matrix must be square");
-
-            var buf = (double[])rightSide.Clone();
-
-            var n = this.rows;
-
-            var clone = Pool != null ? Pool.Allocate(n, n) : new Matrix(n, n);
-
-            this.Values.CopyTo(clone.Values,0);
-
-            var canditates = new bool[n];//if true, then row is canditate for pivot
-            var pivoted = new int[n];//if nonNegative, then row is pivoted once, cannot be used again as pivot
-
-            pivoted.FillWith(-1);
-
-            
-
-            {//find next pivot
-
-                for (var j = 0; j < n; j++) // do for each column
-                {
-                    canditates.FillWith(false);
-                    for (var i = 0; i < n; i++) // find pivot canditate
-                    {
-                        if (pivoted[i] != -1)
-                            continue;
-
-                        if (clone[i, j] != 0)
-                            canditates[i] = true;
-                    }
-
-                    var pivot = canditates.FirstIndexOf(true);
-
-                    if (pivot == -1)
-                        throw new Exception("singular matrix");
-
-                    pivoted[pivot] = j;
-
-                    buf[pivot] *= 1 / clone[pivot, j];
-
-                    clone.MultiplyRowByConstant(pivot, 1 / clone[pivot, j]);
-                    
-
-                    for (var i = 0; i < n; i++) //eliminate each row with pivot
-                    {
-                        if (i == pivot)
-                            continue;
-
-                        var alpha = -clone[i, j];
-
-                        if (clone[i, j] == 0)
-                            continue;
-
-                        for (var jj = 0; jj < n; jj++)
-                        {
-                            clone[i, jj] += alpha * clone[pivot, jj];
-                        }
-
-                        buf[i] += alpha * buf[pivot];
-                    }
-                }
-            }
-
-            var buf2 = new double[n];// Matrix.Multiply(clone.Transpose(), buf);
-
-            for (var i = 0; i < n; i++)
-                buf2[pivoted[i]] = buf[i];
-
-            if (Pool != null)
-                clone.ReturnToPool();
-
-            return buf2;
-        }
-
-        #endregion
-
-        public void Replace(double oldValue, double newValue)
-        {
-            for (int i = 0; i < Values.Length; i++)
-            {
-                if (Values[i].Equals(oldValue))
-                    Values[i] = newValue;
-            }
-        }
-
         public override string ToString()
         {
             var sb = new StringBuilder();
 
             var mtx = this;
 
-            var epsi1on = mtx.Values.Select(i => System.Math.Abs(i)).Min()*1e-9;
+            var epsi1on = mtx.Values.Select(i => System.Math.Abs(i)).Min() * 1e-9;
 
             if (epsi1on == 0)
                 epsi1on = 1e-9;
@@ -908,6 +243,368 @@ namespace BriefFiniteElementNet
             }
 
             return sb.ToString();
+        }
+    }
+
+    public static class DenseMatrixExtensions
+    {
+        /// <summary>
+        /// Helper method to cast the storage to a Matrix instance.
+        /// </summary>
+        public static Matrix AsMatrix(this DenseColumnMajorStorage<double> matrix)
+        {
+            // NOTE: this method is mainly used to simpify the usage operator overloads
+            //       which aren't supported by CSparse matrix types.
+
+            return new Matrix(matrix.RowCount, matrix.ColumnCount, matrix.Values);
+        }
+
+        public static Matrix RepeatDiagonally(this DenseColumnMajorStorage<double> matrix, int n)
+        {
+            int rows = matrix.RowCount;
+            int columns = matrix.ColumnCount;
+
+            var buf = new Matrix(rows * n, columns * n);
+
+            RepeatDiagonally(matrix, n, new Matrix(rows * n, columns * n));
+
+            return buf;
+        }
+
+        public static void RepeatDiagonally(this DenseColumnMajorStorage<double> matrix, int n, Matrix target)
+        {
+            int r = matrix.RowCount;
+            int c = matrix.ColumnCount;
+
+            if (target.RowCount != n * r || target.ColumnCount != n * c)
+            {
+                throw new ArgumentException("Dimensions don't match.");
+            }
+
+            var buf = new Matrix(r * n, c * n);
+
+            for (var i = 0; i < n; i++)
+            {
+                for (var ii = 0; ii < r; ii++)
+                {
+                    for (var jj = 0; jj < c; jj++)
+                    {
+                        // TODO: MAT - direct access
+                        buf[i * r + ii, i * c + jj] = matrix[ii, jj];
+                    }
+                }
+            }
+        }
+
+        public static Matrix PointwiseDivide(this DenseColumnMajorStorage<double> matrix, Matrix other)
+        {
+            int rows = matrix.RowCount;
+            int columns = matrix.ColumnCount;
+
+            if (rows != other.RowCount || columns != other.ColumnCount)
+                throw new Exception();
+
+            var buf = new Matrix(rows, columns);
+            var values = matrix.Values;
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                buf.Values[i] = values[i] / other.Values[i];
+            }
+
+            return buf;
+        }
+
+        public static Matrix PointwiseMultiply(this DenseColumnMajorStorage<double> matrix, Matrix other)
+        {
+            int rows = matrix.RowCount;
+            int columns = matrix.ColumnCount;
+
+            if (rows != other.RowCount || columns != other.ColumnCount)
+                throw new Exception();
+
+            var buf = new Matrix(rows, columns);
+            var values = matrix.Values;
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                buf.Values[i] = values[i] * other.Values[i];
+            }
+
+            return buf;
+        }
+
+        public static void Add(this DenseColumnMajorStorage<double> matrix, Matrix other, Matrix result)
+        {
+            int rows = matrix.RowCount;
+            int columns = matrix.ColumnCount;
+
+            MatrixException.ThrowIf(
+                rows != other.RowCount || other.RowCount != result.RowCount ||
+                columns != other.ColumnCount ||  other.ColumnCount != result.ColumnCount,
+                "Inconsistent matrix sizes");
+
+            int n = rows * columns;
+            var values = matrix.Values;
+
+            for (int i = 0; i < n; i++)
+            {
+                result.Values[i] = values[i] + other.Values[i];
+            }
+        }
+
+
+        /// <summary>
+        /// mat1 = mat1 + mat2
+        /// </summary>
+        /// <param name="other"></param>
+        public static void AddToThis(this DenseColumnMajorStorage<double> matrix, Matrix other)
+        {
+            int rows = matrix.RowCount;
+            int columns = matrix.ColumnCount;
+
+            MatrixException.ThrowIf(rows != other.RowCount || columns != other.ColumnCount, "Inconsistent matrix sizes");
+
+            int n = rows * columns;
+            var values = matrix.Values;
+
+            for (int i = 0; i < n; i++)
+            {
+                values[i] = values[i] + other.Values[i];
+            }
+        }
+
+        /// <summary>
+        /// mat1 = mat1 + mat2 * coefficient
+        /// </summary>
+        /// <param name="mat1"></param>
+        /// <param name="other"></param>
+        /// <param name="coefficient"></param>
+        public static void AddToThis(this DenseColumnMajorStorage<double> matrix, Matrix other, double coefficient)
+        {
+            int rows = matrix.RowCount;
+            int columns = matrix.ColumnCount;
+
+            MatrixException.ThrowIf(rows != other.RowCount || columns != other.ColumnCount, "Inconsistent matrix sizes");
+
+            int n = rows * columns;
+            var values = matrix.Values;
+
+            for (int i = 0; i < n; i++)
+                values[i] = values[i] + other.Values[i] * coefficient;
+        }
+
+        /// <summary>
+        /// Multiplies the specified <see cref="Matrix"/> with specified Vector <see cref="vec"/>.
+        /// </summary>
+        /// <param name="m">The m.</param>
+        /// <param name="vec">The vec.</param>
+        /// <returns></returns>
+        /// <exception cref="BriefFiniteElementNet.MatrixException"></exception>
+        public static double[] Multiply(this DenseColumnMajorStorage<double> matrix, double[] vec)
+        {
+            var buf = new double[vec.Length];
+
+            matrix.Multiply(vec, buf);
+
+            return buf;
+        }
+
+        /*
+        public static Matrix Multiply(this DenseColumnMajorStorage<double> matrix, Matrix other)
+        {
+            int rows = matrix.RowCount;
+            int columns = matrix.ColumnCount;
+
+            if (columns != other.RowCount)
+                throw new InvalidOperationException("No consistent dimensions");
+
+            int columnsB = other.ColumnCount;
+
+            var res = new Matrix(rows, columnsB);
+
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < columnsB; j++)
+                    for (int k = 0; k < columns; k++)
+                    {
+                        res.Values[j * res.RowCount + i] +=
+                            matrix.Values[k * rows + i] *
+                            other.Values[j * other.RowCount + k];
+                    }
+
+
+            return res;
+        }
+        //*/
+
+        /// <summary>
+        /// calculates the [this.transpose] * [other] and stores the value into result.
+        /// </summary>
+        /// <param name="other">The m2.</param>
+        /// <param name="result">The result.</param>
+        /// <returns></returns>
+        public static void TransposeMultiply(this DenseColumnMajorStorage<double> matrix, Matrix other, Matrix result)
+        {
+            int rowsA = matrix.RowCount;
+            int columnsA = matrix.ColumnCount;
+
+            int rowsB = other.RowCount;
+            int columnsB = other.ColumnCount;
+
+            if (rowsA != rowsB)
+                throw new InvalidOperationException("No consistent dimensions");
+
+            var res = result;
+
+            if (res.RowCount != columnsA || res.ColumnCount != columnsB)
+            {
+                throw new Exception("result dimension mismatch");
+            }
+
+            var a_arr = matrix.Values;
+            var b_arr = other.Values;
+
+            int vecLength = rowsA;
+
+            for (int i = 0; i < rowsA; i++)
+                for (int j = 0; j < rowsB; j++)
+                {
+                    double t = 0.0;
+
+                    // column major order.
+                    int a_st = i * columnsA;
+                    int b_st = j * columnsB;
+
+                    for (int k = 0; k < vecLength; k++)
+                        t += a_arr[a_st + k] * b_arr[b_st + k];
+
+                    res[i, j] = t;
+                }
+        }
+
+        public static void InPlaceTranspose(this DenseColumnMajorStorage<double> matrix)
+        {
+            int rows = matrix.RowCount;
+            int columns = matrix.ColumnCount;
+
+            if (rows != columns)
+            {
+                throw new InvalidOperationException("matrix must be square");
+            }
+
+            var values = matrix.Values;
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = i; j < columns; j++)
+                {
+                    double tmp = values[i * columns + j];
+
+                    values[i * columns + j] = values[j * columns + i];
+
+                    values[j * columns + i] = tmp;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks if number of rows equals number of columns.
+        /// </summary>
+        /// <returns>True iff matrix is n by n.</returns>
+        public static bool IsSquare(this DenseColumnMajorStorage<double> matrix)
+        {
+            return (matrix.RowCount == matrix.ColumnCount);
+        }
+
+        /// <summary>
+        /// Retrieves row vector at specfifed index and deletes it from matrix.
+        /// </summary>
+        /// <param name="i">One-based index at which to extract.</param>
+        /// <returns>Row vector.</returns>
+        public static Matrix ExtractRow(this DenseColumnMajorStorage<double> matrix, int i)
+        {
+            return new Matrix(1, matrix.ColumnCount, matrix.Row(i));
+        }
+
+        /// <summary>
+        /// Gets the determinant of matrix
+        /// </summary>
+        /// <returns></returns>
+        public static double Determinant(this DenseColumnMajorStorage<double> matrix)
+        {
+            return DenseLU.Create(matrix).Determinant();
+        }
+
+        /// <summary>
+        /// Gets the inverse of matrix
+        /// </summary>
+        /// <returns></returns>
+        public static Matrix Inverse(this DenseColumnMajorStorage<double> matrix)
+        {
+            int rows = matrix.RowCount;
+            int columns = matrix.ColumnCount;
+
+            var inv = new Matrix(rows, columns);
+
+            DenseLU.Create(matrix).Inverse(inv);
+
+            return inv;
+        }
+
+        /// <summary>
+        /// return the value that this * value = rightSide
+        /// </summary>
+        /// <param name="rightSide"></param>
+        /// <returns></returns>
+        public static double[] Solve(this DenseColumnMajorStorage<double> matrix, double[] rightSide)
+        {
+            int columns = matrix.ColumnCount;
+
+            var lu = DenseLU.Create(matrix);
+            var x = new double[columns];
+
+            lu.Solve(rightSide, x);
+
+            return x;
+        }
+
+        public static void Replace(this DenseColumnMajorStorage<double> matrix, double oldValue, double newValue)
+        {
+            var values = matrix.Values;
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                if (values[i].Equals(oldValue))
+                    values[i] = newValue;
+            }
+        }
+
+        /// <summary>
+        /// Multiplies the <see cref="matrix"/> by a constant value.
+        /// </summary>
+        /// <param name="matrix">The Matrix</param>
+        /// <param name="constant">The constant value</param>
+        public static void Scale(this DenseColumnMajorStorage<double> matrix, double constant)
+        {
+            var values = matrix.Values;
+
+            for (var i = 0; i < values.Length; i++)
+            {
+                values[i] *= constant;
+            }
+        }
+
+        public static void ScaleRow(this DenseColumnMajorStorage<double> matrix, int i, double constant)
+        {
+            int columns = matrix.ColumnCount;
+            var values = matrix.Values;
+
+            int cxi = i * columns;
+
+            for (int j = 0; j < columns; j++)
+            {
+                values[cxi + j] *= constant;
+            }
         }
     }
 }

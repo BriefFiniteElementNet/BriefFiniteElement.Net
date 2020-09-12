@@ -258,7 +258,7 @@ namespace BriefFiniteElementNet.Integration
                                 //new Matrix(val.RowCount, val.ColumnCount);
                                 MatrixPool.Allocate(val.RowCount, val.ColumnCount);
 
-                        val.MultiplyByConstant((g2(noj, gammaK) - g1(noj, gammaK)) / 2 * wi[i]);
+                        val.Scale((g2(noj, gammaK) - g1(noj, gammaK)) / 2 * wi[i]);
 
                         //beta += val;
                         beta.AddToThis(val);

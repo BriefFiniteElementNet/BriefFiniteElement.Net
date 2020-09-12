@@ -89,7 +89,7 @@ namespace BriefFiniteElementNet
             res.SetRow(1, new double[] { -a4a * a9a + a6a * a7a, a1a * a9a - a3a * a7a, -a1a * a6a + a3a * a4a });
             res.SetRow(2, new double[] { a4a * a8a - a5a * a7a, -a1a * a8a + a2a * a7a, a1a * a5a - a2a * a4a });
 
-            res.MultiplyByConstant(1 / det);
+            res.Scale(1 / det);
 
             return res;
         }

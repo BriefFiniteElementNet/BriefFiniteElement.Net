@@ -256,7 +256,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
                 //p55 http://www.code-aster.org/doc/v11/en/man_r/r3/r3.07.03.pdf
 
-                d.MultiplyByConstant(cf);
+                d.Scale(cf);
             }
 
             return d;
@@ -302,7 +302,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             }
 
-            tangent.MultiplyByConstant(-1);
+            tangent.Scale(-1);
 
 
            // var diff = (tangent - GetDMatrixAt(targetElement, isoCoords)).Max(ii=>Math.Abs(ii));//= 1e-
@@ -537,8 +537,8 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                     {
                         var shp = GetNMatrixAt(targetElement, xi, eta, 0);
                         var j = GetJMatrixAt(targetElement, xi, eta, 0);
-                        shp.MultiplyByConstant(j.Determinant());
-                        shp.MultiplyByConstant(uz);
+                        shp.Scale(j.Determinant());
+                        shp.Scale(uz);
 
                         return shp;
                     }
@@ -615,7 +615,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 {
                     var shp = GetNMatrixAt(targetElement, xi, eta, 0);
                     var j = GetJMatrixAt(targetElement, xi, eta, 0);
-                    shp.MultiplyByConstant(j.Determinant());
+                    shp.Scale(j.Determinant());
 
                     //var uzm = ul.SeverityFunction.Evaluate(xi, eta);
 

@@ -88,7 +88,7 @@ namespace BriefFiniteElementNet.Elements
                 new[] {lamX.Z, lamY.Z, lamZ.Z}
             });
 
-            return lambda;
+            return lambda.AsMatrix();
         }
         public override double[] IsoCoordsToLocalCoords(params double[] isoCoords)
         {

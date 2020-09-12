@@ -88,7 +88,8 @@ namespace BriefFiniteElementNet
             t.SetRow(0, new double[] { Math.Cos(rads), Math.Sin(rads) });
             t.SetRow(1, new double[] { -Math.Sin(rads), Math.Cos(rads) });
 
-            var rotated = t*sigma*t.Transpose();
+            // TODO: MAT - the product could be directly computed in a helper method (CalcUtil).
+            var rotated = t * sigma * t.Transpose();
 
             var buf = new MembraneStressTensor()
             {
@@ -117,7 +118,8 @@ namespace BriefFiniteElementNet
         {
             var tensorMatrix = ToMatrix(tensor);
 
-            var rtd = transformationMatrix.Transpose()*tensorMatrix*transformationMatrix;
+            // TODO: MAT - the product could be directly computed in a helper method (CalcUtil).
+            var rtd = transformationMatrix.Transpose() * tensorMatrix * transformationMatrix;
 
             var buf = FromMatrix(rtd);
 

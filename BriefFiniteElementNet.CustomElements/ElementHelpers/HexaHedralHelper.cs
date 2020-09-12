@@ -69,7 +69,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             var density = hex.Material.GetMaterialPropertiesAt(0).Rho;//density considered as constant
 
-            buf.MultiplyByConstant(density);
+            buf.Scale(density);
 
             return buf;
         }
@@ -251,7 +251,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 c1, 0, a1, c2, 0, a2, c3, 0, a3, c4, 0, a4, c5, 0, a5, c6, 0, a6, c7, 0, a7, c8, 0, a8,
                 b1, a1, 0, b2, a2, 0, b3, a3, 0, b4, a4, 0, b5, a5, 0, b6, a6, 0, b7, a7, 0, b8, a8, 0 });
 
-            return b;
+            return b.AsMatrix();
         }
 
         public int[] GetBMaxOrder(Element targetElement)
@@ -280,9 +280,9 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var D = Matrix.OfRowMajor(6, 6, new double[] { 1, miu / s, miu / s, 0, 0, 0, miu / s, 1, miu / s, 0, 0, 0, miu / s, miu / s, 1, 0, 0, 0, 0, 0, 0,
                 (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s) });
 
-            D.MultiplyByConstant(e * (1 - miu) / ((1 + miu) * (1 - 2 * miu)));
+            D.Scale(e * (1 - miu) / ((1 + miu) * (1 - 2 * miu)));
 
-            return D;
+            return D.AsMatrix();
         }
 
         public ElementPermuteHelper.ElementLocalDof[] GetDofOrder(Element targetElement)
@@ -529,15 +529,15 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
 
                         var j = GetJMatrixAt(targetElement, xi, 0, 0);
-                        shp.MultiplyByConstant(j.Determinant());
+                        shp.Scale(j.Determinant());
 
                         var q__ = magnitude(xi);
 
                         var q_ = localDir * q__;
 
-                        shp2.MultiplyRowByConstant(0, q_.X);
-                        shp2.MultiplyRowByConstant(1, q_.Y);
-                        shp2.MultiplyRowByConstant(2, q_.Z);
+                        shp2.ScaleRow(0, q_.X);
+                        shp2.ScaleRow(1, q_.Y);
+                        shp2.ScaleRow(2, q_.Z);
 
                         return shp2;
                     });

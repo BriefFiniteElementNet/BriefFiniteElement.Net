@@ -4,6 +4,7 @@ using System.Windows;
 using BriefFiniteElementNet;
 using BriefFiniteElementNet.Controls;
 using BriefFiniteElementNet.DebuggerVisualizers;
+using CSparse.Double;
 using Microsoft.VisualStudio.DebuggerVisualizers;
 
 [assembly: System.Diagnostics.DebuggerVisualizer(typeof(MatrixVisualizer), typeof(VisualizerObjectSource), Target = typeof(Matrix), Description = "Epsi1on Matrix Visualizer!")]
@@ -43,12 +44,12 @@ namespace BriefFiniteElementNet.DebuggerVisualizers
 
             var ctrl = new MatrixVisualizerControl();
 
-            var rows = (int)objectToVisualize.GetType().GetField("rowCount", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(objectToVisualize);
-            var cols = (int)objectToVisualize.GetType().GetField("columnCount", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(objectToVisualize);
-            var arr = (double[])objectToVisualize.GetType().GetProperty("CoreArray", BindingFlags.Public | BindingFlags.Instance).GetValue(objectToVisualize, null);
+            var rows = (int)objectToVisualize.GetType().GetField("rows", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(objectToVisualize);
+            var cols = (int)objectToVisualize.GetType().GetField("columns", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(objectToVisualize);
+            var arr = (double[])objectToVisualize.GetType().GetProperty("Values", BindingFlags.Public | BindingFlags.Instance).GetValue(objectToVisualize, null);
 
 
-            var mtx = new Matrix((int)rows, (int)cols);
+            var mtx = new Matrix(rows, cols);
             Array.Copy(arr as double[], mtx.Values, mtx.Values.Length);
 
             ctrl.VisualizeMatrix(mtx);

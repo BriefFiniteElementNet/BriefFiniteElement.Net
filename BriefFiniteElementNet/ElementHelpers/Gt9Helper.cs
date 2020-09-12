@@ -216,7 +216,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 d[1, 0] = d[0, 1] = nu;
                 d[2, 2] = (1 - nu) / 2;
 
-                d.MultiplyByConstant(cf);
+                d.Scale(cf);
             }
             else
             {
@@ -228,12 +228,12 @@ namespace BriefFiniteElementNet.ElementHelpers
                 d[1, 0] = d[0, 1] = nu;
                 d[2, 2] = (1 - 2 * nu) / 2;
 
-                d.MultiplyByConstant(cf);
+                d.Scale(cf);
             }
 
             //
 
-            d.MultiplyByConstant(t);
+            d.Scale(t);
 
             return d;
         }

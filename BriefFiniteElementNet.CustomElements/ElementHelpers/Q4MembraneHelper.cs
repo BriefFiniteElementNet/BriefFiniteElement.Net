@@ -70,8 +70,8 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
                 var ki = b.Transpose() * d * b;
 
-                ki.MultiplyByConstant(Math.Abs(j.Determinant()));
-                ki.MultiplyByConstant(quad.Section.GetThicknessAt(new double[] { xi, eta }));
+                ki.Scale(Math.Abs(j.Determinant()));
+                ki.Scale(quad.Section.GetThicknessAt(new double[] { xi, eta }));
 
                 return ki;
             });
@@ -95,7 +95,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             //buf.MultiplyByConstant(detJ);
             //should be 1.0/detJ? See 3.41
-            buf.MultiplyByConstant(1.0 / detJ);
+            buf.Scale(1.0 / detJ);
 
             return buf;
         }
@@ -136,7 +136,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             Matrix A = GetAMatrix(targetElement, isoCoords);
             Matrix G = GetGMatrix(targetElement, isoCoords);
 
-            return A.Multiply(G); 
+            return A.Multiply(G).AsMatrix(); 
         }
 
         public int[] GetBMaxOrder(Element targetElement)
@@ -332,8 +332,8 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 {
                     var shp = GetNMatrixAt(targetElement, xi, eta, 0);
                     var j = GetJMatrixAt(targetElement, xi, eta, 0);
-                    shp.MultiplyByConstant(j.Determinant());
-                    shp.MultiplyByConstant(uz);
+                    shp.Scale(j.Determinant());
+                    shp.Scale(uz);
 
                     return shp;
                 }
@@ -410,7 +410,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 {
                     var shp = GetNMatrixAt(targetElement, xi, eta, 0);
                     var j = GetJMatrixAt(targetElement, xi, eta, 0);
-                    shp.MultiplyByConstant(j.Determinant());
+                    shp.Scale(j.Determinant());
 
                     //var uzm = ul.SeverityFunction.Evaluate(xi, eta);
 

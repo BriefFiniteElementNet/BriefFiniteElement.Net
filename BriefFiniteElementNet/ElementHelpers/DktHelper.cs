@@ -138,7 +138,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 buf[2, i] = -x31*hx_xi[i] - x12*hx_eta[i] + y31*hy_xi[i] + y12*hy_eta[i];
             }//eq. 4.26 page 46 ref [1]
 
-            buf.MultiplyByConstant(1 / (2 * a));
+            buf.Scale(1 / (2 * a));
 
             return buf;
         }
@@ -173,7 +173,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 //p55 http://www.code-aster.org/doc/v11/en/man_r/r3/r3.07.03.pdf
 
-                d.MultiplyByConstant(cf);
+                d.Scale(cf);
             }
 
             return d;

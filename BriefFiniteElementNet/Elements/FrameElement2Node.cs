@@ -837,7 +837,7 @@ namespace BriefFiniteElementNet
                     //  z  w  z  z
                     //  z  y  I  y
                     //  z  z  z  w
-                    y.MultiplyByConstant(2.0/3.0);
+                    y.Scale(2.0/3.0);
                     buf.AssembleInside(-y, 0, 3);
                     buf.AssembleInside(w, 3, 3);
                     buf.AssembleInside(y, 6, 3);
@@ -1109,7 +1109,7 @@ namespace BriefFiniteElementNet
                 0, 0, 0, 0,
                 0, -1 / L, 0, 0 });
 
-            return buf;
+            return buf.AsMatrix();
         }
 
         ///<inheritdoc/>
@@ -1142,7 +1142,7 @@ namespace BriefFiniteElementNet
                 (L*(xi - 1)*(xi + 1)*(xi + 1))/8,
                 (L*(xi - 1)*(xi + 1)*(xi + 1))/8 });
 
-            return buf;
+            return buf.AsMatrix();
         }
 
         ///<inheritdoc/>

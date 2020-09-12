@@ -89,7 +89,7 @@ namespace BriefFiniteElementNet.Validation
             }
 
             if (fixes == 6 * n)
-                return k.Clone();
+                return k.Clone().AsMatrix();
 
 
             var pf = new Matrix(fixes, 6 * n);
@@ -140,7 +140,7 @@ namespace BriefFiniteElementNet.Validation
             var kcc = pc * k * pc.Transpose();
 
 
-            var kr = kff - kfc*kcc.Inverse2()*kcf;
+            var kr = kff - kfc*kcc.Inverse()*kcf;
 
 
             var kt = pf.Transpose()*kr*pf;

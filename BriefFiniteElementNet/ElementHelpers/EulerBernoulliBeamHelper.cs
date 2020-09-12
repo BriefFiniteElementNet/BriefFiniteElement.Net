@@ -100,7 +100,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var detJ = J.Determinant();
             J.ReturnToPool();
 
-            buf.MultiplyRowByConstant(0, 1 / (detJ * detJ));
+            buf.ScaleRow(0, 1 / (detJ * detJ));
 
             return buf;
         }
@@ -1164,7 +1164,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             //var ei = d[0, 0];
 
-            f.MultiplyRowByConstant(1, 1 / j);
+            f.ScaleRow(1, 1 / j);
             
             var buf = new Displacement();
 
@@ -1244,12 +1244,12 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var ei = d[0, 0];
 
-            f.MultiplyRowByConstant(1, 1 / j);
-            f.MultiplyRowByConstant(2, ei / (j * j));
-            f.MultiplyRowByConstant(3, ei / (j * j * j));
+            f.ScaleRow(1, 1 / j);
+            f.ScaleRow(2, ei / (j * j));
+            f.ScaleRow(3, ei / (j * j * j));
 
             if (_direction == BeamDirection.Y)
-                f.MultiplyRowByConstant(2, -1);//m/ei = - n''*u , due to where? TODO
+                f.ScaleRow(2, -1);//m/ei = - n''*u , due to where? TODO
 
             if (_direction == BeamDirection.Y)
             {
@@ -1349,14 +1349,14 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                         var q__ = magnitude(xi);
                         var j = GetJMatrixAt(targetElement, xi, 0, 0);
-                        shp.MultiplyByConstant(j.Determinant());
+                        shp.Scale(j.Determinant());
 
                         var q_ = localDir * q__;
 
                         if (this._direction == BeamDirection.Y)
-                            shp.MultiplyByConstant(q_.Z);
+                            shp.Scale(q_.Z);
                         else
-                            shp.MultiplyByConstant(q_.Y);
+                            shp.Scale(q_.Y);
 
                         return shp;
                     }, xi0, xi1, gpt);
@@ -1420,9 +1420,9 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 var detJ = j.Determinant();
 
-                ns.MultiplyRowByConstant(1, 1 / detJ);
-                ns.MultiplyRowByConstant(2, 1 / (detJ * detJ));
-                ns.MultiplyRowByConstant(3, 1 / (detJ * detJ * detJ));
+                ns.ScaleRow(1, 1 / detJ);
+                ns.ScaleRow(2, 1 / (detJ * detJ));
+                ns.ScaleRow(3, 1 / (detJ * detJ * detJ));
 
 
                 for (var i = 0; i < n; i++)

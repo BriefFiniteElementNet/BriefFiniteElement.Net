@@ -37,7 +37,7 @@ namespace BriefFiniteElementNet.Integration
             b.TransposeMultiply(b, buf_);
 
             //var buf_2 = b.Transpose() * d * b;
-            buf_.MultiplyByConstant(d[0, 0] * Math.Abs(j.Determinant()));
+            buf_.Scale(d[0, 0] * Math.Abs(j.Determinant()));
 
             b.ReturnToPool();
             d.ReturnToPool();

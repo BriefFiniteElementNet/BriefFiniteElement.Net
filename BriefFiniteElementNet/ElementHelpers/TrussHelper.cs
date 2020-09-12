@@ -135,7 +135,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var J = GetJMatrixAt(targetElement, isoCoords);
             var detJ = J.Determinant();
             J.ReturnToPool();
-            buf.MultiplyRowByConstant(0, 1 / (detJ));
+            buf.ScaleRow(0, 1 / (detJ));
 
             return buf;
         }
@@ -834,11 +834,11 @@ namespace BriefFiniteElementNet.ElementHelpers
                         var shp = GetNMatrixAt(targetElement, xi, 0, 0);
                         var q__ = magnitude(xi);
                         var j = GetJMatrixAt(targetElement, xi, 0, 0);
-                        shp.MultiplyByConstant(j.Determinant());
+                        shp.Scale(j.Determinant());
 
                         var q_ = localDir * q__;
 
-                        shp.MultiplyByConstant(q_.X);
+                        shp.Scale(q_.X);
 
                         return shp;
                     }, xi0, xi1, gpt);
@@ -873,7 +873,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                     localForce = tr.TransformGlobalToLocal(localForce);
 
 
-                shapes.MultiplyByConstant(localForce.Fx);
+                shapes.Scale(localForce.Fx);
 
                 var fxs = shapes.ExtractRow(0);
 

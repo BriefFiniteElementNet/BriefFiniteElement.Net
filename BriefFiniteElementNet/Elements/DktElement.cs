@@ -260,7 +260,7 @@ namespace BriefFiniteElementNet.Elements
 
             var res = intg.Integrate();
 
-            res.MultiplyByConstant(2*a);
+            res.Scale(2*a);
 
            
 
@@ -425,9 +425,9 @@ namespace BriefFiniteElementNet.Elements
 
                    var buf = Matrix.OfJaggedArray(new[] { b1.Values, b2.Values, b3.Values });
 
-                   buf.MultiplyByConstant(1 / (2 * a));
+                   buf.Scale(1 / (2 * a));
 
-                   return buf;
+                   return buf.AsMatrix();
                });//eq. 4.26 page 46 ref [1]
 
             var buff = B(k, e);
@@ -488,7 +488,7 @@ namespace BriefFiniteElementNet.Elements
 
             var res = intg.Integrate();
 
-            res.MultiplyByConstant(2 * a);
+            res.Scale(2 * a);
 
             return res;
         }
@@ -606,9 +606,9 @@ namespace BriefFiniteElementNet.Elements
 
             var buf = Matrix.OfJaggedArray(new[] { H_x_x, H_y_y, H_xy_yx });
 
-            buf.MultiplyByConstant(1 / (2 * a));
+            buf.Scale(1 / (2 * a));
 
-            return buf;
+            return buf.AsMatrix();
         }
 
         /// <summary>
@@ -632,7 +632,7 @@ namespace BriefFiniteElementNet.Elements
                 d[1, 0] = d[0, 1] = nu;
                 d[2, 2] = (1 - nu) / 2;
 
-                d.MultiplyByConstant(cf);
+                d.Scale(cf);
             }
 
             return d;
@@ -677,7 +677,7 @@ namespace BriefFiniteElementNet.Elements
                 new[] {lamX.Z, lamY.Z, lamZ.Z}
             });//eq. 5.13
 
-            return lambda;
+            return lambda.AsMatrix();
         }
         #endregion
 

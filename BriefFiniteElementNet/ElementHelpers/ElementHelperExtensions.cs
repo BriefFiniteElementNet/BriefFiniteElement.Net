@@ -166,7 +166,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 var j = helper.GetJMatrixAt(elm, xi);
 
                 var buf_ = n.Transpose() * rho * n;
-                buf_.MultiplyByConstant(j.Determinant());
+                buf_.Scale(j.Determinant());
 
                 return buf_;
             });
@@ -225,7 +225,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 var j = helper.GetJMatrixAt(elm, xi);
 
                 var buf_ = n.Transpose() * mu * n;
-                buf_.MultiplyByConstant(j.Determinant());
+                buf_.Scale(j.Determinant());
 
                 return buf_;
             });
@@ -286,7 +286,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 var detj = Math.Abs(j.Determinant());
 
-                buf.MultiplyByConstant(detj); // is this correct? this is pretty close to formula 4.53 for DKQ-ELements (4.31 is without detj)
+                buf.Scale(detj); // is this correct? this is pretty close to formula 4.53 for DKQ-ELements (4.31 is without detj)
 
                 return buf;
             });

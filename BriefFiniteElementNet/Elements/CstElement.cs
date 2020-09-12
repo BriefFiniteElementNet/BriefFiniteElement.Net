@@ -200,7 +200,7 @@ namespace BriefFiniteElementNet.Elements
 
             });//3x3 matrix
 
-            return lambda;
+            return lambda.AsMatrix();
         }
 
         /// <inheritdoc />
@@ -306,7 +306,7 @@ namespace BriefFiniteElementNet.Elements
 
             var klocal = b.Transpose() * d * b;
 
-            klocal.MultiplyByConstant(t * a);
+            klocal.Scale(t * a);
 
             return klocal;
         }
@@ -325,7 +325,7 @@ namespace BriefFiniteElementNet.Elements
                 d[1, 0] = d[0, 1] = nu;
                 d[2, 2] = (1 - nu)/2;
 
-                d.MultiplyByConstant(cf);
+                d.Scale(cf);
             }
             else
             {
@@ -337,7 +337,7 @@ namespace BriefFiniteElementNet.Elements
                 d[1, 0] = d[0, 1] = nu;
                 d[2, 2] = (1 - 2*nu)/2;
 
-                d.MultiplyByConstant(cf);
+                d.Scale(cf);
             }
 
             return d;
@@ -374,9 +374,9 @@ namespace BriefFiniteElementNet.Elements
             });
 
 
-            buf2.MultiplyByConstant(1/(2*a));
+            buf2.Scale(1/(2*a));
 
-            return buf2;
+            return buf2.AsMatrix();
         }
 
         /// <summary>
@@ -409,9 +409,9 @@ namespace BriefFiniteElementNet.Elements
             });
 
 
-            buf2.MultiplyByConstant(1 / (2 * a));
+            buf2.Scale(1 / (2 * a));
 
-            return buf2;
+            return buf2.AsMatrix();
         }
 
         #endregion
