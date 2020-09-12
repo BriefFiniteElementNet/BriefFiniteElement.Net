@@ -21,22 +21,6 @@ namespace BriefFiniteElementNet
     {
         public MatrixPool Pool;
 
-        public static Matrix Repeat(Matrix mtx, int ni, int nj)
-        {
-            var r = mtx.rowCount;
-            var c = mtx.columnCount;
-
-            var buf = new Matrix(r*ni, c*nj);
-
-            for (var i = 0; i < ni; i++)
-                for (var j = 0; j < nj; j++)
-                    for (var ii = 0; ii < mtx.rowCount; ii++)
-                        for (var jj = 0; jj < mtx.columnCount; jj++)
-                            buf[i*r + ii, j*c + jj] = mtx[ii, jj];
-
-            return buf;
-        }
-
         public static Matrix DiagonallyRepeat(Matrix mtx, int n)
         {
             var r = mtx.rowCount;
@@ -49,105 +33,6 @@ namespace BriefFiniteElementNet
                 for (var ii = 0; ii < mtx.rowCount; ii++)
                     for (var jj = 0; jj < mtx.columnCount; jj++)
                         buf[i*r + ii, i*c + jj] = mtx[ii, jj];
-
-            return buf;
-        }
-
-        /// <summary>
-        /// Horizontally join the two matrices.
-        /// Matrix 1 left,  2 right side of it
-        /// </summary>
-        /// <param name="m1">The m1.</param>
-        /// <param name="m2">The m2.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public static Matrix HorizontalConcat(Matrix m1, Matrix m2)
-        {
-            if (m1.RowCount != m2.RowCount)
-                throw new Exception();
-
-            var buf = new Matrix(m1.RowCount, m1.columnCount + m2.columnCount);
-
-            for (var i = 0; i < m1.rowCount; i++)
-            {
-                for (var j = 0; j < m1.columnCount; j++)
-                {
-                    buf[i, j] = m1[i, j];
-                }
-            }
-
-            for (var i = 0; i < m2.rowCount; i++)
-            {
-                for (var j = 0; j < m2.columnCount; j++)
-                {
-                    buf[i , j + m1.columnCount] = m2[i, j];
-                }
-            }
-
-            return buf;
-        }
-
-        public static Matrix HorizontalConcat(params Matrix[] mtx)
-        {
-
-            var rwCnt = mtx.First().rowCount;
-
-            if(mtx.Any(i=>i.rowCount!=rwCnt))
-            //if (m1.RowCount != m2.RowCount)
-                throw new Exception();
-
-            var buf = new Matrix(rwCnt, mtx.Sum(i => i.columnCount));
-
-            var cnt = 0;
-
-            for (var ii = 0; ii < mtx.Length; ii++)
-            {
-                var m = mtx[ii];
-
-                for (var i = 0; i < m.rowCount; i++)
-                {
-                    for (var j = 0; j < m.columnCount; j++)
-                    {
-                        buf[i, j + cnt] = m[i, j];
-                    }
-                }
-
-                cnt += m.columnCount;
-            }
-            
-            return buf;
-        }
-
-        /// <summary>
-        /// Vertically join the two matrices.
-        /// Matrix 1 on top, 2 below it
-        /// </summary>
-        /// <param name="m1">The m1.</param>
-        /// <param name="m2">The m2.</param>
-        /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
-        public static Matrix VerticalConcat(Matrix m1, Matrix m2)
-        {
-            if (m1.columnCount != m2.columnCount)
-                throw new Exception();
-
-            var buf = new Matrix(m1.RowCount + m2.RowCount, m1.columnCount);
-
-            for (var i = 0; i < m1.rowCount; i++)
-            {
-                for (var j = 0; j < m1.columnCount; j++)
-                {
-                    buf[i, j] = m1[i, j];
-                }
-            }
-
-            for (var i = 0; i < m2.rowCount; i++)
-            {
-                for (var j = 0; j < m2.columnCount; j++)
-                {
-                    buf[i + m1.rowCount, j] = m2[i, j];
-                }
-            }
 
             return buf;
         }
@@ -179,46 +64,6 @@ namespace BriefFiniteElementNet
 
 
             return buf;
-        }
-
-        public static Matrix CholeskyDecomposeSymmetric(Matrix a)
-        {
-            if (a.rowCount != a.columnCount)
-                throw new InvalidOperationException();
-
-            var n = a.columnCount;
-
-            var l = new Matrix(n, n);
-
-            for (var i = 0; i < n; i++)
-            {
-                var lii = a[i, i];
-
-                for (int t = 0; t < i; t++)
-                {
-                    lii -= l[i, t]*l[i, t];
-                }
-
-                lii = System.Math.Sqrt(lii);
-                l[i, i] = lii;
-
-
-                for (var j = i + 1; j < n; j++)
-                {
-                    var lji = a[i, j];
-
-                    for (int t = 0; t < i; t++)
-                    {
-                        lji -= l[i, t]*l[j, t];
-                    }
-
-                    lji = lji/lii;
-
-                    l[j, i] = lji;
-                }
-            }
-
-            return l;
         }
 
         public double[] CoreArray
@@ -372,30 +217,6 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        /*
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Matrix"/> class with a 2-d double array.
-        /// </summary>
-        /// <param name="vals">The values.</param>
-        [Obsolete("use static Matrix.FromJaggedArray instead")]
-        public Matrix(double[][] vals) : this()
-        {
-            var rows = vals.Length;
-            var cols = vals.Select(i => i.Length).Max();
-
-            //var buf = new Matrix(rows, cols);
-            this.rowCount = rows;
-            this.columnCount = cols;
-
-            this.coreArray = new double[rows*cols];
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    if (vals[i].Length > j)
-                        this.CoreArray[j*rows + i] = vals[i][j];
-        }
-        */
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix"/> class as a column vector.
         /// </summary>
@@ -475,48 +296,6 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Adds the specified matrix to current matrix.
-        /// </summary>
-        /// <param name="that">The that.</param>
-        /// <exception cref="System.InvalidOperationException">No consistent dimensions</exception>
-        public void Add(Matrix that)
-        {
-            if (this.ColumnCount != that.ColumnCount || this.RowCount != that.RowCount)
-                throw new InvalidOperationException("No consistent dimensions");
-
-            for (var i = 0; i < this.coreArray.Length; i++)
-                this.coreArray[i] += that.coreArray[i];
-        }
-
-        public static void Multiply(Matrix m1, Matrix m2, Matrix result)
-        {
-            if (m1.ColumnCount != m2.RowCount)
-                throw new InvalidOperationException("No consistent dimensions");
-
-            var res = result;
-
-            if (res.rowCount != m1.rowCount || res.ColumnCount != m2.columnCount)
-            {
-                throw new Exception("result dimension mismatch");
-            }
-
-            for (var i = 0; i < m1.rowCount; i++)
-                for (var j = 0; j < m2.columnCount; j++)
-                {
-                    var t = 0.0;
-
-                    for (var k = 0; k < m1.columnCount; k++)
-                    {
-                        t += m1[i, k] * m2[k, j];
-                    }
-
-                    res[i, j] = t;
-                }
-                    
-        }
-
-        
-        /// <summary>
         /// calculates the m1.transpose * m2 and stores the value into result.
         /// </summary>
         /// <param name="m1">The m1.</param>
@@ -556,48 +335,6 @@ namespace BriefFiniteElementNet
                         t += a_arr[a_st + k] * b_arr[b_st + k];
 
                     res[i, j] = t;
-                }
-
-        }
-
-        /// <summary>
-        /// calculates the m1.transpose * v and stores the value into result.
-        /// </summary>
-        /// <param name="m1">The m1.</param>
-        /// <param name="v">The m2.</param>
-        /// <param name="result">The result.</param>
-        /// <returns></returns>
-        public static void TransposeMultiply(Matrix m1, double[] v, double[] result)
-        {
-            if (m1.rowCount != v.Length)
-                throw new InvalidOperationException("No consistent dimensions");
-
-            var res = result;
-
-            if (v.Length != result.Length)
-                throw new Exception("result dimension mismatch");
-
-            var a = m1;
-            var b = v;
-
-
-            var a_arr = a.coreArray;
-            var b_arr = v;// b.coreArray;
-
-            var vecLength = a.rowCount;
-
-            for (var i = 0; i < a.columnCount; i++)
-                for (var j = 0; j < 1; j++)
-                {
-                    var t = 0.0;
-
-                    var a_st = i * a.rowCount;
-                    var b_st = j * b.Length;
-
-                    for (var k = 0; k < vecLength; k++)
-                        t += a_arr[a_st + k] * b_arr[b_st + k];
-
-                    res[i] = t;
                 }
 
         }
@@ -789,24 +526,6 @@ namespace BriefFiniteElementNet
             //return buf;
         }
 
-        public static void CopyTo(Matrix source, Matrix destination)
-        {
-            if (source.rowCount != destination.rowCount || source.columnCount != destination.columnCount)
-                throw new InvalidOperationException("incostintent size");
-
-            Array.Copy(source.coreArray, destination.coreArray, destination.coreArray.Length);
-        }
-
-        public static void TransposeCopyTo(Matrix source, Matrix destination)
-        {
-            if (source.rowCount != destination.columnCount || source.rowCount != destination.columnCount)
-                throw new InvalidOperationException("incostintent size");
-
-            for (var i = 0; i < source.RowCount; i++)
-                for (var j = 0; j < source.ColumnCount; j++)
-                    destination[j, i] = source[i, j];
-        }
-
         #region Equality Members
 
         protected bool Equals(Matrix other)
@@ -847,82 +566,6 @@ namespace BriefFiniteElementNet
             return (this.columnCount == this.rowCount);
         }
 
-        public bool IsSymmetric()
-        {
-            for (int i = 0; i < this.rowCount; i++)
-                for (int j = i + 1; j < this.columnCount; j++)
-                    if (Math.Abs(this[i, j] - this[j, i]) > 1e-3)
-                    {
-                        return false;
-                    }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Checks if A[i, j] == 0 for i < j.
-        /// </summary>
-        /// <returns>True iff matrix is upper trapeze.</returns>
-        public bool IsUpperTrapeze()
-        {
-            for (int j = 1; j <= columnCount; j++)
-                for (int i = j + 1; i <= rowCount; i++)
-                    if (!MathUtil.Equals(this.CoreArray[j*this.RowCount + i], 0))
-                        return false;
-
-            return true;
-        }
-
-        /// <summary>
-        /// Checks if A[i, j] == 0 for i > j.
-        /// </summary>
-        /// <returns>True iff matrix is lower trapeze.</returns>
-        public bool IsLowerTrapeze()
-        {
-            for (int i = 1; i <= rowCount; i++)
-                for (int j = i + 1; j <= columnCount; j++)
-                    if (!MathUtil.Equals(this.CoreArray[j*this.RowCount + i], 0))
-                        return false;
-
-            return true;
-        }
-
-        /// <summary>
-        /// Checks if matrix is lower or upper trapeze.
-        /// </summary>
-        /// <returns>True iff matrix is trapeze.</returns>
-        public bool IsTrapeze()
-        {
-            return (this.IsUpperTrapeze() || this.IsLowerTrapeze());
-        }
-
-        /// <summary>
-        /// Checks if matrix is trapeze and square.
-        /// </summary>
-        /// <returns>True iff matrix is triangular.</returns>
-        public bool IsTriangular()
-        {
-            return (this.IsLowerTriangular() || this.IsUpperTriangular());
-        }
-
-        /// <summary>
-        /// Checks if matrix is square and upper trapeze.
-        /// </summary>
-        /// <returns>True iff matrix is upper triangular.</returns>
-        public bool IsUpperTriangular()
-        {
-            return (this.IsSquare() && this.IsUpperTrapeze());
-        }
-
-        /// <summary>
-        /// Checks if matrix is square and lower trapeze.
-        /// </summary>
-        /// <returns>True iff matrix is lower triangular.</returns>
-        public bool IsLowerTriangular()
-        {
-            return (this.IsSquare() && this.IsLowerTrapeze());
-        }
-
         #endregion
 
         /// <summary>
@@ -949,27 +592,6 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Swaps columns at specified indices. The latter do not have to be ordered.
-        /// When equal, nothing is done.
-        /// </summary>
-        /// <param name="j1">One-based index of first col.</param>
-        /// <param name="j2">One-based index of second col.</param>       
-        public void SwapColumns(int j1, int j2)
-        {
-            if (j1 <= 0 || j1 > columnCount || j2 <= 0 || j2 > columnCount)
-                throw new ArgumentException("Indices must be positive and <= number of cols.");
-
-            if (j1 == j2)
-                return;
-
-            var j1Col = this.ExtractColumn(j1).CoreArray;
-            var j2Col = this.ExtractColumn(j2).CoreArray;
-
-            this.SetRow(j1, j2Col);
-            this.SetRow(j2, j1Col);
-        }
-
-        /// <summary>
         /// Retrieves row vector at specfifed index and deletes it from matrix.
         /// </summary>
         /// <param name="i">One-based index at which to extract.</param>
@@ -985,27 +607,6 @@ namespace BriefFiniteElementNet
             for (int j = 0; j < this.ColumnCount; j++)
             {
                 mtx.CoreArray[j] = this.CoreArray[j*this.RowCount + i];
-            }
-
-            return mtx;
-        }
-
-        /// <summary>
-        /// Retrieves column vector at specfifed index and deletes it from matrix.
-        /// </summary>
-        /// <param name="j">One-based index at which to extract.</param>
-        /// <returns>Row vector.</returns>
-        public Matrix ExtractColumn(int j)
-        {
-            if (j >= this.ColumnCount || j < 0)
-                throw new ArgumentOutOfRangeException("j");
-
-            var mtx = new Matrix(this.RowCount, 1);
-
-
-            for (int i = 0; i < this.RowCount; i++)
-            {
-                mtx.CoreArray[i] = this.CoreArray[j*this.RowCount + i];
             }
 
             return mtx;
@@ -1391,33 +992,6 @@ namespace BriefFiniteElementNet
 
         #region Static Methods
 
-        public static double[,] To2DDoubleArray(Matrix mtx)
-        {
-            var buf = new double[mtx.RowCount, mtx.ColumnCount];
-
-            for (int i = 0; i < mtx.RowCount; i++)
-                for (int j = 0; j < mtx.ColumnCount; j++)
-                    buf[i, j] = mtx.CoreArray[j*mtx.RowCount + i];
-
-            return buf;
-        }
-
-        public static double[][] ToJaggedArray(Matrix mtx)
-        {
-            var buf = new double[mtx.RowCount][];
-
-            for (int i = 0; i < buf.Length; i++)
-            {
-                buf[i] = new double[mtx.ColumnCount];
-            }
-
-            for (int i = 0; i < mtx.RowCount; i++)
-                for (int j = 0; j < mtx.ColumnCount; j++)
-                    buf[i][j] = mtx[i, j];
-
-            return buf;
-        }
-
         /// <summary>
         /// Creates a new Identity matrix.
         /// </summary>
@@ -1431,117 +1005,6 @@ namespace BriefFiniteElementNet
                 buf.CoreArray[i*n + i] = 1.0;
 
             return buf;
-        }
-
-        /// <summary>
-        /// Creates row by n matrix filled with zeros.
-        /// </summary>
-        /// <param name="m">Number of rows.</param>
-        /// <param name="n">Number of columns.</param>
-        /// <returns>row by n matrix filled with zeros.</returns>
-        public static Matrix Zeros(int m, int n)
-        {
-            return new Matrix(m, n);
-        }
-
-        /// <summary>
-        /// Creates n by n matrix filled with zeros.
-        /// </summary>       
-        /// <param name="n">Number of rows and columns, resp.</param>
-        /// <returns>n by n matrix filled with zeros.</returns>
-        public static Matrix Zeros(int n)
-        {
-            return new Matrix(n);
-        }
-
-        /// <summary>
-        /// Creates row by n matrix filled with ones.
-        /// </summary>
-        /// <param name="m">Number of rows.</param>
-        /// <param name="n">Number of columns.</param>
-        /// <returns>row by n matrix filled with zeros.</returns>
-        public static Matrix Ones(int m, int n)
-        {
-            var buf = new Matrix(m, n);
-
-            for (int i = 0; i < m*n; i++)
-                buf.CoreArray[i] = 1.0;
-
-            return buf;
-        }
-
-        /// <summary>
-        /// Creates n by n matrix filled with ones.
-        /// </summary>        
-        /// <param name="n">Number of columns.</param>
-        /// <returns>n by n matrix filled with ones.</returns>        
-        public static Matrix Ones(int n)
-        {
-            var buf = new Matrix(n);
-
-            for (int i = 0; i < n*n; i++)
-                buf.CoreArray[i] = 1.0;
-
-            return buf;
-        }
-
-        /// <summary>
-        /// Computes product of main diagonal entries.
-        /// </summary>
-        /// <returns>Product of diagonal elements</returns>
-        public double DiagProd()
-        {
-            var buf = 1.0;
-            int dim = System.Math.Min(this.rowCount, this.columnCount);
-
-            for (int i = 0; i < dim; i++)
-            {
-                buf *= this.CoreArray[i*this.RowCount + i];
-            }
-
-            return buf;
-        }
-
-        /// <summary>
-        /// Checks if matrix is n by one or one by n.
-        /// </summary>
-        /// <returns>Length, if vector; zero else.</returns>
-        public int VectorLength()
-        {
-            if (columnCount > 1 && rowCount > 1)
-                return 0;
-
-            return System.Math.Max(columnCount, rowCount);
-        }
-
-        /// <summary>
-        /// Generates diagonal matrix
-        /// </summary>
-        /// <param name="diag_vector">column vector containing the diag elements</param>
-        /// <returns></returns>
-        public static Matrix Diag(Matrix diag_vector)
-        {
-            int dim = diag_vector.VectorLength();
-
-            if (dim == 0)
-                throw new ArgumentException("diag_vector must be 1xN or Nx1");
-
-            var M = new Matrix(dim, dim);
-
-            for (int i = 0; i < dim; i++)
-                M.CoreArray[i*dim + i] = diag_vector.CoreArray[i];
-
-            return M;
-        }
-
-        /// <summary>
-        /// Creates n by n identity matrix.
-        /// </summary>
-        /// <param name="n">Number of rows and columns respectively.</param>
-        /// <returns>n by n identity matrix.</returns>
-        public static Matrix Identity(int n)
-        {
-            return Eye(n);
         }
 
         #region Operators
@@ -1731,41 +1194,6 @@ namespace BriefFiniteElementNet
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Fills the matrix in more straight way!
-        /// it is assumed that vals are columns and mappind 2d array to 1d is by placing matrix columns under each other
-        /// </summary>
-        /// <param name="vals"></param>
-        public void FillWith(params double[] vals)
-        {
-            Array.Copy(vals, this.CoreArray, System.Math.Max(vals.Length, this.CoreArray.Length));
-        }
-
-        public void RemoveRow(int m)
-        {
-            var rc = rowCount - 1;
-
-            var arr2 = new double[(rowCount - 1)*columnCount];
-
-            var ext = 0;
-
-            for (var i = 0; i < rowCount; i++)
-            {
-                if (i == m)
-                {
-                    ext = -1;
-                }
-                else
-                    for (var j = 0; j < columnCount; j++)
-                    {
-                        arr2[i + ext + j*rc] = coreArray[i + j*rowCount];
-                    }
-            }
-
-            this.coreArray = arr2;
-            this.rowCount--;
-        }
-
         public void FillRow(int rowNum,params double[] values)
         {
             if (values.Length != this.columnCount)
@@ -1807,21 +1235,6 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static double DotProduct(Matrix a1, Matrix a2)
-        {
-            if (a1.rowCount != a2.rowCount || a1.columnCount != a2.columnCount)
-                throw new Exception();
-
-            var buf = 0.0;
-
-            for (int i = 0; i < a1.coreArray.Length; i++)
-            {
-                buf+= a1.coreArray[i] * a2.coreArray[i];
-            }
-
-            return buf;
-        }
-
         public void FillColumn(int colNum, params double[] values)
         {
             if (values.Length != this.rowCount)
@@ -1830,35 +1243,6 @@ namespace BriefFiniteElementNet
             for (var j = 0; j < this.rowCount; j++)
             {
                 this[j, colNum] = values[j];
-            }
-        }
-
-        public void RemoveColumn(int n)
-        {
-            var l = this.rowCount*(this.columnCount - 1);
-
-            for (var k = n*this.rowCount; k < l; k++)
-            {
-                this.coreArray[k] = this.coreArray[k + rowCount];
-            }
-
-            Array.Resize(ref coreArray, l);
-            this.columnCount--;
-        }
-
-        public void SetRowToValue(int m, double val)
-        {
-            for (int i = 0; i < columnCount; i++)
-            {
-                this[m, i] = val;
-            }
-        }
-
-        public void SetColumnToValue(int n, double val)
-        {
-            for (int j = 0; j < rowCount; j++)
-            {
-                this[j, n] = val;
             }
         }
 
@@ -1882,17 +1266,6 @@ namespace BriefFiniteElementNet
         }
 
         #endregion
-
-        /// <summary>
-        /// Clears this instance. Turn all members to 0...
-        /// </summary>
-        public void Clear()
-        {
-            for (int i = 0; i < coreArray.Length; i++)
-            {
-                coreArray[i] = 0;
-            }
-        }
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
@@ -1935,30 +1308,6 @@ namespace BriefFiniteElementNet
                     this[i, j] = members[this.columnCount*i + j];
                 }
             }
-        }
-
-        /// <summary>
-        /// Fills the matrix col wise.
-        /// </summary>
-        /// <param name="members">The members.</param>
-        /// <exception cref="System.Exception"></exception>
-        public void FillMatrixColWise(params double[] members)
-        {
-            if (members.Length != this.coreArray.Length)
-                throw new Exception();
-
-            Array.Copy(members, this.coreArray, this.coreArray.Length);
-
-            //more simple:
-            /*
-            for (int i = 0; i < this.rowCount; i++)
-            {
-                for (int j = 0; j < this.columnCount; j++)
-                {
-                    this[i, j] = members[this.rowCount*i + j];
-                }
-            }
-            */
         }
 
         #region nonzero Pattern
