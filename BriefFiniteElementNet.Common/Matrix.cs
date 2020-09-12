@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.Security.Permissions;
-using System.Text;
-using System.Globalization;
-using BriefFiniteElementNet.Common;
-
-
+﻿
 namespace BriefFiniteElementNet
 {
+    using CSparse.Double;
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Text;
+    using System.Globalization;
+    using BriefFiniteElementNet.Common;
+
     /// <summary>
     /// Represents a dense real matrix
     /// </summary>
     [DebuggerDisplay("Matrix {RowCount} x {ColumnCount}")]
     [Serializable]
-    public class Matrix
+    public class Matrix : DenseMatrix
     {
         #region Matrix pool
 
@@ -62,46 +60,6 @@ namespace BriefFiniteElementNet
         #endregion
 
         #region Static Methods
-
-        /// <summary>
-        /// Fills the matrix rowise (all rows of new matrix are beside each other).
-        /// </summary>
-        /// <param name="members">The members.</param>
-        /// <exception cref="System.Exception"></exception>
-        public static Matrix OfRowMajor(int rows, int columns, double[] members)
-        {
-            var m = new Matrix(rows, columns);
-
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < columns; j++)
-                {
-                    //column * this.rowCount + row
-                    m[i, j] = members[columns * i + j];
-                }
-            }
-
-            return m;
-        }
-
-        public static Matrix OfJaggedArray(double[][] vals)
-        {
-            var rows = vals.Length;
-            var cols = vals.Select(i => i.Length).Max();
-
-            var buf = new Matrix(rows, cols);
-            buf.rows = rows;
-            buf.columns = cols;
-
-            buf.values = new double[rows * cols];
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    if (vals[i].Length > j)
-                        buf.Values[j * rows + i] = vals[i][j];
-
-            return buf;
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix"/> class as a column vector.
@@ -225,41 +183,6 @@ namespace BriefFiniteElementNet
 
         #endregion
 
-        public double[] Values
-        {
-            get { return values; }
-            internal set { values = value; }
-        }
-
-        private double[] values;
-
-        /// <summary>
-        /// Number of rows of the matrix.
-        /// </summary>
-        public int RowCount
-        {
-            get { return rows; }
-        }
-
-        /// <summary>
-        /// Number of columns of the matrix.
-        /// </summary>
-        public int ColumnCount
-        {
-            get { return columns; }
-        }
-
-
-        /// <summary>
-        /// Number of rows of the matrix.
-        /// </summary>
-        private int rows;
-
-        /// <summary>
-        /// Number of columns of the matrix.
-        /// </summary>
-        private int columns;
-
         #region Constructors
 
         /// <summary>
@@ -268,7 +191,7 @@ namespace BriefFiniteElementNet
         /// <param name="rows">The rows.</param>
         /// <param name="columns">The columns.</param>
         public Matrix(int rows, int columns)
-            : this(rows, columns, new double[rows * columns])
+            : base(rows, columns, new double[rows * columns])
         {
         }
 
@@ -277,7 +200,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="size">The size of the square matrix.</param>
         public Matrix(int size)
-            : this(size, size, new double[size * size])
+            : base(size, size, new double[size * size])
         {
         }
 
@@ -288,42 +211,11 @@ namespace BriefFiniteElementNet
         /// <param name="columns">The columns.</param>
         /// <param name="values">The values array (not cloned, ownership is taken).</param>
         public Matrix(int rows, int columns, double[] values)
+            : base(rows, columns, values)
         {
-            if (rows <= 0)
-                throw new ArgumentException("rows");
-
-            if (columns <= 0)
-                throw new ArgumentException("columns");
-
-            this.rows = rows;
-            this.columns = columns;
-            this.values = values;
         }
 
         #endregion
-
-        /// <summary>
-        /// Gets or sets the specified member.
-        /// </summary>
-        /// <value>
-        /// The <see cref="System.Double"/>.
-        /// </value>
-        /// <param name="row">The row (zero based).</param>
-        /// <param name="column">The column (zero based).</param>
-        /// <returns></returns>
-        [System.Runtime.CompilerServices.IndexerName("TheMember")]
-        public double this[int row, int column]
-        {
-            get
-            {
-                return At(row, column);
-            }
-
-            set
-            {
-                At(row, column, value);
-            }
-        }
 
         public Matrix RepeatDiagonally(int n)
         {
@@ -366,9 +258,9 @@ namespace BriefFiniteElementNet
 
             var buf = new Matrix(rows, columns);
 
-            for (int i = 0; i < values.Length; i++)
+            for (int i = 0; i < Values.Length; i++)
             {
-                buf.values[i] = values[i] / a2.values[i];
+                buf.Values[i] = Values[i] / a2.Values[i];
             }
 
             return buf;
@@ -381,9 +273,9 @@ namespace BriefFiniteElementNet
 
             var buf = new Matrix(rows, columns);
 
-            for (int i = 0; i < values.Length; i++)
+            for (int i = 0; i < Values.Length; i++)
             {
-                buf.values[i] = values[i] * a2.values[i];
+                buf.Values[i] = Values[i] * a2.Values[i];
             }
 
             return buf;
@@ -400,7 +292,7 @@ namespace BriefFiniteElementNet
 
             for (int i = 0; i < n; i++)
             {
-                result.Values[i] = values[i] + mat2.values[i];
+                result.Values[i] = Values[i] + mat2.Values[i];
             }
         }
 
@@ -417,7 +309,7 @@ namespace BriefFiniteElementNet
 
             for (int i = 0; i < n; i++)
             {
-                values[i] = values[i] + mat2.Values[i];
+                Values[i] = Values[i] + mat2.Values[i];
             }
         }
 
@@ -434,7 +326,7 @@ namespace BriefFiniteElementNet
             var n = rows * columns;
 
             for (int i = 0; i < n; i++)
-                values[i] = values[i] + mat2.values[i] * coefficient;
+                Values[i] = Values[i] + mat2.Values[i] * coefficient;
         }
 
         /// <summary>
@@ -482,7 +374,7 @@ namespace BriefFiniteElementNet
                     for (int k = 0; k < columns; k++)
                     {
                         res.Values[j * res.rows + i] +=
-                            values[k * rows + i] *
+                            Values[k * rows + i] *
                             other.Values[j * other.rows + k];
                     }
 
@@ -508,8 +400,8 @@ namespace BriefFiniteElementNet
                 throw new Exception("result dimension mismatch");
             }
 
-            var ax = this.values;
-            var bx = other.values;
+            var ax = this.Values;
+            var bx = other.Values;
 
             var vecLength = rows;
 
@@ -532,99 +424,6 @@ namespace BriefFiniteElementNet
 
         #region Dynamic Functions
 
-        /// <summary>
-        /// Sets the member at defined row and column to defined value.
-        /// </summary>
-        /// <param name="row">The row.</param>
-        /// <param name="column">The column.</param>
-        /// <param name="value">The value.</param>
-        public void At(int row, int column, double value)
-        {
-            MatrixException.ThrowIf(row >= this.RowCount || column >= this.ColumnCount,
-                   "Invalid column or row specified");
-
-            this.Values[column * this.rows + row] = value;
-        }
-
-        /// <summary>
-        /// Gets the member at defined row and column.
-        /// </summary>
-        /// <param name="row">The row.</param>
-        /// <param name="column">The column.</param>
-        /// <returns></returns>
-        public double At(int row, int column)
-        {
-            MatrixException.ThrowIf(row >= this.RowCount || column >= this.ColumnCount,
-                   "Invalid column or row specified");
-
-            return this.Values[column * this.rows + row];
-        }
-
-        /// <summary>
-        /// Substitutes the defined row with defined values.
-        /// </summary>
-        /// <param name="i">The row.</param>
-        /// <param name="values">The values.</param>
-        public void SetRow(int i, double[] values)
-        {
-            
-            if (values.Count() != this.ColumnCount)
-                throw new ArgumentOutOfRangeException("values");
-
-            for (int j = 0; j < this.ColumnCount; j++)
-            {
-                this.Values[j*this.RowCount + i] = values[j];
-            }
-        }
-
-        /// <summary>
-        /// Substitutes the defined column with defined values.
-        /// </summary>
-        /// <param name="j">The column.</param>
-        /// <param name="values">The values.</param>
-        public void SetColumn(int j, double[] values)
-        {
-            if (values.Count() != this.RowCount)
-                throw new ArgumentOutOfRangeException("values");
-
-
-            for (int i = 0; i < this.RowCount; i++)
-            {
-                this.Values[j * this.RowCount + i] = values[i];
-            }
-        }
-        
-        /// <summary>
-        /// Provides a shallow copy of this matrix in O(row).
-        /// </summary>
-        /// <returns></returns>
-        public Matrix Clone()
-        {
-            var buf = new Matrix(this.RowCount, this.ColumnCount);
-
-            buf.Values = (double[]) this.Values.Clone();
-            return buf;
-        }
-
-        /// <summary>
-        /// Swaps each matrix entry A[i, j] with A[j, i].
-        /// </summary>
-        /// <returns>A transposed matrix.</returns>
-        public Matrix Transpose()
-        {
-            var buf = new Matrix(this.ColumnCount, this.RowCount);
-
-            var newMatrix = buf.Values;
-
-            for (int row = 0; row < this.RowCount; row++)
-                for (int column = 0; column < this.ColumnCount; column++)
-                    //newMatrix[column*this.RowCount + row] = this.CoreArray[row*this.RowCount + column];
-                    buf[column, row] = this[row, column];
-
-            buf.Values = newMatrix;
-            return buf;
-        }
-
         public void InPlaceTranspose()
         {
             //var buf = new Matrix(this.ColumnCount, this.RowCount);
@@ -644,35 +443,6 @@ namespace BriefFiniteElementNet
             //buf.CoreArray = newMatrix;
             //return buf;
         }
-
-        #region Equality Members
-
-        protected bool Equals(Matrix other)
-        {
-            if (other.RowCount != this.RowCount)
-                return false;
-
-            if (other.ColumnCount != this.ColumnCount)
-                return false;
-
-            for (int i = 0; i < other.Values.Length; i++)
-            {
-                if (!MathUtil.Equals(this.Values[i], other.Values[i]))
-                    return false;
-            }
-
-            return true;
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((Matrix) obj);
-        }
-
-        #endregion
 
         /// <summary>
         /// Checks if number of rows equals number of columns.
@@ -1037,7 +807,7 @@ namespace BriefFiniteElementNet
 
             var clone = Pool != null ? Pool.Allocate(n, n) : new Matrix(n, n);
 
-            this.values.CopyTo(clone.values,0);
+            this.Values.CopyTo(clone.Values,0);
 
             var canditates = new bool[n];//if true, then row is canditate for pivot
             var pivoted = new int[n];//if nonNegative, then row is pivoted once, cannot be used again as pivot
@@ -1107,10 +877,10 @@ namespace BriefFiniteElementNet
 
         public void Replace(double oldValue, double newValue)
         {
-            for (int i = 0; i < values.Length; i++)
+            for (int i = 0; i < Values.Length; i++)
             {
-                if (values[i].Equals(oldValue))
-                    values[i] = newValue;
+                if (Values[i].Equals(oldValue))
+                    Values[i] = newValue;
             }
         }
 
