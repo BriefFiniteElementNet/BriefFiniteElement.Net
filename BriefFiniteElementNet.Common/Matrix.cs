@@ -2,13 +2,13 @@
 namespace BriefFiniteElementNet
 {
     using CSparse.Double;
-    using System;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Text;
-    using System.Globalization;
     using CSparse.Double.Factorization;
     using CSparse.Storage;
+    using System;
+    using System.Diagnostics;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// Represents a dense real matrix
@@ -19,7 +19,22 @@ namespace BriefFiniteElementNet
     {
         #region Matrix pool
 
+        [NonSerialized]
         public MatrixPool Pool;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether pool is used for this object or not.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [use pool]; otherwise, <c>false</c>.
+        /// </value>
+        /// <remarks>
+        /// If pool used for this object, on distruction values array will return to pool.
+        /// </remarks>
+        public bool UsePool { get; set; }
+
+        [NonSerialized]
+        private bool Disposed = false;
 
         /// <summary>
         /// Returns the matrix into pool and invalidates the matrix
@@ -27,7 +42,6 @@ namespace BriefFiniteElementNet
         /// <returns></returns>
         public void ReturnToPool()
         {
-            //return;
             if (Disposed)
                 return;
 
@@ -38,24 +52,7 @@ namespace BriefFiniteElementNet
                 if (Pool != null)
                     Pool.Free(this);
             }
-
         }
-
-        [NonSerialized]
-        private bool Disposed = false;
-        //[NonSerialized]
-        //private string GenerateCallStack_Temp;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether pool is used for this object or not.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [use pool]; otherwise, <c>false</c>.
-        /// </value>
-        /// <remarks>
-        /// If pool used for this object, on distruction corearray will return to pool
-        /// </remarks>
-        public bool UsePool { get; set; }
 
         #endregion
 
@@ -447,7 +444,7 @@ namespace BriefFiniteElementNet
         /// Transposes the matrix in place (matrix must be square).
         /// </summary>
         /// <param name="matrix"></param>
-        public static void InPlaceTranspose(this DenseColumnMajorStorage<double> matrix)
+        public static void TransposeInPlace(this DenseColumnMajorStorage<double> matrix)
         {
             int rows = matrix.RowCount;
             int columns = matrix.ColumnCount;

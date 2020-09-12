@@ -363,7 +363,7 @@ namespace BriefFiniteElementNet.Elements
             var tr = CalcUtil.GetBarTransformationMatrix(v);//, 0, this.MatrixPool);
 
             //tr = tr.Transpose();// 
-            tr.InPlaceTranspose();
+            tr.TransposeInPlace();
 
             return tr;
             /*
