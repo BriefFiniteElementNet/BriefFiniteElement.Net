@@ -17,7 +17,7 @@ namespace BriefFiniteElementNet
     /// </summary>
     [DebuggerDisplay("Matrix {RowCount} x {ColumnCount}")]
     [Serializable]
-    public class Matrix : ISerializable
+    public class Matrix
     {
         #region Matrix pool
 
@@ -1139,26 +1139,5 @@ namespace BriefFiniteElementNet
 
             return sb.ToString();
         }
-
-        #region Serialization stuff
-
-        [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("rowCount", rows);
-            info.AddValue("columnCount", columns);
-            info.AddValue("coreArray", values);
-        }
-
-        protected Matrix(
-            SerializationInfo info,
-            StreamingContext context)
-        {
-            this.rows = (int) info.GetValue("rowCount", typeof (int));
-            this.columns = (int) info.GetValue("columnCount", typeof (int));
-            this.values = (double[]) info.GetValue("coreArray", typeof (double[]));
-        }
-
-        #endregion
     }
 }
