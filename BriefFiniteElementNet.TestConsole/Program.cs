@@ -426,8 +426,8 @@ namespace BriefFiniteElementNet.TestConsole
             model.Solve_MPC();
 
             Console.WriteLine("Total matrix rents: {0}", model.MatrixPool.TotalRents);
-            Console.WriteLine("Total matrix creates: {0}", Matrix.CreateCount);
-            Console.WriteLine("Total matrix destructs: {0}", Matrix.DistructCount);
+            //Console.WriteLine("Total matrix creates: {0}", Matrix.CreateCount);
+            //Console.WriteLine("Total matrix destructs: {0}", Matrix.DistructCount);
 
             Console.ReadKey();
         }

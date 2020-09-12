@@ -326,102 +326,44 @@ namespace BriefFiniteElementNet
         /// </summary>
         private int columns;
 
-        public static long CreateCount,DistructCount;
-
         #region Constructors
 
         /// <summary>
-        /// Prevents a default instance of the <see cref="Matrix"/> class from being created.
+        /// Initializes a new instance of the <see cref="Matrix"/> class.
         /// </summary>
-        private Matrix()
+        /// <param name="rows">The rows.</param>
+        /// <param name="columns">The columns.</param>
+        public Matrix(int rows, int columns)
+            : this(rows, columns, new double[rows * columns])
         {
-            CreateCount++;
-           // GenerateCallStack_Temp = Environment.StackTrace;
-        }
-
-
-        ~Matrix()
-        {
-            /*
-            if (coreArray != null)
-            {
-                if (coreArray.Length == 2)
-                    Guid.NewGuid();
-
-                int i;
-
-                lock (dists)
-                {
-                    if (dists.TryGetValue(coreArray.Length, out i))
-                        dists[coreArray.Length]++;
-                    else
-                        dists.Add(coreArray.Length, 1);
-                }
-
-            }
-            */
-
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Matrix"/> class.
         /// </summary>
-        /// <param name="m">The row.</param>
-        /// <param name="n">The columns.</param>
-        /// <exception cref="System.ArgumentException">
-        /// row
-        /// or
-        /// n
-        /// </exception>
-        public Matrix(int m, int n):this()
+        /// <param name="size">The size of the square matrix.</param>
+        public Matrix(int size)
+            : this(size, size, new double[size * size])
         {
-            rows = m;
-            columns = n;
+        }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Matrix"/> class.
+        /// </summary>
+        /// <param name="rows">The rows.</param>
+        /// <param name="columns">The columns.</param>
+        /// <param name="values">The values array (not cloned, ownership is taken).</param>
+        public Matrix(int rows, int columns, double[] values)
+        {
             if (rows <= 0)
-                throw new ArgumentException("row");
-
-            if (columns <= 0)
-                throw new ArgumentException("n");
-
-            this.Values = new double[m*n];
-        }
-
-        /// <summary>
-        /// Initializes a new square matrix
-        /// </summary>
-        /// <param name="n">The matrix dimension.</param>
-        public Matrix(int n) : this()
-        {
-            rows = n;
-            columns = n;
-
-            if (n <= 0)
-                throw new ArgumentException("n");
-
-            this.Values = new double[n*n];
-        }
-
-        /// <summary>
-        /// creates
-        /// </summary>
-        /// <param name="rows"></param>
-        /// <param name="cols"></param>
-        /// <param name="coreArray"></param>
-        public Matrix(int rows, int cols, double[] coreArray) :this()
-        {
-            this.rows = rows;
-            columns = cols;
-
-            if (this.rows <= 0)
                 throw new ArgumentException("rows");
 
             if (columns <= 0)
-                throw new ArgumentException("cols");
+                throw new ArgumentException("columns");
 
-            this.Values = coreArray;
-
-            //CreateCount--;
+            this.rows = rows;
+            this.columns = columns;
+            this.values = values;
         }
 
         #endregion
