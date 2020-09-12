@@ -116,7 +116,7 @@ namespace BriefFiniteElementNet.Elements
                 lEndDisp.RX, lEndDisp.RY, lEndDisp.RZ
             };
 
-            var lStartForces = Matrix.Multiply(GetLocalStiffnessMatrix(), displVector);
+            var lStartForces = GetLocalStiffnessMatrix().Multiply(displVector);
 
             var startForce = Force.FromVector(lStartForces, 0);
 

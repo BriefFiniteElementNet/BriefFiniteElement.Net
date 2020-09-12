@@ -238,7 +238,7 @@ namespace BriefFiniteElementNet.Elements
 
             var lambda = GetTransformationMatrix();
 
-            var tr = Matrix.RepeatDiagonally(lambda.Transpose(), 6); // eq. 5-16 page 78 (87 of file)
+            var tr = lambda.Transpose().RepeatDiagonally(6); // eq. 5-16 page 78 (87 of file)
 
             //step 4 : get global stiffness matrix
             var buf = tr.Transpose() * kle * tr; //eq. 5-15 p77

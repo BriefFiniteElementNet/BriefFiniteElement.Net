@@ -936,8 +936,8 @@ namespace BriefFiniteElementNet.TestConsole
             var d1 = 200;
             var d2 = 200;
 
-            var m1 = Matrix.RandomMatrix(d1, d2);
-            var m2 = Matrix.RandomMatrix(d1, d1);
+            var m1 = Matrix.Random(d1, d2);
+            var m2 = Matrix.Random(d1, d1);
 
             var sp = System.Diagnostics.Stopwatch.StartNew();
 
@@ -949,7 +949,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             sp.Restart();
 
-            Matrix.TransposeMultiply(m1, m2, res2);
+            m1.TransposeMultiply(m2, res2);
 
             Console.WriteLine("Optimal took {0} Ms", sp.ElapsedMilliseconds);
 
@@ -1050,8 +1050,8 @@ namespace BriefFiniteElementNet.TestConsole
             var d1 = 36;
             var d2 = 27*6;
 
-            var B = Matrix.RandomMatrix(d1, d2);
-            var D = Matrix.RandomMatrix(d1, d1);
+            var B = Matrix.Random(d1, d2);
+            var D = Matrix.Random(d1, d1);
 
             var cnt = 1000;
 

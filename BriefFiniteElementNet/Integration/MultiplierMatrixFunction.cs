@@ -34,7 +34,7 @@ namespace BriefFiniteElementNet.Integration
             var buf_ =
                 targetElement.MatrixPool.Allocate(b.ColumnCount, b.ColumnCount);
 
-            Matrix.TransposeMultiply(b, b, buf_);
+            b.TransposeMultiply(b, buf_);
 
             //var buf_2 = b.Transpose() * d * b;
             buf_.MultiplyByConstant(d[0, 0] * Math.Abs(j.Determinant()));

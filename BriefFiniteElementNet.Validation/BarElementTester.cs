@@ -58,7 +58,7 @@ namespace BriefFiniteElementNet.Validation
             var kr = GetCondensedStiffness(kfull, newConds);
 
 
-            var ratio = Matrix.DotDivide(kr, kr2);
+            var ratio = kr.PointwiseDivide(kr2);
             ratio.Replace(double.NaN, 0);
 
             var d = (kr - kr2);

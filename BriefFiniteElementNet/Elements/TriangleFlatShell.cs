@@ -178,7 +178,7 @@ namespace BriefFiniteElementNet.Elements
 
             var lambda = GetTransformationMatrix();
 
-            var t = Matrix.RepeatDiagonally(lambda.Transpose(), 6); // eq. 5-16 page 78 (87 of file)
+            var t = lambda.Transpose().RepeatDiagonally(6); // eq. 5-16 page 78 (87 of file)
 
             var buf = t.Transpose() * kl * t; //eq. 5-15 p77
 

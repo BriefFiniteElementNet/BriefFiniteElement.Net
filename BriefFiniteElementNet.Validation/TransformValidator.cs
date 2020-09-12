@@ -13,9 +13,9 @@ namespace BriefFiniteElementNet.Validation
         {
             var dim = 42;
 
-            var B = Matrix.RandomMatrix(dim, dim);// elm.GetLocalStifnessMatrix();
+            var B = Matrix.Random(dim, dim);// elm.GetLocalStifnessMatrix();
 
-            var A = Matrix.RandomMatrix(3, 3);
+            var A = Matrix.Random(3, 3);
 
             var sp = System.Diagnostics.Stopwatch.StartNew();
 
@@ -28,7 +28,7 @@ namespace BriefFiniteElementNet.Validation
 
             System.Console.WriteLine("Optimised took {0} ms", sp.ElapsedMilliseconds);
 
-            var AA = Matrix.RepeatDiagonally(A, dim / 3);
+            var AA = A.RepeatDiagonally(dim / 3);
 
             sp.Restart();
             var at_b_a_dir = AA.Transpose() * B * AA;

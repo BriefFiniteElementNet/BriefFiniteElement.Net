@@ -1508,9 +1508,9 @@ namespace BriefFiniteElementNet
                 new Matrix(D.ColumnCount, B.ColumnCount);
                 //MatrixPool.Allocate(D.ColumnCount, B.ColumnCount);
 
-            Matrix.TransposeMultiply(D, B, buf1);
+            D.TransposeMultiply(B, buf1);
 
-            Matrix.TransposeMultiply(buf1, B, buf);
+            buf1.TransposeMultiply(B, buf);
 
             //MatrixPool.Free(buf1);
         }

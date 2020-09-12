@@ -19,38 +19,277 @@ namespace BriefFiniteElementNet
     [Serializable]
     public class Matrix : ISerializable
     {
+        #region Matrix pool
+
         public MatrixPool Pool;
 
-        public static Matrix RepeatDiagonally(Matrix mtx, int n)
+        /// <summary>
+        /// Returns the matrix into pool and invalidates the matrix
+        /// </summary>
+        /// <returns></returns>
+        public void ReturnToPool()
         {
-            var r = mtx.rows;
-            var c = mtx.columns;
+            //return;
+            if (Disposed)
+                return;
 
-            var buf = new Matrix(r*n, c*n);
+            this.Disposed = true;
 
-            for (var i = 0; i < n; i++)
-                //for (var j = 0; j < n; j++)
-                for (var ii = 0; ii < mtx.rows; ii++)
-                    for (var jj = 0; jj < mtx.columns; jj++)
-                        buf[i*r + ii, i*c + jj] = mtx[ii, jj];
+            lock (this)
+            {
+                if (Pool != null)
+                    Pool.Free(this);
+            }
+
+        }
+
+        [NonSerialized]
+        private bool Disposed = false;
+        //[NonSerialized]
+        //private string GenerateCallStack_Temp;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether pool is used for this object or not.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [use pool]; otherwise, <c>false</c>.
+        /// </value>
+        /// <remarks>
+        /// If pool used for this object, on distruction corearray will return to pool
+        /// </remarks>
+        public bool UsePool { get; set; }
+
+        #endregion
+
+        #region Static Methods
+
+        /// <summary>
+        /// Fills the matrix rowise (all rows of new matrix are beside each other).
+        /// </summary>
+        /// <param name="members">The members.</param>
+        /// <exception cref="System.Exception"></exception>
+        public static Matrix OfRowMajor(int rows, int columns, double[] members)
+        {
+            var m = new Matrix(rows, columns);
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    //column * this.rowCount + row
+                    m[i, j] = members[columns * i + j];
+                }
+            }
+
+            return m;
+        }
+
+        public static Matrix OfJaggedArray(double[][] vals)
+        {
+            var rows = vals.Length;
+            var cols = vals.Select(i => i.Length).Max();
+
+            var buf = new Matrix(rows, cols);
+            buf.rows = rows;
+            buf.columns = cols;
+
+            buf.values = new double[rows * cols];
+
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < cols; j++)
+                    if (vals[i].Length > j)
+                        buf.Values[j * rows + i] = vals[i][j];
 
             return buf;
         }
 
-        public static Matrix RandomMatrix(int m, int n)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Matrix"/> class as a column vector.
+        /// </summary>
+        /// <param name="vals">The vals.</param>
+        public static Matrix OfVector(double[] vals)
         {
-            var buf = new Matrix(m, n);
+            return new Matrix(vals.Length, 1, (double[])vals.Clone());
+        }
 
-            var rnd = new Random(0);
+        public static Matrix Random(int rows, int columns, int seed = 3165077)
+        {
+            var buf = new Matrix(rows, columns);
 
-            for (int i = 0; i < m*n; i++)
+            var rnd = new Random(seed);
+
+            for (int i = 0; i < rows * columns; i++)
             {
-                buf.Values[i] = rnd.NextDouble()*100;
+                buf.Values[i] = rnd.NextDouble() * 100;
             }
 
 
             return buf;
         }
+
+        /// <summary>
+        /// Creates a new Identity matrix.
+        /// </summary>
+        /// <param name="n">The n.</param>
+        /// <returns></returns>
+        public static Matrix Eye(int n)
+        {
+            var buf = new Matrix(n, n);
+
+            for (int i = 0; i < n; i++)
+                buf.Values[i * n + i] = 1.0;
+
+            return buf;
+        }
+
+        #region Operators
+
+        public static Matrix operator *(
+            Matrix m1, Matrix m2)
+        {
+            return m1.Multiply(m2);
+        }
+
+        public static double[] operator *(
+            Matrix m1, double[] vec)
+        {
+            var res = m1.Multiply(vec);
+
+            return res;
+        }
+
+        public static Matrix operator *(
+            double coeff, Matrix mat)
+        {
+            var newMat = new double[mat.RowCount * mat.ColumnCount];
+
+
+            for (int i = 0; i < newMat.Length; i++)
+            {
+                newMat[i] = coeff * mat.Values[i];
+            }
+
+            var buf = new Matrix(mat.RowCount, mat.ColumnCount);
+            buf.Values = newMat;
+
+            return buf;
+        }
+
+        public static Matrix operator -(
+            Matrix mat)
+        {
+            var buf = new Matrix(mat.RowCount, mat.ColumnCount);
+            ;
+
+            for (int i = 0; i < buf.Values.Length; i++)
+            {
+                buf.Values[i] = -mat.Values[i];
+            }
+
+            return buf;
+        }
+
+        public static Matrix operator +(
+            Matrix mat1, Matrix mat2)
+        {
+            MatrixException.ThrowIf(mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount,
+                "Inconsistent matrix sizes");
+
+            var buf = new Matrix(mat1.RowCount, mat1.ColumnCount);
+
+            for (int i = 0; i < buf.Values.Length; i++)
+            {
+                buf.Values[i] = mat1.Values[i] + mat2.Values[i];
+            }
+
+            return buf;
+        }
+
+        public static void Plus(Matrix mat1, Matrix mat2, Matrix result)
+        {
+            MatrixException.ThrowIf(
+                mat1.RowCount != mat2.RowCount ||
+                mat2.RowCount != result.RowCount ||
+
+                mat1.ColumnCount != mat2.ColumnCount ||
+                mat2.ColumnCount != result.ColumnCount,
+                "Inconsistent matrix sizes");
+
+            var n = mat1.rows * mat1.columns;
+
+            for (int i = 0; i < n; i++)
+            {
+                result.Values[i] = mat1.Values[i] + mat2.Values[i];
+            }
+        }
+
+
+        /// <summary>
+        /// mat1 = mat1 + mat2
+        /// </summary>
+        /// <param name="mat1"></param>
+        /// <param name="mat2"></param>
+        public static void InplacePlus(Matrix mat1, Matrix mat2)
+        {
+            MatrixException.ThrowIf(
+                mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount
+                , "Inconsistent matrix sizes");
+
+            var n = mat1.rows * mat1.columns;
+
+            for (int i = 0; i < n; i++)
+            {
+                mat1.Values[i] = mat1.Values[i] + mat2.Values[i];
+            }
+        }
+
+        /// <summary>
+        /// mat1 = mat1 + mat2 * coefficient
+        /// </summary>
+        /// <param name="mat1"></param>
+        /// <param name="mat2"></param>
+        /// <param name="coefficient"></param>
+        public static void InplacePlus(Matrix mat1, Matrix mat2, double coefficient)
+        {
+            MatrixException.ThrowIf(
+                mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount
+                , "Inconsistent matrix sizes");
+
+            var n = mat1.rows * mat1.columns;
+
+            for (int i = 0; i < n; i++)
+                mat1.Values[i] = mat1.Values[i] + mat2.Values[i] * coefficient;
+        }
+
+        public static Matrix operator -(
+            Matrix mat1, Matrix mat2)
+        {
+            MatrixException.ThrowIf(mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount,
+                "Inconsistent matrix sizes");
+
+            var buf = new Matrix(mat1.RowCount, mat1.ColumnCount);
+
+            for (int i = 0; i < buf.Values.Length; i++)
+            {
+                buf.Values[i] = mat1.Values[i] - mat2.Values[i];
+            }
+
+            return buf;
+        }
+
+        public static bool operator ==(Matrix left, Matrix right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(Matrix left, Matrix right)
+        {
+            return !Equals(left, right);
+        }
+
+        #endregion
+
+        #endregion
 
         public double[] Values
         {
@@ -163,34 +402,6 @@ namespace BriefFiniteElementNet
             this.Values = new double[n*n];
         }
 
-        public static Matrix OfJaggedArray(double[][] vals)
-        {
-            var rows = vals.Length;
-            var cols = vals.Select(i => i.Length).Max();
-
-            var buf = new Matrix(rows, cols);
-            buf.rows = rows;
-            buf.columns = cols;
-
-            buf.values = new double[rows * cols];
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    if (vals[i].Length > j)
-                        buf.Values[j * rows + i] = vals[i][j];
-
-            return buf;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Matrix"/> class as a column vector.
-        /// </summary>
-        /// <param name="vals">The vals.</param>
-        public static Matrix OfVector(double[] vals)
-        {
-            return new Matrix(vals.Length, 1, (double[])vals.Clone());
-        }
-
         /// <summary>
         /// creates
         /// </summary>
@@ -238,68 +449,68 @@ namespace BriefFiniteElementNet
             }
         }
 
-        public static Matrix Multiply(Matrix m1, Matrix m2)
+        public Matrix RepeatDiagonally(int n)
         {
-            if (m1.ColumnCount != m2.RowCount)
-                throw new InvalidOperationException("No consistent dimensions");
+            var buf = new Matrix(rows * n, columns * n);
 
-            var res = new Matrix(m1.RowCount, m2.ColumnCount);
+            RepeatDiagonally(n, new Matrix(rows * n, columns * n));
 
-            for (int i = 0; i < m1.rows; i++)
-                for (int j = 0; j < m2.columns; j++)
-                    for (int k = 0; k < m1.columns; k++)
-                    {
-                        res.Values[j*res.rows + i] +=
-                            m1.Values[k*m1.rows + i]*
-                            m2.Values[j*m2.rows + k];
-                    }
-
-
-            return res;
+            return buf;
         }
 
-        /// <summary>
-        /// calculates the m1.transpose * m2 and stores the value into result.
-        /// </summary>
-        /// <param name="m1">The m1.</param>
-        /// <param name="m2">The m2.</param>
-        /// <param name="result">The result.</param>
-        /// <returns></returns>
-        public static void TransposeMultiply(Matrix m1, Matrix m2, Matrix result)
+        public void RepeatDiagonally(int n, Matrix target)
         {
-            if (m1.rows != m2.RowCount)
-                throw new InvalidOperationException("No consistent dimensions");
+            var r = rows;
+            var c = columns;
 
-            var res = result;
-
-            if (res.rows != m1.columns || res.ColumnCount != m2.columns)
+            if (target.rows != n * r || target.columns != n * c)
             {
-                throw new Exception("result dimension mismatch");
+                throw new ArgumentException("Dimensions don't match.");
             }
 
-            var a = m1;
-            var b = m2;
+            var buf = new Matrix(r * n, c * n);
 
-
-            var a_arr = a.values;
-            var b_arr = b.values;
-
-            var vecLength = a.rows;
-
-            for (var i = 0; i < a.columns; i++)
-                for (var j = 0; j < b.columns; j++)
+            for (var i = 0; i < n; i++)
+            {
+                for (var ii = 0; ii < r; ii++)
                 {
-                    var t = 0.0;
-
-                    var a_st = i * a.rows;
-                    var b_st = j * b.rows;
-
-                    for (var k = 0; k < vecLength; k++)
-                        t += a_arr[a_st + k] * b_arr[b_st + k];
-
-                    res[i, j] = t;
+                    for (var jj = 0; jj < c; jj++)
+                    {
+                        // TODO: MAT - direct access
+                        buf[i * r + ii, i * c + jj] = this[ii, jj];
+                    }
                 }
+            }
+        }
 
+        public Matrix PointwiseDivide(Matrix a2)
+        {
+            if (rows != a2.rows || columns != a2.columns)
+                throw new Exception();
+
+            var buf = new Matrix(rows, columns);
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                buf.values[i] = values[i] / a2.values[i];
+            }
+
+            return buf;
+        }
+
+        public Matrix PointwiseMultiply(Matrix a2)
+        {
+            if (rows != a2.rows || columns != a2.columns)
+                throw new Exception();
+
+            var buf = new Matrix(rows, columns);
+
+            for (int i = 0; i < values.Length; i++)
+            {
+                buf.values[i] = values[i] * a2.values[i];
+            }
+
+            return buf;
         }
 
         /// <summary>
@@ -309,13 +520,13 @@ namespace BriefFiniteElementNet
         /// <param name="vec">The vec.</param>
         /// <returns></returns>
         /// <exception cref="BriefFiniteElementNet.MatrixException"></exception>
-        public static double[] Multiply(Matrix m, double[] vec)
+        public double[] Multiply(double[] vec)
         {
-            if (m.columns != vec.Length)
+            if (columns != vec.Length)
                 throw new MatrixException();
 
-            var c = m.columns;
-            var r = m.rows;
+            var c = columns;
+            var r = rows;
 
             var buf = new double[vec.Length];
 
@@ -325,13 +536,74 @@ namespace BriefFiniteElementNet
 
                 for (var j = 0; j < c; j++)
                 {
-                    tmp += m[i, j]*vec[j];
+                    // TODO: MAT - direct access
+                    tmp += this[i, j] * vec[j];
                 }
 
                 buf[i] = tmp;
             }
 
             return buf;
+        }
+
+        public Matrix Multiply(Matrix other)
+        {
+            if (columns != other.RowCount)
+                throw new InvalidOperationException("No consistent dimensions");
+
+            var res = new Matrix(rows, other.columns);
+
+            for (int i = 0; i < rows; i++)
+                for (int j = 0; j < other.columns; j++)
+                    for (int k = 0; k < columns; k++)
+                    {
+                        res.Values[j * res.rows + i] +=
+                            values[k * rows + i] *
+                            other.Values[j * other.rows + k];
+                    }
+
+
+            return res;
+        }
+
+        /// <summary>
+        /// calculates the [this.transpose] * [other] and stores the value into result.
+        /// </summary>
+        /// <param name="other">The m2.</param>
+        /// <param name="result">The result.</param>
+        /// <returns></returns>
+        public void TransposeMultiply(Matrix other, Matrix result)
+        {
+            if (rows != other.rows)
+                throw new InvalidOperationException("No consistent dimensions");
+
+            var res = result;
+
+            if (res.rows != columns || res.columns != other.columns)
+            {
+                throw new Exception("result dimension mismatch");
+            }
+
+            var ax = this.values;
+            var bx = other.values;
+
+            var vecLength = rows;
+
+            for (var i = 0; i < columns; i++)
+                for (var j = 0; j < other.columns; j++)
+                {
+                    var t = 0.0;
+
+                    var a_st = i * rows;
+                    var b_st = j * other.rows;
+
+                    for (var k = 0; k < vecLength; k++)
+                        t += ax[a_st + k] * bx[b_st + k];
+
+                    // TODO: MAT - direct access
+                    res[i, j] = t;
+                }
+
         }
 
         #region Dynamic Functions
@@ -397,63 +669,6 @@ namespace BriefFiniteElementNet
                 this.Values[j * this.RowCount + i] = values[i];
             }
         }
-
-        /// <summary>
-        /// Fills the matrix rowise (all rows of new matrix are beside each other).
-        /// </summary>
-        /// <param name="members">The members.</param>
-        /// <exception cref="System.Exception"></exception>
-        public static Matrix OfRowMajor(int rows, int columns, double[] members)
-        {
-            var m = new Matrix(rows, columns);
-
-            for (int i = 0; i < rows; i++)
-            {
-                for (int j = 0; j < columns; j++)
-                {
-                    //column * this.rowCount + row
-                    m[i, j] = members[columns * i + j];
-                }
-            }
-
-            return m;
-        }
-
-        /// <summary>
-        /// Returns the matrix into pool and invalidates the matrix
-        /// </summary>
-        /// <returns></returns>
-        public void ReturnToPool()
-        {
-            //return;
-            if (Disposed)
-                return;
-
-            this.Disposed = true;
-
-            lock (this)
-            {
-                if (Pool != null)
-                    Pool.Free(this);
-            }
-            
-        }
-
-        [NonSerialized]
-        private bool Disposed = false;
-        //[NonSerialized]
-        //private string GenerateCallStack_Temp;
-
-        /// <summary>
-        /// Gets or sets a value indicating whether pool is used for this object or not.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if [use pool]; otherwise, <c>false</c>.
-        /// </value>
-        /// <remarks>
-        /// If pool used for this object, on distruction corearray will return to pool
-        /// </remarks>
-        public bool UsePool { get; set; }
         
         /// <summary>
         /// Provides a shallow copy of this matrix in O(row).
@@ -535,8 +750,6 @@ namespace BriefFiniteElementNet
 
         #endregion
 
-        #region Checks
-
         /// <summary>
         /// Checks if number of rows equals number of columns.
         /// </summary>
@@ -545,8 +758,6 @@ namespace BriefFiniteElementNet
         {
             return (this.columns == this.rows);
         }
-
-        #endregion
 
         /// <summary>
         /// Swaps rows at specified indices. The latter do not have to be ordered.
@@ -970,175 +1181,6 @@ namespace BriefFiniteElementNet
 
         #endregion
 
-        #region Static Methods
-
-        /// <summary>
-        /// Creates a new Identity matrix.
-        /// </summary>
-        /// <param name="n">The n.</param>
-        /// <returns></returns>
-        public static Matrix Eye(int n)
-        {
-            var buf = new Matrix(n, n);
-
-            for (int i = 0; i < n; i++)
-                buf.Values[i*n + i] = 1.0;
-
-            return buf;
-        }
-
-        #region Operators
-
-        public static Matrix operator *(
-            Matrix m1, Matrix m2)
-        {
-            return Matrix.Multiply(m1, m2);
-        }
-
-        public static double[] operator *(
-            Matrix m1, double[] vec)
-        {
-            var m2 = Matrix.OfVector(vec);
-
-            var res = Matrix.Multiply(m1, m2);
-
-            return res.values;
-        }
-
-        public static Matrix operator *(
-            double coeff, Matrix mat)
-        {
-            var newMat = new double[mat.RowCount*mat.ColumnCount];
-
-
-            for (int i = 0; i < newMat.Length; i++)
-            {
-                newMat[i] = coeff*mat.Values[i];
-            }
-
-            var buf = new Matrix(mat.RowCount, mat.ColumnCount);
-            buf.Values = newMat;
-
-            return buf;
-        }
-
-        public static Matrix operator -(
-            Matrix mat)
-        {
-            var buf = new Matrix(mat.RowCount, mat.ColumnCount);
-            ;
-
-            for (int i = 0; i < buf.Values.Length; i++)
-            {
-                buf.Values[i] = -mat.Values[i];
-            }
-
-            return buf;
-        }
-
-        public static Matrix operator +(
-            Matrix mat1, Matrix mat2)
-        {
-            MatrixException.ThrowIf(mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount,
-                "Inconsistent matrix sizes");
-
-            var buf = new Matrix(mat1.RowCount, mat1.ColumnCount);
-
-            for (int i = 0; i < buf.Values.Length; i++)
-            {
-                buf.Values[i] = mat1.Values[i] + mat2.Values[i];
-            }
-
-            return buf;
-        }
-
-        public static void Plus(Matrix mat1, Matrix mat2, Matrix result)
-        {
-            MatrixException.ThrowIf(
-                mat1.RowCount != mat2.RowCount ||
-                mat2.RowCount != result.RowCount ||
-
-                mat1.ColumnCount != mat2.ColumnCount ||
-                mat2.ColumnCount != result.ColumnCount,
-                "Inconsistent matrix sizes");
-
-            var n = mat1.rows * mat1.columns;
-
-            for (int i = 0; i < n; i++)
-            {
-                result.Values[i] = mat1.Values[i] + mat2.Values[i];
-            }
-        }
-
-
-        /// <summary>
-        /// mat1 = mat1 + mat2
-        /// </summary>
-        /// <param name="mat1"></param>
-        /// <param name="mat2"></param>
-        public static void InplacePlus(Matrix mat1, Matrix mat2)
-        {
-            MatrixException.ThrowIf(
-                mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount
-                , "Inconsistent matrix sizes");
-
-            var n = mat1.rows * mat1.columns;
-
-            for (int i = 0; i < n; i++)
-            {
-                mat1.Values[i] = mat1.Values[i] + mat2.Values[i];
-            }
-        }
-
-        /// <summary>
-        /// mat1 = mat1 + mat2 * coefficient
-        /// </summary>
-        /// <param name="mat1"></param>
-        /// <param name="mat2"></param>
-        /// <param name="coefficient"></param>
-        public static void InplacePlus(Matrix mat1, Matrix mat2,double coefficient)
-        {
-            MatrixException.ThrowIf(
-                mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount
-                , "Inconsistent matrix sizes");
-
-            var n = mat1.rows * mat1.columns;
-
-            for (int i = 0; i < n; i++)
-                mat1.Values[i] = mat1.Values[i] + mat2.Values[i] * coefficient;
-        }
-
-        public static Matrix operator -(
-            Matrix mat1, Matrix mat2)
-        {
-            MatrixException.ThrowIf(mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount,
-                "Inconsistent matrix sizes");
-
-            var buf = new Matrix(mat1.RowCount, mat1.ColumnCount);
-
-            for (int i = 0; i < buf.Values.Length; i++)
-            {
-                buf.Values[i] = mat1.Values[i] - mat2.Values[i];
-            }
-
-            return buf;
-        }
-
-        public static bool operator ==(Matrix left, Matrix right)
-        {
-            return Equals(left, right);
-        }
-
-        public static bool operator !=(Matrix left, Matrix right)
-        {
-            return !Equals(left, right);
-        }
-
-        #endregion
-
-        #endregion
-
-
         public void Replace(double oldValue, double newValue)
         {
             for (int i = 0; i < values.Length; i++)
@@ -1172,36 +1214,6 @@ namespace BriefFiniteElementNet
             }
 
             return sb.ToString();
-        }
-
-        public static Matrix DotDivide(Matrix a1, Matrix a2)
-        {
-            if (a1.rows != a2.rows || a1.columns != a2.columns)
-                throw new Exception();
-
-            var buf = new Matrix(a1.rows, a1.columns);
-
-            for (int i = 0; i < a1.values.Length; i++)
-            {
-                buf.values[i] = a1.values[i] / a2.values[i];
-            }
-
-            return buf;
-        }
-
-        public static Matrix DotMultiply(Matrix a1, Matrix a2)
-        {
-            if (a1.rows != a2.rows || a1.columns != a2.columns)
-                throw new Exception();
-
-            var buf = new Matrix(a1.rows, a1.columns);
-
-            for (int i = 0; i < a1.values.Length; i++)
-            {
-                buf.values[i] = a1.values[i] * a2.values[i];
-            }
-
-            return buf;
         }
 
         #region Serialization stuff

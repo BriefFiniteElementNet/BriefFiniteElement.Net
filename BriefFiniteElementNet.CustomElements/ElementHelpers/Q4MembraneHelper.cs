@@ -136,7 +136,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             Matrix A = GetAMatrix(targetElement, isoCoords);
             Matrix G = GetGMatrix(targetElement, isoCoords);
 
-            return Matrix.Multiply(A, G); 
+            return A.Multiply(G); 
         }
 
         public int[] GetBMaxOrder(Element targetElement)
