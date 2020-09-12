@@ -111,6 +111,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             xs[1,0] = x[0,2] - x[0,0];
             xs[1,1] = x[1,2] - x[1,0];
             */
+
+            // TODO: xs and sx not used?
             var xs = GetJMatrixAt(targetElement, isoCoords).Transpose();
             var sx = xs.Inverse();
 

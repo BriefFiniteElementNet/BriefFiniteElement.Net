@@ -86,9 +86,9 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Creates a new Identity matrix.
+        /// Creates a new identity matrix.
         /// </summary>
-        /// <param name="n">The n.</param>
+        /// <param name="n">The matrix size.</param>
         /// <returns></returns>
         public static Matrix Eye(int n)
         {
@@ -121,36 +121,31 @@ namespace BriefFiniteElementNet
 
         public static double[] operator *(Matrix m1, double[] vec)
         {
-            var res = m1.Multiply(vec);
-
-            return res;
+            return m1.Multiply(vec);
         }
 
         public static Matrix operator *(double coeff, Matrix mat)
         {
-            var newMat = new double[mat.RowCount * mat.ColumnCount];
+            var values = new double[mat.RowCount * mat.ColumnCount];
 
-            for (int i = 0; i < newMat.Length; i++)
+            for (int i = 0; i < values.Length; i++)
             {
-                newMat[i] = coeff * mat.Values[i];
+                values[i] = coeff * mat.Values[i];
             }
 
-            var buf = new Matrix(mat.RowCount, mat.ColumnCount);
-            buf.Values = newMat;
-
-            return buf;
+            return new Matrix(mat.RowCount, mat.ColumnCount, values);
         }
 
         public static Matrix operator -(Matrix mat)
         {
-            var buf = new Matrix(mat.RowCount, mat.ColumnCount);
+            var result = new Matrix(mat.RowCount, mat.ColumnCount);
 
-            for (int i = 0; i < buf.Values.Length; i++)
+            for (int i = 0; i < result.Values.Length; i++)
             {
-                buf.Values[i] = -mat.Values[i];
+                result.Values[i] = -mat.Values[i];
             }
 
-            return buf;
+            return result;
         }
 
         public static Matrix operator +(Matrix mat1, Matrix mat2)
@@ -158,14 +153,14 @@ namespace BriefFiniteElementNet
             MatrixException.ThrowIf(mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount,
                 "Inconsistent matrix sizes");
 
-            var buf = new Matrix(mat1.RowCount, mat1.ColumnCount);
+            var result = new Matrix(mat1.RowCount, mat1.ColumnCount);
 
-            for (int i = 0; i < buf.Values.Length; i++)
+            for (int i = 0; i < result.Values.Length; i++)
             {
-                buf.Values[i] = mat1.Values[i] + mat2.Values[i];
+                result.Values[i] = mat1.Values[i] + mat2.Values[i];
             }
 
-            return buf;
+            return result;
         }
 
         public static Matrix operator -(Matrix mat1, Matrix mat2)
@@ -173,14 +168,14 @@ namespace BriefFiniteElementNet
             MatrixException.ThrowIf(mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount,
                 "Inconsistent matrix sizes");
 
-            var buf = new Matrix(mat1.RowCount, mat1.ColumnCount);
+            var result = new Matrix(mat1.RowCount, mat1.ColumnCount);
 
-            for (int i = 0; i < buf.Values.Length; i++)
+            for (int i = 0; i < result.Values.Length; i++)
             {
-                buf.Values[i] = mat1.Values[i] - mat2.Values[i];
+                result.Values[i] = mat1.Values[i] - mat2.Values[i];
             }
 
-            return buf;
+            return result;
         }
 
         #endregion
@@ -225,7 +220,7 @@ namespace BriefFiniteElementNet
 
             var mtx = this;
 
-            var epsi1on = mtx.Values.Select(i => System.Math.Abs(i)).Min() * 1e-9;
+            var epsi1on = mtx.Values.Select(i => Math.Abs(i)).Min() * 1e-9;
 
             if (epsi1on == 0)
                 epsi1on = 1e-9;
@@ -234,7 +229,7 @@ namespace BriefFiniteElementNet
             {
                 for (var j = 0; j < mtx.ColumnCount; j++)
                 {
-                    if (System.Math.Abs(mtx[i, j]) < epsi1on)
+                    if (Math.Abs(mtx[i, j]) < epsi1on)
                         sb.AppendFormat(CultureInfo.CurrentCulture, "0\t", mtx[i, j]);
                     else
                         sb.AppendFormat("{0:0.00}\t", mtx[i, j]);
@@ -249,13 +244,10 @@ namespace BriefFiniteElementNet
     public static class DenseMatrixExtensions
     {
         /// <summary>
-        /// Helper method to cast the storage to a Matrix instance.
+        /// Helper method to cast the storage to a <see cref="Matrix"/> instance.
         /// </summary>
         public static Matrix AsMatrix(this DenseColumnMajorStorage<double> matrix)
         {
-            // NOTE: this method is mainly used to simpify the usage operator overloads
-            //       which aren't supported by CSparse matrix types.
-
             return new Matrix(matrix.RowCount, matrix.ColumnCount, matrix.Values);
         }
 
@@ -296,6 +288,11 @@ namespace BriefFiniteElementNet
             }
         }
 
+        /// <summary>
+        /// Pointwise division of two matrices (Matlab dot syntax A./B).
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <param name="other"></param>
         public static Matrix PointwiseDivide(this DenseColumnMajorStorage<double> matrix, Matrix other)
         {
             int rows = matrix.RowCount;
@@ -315,6 +312,12 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
+        /// <summary>
+        /// Pointwise multiplcation of two matrices (Matlab dot syntax A.*B).
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public static Matrix PointwiseMultiply(this DenseColumnMajorStorage<double> matrix, Matrix other)
         {
             int rows = matrix.RowCount;
@@ -334,29 +337,10 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static void Add(this DenseColumnMajorStorage<double> matrix, Matrix other, Matrix result)
-        {
-            int rows = matrix.RowCount;
-            int columns = matrix.ColumnCount;
-
-            MatrixException.ThrowIf(
-                rows != other.RowCount || other.RowCount != result.RowCount ||
-                columns != other.ColumnCount ||  other.ColumnCount != result.ColumnCount,
-                "Inconsistent matrix sizes");
-
-            int n = rows * columns;
-            var values = matrix.Values;
-
-            for (int i = 0; i < n; i++)
-            {
-                result.Values[i] = values[i] + other.Values[i];
-            }
-        }
-
-
         /// <summary>
-        /// mat1 = mat1 + mat2
+        /// Computes the sum A = A + B.
         /// </summary>
+        /// <param name="matrix"></param>
         /// <param name="other"></param>
         public static void AddToThis(this DenseColumnMajorStorage<double> matrix, Matrix other)
         {
@@ -375,12 +359,12 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// mat1 = mat1 + mat2 * coefficient
+        /// Computes the sum A = A + s * B.
         /// </summary>
-        /// <param name="mat1"></param>
+        /// <param name="matrix"></param>
         /// <param name="other"></param>
-        /// <param name="coefficient"></param>
-        public static void AddToThis(this DenseColumnMajorStorage<double> matrix, Matrix other, double coefficient)
+        /// <param name="s"></param>
+        public static void AddToThis(this DenseColumnMajorStorage<double> matrix, Matrix other, double s)
         {
             int rows = matrix.RowCount;
             int columns = matrix.ColumnCount;
@@ -391,16 +375,15 @@ namespace BriefFiniteElementNet
             var values = matrix.Values;
 
             for (int i = 0; i < n; i++)
-                values[i] = values[i] + other.Values[i] * coefficient;
+                values[i] = values[i] + other.Values[i] * s;
         }
 
         /// <summary>
-        /// Multiplies the specified <see cref="Matrix"/> with specified Vector <see cref="vec"/>.
+        /// Multiplies the specified <see cref="Matrix"/> with specified Vector <paramref name="vec"/>.
         /// </summary>
-        /// <param name="m">The m.</param>
+        /// <param name="matrix">The matrix.</param>
         /// <param name="vec">The vec.</param>
         /// <returns></returns>
-        /// <exception cref="BriefFiniteElementNet.MatrixException"></exception>
         public static double[] Multiply(this DenseColumnMajorStorage<double> matrix, double[] vec)
         {
             var buf = new double[vec.Length];
@@ -410,39 +393,12 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        /*
-        public static Matrix Multiply(this DenseColumnMajorStorage<double> matrix, Matrix other)
-        {
-            int rows = matrix.RowCount;
-            int columns = matrix.ColumnCount;
-
-            if (columns != other.RowCount)
-                throw new InvalidOperationException("No consistent dimensions");
-
-            int columnsB = other.ColumnCount;
-
-            var res = new Matrix(rows, columnsB);
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < columnsB; j++)
-                    for (int k = 0; k < columns; k++)
-                    {
-                        res.Values[j * res.RowCount + i] +=
-                            matrix.Values[k * rows + i] *
-                            other.Values[j * other.RowCount + k];
-                    }
-
-
-            return res;
-        }
-        //*/
-
         /// <summary>
-        /// calculates the [this.transpose] * [other] and stores the value into result.
+        /// Computes the matrix product A^T * B.
         /// </summary>
-        /// <param name="other">The m2.</param>
-        /// <param name="result">The result.</param>
-        /// <returns></returns>
+        /// <param name="matrix">The matrix A.</param>
+        /// <param name="other">The other matrix B.</param>
+        /// <param name="result">The result matrix.</param>
         public static void TransposeMultiply(this DenseColumnMajorStorage<double> matrix, Matrix other, Matrix result)
         {
             int rowsA = matrix.RowCount;
@@ -452,36 +408,45 @@ namespace BriefFiniteElementNet
             int columnsB = other.ColumnCount;
 
             if (rowsA != rowsB)
+            {
                 throw new InvalidOperationException("No consistent dimensions");
+            }
 
-            var res = result;
-
-            if (res.RowCount != columnsA || res.ColumnCount != columnsB)
+            if (result.RowCount != columnsA || result.ColumnCount != columnsB)
             {
                 throw new Exception("result dimension mismatch");
             }
 
-            var a_arr = matrix.Values;
-            var b_arr = other.Values;
+            var A = matrix.Values;
+            var B = other.Values;
+            var C = result.Values;
 
-            int vecLength = rowsA;
-
-            for (int i = 0; i < rowsA; i++)
-                for (int j = 0; j < rowsB; j++)
+            for (int i = 0; i < columnsA; i++)
+            {
+                for (int j = 0; j < columnsB; j++)
                 {
-                    double t = 0.0;
+                    double sum = 0.0;
 
-                    // column major order.
-                    int a_st = i * columnsA;
-                    int b_st = j * columnsB;
+                    // Column major order.
+                    int strideA = i * rowsA;
+                    int strideB = j * rowsB;
 
-                    for (int k = 0; k < vecLength; k++)
-                        t += a_arr[a_st + k] * b_arr[b_st + k];
+                    for (int k = 0; k < rowsA; k++)
+                    {
+                        //sum += A[k, i] * B[k, j];
+                        sum += A[strideA + k] * B[strideB + k];
+                    }
 
-                    res[i, j] = t;
+                    //C[i, j] = sum;
+                    C[j * columnsA + i] = sum;
                 }
+            }
         }
 
+        /// <summary>
+        /// Transposes the matrix in place (matrix must be square).
+        /// </summary>
+        /// <param name="matrix"></param>
         public static void InPlaceTranspose(this DenseColumnMajorStorage<double> matrix)
         {
             int rows = matrix.RowCount;
@@ -496,11 +461,13 @@ namespace BriefFiniteElementNet
 
             for (int i = 0; i < rows; i++)
             {
+                int nxi = i * columns;
+
                 for (int j = i; j < columns; j++)
                 {
-                    double tmp = values[i * columns + j];
+                    double tmp = values[nxi + j];
 
-                    values[i * columns + j] = values[j * columns + i];
+                    values[nxi + j] = values[j * columns + i];
 
                     values[j * columns + i] = tmp;
                 }
@@ -517,9 +484,10 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Retrieves row vector at specfifed index and deletes it from matrix.
+        /// Retrieves the matrix row vector at specfifed index.
         /// </summary>
-        /// <param name="i">One-based index at which to extract.</param>
+        /// <param name="matrix">The matrix.</param>
+        /// <param name="i">The row index.</param>
         /// <returns>Row vector.</returns>
         public static Matrix ExtractRow(this DenseColumnMajorStorage<double> matrix, int i)
         {
@@ -527,7 +495,7 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Gets the determinant of matrix
+        /// Gets the determinant of the matrix.
         /// </summary>
         /// <returns></returns>
         public static double Determinant(this DenseColumnMajorStorage<double> matrix)
@@ -536,7 +504,7 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Gets the inverse of matrix
+        /// Gets the inverse of the matrix.
         /// </summary>
         /// <returns></returns>
         public static Matrix Inverse(this DenseColumnMajorStorage<double> matrix)
@@ -552,18 +520,18 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// return the value that this * value = rightSide
+        /// Solves the linear system Ax=b.
         /// </summary>
-        /// <param name="rightSide"></param>
+        /// <param name="input">The right hand side vector.</param>
         /// <returns></returns>
-        public static double[] Solve(this DenseColumnMajorStorage<double> matrix, double[] rightSide)
+        public static double[] Solve(this DenseColumnMajorStorage<double> matrix, double[] input)
         {
             int columns = matrix.ColumnCount;
 
             var lu = DenseLU.Create(matrix);
             var x = new double[columns];
 
-            lu.Solve(rightSide, x);
+            lu.Solve(input, x);
 
             return x;
         }
@@ -580,10 +548,10 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Multiplies the <see cref="matrix"/> by a constant value.
+        /// Multiplies the matrix by a constant value.
         /// </summary>
-        /// <param name="matrix">The Matrix</param>
-        /// <param name="constant">The constant value</param>
+        /// <param name="matrix">The matrix.</param>
+        /// <param name="constant">The constant value.</param>
         public static void Scale(this DenseColumnMajorStorage<double> matrix, double constant)
         {
             var values = matrix.Values;
@@ -594,16 +562,21 @@ namespace BriefFiniteElementNet
             }
         }
 
+        /// <summary>
+        /// Multiplies a matrix row by a constant value.
+        /// </summary>
+        /// <param name="matrix">The matrix.</param>
+        /// <param name="i">The row index.</param>
+        /// <param name="constant">The constant value.</param>
         public static void ScaleRow(this DenseColumnMajorStorage<double> matrix, int i, double constant)
         {
+            int rows = matrix.RowCount;
             int columns = matrix.ColumnCount;
             var values = matrix.Values;
 
-            int cxi = i * columns;
-
             for (int j = 0; j < columns; j++)
             {
-                values[cxi + j] *= constant;
+                values[j * rows + i] *= constant;
             }
         }
     }

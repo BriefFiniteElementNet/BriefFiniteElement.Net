@@ -597,17 +597,18 @@ namespace BriefFiniteElementNet.Elements
             pars[7] = czy * c + czz * s;
             pars[8] = -czy * s + czz * c;
 
-
+            /*
             var buf =
             //new Matrix(3, 3);
             MatrixPool.Allocate(3, 3);
 
-            // TODO: MAT - set values directly
             buf.SetColumn(0, new double[] { pars[0], pars[1], pars[2] });
             buf.SetColumn(1, new double[] { pars[3], pars[4], pars[5] });
             buf.SetColumn(2, new double[] { pars[6], pars[7], pars[8] });
+            //*/
 
-            return buf;
+            // pars array is column major
+            return new Matrix(3, 3, pars);
         }
 
         /// <inheritdoc/>
