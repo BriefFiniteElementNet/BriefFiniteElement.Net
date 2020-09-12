@@ -142,62 +142,6 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static void Plus(Matrix mat1, Matrix mat2, Matrix result)
-        {
-            MatrixException.ThrowIf(
-                mat1.RowCount != mat2.RowCount ||
-                mat2.RowCount != result.RowCount ||
-
-                mat1.ColumnCount != mat2.ColumnCount ||
-                mat2.ColumnCount != result.ColumnCount,
-                "Inconsistent matrix sizes");
-
-            var n = mat1.rows * mat1.columns;
-
-            for (int i = 0; i < n; i++)
-            {
-                result.Values[i] = mat1.Values[i] + mat2.Values[i];
-            }
-        }
-
-
-        /// <summary>
-        /// mat1 = mat1 + mat2
-        /// </summary>
-        /// <param name="mat1"></param>
-        /// <param name="mat2"></param>
-        public static void InplacePlus(Matrix mat1, Matrix mat2)
-        {
-            MatrixException.ThrowIf(
-                mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount
-                , "Inconsistent matrix sizes");
-
-            var n = mat1.rows * mat1.columns;
-
-            for (int i = 0; i < n; i++)
-            {
-                mat1.Values[i] = mat1.Values[i] + mat2.Values[i];
-            }
-        }
-
-        /// <summary>
-        /// mat1 = mat1 + mat2 * coefficient
-        /// </summary>
-        /// <param name="mat1"></param>
-        /// <param name="mat2"></param>
-        /// <param name="coefficient"></param>
-        public static void InplacePlus(Matrix mat1, Matrix mat2, double coefficient)
-        {
-            MatrixException.ThrowIf(
-                mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount
-                , "Inconsistent matrix sizes");
-
-            var n = mat1.rows * mat1.columns;
-
-            for (int i = 0; i < n; i++)
-                mat1.Values[i] = mat1.Values[i] + mat2.Values[i] * coefficient;
-        }
-
         #region Operators
 
         public static Matrix operator *(
@@ -443,6 +387,54 @@ namespace BriefFiniteElementNet
             }
 
             return buf;
+        }
+
+        public void Add(Matrix mat2, Matrix result)
+        {
+            MatrixException.ThrowIf(
+                rows != mat2.rows || mat2.rows != result.rows ||
+                columns != mat2.columns ||  mat2.columns != result.columns,
+                "Inconsistent matrix sizes");
+
+            var n = rows * columns;
+
+            for (int i = 0; i < n; i++)
+            {
+                result.Values[i] = values[i] + mat2.values[i];
+            }
+        }
+
+
+        /// <summary>
+        /// mat1 = mat1 + mat2
+        /// </summary>
+        /// <param name="mat2"></param>
+        public void AddToThis(Matrix mat2)
+        {
+            MatrixException.ThrowIf(rows != mat2.rows || columns != mat2.columns , "Inconsistent matrix sizes");
+
+            var n = rows * columns;
+
+            for (int i = 0; i < n; i++)
+            {
+                values[i] = values[i] + mat2.Values[i];
+            }
+        }
+
+        /// <summary>
+        /// mat1 = mat1 + mat2 * coefficient
+        /// </summary>
+        /// <param name="mat1"></param>
+        /// <param name="mat2"></param>
+        /// <param name="coefficient"></param>
+        public void AddToThis(Matrix mat2, double coefficient)
+        {
+            MatrixException.ThrowIf(rows != mat2.rows || columns != mat2.columns , "Inconsistent matrix sizes");
+
+            var n = rows * columns;
+
+            for (int i = 0; i < n; i++)
+                values[i] = values[i] + mat2.values[i] * coefficient;
         }
 
         /// <summary>

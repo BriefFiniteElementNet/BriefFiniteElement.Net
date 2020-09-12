@@ -261,17 +261,17 @@ namespace BriefFiniteElementNet.Integration
                         val.MultiplyByConstant((g2(noj, gammaK) - g1(noj, gammaK)) / 2 * wi[i]);
 
                         //beta += val;
-                        Matrix.InplacePlus(beta, val);
+                        beta.AddToThis(val);
 
                         val.ReturnToPool();
                     }
 
-                    Matrix.InplacePlus(phi, beta, (f2(gammaK) - f1(gammaK)) / 2 * wj[j]);
+                    phi.AddToThis(beta, (f2(gammaK) - f1(gammaK)) / 2 * wj[j]);
 
                     beta.ReturnToPool();
                 }
 
-                Matrix.InplacePlus(I, phi, (a2 - a1) / 2 * wk[k]);
+                I.AddToThis(phi, (a2 - a1) / 2 * wk[k]);
 
                 phi.ReturnToPool();
                 //I += (a2 - a1) / 2 * wk[k] * phi;
