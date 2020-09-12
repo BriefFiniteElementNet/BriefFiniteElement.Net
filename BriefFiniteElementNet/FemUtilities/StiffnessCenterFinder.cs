@@ -80,10 +80,11 @@ namespace BriefFiniteElementNet.FemUtilies
 
                 var f = new Matrix(4, 3);
 
-                f.SetRow(0, 0, fz, -fy);
-                f.SetRow(1, -fz, 0, fx);
-                f.SetRow(2, fy, -fx, 0);
-                f.SetRow(3, fx, fy, fz);
+                // TODO: MAT - set values directly
+                f.SetRow(0, new double[] { 0, fz, -fy });
+                f.SetRow(1, new double[] { -fz, 0, fx });
+                f.SetRow(2, new double[] { fy, -fx, 0 });
+                f.SetRow(3, new double[] { fx, fy, fz });
 
                 var p0 = new Matrix(3, 4);
                 p0[0, 1] = p0[1, 2] = p0[2, 3] = 1;

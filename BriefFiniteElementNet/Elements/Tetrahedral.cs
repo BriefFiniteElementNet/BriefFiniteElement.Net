@@ -232,10 +232,9 @@ namespace BriefFiniteElementNet.Elements
         {
             var miu = this.Nu;
             var s = (1 - miu);
-            var E = new Matrix(6, 6);
-
-            E.FillMatrixRowise(1, miu / s, miu / s, 0, 0, 0, miu / s, 1, miu / s, 0, 0, 0, miu / s, miu / s, 1, 0, 0, 0, 0, 0, 0,
-                (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s));
+            var E = Matrix.OfRowMajor(6, 6, new double[] {
+                1, miu / s, miu / s, 0, 0, 0, miu / s, 1, miu / s, 0, 0, 0, miu / s, miu / s, 1, 0, 0, 0, 0, 0, 0,
+                (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s) });
 
             E.MultiplyByConstant(this.E * (1 - miu) / ((1 + miu) * (1 - 2 * miu)));
 
@@ -319,15 +318,14 @@ namespace BriefFiniteElementNet.Elements
             double a3 = Q[2, 1]; double b3 = Q[2, 2]; double c3 = Q[2, 3];
             double a4 = Q[3, 1]; double b4 = Q[3, 2]; double c4 = Q[3, 3];
 
-            var b = new Matrix(6, 12);//transpose of b
-
-            b.FillMatrixRowise(
+            //transpose of b
+            var b = Matrix.OfRowMajor(6, 12, new double[] {
                 a1, 0, 0, a2, 0, 0, a3, 0, 0, a4, 0, 0,
                 0, b1, 0, 0, b2, 0, 0, b3, 0, 0, b4, 0,
                 0, 0, c1, 0, 0, c2, 0, 0, c3, 0, 0, c4,
                 0, c1, b1, 0, c2, b2, 0, c3, b3, 0, c4, b4,
                 c1, 0, a1, c2, 0, a2, c3, 0, a3, c4, 0, a4,
-                b1, a1, 0, b2, a2, 0, b3, a3, 0, b4, a4, 0);
+                b1, a1, 0, b2, a2, 0, b3, a3, 0, b4, a4, 0 });
 
 
             b.MultiplyByConstant(1 / (6 * V));
@@ -365,15 +363,14 @@ namespace BriefFiniteElementNet.Elements
             double a3 = a[2]; double b3 = b[2]; double c3 = c[2]; double d3 = d[2];
             double a4 = a[3]; double b4 = b[3]; double c4 = c[3]; double d4 = d[3];
 
-            var B = new Matrix(6, 12);//transpose of b
-
-            B.FillMatrixRowise(
+            //transpose of b
+            var B = Matrix.OfRowMajor(6, 12, new double[] {
                 b1, 0, 0, b2, 0, 0, b3, 0, 0, b4, 0, 0,
                 0, c1, 0, 0, c2, 0, 0, c3, 0, 0, c4, 0,
                 0, 0, d1, 0, 0, d2, 0, 0, d3, 0, 0, d4,
                 c1, b1, 0, c2, b2, 0, c3, b3, 0, c4, b4, 0,
                 0, d1, c1, 0, d2, c2, 0, d3, c3, 0, d4, c4,
-                d1, 0, b1, d2, 0, b2, d3, 0, b3, d4, 0, b4);
+                d1, 0, b1, d2, 0, b2, d3, 0, b3, d4, 0, b4 });
 
 
 
@@ -381,10 +378,9 @@ namespace BriefFiniteElementNet.Elements
 
             var miu = this.Nu;
             var s = (1 - miu);
-            var E = new Matrix(6, 6);
-
-            E.FillMatrixRowise(1, miu / s, miu / s, 0, 0, 0, miu / s, 1, miu / s, 0, 0, 0, miu / s, miu / s, 1, 0, 0, 0, 0, 0, 0,
-                (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s));
+            var E = Matrix.OfRowMajor(6, 6, new double[] {
+                1, miu / s, miu / s, 0, 0, 0, miu / s, 1, miu / s, 0, 0, 0, miu / s, miu / s, 1, 0, 0, 0, 0, 0, 0,
+                (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s) });
 
             E.MultiplyByConstant(this.E * (1 - miu) / ((1 + miu) * (1 - 2 * miu)));
 

@@ -395,8 +395,9 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             var buf = targetElement.MatrixPool.Allocate(2, 2);
 
-            buf.SetRow(0, J11, J12);
-            buf.SetRow(1, J21, J22);
+            // TODO: MAT - set values directly
+            buf.SetRow(0, new double[] { J11, J12 });
+            buf.SetRow(1, new double[] { J21, J22 });
 
             return buf;
         }

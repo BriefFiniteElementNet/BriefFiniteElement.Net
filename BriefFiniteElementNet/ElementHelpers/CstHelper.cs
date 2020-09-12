@@ -45,9 +45,10 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var buf = targetElement.MatrixPool.Allocate(3, 6);
 
-            buf.SetRow(0, y2 - y3, 0, y3 - y1, 0, y1 - y2, 0);
-            buf.SetRow(1, 0, x3 - x2, 0, x1 - x3, 0, x2 - x1);
-            buf.SetRow(2, x3 - x2, y2 - y3, x1 - x3, y3 - y1, x2 - x1, y1 - y2);
+            // TODO: MAT - set values directly
+            buf.SetRow(0, new double[] { y2 - y3, 0, y3 - y1, 0, y1 - y2, 0 });
+            buf.SetRow(1, new double[] { 0, x3 - x2, 0, x1 - x3, 0, x2 - x1 });
+            buf.SetRow(2, new double[] { x3 - x2, y2 - y3, x1 - x3, y3 - y1, x2 - x1, y1 - y2 });
 
             var a = 0.5*Math.Abs((x3 - x1)*(y1 - y2) - (x1 - x2)*(y3 - y1));
 
@@ -281,7 +282,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var uDkt = targetElement.MatrixPool.Allocate(6, 1);
 
-            uDkt.SetColumn(1, u1l.DX, u1l.DY, /**/ u2l.DX, u2l.DY, /**/ u3l.DX, u3l.DY);
+            // TODO: MAT - set values directly
+            uDkt.SetColumn(1, new double[] { u1l.DX, u1l.DY, /**/ u2l.DX, u2l.DY, /**/ u3l.DX, u3l.DY });
 
             var mDkt = d * b * uDkt; //eq. 32, batoz article
 
@@ -411,7 +413,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var uCst = targetElement.MatrixPool.Allocate(6, 1);
 
-            uCst.SetColumn(1, d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY);
+            // TODO: MAT - set values directly
+            uCst.SetColumn(1, new double[] { d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY });
 
             //cst -> constant over entire element -> provide random values for local
             var dbCst = this.GetDMatrixAt(targetElement, new double[] { 0, 0 });

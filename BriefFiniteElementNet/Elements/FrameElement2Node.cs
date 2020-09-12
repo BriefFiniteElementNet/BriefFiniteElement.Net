@@ -1089,9 +1089,7 @@ namespace BriefFiniteElementNet
                 throw new ArgumentOutOfRangeException("location");
 
 
-            var buf = new Matrix(4, 12);
-
-            buf.FillMatrixRowise(
+            var buf = Matrix.OfRowMajor(4, 12, new double[] {
                 0, 0, (6 * xi) / L2, 0,
                 (3 * xi) / L - 1 / L, 0, 0, 0,
                 -(6 * xi) / L2, 0, (3 * xi) / L + 1 / L, 0,
@@ -1109,7 +1107,7 @@ namespace BriefFiniteElementNet
 
                 0, 0, 0, 1 / L,
                 0, 0, 0, 0,
-                0, -1 / L, 0, 0);
+                0, -1 / L, 0, 0 });
 
             return buf;
         }
@@ -1130,9 +1128,7 @@ namespace BriefFiniteElementNet
             if (xi < -1 || xi > 1)
                 throw new ArgumentOutOfRangeException("location");
 
-            var buf = new Matrix(1, 12);
-
-            buf.FillMatrixRowise(
+            var buf = Matrix.OfRowMajor(1, 12, new double[] {
                 xi/2 + 1.0/2,
                 ((xi - 1)*(xi - 1)*(xi + 2))/4,
                 ((xi - 1)*(xi - 1)*(xi + 2))/4,
@@ -1144,7 +1140,7 @@ namespace BriefFiniteElementNet
                 -((xi + 1)*(xi + 1)*(xi - 2))/4,
                 1.0/2 - xi/2,
                 (L*(xi - 1)*(xi + 1)*(xi + 1))/8,
-                (L*(xi - 1)*(xi + 1)*(xi + 1))/8);
+                (L*(xi - 1)*(xi + 1)*(xi + 1))/8 });
 
             return buf;
         }

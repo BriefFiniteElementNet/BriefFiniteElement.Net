@@ -84,9 +84,10 @@ namespace BriefFiniteElementNet
 
             var res = new Matrix(3, 3);
 
-            res.SetRow(0, a5a * a9a - a6a * a8a, -a2a * a9a + a3a * a8a, a2a * a6a - a3a * a5a);
-            res.SetRow(1, -a4a * a9a + a6a * a7a, a1a * a9a - a3a * a7a, -a1a * a6a + a3a * a4a);
-            res.SetRow(2, a4a * a8a - a5a * a7a, -a1a * a8a + a2a * a7a, a1a * a5a - a2a * a4a);
+            // TODO: MAT - set values directly
+            res.SetRow(0, new double[] { a5a * a9a - a6a * a8a, -a2a * a9a + a3a * a8a, a2a * a6a - a3a * a5a });
+            res.SetRow(1, new double[] { -a4a * a9a + a6a * a7a, a1a * a9a - a3a * a7a, -a1a * a6a + a3a * a4a });
+            res.SetRow(2, new double[] { a4a * a8a - a5a * a7a, -a1a * a8a + a2a * a7a, a1a * a5a - a2a * a4a });
 
             res.MultiplyByConstant(1 / det);
 

@@ -155,7 +155,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var buf = new Matrix(1, 2);
 
-            buf.SetRow(0, -1 / l, 1 / l);
+            // TODO: MAT - set values directly
+            buf.SetRow(0, new double[] { -1 / l, 1 / l });
 
 
             return buf;
@@ -178,7 +179,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             //new Matrix(1, 1);
             targetElement.MatrixPool.Allocate(1, 1);
 
-            buf.SetRow(0, geo.A*mech.Ex);
+            buf.At(0, 0, geo.A*mech.Ex);
 
             return buf;
         }
@@ -348,7 +349,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 }
 
                 condMtx.SetRow(i, rw);
-                rMtx.SetRow(i, cond.Item2);
+                rMtx.At(i, 0, cond.Item2);
             }
 
             var res = condMtx.Inverse() * rMtx;

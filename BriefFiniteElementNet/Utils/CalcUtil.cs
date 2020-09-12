@@ -130,9 +130,10 @@ namespace BriefFiniteElementNet
 
             var buf = new Matrix(3, 3);
 
-            buf.SetColumn(0, pars[0], pars[1], pars[2]);
-            buf.SetColumn(1, pars[3], pars[4], pars[5]);
-            buf.SetColumn(2, pars[6], pars[7], pars[8]);
+            // TODO: MAT - set values directly
+            buf.SetColumn(0, new double[] { pars[0], pars[1], pars[2] });
+            buf.SetColumn(1, new double[] { pars[3], pars[4], pars[5] });
+            buf.SetColumn(2, new double[] { pars[6], pars[7], pars[8] });
 
             return buf;
         }
@@ -213,9 +214,10 @@ namespace BriefFiniteElementNet
             if (buf.RowCount != 3 || buf.ColumnCount != 3)
                 throw new Exception();
 
-            buf.SetColumn(0, pars[0], pars[1], pars[2]);
-            buf.SetColumn(1, pars[3], pars[4], pars[5]);
-            buf.SetColumn(2, pars[6], pars[7], pars[8]);
+            // TODO: MAT - set values directly (using pars array)
+            buf.SetColumn(0, new double[] { pars[0], pars[1], pars[2] });
+            buf.SetColumn(1, new double[] { pars[3], pars[4], pars[5] });
+            buf.SetColumn(2, new double[] { pars[6], pars[7], pars[8] });
 
             //return buf;
         }
@@ -294,12 +296,13 @@ namespace BriefFiniteElementNet
                 pool == null ?
                 new Matrix(3, 3) : pool.Allocate(3, 3);
 
+            // TODO: MAT - set values directly
             //buf.FillColumn(0, pars[0], pars[1], pars[2]);
-            buf.SetColumn(0, cxx, cxy * c + cxz * s, -cxy * s + cxz * c);
+            buf.SetColumn(0, new double[] { cxx, cxy * c + cxz * s, -cxy * s + cxz * c });
             //buf.FillColumn(1, pars[3], pars[4], pars[5]);
-            buf.SetColumn(1, cyx, cyy * c + cyz * s, -cyy * s + cyz * c);
+            buf.SetColumn(1, new double[] { cyx, cyy * c + cyz * s, -cyy * s + cyz * c });
             //buf.FillColumn(2, pars[6], pars[7], pars[8]);
-            buf.SetColumn(2, czx, czy * c + czz * s, -czy * s + czz * c);
+            buf.SetColumn(2, new double[] { czx, czy * c + czz * s, -czy * s + czz * c });
 
             if (buf.Values.Any(ii => ii < 0.9 && ii > 0.6))
                 Guid.NewGuid();
@@ -334,17 +337,18 @@ namespace BriefFiniteElementNet
             var r2 = new Matrix(3, 3);
             var r3 = new Matrix(3, 3);
 
-            r1.SetRow(0, 1, 0, 0);
-            r1.SetRow(1, 0, cc, sc);
-            r1.SetRow(2, 0, -sc, cc);
+            // TODO: MAT - set values directly
+            r1.SetRow(0, new double[] { 1, 0, 0 });
+            r1.SetRow(1, new double[] { 0, cc, sc });
+            r1.SetRow(2, new double[] { 0, -sc, cc });
 
-            r2.SetRow(0, cb, sb, 0);
-            r2.SetRow(1, -sb, cb, 0);
-            r2.SetRow(2, 0, 0, 1);
+            r2.SetRow(0, new double[] { cb, sb, 0 });
+            r2.SetRow(1, new double[] { -sb, cb, 0 });
+            r2.SetRow(2, new double[] { 0, 0, 1 });
 
-            r3.SetRow(0,ca, 0, sa);
-            r3.SetRow(1, 0, 1, 0);
-            r3.SetRow(2,-sa, 0, ca);
+            r3.SetRow(0, new double[] { ca, 0, sa });
+            r3.SetRow(1, new double[] { 0, 1, 0 });
+            r3.SetRow(2, new double[] { -sa, 0, ca });
 
             var buf = r1 * r2 * r3;
 

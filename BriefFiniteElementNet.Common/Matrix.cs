@@ -369,7 +369,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="i">The row.</param>
         /// <param name="values">The values.</param>
-        public void SetRow(int i, params double[] values)
+        public void SetRow(int i, double[] values)
         {
             
             if (values.Count() != this.ColumnCount)
@@ -386,7 +386,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="j">The column.</param>
         /// <param name="values">The values.</param>
-        public void SetColumn(int j, params double[] values)
+        public void SetColumn(int j, double[] values)
         {
             if (values.Count() != this.RowCount)
                 throw new ArgumentOutOfRangeException("values");
@@ -396,6 +396,27 @@ namespace BriefFiniteElementNet
             {
                 this.Values[j * this.RowCount + i] = values[i];
             }
+        }
+
+        /// <summary>
+        /// Fills the matrix rowise (all rows of new matrix are beside each other).
+        /// </summary>
+        /// <param name="members">The members.</param>
+        /// <exception cref="System.Exception"></exception>
+        public static Matrix OfRowMajor(int rows, int columns, double[] members)
+        {
+            var m = new Matrix(rows, columns);
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < columns; j++)
+                {
+                    //column * this.rowCount + row
+                    m[i, j] = members[columns * i + j];
+                }
+            }
+
+            return m;
         }
 
         /// <summary>
@@ -1203,25 +1224,5 @@ namespace BriefFiniteElementNet
         }
 
         #endregion
-
-        /// <summary>
-        /// Fills the matrix rowise (all rows of new matrix are beside each other).
-        /// </summary>
-        /// <param name="members">The members.</param>
-        /// <exception cref="System.Exception"></exception>
-        public void FillMatrixRowise(params double[] members)
-        {
-            if (members.Length != this.values.Length)
-                throw new Exception();
-
-            for (int i = 0; i < this.rows; i++)
-            {
-                for (int j = 0; j < this.columns; j++)
-                {
-                    //column * this.rowCount + row
-                    this[i, j] = members[this.columns*i + j];
-                }
-            }
-        }
     }
 }

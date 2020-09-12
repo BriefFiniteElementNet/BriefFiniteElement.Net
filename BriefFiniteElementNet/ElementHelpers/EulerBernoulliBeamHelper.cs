@@ -481,7 +481,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     mtx.SetRow(i, Diff(itm.Xi, condCount - 1, itm.DifferentialDegree));
 
-                    rightSide.SetRow(i, itm.RightSide);
+                    rightSide.At(i, 0, itm.RightSide);
                 }
 
                 SingleVariablePolynomial pl;
@@ -1156,9 +1156,9 @@ namespace BriefFiniteElementNet.ElementHelpers
             var j = GetJMatrixAt(targetElement, isoCoords).Determinant();
 
             if (_direction == BeamDirection.Y)
-                u.SetColumn(0, ld[0].DZ, ld[0].RY, ld[1].DZ, ld[1].RY);
+                u.SetColumn(0, new double[] { ld[0].DZ, ld[0].RY, ld[1].DZ, ld[1].RY });
             else
-                u.SetColumn(0, ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ);
+                u.SetColumn(0, new double[] { ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ });
 
             var f = n * u;
 

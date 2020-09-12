@@ -602,9 +602,10 @@ namespace BriefFiniteElementNet.Elements
             //new Matrix(3, 3);
             MatrixPool.Allocate(3, 3);
 
-            buf.SetColumn(0, pars[0], pars[1], pars[2]);
-            buf.SetColumn(1, pars[3], pars[4], pars[5]);
-            buf.SetColumn(2, pars[6], pars[7], pars[8]);
+            // TODO: MAT - set values directly
+            buf.SetColumn(0, new double[] { pars[0], pars[1], pars[2] });
+            buf.SetColumn(1, new double[] { pars[3], pars[4], pars[5] });
+            buf.SetColumn(2, new double[] { pars[6], pars[7], pars[8] });
 
             return buf;
         }
