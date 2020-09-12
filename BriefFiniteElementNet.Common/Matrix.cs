@@ -255,7 +255,7 @@ namespace BriefFiniteElementNet
 
             var buf = new Matrix(rows * n, columns * n);
 
-            RepeatDiagonally(matrix, n, new Matrix(rows * n, columns * n));
+            RepeatDiagonally(matrix, n, buf);
 
             return buf;
         }
@@ -270,16 +270,22 @@ namespace BriefFiniteElementNet
                 throw new ArgumentException("Dimensions don't match.");
             }
 
-            var buf = new Matrix(r * n, c * n);
+            var A = matrix.Values;
+            var B = target.Values;
+
+            int nxr = n * r;
 
             for (var i = 0; i < n; i++)
             {
+                int rxi = r * i;
+                int cxi = c * i;
+
                 for (var ii = 0; ii < r; ii++)
                 {
                     for (var jj = 0; jj < c; jj++)
                     {
-                        // TODO: MAT - direct access
-                        buf[i * r + ii, i * c + jj] = matrix[ii, jj];
+                        //target[i * r + ii, i * c + jj] = matrix[ii, jj];
+                        B[(cxi + jj) * nxr + (rxi + ii)] = A[jj * r + ii];
                     }
                 }
             }

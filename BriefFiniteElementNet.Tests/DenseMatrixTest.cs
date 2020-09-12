@@ -93,6 +93,62 @@ namespace BriefFiniteElementNet.Tests
         }
 
         [Test]
+        public void TestRepeatDiagonally()
+        {
+            var A = Matrix.OfRowMajor(2, 2, new double[]
+            {
+                1.0, 2.0,
+                3.0, 4.0
+            });
+
+            int repeat = 3;
+
+            var actual = A.RepeatDiagonally(repeat);
+
+            Assert.AreEqual(actual.RowCount, repeat * A.RowCount);
+            Assert.AreEqual(actual.ColumnCount, repeat * A.ColumnCount);
+
+            var expected = Matrix.OfRowMajor(6, 6, new double[]
+            {
+                1.0, 2.0, 0.0, 0.0, 0.0, 0.0,
+                3.0, 4.0, 0.0, 0.0, 0.0, 0.0,
+                0.0, 0.0, 1.0, 2.0, 0.0, 0.0,
+                0.0, 0.0, 3.0, 4.0, 0.0, 0.0,
+                0.0, 0.0, 0.0, 0.0, 1.0, 2.0,
+                0.0, 0.0, 0.0, 0.0, 3.0, 4.0
+            });
+
+            Assert.IsTrue(expected.Equals(actual));
+        }
+
+        [Test]
+        public void TestRepeatDiagonallyNonSquare()
+        {
+            var A = Matrix.OfRowMajor(2, 3, new double[]
+            {
+                1.0, 2.0, 3.0,
+                4.0, 5.0, 6.0,
+            });
+
+            int repeat = 2;
+
+            var actual = A.RepeatDiagonally(repeat);
+
+            Assert.AreEqual(actual.RowCount, repeat * A.RowCount);
+            Assert.AreEqual(actual.ColumnCount, repeat * A.ColumnCount);
+
+            var expected = Matrix.OfRowMajor(4, 6, new double[]
+            {
+                1.0, 2.0, 3.0, 0.0, 0.0, 0.0,
+                4.0, 5.0, 6.0, 0.0, 0.0, 0.0,
+                0.0, 0.0, 0.0, 1.0, 2.0, 3.0,
+                0.0, 0.0, 0.0, 4.0, 5.0, 6.0,
+            });
+
+            Assert.IsTrue(expected.Equals(actual));
+        }
+
+        [Test]
         public void TestSolve()
         {
             var n = 4;
