@@ -63,7 +63,7 @@ namespace BriefFiniteElementNet.Validation
 
             var d = (kr - kr2);
 
-            var dmax = d.Max(i => Math.Abs(i));
+            var dmax = d.Values.Max(i => Math.Abs(i));
         }
 
         private static Matrix GetCondensedStiffness(Matrix k, params Constraint[] consts)
@@ -726,7 +726,7 @@ namespace BriefFiniteElementNet.Validation
             var frK = frameElement.GetGlobalStifnessMatrix();
             var barK = barElement.GetGlobalStifnessMatrix();
 
-            var d = (frK - barK).Max(i => Math.Abs(i));
+            var d = (frK - barK).Values.Max(i => Math.Abs(i));
 
 
         }

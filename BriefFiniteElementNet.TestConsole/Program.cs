@@ -953,7 +953,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             Console.WriteLine("Optimal took {0} Ms", sp.ElapsedMilliseconds);
 
-            var d = (res1 - res2).Max(ii => Math.Abs(ii));
+            var d = (res1 - res2).Values.Max(ii => Math.Abs(ii));
 
         }
 
@@ -1074,7 +1074,7 @@ namespace BriefFiniteElementNet.TestConsole
                 CalcUtil.Bt_D_B(B, D, res2);
             Console.WriteLine("Optimal took {0} Ms", sp.ElapsedMilliseconds);
 
-            var d = (res1 - res2).Max(ii => Math.Abs(ii));
+            var d = (res1 - res2).Values.Max(ii => Math.Abs(ii));
             Console.WriteLine("Err: {0:g}", d);
         }
 

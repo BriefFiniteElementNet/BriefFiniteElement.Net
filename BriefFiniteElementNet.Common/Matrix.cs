@@ -17,7 +17,7 @@ namespace BriefFiniteElementNet
     /// </summary>
     [DebuggerDisplay("Matrix {RowCount} x {ColumnCount}")]
     [Serializable]
-    public class Matrix : ISerializable, IEnumerable<double>
+    public class Matrix : ISerializable
     {
         public MatrixPool Pool;
 
@@ -1203,29 +1203,6 @@ namespace BriefFiniteElementNet
         }
 
         #endregion
-
-        /// <summary>
-        /// Returns an enumerator that iterates through a collection.
-        /// </summary>
-        /// <returns>
-        /// An <see cref="T:System.Collections.IEnumerator" /> object that can be used to iterate through the collection.
-        /// </returns>
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        /// <summary>
-        /// Returns an enumerator that iterates through the collection.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.
-        /// </returns>
-        public IEnumerator<double> GetEnumerator()
-        {
-            return (IEnumerator<double>) new List<double>(values).GetEnumerator();
-        }
-
 
         /// <summary>
         /// Fills the matrix rowise (all rows of new matrix are beside each other).
