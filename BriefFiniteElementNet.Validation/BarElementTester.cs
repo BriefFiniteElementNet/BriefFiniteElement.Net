@@ -813,13 +813,13 @@ namespace BriefFiniteElementNet.Validation
 
                 var u = new Matrix(12, 1);
 
-                u1.CopyTo(u.CoreArray, 0);
-                u2.CopyTo(u.CoreArray, 6);
+                u1.CopyTo(u.Values, 0);
+                u2.CopyTo(u.Values, 6);
 
                 var endFrc = stf * u;
 
-                var stFc = Force.FromVector(endFrc.CoreArray, 0);
-                var endFc = Force.FromVector(endFrc.CoreArray, 6);
+                var stFc = Force.FromVector(endFrc.Values, 0);
+                var endFc = Force.FromVector(endFrc.Values, 6);
 
                 for (var i = 0; i < n; i++)
                 {

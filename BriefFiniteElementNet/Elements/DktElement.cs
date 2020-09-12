@@ -212,7 +212,7 @@ namespace BriefFiniteElementNet.Elements
 
             var lambda = GetTransformationMatrix();
 
-            var t = Matrix.DiagonallyRepeat(lambda.Transpose(), 6); // eq. 5-16 page 78 (87 of file)
+            var t = Matrix.RepeatDiagonally(lambda.Transpose(), 6); // eq. 5-16 page 78 (87 of file)
 
             //step 4 : get global stiffness matrix
             var buf = t.Transpose()* kle * t; //eq. 5-15 p77
@@ -271,7 +271,7 @@ namespace BriefFiniteElementNet.Elements
             var p = new Matrix(6, 3);
             p[2, 0] = p[3, 1] = p[4, 2] = 1;
 
-            var pt = Matrix.DiagonallyRepeat(p, 3);
+            var pt = Matrix.RepeatDiagonally(p, 3);
 
             var buf2 = (pt * res) * pt.Transpose();//local expanded stiffness matrix
 
@@ -349,7 +349,7 @@ namespace BriefFiniteElementNet.Elements
                         -eta*(r5 - r4)
                     };
 
-                    return Matrix.FromRowColCoreArray(9, 1, buf);
+                    return new Matrix(9, 1, buf);
                 });//eq. 4.27 ref [1], also noted in several other references
 
 
@@ -370,7 +370,7 @@ namespace BriefFiniteElementNet.Elements
                         -eta*(q4 - q5)
                     };
 
-                    return Matrix.FromRowColCoreArray(9, 1, buf);
+                    return new Matrix(9, 1, buf);
                 });//eq. 4.28 ref [1], also noted in several other references
 
             var hx_eta = new Func<double, double, Matrix>(
@@ -389,7 +389,7 @@ namespace BriefFiniteElementNet.Elements
                         -2 + 6*eta + r5*(1 - 2*eta) + xi*(r4 - r5)
                     };
 
-                    return Matrix.FromRowColCoreArray(9, 1, buf);
+                    return new Matrix(9, 1, buf);
                 });//eq. 4.29 ref [1], also noted in several other references
 
             var hy_eta = new Func<double, double, Matrix>(
@@ -408,7 +408,7 @@ namespace BriefFiniteElementNet.Elements
                         -q5*(1 - 2*eta) - xi*(q4 - q5)
                     };
 
-                    return Matrix.FromRowColCoreArray(9, 1, buf);
+                    return new Matrix(9, 1, buf);
                 });//eq. 4.30 ref [1], also noted in several other references
 
 
@@ -423,7 +423,7 @@ namespace BriefFiniteElementNet.Elements
                    var b3 =
                        (-x31 * hx_xi(xi, eta) - x12 * hx_eta(xi, eta) + y31 * hy_xi(xi, eta) + y12 * hy_eta(xi, eta));
 
-                   var buf = Matrix.FromJaggedArray(new[] { b1.CoreArray, b2.CoreArray, b3.CoreArray });
+                   var buf = Matrix.OfJaggedArray(new[] { b1.Values, b2.Values, b3.Values });
 
                    buf.MultiplyByConstant(1 / (2 * a));
 
@@ -604,7 +604,7 @@ namespace BriefFiniteElementNet.Elements
             } //eq 4.26 p. 46
 
 
-            var buf = Matrix.FromJaggedArray(new[] { H_x_x, H_y_y, H_xy_yx });
+            var buf = Matrix.OfJaggedArray(new[] { H_x_x, H_y_y, H_xy_yx });
 
             buf.MultiplyByConstant(1 / (2 * a));
 
@@ -670,7 +670,7 @@ namespace BriefFiniteElementNet.Elements
             var lamY = vy.GetUnit();//Lambda_x
             var lamZ = vz.GetUnit();//Lambda_x
 
-            var lambda = Matrix.FromJaggedArray(new[]
+            var lambda = Matrix.OfJaggedArray(new[]
             {
                 new[] {lamX.X, lamY.X, lamZ.X},
                 new[] {lamX.Y, lamY.Y, lamZ.Y},

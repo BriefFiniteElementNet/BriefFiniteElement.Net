@@ -435,9 +435,9 @@ namespace BriefFiniteElementNet.Elements
             }
 
 
-            for (var i = buf.CoreArray.Length - 1; i >= 0; i--)
+            for (var i = buf.Values.Length - 1; i >= 0; i--)
             {
-                buf.CoreArray[i] *= _massDensity*v/20.0;
+                buf.Values[i] *= _massDensity*v/20.0;
             }
 
 

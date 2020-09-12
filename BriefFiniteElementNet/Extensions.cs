@@ -84,9 +84,9 @@ namespace BriefFiniteElementNet
 
             var res = new Matrix(3, 3);
 
-            res.FillRow(0, a5a * a9a - a6a * a8a, -a2a * a9a + a3a * a8a, a2a * a6a - a3a * a5a);
-            res.FillRow(1, -a4a * a9a + a6a * a7a, a1a * a9a - a3a * a7a, -a1a * a6a + a3a * a4a);
-            res.FillRow(2, a4a * a8a - a5a * a7a, -a1a * a8a + a2a * a7a, a1a * a5a - a2a * a4a);
+            res.SetRow(0, a5a * a9a - a6a * a8a, -a2a * a9a + a3a * a8a, a2a * a6a - a3a * a5a);
+            res.SetRow(1, -a4a * a9a + a6a * a7a, a1a * a9a - a3a * a7a, -a1a * a6a + a3a * a4a);
+            res.SetRow(2, a4a * a8a - a5a * a7a, -a1a * a8a + a2a * a7a, a1a * a5a - a2a * a4a);
 
             res.MultiplyByConstant(1 / det);
 
@@ -111,12 +111,12 @@ namespace BriefFiniteElementNet
 
         public static Matrix ToMatrix(this Point pt)
         {
-            return new Matrix(new[] {pt.X, pt.Y, pt.Z});
+            return Matrix.OfVector(new[] {pt.X, pt.Y, pt.Z});
         }
 
         public static Matrix ToMatrix(this Vector pt)
         {
-            return new Matrix(new[] { pt.X, pt.Y, pt.Z });
+            return Matrix.OfVector(new[] { pt.X, pt.Y, pt.Z });
         }
 
         public static Point ToPoint(this Matrix pt)

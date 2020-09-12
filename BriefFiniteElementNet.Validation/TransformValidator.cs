@@ -28,7 +28,7 @@ namespace BriefFiniteElementNet.Validation
 
             System.Console.WriteLine("Optimised took {0} ms", sp.ElapsedMilliseconds);
 
-            var AA = Matrix.DiagonallyRepeat(A, dim / 3);
+            var AA = Matrix.RepeatDiagonally(A, dim / 3);
 
             sp.Restart();
             var at_b_a_dir = AA.Transpose() * B * AA;

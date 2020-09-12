@@ -74,7 +74,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var buf = new Matrix(1, 2);
 
-            buf.FillRow(0, -1 / l, 1 / l);
+            buf.SetRow(0, -1 / l, 1 / l);
 
             return buf;
         }
@@ -100,7 +100,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var g = mech.Ex / (2 * (1 + mech.NuXy));
 
-            buf.FillRow(0, geo.J * g);
+            buf.SetRow(0, geo.J * g);
 
             return buf;
         }
@@ -177,7 +177,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             arr = new double[] {n1, n2};
 
-            buf.FillRow(0, arr);
+            buf.SetRow(0, arr);
 
             return buf;
         }
@@ -270,7 +270,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
 
             var res = condMtx.Inverse() * rMtx;
-            var buf = new SingleVariablePolynomial(res.CoreArray);
+            var buf = new SingleVariablePolynomial(res.Values);
 
             { //test
                 var epsilon = 0.0;

@@ -36,11 +36,11 @@ namespace BriefFiniteElementNet.TestConsole
         {
             Console.Title = "BFE tests & temporary codes";
 
-            //Validation.GithubIssues.Issue50.Run1();
+            Validation.GithubIssues.Issue50.Run1();
 
-            TestGrid();
+            //TestGrid();
             return;
-            //Validation.GithubIssues.Issue41.Run3();
+            Validation.GithubIssues.Issue41.Run3();
 
             //TestHingedInternalForce();
             //TestBinModel();
@@ -420,11 +420,7 @@ namespace BriefFiniteElementNet.TestConsole
        
         static void TestGrid()
         {
-            var model = StructureGenerator.Generate3DBarElementGrid(15, 15, 15);
-
-            //StructureGenerator.AddRandomiseNodalLoads(model, LoadCase.DefaultLoadCase);
-            StructureGenerator.AddRandomiseLoading(model, true,true,LoadCase.DefaultLoadCase);
-
+            var model = StructureGenerator.Generate3DBarElementGrid(10, 10, 10);
             model.Trace.Listeners.Add(new ConsoleTraceListener());
 
             model.Solve_MPC();
@@ -432,12 +428,6 @@ namespace BriefFiniteElementNet.TestConsole
             Console.WriteLine("Total matrix rents: {0}", model.MatrixPool.TotalRents);
             Console.WriteLine("Total matrix creates: {0}", Matrix.CreateCount);
             Console.WriteLine("Total matrix destructs: {0}", Matrix.DistructCount);
-
-            Console.WriteLine("hit: {0}", EulerBernoulliBeamHelper.hit);
-            Console.WriteLine("miss: {0}", EulerBernoulliBeamHelper.miss);
-
-            var totHit = model.Elements.Sum(i => i.CacheHit);
-            var totMis = model.Elements.Sum(i => i.CacheMiss);
 
             Console.ReadKey();
         }
@@ -865,7 +855,7 @@ namespace BriefFiniteElementNet.TestConsole
             var t = 1;//- 1e-10;
 
             var d = (frameM - t* barM);//
-            var dMax = d.CoreArray.Max(i => Math.Abs(i));
+            var dMax = d.Values.Max(i => Math.Abs(i));
 
             model.Nodes[0].Constraints = Constraint.Fixed;
 

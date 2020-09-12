@@ -155,7 +155,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var buf = new Matrix(1, 2);
 
-            buf.FillRow(0, -1 / l, 1 / l);
+            buf.SetRow(0, -1 / l, 1 / l);
 
 
             return buf;
@@ -178,7 +178,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             //new Matrix(1, 1);
             targetElement.MatrixPool.Allocate(1, 1);
 
-            buf.FillRow(0, geo.A*mech.Ex);
+            buf.SetRow(0, geo.A*mech.Ex);
 
             return buf;
         }
@@ -254,7 +254,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             arr = new double[] { n1, n2 };
             
-            buf.FillRow(0, arr);
+            buf.SetRow(0, arr);
 
             return buf;
         }
@@ -352,7 +352,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
 
             var res = condMtx.Inverse() * rMtx;
-            var buf = new SingleVariablePolynomial(res.CoreArray);
+            var buf = new SingleVariablePolynomial(res.Values);
 
             { //test
                 var epsilon = 0.0;
@@ -454,7 +454,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
 
             //var frc = d * b * u;
-            var frc = d[0, 0] * CalcUtil.DotProduct(b.CoreArray, u.CoreArray);//performance tip, equals to d * b * u
+            var frc = d[0, 0] * CalcUtil.DotProduct(b.Values, u.Values);//performance tip, equals to d * b * u
             d.ReturnToPool();
             u.ReturnToPool();
             b.ReturnToPool();
@@ -659,7 +659,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                             var df = q_.X;
 
-                            var buf_ = new Matrix(new double[] { df});
+                            var buf_ = Matrix.OfVector(new double[] { df});
 
                             return buf_;
                         }, 0, to, gpt);

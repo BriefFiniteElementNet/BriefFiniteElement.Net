@@ -21,34 +21,20 @@ namespace BriefFiniteElementNet
     {
         public MatrixPool Pool;
 
-        public static Matrix DiagonallyRepeat(Matrix mtx, int n)
+        public static Matrix RepeatDiagonally(Matrix mtx, int n)
         {
-            var r = mtx.rowCount;
-            var c = mtx.columnCount;
+            var r = mtx.rows;
+            var c = mtx.columns;
 
             var buf = new Matrix(r*n, c*n);
 
             for (var i = 0; i < n; i++)
                 //for (var j = 0; j < n; j++)
-                for (var ii = 0; ii < mtx.rowCount; ii++)
-                    for (var jj = 0; jj < mtx.columnCount; jj++)
+                for (var ii = 0; ii < mtx.rows; ii++)
+                    for (var jj = 0; jj < mtx.columns; jj++)
                         buf[i*r + ii, i*c + jj] = mtx[ii, jj];
 
             return buf;
-        }
-
-        /// <summary>
-        /// Creates a matrix from rowcount, colcount and core array
-        /// </summary>
-        /// <param name="rows">The rows.</param>
-        /// <param name="cols">The cols.</param>
-        /// <param name="coreArr">The core arr.</param>
-        /// <remarks>
-        /// Unlike constructor, do not clones the <see cref="coreArr"/> for better performance</remarks>
-        /// <returns></returns>
-        public static Matrix FromRowColCoreArray(int rows, int cols, double[] coreArr)
-        {
-            return new Matrix() {columnCount = cols, rowCount = rows, coreArray = coreArr};
         }
 
         public static Matrix RandomMatrix(int m, int n)
@@ -59,27 +45,27 @@ namespace BriefFiniteElementNet
 
             for (int i = 0; i < m*n; i++)
             {
-                buf.CoreArray[i] = rnd.NextDouble()*100;
+                buf.Values[i] = rnd.NextDouble()*100;
             }
 
 
             return buf;
         }
 
-        public double[] CoreArray
+        public double[] Values
         {
-            get { return coreArray; }
-            internal set { coreArray = value; }
+            get { return values; }
+            internal set { values = value; }
         }
 
-        private double[] coreArray;
+        private double[] values;
 
         /// <summary>
         /// Number of rows of the matrix.
         /// </summary>
         public int RowCount
         {
-            get { return rowCount; }
+            get { return rows; }
         }
 
         /// <summary>
@@ -87,19 +73,19 @@ namespace BriefFiniteElementNet
         /// </summary>
         public int ColumnCount
         {
-            get { return columnCount; }
+            get { return columns; }
         }
 
 
         /// <summary>
         /// Number of rows of the matrix.
         /// </summary>
-        private int rowCount;
+        private int rows;
 
         /// <summary>
         /// Number of columns of the matrix.
         /// </summary>
-        private int columnCount;
+        private int columns;
 
         public static long CreateCount,DistructCount;
 
@@ -150,16 +136,16 @@ namespace BriefFiniteElementNet
         /// </exception>
         public Matrix(int m, int n):this()
         {
-            rowCount = m;
-            columnCount = n;
+            rows = m;
+            columns = n;
 
-            if (rowCount <= 0)
+            if (rows <= 0)
                 throw new ArgumentException("row");
 
-            if (columnCount <= 0)
+            if (columns <= 0)
                 throw new ArgumentException("n");
 
-            this.CoreArray = new double[m*n];
+            this.Values = new double[m*n];
         }
 
         /// <summary>
@@ -168,51 +154,30 @@ namespace BriefFiniteElementNet
         /// <param name="n">The matrix dimension.</param>
         public Matrix(int n) : this()
         {
-            rowCount = n;
-            columnCount = n;
+            rows = n;
+            columns = n;
 
             if (n <= 0)
                 throw new ArgumentException("n");
 
-            this.CoreArray = new double[n*n];
+            this.Values = new double[n*n];
         }
 
-
-        public static Matrix From2DArray(double[,] vals)
-        {
-            
-            var rows = vals.GetLength(0);
-            var cols = vals.GetLength(1);
-
-            var buf = new Matrix(rows, cols);
-            buf.rowCount = rows;
-            buf.columnCount = cols;
-
-            buf.coreArray = new double[rows * cols];
-
-            for (int i = 0; i < rows; i++)
-                for (int j = 0; j < cols; j++)
-                    buf.CoreArray[j * rows + i] = vals[i, j];
-
-
-            return buf;
-        }
-
-        public static Matrix FromJaggedArray(double[][] vals)
+        public static Matrix OfJaggedArray(double[][] vals)
         {
             var rows = vals.Length;
             var cols = vals.Select(i => i.Length).Max();
 
             var buf = new Matrix(rows, cols);
-            buf.rowCount = rows;
-            buf.columnCount = cols;
+            buf.rows = rows;
+            buf.columns = cols;
 
-            buf.coreArray = new double[rows * cols];
+            buf.values = new double[rows * cols];
 
             for (int i = 0; i < rows; i++)
                 for (int j = 0; j < cols; j++)
                     if (vals[i].Length > j)
-                        buf.CoreArray[j * rows + i] = vals[i][j];
+                        buf.Values[j * rows + i] = vals[i][j];
 
             return buf;
         }
@@ -221,11 +186,9 @@ namespace BriefFiniteElementNet
         /// Initializes a new instance of the <see cref="Matrix"/> class as a column vector.
         /// </summary>
         /// <param name="vals">The vals.</param>
-        public Matrix(double[] vals) : this()
+        public static Matrix OfVector(double[] vals)
         {
-            this.rowCount = vals.Length;
-            this.columnCount = 1;
-            this.CoreArray = (double[]) vals.Clone();
+            return new Matrix(vals.Length, 1, (double[])vals.Clone());
         }
 
         /// <summary>
@@ -234,18 +197,18 @@ namespace BriefFiniteElementNet
         /// <param name="rows"></param>
         /// <param name="cols"></param>
         /// <param name="coreArray"></param>
-        public Matrix(int rows, int cols, ref double[] coreArray) :this()
+        public Matrix(int rows, int cols, double[] coreArray) :this()
         {
-            rowCount = rows;
-            columnCount = cols;
+            this.rows = rows;
+            columns = cols;
 
-            if (rowCount <= 0)
+            if (this.rows <= 0)
                 throw new ArgumentException("rows");
 
-            if (columnCount <= 0)
+            if (columns <= 0)
                 throw new ArgumentException("cols");
 
-            this.CoreArray = coreArray;
+            this.Values = coreArray;
 
             //CreateCount--;
         }
@@ -266,12 +229,12 @@ namespace BriefFiniteElementNet
         {
             get
             {
-                return GetMember(row, column);
+                return At(row, column);
             }
 
             set
             {
-                SetMember(row, column, value);
+                At(row, column, value);
             }
         }
 
@@ -282,13 +245,13 @@ namespace BriefFiniteElementNet
 
             var res = new Matrix(m1.RowCount, m2.ColumnCount);
 
-            for (int i = 0; i < m1.rowCount; i++)
-                for (int j = 0; j < m2.columnCount; j++)
-                    for (int k = 0; k < m1.columnCount; k++)
+            for (int i = 0; i < m1.rows; i++)
+                for (int j = 0; j < m2.columns; j++)
+                    for (int k = 0; k < m1.columns; k++)
                     {
-                        res.CoreArray[j*res.rowCount + i] +=
-                            m1.CoreArray[k*m1.rowCount + i]*
-                            m2.CoreArray[j*m2.rowCount + k];
+                        res.Values[j*res.rows + i] +=
+                            m1.Values[k*m1.rows + i]*
+                            m2.Values[j*m2.rows + k];
                     }
 
 
@@ -304,12 +267,12 @@ namespace BriefFiniteElementNet
         /// <returns></returns>
         public static void TransposeMultiply(Matrix m1, Matrix m2, Matrix result)
         {
-            if (m1.rowCount != m2.RowCount)
+            if (m1.rows != m2.RowCount)
                 throw new InvalidOperationException("No consistent dimensions");
 
             var res = result;
 
-            if (res.rowCount != m1.columnCount || res.ColumnCount != m2.columnCount)
+            if (res.rows != m1.columns || res.ColumnCount != m2.columns)
             {
                 throw new Exception("result dimension mismatch");
             }
@@ -318,18 +281,18 @@ namespace BriefFiniteElementNet
             var b = m2;
 
 
-            var a_arr = a.coreArray;
-            var b_arr = b.coreArray;
+            var a_arr = a.values;
+            var b_arr = b.values;
 
-            var vecLength = a.rowCount;
+            var vecLength = a.rows;
 
-            for (var i = 0; i < a.columnCount; i++)
-                for (var j = 0; j < b.columnCount; j++)
+            for (var i = 0; i < a.columns; i++)
+                for (var j = 0; j < b.columns; j++)
                 {
                     var t = 0.0;
 
-                    var a_st = i * a.rowCount;
-                    var b_st = j * b.rowCount;
+                    var a_st = i * a.rows;
+                    var b_st = j * b.rows;
 
                     for (var k = 0; k < vecLength; k++)
                         t += a_arr[a_st + k] * b_arr[b_st + k];
@@ -348,11 +311,11 @@ namespace BriefFiniteElementNet
         /// <exception cref="BriefFiniteElementNet.MatrixException"></exception>
         public static double[] Multiply(Matrix m, double[] vec)
         {
-            if (m.columnCount != vec.Length)
+            if (m.columns != vec.Length)
                 throw new MatrixException();
 
-            var c = m.columnCount;
-            var r = m.rowCount;
+            var c = m.columns;
+            var r = m.rows;
 
             var buf = new double[vec.Length];
 
@@ -379,12 +342,12 @@ namespace BriefFiniteElementNet
         /// <param name="row">The row.</param>
         /// <param name="column">The column.</param>
         /// <param name="value">The value.</param>
-        public void SetMember(int row, int column, double value)
+        public void At(int row, int column, double value)
         {
             MatrixException.ThrowIf(row >= this.RowCount || column >= this.ColumnCount,
                    "Invalid column or row specified");
 
-            this.CoreArray[column * this.rowCount + row] = value;
+            this.Values[column * this.rows + row] = value;
         }
 
         /// <summary>
@@ -393,18 +356,18 @@ namespace BriefFiniteElementNet
         /// <param name="row">The row.</param>
         /// <param name="column">The column.</param>
         /// <returns></returns>
-        public double GetMember(int row, int column)
+        public double At(int row, int column)
         {
             MatrixException.ThrowIf(row >= this.RowCount || column >= this.ColumnCount,
                    "Invalid column or row specified");
 
-            return this.CoreArray[column * this.rowCount + row];
+            return this.Values[column * this.rows + row];
         }
 
         /// <summary>
         /// Substitutes the defined row with defined values.
         /// </summary>
-        /// <param name="i">The i.</param>
+        /// <param name="i">The row.</param>
         /// <param name="values">The values.</param>
         public void SetRow(int i, params double[] values)
         {
@@ -414,12 +377,26 @@ namespace BriefFiniteElementNet
 
             for (int j = 0; j < this.ColumnCount; j++)
             {
-                this.CoreArray[j*this.RowCount + i] = values[j];
+                this.Values[j*this.RowCount + i] = values[j];
             }
         }
 
-        public static Dictionary<int, int> dists = new Dictionary<int, int>();
+        /// <summary>
+        /// Substitutes the defined column with defined values.
+        /// </summary>
+        /// <param name="j">The column.</param>
+        /// <param name="values">The values.</param>
+        public void SetColumn(int j, params double[] values)
+        {
+            if (values.Count() != this.RowCount)
+                throw new ArgumentOutOfRangeException("values");
 
+
+            for (int i = 0; i < this.RowCount; i++)
+            {
+                this.Values[j * this.RowCount + i] = values[i];
+            }
+        }
 
         /// <summary>
         /// Returns the matrix into pool and invalidates the matrix
@@ -457,24 +434,6 @@ namespace BriefFiniteElementNet
         /// </remarks>
         public bool UsePool { get; set; }
         
-
-        /// <summary>
-        /// Substitutes the defined column with defined values.
-        /// </summary>
-        /// <param name="j">The j.</param>
-        /// <param name="values">The values.</param>
-        public void SetColumn(int j, params double[] values)
-        {
-            if (values.Count() != this.RowCount)
-                throw new ArgumentOutOfRangeException("values");
-
-
-            for (int i = 0; i < this.RowCount; i++)
-            {
-                this.CoreArray[j*this.RowCount + i] = values[i];
-            }
-        }
-
         /// <summary>
         /// Provides a shallow copy of this matrix in O(row).
         /// </summary>
@@ -483,7 +442,7 @@ namespace BriefFiniteElementNet
         {
             var buf = new Matrix(this.RowCount, this.ColumnCount);
 
-            buf.CoreArray = (double[]) this.CoreArray.Clone();
+            buf.Values = (double[]) this.Values.Clone();
             return buf;
         }
 
@@ -495,14 +454,14 @@ namespace BriefFiniteElementNet
         {
             var buf = new Matrix(this.ColumnCount, this.RowCount);
 
-            var newMatrix = buf.CoreArray;
+            var newMatrix = buf.Values;
 
             for (int row = 0; row < this.RowCount; row++)
                 for (int column = 0; column < this.ColumnCount; column++)
                     //newMatrix[column*this.RowCount + row] = this.CoreArray[row*this.RowCount + column];
                     buf[column, row] = this[row, column];
 
-            buf.CoreArray = newMatrix;
+            buf.Values = newMatrix;
             return buf;
         }
 
@@ -536,9 +495,9 @@ namespace BriefFiniteElementNet
             if (other.ColumnCount != this.ColumnCount)
                 return false;
 
-            for (int i = 0; i < other.CoreArray.Length; i++)
+            for (int i = 0; i < other.Values.Length; i++)
             {
-                if (!MathUtil.Equals(this.CoreArray[i], other.CoreArray[i]))
+                if (!MathUtil.Equals(this.Values[i], other.Values[i]))
                     return false;
             }
 
@@ -563,7 +522,7 @@ namespace BriefFiniteElementNet
         /// <returns>True iff matrix is n by n.</returns>
         public bool IsSquare()
         {
-            return (this.columnCount == this.rowCount);
+            return (this.columns == this.rows);
         }
 
         #endregion
@@ -576,13 +535,13 @@ namespace BriefFiniteElementNet
         /// <param name="i2">One-based index of second row.</param>        
         public void SwapRows(int i1, int i2)
         {
-            if (i1 < 0 || i1 >= rowCount || i2 < 0 || i2 >= rowCount)
+            if (i1 < 0 || i1 >= rows || i2 < 0 || i2 >= rows)
                 throw new ArgumentException("Indices must be positive and <= number of rows.");
 
             if (i1 == i2)
                 return;
 
-            for (int i = 0; i < columnCount; i++)
+            for (int i = 0; i < columns; i++)
             {
                 var tmp = this[i1, i];
 
@@ -606,7 +565,7 @@ namespace BriefFiniteElementNet
 
             for (int j = 0; j < this.ColumnCount; j++)
             {
-                mtx.CoreArray[j] = this.CoreArray[j*this.RowCount + i];
+                mtx.Values[j] = this.Values[j*this.RowCount + i];
             }
 
             return mtx;
@@ -618,7 +577,7 @@ namespace BriefFiniteElementNet
         /// <returns></returns>
         public double Determinant()
         {
-            if (rowCount == columnCount && columnCount == 1)
+            if (rows == columns && columns == 1)
                 return this[0, 0];
             //Seems working good!
 
@@ -627,11 +586,11 @@ namespace BriefFiniteElementNet
 
             var clone = this.Clone();
 
-            var n = this.rowCount;
+            var n = this.rows;
 
             var sign = 1.0;
 
-            var epsi1on = 1e-10*clone.CoreArray.Select(System.Math.Abs).Min();
+            var epsi1on = 1e-10*clone.Values.Select(System.Math.Abs).Min();
 
             if (epsi1on == 0)
                 epsi1on = 1e-9;
@@ -660,11 +619,11 @@ namespace BriefFiniteElementNet
 
                 for (var j = i + 1; j < n; j++)
                 {
-                    var alfa = (clone.CoreArray[j*n + i]/clone.CoreArray[i*n + i]);
+                    var alfa = (clone.Values[j*n + i]/clone.Values[i*n + i]);
 
                     for (var k = i; k < n; k++)
                     {
-                        clone.CoreArray[j*n + k] -= alfa*clone.CoreArray[i*n + k];
+                        clone.Values[j*n + k] -= alfa*clone.Values[i*n + k];
                     }
                 }
             }
@@ -674,7 +633,7 @@ namespace BriefFiniteElementNet
             var arr = new double[n];
 
             for (var i = 0; i < n; i++)
-                arr[i] = clone.CoreArray[i*n + i];
+                arr[i] = clone.Values[i*n + i];
 
             Array.Sort(arr);
 
@@ -694,11 +653,11 @@ namespace BriefFiniteElementNet
                 throw new InvalidOperationException();
 
             //seems working good!
-            var n = this.rowCount;
+            var n = this.rows;
             var clone = this.Clone();
             var eye = Eye(n);
 
-            var epsi1on = 1e-10*clone.CoreArray.Select(System.Math.Abs).Min();
+            var epsi1on = 1e-10*clone.Values.Select(System.Math.Abs).Min();
 
             if (epsi1on == 0)
                 epsi1on = 1e-9;
@@ -802,11 +761,11 @@ namespace BriefFiniteElementNet
                 throw new InvalidOperationException();
 
             //seems working good!
-            var n = this.rowCount;
+            var n = this.rows;
             var clone = this.Clone();
             var eye = Eye(n);
 
-            var epsi1on = 1e-10*clone.CoreArray.Select(System.Math.Abs).Min();
+            var epsi1on = 1e-10*clone.Values.Select(System.Math.Abs).Min();
 
             if (epsi1on == 0)
                 epsi1on = 1e-9;
@@ -815,8 +774,8 @@ namespace BriefFiniteElementNet
 
             var perm = new List<int>();
 
-            var clonea = clone.CoreArray;
-            var eyea = eye.CoreArray;
+            var clonea = clone.Values;
+            var eyea = eye.Values;
 
             for (var j = 0; j < n - 1; j++)
             {
@@ -918,11 +877,11 @@ namespace BriefFiniteElementNet
 
             var buf = (double[])rightSide.Clone();
 
-            var n = this.rowCount;
+            var n = this.rows;
 
             var clone = Pool != null ? Pool.Allocate(n, n) : new Matrix(n, n);
 
-            this.coreArray.CopyTo(clone.coreArray,0);
+            this.values.CopyTo(clone.values,0);
 
             var canditates = new bool[n];//if true, then row is canditate for pivot
             var pivoted = new int[n];//if nonNegative, then row is pivoted once, cannot be used again as pivot
@@ -1002,7 +961,7 @@ namespace BriefFiniteElementNet
             var buf = new Matrix(n, n);
 
             for (int i = 0; i < n; i++)
-                buf.CoreArray[i*n + i] = 1.0;
+                buf.Values[i*n + i] = 1.0;
 
             return buf;
         }
@@ -1018,11 +977,11 @@ namespace BriefFiniteElementNet
         public static double[] operator *(
             Matrix m1, double[] vec)
         {
-            var m2 = new Matrix(vec);
+            var m2 = Matrix.OfVector(vec);
 
             var res = Matrix.Multiply(m1, m2);
 
-            return res.coreArray;
+            return res.values;
         }
 
         public static Matrix operator *(
@@ -1033,11 +992,11 @@ namespace BriefFiniteElementNet
 
             for (int i = 0; i < newMat.Length; i++)
             {
-                newMat[i] = coeff*mat.CoreArray[i];
+                newMat[i] = coeff*mat.Values[i];
             }
 
             var buf = new Matrix(mat.RowCount, mat.ColumnCount);
-            buf.CoreArray = newMat;
+            buf.Values = newMat;
 
             return buf;
         }
@@ -1048,9 +1007,9 @@ namespace BriefFiniteElementNet
             var buf = new Matrix(mat.RowCount, mat.ColumnCount);
             ;
 
-            for (int i = 0; i < buf.CoreArray.Length; i++)
+            for (int i = 0; i < buf.Values.Length; i++)
             {
-                buf.CoreArray[i] = -mat.CoreArray[i];
+                buf.Values[i] = -mat.Values[i];
             }
 
             return buf;
@@ -1064,9 +1023,9 @@ namespace BriefFiniteElementNet
 
             var buf = new Matrix(mat1.RowCount, mat1.ColumnCount);
 
-            for (int i = 0; i < buf.CoreArray.Length; i++)
+            for (int i = 0; i < buf.Values.Length; i++)
             {
-                buf.CoreArray[i] = mat1.CoreArray[i] + mat2.CoreArray[i];
+                buf.Values[i] = mat1.Values[i] + mat2.Values[i];
             }
 
             return buf;
@@ -1082,11 +1041,11 @@ namespace BriefFiniteElementNet
                 mat2.ColumnCount != result.ColumnCount,
                 "Inconsistent matrix sizes");
 
-            var n = mat1.rowCount * mat1.columnCount;
+            var n = mat1.rows * mat1.columns;
 
             for (int i = 0; i < n; i++)
             {
-                result.CoreArray[i] = mat1.CoreArray[i] + mat2.CoreArray[i];
+                result.Values[i] = mat1.Values[i] + mat2.Values[i];
             }
         }
 
@@ -1102,11 +1061,11 @@ namespace BriefFiniteElementNet
                 mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount
                 , "Inconsistent matrix sizes");
 
-            var n = mat1.rowCount * mat1.columnCount;
+            var n = mat1.rows * mat1.columns;
 
             for (int i = 0; i < n; i++)
             {
-                mat1.CoreArray[i] = mat1.CoreArray[i] + mat2.CoreArray[i];
+                mat1.Values[i] = mat1.Values[i] + mat2.Values[i];
             }
         }
 
@@ -1122,10 +1081,10 @@ namespace BriefFiniteElementNet
                 mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount
                 , "Inconsistent matrix sizes");
 
-            var n = mat1.rowCount * mat1.columnCount;
+            var n = mat1.rows * mat1.columns;
 
             for (int i = 0; i < n; i++)
-                mat1.CoreArray[i] = mat1.CoreArray[i] + mat2.CoreArray[i] * coefficient;
+                mat1.Values[i] = mat1.Values[i] + mat2.Values[i] * coefficient;
         }
 
         public static Matrix operator -(
@@ -1136,9 +1095,9 @@ namespace BriefFiniteElementNet
 
             var buf = new Matrix(mat1.RowCount, mat1.ColumnCount);
 
-            for (int i = 0; i < buf.CoreArray.Length; i++)
+            for (int i = 0; i < buf.Values.Length; i++)
             {
-                buf.CoreArray[i] = mat1.CoreArray[i] - mat2.CoreArray[i];
+                buf.Values[i] = mat1.Values[i] - mat2.Values[i];
             }
 
             return buf;
@@ -1161,10 +1120,10 @@ namespace BriefFiniteElementNet
 
         public void Replace(double oldValue, double newValue)
         {
-            for (int i = 0; i < coreArray.Length; i++)
+            for (int i = 0; i < values.Length; i++)
             {
-                if (coreArray[i].Equals(oldValue))
-                    coreArray[i] = newValue;
+                if (values[i].Equals(oldValue))
+                    values[i] = newValue;
             }
         }
 
@@ -1174,7 +1133,7 @@ namespace BriefFiniteElementNet
 
             var mtx = this;
 
-            var epsi1on = mtx.CoreArray.Select(i => System.Math.Abs(i)).Min()*1e-9;
+            var epsi1on = mtx.Values.Select(i => System.Math.Abs(i)).Min()*1e-9;
 
             if (epsi1on == 0)
                 epsi1on = 1e-9;
@@ -1194,27 +1153,16 @@ namespace BriefFiniteElementNet
             return sb.ToString();
         }
 
-        public void FillRow(int rowNum,params double[] values)
-        {
-            if (values.Length != this.columnCount)
-                throw new Exception();
-
-            for (var j = 0; j < this.columnCount; j++)
-            {
-                this[rowNum, j] = values[j];
-            }
-        }
-
         public static Matrix DotDivide(Matrix a1, Matrix a2)
         {
-            if (a1.rowCount != a2.rowCount || a1.columnCount != a2.columnCount)
+            if (a1.rows != a2.rows || a1.columns != a2.columns)
                 throw new Exception();
 
-            var buf = new Matrix(a1.rowCount, a1.columnCount);
+            var buf = new Matrix(a1.rows, a1.columns);
 
-            for (int i = 0; i < a1.coreArray.Length; i++)
+            for (int i = 0; i < a1.values.Length; i++)
             {
-                buf.coreArray[i] = a1.coreArray[i] / a2.coreArray[i];
+                buf.values[i] = a1.values[i] / a2.values[i];
             }
 
             return buf;
@@ -1222,28 +1170,17 @@ namespace BriefFiniteElementNet
 
         public static Matrix DotMultiply(Matrix a1, Matrix a2)
         {
-            if (a1.rowCount != a2.rowCount || a1.columnCount != a2.columnCount)
+            if (a1.rows != a2.rows || a1.columns != a2.columns)
                 throw new Exception();
 
-            var buf = new Matrix(a1.rowCount, a1.columnCount);
+            var buf = new Matrix(a1.rows, a1.columns);
 
-            for (int i = 0; i < a1.coreArray.Length; i++)
+            for (int i = 0; i < a1.values.Length; i++)
             {
-                buf.coreArray[i] = a1.coreArray[i] * a2.coreArray[i];
+                buf.values[i] = a1.values[i] * a2.values[i];
             }
 
             return buf;
-        }
-
-        public void FillColumn(int colNum, params double[] values)
-        {
-            if (values.Length != this.rowCount)
-                throw new Exception();
-
-            for (var j = 0; j < this.rowCount; j++)
-            {
-                this[j, colNum] = values[j];
-            }
         }
 
         #region Serialization stuff
@@ -1251,18 +1188,18 @@ namespace BriefFiniteElementNet
         [SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("rowCount", rowCount);
-            info.AddValue("columnCount", columnCount);
-            info.AddValue("coreArray", coreArray);
+            info.AddValue("rowCount", rows);
+            info.AddValue("columnCount", columns);
+            info.AddValue("coreArray", values);
         }
 
         protected Matrix(
             SerializationInfo info,
             StreamingContext context)
         {
-            this.rowCount = (int) info.GetValue("rowCount", typeof (int));
-            this.columnCount = (int) info.GetValue("columnCount", typeof (int));
-            this.coreArray = (double[]) info.GetValue("coreArray", typeof (double[]));
+            this.rows = (int) info.GetValue("rowCount", typeof (int));
+            this.columns = (int) info.GetValue("columnCount", typeof (int));
+            this.values = (double[]) info.GetValue("coreArray", typeof (double[]));
         }
 
         #endregion
@@ -1286,7 +1223,7 @@ namespace BriefFiniteElementNet
         /// </returns>
         public IEnumerator<double> GetEnumerator()
         {
-            return (IEnumerator<double>) new List<double>(coreArray).GetEnumerator();
+            return (IEnumerator<double>) new List<double>(values).GetEnumerator();
         }
 
 
@@ -1297,15 +1234,15 @@ namespace BriefFiniteElementNet
         /// <exception cref="System.Exception"></exception>
         public void FillMatrixRowise(params double[] members)
         {
-            if (members.Length != this.coreArray.Length)
+            if (members.Length != this.values.Length)
                 throw new Exception();
 
-            for (int i = 0; i < this.rowCount; i++)
+            for (int i = 0; i < this.rows; i++)
             {
-                for (int j = 0; j < this.columnCount; j++)
+                for (int j = 0; j < this.columns; j++)
                 {
                     //column * this.rowCount + row
-                    this[i, j] = members[this.columnCount*i + j];
+                    this[i, j] = members[this.columns*i + j];
                 }
             }
         }
@@ -1330,9 +1267,9 @@ namespace BriefFiniteElementNet
             #region row nonzeros
 
             if (RowNonzeros == null)
-                RowNonzeros = new List<int>[rowCount];
+                RowNonzeros = new List<int>[rows];
 
-            for (int i = 0; i < rowCount; i++)
+            for (int i = 0; i < rows; i++)
             {
                 if (RowNonzeros[i] == null)
                     RowNonzeros[i] = new List<int>();
@@ -1340,7 +1277,7 @@ namespace BriefFiniteElementNet
                     RowNonzeros[i].Clear();
 
 
-                for (int j = 0; j < columnCount; j++)
+                for (int j = 0; j < columns; j++)
                 {
                     if (!this[i, j].Equals(0.0))
                         RowNonzeros[i].Add(j);
@@ -1352,9 +1289,9 @@ namespace BriefFiniteElementNet
             #region col nonzeros
 
             if (ColumnNonzeros == null)
-                ColumnNonzeros = new List<int>[columnCount];
+                ColumnNonzeros = new List<int>[columns];
 
-            for (int j = 0; j < columnCount; j++)
+            for (int j = 0; j < columns; j++)
             {
                 if (ColumnNonzeros[j] == null)
                     ColumnNonzeros[j] = new List<int>();
@@ -1362,7 +1299,7 @@ namespace BriefFiniteElementNet
                     ColumnNonzeros[j].Clear();
 
 
-                for (int i = 0; i < rowCount; i++)
+                for (int i = 0; i < rows; i++)
                 {
                     if (!this[i, j].Equals(0.0))
                         ColumnNonzeros[j].Add(i);

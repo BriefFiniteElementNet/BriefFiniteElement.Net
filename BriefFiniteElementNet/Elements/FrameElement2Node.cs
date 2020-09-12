@@ -289,7 +289,7 @@ namespace BriefFiniteElementNet
             var k = GetLocalStiffnessMatrix();
 
             
-            var kArr = k.CoreArray;
+            var kArr = k.Values;
 
             var r = GetTransformationParameters();
 
@@ -361,7 +361,7 @@ namespace BriefFiniteElementNet
 
 
             var baseArr = new double[144];
-            var buf = Matrix.FromRowColCoreArray(12, 12, baseArr);
+            var buf = new Matrix(12, 12, baseArr);
 
             if (!this._considerShearDeformation)
             {
@@ -891,7 +891,7 @@ namespace BriefFiniteElementNet
         public override Matrix GetGlobalMassMatrix()
         {
             var m = GetLocalMassMatrix();
-            var mArr = m.CoreArray;
+            var mArr = m.Values;
 
             var r = GetTransformationParameters();
 
@@ -978,8 +978,8 @@ namespace BriefFiniteElementNet
 
                 var c = ro * a * l / 420.0;
 
-                for (var i = 0; i < m.CoreArray.Length; i++) //m=c*m
-                    m.CoreArray[i] *= c;
+                for (var i = 0; i < m.Values.Length; i++) //m=c*m
+                    m.Values[i] *= c;
             }
             else
             {
@@ -997,8 +997,8 @@ namespace BriefFiniteElementNet
 
                 var c = ro * a * l / 2.0;
 
-                for (var i = 0; i < m.CoreArray.Length; i++) //m=c*m
-                    m.CoreArray[i] *= c;
+                for (var i = 0; i < m.Values.Length; i++) //m=c*m
+                    m.Values[i] *= c;
             }
 
 
@@ -1154,7 +1154,7 @@ namespace BriefFiniteElementNet
         {
             var v = (EndNode.Location - StartNode.Location).Length;
 
-            return new Matrix(new double[] {v/2});
+            return Matrix.OfVector(new double[] {v/2});
         }
         #endregion
 

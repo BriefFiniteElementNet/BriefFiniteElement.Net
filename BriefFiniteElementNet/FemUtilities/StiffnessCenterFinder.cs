@@ -80,10 +80,10 @@ namespace BriefFiniteElementNet.FemUtilies
 
                 var f = new Matrix(4, 3);
 
-                f.FillRow(0, 0, fz, -fy);
-                f.FillRow(1, -fz, 0, fx);
-                f.FillRow(2, fy, -fx, 0);
-                f.FillRow(3, fx, fy, fz);
+                f.SetRow(0, 0, fz, -fy);
+                f.SetRow(1, -fz, 0, fx);
+                f.SetRow(2, fy, -fx, 0);
+                f.SetRow(3, fx, fy, fz);
 
                 var p0 = new Matrix(3, 4);
                 p0[0, 1] = p0[1, 2] = p0[2, 3] = 1;

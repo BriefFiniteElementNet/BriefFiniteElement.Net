@@ -33,7 +33,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             TargetElement = targetElement;
 
             {//loading condistions list pool from element's cache
-                var listPoolKey = "26167C0A-1E58-4FA5-950D-5464ED6F264A" + this.Direction;
+                var listPoolKey = "26167C0A-1E58-4FA5-950D-5464ED6F264A";
 
                 object obj;
 
@@ -50,7 +50,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
            
         }
-
 
         /// <summary>
         /// The target element
@@ -377,10 +376,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             return lst;
         }
 
-
-
-
-        public static int hit, miss;
         //private readonly string mssKey = "82069A88-26BD-4902-9CA6-7AE324193FE3:X";
         //private readonly string nssKey = "0EECCFF2-8CAE-4D65-935F-15E1AF31709B:X" ;
 
@@ -389,7 +384,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             nss = null;
             mss = null;
 
-            var mssKey = "7AE324193FE3:X" + this.Direction;
+            var mssKey = "7AE324193FE3:X"+this.Direction ;
             var nssKey = "15E1AF31709B:X" + this.Direction;
 
 
@@ -400,6 +395,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var n = bar.NodeCount;
 
 
+            List<Condition> cnds = null;
 
             {
                 var xis = new Func<int, double>(i =>
@@ -413,12 +409,49 @@ namespace BriefFiniteElementNet.ElementHelpers
                 bar.TryGetCache(nssKey, out nss);
 
                 if (nss != null && mss != null)
-                    return true;
+                {
+                    //return true;
+
+                    cnds = GetShapeFunctionConditions(bar);
+
+                    var flag = true;
+
+                    foreach (var cnd in cnds)
+                    {
+                        var pn = (cnd.Type == Condition.FunctionType.N) ? nss[cnd.NodeNumber] : mss[cnd.NodeNumber];
+
+                        var epsilon = (pn.EvaluateDerivative(cnd.Xi, cnd.DifferentialDegree) - cnd.RightSide);
+
+                        if (epsilon < 0)
+                            epsilon *= -1;
+
+                        if (epsilon > 1e-10)
+                        {
+                            flag = false;
+                            break;
+                        }
+                            
+                    }
+
+                    if (flag)
+                    {
+                        CondsListPool.Free(cnds);
+                        return true;
+                    }
+                    else
+                    {
+                        mss = nss = null;
+                    }
+                }
+
+                if (cnds == null)
+                {
+                    cnds = GetShapeFunctionConditions(bar);
+                }
+                    
             }
 
-
-            var cnds = GetShapeFunctionConditions(bar);
-
+            
             var grpd = cnds.GroupBy(i => Tuple.Create(i.NodeNumber, i.Type)).ToArray();
 
             CondsListPool.Free(cnds);
@@ -457,7 +490,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 {
 
                     //var cfs = mtx.Inverse2() * rightSide;
-                    var cfs = mtx.Solve(rightSide.CoreArray);//.Inverse2() * rightSide;
+                    var cfs = mtx.Solve(rightSide.Values);//.Inverse2() * rightSide;
 
                     pl = new SingleVariablePolynomial(cfs);
                 }
@@ -1123,9 +1156,9 @@ namespace BriefFiniteElementNet.ElementHelpers
             var j = GetJMatrixAt(targetElement, isoCoords).Determinant();
 
             if (_direction == BeamDirection.Y)
-                u.FillColumn(0, ld[0].DZ, ld[0].RY, ld[1].DZ, ld[1].RY);
+                u.SetColumn(0, ld[0].DZ, ld[0].RY, ld[1].DZ, ld[1].RY);
             else
-                u.FillColumn(0, ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ);
+                u.SetColumn(0, ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ);
 
             var f = n * u;
 

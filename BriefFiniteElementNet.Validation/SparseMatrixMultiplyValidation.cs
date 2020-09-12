@@ -21,8 +21,8 @@ namespace BriefFiniteElementNet.Validation
             var nnz1Percent = 25;
             var nnz2Percent = 25;
 
-            FillRandomely(m1, m1.CoreArray.Length* nnz1Percent/ 100, rnd);
-            FillRandomely(m2, m2.CoreArray.Length * nnz2Percent/ 100, rnd);
+            FillRandomely(m1, m1.Values.Length* nnz1Percent/ 100, rnd);
+            FillRandomely(m2, m2.Values.Length * nnz2Percent/ 100, rnd);
 
             m1.UpdateNonzeroPattern();
             m2.UpdateNonzeroPattern();
@@ -39,7 +39,7 @@ namespace BriefFiniteElementNet.Validation
 
             var d = result1 - result2;
 
-            var maxErr = d.CoreArray.Max(i => Math.Abs(i));
+            var maxErr = d.Values.Max(i => Math.Abs(i));
 
             Console.WriteLine("Max Absolute Err: {0:G}",maxErr);
 
@@ -47,7 +47,7 @@ namespace BriefFiniteElementNet.Validation
 
         private static void FillRandomely(Matrix matrix, int count,Random rnd)
         {
-            while (matrix.CoreArray.Count(i => i != 0.0) < count)
+            while (matrix.Values.Count(i => i != 0.0) < count)
             {
                 matrix[rnd.Next(0, matrix.RowCount), rnd.Next(0, matrix.ColumnCount)] = (1 - rnd.NextDouble()) * 1000;
             }

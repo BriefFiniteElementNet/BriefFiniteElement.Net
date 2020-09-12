@@ -49,7 +49,7 @@ namespace BriefFiniteElementNet.DebuggerVisualizers
 
 
             var mtx = new Matrix((int)rows, (int)cols);
-            Array.Copy(arr as double[], mtx.CoreArray, mtx.CoreArray.Length);
+            Array.Copy(arr as double[], mtx.Values, mtx.Values.Length);
 
             ctrl.VisualizeMatrix(mtx);
             new Window() { Content = ctrl, Title = "epsi1on Matrix Visualizer!", Width = cols * 150, Height = rows * 50 }

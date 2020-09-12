@@ -163,7 +163,7 @@ namespace BriefFiniteElementNet.Elements
         public override Matrix GetGlobalStifnessMatrix()
         {
             var k = GetLocalStiffnessMatrix();
-            var kArr = k.CoreArray;
+            var kArr = k.Values;
 
             var r = GetTransformationParameters();
 
@@ -421,7 +421,7 @@ namespace BriefFiniteElementNet.Elements
         internal Vector TransformLocalToGlobal(Vector v)
         {
             var t = GetTransformationMatrix();
-            var vm = new Matrix(new[] {v.X, v.Y, v.Z});
+            var vm = Matrix.OfVector(new[] { v.X, v.Y, v.Z });
 
             var buf = t*vm;
 
@@ -436,7 +436,7 @@ namespace BriefFiniteElementNet.Elements
         internal Vector TransformGlobalToLocal(Vector v)
         {
             var t = GetTransformationMatrix();
-            var vm = new Matrix(new[] { v.X, v.Y, v.Z });
+            var vm = Matrix.OfVector(new[] { v.X, v.Y, v.Z });
 
             var buf = t.Transpose() * vm;
 

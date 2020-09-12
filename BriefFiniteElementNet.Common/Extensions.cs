@@ -20,9 +20,9 @@ namespace BriefFiniteElementNet.Common
         /// <param name="constant">The constant value</param>
         public static void MultiplyByConstant(this Matrix matrix, double constant)
         {
-            for (var i = 0; i < matrix.CoreArray.Length; i++)
+            for (var i = 0; i < matrix.Values.Length; i++)
             {
-                matrix.CoreArray[i] *= constant;
+                matrix.Values[i] *= constant;
             }
         }
 

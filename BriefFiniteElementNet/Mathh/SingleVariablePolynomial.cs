@@ -41,7 +41,7 @@ namespace BriefFiniteElementNet.Mathh
                 b[i, 0] = points[i].Item2;
             }
 
-            var coefs = mtx.Solve(b.CoreArray);
+            var coefs = mtx.Solve(b.Values);
 
             return new SingleVariablePolynomial(coefs);
         }

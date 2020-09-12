@@ -298,7 +298,7 @@ namespace BriefFiniteElementNet.Integration
             buf.GammaPointCount = sampling;
             buf.XiPointCount = buf.EtaPointCount = 1;
 
-            buf.H = new FunctionMatrixFunction((xi, eta, gama) => new Matrix(new[] { function(gama) }));
+            buf.H = new FunctionMatrixFunction((xi, eta, gama) => Matrix.OfVector(new[] { function(gama) }));
 
             return buf;
         }

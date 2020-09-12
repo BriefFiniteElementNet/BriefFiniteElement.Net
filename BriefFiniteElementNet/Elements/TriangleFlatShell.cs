@@ -178,7 +178,7 @@ namespace BriefFiniteElementNet.Elements
 
             var lambda = GetTransformationMatrix();
 
-            var t = Matrix.DiagonallyRepeat(lambda.Transpose(), 6); // eq. 5-16 page 78 (87 of file)
+            var t = Matrix.RepeatDiagonally(lambda.Transpose(), 6); // eq. 5-16 page 78 (87 of file)
 
             var buf = t.Transpose() * kl * t; //eq. 5-15 p77
 
@@ -323,9 +323,8 @@ namespace BriefFiniteElementNet.Elements
             var d2l = new Displacement(g2l(d2g.Displacements), g2l(d2g.Rotations));
             var d3l = new Displacement(g2l(d3g.Displacements), g2l(d3g.Rotations));
 
-            var uCst =
-                   new Matrix(new[]
-                   {d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY});
+            var uCst = Matrix.OfVector(new[]
+                   { d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY });
 
             var dbCst = CstElement.GetDMatrix(_elasticModulus,_poissonRatio,_formulationType);
 
@@ -369,9 +368,8 @@ namespace BriefFiniteElementNet.Elements
             var d2l = new Displacement(g2l(d2g.Displacements), g2l(d2g.Rotations));
             var d3l = new Displacement(g2l(d3g.Displacements), g2l(d3g.Rotations));
 
-            var uDkt =
-                   new Matrix(new[]
-                   {d1l.DZ, d1l.RX, d1l.RY, /**/ d2l.DZ, d2l.RX, d2l.RY, /**/ d3l.DZ, d3l.RX, d3l.RY});
+            var uDkt = Matrix.OfVector(new[]
+                   { d1l.DZ, d1l.RX, d1l.RY, /**/ d2l.DZ, d2l.RX, d2l.RY, /**/ d3l.DZ, d3l.RX, d3l.RY });
 
 
             var dbDkt = DktElement.GetDMatrix(this._thickness, this._elasticModulus, this._poissonRatio);
@@ -453,9 +451,8 @@ namespace BriefFiniteElementNet.Elements
             var d2l = new Displacement(g2l(d2g.Displacements), g2l(d2g.Rotations));
             var d3l = new Displacement(g2l(d3g.Displacements), g2l(d3g.Rotations));
 
-            var uCst =
-                   new Matrix(new[]
-                   {d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY});
+            var uCst = Matrix.OfVector(new[]
+                   { d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY });
 
             var bCst = CstElement.GetBMatrix(lp.Select(i => i.X).ToArray(),
                 lp.Select(i => i.Y).ToArray());
@@ -496,9 +493,8 @@ namespace BriefFiniteElementNet.Elements
             var d2l = new Displacement(g2l(d2g.Displacements), g2l(d2g.Rotations));
             var d3l = new Displacement(g2l(d3g.Displacements), g2l(d3g.Rotations));
 
-            var uDkt =
-                   new Matrix(new[]
-                   {d1l.DZ, d1l.RX, d1l.RY, /**/ d2l.DZ, d2l.RX, d2l.RY, /**/ d3l.DZ, d3l.RX, d3l.RY});
+            var uDkt = Matrix.OfVector(new[]
+                   { d1l.DZ, d1l.RX, d1l.RY, /**/ d2l.DZ, d2l.RX, d2l.RY, /**/ d3l.DZ, d3l.RX, d3l.RY });
 
 
 

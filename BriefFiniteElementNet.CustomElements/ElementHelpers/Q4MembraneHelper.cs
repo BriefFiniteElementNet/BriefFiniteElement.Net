@@ -88,9 +88,9 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var detJ = j.Determinant(); 
 
             var buf = targetElement.MatrixPool.Allocate(3, 4);
-            buf.FillRow(0, j[1, 1], -j[0, 1], 0, 0);
-            buf.FillRow(1, 0, 0, -j[1, 0], j[0, 0]);
-            buf.FillRow(2, -j[1, 0], j[0, 0], j[1, 1], -j[0, 1]);
+            buf.SetRow(0, j[1, 1], -j[0, 1], 0, 0);
+            buf.SetRow(1, 0, 0, -j[1, 0], j[0, 0]);
+            buf.SetRow(2, -j[1, 0], j[0, 0], j[1, 1], -j[0, 1]);
 
             //buf.MultiplyByConstant(detJ);
             //should be 1.0/detJ? See 3.41
@@ -120,10 +120,10 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var N4_eta = -q * xi_m;
 
             var buf = targetElement.MatrixPool.Allocate(4, 8); //ref [1] eq. 3.45
-            buf.FillRow(0, N1_xi, 0, N2_xi, 0, N3_xi, 0, N4_xi, 0);
-            buf.FillRow(1, N1_eta, 0, N2_eta, 0, N3_eta, 0, N4_eta, 0);
-            buf.FillRow(2, 0, N1_xi, 0, N2_xi, 0, N3_xi, 0, N4_xi);
-            buf.FillRow(3, 0, N1_eta, 0, N2_eta, 0, N3_eta, 0, N4_eta);
+            buf.SetRow(0, N1_xi, 0, N2_xi, 0, N3_xi, 0, N4_xi, 0);
+            buf.SetRow(1, N1_eta, 0, N2_eta, 0, N3_eta, 0, N4_eta, 0);
+            buf.SetRow(2, 0, N1_xi, 0, N2_xi, 0, N3_xi, 0, N4_xi);
+            buf.SetRow(3, 0, N1_eta, 0, N2_eta, 0, N3_eta, 0, N4_eta);
             
             return buf;
         }
@@ -655,7 +655,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var d3l = lds[2];
             var d4l = lds[3];
 
-            var u = new Matrix(new[] { d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY });
+            var u = Matrix.OfVector(new[] { d1l.DX, d1l.DY, d2l.DX, d2l.DY, d3l.DX, d3l.DY, d4l.DX, d4l.DY });
             var d = this.GetDMatrixAt(targetElement, isoCoords);
             var b = this.GetBMatrixAt(targetElement, isoCoords);
 

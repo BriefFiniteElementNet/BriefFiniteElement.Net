@@ -395,8 +395,8 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             var buf = targetElement.MatrixPool.Allocate(2, 2);
 
-            buf.FillRow(0, J11, J12);
-            buf.FillRow(1, J21, J22);
+            buf.SetRow(0, J11, J12);
+            buf.SetRow(1, J21, J22);
 
             return buf;
         }
@@ -739,9 +739,8 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var u3l = lds[2];
             var u4l = lds[3];
 
-            var uDkt =
-                   new Matrix(new[]
-                   {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY, /**/ u4l.DZ, u4l.RX, u4l.RY});
+            var uDkt = Matrix.OfVector(new[]
+                   { u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY, /**/ u4l.DZ, u4l.RX, u4l.RY });
 
 
             var mDkt = d * b * uDkt; //eq. 32, batoz article

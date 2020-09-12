@@ -130,9 +130,9 @@ namespace BriefFiniteElementNet
 
             var buf = new Matrix(3, 3);
 
-            buf.FillColumn(0, pars[0], pars[1], pars[2]);
-            buf.FillColumn(1, pars[3], pars[4], pars[5]);
-            buf.FillColumn(2, pars[6], pars[7], pars[8]);
+            buf.SetColumn(0, pars[0], pars[1], pars[2]);
+            buf.SetColumn(1, pars[3], pars[4], pars[5]);
+            buf.SetColumn(2, pars[6], pars[7], pars[8]);
 
             return buf;
         }
@@ -213,9 +213,9 @@ namespace BriefFiniteElementNet
             if (buf.RowCount != 3 || buf.ColumnCount != 3)
                 throw new Exception();
 
-            buf.FillColumn(0, pars[0], pars[1], pars[2]);
-            buf.FillColumn(1, pars[3], pars[4], pars[5]);
-            buf.FillColumn(2, pars[6], pars[7], pars[8]);
+            buf.SetColumn(0, pars[0], pars[1], pars[2]);
+            buf.SetColumn(1, pars[3], pars[4], pars[5]);
+            buf.SetColumn(2, pars[6], pars[7], pars[8]);
 
             //return buf;
         }
@@ -295,13 +295,13 @@ namespace BriefFiniteElementNet
                 new Matrix(3, 3) : pool.Allocate(3, 3);
 
             //buf.FillColumn(0, pars[0], pars[1], pars[2]);
-            buf.FillColumn(0, cxx, cxy * c + cxz * s, -cxy * s + cxz * c);
+            buf.SetColumn(0, cxx, cxy * c + cxz * s, -cxy * s + cxz * c);
             //buf.FillColumn(1, pars[3], pars[4], pars[5]);
-            buf.FillColumn(1, cyx, cyy * c + cyz * s, -cyy * s + cyz * c);
+            buf.SetColumn(1, cyx, cyy * c + cyz * s, -cyy * s + cyz * c);
             //buf.FillColumn(2, pars[6], pars[7], pars[8]);
-            buf.FillColumn(2, czx, czy * c + czz * s, -czy * s + czz * c);
+            buf.SetColumn(2, czx, czy * c + czz * s, -czy * s + czz * c);
 
-            if (buf.CoreArray.Any(ii => ii < 0.9 && ii > 0.6))
+            if (buf.Values.Any(ii => ii < 0.9 && ii > 0.6))
                 Guid.NewGuid();
 
 
@@ -334,17 +334,17 @@ namespace BriefFiniteElementNet
             var r2 = new Matrix(3, 3);
             var r3 = new Matrix(3, 3);
 
-            r1.FillRow(0, 1, 0, 0);
-            r1.FillRow(1, 0, cc, sc);
-            r1.FillRow(2, 0, -sc, cc);
+            r1.SetRow(0, 1, 0, 0);
+            r1.SetRow(1, 0, cc, sc);
+            r1.SetRow(2, 0, -sc, cc);
 
-            r2.FillRow(0, cb, sb, 0);
-            r2.FillRow(1, -sb, cb, 0);
-            r2.FillRow(2, 0, 0, 1);
+            r2.SetRow(0, cb, sb, 0);
+            r2.SetRow(1, -sb, cb, 0);
+            r2.SetRow(2, 0, 0, 1);
 
-            r3.FillRow(0,ca, 0, sa);
-            r3.FillRow(1, 0, 1, 0);
-            r3.FillRow(2,-sa, 0, ca);
+            r3.SetRow(0,ca, 0, sa);
+            r3.SetRow(1, 0, 1, 0);
+            r3.SetRow(2,-sa, 0, ca);
 
             var buf = r1 * r2 * r3;
 
@@ -1290,14 +1290,14 @@ namespace BriefFiniteElementNet
                 fullLoadVector[11] = localEndForces[1].Mz;
             }
 
-            var ld = new Matrix(fullLoadVector);
+            var ld = Matrix.OfVector(fullLoadVector);
             var rsm = element.GetReleaseMatrix();
             ld = rsm*ld;
 
             var buf = new Force[2];
 
-            buf[0] = Force.FromVector(ld.CoreArray, 0);
-            buf[1] = Force.FromVector(ld.CoreArray, 6);
+            buf[0] = Force.FromVector(ld.Values, 0);
+            buf[1] = Force.FromVector(ld.Values, 6);
 
             return buf;
         }
