@@ -117,7 +117,7 @@ namespace BriefFiniteElementNet.Validation
                             {
                                 var stf = elm.GetGlobalStifnessMatrix();
 
-                                if (stf.CoreArray.Any(ii => double.IsNaN(ii)))
+                                if (stf.Values.Any(ii => double.IsNaN(ii)))
                                     susps += elm.Index + ",";
                             }
 

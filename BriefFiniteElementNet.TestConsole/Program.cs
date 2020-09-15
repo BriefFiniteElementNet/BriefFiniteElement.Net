@@ -36,11 +36,11 @@ namespace BriefFiniteElementNet.TestConsole
         {
             Console.Title = "BFE tests & temporary codes";
 
-            //Validation.GithubIssues.Issue50.Run1();
+            Validation.GithubIssues.Issue50.Run1();
 
-            TestGrid();
+            //TestGrid();
             return;
-            //Validation.GithubIssues.Issue41.Run3();
+            Validation.GithubIssues.Issue41.Run3();
 
             //TestHingedInternalForce();
             //TestBinModel();
@@ -420,24 +420,14 @@ namespace BriefFiniteElementNet.TestConsole
        
         static void TestGrid()
         {
-            var model = StructureGenerator.Generate3DBarElementGrid(15, 15, 15);
-
-            //StructureGenerator.AddRandomiseNodalLoads(model, LoadCase.DefaultLoadCase);
-            StructureGenerator.AddRandomiseLoading(model, true,true,LoadCase.DefaultLoadCase);
-
+            var model = StructureGenerator.Generate3DBarElementGrid(10, 10, 10);
             model.Trace.Listeners.Add(new ConsoleTraceListener());
 
             model.Solve_MPC();
 
             Console.WriteLine("Total matrix rents: {0}", model.MatrixPool.TotalRents);
-            Console.WriteLine("Total matrix creates: {0}", Matrix.CreateCount);
-            Console.WriteLine("Total matrix destructs: {0}", Matrix.DistructCount);
-
-            Console.WriteLine("hit: {0}", EulerBernoulliBeamHelper.hit);
-            Console.WriteLine("miss: {0}", EulerBernoulliBeamHelper.miss);
-
-            var totHit = model.Elements.Sum(i => i.CacheHit);
-            var totMis = model.Elements.Sum(i => i.CacheMiss);
+            //Console.WriteLine("Total matrix creates: {0}", Matrix.CreateCount);
+            //Console.WriteLine("Total matrix destructs: {0}", Matrix.DistructCount);
 
             Console.ReadKey();
         }
@@ -865,7 +855,7 @@ namespace BriefFiniteElementNet.TestConsole
             var t = 1;//- 1e-10;
 
             var d = (frameM - t* barM);//
-            var dMax = d.CoreArray.Max(i => Math.Abs(i));
+            var dMax = d.Values.Max(i => Math.Abs(i));
 
             model.Nodes[0].Constraints = Constraint.Fixed;
 
@@ -946,8 +936,8 @@ namespace BriefFiniteElementNet.TestConsole
             var d1 = 200;
             var d2 = 200;
 
-            var m1 = Matrix.RandomMatrix(d1, d2);
-            var m2 = Matrix.RandomMatrix(d1, d1);
+            var m1 = Matrix.Random(d1, d2);
+            var m2 = Matrix.Random(d1, d1);
 
             var sp = System.Diagnostics.Stopwatch.StartNew();
 
@@ -959,11 +949,11 @@ namespace BriefFiniteElementNet.TestConsole
 
             sp.Restart();
 
-            Matrix.TransposeMultiply(m1, m2, res2);
+            m1.TransposeMultiply(m2, res2);
 
             Console.WriteLine("Optimal took {0} Ms", sp.ElapsedMilliseconds);
 
-            var d = (res1 - res2).Max(ii => Math.Abs(ii));
+            var d = (res1 - res2).Values.Max(ii => Math.Abs(ii));
 
         }
 
@@ -1060,8 +1050,8 @@ namespace BriefFiniteElementNet.TestConsole
             var d1 = 36;
             var d2 = 27*6;
 
-            var B = Matrix.RandomMatrix(d1, d2);
-            var D = Matrix.RandomMatrix(d1, d1);
+            var B = Matrix.Random(d1, d2);
+            var D = Matrix.Random(d1, d1);
 
             var cnt = 1000;
 
@@ -1084,7 +1074,7 @@ namespace BriefFiniteElementNet.TestConsole
                 CalcUtil.Bt_D_B(B, D, res2);
             Console.WriteLine("Optimal took {0} Ms", sp.ElapsedMilliseconds);
 
-            var d = (res1 - res2).Max(ii => Math.Abs(ii));
+            var d = (res1 - res2).Values.Max(ii => Math.Abs(ii));
             Console.WriteLine("Err: {0:g}", d);
         }
 

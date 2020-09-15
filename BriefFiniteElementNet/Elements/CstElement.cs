@@ -192,7 +192,7 @@ namespace BriefFiniteElementNet.Elements
             var lamY = vy.GetUnit();//Lambda_y
             var lamZ = vz.GetUnit();//Lambda_z
 
-            var lambda = Matrix.FromJaggedArray(new[]
+            var lambda = Matrix.OfJaggedArray(new[]
             {
                 new[] {lamX.X, lamY.X, lamZ.X},
                 new[] {lamX.Y, lamY.Y, lamZ.Y},
@@ -200,7 +200,7 @@ namespace BriefFiniteElementNet.Elements
 
             });//3x3 matrix
 
-            return lambda;
+            return lambda.AsMatrix();
         }
 
         /// <inheritdoc />
@@ -238,7 +238,7 @@ namespace BriefFiniteElementNet.Elements
 
             var lambda = GetTransformationMatrix();
 
-            var tr = Matrix.DiagonallyRepeat(lambda.Transpose(), 6); // eq. 5-16 page 78 (87 of file)
+            var tr = lambda.Transpose().RepeatDiagonally(6); // eq. 5-16 page 78 (87 of file)
 
             //step 4 : get global stiffness matrix
             var buf = tr.Transpose() * kle * tr; //eq. 5-15 p77
@@ -306,7 +306,7 @@ namespace BriefFiniteElementNet.Elements
 
             var klocal = b.Transpose() * d * b;
 
-            klocal.MultiplyByConstant(t * a);
+            klocal.Scale(t * a);
 
             return klocal;
         }
@@ -325,7 +325,7 @@ namespace BriefFiniteElementNet.Elements
                 d[1, 0] = d[0, 1] = nu;
                 d[2, 2] = (1 - nu)/2;
 
-                d.MultiplyByConstant(cf);
+                d.Scale(cf);
             }
             else
             {
@@ -337,7 +337,7 @@ namespace BriefFiniteElementNet.Elements
                 d[1, 0] = d[0, 1] = nu;
                 d[2, 2] = (1 - 2*nu)/2;
 
-                d.MultiplyByConstant(cf);
+                d.Scale(cf);
             }
 
             return d;
@@ -366,7 +366,7 @@ namespace BriefFiniteElementNet.Elements
 
             //eq 3.24 page 29 of thesis pdf
 
-            var buf2 = Matrix.FromJaggedArray(new double[][]
+            var buf2 = Matrix.OfJaggedArray(new double[][]
             {
                 new [] {y23, 0, y31, 0, y12, 0},
                 new [] {0, x32, 0, x13, 0, x21},
@@ -374,9 +374,9 @@ namespace BriefFiniteElementNet.Elements
             });
 
 
-            buf2.MultiplyByConstant(1/(2*a));
+            buf2.Scale(1/(2*a));
 
-            return buf2;
+            return buf2.AsMatrix();
         }
 
         /// <summary>
@@ -401,7 +401,7 @@ namespace BriefFiniteElementNet.Elements
 
             //eq 3.24 page 29 of thesis pdf
 
-            var buf2 = Matrix.FromJaggedArray(new double[][]
+            var buf2 = Matrix.OfJaggedArray(new double[][]
             {
                 new [] {y23, 0, y31, 0, y12, 0},
                 new [] {0, x32, 0, x13, 0, x21},
@@ -409,9 +409,9 @@ namespace BriefFiniteElementNet.Elements
             });
 
 
-            buf2.MultiplyByConstant(1 / (2 * a));
+            buf2.Scale(1 / (2 * a));
 
-            return buf2;
+            return buf2.AsMatrix();
         }
 
         #endregion

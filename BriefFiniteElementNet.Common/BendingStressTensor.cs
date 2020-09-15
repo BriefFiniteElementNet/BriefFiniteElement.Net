@@ -141,6 +141,7 @@ namespace BriefFiniteElementNet
         {
             var tensorMatrix = ToMatrix(tensor);
 
+            // TODO: MAT - the product could be directly computed in a helper method (CalcUtil).
             var rtd = transformationMatrix.Transpose() * tensorMatrix * transformationMatrix;
 
             var buf = FromMatrix(rtd);
@@ -158,6 +159,7 @@ namespace BriefFiniteElementNet
         {
             var tensorMatrix = ToMatrix(tensor);
 
+            // TODO: MAT - the product could be directly computed in a helper method (CalcUtil).
             var rtd = transformationMatrix * tensorMatrix * transformationMatrix.Transpose();
 
             var buf = FromMatrix(rtd);

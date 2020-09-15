@@ -50,7 +50,7 @@ namespace BriefFiniteElementNet
             for (var i = 0; i < arr.Length; i++)
                 arr[i] = 0.0;
 
-            var buf = new Matrix(rows, columns, ref arr);
+            var buf = new Matrix(rows, columns, arr);
 
             buf.UsePool = true;
             buf.Pool = this;
@@ -93,7 +93,7 @@ namespace BriefFiniteElementNet
 
             Array.Copy(values, arr, values.Length);
 
-            var buf = new Matrix(values.Length,1, ref arr);
+            var buf = new Matrix(values.Length,1, arr);
 
             buf.UsePool = true;
             buf.Pool = this;
@@ -111,12 +111,12 @@ namespace BriefFiniteElementNet
         /// <returns></returns>
         public Matrix Clone(Matrix mtx)
         {
-            var arr = Pool.Allocate(mtx.CoreArray.Length);
+            var arr = Pool.Allocate(mtx.Values.Length);
 
             for (var i = 0; i < arr.Length; i++)
-                arr[i] = mtx.CoreArray[i];
+                arr[i] = mtx.Values[i];
 
-            var buf = new Matrix(mtx.RowCount, mtx.ColumnCount, ref arr);
+            var buf = new Matrix(mtx.RowCount, mtx.ColumnCount, arr);
 
             buf.UsePool = true;
             buf.Pool = this;
@@ -134,11 +134,11 @@ namespace BriefFiniteElementNet
         {
             foreach (var mtx in matrices)
             {
-                if (mtx.CoreArray == null)
+                if (mtx.Values == null)
                     continue;
 
-                Pool.Free(mtx.CoreArray);
-                mtx.CoreArray = null;
+                Pool.Free(mtx.Values);
+                mtx.Values = null;
                 TotalReturns++;
             }
         }

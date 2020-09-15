@@ -34,8 +34,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CSparse, Version=3.4.6.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CSparse.3.4.6\lib\net45\CSparse.dll</HintPath>
+    <Reference Include="CSparse, Version=3.4.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CSparse.3.4.7\lib\net45\CSparse.dll</HintPath>
     </Reference>
     <Reference Include="HelixToolkit, Version=2.12.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
       <HintPath>..\packages\HelixToolkit.2.12.0\lib\netstandard1.1\HelixToolkit.dll</HintPath>

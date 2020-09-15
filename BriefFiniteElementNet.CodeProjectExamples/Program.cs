@@ -163,7 +163,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
 
             var sp = System.Diagnostics.Stopwatch.StartNew();
 
-            var m3 = Matrix.Multiply(m1, m2);
+            var m3 = m1.Multiply(m2);
 
             Console.WriteLine("{1}x{1}*{1}x{1} took {0} milisecs", sp.ElapsedMilliseconds,n);
         }
