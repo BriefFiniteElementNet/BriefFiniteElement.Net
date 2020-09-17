@@ -61,9 +61,10 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var buf = new Matrix(3, 3);
 
-            buf.SetRow(0, n2.X - n1.X, n3.X - n1.X, n4.X - n1.X);
-            buf.SetRow(1, n2.Y - n1.Y, n3.Y - n1.Y, n4.Y - n1.Y);
-            buf.SetRow(2, n2.Z - n1.Z, n3.Z - n1.Z, n4.Z - n1.Z);
+            // TODO: MAT - set values directly
+            buf.SetRow(0, new double[] { n2.X - n1.X, n3.X - n1.X, n4.X - n1.X });
+            buf.SetRow(1, new double[] { n2.Y - n1.Y, n3.Y - n1.Y, n4.Y - n1.Y });
+            buf.SetRow(2, new double[] { n2.Z - n1.Z, n3.Z - n1.Z, n4.Z - n1.Z });
 
             return buf;
         }

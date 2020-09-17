@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             var buf = Matrix.Eye(4);
 
-            buf.MultiplyByConstant(1e3);
+            buf.Scale(1e3);
 
             return buf;
 

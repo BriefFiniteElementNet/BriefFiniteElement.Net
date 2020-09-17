@@ -256,7 +256,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
                 //p55 http://www.code-aster.org/doc/v11/en/man_r/r3/r3.07.03.pdf
 
-                d.MultiplyByConstant(cf);
+                d.Scale(cf);
             }
 
             return d;
@@ -302,9 +302,11 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             }
 
-            tangent.MultiplyByConstant(-1);
+            tangent.Scale(-1);
 
-            return d;
+
+           // var diff = (tangent - GetDMatrixAt(targetElement, isoCoords)).Max(ii=>Math.Abs(ii));//= 1e-
+           return d;
         }
 
         public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
@@ -393,8 +395,9 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             var buf = targetElement.MatrixPool.Allocate(2, 2);
 
-            buf.FillRow(0, J11, J12);
-            buf.FillRow(1, J21, J22);
+            // TODO: MAT - set values directly
+            buf.SetRow(0, new double[] { J11, J12 });
+            buf.SetRow(1, new double[] { J21, J22 });
 
             return buf;
         }
@@ -534,8 +537,8 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                     {
                         var shp = GetNMatrixAt(targetElement, xi, eta, 0);
                         var j = GetJMatrixAt(targetElement, xi, eta, 0);
-                        shp.MultiplyByConstant(j.Determinant());
-                        shp.MultiplyByConstant(uz);
+                        shp.Scale(j.Determinant());
+                        shp.Scale(uz);
 
                         return shp;
                     }
@@ -612,7 +615,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
                 {
                     var shp = GetNMatrixAt(targetElement, xi, eta, 0);
                     var j = GetJMatrixAt(targetElement, xi, eta, 0);
-                    shp.MultiplyByConstant(j.Determinant());
+                    shp.Scale(j.Determinant());
 
                     //var uzm = ul.SeverityFunction.Evaluate(xi, eta);
 
@@ -737,9 +740,8 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var u3l = lds[2];
             var u4l = lds[3];
 
-            var uDkt =
-                   new Matrix(new[]
-                   {u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY, /**/ u4l.DZ, u4l.RX, u4l.RY});
+            var uDkt = Matrix.OfVector(new[]
+                   { u1l.DZ, u1l.RX, u1l.RY, /**/ u2l.DZ, u2l.RX, u2l.RY, /**/ u3l.DZ, u3l.RX, u3l.RY, /**/ u4l.DZ, u4l.RX, u4l.RY });
 
 
             var mDkt = d * b * uDkt; //eq. 32, batoz article

@@ -1,10 +1,11 @@
-﻿using System;
-using System.Reflection;
-using System.Windows;
-using BriefFiniteElementNet;
+﻿using BriefFiniteElementNet;
 using BriefFiniteElementNet.Controls;
 using BriefFiniteElementNet.DebuggerVisualizers;
+using CSparse.Double;
 using Microsoft.VisualStudio.DebuggerVisualizers;
+using System;
+using System.Reflection;
+using System.Windows;
 
 [assembly: System.Diagnostics.DebuggerVisualizer(typeof(MatrixVisualizer), typeof(VisualizerObjectSource), Target = typeof(Matrix), Description = "Epsi1on Matrix Visualizer!")]
 namespace BriefFiniteElementNet.DebuggerVisualizers
@@ -43,13 +44,13 @@ namespace BriefFiniteElementNet.DebuggerVisualizers
 
             var ctrl = new MatrixVisualizerControl();
 
-            var rows = (int)objectToVisualize.GetType().GetField("rowCount", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(objectToVisualize);
-            var cols = (int)objectToVisualize.GetType().GetField("columnCount", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(objectToVisualize);
-            var arr = (double[])objectToVisualize.GetType().GetProperty("CoreArray", BindingFlags.Public | BindingFlags.Instance).GetValue(objectToVisualize, null);
+            var rows = (int)objectToVisualize.GetType().GetProperty("RowCount", BindingFlags.Public | BindingFlags.Instance).GetValue(objectToVisualize);
+            var cols = (int)objectToVisualize.GetType().GetProperty("ColumnCount", BindingFlags.Public | BindingFlags.Instance).GetValue(objectToVisualize);
+            var arr = (double[])objectToVisualize.GetType().GetProperty("Values", BindingFlags.Public | BindingFlags.Instance).GetValue(objectToVisualize, null);
 
+            // TODO: why not directly cast to DenseMatrix?
 
-            var mtx = new Matrix((int)rows, (int)cols);
-            Array.Copy(arr as double[], mtx.CoreArray, mtx.CoreArray.Length);
+            var mtx = new DenseMatrix(rows, cols, arr);
 
             ctrl.VisualizeMatrix(mtx);
             new Window() { Content = ctrl, Title = "epsi1on Matrix Visualizer!", Width = cols * 150, Height = rows * 50 }
