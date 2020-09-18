@@ -169,12 +169,12 @@ namespace BriefFiniteElementNet.Validation.Data.FlatShell___triangle.IBeamTorsio
             var abaqus12 = new Vector(15.3931E-03   ,  89.1206E-03 ,- 149.515E-03); //node 12
             var abaqus41 = new Vector(-189.084E-06, 72.3778E-03, -734.918E-06); //node 41
 
-            Console.WriteLine("Err at A against abaqus (displacement): {0:0.00}%", GetError(da, abaqusDa));
-            Console.WriteLine("Err at B against abaqus (displacement): {0:0.00}%", GetError(db, abaqusDb));
+            Console.WriteLine("Err at A against abaqus (displacement): {0:0.00}%", GetErrorPercent(da, abaqusDa));
+            Console.WriteLine("Err at B against abaqus (displacement): {0:0.00}%", GetErrorPercent(db, abaqusDb));
 
-            Console.WriteLine("Err at 41 (57) against abaqus (displacement): {0:0.00}%", GetError(d50, abaqus41));
-            Console.WriteLine("Err at 12 (56) against abaqus (displacement): {0:0.00}%", GetError(d56, abaqus12));
-            Console.WriteLine("Err at 08 (50) against abaqus (displacement): {0:0.00}%", GetError(d57, abaqus8));
+            Console.WriteLine("Err at 41 (57) against abaqus (displacement): {0:0.00}%", GetErrorPercent(d50, abaqus41));
+            Console.WriteLine("Err at 12 (56) against abaqus (displacement): {0:0.00}%", GetErrorPercent(d56, abaqus12));
+            Console.WriteLine("Err at 08 (50) against abaqus (displacement): {0:0.00}%", GetErrorPercent(d57, abaqus8));
 
 
             model.ReIndexElements();
@@ -206,9 +206,9 @@ namespace BriefFiniteElementNet.Validation.Data.FlatShell___triangle.IBeamTorsio
                 var abacus_bt = new CauchyStressTensor() { S11 = -34.7168E-03, S22 = -538.942E-03, S12 = 1.03438, S21 = 1.08243 } * -1e9;
                 var abacus_ct = new CauchyStressTensor() { S11 = -201.062E-03, S22 = -1.18348, S12 = 747.243E-03, S21 = 747.243E-03 } * -1e9;
 
-                var e1 = GetError(at, abacus_ct);
-                var e2 = GetError(bt, abacus_at);
-                var e3 = GetError(ct, abacus_bt);
+                var e1 = GetErrorPercent(at, abacus_ct);
+                var e2 = GetErrorPercent(bt, abacus_at);
+                var e3 = GetErrorPercent(ct, abacus_bt);
 
                 Console.WriteLine("Err at p1 element 81 (stress): {0:0.00}%", e1);
                 Console.WriteLine("Err at p2 element 81 (stress): {0:0.00}%", e2);
@@ -224,14 +224,14 @@ namespace BriefFiniteElementNet.Validation.Data.FlatShell___triangle.IBeamTorsio
             throw new NotImplementedException();
         }
 
-        private static double GetError(double test, double accurate)
+        private static double GetErrorPercent(double test, double accurate)
         {
             var buf = Math.Abs(test - accurate) / Math.Abs(accurate);
 
             return 100 * buf;
         }
 
-        private static double GetError(Vector test, Vector accurate)
+        private static double GetErrorPercent(Vector test, Vector accurate)
         {
             if (test == accurate)
                 return 0;
@@ -239,7 +239,7 @@ namespace BriefFiniteElementNet.Validation.Data.FlatShell___triangle.IBeamTorsio
             return 100 * Math.Abs((test - accurate).Length) / Math.Max(test.Length, accurate.Length);
         }
 
-        private static double GetError(CauchyStressTensor test, CauchyStressTensor accurate)
+        private static double GetErrorPercent(CauchyStressTensor test, CauchyStressTensor accurate)
         {
             var f1t = new Vector(test.S11, test.S12, test.S13);
             var f1a = new Vector(accurate.S11, accurate.S12, accurate.S13);
@@ -250,9 +250,9 @@ namespace BriefFiniteElementNet.Validation.Data.FlatShell___triangle.IBeamTorsio
             var f3t = new Vector(test.S31, test.S32, test.S33);
             var f3a = new Vector(accurate.S31, accurate.S32, accurate.S33);
 
-            var e1 = GetError(f1t, f1a);
-            var e2 = GetError(f2t, f2a);
-            var e3 = GetError(f3t, f3a);
+            var e1 = GetErrorPercent(f1t, f1a);
+            var e2 = GetErrorPercent(f2t, f2a);
+            var e3 = GetErrorPercent(f3t, f3a);
 
 
             return e1 + e2 + e3;
