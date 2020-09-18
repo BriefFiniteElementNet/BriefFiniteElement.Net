@@ -7,6 +7,7 @@ using System.Text;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
+using BriefFiniteElementNet.Validation.Case_01;
 using HtmlTags;
 
 namespace BriefFiniteElementNet.Validation

@@ -1,6 +1,12 @@
 ﻿using System.Linq;
 using BriefFiniteElementNet.Elements;
 using HtmlTags;
+using BriefFiniteElementNet.Materials;
+using System;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace BriefFiniteElementNet.Validation.Case_01
 {

@@ -23,6 +23,16 @@ namespace BriefFiniteElementNet.Validation
             return 100 * Math.Abs((test - accurate).Length) / Math.Max(test.Length, accurate.Length);
         }
 
+        public static double GetErrorPercent(Displacement test, Displacement accurate)
+        {
+            if (test == accurate)
+                return 0;
+
+            return GetErrorPercent(test.Displacements, accurate.Displacements) +
+                   GetErrorPercent(test.Rotations, accurate.Rotations);
+        }
+
+
         public static double GetErrorPercent(CauchyStressTensor test, CauchyStressTensor accurate)
         {
             var f1t = new Vector(test.S11, test.S12, test.S13);
