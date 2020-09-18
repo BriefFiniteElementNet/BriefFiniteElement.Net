@@ -872,8 +872,7 @@ namespace BriefFiniteElementNet.Validation
             {//nodal displacements
 
                 span.Add("h4").Text("Nodal Displacements");
-                span.Add("paragraph")
-               .Text(string.Format("Validation output for nodal displacements:"));
+                span.Add("paragraph").Text(string.Format("Validation output for nodal displacements:"));
 
 
                 span.Add("p").AddClass("bg-info").AppendHtml(string.Format(CultureInfo.CurrentCulture, "-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxDispAbsError, maxDispRelError));
