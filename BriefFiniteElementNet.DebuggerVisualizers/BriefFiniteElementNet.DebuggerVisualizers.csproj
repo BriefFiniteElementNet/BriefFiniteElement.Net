@@ -36,16 +36,13 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.VisualStudio.DebuggerVisualizers, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.DebuggerVisualizers, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -54,9 +51,14 @@
   <ItemGroup>
     <Compile Include="MatrixVisualizer.cs" />
     <Compile Include="ModelVisualizer.cs" />
+    <Compile Include="PolynomialVisualizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj">
+      <Project>{82c63c6b-651a-4308-8b89-b4c643f3a7c2}</Project>
+      <Name>BriefFiniteElementNet.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BriefFiniteElementNet.Controls\BriefFiniteElementNet.Controls.csproj">
       <Project>{8dabde62-8a8e-4153-b753-3a62015a9c16}</Project>
       <Name>BriefFiniteElementNet.Controls</Name>
@@ -71,13 +73,13 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "BriefFiniteElementNet.DebuggerVisualizers.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
-xcopy "BriefFiniteElementNet.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
-xcopy "BriefFiniteElementNet.Common.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
-xcopy "BriefFiniteElementNet.Controls.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
-xcopy "DynamicDataDisplay.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
-xcopy "HelixToolkit.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
-xcopy "HelixToolkit.Wpf.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
+    <PostBuildEvent>xcopy "BriefFiniteElementNet.DebuggerVisualizers.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
+xcopy "BriefFiniteElementNet.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
+xcopy "BriefFiniteElementNet.Common.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
+xcopy "BriefFiniteElementNet.Controls.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
+xcopy "OxyPlot.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
+xcopy "OxyPlot.Wpf.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
+xcopy "HelixToolkit.Wpf.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

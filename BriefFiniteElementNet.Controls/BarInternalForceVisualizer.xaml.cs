@@ -4,19 +4,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using BriefFiniteElementNet.Elements;
-using Microsoft.Research.DynamicDataDisplay;
-using Microsoft.Research.DynamicDataDisplay.DataSources;
+using OxyPlot;
+using OxyPlot.Series;
 
 namespace BriefFiniteElementNet.Controls
 {
@@ -45,10 +38,6 @@ namespace BriefFiniteElementNet.Controls
         public void UpdateUi()
         {
             var bar = Context.TargetElement;
-
-            for (var i = plotter.Children.Count - 1; i >= 0; i--)
-                if (plotter.Children[i] is LineGraph)
-                    plotter.Children.RemoveAt(i);
 
             if (bar == null)
                 return;
@@ -82,7 +71,7 @@ namespace BriefFiniteElementNet.Controls
 
             Array.Sort(l2);
 
-            var pts = new List<Point>();
+            var data = new List<DataPoint>();
 
             var lc = Context.SelectedLoadCase;
 
@@ -124,24 +113,24 @@ namespace BriefFiniteElementNet.Controls
                         throw new ArgumentOutOfRangeException();
                 }
 
-                pts.Add(new Point(x, y, 0));
+                data.Add(new DataPoint(x, y));
             }
 
-            var src = new ObservableDataSource<Point>(pts);
+            var model = new PlotModel();
 
-            src.SetXMapping(i => i.X);
-            src.SetYMapping(i => i.Y);
+            var series = new LineSeries()
+            {
+                Title = Context.Component.ToString(),
+                MarkerType = MarkerType.Circle,
+                Color = OxyColors.Black,
+                StrokeThickness = 2.0
+            };
 
+            series.Points.AddRange(data);
 
-            var gr = new LineGraph(src);
-            
-            gr.Stroke = Brushes.Black;
-            gr.StrokeThickness = 2;
-            gr.Name = Context.Component.ToString();
+            model.Series.Add(series);
 
-            plotter.Children.Add(gr);
-            //plotter.AddLineGraph(src, Colors.Black, 2, Context.Component.ToString());
-            Microsoft.Research.DynamicDataDisplay.Charts.Legend.SetDescription(gr, Context.Component.ToString());
+            plotter.Model = model;
         }
 
         private BarInternalForceContext Context;

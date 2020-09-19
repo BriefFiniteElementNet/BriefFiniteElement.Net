@@ -28,6 +28,7 @@ namespace BriefFiniteElementNet
         private double s31;
         private double s32;
 
+
         public double S11
         {
             get { return s11; }
@@ -100,6 +101,20 @@ namespace BriefFiniteElementNet
                 s33 = value;
             }
         }
+
+        public CauchyStressTensor(double s11, double s22, double s33) : this()
+        {
+            S11 = s11;
+            S22 = s22;
+            S33 = s33;
+        }
+
+
+
+
+
+
+
 
         /// <summary>
         /// Updates the principal stresses based on the tensor 
@@ -354,6 +369,11 @@ namespace BriefFiniteElementNet
         }
 
         public static CauchyStressTensor operator *(double coef, CauchyStressTensor tensor)
+        {
+            return Multiply(tensor, coef);
+        }
+
+        public static CauchyStressTensor operator *(CauchyStressTensor tensor, double coef)
         {
             return Multiply(tensor, coef);
         }

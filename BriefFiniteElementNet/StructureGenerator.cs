@@ -7,7 +7,7 @@ using System.Text;
 using BriefFiniteElementNet.Elements;
 using rnd=BriefFiniteElementNet.RandomHelper;
 using System.Globalization;
-
+using BriefFiniteElementNet.Loads;
 
 namespace BriefFiniteElementNet
 {
@@ -66,19 +66,11 @@ namespace BriefFiniteElementNet
                 foreach (var elm in mdl.Elements)
                     foreach (var cse in cases)
                     {
-                        var uniformLoad =
-                            new UniformLoad1D(rnd.GetRandomNumber(-1000, 1000), LoadDirection.X,
-                                CoordinationSystem.Global,
-                                cse);
+                        var dir1 = rnd.GetRandomVector(-1, 1).GetUnit();
 
-                        var l = (elm.Nodes[0].Location - elm.Nodes[1].Location).Length;
-
-                        var concenstratedLoad = new ConcentratedLoad1D(rnd.GetRandomForce(-1000, 1000),
-                            rnd.GetRandomNumber(0, l), CoordinationSystem.Global, cse);
-
+                        var uniformLoad = new UniformLoad(cse, dir1, rnd.GetRandomNumber(-1000, 1000), CoordinationSystem.Global);
 
                         elm.Loads.Add(uniformLoad);
-                        elm.Loads.Add(concenstratedLoad);
                     }
 
 

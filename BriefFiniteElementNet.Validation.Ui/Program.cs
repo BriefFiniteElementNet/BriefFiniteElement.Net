@@ -15,8 +15,11 @@ namespace BriefFiniteElementNet.Validation.Ui
         static void Main(string[] args)
         {
             //TestQuad();
-            //TestTri();
-            TestBar();
+            //
+            //TestBar();
+
+            TestTri();
+
             //TestTelepaty();
             //TestTetra();
             //return;

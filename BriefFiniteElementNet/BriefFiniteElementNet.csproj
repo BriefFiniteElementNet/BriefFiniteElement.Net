@@ -1,51 +1,47 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7CDA20D4-9BC8-4BC3-9F22-CB86CD4DC3E1}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BriefFiniteElementNet</RootNamespace>
+    <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <PackageId>BriefFiniteElement.Net</PackageId>
+    <Description>A Finite Element library for static and linear analysis of solids and structures.</Description>
+    <Version>2.0.0-pre</Version>
+    <PackageTags>finite elements static linear analysis</PackageTags>
+    <Product>BriefFiniteElement.Net</Product>
+    <Company>Ehsan M.A.</Company>
+    <Copyright>Copyleft © 2020 Ehsan Mohammad Ali ehsan.ma@gmx.com</Copyright>
+    <Authors>Ehsan M.A.</Authors>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
     <AssemblyName>BriefFiniteElementNet</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <RootNamespace>BriefFiniteElementNet</RootNamespace>
+    <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes></PackageReleaseNotes>
+
+    <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+    
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>bin\Release\BriefFiniteElementNet.XML</DocumentationFile>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="CSparse, Version=3.4.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CSparse.3.4.3\lib\net40\CSparse.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Xml" />
+    <Compile Remove="Elements\SdofMass.cs" />
+    <Compile Remove="Elements\TriangleCoordinatedGeometricProperties.cs" />
+    <Compile Remove="Elements\TriangleCoordinatedMechanicalProperties.cs" />
+    <Compile Remove="Materials\BaseBarMaterial.cs" />
+    <Compile Remove="Materials\BaseTriangleMaterial.cs" />
+    <Compile Remove="Materials\UniformBarMaterial.cs" />
+    <Compile Remove="Materials\UniformTriangleMaterial.cs" />
+    <Compile Remove="ConcurrentArrayPool.cs" />
+    <Compile Remove="DofMap.cs" />
+    <Compile Remove="ReflectionUtils.cs" />
+    <Compile Remove="SparseMatrixMultiplication.cs" />
   </ItemGroup>
+
   <ItemGroup>
     <Compile Include="Elements\Extensions.cs" />
-    <Compile Include="Loads\PressureLoadForPlanarElements.cs" />
     <Compile Include="Mathh\IPolynomial.cs" />
     <Compile Include="Utils\ArrayEqualityCompairer.cs" />
     <Compile Include="ElementHelpers\Gt9Helper.cs" />
@@ -205,7 +201,6 @@
     <None Include="ElementHelpers\DktHelper.md" />
     <None Include="Elements\TriangleElement.md" />
     <None Include="Mathh\IPolynomial.md" />
-    <None Include="packages.config" />
     <None Include="Utils\CalcUtil.md" />
     <None Include="ClassDiagram1.cd" />
     <None Include="Documents\SupportReactions.mkd" />
@@ -226,19 +221,22 @@
     <None Include="Todo.md" />
     <None Include="Loads\UniformLoad1D.md" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CSparse" Version="3.4.6" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj">
-      <Project>{82c63c6b-651a-4308-8b89-b4c643f3a7c2}</Project>
-      <Name>BriefFiniteElementNet.Common</Name>
+      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+      <IncludeAssets>BriefFiniteElementNet.Common.dll</IncludeAssets>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+
+  <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">
+    <ItemGroup>
+      <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+    </ItemGroup>
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  
 </Project>

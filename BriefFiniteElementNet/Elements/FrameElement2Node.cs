@@ -7,14 +7,10 @@
 
 
 
+using BriefFiniteElementNet.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management.Instrumentation;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
-using System.Text;
-using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet
 {

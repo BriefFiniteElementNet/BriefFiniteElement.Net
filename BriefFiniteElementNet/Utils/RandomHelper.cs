@@ -30,9 +30,6 @@ namespace BriefFiniteElementNet
         }
 
 
-
-
-
         private static Random ForceRnd = new Random(1);
 
         /// <summary>
