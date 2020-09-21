@@ -9,7 +9,7 @@ Modulus of elasticity E = 210 GPa (steel)
 Poisson’s ratio ν = 0.3
 
 Boundary Conditions:
-One end of the plate is fullt fixed.
+One end of the plate is fully fixed.
 
 Loading:
 Each node is loaded with a force of 2500 N in Y and 2500 N in Z. 

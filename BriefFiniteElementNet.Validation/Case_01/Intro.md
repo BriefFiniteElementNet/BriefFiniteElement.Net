@@ -21,7 +21,7 @@ Boundary Conditions:
 - One end of the cantilever is fixed.
 
 Loading:
-- A  concentrated  load  of  1.6  kips  is  applied  at  the  top  and  bottom  of  the  flange  in  opposite directions as shown in Fig. 7.16.
+- Two concentrated  load  of  1.6  kips  is  applied  at  the  top  and  bottom  of  the  flange  in  opposite directions as shown in Fig. 7.16.
 
 Abaqus model (node numbers are differently named)
 

@@ -226,7 +226,7 @@ namespace BriefFiniteElementNet.Elements
                 0, (3 * xi) / L - 1 / L, 0, -(6 * xi) / L2,
                 0, 0, 0, (3 * xi) / L + 1 / L};
 
-                buf.FillRow(0, arr);
+                buf.SetRow(0, arr);
             }
 
             if ((this._behavior & BarElementBehaviour.BeamYTimoshenko) != 0)
@@ -254,7 +254,7 @@ namespace BriefFiniteElementNet.Elements
                     0, 0, 0, 6*c*L*xi + L*(3*xi + 1)
                 };
 
-                buf.FillRow(0, arr);
+                buf.SetRow(0, arr);
             }
 
             if ((this._behavior & BarElementBehaviour.BeamZEulerBernoulli) != 0)
@@ -265,7 +265,7 @@ namespace BriefFiniteElementNet.Elements
                 (3 * xi) / L - 1 / L, 0, 0, 0,
                 -(6 * xi) / L2, 0, (3 * xi) / L + 1 / L, 0};
 
-                buf.FillRow(1, arr);
+                buf.SetRow(1, arr);
             }
 
             if ((this._behavior & BarElementBehaviour.BeamZTimoshenko) != 0)
@@ -293,7 +293,7 @@ namespace BriefFiniteElementNet.Elements
                     6*c*L*xi + L*(3*xi + 1), 0
                 };
 
-                buf.FillRow(1, arr);
+                buf.SetRow(1, arr);
             }
 
             if ((this._behavior & BarElementBehaviour.Truss) != 0)
@@ -302,7 +302,7 @@ namespace BriefFiniteElementNet.Elements
                 0, 0, -1 / L, 0,
                 0, 0, 0, 0,};
 
-                buf.FillRow(2, arr);
+                buf.SetRow(2, arr);
             }
 
             if ((this._behavior & BarElementBehaviour.Shaft) != 0)
@@ -311,7 +311,7 @@ namespace BriefFiniteElementNet.Elements
                 0, 0, 0, 0,
                 0, -1 / L, 0, 0};
 
-                buf.FillRow(3, arr);
+                buf.SetRow(3, arr);
             }
 
 
@@ -363,7 +363,7 @@ namespace BriefFiniteElementNet.Elements
             var tr = CalcUtil.GetBarTransformationMatrix(v);//, 0, this.MatrixPool);
 
             //tr = tr.Transpose();// 
-            tr.InPlaceTranspose();
+            tr.TransposeInPlace();
 
             return tr;
             /*
@@ -597,16 +597,18 @@ namespace BriefFiniteElementNet.Elements
             pars[7] = czy * c + czz * s;
             pars[8] = -czy * s + czz * c;
 
-
+            /*
             var buf =
             //new Matrix(3, 3);
             MatrixPool.Allocate(3, 3);
 
-            buf.FillColumn(0, pars[0], pars[1], pars[2]);
-            buf.FillColumn(1, pars[3], pars[4], pars[5]);
-            buf.FillColumn(2, pars[6], pars[7], pars[8]);
+            buf.SetColumn(0, new double[] { pars[0], pars[1], pars[2] });
+            buf.SetColumn(1, new double[] { pars[3], pars[4], pars[5] });
+            buf.SetColumn(2, new double[] { pars[6], pars[7], pars[8] });
+            //*/
 
-            return buf;
+            // pars array is column major
+            return new Matrix(3, 3, pars);
         }
 
         /// <inheritdoc/>
@@ -1204,7 +1206,7 @@ namespace BriefFiniteElementNet.Elements
                 }
 
                 //var as_ = mtx.Inverse() * right;
-                var as_ = mtx.Solve(right.CoreArray);
+                var as_ = mtx.Solve(right.Values);
 
                 x_xi = new Mathh.SingleVariablePolynomial(as_);
 

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using CSparse.Double;
+using System;
 using System.Data;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Globalization;
 
 namespace BriefFiniteElementNet.Controls
 {
@@ -32,7 +33,7 @@ namespace BriefFiniteElementNet.Controls
         }
 
 
-        public static void VisualizeInNewWindow(Matrix matrix, string title = "")
+        public static void VisualizeInNewWindow(DenseMatrix matrix, string title = "")
         {
             var wnd = new Window() { Title = title };
             var mtxCtrl = new MatrixVisualizerControl();
@@ -43,7 +44,7 @@ namespace BriefFiniteElementNet.Controls
             wnd.Show();
         }
 
-        public static void VisualizeInNewWindow(Matrix matrix, string title ,bool showDialog)
+        public static void VisualizeInNewWindow(DenseMatrix matrix, string title ,bool showDialog)
         {
             var wnd = new Window() { Title = title };
             var mtxCtrl = new MatrixVisualizerControl();
@@ -57,7 +58,7 @@ namespace BriefFiniteElementNet.Controls
                 wnd.Show();
         }
 
-        public void VisualizeMatrix(BriefFiniteElementNet.Matrix mtx)
+        public void VisualizeMatrix(DenseMatrix mtx)
         {
             var tbl = new DataTable();
             tbl.Locale = CultureInfo.InvariantCulture;
@@ -70,13 +71,13 @@ namespace BriefFiniteElementNet.Controls
 
             for (var i = 0; i < mtx.RowCount; i++)
             {
-                tbl.Rows.Add(mtx.ExtractRow(i).CoreArray.Cast<object>().ToArray());
+                tbl.Rows.Add(mtx.Row(i));
             }
 
             DataGrid.ItemsSource = tbl.DefaultView;
         }
 
-        private BriefFiniteElementNet.Matrix target;
+        private DenseMatrix target;
 
         private void Button_Click(object sender, System.Windows.RoutedEventArgs e)
         {

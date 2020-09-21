@@ -257,7 +257,7 @@ namespace BriefFiniteElementNet.Validation
                 .ToArray();
 
 
-            return Matrix.FromJaggedArray(openseesStfArr);
+            return Matrix.OfJaggedArray(openseesStfArr).AsMatrix();
         }
 
     }

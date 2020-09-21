@@ -58,12 +58,12 @@ namespace BriefFiniteElementNet.Validation
             var kr = GetCondensedStiffness(kfull, newConds);
 
 
-            var ratio = Matrix.DotDivide(kr, kr2);
+            var ratio = kr.PointwiseDivide(kr2);
             ratio.Replace(double.NaN, 0);
 
             var d = (kr - kr2);
 
-            var dmax = d.Max(i => Math.Abs(i));
+            var dmax = d.Values.Max(i => Math.Abs(i));
         }
 
         private static Matrix GetCondensedStiffness(Matrix k, params Constraint[] consts)
@@ -89,7 +89,7 @@ namespace BriefFiniteElementNet.Validation
             }
 
             if (fixes == 6 * n)
-                return k.Clone();
+                return k.Clone().AsMatrix();
 
 
             var pf = new Matrix(fixes, 6 * n);
@@ -140,7 +140,7 @@ namespace BriefFiniteElementNet.Validation
             var kcc = pc * k * pc.Transpose();
 
 
-            var kr = kff - kfc*kcc.Inverse2()*kcf;
+            var kr = kff - kfc*kcc.Inverse()*kcf;
 
 
             var kt = pf.Transpose()*kr*pf;
@@ -726,7 +726,7 @@ namespace BriefFiniteElementNet.Validation
             var frK = frameElement.GetGlobalStifnessMatrix();
             var barK = barElement.GetGlobalStifnessMatrix();
 
-            var d = (frK - barK).Max(i => Math.Abs(i));
+            var d = (frK - barK).Values.Max(i => Math.Abs(i));
 
 
         }
@@ -813,13 +813,13 @@ namespace BriefFiniteElementNet.Validation
 
                 var u = new Matrix(12, 1);
 
-                u1.CopyTo(u.CoreArray, 0);
-                u2.CopyTo(u.CoreArray, 6);
+                u1.CopyTo(u.Values, 0);
+                u2.CopyTo(u.Values, 6);
 
                 var endFrc = stf * u;
 
-                var stFc = Force.FromVector(endFrc.CoreArray, 0);
-                var endFc = Force.FromVector(endFrc.CoreArray, 6);
+                var stFc = Force.FromVector(endFrc.Values, 0);
+                var endFc = Force.FromVector(endFrc.Values, 6);
 
                 for (var i = 0; i < n; i++)
                 {
@@ -872,8 +872,7 @@ namespace BriefFiniteElementNet.Validation
             {//nodal displacements
 
                 span.Add("h4").Text("Nodal Displacements");
-                span.Add("paragraph")
-               .Text(string.Format("Validation output for nodal displacements:"));
+                span.Add("paragraph").Text(string.Format("Validation output for nodal displacements:"));
 
 
                 span.Add("p").AddClass("bg-info").AppendHtml(string.Format(CultureInfo.CurrentCulture, "-Max ABSOLUTE Error: {0:e3}<br/>-Max RELATIVE Error: {1:e3}", maxDispAbsError, maxDispRelError));

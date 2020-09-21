@@ -111,6 +111,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             xs[1,0] = x[0,2] - x[0,0];
             xs[1,1] = x[1,2] - x[1,0];
             */
+
+            // TODO: xs and sx not used?
             var xs = GetJMatrixAt(targetElement, isoCoords).Transpose();
             var sx = xs.Inverse();
 
@@ -216,7 +218,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 d[1, 0] = d[0, 1] = nu;
                 d[2, 2] = (1 - nu) / 2;
 
-                d.MultiplyByConstant(cf);
+                d.Scale(cf);
             }
             else
             {
@@ -228,12 +230,12 @@ namespace BriefFiniteElementNet.ElementHelpers
                 d[1, 0] = d[0, 1] = nu;
                 d[2, 2] = (1 - 2 * nu) / 2;
 
-                d.MultiplyByConstant(cf);
+                d.Scale(cf);
             }
 
             //
 
-            d.MultiplyByConstant(t);
+            d.Scale(t);
 
             return d;
         }

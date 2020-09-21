@@ -76,18 +76,20 @@ namespace BriefFiniteElementNet
         public static MembraneStressTensor Rotate(MembraneStressTensor tensor, double angle)
         {
             var rads = angle;
-            
+
             //formulation based on this: http://www.creatis.insa-lyon.fr/~dsarrut/bib/Archive/others/phys/www.jwave.vt.edu/crcd/batra/lectures/esmmse5984/node38.html
 
+            // TODO: MAT - set values directly
             var sigma = new Matrix(2, 2);
-            sigma.SetRow(0, tensor.Sx, tensor.Txy);
-            sigma.SetRow(1, tensor.Txy, tensor.Sy);
+            sigma.SetRow(0, new double[] { tensor.Sx, tensor.Txy });
+            sigma.SetRow(1, new double[] { tensor.Txy, tensor.Sy });
 
             var t = new Matrix(2, 2);
-            t.SetRow(0, Math.Cos(rads), Math.Sin(rads));
-            t.SetRow(1, -Math.Sin(rads), Math.Cos(rads));
+            t.SetRow(0, new double[] { Math.Cos(rads), Math.Sin(rads) });
+            t.SetRow(1, new double[] { -Math.Sin(rads), Math.Cos(rads) });
 
-            var rotated = t*sigma*t.Transpose();
+            // TODO: MAT - the product could be directly computed in a helper method (CalcUtil).
+            var rotated = t * sigma * t.Transpose();
 
             var buf = new MembraneStressTensor()
             {
@@ -116,7 +118,8 @@ namespace BriefFiniteElementNet
         {
             var tensorMatrix = ToMatrix(tensor);
 
-            var rtd = transformationMatrix.Transpose()*tensorMatrix*transformationMatrix;
+            // TODO: MAT - the product could be directly computed in a helper method (CalcUtil).
+            var rtd = transformationMatrix.Transpose() * tensorMatrix * transformationMatrix;
 
             var buf = FromMatrix(rtd);
 
