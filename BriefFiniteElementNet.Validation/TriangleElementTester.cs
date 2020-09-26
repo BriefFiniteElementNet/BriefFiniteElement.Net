@@ -7,6 +7,7 @@ using System.Text;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
+using BriefFiniteElementNet.Validation.Case_01;
 using HtmlTags;
 
 namespace BriefFiniteElementNet.Validation
@@ -63,7 +64,7 @@ namespace BriefFiniteElementNet.Validation
         {
             var buf = new List<ValidationResult>();
 
-            buf.AddRange(new BriefFiniteElementNet.Validation.Data.FlatShell___triangle.IBeamTorsion.Validator().DoPopularValidation());
+            buf.Add(new Validator().Validate());
 
             buf.Add(Validation_2());
 

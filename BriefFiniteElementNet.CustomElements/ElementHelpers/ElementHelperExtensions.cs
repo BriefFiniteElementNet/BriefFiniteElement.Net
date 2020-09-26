@@ -78,7 +78,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
                 CalcUtil.Bt_D_B(b, d, buf);                         // multiplicates three matrices
 
-                buf.MultiplyByConstant(detj);
+                buf.Scale(detj);
 
                 return buf;
             });

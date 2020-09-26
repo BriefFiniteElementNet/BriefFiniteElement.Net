@@ -6,6 +6,9 @@ A Finite Element library for Static and Linear analysis of solids and structures
 
 [![Build status](https://ci.appveyor.com/api/projects/status/var3sx7nxa309tmo?svg=true)](https://ci.appveyor.com/project/epsi1on/brieffiniteelement-net)     [![Join the chat at https://gitter.im/BFE-Net/Lobby](https://badges.gitter.im/BFE-Net/Lobby.svg)](https://gitter.im/BFE-NET/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+## Notice
+We are fixing bugs before release Nuget Package, please let us know any bugs you found in this library in order to let us fix it. To report bugs please use [issues section](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues).
+
 ## Introduction
 Brief Finite Element Dot NET (BFE.NET) is a .NET based software framework for static and linear Finite Element Analysis (FEA) of solids and structures. BFE.NET help you to simply take advantage of Object Oriented approach to analyze FE models. Advantage of such a framework is that user does have a very powerful control on what he is working with, and control is not limited to an UI with predefined controls.
 

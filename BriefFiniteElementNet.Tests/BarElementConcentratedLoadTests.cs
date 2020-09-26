@@ -11,6 +11,9 @@ using BriefFiniteElementNet.Sections;
 
 namespace BriefFiniteElementNet.Tests
 {
+
+  
+
     /// <summary>
     /// Tests for ConcentratedLoad applied on BarElement
     /// </summary>

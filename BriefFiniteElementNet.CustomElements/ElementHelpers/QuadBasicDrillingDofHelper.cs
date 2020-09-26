@@ -48,7 +48,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
         public Matrix CalcLocalStiffnessMatrix(Element targetElement)
         {
             var buf = Matrix.Eye(4);
-            buf.MultiplyByConstant(1e3);
+            buf.Scale(1e3);
             return buf;
         }
 

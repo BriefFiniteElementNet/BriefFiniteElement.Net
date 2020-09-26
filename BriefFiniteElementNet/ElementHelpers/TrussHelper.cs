@@ -9,6 +9,7 @@ using BriefFiniteElementNet.Mathh;
 using CSparse.Storage;
 using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet;
+using CSparse.Double;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
@@ -135,7 +136,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var J = GetJMatrixAt(targetElement, isoCoords);
             var detJ = J.Determinant();
             J.ReturnToPool();
-            buf.MultiplyRowByConstant(0, 1 / (detJ));
+            buf.ScaleRow(0, 1 / (detJ));
 
             return buf;
         }
@@ -155,7 +156,8 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var buf = new Matrix(1, 2);
 
-            buf.FillRow(0, -1 / l, 1 / l);
+            // TODO: MAT - set values directly
+            buf.SetRow(0, new double[] { -1 / l, 1 / l });
 
 
             return buf;
@@ -178,7 +180,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             //new Matrix(1, 1);
             targetElement.MatrixPool.Allocate(1, 1);
 
-            buf.FillRow(0, geo.A*mech.Ex);
+            buf.At(0, 0, geo.A*mech.Ex);
 
             return buf;
         }
@@ -254,7 +256,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             arr = new double[] { n1, n2 };
             
-            buf.FillRow(0, arr);
+            buf.SetRow(0, arr);
 
             return buf;
         }
@@ -348,11 +350,11 @@ namespace BriefFiniteElementNet.ElementHelpers
                 }
 
                 condMtx.SetRow(i, rw);
-                rMtx.SetRow(i, cond.Item2);
+                rMtx.At(i, 0, cond.Item2);
             }
 
             var res = condMtx.Inverse() * rMtx;
-            var buf = new SingleVariablePolynomial(res.CoreArray);
+            var buf = new SingleVariablePolynomial(res.Values);
 
             { //test
                 var epsilon = 0.0;
@@ -454,7 +456,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
 
             //var frc = d * b * u;
-            var frc = d[0, 0] * CalcUtil.DotProduct(b.CoreArray, u.CoreArray);//performance tip, equals to d * b * u
+            var frc = d[0, 0] * CalcUtil.DotProduct(b.Values, u.Values);//performance tip, equals to d * b * u
             d.ReturnToPool();
             u.ReturnToPool();
             b.ReturnToPool();
@@ -659,7 +661,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                             var df = q_.X;
 
-                            var buf_ = new Matrix(new double[] { df});
+                            var buf_ = Matrix.OfVector(new double[] { df});
 
                             return buf_;
                         }, 0, to, gpt);
@@ -755,16 +757,14 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
-            var n = GetNMatrixAt(targetElement, isoCoords).ExtractRow(0);
+            var n = GetNMatrixAt(targetElement, isoCoords).Row(0);
 
-            var u = new Matrix(targetElement.Nodes.Length, 1);
+            var u = new double[targetElement.Nodes.Length];
 
             for(var i=0;i< targetElement.Nodes.Length;i++)
-                u[i, 0] = localDisplacements[i].DX;
+                u[i] = localDisplacements[i].DX;
 
-            var buf = n * u;
-
-            return new Displacement(buf[0, 0], 0, 0, 0, 0, 0);
+            return new Displacement(CalcUtil.DotProduct(n, u), 0, 0, 0, 0, 0);
         }
 
         public Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
@@ -833,11 +833,11 @@ namespace BriefFiniteElementNet.ElementHelpers
                         var shp = GetNMatrixAt(targetElement, xi, 0, 0);
                         var q__ = magnitude(xi);
                         var j = GetJMatrixAt(targetElement, xi, 0, 0);
-                        shp.MultiplyByConstant(j.Determinant());
+                        shp.Scale(j.Determinant());
 
                         var q_ = localDir * q__;
 
-                        shp.MultiplyByConstant(q_.X);
+                        shp.Scale(q_.X);
 
                         return shp;
                     }, xi0, xi1, gpt);
@@ -872,16 +872,16 @@ namespace BriefFiniteElementNet.ElementHelpers
                     localForce = tr.TransformGlobalToLocal(localForce);
 
 
-                shapes.MultiplyByConstant(localForce.Fx);
+                shapes.Scale(localForce.Fx);
 
-                var fxs = shapes.ExtractRow(0);
+                var fxs = shapes.Row(0);
 
                 var n = targetElement.Nodes.Length;
 
                 var buf = new Force[n];
 
                 for (var i = 0; i < n; i++)
-                    buf[i] = new Force(fxs[0, i], 0, 0, 0, 0, 0);
+                    buf[i] = new Force(fxs[i], 0, 0, 0, 0, 0);
 
                 return buf;
             }

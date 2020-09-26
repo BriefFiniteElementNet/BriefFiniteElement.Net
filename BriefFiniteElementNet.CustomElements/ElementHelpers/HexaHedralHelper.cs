@@ -69,7 +69,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             var density = hex.Material.GetMaterialPropertiesAt(0).Rho;//density considered as constant
 
-            buf.MultiplyByConstant(density);
+            buf.Scale(density);
 
             return buf;
         }
@@ -195,9 +195,12 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var J38 = 1.0 / 8.0 * (-1.0 - xi + eta + eta * xi);
 
             var B10 = targetElement.MatrixPool.Allocate(3, 1);
-            B10.FillMatrixRowise(J11, J21, J31);
+            //B10.FillMatrixRowise(J11, J21, J31);
+            // TODO: MAT - set values directly
+            B10.SetColumn(0, new double[] { J11, J21, J31 });
             var B1 = J.Inverse() * B10;
 
+            /*
             var B20 = targetElement.MatrixPool.Allocate(3, 1);
             B20.FillMatrixRowise(J12, J22, J32);
             var B2 = J.Inverse() * B20;
@@ -225,6 +228,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var B80 = targetElement.MatrixPool.Allocate(3, 1);
             B80.FillMatrixRowise(J18, J28, J38);
             var B8 = J.Inverse() * B80;
+            //*/
 
             double a1 = B1[0, 0]; double b1 = B1[1, 0]; double c1 = B1[2, 0];
             double a2 = B1[0, 0]; double b2 = B1[1, 0]; double c2 = B1[2, 0];
@@ -235,17 +239,19 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             double a7 = B1[0, 0]; double b7 = B1[1, 0]; double c7 = B1[2, 0];
             double a8 = B1[0, 0]; double b8 = B1[1, 0]; double c8 = B1[2, 0];
 
-            var b = targetElement.MatrixPool.Allocate(6, 24);//transpose of b
+            // TODO: MAT - use matrix pool
+            // var b = targetElement.MatrixPool.Allocate(6, 24);
 
-            b.FillMatrixRowise(
+            // transpose of b
+            var b = Matrix.OfRowMajor(6, 24, new double[] {
                 a1, 0, 0, a2, 0, 0, a3, 0, 0, a4, 0, 0, a5, 0, 0, a6, 0, 0, a7, 0, 0, a8, 0, 0,
                 0, b1, 0, 0, b2, 0, 0, b3, 0, 0, b4, 0, 0, b5, 0, 0, b6, 0, 0, b7, 0, 0, b8, 0,
                 0, 0, c1, 0, 0, c2, 0, 0, c3, 0, 0, c4, 0, 0, c5, 0, 0, c6, 0, 0, c7, 0, 0, c8,
                 0, c1, b1, 0, c2, b2, 0, c3, b3, 0, c4, b4, 0, c5, b5, 0, c6, b6, 0, c7, b7, 0, c8, b8,
                 c1, 0, a1, c2, 0, a2, c3, 0, a3, c4, 0, a4, c5, 0, a5, c6, 0, a6, c7, 0, a7, c8, 0, a8,
-                b1, a1, 0, b2, a2, 0, b3, a3, 0, b4, a4, 0, b5, a5, 0, b6, a6, 0, b7, a7, 0, b8, a8, 0);
+                b1, a1, 0, b2, a2, 0, b3, a3, 0, b4, a4, 0, b5, a5, 0, b6, a6, 0, b7, a7, 0, b8, a8, 0 });
 
-            return b;
+            return b.AsMatrix();
         }
 
         public int[] GetBMaxOrder(Element targetElement)
@@ -267,15 +273,16 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             var miu = props.NuXy;
             var e = props.Ex;
 
+            // var D = targetElement.MatrixPool.Allocate(6, 6);
+
             var s = (1 - miu);
-            var D = targetElement.MatrixPool.Allocate(6, 6);
+            // TODO: MAT - use matrix pool
+            var D = Matrix.OfRowMajor(6, 6, new double[] { 1, miu / s, miu / s, 0, 0, 0, miu / s, 1, miu / s, 0, 0, 0, miu / s, miu / s, 1, 0, 0, 0, 0, 0, 0,
+                (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s) });
 
-            D.FillMatrixRowise(1, miu / s, miu / s, 0, 0, 0, miu / s, 1, miu / s, 0, 0, 0, miu / s, miu / s, 1, 0, 0, 0, 0, 0, 0,
-                (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s));
+            D.Scale(e * (1 - miu) / ((1 + miu) * (1 - 2 * miu)));
 
-            D.MultiplyByConstant(e * (1 - miu) / ((1 + miu) * (1 - 2 * miu)));
-
-            return D;
+            return D.AsMatrix();
         }
 
         public ElementPermuteHelper.ElementLocalDof[] GetDofOrder(Element targetElement)
@@ -378,15 +385,16 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             var buf = targetElement.MatrixPool.Allocate(3, 3);
 
-            buf.FillRow(0, (J11 * x1 + J12 * x2 + J13 * x3 + J14 * x4 + J15 * x5 + J16 * x6 + J17 * x7 + J18 * x8),
+            // TODO: MAT - set values directly
+            buf.SetRow(0, new double[] { (J11 * x1 + J12 * x2 + J13 * x3 + J14 * x4 + J15 * x5 + J16 * x6 + J17 * x7 + J18 * x8),
                            (J11 * y1 + J12 * y2 + J13 * y3 + J14 * y4 + J15 * y5 + J16 * y6 + J17 * y7 + J18 * y8),
-                           (J11 * z1 + J12 * z2 + J13 * z3 + J14 * z4 + J15 * z5 + J16 * z6 + J17 * z7 + J18 * z8));
-            buf.FillRow(1, (J21 * x1 + J22 * x2 + J23 * x3 + J24 * x4 + J25 * x5 + J26 * x6 + J27 * x7 + J28 * x8),
+                           (J11 * z1 + J12 * z2 + J13 * z3 + J14 * z4 + J15 * z5 + J16 * z6 + J17 * z7 + J18 * z8) });
+            buf.SetRow(1, new double[] { (J21 * x1 + J22 * x2 + J23 * x3 + J24 * x4 + J25 * x5 + J26 * x6 + J27 * x7 + J28 * x8),
                            (J21 * y1 + J22 * y2 + J23 * y3 + J24 * y4 + J25 * y5 + J26 * y6 + J27 * y7 + J28 * y8),
-                           (J21 * z1 + J22 * z2 + J23 * z3 + J24 * z4 + J25 * z5 + J26 * z6 + J27 * z7 + J28 * z8));
-            buf.FillRow(2, (J31 * x1 + J32 * x2 + J33 * x3 + J34 * x4 + J35 * x5 + J36 * x6 + J37 * x7 + J38 * x8),
+                           (J21 * z1 + J22 * z2 + J23 * z3 + J24 * z4 + J25 * z5 + J26 * z6 + J27 * z7 + J28 * z8) });
+            buf.SetRow(2, new double[] { (J31 * x1 + J32 * x2 + J33 * x3 + J34 * x4 + J35 * x5 + J36 * x6 + J37 * x7 + J38 * x8),
                            (J31 * y1 + J32 * y2 + J33 * y3 + J34 * y4 + J35 * y5 + J36 * y6 + J37 * y7 + J38 * y8),
-                           (J31 * z1 + J32 * z2 + J33 * z3 + J34 * z4 + J35 * z5 + J36 * z6 + J37 * z7 + J38 * z8));
+                           (J31 * z1 + J32 * z2 + J33 * z3 + J34 * z4 + J35 * z5 + J36 * z6 + J37 * z7 + J38 * z8) });
             return buf;
         }
 
@@ -521,15 +529,15 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
 
                         var j = GetJMatrixAt(targetElement, xi, 0, 0);
-                        shp.MultiplyByConstant(j.Determinant());
+                        shp.Scale(j.Determinant());
 
                         var q__ = magnitude(xi);
 
                         var q_ = localDir * q__;
 
-                        shp2.MultiplyRowByConstant(0, q_.X);
-                        shp2.MultiplyRowByConstant(1, q_.Y);
-                        shp2.MultiplyRowByConstant(2, q_.Z);
+                        shp2.ScaleRow(0, q_.X);
+                        shp2.ScaleRow(1, q_.Y);
+                        shp2.ScaleRow(2, q_.Z);
 
                         return shp2;
                     });

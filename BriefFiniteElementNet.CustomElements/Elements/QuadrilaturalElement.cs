@@ -100,14 +100,14 @@ namespace BriefFiniteElementNet.Elements
             var lamY = vy.GetUnit();//Lambda_Y
             var lamZ = vz.GetUnit();//Lambda_Z
 
-            var lambda = Matrix.FromJaggedArray(new[]
+            var lambda = Matrix.OfJaggedArray(new[]
             {
                 new[] {lamX.X, lamY.X, lamZ.X},
                 new[] {lamX.Y, lamY.Y, lamZ.Y},
                 new[] {lamX.Z, lamY.Z, lamZ.Z}
             });
 
-            return lambda;
+            return lambda.AsMatrix();
         }
         public override double[] IsoCoordsToLocalCoords(params double[] isoCoords)
         {

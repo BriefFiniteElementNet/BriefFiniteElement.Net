@@ -18,6 +18,8 @@ namespace BriefFiniteElementNet.Validation.Ui
             //
             //TestBar();
 
+            new BriefFiniteElementNet.Validation.Case_02.Validator().Validate();
+
             TestTri();
 
             //TestTelepaty();

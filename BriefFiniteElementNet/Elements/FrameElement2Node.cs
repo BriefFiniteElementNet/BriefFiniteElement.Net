@@ -289,7 +289,7 @@ namespace BriefFiniteElementNet
             var k = GetLocalStiffnessMatrix();
 
             
-            var kArr = k.CoreArray;
+            var kArr = k.Values;
 
             var r = GetTransformationParameters();
 
@@ -361,7 +361,7 @@ namespace BriefFiniteElementNet
 
 
             var baseArr = new double[144];
-            var buf = Matrix.FromRowColCoreArray(12, 12, baseArr);
+            var buf = new Matrix(12, 12, baseArr);
 
             if (!this._considerShearDeformation)
             {
@@ -484,7 +484,7 @@ namespace BriefFiniteElementNet
                 lEndDisp.RX, lEndDisp.RY, lEndDisp.RZ
             };
 
-            var lStartForces = Matrix.Multiply(GetLocalStiffnessMatrix(), displVector);
+            var lStartForces = GetLocalStiffnessMatrix().Multiply(displVector);
 
             var startForce = Force.FromVector(lStartForces, 0);
 
@@ -837,7 +837,7 @@ namespace BriefFiniteElementNet
                     //  z  w  z  z
                     //  z  y  I  y
                     //  z  z  z  w
-                    y.MultiplyByConstant(2.0/3.0);
+                    y.Scale(2.0/3.0);
                     buf.AssembleInside(-y, 0, 3);
                     buf.AssembleInside(w, 3, 3);
                     buf.AssembleInside(y, 6, 3);
@@ -891,7 +891,7 @@ namespace BriefFiniteElementNet
         public override Matrix GetGlobalMassMatrix()
         {
             var m = GetLocalMassMatrix();
-            var mArr = m.CoreArray;
+            var mArr = m.Values;
 
             var r = GetTransformationParameters();
 
@@ -978,8 +978,8 @@ namespace BriefFiniteElementNet
 
                 var c = ro * a * l / 420.0;
 
-                for (var i = 0; i < m.CoreArray.Length; i++) //m=c*m
-                    m.CoreArray[i] *= c;
+                for (var i = 0; i < m.Values.Length; i++) //m=c*m
+                    m.Values[i] *= c;
             }
             else
             {
@@ -997,8 +997,8 @@ namespace BriefFiniteElementNet
 
                 var c = ro * a * l / 2.0;
 
-                for (var i = 0; i < m.CoreArray.Length; i++) //m=c*m
-                    m.CoreArray[i] *= c;
+                for (var i = 0; i < m.Values.Length; i++) //m=c*m
+                    m.Values[i] *= c;
             }
 
 
@@ -1089,9 +1089,7 @@ namespace BriefFiniteElementNet
                 throw new ArgumentOutOfRangeException("location");
 
 
-            var buf = new Matrix(4, 12);
-
-            buf.FillMatrixRowise(
+            var buf = Matrix.OfRowMajor(4, 12, new double[] {
                 0, 0, (6 * xi) / L2, 0,
                 (3 * xi) / L - 1 / L, 0, 0, 0,
                 -(6 * xi) / L2, 0, (3 * xi) / L + 1 / L, 0,
@@ -1109,9 +1107,9 @@ namespace BriefFiniteElementNet
 
                 0, 0, 0, 1 / L,
                 0, 0, 0, 0,
-                0, -1 / L, 0, 0);
+                0, -1 / L, 0, 0 });
 
-            return buf;
+            return buf.AsMatrix();
         }
 
         ///<inheritdoc/>
@@ -1130,9 +1128,7 @@ namespace BriefFiniteElementNet
             if (xi < -1 || xi > 1)
                 throw new ArgumentOutOfRangeException("location");
 
-            var buf = new Matrix(1, 12);
-
-            buf.FillMatrixRowise(
+            var buf = Matrix.OfRowMajor(1, 12, new double[] {
                 xi/2 + 1.0/2,
                 ((xi - 1)*(xi - 1)*(xi + 2))/4,
                 ((xi - 1)*(xi - 1)*(xi + 2))/4,
@@ -1144,9 +1140,9 @@ namespace BriefFiniteElementNet
                 -((xi + 1)*(xi + 1)*(xi - 2))/4,
                 1.0/2 - xi/2,
                 (L*(xi - 1)*(xi + 1)*(xi + 1))/8,
-                (L*(xi - 1)*(xi + 1)*(xi + 1))/8);
+                (L*(xi - 1)*(xi + 1)*(xi + 1))/8 });
 
-            return buf;
+            return buf.AsMatrix();
         }
 
         ///<inheritdoc/>
@@ -1154,7 +1150,7 @@ namespace BriefFiniteElementNet
         {
             var v = (EndNode.Location - StartNode.Location).Length;
 
-            return new Matrix(new double[] {v/2});
+            return Matrix.OfVector(new double[] {v/2});
         }
         #endregion
 

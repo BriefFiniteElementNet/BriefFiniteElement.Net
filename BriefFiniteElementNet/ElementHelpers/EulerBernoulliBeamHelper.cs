@@ -33,7 +33,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             TargetElement = targetElement;
 
             {//loading condistions list pool from element's cache
-                var listPoolKey = "26167C0A-1E58-4FA5-950D-5464ED6F264A" + this.Direction;
+                var listPoolKey = "26167C0A-1E58-4FA5-950D-5464ED6F264A";
 
                 object obj;
 
@@ -50,7 +50,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
            
         }
-
 
         /// <summary>
         /// The target element
@@ -101,7 +100,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var detJ = J.Determinant();
             J.ReturnToPool();
 
-            buf.MultiplyRowByConstant(0, 1 / (detJ * detJ));
+            buf.ScaleRow(0, 1 / (detJ * detJ));
 
             return buf;
         }
@@ -377,10 +376,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             return lst;
         }
 
-
-
-
-        public static int hit, miss;
         //private readonly string mssKey = "82069A88-26BD-4902-9CA6-7AE324193FE3:X";
         //private readonly string nssKey = "0EECCFF2-8CAE-4D65-935F-15E1AF31709B:X" ;
 
@@ -389,7 +384,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             nss = null;
             mss = null;
 
-            var mssKey = "7AE324193FE3:X" + this.Direction;
+            var mssKey = "7AE324193FE3:X"+this.Direction ;
             var nssKey = "15E1AF31709B:X" + this.Direction;
 
 
@@ -400,6 +395,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var n = bar.NodeCount;
 
 
+            List<Condition> cnds = null;
 
             {
                 var xis = new Func<int, double>(i =>
@@ -413,12 +409,49 @@ namespace BriefFiniteElementNet.ElementHelpers
                 bar.TryGetCache(nssKey, out nss);
 
                 if (nss != null && mss != null)
-                    return true;
+                {
+                    //return true;
+
+                    cnds = GetShapeFunctionConditions(bar);
+
+                    var flag = true;
+
+                    foreach (var cnd in cnds)
+                    {
+                        var pn = (cnd.Type == Condition.FunctionType.N) ? nss[cnd.NodeNumber] : mss[cnd.NodeNumber];
+
+                        var epsilon = (pn.EvaluateDerivative(cnd.Xi, cnd.DifferentialDegree) - cnd.RightSide);
+
+                        if (epsilon < 0)
+                            epsilon *= -1;
+
+                        if (epsilon > 1e-10)
+                        {
+                            flag = false;
+                            break;
+                        }
+                            
+                    }
+
+                    if (flag)
+                    {
+                        CondsListPool.Free(cnds);
+                        return true;
+                    }
+                    else
+                    {
+                        mss = nss = null;
+                    }
+                }
+
+                if (cnds == null)
+                {
+                    cnds = GetShapeFunctionConditions(bar);
+                }
+                    
             }
 
-
-            var cnds = GetShapeFunctionConditions(bar);
-
+            
             var grpd = cnds.GroupBy(i => Tuple.Create(i.NodeNumber, i.Type)).ToArray();
 
             CondsListPool.Free(cnds);
@@ -448,7 +481,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     mtx.SetRow(i, Diff(itm.Xi, condCount - 1, itm.DifferentialDegree));
 
-                    rightSide.SetRow(i, itm.RightSide);
+                    rightSide.At(i, 0, itm.RightSide);
                 }
 
                 SingleVariablePolynomial pl;
@@ -457,7 +490,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 {
 
                     //var cfs = mtx.Inverse2() * rightSide;
-                    var cfs = mtx.Solve(rightSide.CoreArray);//.Inverse2() * rightSide;
+                    var cfs = mtx.Solve(rightSide.Values);//.Inverse2() * rightSide;
 
                     pl = new SingleVariablePolynomial(cfs);
                 }
@@ -1123,15 +1156,15 @@ namespace BriefFiniteElementNet.ElementHelpers
             var j = GetJMatrixAt(targetElement, isoCoords).Determinant();
 
             if (_direction == BeamDirection.Y)
-                u.FillColumn(0, ld[0].DZ, ld[0].RY, ld[1].DZ, ld[1].RY);
+                u.SetColumn(0, new double[] { ld[0].DZ, ld[0].RY, ld[1].DZ, ld[1].RY });
             else
-                u.FillColumn(0, ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ);
+                u.SetColumn(0, new double[] { ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ });
 
             var f = n * u;
 
             //var ei = d[0, 0];
 
-            f.MultiplyRowByConstant(1, 1 / j);
+            f.ScaleRow(1, 1 / j);
             
             var buf = new Displacement();
 
@@ -1211,12 +1244,12 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var ei = d[0, 0];
 
-            f.MultiplyRowByConstant(1, 1 / j);
-            f.MultiplyRowByConstant(2, ei / (j * j));
-            f.MultiplyRowByConstant(3, ei / (j * j * j));
+            f.ScaleRow(1, 1 / j);
+            f.ScaleRow(2, ei / (j * j));
+            f.ScaleRow(3, ei / (j * j * j));
 
             if (_direction == BeamDirection.Y)
-                f.MultiplyRowByConstant(2, -1);//m/ei = - n''*u , due to where? TODO
+                f.ScaleRow(2, -1);//m/ei = - n''*u , due to where? TODO
 
             if (_direction == BeamDirection.Y)
             {
@@ -1316,14 +1349,14 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                         var q__ = magnitude(xi);
                         var j = GetJMatrixAt(targetElement, xi, 0, 0);
-                        shp.MultiplyByConstant(j.Determinant());
+                        shp.Scale(j.Determinant());
 
                         var q_ = localDir * q__;
 
                         if (this._direction == BeamDirection.Y)
-                            shp.MultiplyByConstant(q_.Z);
+                            shp.Scale(q_.Z);
                         else
-                            shp.MultiplyByConstant(q_.Y);
+                            shp.Scale(q_.Y);
 
                         return shp;
                     }, xi0, xi1, gpt);
@@ -1387,9 +1420,9 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 var detJ = j.Determinant();
 
-                ns.MultiplyRowByConstant(1, 1 / detJ);
-                ns.MultiplyRowByConstant(2, 1 / (detJ * detJ));
-                ns.MultiplyRowByConstant(3, 1 / (detJ * detJ * detJ));
+                ns.ScaleRow(1, 1 / detJ);
+                ns.ScaleRow(2, 1 / (detJ * detJ));
+                ns.ScaleRow(3, 1 / (detJ * detJ * detJ));
 
 
                 for (var i = 0; i < n; i++)
