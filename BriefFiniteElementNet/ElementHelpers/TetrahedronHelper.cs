@@ -8,7 +8,7 @@ using CSparse.Storage;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
-    public class TetrahedralHelper : IElementHelper
+    public class TetrahedronHelper : IElementHelper
     {
         public Element TargetElement { get; set; }
 
@@ -17,7 +17,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             //http://what-when-how.com/the-finite-element-method/fem-for-3d-solids-finite-element-method-part-1/
 
-            var tetra = targetElement as Tetrahedral;
+            var tetra = targetElement as TetrahedronElement;
 
             var ls = targetElement.AllocateFromPool(4, 4);
 
@@ -56,7 +56,28 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var tetra = targetElement as TetrahedronElement;
+
+            var buf = targetElement.AllocateFromPool(6, 6);
+
+            //Gets the consitutive matrix. Only for isotropic materials!!!If orthotropic is needed: check http://web.mit.edu/16.20/homepage/3_Constitutive/Constitutive_files/module_3_with_solutions.pdf
+            var props = tetra.Material.GetMaterialPropertiesAt(isoCoords);
+
+            //material considered to be isotropic
+            var miu = props.NuXy;
+            var e = props.Ex;
+
+            // var D = targetElement.MatrixPool.Allocate(6, 6);
+
+            var s = (1 - miu);
+            // TODO: MAT - use matrix pool
+            var D = Matrix.OfRowMajor(6, 6, new double[] { 1, miu / s, miu / s, 0, 0, 0, miu / s, 1, miu / s, 0, 0, 0, miu / s, miu / s, 1, 0, 0, 0, 0, 0, 0,
+                (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s) });
+
+            D.Scale(e * (1 - miu) / ((1 + miu) * (1 - 2 * miu)));
+
+            return D.AsMatrix();
+
         }
 
         public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
@@ -98,7 +119,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix GetJMatrixAt(Element targetElement, params double[] isoCoords)
         {
-            var tet = targetElement as Tetrahedral;
+            var tet = targetElement as TetrahedronElement;
 
             if (tet == null)
                 throw new Exception();
@@ -121,7 +142,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix CalcLocalStiffnessMatrix(Element targetElement)
         {
-            throw new NotImplementedException();
+            return ElementHelperExtensions.CalcLocalKMatrix_Tetrahedron(this, targetElement);
         }
 
         public Matrix CalcLocalMassMatrix(Element targetElement)
@@ -137,7 +158,27 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public ElementPermuteHelper.ElementLocalDof[] GetDofOrder(Element targetElement)
         {
-            throw new NotImplementedException();
+            var buf = new ElementPermuteHelper.ElementLocalDof[]
+            {
+                new ElementPermuteHelper.ElementLocalDof(0, DoF.Dx),
+                new ElementPermuteHelper.ElementLocalDof(0, DoF.Dy),
+                new ElementPermuteHelper.ElementLocalDof(0, DoF.Dz),
+
+                new ElementPermuteHelper.ElementLocalDof(1, DoF.Dx),
+                new ElementPermuteHelper.ElementLocalDof(1, DoF.Dy),
+                new ElementPermuteHelper.ElementLocalDof(1, DoF.Dz),
+
+                new ElementPermuteHelper.ElementLocalDof(2, DoF.Dx),
+                new ElementPermuteHelper.ElementLocalDof(2, DoF.Dy),
+                new ElementPermuteHelper.ElementLocalDof(2, DoF.Dz),
+
+                new ElementPermuteHelper.ElementLocalDof(3, DoF.Dx),
+                new ElementPermuteHelper.ElementLocalDof(3, DoF.Dy),
+                new ElementPermuteHelper.ElementLocalDof(3, DoF.Dz),
+
+            };
+
+            return buf;
         }
 
         /// <inheritdoc/>
@@ -161,12 +202,12 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public int[] GetBMaxOrder(Element targetElement)
         {
-            throw new NotImplementedException();
+            return new[] {0, 0, 0};
         }
 
         public int[] GetDetJOrder(Element targetElement)
         {
-            throw new NotImplementedException();
+            return new[] { 0, 0, 0 };
         }
 
         public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load,

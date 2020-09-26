@@ -1490,8 +1490,8 @@ namespace BriefFiniteElementNet
         {
             //method 1 is divide B into smallers
             //method 2 is: B' D B = (D' B)' B
-            // first find D' B which is possible high performancely and call it R1
-            // find R1' B which is possible high performancely too!
+            // first find D' B which is possible high performance and call it R1
+            // find R1' B which is possible high performance too!
 
             var dd = B.RowCount;//dim of b
             var dOut = B.ColumnCount;// dim of out
@@ -1511,8 +1511,6 @@ namespace BriefFiniteElementNet
             D.TransposeMultiply(B, buf1);
 
             buf1.TransposeMultiply(B, buf);
-
-            //MatrixPool.Free(buf1);
         }
 
 
@@ -1873,8 +1871,6 @@ namespace BriefFiniteElementNet
             var n = target.Nodes.Count;
 
             var boundaryConditions = GetModelBoundaryConditions(target, loadCase);
-
-            //var ttt = boundaryConditions.ToDenseMatrix();
 
             var lastRow = 0;
 

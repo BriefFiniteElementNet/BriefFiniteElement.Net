@@ -92,6 +92,7 @@ namespace BriefFiniteElementNet.Elements
         }
         public override double[] IsoCoordsToLocalCoords(params double[] isoCoords)
         {
+            //TODO: add reference for fomulation
             var tr = GetTransformationManager();
             List<Node> Nodes = new List<Node>();
             for (int i = 0; i < this.Nodes.Count(); i++)

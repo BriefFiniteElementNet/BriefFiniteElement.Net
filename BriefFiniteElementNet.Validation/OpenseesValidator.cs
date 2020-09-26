@@ -25,6 +25,7 @@ namespace BriefFiniteElementNet.Validation
             gen.ElementTranslators.Add(new BarElement2Tcl() { TargetGenerator = gen });
             gen.ElementTranslators.Add(new TetrahedronToTcl() { TargetGenerator = gen });
             gen.ElementTranslators.Add(new TriangleElementToTri3Tcl() { TargetGenerator = gen });
+            gen.ElementTranslators.Add(new TetrahedralElementToTcl() { TargetGenerator = gen });
 
             gen.ElementLoadTranslators.Add(new UniformLoad2Tcl() { TargetGenerator = gen });
 

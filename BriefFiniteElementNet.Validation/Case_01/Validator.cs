@@ -201,6 +201,47 @@ namespace BriefFiniteElementNet.Validation.Case_01
                 span.Add("paragraph").Text(string.Format("Err at node 08 (50) (displacement): {0:0.00}%", Util.GetErrorPercent(d57, abaqus8))).AddClosedTag("br"); ;
             }
 
+            {//element stress
+                {
+                    var e81 = model.Elements[85] as TriangleElement;
+
+
+                    var tr = e81.GetTransformationManager();
+
+                    //t = 1/t;
+
+                    var am = tr.TransformLocalToGlobal(e81.GetLocalInternalStress(LoadCase.DefaultLoadCase, 1 / 6.0, 1 / 6.0, 0) * (1 / t));
+                    var at = tr.TransformLocalToGlobal(e81.GetLocalInternalStress(LoadCase.DefaultLoadCase, 1 / 6.0, 1 / 6.0, +1) * (1 / t));
+                    var ab = tr.TransformLocalToGlobal(e81.GetLocalInternalStress(LoadCase.DefaultLoadCase, 1 / 6.0, 1 / 6.0, -1) * (1 / t));
+
+                    var bm = tr.TransformLocalToGlobal(e81.GetLocalInternalStress(LoadCase.DefaultLoadCase, 4 / 6.0, 1 / 6.0, 0) * (1 / t));
+                    var bt = tr.TransformGlobalToLocal(e81.GetLocalInternalStress(LoadCase.DefaultLoadCase, 4 / 6.0, 1 / 6.0, +1) * (1 / t));
+                    var bb = tr.TransformLocalToGlobal(e81.GetLocalInternalStress(LoadCase.DefaultLoadCase, 4 / 6.0, 1 / 6.0, -1) * (1 / t));
+
+                    var cm = tr.TransformLocalToGlobal(e81.GetLocalInternalStress(LoadCase.DefaultLoadCase, 1 / 6.0, 4 / 6.0, 0) * (1 / t));
+                    var ct = tr.TransformLocalToGlobal(e81.GetLocalInternalStress(LoadCase.DefaultLoadCase, 1 / 6.0, 4 / 6.0, +1) * (1 / t));
+                    var cb = tr.TransformLocalToGlobal(e81.GetLocalInternalStress(LoadCase.DefaultLoadCase, 1 / 6.0, 4 / 6.0, -1) * (1 / t));
+
+                    var abacus_at = new CauchyStressTensor() { S11 = 103.814E-03, S22 = 249.185E-03, S12 = 1.03438, S21 = 1.03438 } * -1e9;
+                    var abacus_bt = new CauchyStressTensor() { S11 = -34.7168E-03, S22 = -538.942E-03, S12 = 1.03438, S21 = 1.08243 } * -1e9;
+                    var abacus_ct = new CauchyStressTensor() { S11 = -201.062E-03, S22 = -1.18348, S12 = 747.243E-03, S21 = 747.243E-03 } * -1e9;
+
+                    var e1 = Util.GetErrorPercent(at, abacus_ct);
+                    var e2 = Util.GetErrorPercent(bt, abacus_at);
+                    var e3 = Util.GetErrorPercent(ct, abacus_bt);
+
+                    span.Add("paragraph").Text(string.Format("Validation output for element stress:"));
+
+                    span.Add("paragraph").Text(string.Format("Err at p1 element 81 (stress): {0:0.00}%", e1)).AddClosedTag("br"); 
+                    span.Add("paragraph").Text(string.Format("Err at p2 element 81 (stress): {0:0.00}%", e2)).AddClosedTag("br"); 
+                    span.Add("paragraph").Text(string.Format("Err at p3 element 81 (stress): {0:0.00}%", e3)).AddClosedTag("br"); 
+
+                    //in abaqus e81 connected to 8-12-41
+                    //in bfe e85 connected to 57-56-50
+                }
+
+            }
+
             return val;
         }
 

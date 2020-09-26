@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Case_02\Validator.cs" />
     <Compile Include="Case_01\Validator.cs" />
+    <Compile Include="Case_03\Validator.cs" />
     <Compile Include="EqualDofValidator.cs" />
     <Compile Include="GithubIssues\Issue23.cs" />
     <Compile Include="GithubIssues\Issue24.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="GithubIssues\Issue41.cs" />
     <Compile Include="GithubIssues\Issue48.cs" />
     <Compile Include="GithubIssues\Issue50.cs" />
+    <Compile Include="OpenseesTclGenerator\TetrahedralElementToTcl.cs" />
     <Compile Include="OpenseesTclGenerator\TetrahedronToTcl.cs" />
     <Compile Include="OpenseesTclGenerator\TriangleElementToTcl.cs" />
     <Compile Include="OpenseesTclGenerator\UniformLoad2Tcl.cs" />
@@ -129,6 +131,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Case_03\kibnrzi2.bmp" />
     <Content Include="Data\Brick8-1n\br1.jpg" />
     <Content Include="Data\Brick8-1n\br2.jpg" />
     <Content Include="Data\Brick8-1n\Elements-Nodes.txt" />
