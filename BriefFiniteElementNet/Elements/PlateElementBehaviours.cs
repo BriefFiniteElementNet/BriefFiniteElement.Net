@@ -8,6 +8,7 @@ namespace BriefFiniteElementNet.Elements
     /// <summary>
     /// Utility class for PlateElementBehaviour 
     /// </summary>
+    [Obsolete("use PlaneElementBehaviours instead")]
     public static class PlateElementBehaviours
     {
         /// <summary>

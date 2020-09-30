@@ -12,6 +12,7 @@ namespace BriefFiniteElementNet.Elements
     /// Represents a tetrahedron with isotropic material.
     /// </summary>
     [Serializable]
+    [Obsolete("use Tetrahedron instead")]
     public class Tetrahedral : Element
     {
 
@@ -85,6 +86,12 @@ namespace BriefFiniteElementNet.Elements
         public override double[] IsoCoordsToLocalCoords(params double[] isoCoords)
         {
             throw new NotImplementedException();
+        }
+
+
+        public void CheckNodeOrder()
+        {
+
         }
 
         /// <summary>
@@ -246,9 +253,6 @@ namespace BriefFiniteElementNet.Elements
             //Code ported from D3_TETRAH.m from fem_toolbox
 
             var newNodeOrder = newOrder = new int[4];
-
-
-
 
             {
                 //based on "9 - The Linear Tetrahedron, file: AFEM.Ch09, page 9-4

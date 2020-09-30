@@ -23,6 +23,7 @@ namespace BriefFiniteElementNet
         /// <param name="row"></param>
         /// <param name="cols"></param>
         /// <returns></returns>
+        /// TODO: Rename to AllocateMatrixFromPool
         public static DisposableDenseMatrix AllocateFromPool(this Element element,int row,int cols)
         {
             if (element.Parent == null)

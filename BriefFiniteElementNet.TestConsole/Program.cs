@@ -36,8 +36,10 @@ namespace BriefFiniteElementNet.TestConsole
         {
             Console.Title = "BFE tests & temporary codes";
 
-            Validation.GithubIssues.Issue50.Run1();
-
+            //TestTet();
+            TestTriangle();
+            //Validation.GithubIssues.Issue50.Run1();
+            new Validation.Case_01.Validator().Validate();
             //TestGrid();
             return;
             Validation.GithubIssues.Issue41.Run3();
@@ -128,6 +130,32 @@ namespace BriefFiniteElementNet.TestConsole
             //Tst();
 
             //Console.ReadKey();
+        }
+
+
+        static void TestTet()
+        {
+            //new Validation.Case_03.Validator().Validate();
+
+            var tet = new Tetrahedral();
+
+            tet.Nodes[0] = new Node(-1, -1, 0);
+            tet.Nodes[1] = new Node(1, -1, 0);
+            tet.Nodes[2] = new Node(1, 1, 0);
+            tet.Nodes[3] = new Node(0, 0, 5);
+
+            //tet.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
+
+            tet.E = 1000;
+            tet.Nu = 0.3;
+
+            var stf = tet.GetGlobalStifnessMatrix();
+
+            var ctrl = new MatrixVisualizerControl();
+            ctrl.VisualizeMatrix(stf);
+
+            new Window() { Content = ctrl, Title = "epsi1on Matrix Visualizer!", Width = 24 * 50, Height = 24 * 50 }
+                .ShowDialog();
         }
 
         static public void test0()

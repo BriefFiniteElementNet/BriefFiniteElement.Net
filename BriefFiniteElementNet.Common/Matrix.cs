@@ -1,4 +1,6 @@
 ﻿
+using System.Runtime.Serialization;
+
 namespace BriefFiniteElementNet
 {
     using CSparse.Double;
@@ -15,7 +17,7 @@ namespace BriefFiniteElementNet
     /// </summary>
     [DebuggerDisplay("Matrix {RowCount} x {ColumnCount}")]
     [Serializable]
-    public class Matrix : DenseMatrix
+    public class Matrix : DenseMatrix,ISerializable
     {
         #region Matrix pool
 
@@ -235,6 +237,18 @@ namespace BriefFiniteElementNet
             }
 
             return sb.ToString();
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("rows", base.rows);
+            info.AddValue("columns", base.columns);
+            info.AddValue("Values", base.Values);
+        }
+
+        public Matrix(SerializationInfo info, StreamingContext context):
+            base(info.GetInt32("rows"), info.GetInt32("columns"), (double[])info.GetValue("Values",typeof(double[])))
+        {
         }
     }
 

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Xml;
 using HtmlTags;
@@ -14,78 +16,79 @@ namespace BriefFiniteElementNet.Validation.Ui
         [STAThread]
         static void Main(string[] args)
         {
-            //TestQuad();
-            //
-            //TestBar();
-
-            new BriefFiniteElementNet.Validation.Case_02.Validator().Validate();
-
-            TestTri();
-
-            //TestTelepaty();
-            //TestTetra();
-            //return;
-            //BarElementTester.ValidateConsoleUniformLoad();
-            //BarElementTester.TestEndReleaseStyiffness();
-
-            //GithubIssues.Issue50.Run1();
-
+            RunAllValidations();
 
             Console.ReadKey();
         }
 
-        static void TestQuad()
+        static void RunAllValidations()
         {
-            Console.WriteLine("Quad Element Test - Start");
+            var caseList = new List<IValidationCase>();
 
-            //ExportToHtmFile("c:\\temp\\quad-validation.html", new BriefFiniteElementNet.Validation.QuadElementTester());
-            QuadElementTester.TestPlateBending();
-            QuadElementTester.TestMembrane();
-            QuadElementTester.TestDrillingDof();
+            {//load cases
+
+                var asm = typeof(IValidator).Assembly;
+                var types = asm.GetTypes();
+
+                foreach (var type in types)
+                {
+
+                    if (!ImplementsInterface(type, typeof(IValidationCase)))
+                        continue;
+
+                    var attribs = type.GetCustomAttributes(typeof(ValidationCaseAttribute));
+
+                    if (!attribs.Any())
+                        continue;
+
+                    var cse = (IValidationCase)Activator.CreateInstance(type);
+
+                    caseList.Add(cse);
+                }
+            }
+
+            ExportToHtmFile(Path.GetTempFileName() + ".html", caseList.ToArray());
         }
 
-        static void TestTelepaty()
+        public static bool ImplementsInterface(this Type type, Type @interface)
         {
-            Validation.EqualDofValidator.Test1();
+            if (type == null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
 
-            //var resss = new BarElementTester().DoValidation();
+            if (@interface == null)
+            {
+                throw new ArgumentNullException(nameof(@interface));
+            }
+
+            var interfaces = type.GetInterfaces();
+            if (@interface.IsGenericTypeDefinition)
+            {
+                foreach (var item in interfaces)
+                {
+                    if (item.IsConstructedGenericType && item.GetGenericTypeDefinition() == @interface)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var item in interfaces)
+                {
+                    if (item == @interface)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
-        static void TestBar()
-        {
-            //Console.WriteLine("Bar Element Test - Start");
-
-
-            ExportToHtmFile("c:\\temp\\validation.html", new BarElementTester());
-            //BarElementTester.TestEndReleaseStyiffness();
-
-            //var resss = new BarElementTester().DoValidation();
-        }
-
-        static void TestTetra()
-        {
-            Console.WriteLine("Tetrahedron Test - Start");
-
-
-            ExportToHtmFile("c:\\temp\\validation.html", new TetrahedronElementTester());
-
-
-            //var resss = new BarElementTester().DoValidation();
-        }
-
-        static void TestTri()
-        {
-            Console.WriteLine("Trianlge Element Test - Start");
-
-
-            ExportToHtmFile("c:\\temp\\tri-validation.html", new TriangleElementTester());
-
-
-            //var resss = new BarElementTester().DoValidation();
-        }
-
-        public static void ExportToHtmFile(string fileName, params IValidator[] validators)
-        {
+        public static void ExportToHtmFile(string fileName, params IValidationCase[] validators)
+        {/*
             bool all = false;
 
             while(true)
@@ -105,7 +108,7 @@ namespace BriefFiniteElementNet.Validation.Ui
                     all = false;
                     break;
                 }
-            }
+            }*/
             
 
             var doc = new HtmlTags.HtmlDocument();
@@ -157,11 +160,9 @@ namespace BriefFiniteElementNet.Validation.Ui
 
             foreach (var validator in validators)
             {
-                var valReses = all ?
-                    validator.DoAllValidation() :
-                    validator.DoPopularValidation();
+                var valRese = validator.Validate();
 
-                foreach (var valRese in valReses)
+                //foreach (var valRese in valReses)
                 {
                     var id = Guid.NewGuid().ToString("N").Substring(0, 5);
 

@@ -12,7 +12,7 @@ using HtmlTags;
 namespace BriefFiniteElementNet.Validation.Case_02
 {
     [ValidationCase("Clamped plate with triangle",typeof(TriangleElement))]
-    public class Validator:IValidator
+    public class Validator: IValidationCase
     {
         #region meshing
         static Model Generate3DTriangleElementGridTest(int m, int n, int l)
@@ -212,6 +212,31 @@ namespace BriefFiniteElementNet.Validation.Case_02
 
             #endregion
 
+
+
+            val.Title = "Clamped plate with triangle";
+
+            {//report
+
+                span.Add("p").Text("Validate a simple example of a flat plate, clamped on one side and loaded on the other side.");
+                span.Add("h3").Text("Validate with");
+                span.Add("paragraph").Text("ABAQUS from Abaqus inc. available from www.simulia.com");
+                span.Add("h3").Text("Validate objective");
+
+
+                span.Add("paragraph").Text("compare nodal displacement for a model consist of Triangle Elements");
+
+                span.Add("h3").Text("Model Definition");
+
+                span.Add("paragraph")
+                    .Text("Look at `intro.md` file in this folder")
+                    .AddClosedTag("br");
+
+                span.Add("h3").Text("Validation Result");
+            }
+
+
+
             {
                 model.Trace.Listeners.Add(new BriefFiniteElementNet.Common.ConsoleTraceListener());
                 new ModelWarningChecker().CheckModel(model);
@@ -273,8 +298,8 @@ namespace BriefFiniteElementNet.Validation.Case_02
 
                 span.Add("paragraph").Text(string.Format("Validation output for nodal displacements:(36 nodes)")).AddClosedTag("br");
 
-                span.Add("paragraph").Text(string.Format("Maximum Error: {0}", max)).AddClosedTag("br");
-                span.Add("paragraph").Text(string.Format("Average Error: {0}", avg)).AddClosedTag("br");
+                span.Add("paragraph").Text(string.Format("Maximum Error: {0:g2}%", max)).AddClosedTag("br");
+                span.Add("paragraph").Text(string.Format("Average Error: {0:g2}%", avg)).AddClosedTag("br");
             }
 
             {//element stress
@@ -282,18 +307,10 @@ namespace BriefFiniteElementNet.Validation.Case_02
             }
             //writeDataTriangleElement(model, LoadCase.DefaultLoadCase);
 
+            return val;
             throw new NotImplementedException();
         }
 
 
-        public ValidationResult[] DoPopularValidation()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ValidationResult[] DoAllValidation()
-        {
-            return DoPopularValidation();
-        }
     }
 }

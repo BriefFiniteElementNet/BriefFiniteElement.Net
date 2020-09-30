@@ -7,9 +7,10 @@ using BriefFiniteElementNet.Geometry;
 
 namespace BriefFiniteElementNet.Elements
 {
+    [Obsolete]
     public static class TriangleFlatShellExtensions
     {
-        [Obsolete]
+        
         /// <summary>
         /// Gets the N points, equally spaced and lying of intersection line between current triangular flat shell and defined <see cref="plane" />.
         /// </summary>

@@ -136,6 +136,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
 
             var n = model.Nodes.Count;
 
+
             if (ExportTotalStiffness)
                 Commands.Add(new TclCommand("system", "FullGeneral"));
             else
@@ -169,6 +170,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             }
 
 
+
             sb.AppendLine("pattern Plain 2 \"Linear\" {");
             foreach (var command in LoadCommands)
             {
@@ -176,7 +178,10 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             }
             sb.AppendLine("}");
 
+
             sb.AppendLine(anzCmd.CommandName + " " + string.Join(" ", anzCmd.CommandArgs));
+
+            var buf = sb.ToString();
 
             return sb.ToString();
         }

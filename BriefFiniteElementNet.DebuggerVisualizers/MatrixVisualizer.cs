@@ -41,13 +41,16 @@ namespace BriefFiniteElementNet.DebuggerVisualizers
         {
             //VisualizerDevelopmentHost visualizerHost = new VisualizerDevelopmentHost(objectToVisualize, typeof(MatrixVisualizer));
             //visualizerHost.ShowVisualizer();
+            //MessageBox.Show(objectToVisualize.ToString());
 
             var ctrl = new MatrixVisualizerControl();
 
             var rows = (int)objectToVisualize.GetType().GetProperty("RowCount", BindingFlags.Public | BindingFlags.Instance).GetValue(objectToVisualize);
-            var cols = (int)objectToVisualize.GetType().GetProperty("ColumnCount", BindingFlags.Public | BindingFlags.Instance).GetValue(objectToVisualize);
-            var arr = (double[])objectToVisualize.GetType().GetProperty("Values", BindingFlags.Public | BindingFlags.Instance).GetValue(objectToVisualize, null);
+            
 
+            var cols =(int)objectToVisualize.GetType().GetProperty("ColumnCount", BindingFlags.Public | BindingFlags.Instance).GetValue(objectToVisualize);
+            
+            var arr = (double[])objectToVisualize.GetType().GetField("Values", BindingFlags.Public | BindingFlags.Instance).GetValue(objectToVisualize);
             // TODO: why not directly cast to DenseMatrix?
 
             var mtx = new DenseMatrix(rows, cols, arr);

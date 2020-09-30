@@ -5,7 +5,9 @@ using System.Text;
 
 namespace BriefFiniteElementNet.Elements
 {
-
+    /// <summary>
+    /// Some extension methods
+    /// </summary>
     public static class Extensions
     {
         #region peace add methods

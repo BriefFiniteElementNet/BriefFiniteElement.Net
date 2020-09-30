@@ -8,7 +8,7 @@
         /// <summary>
         /// The plate bending behavior
         /// </summary>
-        public static PlaneElementBehaviour PlateBending = PlaneElementBehaviour.ThinPlate;
+        public static PlaneElementBehaviour ThinPlateBending = PlaneElementBehaviour.ThinPlate;
 
         /// <summary>
         /// The membrane behavior
