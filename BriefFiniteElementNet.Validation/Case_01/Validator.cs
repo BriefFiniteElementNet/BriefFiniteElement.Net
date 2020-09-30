@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace BriefFiniteElementNet.Validation.Case_01
 {
@@ -138,8 +139,32 @@ namespace BriefFiniteElementNet.Validation.Case_01
 
             model.Solve_MPC();
 
+            //show the model
+            //ModelVisualizer.TestShowVisualizer(model);
 
-           
+            //generate a list of all results
+            List<string> results = new List<string>();
+            results.Add("Index ; S11 ; S12 ; S13 ; S21 ; S22 ; S23 ; S31 ; S32 ; S33 ; SVM");
+            foreach (var element in model.Elements)
+            {
+                var el = (TriangleElement)element;
+                var index = el.GetIndex();
+                var cauchy = el.GetInternalStress(new double[] { 0.166666666, 0.1666666, 1.0 }, LoadCombination.DefaultLoadCombination, SectionPoints.Envelope);
+                results.Add(index + ";" + cauchy.S11 + ";" + cauchy.S12 + ";" + cauchy.S13 + ";" + cauchy.S21 + ";" + cauchy.S22 + ";" + cauchy.S23
+                    + ";" + cauchy.S31 + ";" + cauchy.S32 + ";" + cauchy.S33 + ";" + CauchyStressTensor.GetVonMisesStress(cauchy));
+
+                cauchy = el.GetInternalStress(new double[] { 0.6666666, 0.1666666, 1.0 }, LoadCombination.DefaultLoadCombination, SectionPoints.Envelope);
+                results.Add(index + ";" + cauchy.S11 + ";" + cauchy.S12 + ";" + cauchy.S13 + ";" + cauchy.S21 + ";" + cauchy.S22 + ";" + cauchy.S23
+                   + ";" + cauchy.S31 + ";" + cauchy.S32 + ";" + cauchy.S33 + ";" + CauchyStressTensor.GetVonMisesStress(cauchy));
+
+                cauchy = el.GetInternalStress(new double[] { 0.166666666, 0.6666666, 1.0 }, LoadCombination.DefaultLoadCombination, SectionPoints.Envelope);
+                results.Add(index + ";" + cauchy.S11 + ";" + cauchy.S12 + ";" + cauchy.S13 + ";" + cauchy.S21 + ";" + cauchy.S22 + ";" + cauchy.S23
+                   + ";" + cauchy.S31 + ";" + cauchy.S32 + ";" + cauchy.S33 + ";" + CauchyStressTensor.GetVonMisesStress(cauchy));
+
+            }
+            //Write data if needed
+            //File.WriteAllLines("Insert path here!!", results.ToArray());
+
 
             var A = nodes.Last()[2];
             var B = nodes.Last()[4];
