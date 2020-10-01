@@ -72,7 +72,7 @@ namespace BriefFiniteElementNet.Solver
 
             if (Target != null)
                 Target.Trace.Write(TraceRecord.Create(BriefFiniteElementNet.Common.TraceLevel.Info,
-                    string.Format(CultureInfo.CurrentCulture, "cholesky decomposition of matrix took about {0:#,##0} ms",
+                    string.Format(CultureInfo.CurrentCulture, "Cholesky decomposition of matrix took about {0:#,##0} ms",
                         sp.ElapsedMilliseconds)));
         }
 

@@ -39,7 +39,10 @@ namespace BriefFiniteElementNet.Common
                     throw new ArgumentOutOfRangeException();
             }
 
-            Console.WriteLine("{0},{1}", record.IssueId, record.Message);
+            if (string.IsNullOrEmpty(record.IssueId))
+                Console.WriteLine("{1}", record.IssueId, record.Message);
+            else
+                Console.WriteLine("{0},{1}", record.IssueId, record.Message);
 
             Console.ForegroundColor = bck;
         }
