@@ -29,7 +29,6 @@ namespace BriefFiniteElementNet.Common
 
         public DisposableDenseMatrix(int rows, int columns, ArrayPool<double> pool) : this(rows, columns, pool.Allocate(rows * columns), pool)
         {
-
         }
 
         public DisposableDenseMatrix(int rows, int columns, double[] values, ArrayPool<double> pool) : base(rows, columns, values)
