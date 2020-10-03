@@ -534,6 +534,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             throw new NotImplementedException();
         }
+
         #region strain
 
         public StrainTensor GetMembraneInternalStrain(Element targetElement, LoadCase loadCase, params double[] isoCoords)

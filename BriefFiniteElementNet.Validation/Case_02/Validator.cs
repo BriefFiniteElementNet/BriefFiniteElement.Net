@@ -305,6 +305,7 @@ namespace BriefFiniteElementNet.Validation.Case_02
             {//element stress
                 
             }
+
             //writeDataTriangleElement(model, LoadCase.DefaultLoadCase);
 
             return val;

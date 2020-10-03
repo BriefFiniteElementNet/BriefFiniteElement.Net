@@ -197,7 +197,7 @@ namespace BriefFiniteElementNet.Validation.Ui
                 }
             }
 
-            var fl = "c:\\temp\\val-res.html";
+            var fl = System.IO.Path.GetTempFileName() + ".html";// "c:\\temp\\val-res.html";
 
             var xmlDoc = new XmlDocument();
 
@@ -205,8 +205,6 @@ namespace BriefFiniteElementNet.Validation.Ui
 
             xmlDoc.Save(fl);
 
-            
-            
             Process.Start(fl);
         }
     }
