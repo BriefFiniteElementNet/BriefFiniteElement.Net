@@ -8,6 +8,7 @@ namespace BriefFiniteElementNet.Elements
     /// Represents a 2 node truss element (start and end)
     /// </summary>
     [Serializable]
+    [Obsolete("Use BarElement with Truss behaviour instead")]
     public sealed class TrussElement2Node : Element1D
     {
         #region Members

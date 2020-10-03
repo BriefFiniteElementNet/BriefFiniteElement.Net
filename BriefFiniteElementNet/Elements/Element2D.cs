@@ -10,6 +10,7 @@ using BriefFiniteElementNet.Elements;
 namespace BriefFiniteElementNet
 {
     [Serializable]
+    [Obsolete]
     public abstract class Element2D : Element
     {
         /// <summary>

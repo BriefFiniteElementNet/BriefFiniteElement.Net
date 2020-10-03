@@ -602,12 +602,15 @@ namespace BriefFiniteElementNet.Controls
                         AddTriangleElement(builder, elm as TriangleElement);
                     else if (elm is ConcentratedMass)
                         AddMassElement(builder, elm as ConcentratedMass);
+                    else if (elm is TetrahedronElement)
+                        AddTetrahedronElement(builder, elm as TetrahedronElement);
                     else if (elm is TrussElement2Node)
                         AddTrussElement(builder, elm as TrussElement2Node);
                     else if (elm is DktElement)
                         AddDktElement(builder, elm as DktElement);
                     else if (elm is Tetrahedral)
                         AddTetrahedronElement(builder, elm as Tetrahedral);
+
                     else if (elm is TriangleFlatShell)
                         AddFlatshellElement(builder, elm as TriangleFlatShell);
                     else if (elm.GetType().Name == "QuadrilaturalElement")
@@ -832,6 +835,24 @@ namespace BriefFiniteElementNet.Controls
 
 
             MainViewport.Children.Add(new DefaultLights());
+        }
+
+        private void AddTetrahedronElement(MeshBuilder bldr, TetrahedronElement elm)
+        {
+
+            var r = ElementVisualThickness / 2;
+
+
+            var p1 = elm.Nodes[0].Location;
+            var p2 = elm.Nodes[1].Location;
+            var p3 = elm.Nodes[2].Location;
+            var p4 = elm.Nodes[3].Location;
+
+
+            bldr.AddTriangle(p1, p3, p4);
+            bldr.AddTriangle(p3, p2, p4);
+            bldr.AddTriangle(p1, p2, p4);
+            bldr.AddTriangle(p1, p2, p3);
         }
 
         private void BindMouseEvents(ModelUIElement3D model, Element elm)

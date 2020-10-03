@@ -61,6 +61,7 @@
   <ItemGroup>
     <Compile Include="Case_02\Validator.cs" />
     <Compile Include="Case_01\Validator.cs" />
+    <Compile Include="Case_03\Validator.cs" />
     <Compile Include="EqualDofValidator.cs" />
     <Compile Include="GithubIssues\Issue23.cs" />
     <Compile Include="GithubIssues\Issue24.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="GithubIssues\Issue41.cs" />
     <Compile Include="GithubIssues\Issue48.cs" />
     <Compile Include="GithubIssues\Issue50.cs" />
+    <Compile Include="OpenseesTclGenerator\TetrahedralElementToTcl.cs" />
     <Compile Include="OpenseesTclGenerator\TetrahedronToTcl.cs" />
     <Compile Include="OpenseesTclGenerator\TriangleElementToTcl.cs" />
     <Compile Include="OpenseesTclGenerator\UniformLoad2Tcl.cs" />
@@ -102,8 +104,17 @@
     <Compile Include="TransformValidator.cs" />
     <Compile Include="TriangleElementTester.cs" />
     <Compile Include="UnitConverter.cs" />
+    <None Include="Case_02\Abaqus comparison\Bottom_S11.rpt" />
+    <None Include="Case_02\Abaqus comparison\Bottom_S12.rpt" />
+    <None Include="Case_02\Abaqus comparison\Bottom_S22.rpt" />
+    <None Include="Case_02\Abaqus comparison\Flat plate comparison_Bottom.csv" />
+    <None Include="Case_02\Abaqus comparison\Flat plate comparison_Top.csv" />
+    <None Include="Case_02\Abaqus comparison\Top_S11.rpt" />
+    <None Include="Case_02\Abaqus comparison\Top_S12.rpt" />
+    <None Include="Case_02\Abaqus comparison\Top_S22.rpt" />
+    <None Include="Case_02\Abaqus comparison\U.rpt" />
     <None Include="Case_02\Intro.md" />
-    <None Include="Case_02\Model1_BFE_Abaqus.csv" />
+    <None Include="Case_02\Abaqus comparison\Model1_BFE_Abaqus.csv" />
     <None Include="Case_01\stress &amp; displacement.rpt" />
     <None Include="OpenseesTclGenerator\Readme.md" />
     <None Include="packages.config" />

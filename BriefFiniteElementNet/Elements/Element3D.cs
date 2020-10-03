@@ -10,6 +10,7 @@ using BriefFiniteElementNet.Elements;
 namespace BriefFiniteElementNet
 {
     [Serializable]
+    [Obsolete]
     public abstract class Element3D : Element
     {
         protected Element3D(int nodes) : base(nodes)

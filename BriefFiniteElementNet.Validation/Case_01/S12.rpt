@@ -1,0 +1,800 @@
+********************************************************************************
+
+   Variable: S, S12 (Not averaged)
+
+Loc 1 : Integration point values at shell < MATERIAL-1 > < 5 section points > : SNEG, (fraction = -1.0)
+
+Probe values reported at integration points
+
+  Part Instance  Element ID        Type  Attached nodes
+--------------------------------------------------------------------------------
+    PART-1-1           1       STRI3           1          13          26
+    PART-1-1           2       STRI3          26           4           1
+    PART-1-1           3       STRI3          13          14          25
+    PART-1-1           4       STRI3          25          26          13
+    PART-1-1           5       STRI3          14          15          24
+    PART-1-1           6       STRI3          24          25          14
+    PART-1-1           7       STRI3          15          16          23
+    PART-1-1           8       STRI3          23          24          15
+    PART-1-1           9       STRI3          16          17          22
+    PART-1-1          10       STRI3          22          23          16
+    PART-1-1          11       STRI3          17          18          21
+    PART-1-1          12       STRI3          21          22          17
+    PART-1-1          13       STRI3          18          19          20
+    PART-1-1          14       STRI3          20          21          18
+    PART-1-1          15       STRI3          19           2           3
+    PART-1-1          16       STRI3           3          20          19
+    PART-1-1          17       STRI3           2          19          33
+    PART-1-1          18       STRI3          33           6           2
+    PART-1-1          19       STRI3          19          18          32
+    PART-1-1          20       STRI3          32          33          19
+    PART-1-1          21       STRI3          18          17          31
+    PART-1-1          22       STRI3          31          32          18
+    PART-1-1          23       STRI3          17          16          30
+    PART-1-1          24       STRI3          30          31          17
+    PART-1-1          25       STRI3          16          15          29
+    PART-1-1          26       STRI3          29          30          16
+    PART-1-1          27       STRI3          15          14          28
+    PART-1-1          28       STRI3          28          29          15
+    PART-1-1          29       STRI3          14          13          27
+    PART-1-1          30       STRI3          27          28          14
+    PART-1-1          31       STRI3          13           1           5
+    PART-1-1          32       STRI3           5          27          13
+    PART-1-1          33       STRI3           7           8          34
+    PART-1-1          34       STRI3          34          47           7
+    PART-1-1          35       STRI3          47          34          35
+    PART-1-1          36       STRI3          35          46          47
+    PART-1-1          37       STRI3          46          35          36
+    PART-1-1          38       STRI3          36          45          46
+    PART-1-1          39       STRI3          45          36          37
+    PART-1-1          40       STRI3          37          44          45
+    PART-1-1          41       STRI3          44          37          38
+    PART-1-1          42       STRI3          38          43          44
+    PART-1-1          43       STRI3          43          38          39
+    PART-1-1          44       STRI3          39          42          43
+    PART-1-1          45       STRI3          42          39          40
+    PART-1-1          46       STRI3          40          41          42
+    PART-1-1          47       STRI3          41          40           9
+    PART-1-1          48       STRI3           9          10          41
+    PART-1-1          49       STRI3           8          11          48
+    PART-1-1          50       STRI3          48          34           8
+    PART-1-1          51       STRI3          34          48          49
+    PART-1-1          52       STRI3          49          35          34
+    PART-1-1          53       STRI3          35          49          50
+    PART-1-1          54       STRI3          50          36          35
+    PART-1-1          55       STRI3          36          50          51
+    PART-1-1          56       STRI3          51          37          36
+    PART-1-1          57       STRI3          37          51          52
+    PART-1-1          58       STRI3          52          38          37
+    PART-1-1          59       STRI3          38          52          53
+    PART-1-1          60       STRI3          53          39          38
+    PART-1-1          61       STRI3          39          53          54
+    PART-1-1          62       STRI3          54          40          39
+    PART-1-1          63       STRI3          40          54          12
+    PART-1-1          64       STRI3          12           9          40
+    PART-1-1          65       STRI3           8          55          57
+    PART-1-1          66       STRI3          57          34           8
+    PART-1-1          67       STRI3          55           2          19
+    PART-1-1          68       STRI3          19          57          55
+    PART-1-1          69       STRI3          34          57          58
+    PART-1-1          70       STRI3          58          35          34
+    PART-1-1          71       STRI3          57          19          18
+    PART-1-1          72       STRI3          18          58          57
+    PART-1-1          73       STRI3          35          58          59
+    PART-1-1          74       STRI3          59          36          35
+    PART-1-1          75       STRI3          58          18          17
+    PART-1-1          76       STRI3          17          59          58
+    PART-1-1          77       STRI3          36          59          60
+    PART-1-1          78       STRI3          60          37          36
+    PART-1-1          79       STRI3          59          17          16
+    PART-1-1          80       STRI3          16          60          59
+    PART-1-1          81       STRI3          37          60          61
+    PART-1-1          82       STRI3          61          38          37
+    PART-1-1          83       STRI3          60          16          15
+    PART-1-1          84       STRI3          15          61          60
+    PART-1-1          85       STRI3          38          61          62
+    PART-1-1          86       STRI3          62          39          38
+    PART-1-1          87       STRI3          61          15          14
+    PART-1-1          88       STRI3          14          62          61
+    PART-1-1          89       STRI3          39          62          63
+    PART-1-1          90       STRI3          63          40          39
+    PART-1-1          91       STRI3          62          14          13
+    PART-1-1          92       STRI3          13          63          62
+    PART-1-1          93       STRI3          40          63          56
+    PART-1-1          94       STRI3          56           9          40
+    PART-1-1          95       STRI3          63          13           1
+    PART-1-1          96       STRI3           1          56          63
+
+
+  Part Instance  Element ID        Type        Int. Pt.          S, S12
+--------------------------------------------------------------------------------
+    PART-1-1           1       STRI3               1     7.71575E+06
+    PART-1-1           1       STRI3               2      8.2386E+06
+    PART-1-1           1       STRI3               3  8.77486E+06(LAYER_1)
+    PART-1-1           2       STRI3               1     17.2186E+06
+    PART-1-1           2       STRI3               2     16.0757E+06
+    PART-1-1           2       STRI3               3  15.7047E+06 (LAYER_1)
+    PART-1-1           3       STRI3               1     7.27344E+06
+    PART-1-1           3       STRI3               2     7.55945E+06
+    PART-1-1           3       STRI3               3  7.88621E+06(LAYER_1)
+    PART-1-1           4       STRI3               1     16.4607E+06
+    PART-1-1           4       STRI3               2     16.2684E+06
+    PART-1-1           4       STRI3               3  16.0216E+06 (LAYER_1)
+    PART-1-1           5       STRI3               1     7.52571E+06
+    PART-1-1           5       STRI3               2     7.67729E+06
+    PART-1-1           5       STRI3               3  7.95838E+06(LAYER_1)
+    PART-1-1           6       STRI3               1     15.9767E+06
+    PART-1-1           6       STRI3               2     15.8203E+06
+    PART-1-1           6       STRI3               3  15.518E+06  (LAYER_1)
+    PART-1-1           7       STRI3               1      7.4171E+06
+    PART-1-1           7       STRI3               2     7.50303E+06
+    PART-1-1           7       STRI3               3  7.67896E+06(LAYER_1)
+    PART-1-1           8       STRI3               1     15.5614E+06
+    PART-1-1           8       STRI3               2     15.4145E+06
+    PART-1-1           8       STRI3               3  15.1766E+06 (LAYER_1)
+    PART-1-1           9       STRI3               1     6.91244E+06
+    PART-1-1           9       STRI3               2     6.90586E+06
+    PART-1-1           9       STRI3               3  6.90156E+06(LAYER_1)
+    PART-1-1          10       STRI3               1      15.039E+06
+    PART-1-1          10       STRI3               2     14.9155E+06
+    PART-1-1          10       STRI3               3  14.7954E+06 (LAYER_1)
+    PART-1-1          11       STRI3               1     8.16107E+06
+    PART-1-1          11       STRI3               2     7.97046E+06
+    PART-1-1          11       STRI3               3  7.54485E+06(LAYER_1)
+    PART-1-1          12       STRI3               1     13.9899E+06
+    PART-1-1          12       STRI3               2     13.9572E+06
+    PART-1-1          12       STRI3               3  14.0844E+06 (LAYER_1)
+    PART-1-1          13       STRI3               1     8.70853E+06
+    PART-1-1          13       STRI3               2     8.41112E+06
+    PART-1-1          13       STRI3               3  7.18165E+06(LAYER_1)
+    PART-1-1          14       STRI3               1     11.7221E+06
+    PART-1-1          14       STRI3               2     11.9167E+06
+    PART-1-1          14       STRI3               3  12.5278E+06 (LAYER_1)
+    PART-1-1          15       STRI3               1     8.29257E+06
+    PART-1-1          15       STRI3               2     7.99885E+06
+    PART-1-1          15       STRI3               3  6.20034E+06(LAYER_1)
+    PART-1-1          16       STRI3               1     7.30005E+06
+    PART-1-1          16       STRI3               2      7.9235E+06
+    PART-1-1          16       STRI3               3  8.95681E+06(LAYER_1)
+    PART-1-1          17       STRI3               1     10.4772E+06
+    PART-1-1          17       STRI3               2     9.90898E+06
+    PART-1-1          17       STRI3               3  9.59517E+06(LAYER_1)
+    PART-1-1          18       STRI3               1      7.9807E+06
+    PART-1-1          18       STRI3               2     9.37144E+06
+    PART-1-1          18       STRI3               3  8.69285E+06(LAYER_1)
+    PART-1-1          19       STRI3               1     13.0886E+06
+    PART-1-1          19       STRI3               2     12.8416E+06
+    PART-1-1          19       STRI3               3  12.6117E+06 (LAYER_1)
+    PART-1-1          20       STRI3               1     7.44757E+06
+    PART-1-1          20       STRI3               2     7.18106E+06
+    PART-1-1          20       STRI3               3  6.98121E+06(LAYER_1)
+    PART-1-1          21       STRI3               1     14.4816E+06
+    PART-1-1          21       STRI3               2     14.3846E+06
+    PART-1-1          21       STRI3               3  14.1039E+06 (LAYER_1)
+    PART-1-1          22       STRI3               1      7.2814E+06
+    PART-1-1          22       STRI3               2      7.1088E+06
+    PART-1-1          22       STRI3               3  7.26721E+06(LAYER_1)
+    PART-1-1          23       STRI3               1     15.3464E+06
+    PART-1-1          23       STRI3               2     15.2305E+06
+    PART-1-1          23       STRI3               3  14.9436E+06 (LAYER_1)
+    PART-1-1          24       STRI3               1      7.3313E+06
+    PART-1-1          24       STRI3               2     7.31104E+06
+    PART-1-1          24       STRI3               3  7.54956E+06(LAYER_1)
+    PART-1-1          25       STRI3               1      15.763E+06
+    PART-1-1          25       STRI3               2     15.6207E+06
+    PART-1-1          25       STRI3               3  15.3304E+06 (LAYER_1)
+    PART-1-1          26       STRI3               1     7.85707E+06
+    PART-1-1          26       STRI3               2     7.94176E+06
+    PART-1-1          26       STRI3               3  8.21828E+06(LAYER_1)
+    PART-1-1          27       STRI3               1     15.8561E+06
+    PART-1-1          27       STRI3               2     15.7096E+06
+    PART-1-1          27       STRI3               3  15.4803E+06 (LAYER_1)
+    PART-1-1          28       STRI3               1     8.15507E+06
+    PART-1-1          28       STRI3               2     8.27497E+06
+    PART-1-1          28       STRI3               3  8.54705E+06(LAYER_1)
+    PART-1-1          29       STRI3               1     15.5882E+06
+    PART-1-1          29       STRI3               2     15.3384E+06
+    PART-1-1          29       STRI3               3  15.1601E+06 (LAYER_1)
+    PART-1-1          30       STRI3               1     8.40642E+06
+    PART-1-1          30       STRI3               2     8.49492E+06
+    PART-1-1          30       STRI3               3  8.71761E+06(LAYER_1)
+    PART-1-1          31       STRI3               1     14.0823E+06
+    PART-1-1          31       STRI3               2     13.4077E+06
+    PART-1-1          31       STRI3               3  12.8849E+06 (LAYER_1)
+    PART-1-1          32       STRI3               1     6.42715E+06
+    PART-1-1          32       STRI3               2     6.63911E+06
+    PART-1-1          32       STRI3               3  7.29474E+06(LAYER_1)
+    PART-1-1          33       STRI3               1     6.23011E+06
+    PART-1-1          33       STRI3               2     8.21971E+06
+    PART-1-1          33       STRI3               3  8.55517E+06(LAYER_1)
+    PART-1-1          34       STRI3               1     9.07938E+06
+    PART-1-1          34       STRI3               2     8.02641E+06
+    PART-1-1          34       STRI3               3  7.37918E+06(LAYER_1)
+    PART-1-1          35       STRI3               1      7.3099E+06
+    PART-1-1          35       STRI3               2     8.48802E+06
+    PART-1-1          35       STRI3               3  8.75045E+06(LAYER_1)
+    PART-1-1          36       STRI3               1     12.5425E+06
+    PART-1-1          36       STRI3               2     11.9692E+06
+    PART-1-1          36       STRI3               3  11.7925E+06 (LAYER_1)
+    PART-1-1          37       STRI3               1     7.57688E+06
+    PART-1-1          37       STRI3               2     7.97793E+06
+    PART-1-1          37       STRI3               3  8.16018E+06(LAYER_1)
+    PART-1-1          38       STRI3               1     14.0664E+06
+    PART-1-1          38       STRI3               2     13.9495E+06
+    PART-1-1          38       STRI3               3  13.9846E+06 (LAYER_1)
+    PART-1-1          39       STRI3               1     6.88804E+06
+    PART-1-1          39       STRI3               2     6.88727E+06
+    PART-1-1          39       STRI3               3  6.89049E+06(LAYER_1)
+    PART-1-1          40       STRI3               1     14.7713E+06
+    PART-1-1          40       STRI3               2     14.8931E+06
+    PART-1-1          40       STRI3               3  15.0161E+06 (LAYER_1)
+    PART-1-1          41       STRI3               1     7.65527E+06
+    PART-1-1          41       STRI3               2     7.47952E+06
+    PART-1-1          41       STRI3               3  7.3936E+06 (LAYER_1)
+    PART-1-1          42       STRI3               1     15.1576E+06
+    PART-1-1          42       STRI3               2     15.3951E+06
+    PART-1-1          42       STRI3               3  15.5405E+06 (LAYER_1)
+    PART-1-1          43       STRI3               1     7.93737E+06
+    PART-1-1          43       STRI3               2     7.65665E+06
+    PART-1-1          43       STRI3               3  7.50472E+06(LAYER_1)
+    PART-1-1          44       STRI3               1     15.5099E+06
+    PART-1-1          44       STRI3               2     15.8102E+06
+    PART-1-1          44       STRI3               3  15.9648E+06 (LAYER_1)
+    PART-1-1          45       STRI3               1     7.87794E+06
+    PART-1-1          45       STRI3               2     7.55281E+06
+    PART-1-1          45       STRI3               3  7.26795E+06(LAYER_1)
+    PART-1-1          46       STRI3               1       16.03E+06
+    PART-1-1          46       STRI3               2     16.2706E+06
+    PART-1-1          46       STRI3               3  16.4625E+06 (LAYER_1)
+    PART-1-1          47       STRI3               1     8.77148E+06
+    PART-1-1          47       STRI3               2     8.24439E+06
+    PART-1-1          47       STRI3               3  7.72255E+06(LAYER_1)
+    PART-1-1          48       STRI3               1     15.7173E+06
+    PART-1-1          48       STRI3               2     16.0862E+06
+    PART-1-1          48       STRI3               3  17.2359E+06 (LAYER_1)
+    PART-1-1          49       STRI3               1     8.86419E+06
+    PART-1-1          49       STRI3               2     9.51817E+06
+    PART-1-1          49       STRI3               3  8.03178E+06(LAYER_1)
+    PART-1-1          50       STRI3               1     9.67238E+06
+    PART-1-1          50       STRI3               2     10.1439E+06
+    PART-1-1          50       STRI3               3  10.8138E+06 (LAYER_1)
+    PART-1-1          51       STRI3               1     7.10116E+06
+    PART-1-1          51       STRI3               2     7.24914E+06
+    PART-1-1          51       STRI3               3  7.52393E+06(LAYER_1)
+    PART-1-1          52       STRI3               1     12.6425E+06
+    PART-1-1          52       STRI3               2     12.8644E+06
+    PART-1-1          52       STRI3               3  13.113E+06  (LAYER_1)
+    PART-1-1          53       STRI3               1     7.28744E+06
+    PART-1-1          53       STRI3               2     7.12887E+06
+    PART-1-1          53       STRI3               3  7.29505E+06(LAYER_1)
+    PART-1-1          54       STRI3               1     14.0959E+06
+    PART-1-1          54       STRI3               2     14.3714E+06
+    PART-1-1          54       STRI3               3  14.4645E+06 (LAYER_1)
+    PART-1-1          55       STRI3               1     7.53518E+06
+    PART-1-1          55       STRI3               2     7.29879E+06
+    PART-1-1          55       STRI3               3  7.31442E+06(LAYER_1)
+    PART-1-1          56       STRI3               1     14.9251E+06
+    PART-1-1          56       STRI3               2     15.2089E+06
+    PART-1-1          56       STRI3               3  15.3244E+06 (LAYER_1)
+    PART-1-1          57       STRI3               1     8.19505E+06
+    PART-1-1          57       STRI3               2     7.92064E+06
+    PART-1-1          57       STRI3               3  7.83446E+06(LAYER_1)
+    PART-1-1          58       STRI3               1     15.3122E+06
+    PART-1-1          58       STRI3               2     15.6002E+06
+    PART-1-1          58       STRI3               3  15.7415E+06 (LAYER_1)
+    PART-1-1          59       STRI3               1     8.52743E+06
+    PART-1-1          59       STRI3               2      8.2589E+06
+    PART-1-1          59       STRI3               3  8.13985E+06(LAYER_1)
+    PART-1-1          60       STRI3               1     15.4743E+06
+    PART-1-1          60       STRI3               2     15.6975E+06
+    PART-1-1          60       STRI3               3  15.8421E+06 (LAYER_1)
+    PART-1-1          61       STRI3               1     8.70908E+06
+    PART-1-1          61       STRI3               2     8.49199E+06
+    PART-1-1          61       STRI3               3  8.40607E+06(LAYER_1)
+    PART-1-1          62       STRI3               1     15.1669E+06
+    PART-1-1          62       STRI3               2     15.3397E+06
+    PART-1-1          62       STRI3               3  15.5863E+06 (LAYER_1)
+    PART-1-1          63       STRI3               1     7.29763E+06
+    PART-1-1          63       STRI3               2     6.63954E+06
+    PART-1-1          63       STRI3               3  6.42679E+06(LAYER_1)
+    PART-1-1          64       STRI3               1     12.8935E+06
+    PART-1-1          64       STRI3               2     13.4229E+06
+    PART-1-1          64       STRI3               3  14.1052E+06 (LAYER_1)
+    PART-1-1          65       STRI3               1     11.1922E+06
+    PART-1-1          65       STRI3               2     9.83563E+06
+    PART-1-1          65       STRI3               3  12.1465E+06 (LAYER_1)
+    PART-1-1          66       STRI3               1     6.54421E+06
+    PART-1-1          66       STRI3               2     6.86188E+06
+    PART-1-1          66       STRI3               3  5.20069E+06(LAYER_1)
+    PART-1-1          67       STRI3               1     11.3753E+06
+    PART-1-1          67       STRI3               2     8.99269E+06
+    PART-1-1          67       STRI3               3  7.93051E+06(LAYER_1)
+    PART-1-1          68       STRI3               1     7.01488E+06
+    PART-1-1          68       STRI3               2     8.07821E+06
+    PART-1-1          68       STRI3               3  8.17968E+06(LAYER_1)
+    PART-1-1          69       STRI3               1     9.49512E+06
+    PART-1-1          69       STRI3               2     8.98272E+06
+    PART-1-1          69       STRI3               3  9.72883E+06(LAYER_1)
+    PART-1-1          70       STRI3               1     7.55004E+06
+    PART-1-1          70       STRI3               2     7.41507E+06
+    PART-1-1          70       STRI3               3  6.89595E+06(LAYER_1)
+    PART-1-1          71       STRI3               1     8.80934E+06
+    PART-1-1          71       STRI3               2     7.84989E+06
+    PART-1-1          71       STRI3               3  8.39971E+06(LAYER_1)
+    PART-1-1          72       STRI3               1     7.95794E+06
+    PART-1-1          72       STRI3               2     8.26326E+06
+    PART-1-1          72       STRI3               3  8.73492E+06(LAYER_1)
+    PART-1-1          73       STRI3               1     8.08517E+06
+    PART-1-1          73       STRI3               2     8.04213E+06
+    PART-1-1          73       STRI3               3  8.12285E+06(LAYER_1)
+    PART-1-1          74       STRI3               1     7.62497E+06
+    PART-1-1          74       STRI3               2     7.42041E+06
+    PART-1-1          74       STRI3               3  7.50357E+06(LAYER_1)
+    PART-1-1          75       STRI3               1     7.95046E+06
+    PART-1-1          75       STRI3               2     7.60363E+06
+    PART-1-1          75       STRI3               3  7.62829E+06(LAYER_1)
+    PART-1-1          76       STRI3               1     7.77888E+06
+    PART-1-1          76       STRI3               2     7.80385E+06
+    PART-1-1          76       STRI3               3  8.39493E+06(LAYER_1)
+    PART-1-1          77       STRI3               1     7.01426E+06
+    PART-1-1          77       STRI3               2     7.13108E+06
+    PART-1-1          77       STRI3               3  6.81997E+06(LAYER_1)
+    PART-1-1          78       STRI3               1     7.11225E+06
+    PART-1-1          78       STRI3               2     6.88071E+06
+    PART-1-1          78       STRI3               3  7.30102E+06(LAYER_1)
+    PART-1-1          79       STRI3               1     6.97849E+06
+    PART-1-1          79       STRI3               2     6.93929E+06
+    PART-1-1          79       STRI3               3  6.68441E+06(LAYER_1)
+    PART-1-1          80       STRI3               1     7.12835E+06
+    PART-1-1          80       STRI3               2     7.02082E+06
+    PART-1-1          80       STRI3               3  7.70967E+06(LAYER_1)
+    PART-1-1          81       STRI3               1      5.8774E+06
+    PART-1-1          81       STRI3               2     6.06257E+06
+    PART-1-1          81       STRI3               3  5.52893E+06(LAYER_1)
+    PART-1-1          82       STRI3               1     6.18433E+06
+    PART-1-1          82       STRI3               2      5.9534E+06
+    PART-1-1          82       STRI3               3  6.55612E+06(LAYER_1)
+    PART-1-1          83       STRI3               1     5.89427E+06
+    PART-1-1          83       STRI3               2     5.98702E+06
+    PART-1-1          83       STRI3               3  5.57089E+06(LAYER_1)
+    PART-1-1          84       STRI3               1     6.12949E+06
+    PART-1-1          84       STRI3               2     5.97132E+06
+    PART-1-1          84       STRI3               3  6.75639E+06(LAYER_1)
+    PART-1-1          85       STRI3               1     4.58927E+06
+    PART-1-1          85       STRI3               2     4.78941E+06
+    PART-1-1          85       STRI3               3  4.08506E+06(LAYER_1)
+    PART-1-1          86       STRI3               1     4.88974E+06
+    PART-1-1          86       STRI3               2     4.70392E+06
+    PART-1-1          86       STRI3               3  5.39281E+06(LAYER_1)
+    PART-1-1          87       STRI3               1     4.64188E+06
+    PART-1-1          87       STRI3               2     4.79584E+06
+    PART-1-1          87       STRI3               3  4.29779E+06(LAYER_1)
+    PART-1-1          88       STRI3               1     4.78185E+06
+    PART-1-1          88       STRI3               2     4.61796E+06
+    PART-1-1          88       STRI3               3  5.46743E+06(LAYER_1)
+    PART-1-1          89       STRI3               1     3.08892E+06
+    PART-1-1          89       STRI3               2      3.2561E+06
+    PART-1-1          89       STRI3               3  2.38641E+06(LAYER_1)
+    PART-1-1          90       STRI3               1     3.46553E+06
+    PART-1-1          90       STRI3               2     3.40214E+06
+    PART-1-1          90       STRI3               3  4.19482E+06(LAYER_1)
+    PART-1-1          91       STRI3               1     3.21659E+06
+    PART-1-1          91       STRI3               2     3.39796E+06
+    PART-1-1          91       STRI3               3  2.90604E+06(LAYER_1)
+    PART-1-1          92       STRI3               1     3.17455E+06
+    PART-1-1          92       STRI3               2     3.10461E+06
+    PART-1-1          92       STRI3               3  3.97493E+06(LAYER_1)
+    PART-1-1          93       STRI3               1     1.66339E+06
+    PART-1-1          93       STRI3               2     1.66505E+06
+    PART-1-1          93       STRI3               3  710.166E+03  (LAYER_1)
+    PART-1-1          94       STRI3               1     926.702E+03
+    PART-1-1          94       STRI3               2      1.1068E+06
+    PART-1-1          94       STRI3               3  2.13841E+06(LAYER_1)
+    PART-1-1          95       STRI3               1     1.81329E+06
+    PART-1-1          95       STRI3               2      1.8757E+06
+    PART-1-1          95       STRI3               3  1.46222E+06(LAYER_1)
+    PART-1-1          96       STRI3               1     662.809E+03
+    PART-1-1          96       STRI3               2     788.871E+03
+    PART-1-1          96       STRI3               3  1.52759E+06(LAYER_1)
+
+
+********************************************************************************
+
+   Variable: S, S12 (Not averaged)
+
+Loc 1 : Integration point values at shell < MATERIAL-1 > < 5 section points > : SNEG, (fraction = -1.0)
+
+Probe values reported at integration points
+
+  Part Instance  Element ID        Type  Attached nodes
+--------------------------------------------------------------------------------
+    PART-1-1           1       STRI3           1          13          26
+    PART-1-1           2       STRI3          26           4           1
+    PART-1-1           3       STRI3          13          14          25
+    PART-1-1           4       STRI3          25          26          13
+    PART-1-1           5       STRI3          14          15          24
+    PART-1-1           6       STRI3          24          25          14
+    PART-1-1           7       STRI3          15          16          23
+    PART-1-1           8       STRI3          23          24          15
+    PART-1-1           9       STRI3          16          17          22
+    PART-1-1          10       STRI3          22          23          16
+    PART-1-1          11       STRI3          17          18          21
+    PART-1-1          12       STRI3          21          22          17
+    PART-1-1          13       STRI3          18          19          20
+    PART-1-1          14       STRI3          20          21          18
+    PART-1-1          15       STRI3          19           2           3
+    PART-1-1          16       STRI3           3          20          19
+    PART-1-1          17       STRI3           2          19          33
+    PART-1-1          18       STRI3          33           6           2
+    PART-1-1          19       STRI3          19          18          32
+    PART-1-1          20       STRI3          32          33          19
+    PART-1-1          21       STRI3          18          17          31
+    PART-1-1          22       STRI3          31          32          18
+    PART-1-1          23       STRI3          17          16          30
+    PART-1-1          24       STRI3          30          31          17
+    PART-1-1          25       STRI3          16          15          29
+    PART-1-1          26       STRI3          29          30          16
+    PART-1-1          27       STRI3          15          14          28
+    PART-1-1          28       STRI3          28          29          15
+    PART-1-1          29       STRI3          14          13          27
+    PART-1-1          30       STRI3          27          28          14
+    PART-1-1          31       STRI3          13           1           5
+    PART-1-1          32       STRI3           5          27          13
+    PART-1-1          33       STRI3           7           8          34
+    PART-1-1          34       STRI3          34          47           7
+    PART-1-1          35       STRI3          47          34          35
+    PART-1-1          36       STRI3          35          46          47
+    PART-1-1          37       STRI3          46          35          36
+    PART-1-1          38       STRI3          36          45          46
+    PART-1-1          39       STRI3          45          36          37
+    PART-1-1          40       STRI3          37          44          45
+    PART-1-1          41       STRI3          44          37          38
+    PART-1-1          42       STRI3          38          43          44
+    PART-1-1          43       STRI3          43          38          39
+    PART-1-1          44       STRI3          39          42          43
+    PART-1-1          45       STRI3          42          39          40
+    PART-1-1          46       STRI3          40          41          42
+    PART-1-1          47       STRI3          41          40           9
+    PART-1-1          48       STRI3           9          10          41
+    PART-1-1          49       STRI3           8          11          48
+    PART-1-1          50       STRI3          48          34           8
+    PART-1-1          51       STRI3          34          48          49
+    PART-1-1          52       STRI3          49          35          34
+    PART-1-1          53       STRI3          35          49          50
+    PART-1-1          54       STRI3          50          36          35
+    PART-1-1          55       STRI3          36          50          51
+    PART-1-1          56       STRI3          51          37          36
+    PART-1-1          57       STRI3          37          51          52
+    PART-1-1          58       STRI3          52          38          37
+    PART-1-1          59       STRI3          38          52          53
+    PART-1-1          60       STRI3          53          39          38
+    PART-1-1          61       STRI3          39          53          54
+    PART-1-1          62       STRI3          54          40          39
+    PART-1-1          63       STRI3          40          54          12
+    PART-1-1          64       STRI3          12           9          40
+    PART-1-1          65       STRI3           8          55          57
+    PART-1-1          66       STRI3          57          34           8
+    PART-1-1          67       STRI3          55           2          19
+    PART-1-1          68       STRI3          19          57          55
+    PART-1-1          69       STRI3          34          57          58
+    PART-1-1          70       STRI3          58          35          34
+    PART-1-1          71       STRI3          57          19          18
+    PART-1-1          72       STRI3          18          58          57
+    PART-1-1          73       STRI3          35          58          59
+    PART-1-1          74       STRI3          59          36          35
+    PART-1-1          75       STRI3          58          18          17
+    PART-1-1          76       STRI3          17          59          58
+    PART-1-1          77       STRI3          36          59          60
+    PART-1-1          78       STRI3          60          37          36
+    PART-1-1          79       STRI3          59          17          16
+    PART-1-1          80       STRI3          16          60          59
+    PART-1-1          81       STRI3          37          60          61
+    PART-1-1          82       STRI3          61          38          37
+    PART-1-1          83       STRI3          60          16          15
+    PART-1-1          84       STRI3          15          61          60
+    PART-1-1          85       STRI3          38          61          62
+    PART-1-1          86       STRI3          62          39          38
+    PART-1-1          87       STRI3          61          15          14
+    PART-1-1          88       STRI3          14          62          61
+    PART-1-1          89       STRI3          39          62          63
+    PART-1-1          90       STRI3          63          40          39
+    PART-1-1          91       STRI3          62          14          13
+    PART-1-1          92       STRI3          13          63          62
+    PART-1-1          93       STRI3          40          63          56
+    PART-1-1          94       STRI3          56           9          40
+    PART-1-1          95       STRI3          63          13           1
+    PART-1-1          96       STRI3           1          56          63
+
+
+  Part Instance  Element ID        Type        Int. Pt.          S, S12
+--------------------------------------------------------------------------------
+    PART-1-1           1       STRI3               1     7.71575E+06
+    PART-1-1           1       STRI3               2      8.2386E+06
+    PART-1-1           1       STRI3               3  8.77486E+06(LAYER_1)
+    PART-1-1           2       STRI3               1     17.2186E+06
+    PART-1-1           2       STRI3               2     16.0757E+06
+    PART-1-1           2       STRI3               3  15.7047E+06 (LAYER_1)
+    PART-1-1           3       STRI3               1     7.27344E+06
+    PART-1-1           3       STRI3               2     7.55945E+06
+    PART-1-1           3       STRI3               3  7.88621E+06(LAYER_1)
+    PART-1-1           4       STRI3               1     16.4607E+06
+    PART-1-1           4       STRI3               2     16.2684E+06
+    PART-1-1           4       STRI3               3  16.0216E+06 (LAYER_1)
+    PART-1-1           5       STRI3               1     7.52571E+06
+    PART-1-1           5       STRI3               2     7.67729E+06
+    PART-1-1           5       STRI3               3  7.95838E+06(LAYER_1)
+    PART-1-1           6       STRI3               1     15.9767E+06
+    PART-1-1           6       STRI3               2     15.8203E+06
+    PART-1-1           6       STRI3               3  15.518E+06  (LAYER_1)
+    PART-1-1           7       STRI3               1      7.4171E+06
+    PART-1-1           7       STRI3               2     7.50303E+06
+    PART-1-1           7       STRI3               3  7.67896E+06(LAYER_1)
+    PART-1-1           8       STRI3               1     15.5614E+06
+    PART-1-1           8       STRI3               2     15.4145E+06
+    PART-1-1           8       STRI3               3  15.1766E+06 (LAYER_1)
+    PART-1-1           9       STRI3               1     6.91244E+06
+    PART-1-1           9       STRI3               2     6.90586E+06
+    PART-1-1           9       STRI3               3  6.90156E+06(LAYER_1)
+    PART-1-1          10       STRI3               1      15.039E+06
+    PART-1-1          10       STRI3               2     14.9155E+06
+    PART-1-1          10       STRI3               3  14.7954E+06 (LAYER_1)
+    PART-1-1          11       STRI3               1     8.16107E+06
+    PART-1-1          11       STRI3               2     7.97046E+06
+    PART-1-1          11       STRI3               3  7.54485E+06(LAYER_1)
+    PART-1-1          12       STRI3               1     13.9899E+06
+    PART-1-1          12       STRI3               2     13.9572E+06
+    PART-1-1          12       STRI3               3  14.0844E+06 (LAYER_1)
+    PART-1-1          13       STRI3               1     8.70853E+06
+    PART-1-1          13       STRI3               2     8.41112E+06
+    PART-1-1          13       STRI3               3  7.18165E+06(LAYER_1)
+    PART-1-1          14       STRI3               1     11.7221E+06
+    PART-1-1          14       STRI3               2     11.9167E+06
+    PART-1-1          14       STRI3               3  12.5278E+06 (LAYER_1)
+    PART-1-1          15       STRI3               1     8.29257E+06
+    PART-1-1          15       STRI3               2     7.99885E+06
+    PART-1-1          15       STRI3               3  6.20034E+06(LAYER_1)
+    PART-1-1          16       STRI3               1     7.30005E+06
+    PART-1-1          16       STRI3               2      7.9235E+06
+    PART-1-1          16       STRI3               3  8.95681E+06(LAYER_1)
+    PART-1-1          17       STRI3               1     10.4772E+06
+    PART-1-1          17       STRI3               2     9.90898E+06
+    PART-1-1          17       STRI3               3  9.59517E+06(LAYER_1)
+    PART-1-1          18       STRI3               1      7.9807E+06
+    PART-1-1          18       STRI3               2     9.37144E+06
+    PART-1-1          18       STRI3               3  8.69285E+06(LAYER_1)
+    PART-1-1          19       STRI3               1     13.0886E+06
+    PART-1-1          19       STRI3               2     12.8416E+06
+    PART-1-1          19       STRI3               3  12.6117E+06 (LAYER_1)
+    PART-1-1          20       STRI3               1     7.44757E+06
+    PART-1-1          20       STRI3               2     7.18106E+06
+    PART-1-1          20       STRI3               3  6.98121E+06(LAYER_1)
+    PART-1-1          21       STRI3               1     14.4816E+06
+    PART-1-1          21       STRI3               2     14.3846E+06
+    PART-1-1          21       STRI3               3  14.1039E+06 (LAYER_1)
+    PART-1-1          22       STRI3               1      7.2814E+06
+    PART-1-1          22       STRI3               2      7.1088E+06
+    PART-1-1          22       STRI3               3  7.26721E+06(LAYER_1)
+    PART-1-1          23       STRI3               1     15.3464E+06
+    PART-1-1          23       STRI3               2     15.2305E+06
+    PART-1-1          23       STRI3               3  14.9436E+06 (LAYER_1)
+    PART-1-1          24       STRI3               1      7.3313E+06
+    PART-1-1          24       STRI3               2     7.31104E+06
+    PART-1-1          24       STRI3               3  7.54956E+06(LAYER_1)
+    PART-1-1          25       STRI3               1      15.763E+06
+    PART-1-1          25       STRI3               2     15.6207E+06
+    PART-1-1          25       STRI3               3  15.3304E+06 (LAYER_1)
+    PART-1-1          26       STRI3               1     7.85707E+06
+    PART-1-1          26       STRI3               2     7.94176E+06
+    PART-1-1          26       STRI3               3  8.21828E+06(LAYER_1)
+    PART-1-1          27       STRI3               1     15.8561E+06
+    PART-1-1          27       STRI3               2     15.7096E+06
+    PART-1-1          27       STRI3               3  15.4803E+06 (LAYER_1)
+    PART-1-1          28       STRI3               1     8.15507E+06
+    PART-1-1          28       STRI3               2     8.27497E+06
+    PART-1-1          28       STRI3               3  8.54705E+06(LAYER_1)
+    PART-1-1          29       STRI3               1     15.5882E+06
+    PART-1-1          29       STRI3               2     15.3384E+06
+    PART-1-1          29       STRI3               3  15.1601E+06 (LAYER_1)
+    PART-1-1          30       STRI3               1     8.40642E+06
+    PART-1-1          30       STRI3               2     8.49492E+06
+    PART-1-1          30       STRI3               3  8.71761E+06(LAYER_1)
+    PART-1-1          31       STRI3               1     14.0823E+06
+    PART-1-1          31       STRI3               2     13.4077E+06
+    PART-1-1          31       STRI3               3  12.8849E+06 (LAYER_1)
+    PART-1-1          32       STRI3               1     6.42715E+06
+    PART-1-1          32       STRI3               2     6.63911E+06
+    PART-1-1          32       STRI3               3  7.29474E+06(LAYER_1)
+    PART-1-1          33       STRI3               1     6.23011E+06
+    PART-1-1          33       STRI3               2     8.21971E+06
+    PART-1-1          33       STRI3               3  8.55517E+06(LAYER_1)
+    PART-1-1          34       STRI3               1     9.07938E+06
+    PART-1-1          34       STRI3               2     8.02641E+06
+    PART-1-1          34       STRI3               3  7.37918E+06(LAYER_1)
+    PART-1-1          35       STRI3               1      7.3099E+06
+    PART-1-1          35       STRI3               2     8.48802E+06
+    PART-1-1          35       STRI3               3  8.75045E+06(LAYER_1)
+    PART-1-1          36       STRI3               1     12.5425E+06
+    PART-1-1          36       STRI3               2     11.9692E+06
+    PART-1-1          36       STRI3               3  11.7925E+06 (LAYER_1)
+    PART-1-1          37       STRI3               1     7.57688E+06
+    PART-1-1          37       STRI3               2     7.97793E+06
+    PART-1-1          37       STRI3               3  8.16018E+06(LAYER_1)
+    PART-1-1          38       STRI3               1     14.0664E+06
+    PART-1-1          38       STRI3               2     13.9495E+06
+    PART-1-1          38       STRI3               3  13.9846E+06 (LAYER_1)
+    PART-1-1          39       STRI3               1     6.88804E+06
+    PART-1-1          39       STRI3               2     6.88727E+06
+    PART-1-1          39       STRI3               3  6.89049E+06(LAYER_1)
+    PART-1-1          40       STRI3               1     14.7713E+06
+    PART-1-1          40       STRI3               2     14.8931E+06
+    PART-1-1          40       STRI3               3  15.0161E+06 (LAYER_1)
+    PART-1-1          41       STRI3               1     7.65527E+06
+    PART-1-1          41       STRI3               2     7.47952E+06
+    PART-1-1          41       STRI3               3  7.3936E+06 (LAYER_1)
+    PART-1-1          42       STRI3               1     15.1576E+06
+    PART-1-1          42       STRI3               2     15.3951E+06
+    PART-1-1          42       STRI3               3  15.5405E+06 (LAYER_1)
+    PART-1-1          43       STRI3               1     7.93737E+06
+    PART-1-1          43       STRI3               2     7.65665E+06
+    PART-1-1          43       STRI3               3  7.50472E+06(LAYER_1)
+    PART-1-1          44       STRI3               1     15.5099E+06
+    PART-1-1          44       STRI3               2     15.8102E+06
+    PART-1-1          44       STRI3               3  15.9648E+06 (LAYER_1)
+    PART-1-1          45       STRI3               1     7.87794E+06
+    PART-1-1          45       STRI3               2     7.55281E+06
+    PART-1-1          45       STRI3               3  7.26795E+06(LAYER_1)
+    PART-1-1          46       STRI3               1       16.03E+06
+    PART-1-1          46       STRI3               2     16.2706E+06
+    PART-1-1          46       STRI3               3  16.4625E+06 (LAYER_1)
+    PART-1-1          47       STRI3               1     8.77148E+06
+    PART-1-1          47       STRI3               2     8.24439E+06
+    PART-1-1          47       STRI3               3  7.72255E+06(LAYER_1)
+    PART-1-1          48       STRI3               1     15.7173E+06
+    PART-1-1          48       STRI3               2     16.0862E+06
+    PART-1-1          48       STRI3               3  17.2359E+06 (LAYER_1)
+    PART-1-1          49       STRI3               1     8.86419E+06
+    PART-1-1          49       STRI3               2     9.51817E+06
+    PART-1-1          49       STRI3               3  8.03178E+06(LAYER_1)
+    PART-1-1          50       STRI3               1     9.67238E+06
+    PART-1-1          50       STRI3               2     10.1439E+06
+    PART-1-1          50       STRI3               3  10.8138E+06 (LAYER_1)
+    PART-1-1          51       STRI3               1     7.10116E+06
+    PART-1-1          51       STRI3               2     7.24914E+06
+    PART-1-1          51       STRI3               3  7.52393E+06(LAYER_1)
+    PART-1-1          52       STRI3               1     12.6425E+06
+    PART-1-1          52       STRI3               2     12.8644E+06
+    PART-1-1          52       STRI3               3  13.113E+06  (LAYER_1)
+    PART-1-1          53       STRI3               1     7.28744E+06
+    PART-1-1          53       STRI3               2     7.12887E+06
+    PART-1-1          53       STRI3               3  7.29505E+06(LAYER_1)
+    PART-1-1          54       STRI3               1     14.0959E+06
+    PART-1-1          54       STRI3               2     14.3714E+06
+    PART-1-1          54       STRI3               3  14.4645E+06 (LAYER_1)
+    PART-1-1          55       STRI3               1     7.53518E+06
+    PART-1-1          55       STRI3               2     7.29879E+06
+    PART-1-1          55       STRI3               3  7.31442E+06(LAYER_1)
+    PART-1-1          56       STRI3               1     14.9251E+06
+    PART-1-1          56       STRI3               2     15.2089E+06
+    PART-1-1          56       STRI3               3  15.3244E+06 (LAYER_1)
+    PART-1-1          57       STRI3               1     8.19505E+06
+    PART-1-1          57       STRI3               2     7.92064E+06
+    PART-1-1          57       STRI3               3  7.83446E+06(LAYER_1)
+    PART-1-1          58       STRI3               1     15.3122E+06
+    PART-1-1          58       STRI3               2     15.6002E+06
+    PART-1-1          58       STRI3               3  15.7415E+06 (LAYER_1)
+    PART-1-1          59       STRI3               1     8.52743E+06
+    PART-1-1          59       STRI3               2      8.2589E+06
+    PART-1-1          59       STRI3               3  8.13985E+06(LAYER_1)
+    PART-1-1          60       STRI3               1     15.4743E+06
+    PART-1-1          60       STRI3               2     15.6975E+06
+    PART-1-1          60       STRI3               3  15.8421E+06 (LAYER_1)
+    PART-1-1          61       STRI3               1     8.70908E+06
+    PART-1-1          61       STRI3               2     8.49199E+06
+    PART-1-1          61       STRI3               3  8.40607E+06(LAYER_1)
+    PART-1-1          62       STRI3               1     15.1669E+06
+    PART-1-1          62       STRI3               2     15.3397E+06
+    PART-1-1          62       STRI3               3  15.5863E+06 (LAYER_1)
+    PART-1-1          63       STRI3               1     7.29763E+06
+    PART-1-1          63       STRI3               2     6.63954E+06
+    PART-1-1          63       STRI3               3  6.42679E+06(LAYER_1)
+    PART-1-1          64       STRI3               1     12.8935E+06
+    PART-1-1          64       STRI3               2     13.4229E+06
+    PART-1-1          64       STRI3               3  14.1052E+06 (LAYER_1)
+    PART-1-1          65       STRI3               1     11.1922E+06
+    PART-1-1          65       STRI3               2     9.83563E+06
+    PART-1-1          65       STRI3               3  12.1465E+06 (LAYER_1)
+    PART-1-1          66       STRI3               1     6.54421E+06
+    PART-1-1          66       STRI3               2     6.86188E+06
+    PART-1-1          66       STRI3               3  5.20069E+06(LAYER_1)
+    PART-1-1          67       STRI3               1     11.3753E+06
+    PART-1-1          67       STRI3               2     8.99269E+06
+    PART-1-1          67       STRI3               3  7.93051E+06(LAYER_1)
+    PART-1-1          68       STRI3               1     7.01488E+06
+    PART-1-1          68       STRI3               2     8.07821E+06
+    PART-1-1          68       STRI3               3  8.17968E+06(LAYER_1)
+    PART-1-1          69       STRI3               1     9.49512E+06
+    PART-1-1          69       STRI3               2     8.98272E+06
+    PART-1-1          69       STRI3               3  9.72883E+06(LAYER_1)
+    PART-1-1          70       STRI3               1     7.55004E+06
+    PART-1-1          70       STRI3               2     7.41507E+06
+    PART-1-1          70       STRI3               3  6.89595E+06(LAYER_1)
+    PART-1-1          71       STRI3               1     8.80934E+06
+    PART-1-1          71       STRI3               2     7.84989E+06
+    PART-1-1          71       STRI3               3  8.39971E+06(LAYER_1)
+    PART-1-1          72       STRI3               1     7.95794E+06
+    PART-1-1          72       STRI3               2     8.26326E+06
+    PART-1-1          72       STRI3               3  8.73492E+06(LAYER_1)
+    PART-1-1          73       STRI3               1     8.08517E+06
+    PART-1-1          73       STRI3               2     8.04213E+06
+    PART-1-1          73       STRI3               3  8.12285E+06(LAYER_1)
+    PART-1-1          74       STRI3               1     7.62497E+06
+    PART-1-1          74       STRI3               2     7.42041E+06
+    PART-1-1          74       STRI3               3  7.50357E+06(LAYER_1)
+    PART-1-1          75       STRI3               1     7.95046E+06
+    PART-1-1          75       STRI3               2     7.60363E+06
+    PART-1-1          75       STRI3               3  7.62829E+06(LAYER_1)
+    PART-1-1          76       STRI3               1     7.77888E+06
+    PART-1-1          76       STRI3               2     7.80385E+06
+    PART-1-1          76       STRI3               3  8.39493E+06(LAYER_1)
+    PART-1-1          77       STRI3               1     7.01426E+06
+    PART-1-1          77       STRI3               2     7.13108E+06
+    PART-1-1          77       STRI3               3  6.81997E+06(LAYER_1)
+    PART-1-1          78       STRI3               1     7.11225E+06
+    PART-1-1          78       STRI3               2     6.88071E+06
+    PART-1-1          78       STRI3               3  7.30102E+06(LAYER_1)
+    PART-1-1          79       STRI3               1     6.97849E+06
+    PART-1-1          79       STRI3               2     6.93929E+06
+    PART-1-1          79       STRI3               3  6.68441E+06(LAYER_1)
+    PART-1-1          80       STRI3               1     7.12835E+06
+    PART-1-1          80       STRI3               2     7.02082E+06
+    PART-1-1          80       STRI3               3  7.70967E+06(LAYER_1)
+    PART-1-1          81       STRI3               1      5.8774E+06
+    PART-1-1          81       STRI3               2     6.06257E+06
+    PART-1-1          81       STRI3               3  5.52893E+06(LAYER_1)
+    PART-1-1          82       STRI3               1     6.18433E+06
+    PART-1-1          82       STRI3               2      5.9534E+06
+    PART-1-1          82       STRI3               3  6.55612E+06(LAYER_1)
+    PART-1-1          83       STRI3               1     5.89427E+06
+    PART-1-1          83       STRI3               2     5.98702E+06
+    PART-1-1          83       STRI3               3  5.57089E+06(LAYER_1)
+    PART-1-1          84       STRI3               1     6.12949E+06
+    PART-1-1          84       STRI3               2     5.97132E+06
+    PART-1-1          84       STRI3               3  6.75639E+06(LAYER_1)
+    PART-1-1          85       STRI3               1     4.58927E+06
+    PART-1-1          85       STRI3               2     4.78941E+06
+    PART-1-1          85       STRI3               3  4.08506E+06(LAYER_1)
+    PART-1-1          86       STRI3               1     4.88974E+06
+    PART-1-1          86       STRI3               2     4.70392E+06
+    PART-1-1          86       STRI3               3  5.39281E+06(LAYER_1)
+    PART-1-1          87       STRI3               1     4.64188E+06
+    PART-1-1          87       STRI3               2     4.79584E+06
+    PART-1-1          87       STRI3               3  4.29779E+06(LAYER_1)
+    PART-1-1          88       STRI3               1     4.78185E+06
+    PART-1-1          88       STRI3               2     4.61796E+06
+    PART-1-1          88       STRI3               3  5.46743E+06(LAYER_1)
+    PART-1-1          89       STRI3               1     3.08892E+06
+    PART-1-1          89       STRI3               2      3.2561E+06
+    PART-1-1          89       STRI3               3  2.38641E+06(LAYER_1)
+    PART-1-1          90       STRI3               1     3.46553E+06
+    PART-1-1          90       STRI3               2     3.40214E+06
+    PART-1-1          90       STRI3               3  4.19482E+06(LAYER_1)
+    PART-1-1          91       STRI3               1     3.21659E+06
+    PART-1-1          91       STRI3               2     3.39796E+06
+    PART-1-1          91       STRI3               3  2.90604E+06(LAYER_1)
+    PART-1-1          92       STRI3               1     3.17455E+06
+    PART-1-1          92       STRI3               2     3.10461E+06
+    PART-1-1          92       STRI3               3  3.97493E+06(LAYER_1)
+    PART-1-1          93       STRI3               1     1.66339E+06
+    PART-1-1          93       STRI3               2     1.66505E+06
+    PART-1-1          93       STRI3               3  710.166E+03  (LAYER_1)
+    PART-1-1          94       STRI3               1     926.702E+03
+    PART-1-1          94       STRI3               2      1.1068E+06
+    PART-1-1          94       STRI3               3  2.13841E+06(LAYER_1)
+    PART-1-1          95       STRI3               1     1.81329E+06
+    PART-1-1          95       STRI3               2      1.8757E+06
+    PART-1-1          95       STRI3               3  1.46222E+06(LAYER_1)
+    PART-1-1          96       STRI3               1     662.809E+03
+    PART-1-1          96       STRI3               2     788.871E+03
+    PART-1-1          96       STRI3               3  1.52759E+06(LAYER_1)
+
+

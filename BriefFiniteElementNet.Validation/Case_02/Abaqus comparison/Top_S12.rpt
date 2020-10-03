@@ -1,0 +1,222 @@
+********************************************************************************
+Probe Values Report, written on Wed Sep 30 14:07:54 2020
+
+Source
+-------
+
+   Step: Step-1
+   Frame: Increment      1: Step Time =    1.000
+   Variable: S, S12 (Not averaged)
+
+Loc 1 : Integration point values at shell < MATERIAL-1 > < 5 section points > : SNEG, (fraction = -1.0)
+
+Probe values reported at integration points
+
+  Part Instance  Element ID        Type  Attached nodes
+--------------------------------------------------------------------------------
+    PART-1-1           1       STRI3           1           2           3
+    PART-1-1           2       STRI3           3           4           1
+    PART-1-1           3       STRI3           5           6           7
+    PART-1-1           4       STRI3           7           8           5
+    PART-1-1           5       STRI3           2           1           9
+    PART-1-1           6       STRI3           9          10           2
+    PART-1-1           7       STRI3          11          12           6
+    PART-1-1           8       STRI3           6           5          11
+    PART-1-1           9       STRI3          13           1           4
+    PART-1-1          10       STRI3           4          14          13
+    PART-1-1          11       STRI3           6          15          16
+    PART-1-1          12       STRI3          16           7           6
+    PART-1-1          13       STRI3           1          13          17
+    PART-1-1          14       STRI3          17           9           1
+    PART-1-1          15       STRI3          12          18          15
+    PART-1-1          16       STRI3          15           6          12
+    PART-1-1          17       STRI3          19          13          14
+    PART-1-1          18       STRI3          14          20          19
+    PART-1-1          19       STRI3          15          21          22
+    PART-1-1          20       STRI3          22          16          15
+    PART-1-1          21       STRI3          13          19          23
+    PART-1-1          22       STRI3          23          17          13
+    PART-1-1          23       STRI3          18          24          21
+    PART-1-1          24       STRI3          21          15          18
+    PART-1-1          25       STRI3          25          19          20
+    PART-1-1          26       STRI3          20          26          25
+    PART-1-1          27       STRI3          21          27          28
+    PART-1-1          28       STRI3          28          22          21
+    PART-1-1          29       STRI3          19          25          29
+    PART-1-1          30       STRI3          29          23          19
+    PART-1-1          31       STRI3          24          30          27
+    PART-1-1          32       STRI3          27          21          24
+    PART-1-1          33       STRI3          31          25          26
+    PART-1-1          34       STRI3          26          32          31
+    PART-1-1          35       STRI3          25          31          33
+    PART-1-1          36       STRI3          33          29          25
+    PART-1-1          37       STRI3          27          34          35
+    PART-1-1          38       STRI3          35          28          27
+    PART-1-1          39       STRI3          36          30          29
+    PART-1-1          40       STRI3          29          33          36
+    PART-1-1          41       STRI3          12          11          10
+    PART-1-1          42       STRI3          10           9          12
+    PART-1-1          43       STRI3          30          36          34
+    PART-1-1          44       STRI3          34          27          30
+    PART-1-1          45       STRI3          18          12           9
+    PART-1-1          46       STRI3           9          17          18
+    PART-1-1          47       STRI3          30          24          23
+    PART-1-1          48       STRI3          23          29          30
+    PART-1-1          49       STRI3          24          18          17
+    PART-1-1          50       STRI3          17          23          24
+
+
+  Part Instance  Element ID        Type        Int. Pt.          S, S12
+--------------------------------------------------------------------------------
+    PART-1-1           1       STRI3               1    -481.728E+06
+    PART-1-1           1       STRI3               2    -457.405E+06
+    PART-1-1           1       STRI3               3     -600.36E+06
+    PART-1-1           2       STRI3               1    -269.749E+06
+    PART-1-1           2       STRI3               2    -290.828E+06
+    PART-1-1           2       STRI3               3    -110.147E+06
+    PART-1-1           3       STRI3               1     741.039E+06
+    PART-1-1           3       STRI3               2     518.064E+06
+    PART-1-1           3       STRI3               3     346.725E+06
+    PART-1-1           4       STRI3               1     373.054E+06
+    PART-1-1           4       STRI3               2     756.252E+06
+    PART-1-1           4       STRI3               3     1.37405E+09
+    PART-1-1           5       STRI3               1     -141.63E+06
+    PART-1-1           5       STRI3               2    -166.771E+06
+    PART-1-1           5       STRI3               3     151.903E+03
+    PART-1-1           6       STRI3               1    -343.762E+06
+    PART-1-1           6       STRI3               2    -353.054E+06
+    PART-1-1           6       STRI3               3    -540.539E+06
+    PART-1-1           7       STRI3               1     260.889E+06
+    PART-1-1           7       STRI3               2     296.942E+06
+    PART-1-1           7       STRI3               3     417.535E+06
+    PART-1-1           8       STRI3               1      596.45E+06
+    PART-1-1           8       STRI3               2     474.622E+06
+    PART-1-1           8       STRI3               3     221.568E+06
+    PART-1-1           9       STRI3               1     -301.01E+06
+    PART-1-1           9       STRI3               2    -247.923E+06
+    PART-1-1           9       STRI3               3    -402.697E+06
+    PART-1-1          10       STRI3               1     -3.3229E+06
+    PART-1-1          10       STRI3               2    -61.0651E+06
+    PART-1-1          10       STRI3               3     70.9793E+06
+    PART-1-1          11       STRI3               1     399.401E+06
+    PART-1-1          11       STRI3               2     198.149E+06
+    PART-1-1          11       STRI3               3     273.111E+06
+    PART-1-1          12       STRI3               1    -138.084E+06
+    PART-1-1          12       STRI3               2     56.1977E+06
+    PART-1-1          12       STRI3               3     38.6196E+06
+    PART-1-1          13       STRI3               1     51.6904E+06
+    PART-1-1          13       STRI3               2    -2.14259E+06
+    PART-1-1          13       STRI3               3     125.808E+06
+    PART-1-1          14       STRI3               1    -167.744E+06
+    PART-1-1          14       STRI3               2    -125.299E+06
+    PART-1-1          14       STRI3               3    -266.387E+06
+    PART-1-1          15       STRI3               1      312.16E+06
+    PART-1-1          15       STRI3               2     200.268E+06
+    PART-1-1          15       STRI3               3     266.623E+06
+    PART-1-1          16       STRI3               1     80.2685E+06
+    PART-1-1          16       STRI3               2     232.585E+06
+    PART-1-1          16       STRI3               3     218.944E+06
+    PART-1-1          17       STRI3               1    -176.362E+06
+    PART-1-1          17       STRI3               2    -103.631E+06
+    PART-1-1          17       STRI3               3    -229.051E+06
+    PART-1-1          18       STRI3               1     157.238E+06
+    PART-1-1          18       STRI3               2     82.7883E+06
+    PART-1-1          18       STRI3               3     200.679E+06
+    PART-1-1          19       STRI3               1     284.436E+06
+    PART-1-1          19       STRI3               2     92.8097E+06
+    PART-1-1          19       STRI3               3     244.959E+06
+    PART-1-1          20       STRI3               1    -213.651E+06
+    PART-1-1          20       STRI3               2    -72.4681E+06
+    PART-1-1          20       STRI3               3    -200.528E+06
+    PART-1-1          21       STRI3               1     157.512E+06
+    PART-1-1          21       STRI3               2     74.9268E+06
+    PART-1-1          21       STRI3               3     179.956E+06
+    PART-1-1          22       STRI3               1    -151.775E+06
+    PART-1-1          22       STRI3               2    -62.3786E+06
+    PART-1-1          22       STRI3               3    -174.597E+06
+    PART-1-1          23       STRI3               1     198.453E+06
+    PART-1-1          23       STRI3               2     51.9362E+06
+    PART-1-1          23       STRI3               3      137.17E+06
+    PART-1-1          24       STRI3               1    -195.639E+06
+    PART-1-1          24       STRI3               2    -25.1457E+06
+    PART-1-1          24       STRI3               3    -116.798E+06
+    PART-1-1          25       STRI3               1    -80.6166E+06
+    PART-1-1          25       STRI3               2     2.20946E+06
+    PART-1-1          25       STRI3               3    -112.765E+06
+    PART-1-1          26       STRI3               1     287.687E+06
+    PART-1-1          26       STRI3               2     198.562E+06
+    PART-1-1          26       STRI3               3     307.121E+06
+    PART-1-1          27       STRI3               1     136.561E+06
+    PART-1-1          27       STRI3               2    -115.501E+06
+    PART-1-1          27       STRI3               3     99.9358E+06
+    PART-1-1          28       STRI3               1    -242.551E+06
+    PART-1-1          28       STRI3               2     -115.83E+06
+    PART-1-1          28       STRI3               3    -282.442E+06
+    PART-1-1          29       STRI3               1     248.865E+06
+    PART-1-1          29       STRI3               2     161.368E+06
+    PART-1-1          29       STRI3               3     262.513E+06
+    PART-1-1          30       STRI3               1    -159.571E+06
+    PART-1-1          30       STRI3               2     -48.268E+06
+    PART-1-1          30       STRI3               3    -155.563E+06
+    PART-1-1          31       STRI3               1     86.1622E+06
+    PART-1-1          31       STRI3               2    -82.2953E+06
+    PART-1-1          31       STRI3               3     11.6151E+06
+    PART-1-1          32       STRI3               1    -495.395E+06
+    PART-1-1          32       STRI3               2    -263.117E+06
+    PART-1-1          32       STRI3               3    -361.464E+06
+    PART-1-1          33       STRI3               1      101.16E+06
+    PART-1-1          33       STRI3               2     143.746E+06
+    PART-1-1          33       STRI3               3     10.4967E+06
+    PART-1-1          34       STRI3               1     376.829E+06
+    PART-1-1          34       STRI3               2     346.055E+06
+    PART-1-1          34       STRI3               3     554.144E+06
+    PART-1-1          35       STRI3               1     458.257E+06
+    PART-1-1          35       STRI3               2     408.003E+06
+    PART-1-1          35       STRI3               3     571.767E+06
+    PART-1-1          36       STRI3               1    -34.8367E+06
+    PART-1-1          36       STRI3               2     55.5809E+06
+    PART-1-1          36       STRI3               3    -67.2584E+06
+    PART-1-1          37       STRI3               1    -477.632E+06
+    PART-1-1          37       STRI3               2    -802.449E+06
+    PART-1-1          37       STRI3               3    -1.00391E+09
+    PART-1-1          38       STRI3               1    -313.634E+06
+    PART-1-1          38       STRI3               2    -255.327E+06
+    PART-1-1          38       STRI3               3    -539.177E+06
+    PART-1-1          39       STRI3               1    -376.528E+06
+    PART-1-1          39       STRI3               2     -201.66E+06
+    PART-1-1          39       STRI3               3    -303.905E+06
+    PART-1-1          40       STRI3               1     333.633E+06
+    PART-1-1          40       STRI3               2     227.727E+06
+    PART-1-1          40       STRI3               3     345.246E+06
+    PART-1-1          41       STRI3               1    -26.7772E+06
+    PART-1-1          41       STRI3               2    -63.0851E+06
+    PART-1-1          41       STRI3               3    -281.355E+06
+    PART-1-1          42       STRI3               1     -7.1788E+06
+    PART-1-1          42       STRI3               2    -428.586E+03
+    PART-1-1          42       STRI3               3     161.417E+06
+    PART-1-1          43       STRI3               1     2.43776E+06
+    PART-1-1          43       STRI3               2    -172.515E+06
+    PART-1-1          43       STRI3               3    -125.511E+06
+    PART-1-1          44       STRI3               1    -845.702E+06
+    PART-1-1          44       STRI3               2    -510.411E+06
+    PART-1-1          44       STRI3               3    -642.479E+06
+    PART-1-1          45       STRI3               1     22.4388E+06
+    PART-1-1          45       STRI3               2     65.3696E+06
+    PART-1-1          45       STRI3               3    -58.2317E+06
+    PART-1-1          46       STRI3               1     149.192E+06
+    PART-1-1          46       STRI3               2     91.7962E+06
+    PART-1-1          46       STRI3               3     203.365E+06
+    PART-1-1          47       STRI3               1    -310.346E+06
+    PART-1-1          47       STRI3               2    -151.777E+06
+    PART-1-1          47       STRI3               3    -239.546E+06
+    PART-1-1          48       STRI3               1     182.618E+06
+    PART-1-1          48       STRI3               2     49.1669E+06
+    PART-1-1          48       STRI3               3     123.059E+06
+    PART-1-1          49       STRI3               1    -152.597E+06
+    PART-1-1          49       STRI3               2    -24.2527E+06
+    PART-1-1          49       STRI3               3    -110.331E+06
+    PART-1-1          50       STRI3               1     176.959E+06
+    PART-1-1          50       STRI3               2     62.8531E+06
+    PART-1-1          50       STRI3               3     145.794E+06
+
+

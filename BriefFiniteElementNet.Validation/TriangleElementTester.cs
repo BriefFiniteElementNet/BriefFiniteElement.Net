@@ -91,12 +91,9 @@ namespace BriefFiniteElementNet.Validation
             #endregion
 
 
-
-
             StructureGenerator.AddRandomiseNodalLoads(grd, LoadCase.DefaultLoadCase);//random nodal loads
 
             grd.Solve_MPC();
-
 
             var res = OpenseesValidator.OpenseesValidate(grd, LoadCase.DefaultLoadCase, false);
 
