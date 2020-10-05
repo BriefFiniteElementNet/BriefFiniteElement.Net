@@ -62,6 +62,7 @@
     <Compile Include="Case_02\Validator.cs" />
     <Compile Include="Case_01\Validator.cs" />
     <Compile Include="Case_03\Validator.cs" />
+    <Compile Include="Case_04\Validator.cs" />
     <Compile Include="EqualDofValidator.cs" />
     <Compile Include="GithubIssues\Issue23.cs" />
     <Compile Include="GithubIssues\Issue24.cs" />

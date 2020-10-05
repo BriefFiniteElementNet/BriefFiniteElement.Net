@@ -9,6 +9,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents an enumeration for determining type of <see cref="Element"/>s.
     /// </summary>
+    [Obsolete("Not used anymore")]
     public enum ElementType
     {
         /// <summary>

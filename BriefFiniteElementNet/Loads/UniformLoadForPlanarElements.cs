@@ -12,6 +12,7 @@ namespace BriefFiniteElementNet
     /// Represents a uniform load for shells
     /// </summary>
     [Serializable]
+    [Obsolete("Use UniformLoad instead")]
     public class UniformLoadForPlanarElements : ElementalLoad
     {
         public UniformLoadForPlanarElements()

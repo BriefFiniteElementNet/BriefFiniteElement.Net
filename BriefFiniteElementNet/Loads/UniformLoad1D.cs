@@ -8,6 +8,7 @@ namespace BriefFiniteElementNet
     /// Represents a uniform load with specified magnitude which is applying to an <see cref="FrameElement2Node"/> element.
     /// </summary>
     [Serializable]
+    [Obsolete("Use UniformLoad instead")]
     public class UniformLoad1D : Load1D
     {
         #region Members

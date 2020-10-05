@@ -11,6 +11,7 @@ namespace BriefFiniteElementNet
     /// Represents an element with rigid body with no relative deformation of <see cref="Nodes"/>
     /// </summary>
     [Serializable]
+    [Obsolete("Use MpcElements.RigidElement instead")]
     public sealed class RigidElement : StructurePart
     {
         [NonSerialized()]

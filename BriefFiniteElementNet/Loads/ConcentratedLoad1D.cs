@@ -13,6 +13,7 @@ namespace BriefFiniteElementNet
     /// Represents a Concentrated load (contains both force and moment in 3d space) which is applying to an <see cref="Element1D"/> body.
     /// </summary>
     [Serializable]
+    [Obsolete("Use ConcentratedLoad instead")]
     public class ConcentratedLoad1D : Load1D
     {
         #region Constructors

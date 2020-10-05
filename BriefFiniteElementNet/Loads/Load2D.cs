@@ -8,6 +8,7 @@ using System.Text;
 namespace BriefFiniteElementNet
 {
     [Serializable]
+    [Obsolete]
     public abstract class Load2D : ElementalLoad
     {
          /// <summary>

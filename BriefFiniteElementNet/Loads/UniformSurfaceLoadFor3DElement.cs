@@ -12,6 +12,7 @@ namespace BriefFiniteElementNet
     /// Represents a uniform load which is applying to one side of a 3d element
     /// </summary>
     [Serializable]
+    [Obsolete]
     public class UniformSurfaceLoadFor3DElement : Load3D
     {
         /// <inheritdoc />

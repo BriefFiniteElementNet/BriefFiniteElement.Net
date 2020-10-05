@@ -12,7 +12,7 @@ namespace BriefFiniteElementNet.MpcElements
     /// Represents a virtual support for nodes.
     /// </summary>
     /// <remarks>
-    /// This class is a vitual support for nodes in it. this also supports settlement.
+    /// This class is a virtual support for nodes in it. this also supports settlement.
     /// </remarks>
     /// <seealso cref="BriefFiniteElementNet.Elements.MpcElement" />
     [Serializable]

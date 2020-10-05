@@ -12,6 +12,7 @@ namespace BriefFiniteElementNet
     /// Represents a uniformly distributed load on a whole of 3d <see cref="Element"/>'s body.
     /// </summary>
     [Serializable]
+    [Obsolete]
     public class UniformBodyLoad3D : Load3D
     {
         private double _vx, _vy, _vz;
