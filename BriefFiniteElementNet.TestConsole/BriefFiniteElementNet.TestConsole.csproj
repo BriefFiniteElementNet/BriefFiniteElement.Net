@@ -35,6 +35,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="BriefFiniteElementNet.Validation">
+      <HintPath>..\BriefFiniteElementNet.Validation\bin\Debug\BriefFiniteElementNet.Validation.dll</HintPath>
+    </Reference>
     <Reference Include="CSparse, Version=3.4.7.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CSparse.3.4.7\lib\net45\CSparse.dll</HintPath>
     </Reference>
@@ -70,10 +73,6 @@
     <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj">
       <Project>{82C63C6B-651A-4308-8B89-B4C643F3A7C2}</Project>
       <Name>BriefFiniteElementNet.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\BriefFiniteElementNet.Validation\BriefFiniteElementNet.Validation.csproj">
-      <Project>{7a20ce01-552e-457a-a9c3-18bed244d897}</Project>
-      <Name>BriefFiniteElementNet.Validation</Name>
     </ProjectReference>
     <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj">
       <Project>{7cda20d4-9bc8-4bc3-9f22-cb86cd4dc3e1}</Project>

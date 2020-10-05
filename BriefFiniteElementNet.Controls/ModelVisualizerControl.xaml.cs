@@ -593,10 +593,10 @@ namespace BriefFiniteElementNet.Controls
                 foreach (var elm in ModelToVisualize.Elements)
                 {
                     var builder = new MeshBuilder(false, false);
-
-                    if (elm is FrameElement2Node)
-                        AddFrameElement(builder, elm as FrameElement2Node);
-                    else if (elm is BarElement)
+                    //Obsolete element type
+                    //if (elm is FrameElement2Node)
+                    //    AddFrameElement(builder, elm as FrameElement2Node);
+                    if (elm is BarElement)
                         AddBarElement(builder, elm as BarElement);
                     else if (elm is TriangleElement)
                         AddTriangleElement(builder, elm as TriangleElement);
@@ -606,17 +606,19 @@ namespace BriefFiniteElementNet.Controls
                         AddTetrahedronElement(builder, elm as TetrahedronElement);
                     else if (elm is TrussElement2Node)
                         AddTrussElement(builder, elm as TrussElement2Node);
-                    else if (elm is DktElement)
-                        AddDktElement(builder, elm as DktElement);
+                    //Obsolete element type
+                    //else if (elm is DktElement)
+                    //    AddDktElement(builder, elm as DktElement);
                     else if (elm is Tetrahedral)
                         AddTetrahedronElement(builder, elm as Tetrahedral);
-
-                    else if (elm is TriangleFlatShell)
-                        AddFlatshellElement(builder, elm as TriangleFlatShell);
+                    //Obsolete element type
+                    //else if (elm is TriangleFlatShell)
+                        //AddFlatshellElement(builder, elm as TriangleFlatShell);
                     else if (elm.GetType().Name == "QuadrilaturalElement")
                         AddQuadrilaturalElement(builder, elm);
-                    else if (elm is CstElement)
-                        AddCstElement(builder, elm as CstElement);
+                    //Obsolete element type
+                    //else if (elm is CstElement)
+                    //    AddCstElement(builder, elm as CstElement);
                     else if (elm is Element2D)
                         AddElement2d(builder, elm as Element2D);
                     else if (elm is Element3D)
@@ -1431,46 +1433,47 @@ namespace BriefFiniteElementNet.Controls
             }
         }
 
-        private void AddFrameElement(MeshBuilder bldr, FrameElement2Node elm)
-        {
-            PolygonYz section = null;
+        //Obsolete element type
+        //private void AddFrameElement(MeshBuilder bldr, FrameElement2Node elm)
+        //{
+        //    PolygonYz section = null;
 
-            var r = ElementVisualThickness/2;
-
-
-            if (elm.UseOverridedProperties)
-            {
-                section = new PolygonYz(
-                    new PointYZ(-r, -r),
-                    new PointYZ(-r, r),
-                    new PointYZ(r, r),
-                    new PointYZ(r, -r),
-                    new PointYZ(-r, -r));
-            }
-            else
-                section = elm.Geometry;
+        //    var r = ElementVisualThickness/2;
 
 
-            for (var i = 0; i < section.Count - 1; i++)
-            {
-                var v1 = new Vector(0, section[i].Y, section[i].Z);
-                var v2 = new Vector(0, section[i + 1].Y, section[i + 1].Z);
+        //    if (elm.UseOverridedProperties)
+        //    {
+        //        section = new PolygonYz(
+        //            new PointYZ(-r, -r),
+        //            new PointYZ(-r, r),
+        //            new PointYZ(r, r),
+        //            new PointYZ(r, -r),
+        //            new PointYZ(-r, -r));
+        //    }
+        //    else
+        //        section = elm.Geometry;
 
-                var p1 = elm.StartNode.Location + elm.TransformLocalToGlobal(v1);
-                var p2 = elm.StartNode.Location + elm.TransformLocalToGlobal(v2);
 
-                var v = elm.EndNode.Location - elm.StartNode.Location;
+        //    for (var i = 0; i < section.Count - 1; i++)
+        //    {
+        //        var v1 = new Vector(0, section[i].Y, section[i].Z);
+        //        var v2 = new Vector(0, section[i + 1].Y, section[i + 1].Z);
 
-                if (Math.Abs(v.Z) < 0.01)
-                    Guid.NewGuid();
+        //        var p1 = elm.StartNode.Location + elm.TransformLocalToGlobal(v1);
+        //        var p2 = elm.StartNode.Location + elm.TransformLocalToGlobal(v2);
 
-                var p3 = p1 + v;
-                var p4 = p2 + v;
+        //        var v = elm.EndNode.Location - elm.StartNode.Location;
 
-                bldr.AddTriangle(p1, p3, p2);
-                bldr.AddTriangle(p4, p2, p3);
-            }
-        }
+        //        if (Math.Abs(v.Z) < 0.01)
+        //            Guid.NewGuid();
+
+        //        var p3 = p1 + v;
+        //        var p4 = p2 + v;
+
+        //        bldr.AddTriangle(p1, p3, p2);
+        //        bldr.AddTriangle(p4, p2, p3);
+        //    }
+        //}
 
         private void AddBarElement(MeshBuilder bldr, BarElement elm)
         {
@@ -1611,20 +1614,21 @@ namespace BriefFiniteElementNet.Controls
             }
         }
 
-        private void AddDktElement(MeshBuilder bldr, DktElement elm)
-        {
-            //PolygonYz section = null;
+        //Obsolete element type
+        //private void AddDktElement(MeshBuilder bldr, DktElement elm)
+        //{
+        //    //PolygonYz section = null;
 
-            var r = ElementVisualThickness/2;
-
-
-            var p1 = elm.Nodes[0].Location;
-            var p2 = elm.Nodes[1].Location;
-            var p3 = elm.Nodes[2].Location;
+        //    var r = ElementVisualThickness/2;
 
 
-            bldr.AddTriangle(p1, p3, p2);
-        }
+        //    var p1 = elm.Nodes[0].Location;
+        //    var p2 = elm.Nodes[1].Location;
+        //    var p3 = elm.Nodes[2].Location;
+
+
+        //    bldr.AddTriangle(p1, p3, p2);
+        //}
 
 
         private void AddTriangleElement(MeshBuilder bldr, TriangleElement elm)
@@ -1664,20 +1668,21 @@ namespace BriefFiniteElementNet.Controls
             
         }
 
-        private void AddFlatshellElement(MeshBuilder bldr, TriangleFlatShell elm)
-        {
-            //PolygonYz section = null;
+        //Obsolete element type
+        //private void AddFlatshellElement(MeshBuilder bldr, TriangleFlatShell elm)
+        //{
+        //    //PolygonYz section = null;
 
-            var r = ElementVisualThickness / 2;
-
-
-            var p1 = elm.Nodes[0].Location;
-            var p2 = elm.Nodes[1].Location;
-            var p3 = elm.Nodes[2].Location;
+        //    var r = ElementVisualThickness / 2;
 
 
-            bldr.AddTriangle(p1, p3, p2);
-        }
+        //    var p1 = elm.Nodes[0].Location;
+        //    var p2 = elm.Nodes[1].Location;
+        //    var p3 = elm.Nodes[2].Location;
+
+
+        //    bldr.AddTriangle(p1, p3, p2);
+        //}
 
 
         private void AddQuadrilaturalElement(MeshBuilder bldr, Element elm)
@@ -1726,20 +1731,21 @@ namespace BriefFiniteElementNet.Controls
 
         }
 
-        private void AddCstElement(MeshBuilder bldr, CstElement elm)
-        {
-            //PolygonYz section = null;
+        //Obsolete element type
+        //private void AddCstElement(MeshBuilder bldr, CstElement elm)
+        //{
+        //    //PolygonYz section = null;
 
-            var r = ElementVisualThickness/2;
-
-
-            var p1 = elm.Nodes[0].Location;
-            var p2 = elm.Nodes[1].Location;
-            var p3 = elm.Nodes[2].Location;
+        //    var r = ElementVisualThickness/2;
 
 
-            bldr.AddTriangle(p1, p3, p2);
-        }
+        //    var p1 = elm.Nodes[0].Location;
+        //    var p2 = elm.Nodes[1].Location;
+        //    var p3 = elm.Nodes[2].Location;
+
+
+        //    bldr.AddTriangle(p1, p3, p2);
+        //}
 
         private void AddElement3D(MeshBuilder bldr, Element3D elm)
         {

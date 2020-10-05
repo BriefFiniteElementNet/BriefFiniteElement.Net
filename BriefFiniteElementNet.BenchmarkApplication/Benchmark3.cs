@@ -21,9 +21,10 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
         public Model GetCaseModel()
         {
-            var st = StructureGenerator.Generate3DFrameElementGrid(Dimension, Dimension, Dimension);
+            throw new NotImplementedException("Commented out during obsolete code removal. Location: Benchmark1:IBenchmarkCase");
+            //var st = StructureGenerator.Generate3DFrameElementGrid(Dimension, Dimension, Dimension);
 
-            return st;
+            //return st;
         }
 
 
