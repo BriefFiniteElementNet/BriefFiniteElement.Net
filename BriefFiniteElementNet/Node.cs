@@ -201,75 +201,75 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="cmb">The CMB.</param>
         /// <returns></returns>
-        [Obsolete("Use GetSupportReaction")]
-        internal Force GetSupportReaction2(LoadCombination cmb)
-        {
-            //TODO: this methods not works correctly!
+        //[Obsolete("Use GetSupportReaction")]
+        //internal Force GetSupportReaction2(LoadCombination cmb)
+        //{
+        //    //TODO: this methods not works correctly!
 
-            var f1 = new Force();
-            var f = new Force();
+        //    var f1 = new Force();
+        //    var f = new Force();
 
-            foreach (var cse in cmb.Keys)
-                parent.LastResult.AddAnalysisResultIfNotExists(cse);
+        //    foreach (var cse in cmb.Keys)
+        //        parent.LastResult.AddAnalysisResultIfNotExists(cse);
 
             
 
-            #region From Connected Elements
+        //    #region From Connected Elements
 
-            foreach (var elm in ConnectedElements)
-            {
-                var ind = elm.Nodes.IndexOfReference(this);
+        //    foreach (var elm in ConnectedElements)
+        //    {
+        //        var ind = elm.Nodes.IndexOfReference(this);
 
-                foreach (var cse in cmb.Keys)
-                {
-                    foreach (var lde in elm.Loads)
-                    {
-                        if (lde.Case != cse)
-                            continue;
+        //        foreach (var cse in cmb.Keys)
+        //        {
+        //            foreach (var lde in elm.Loads)
+        //            {
+        //                if (lde.Case != cse)
+        //                    continue;
 
-                        //elm.GetGlobalEquivalentNodalLoads
-                        var loads = elm.GetGlobalEquivalentNodalLoads(lde);
+        //                //elm.GetGlobalEquivalentNodalLoads
+        //                var loads = elm.GetGlobalEquivalentNodalLoads(lde);
 
-                        f1 += cmb[cse] * loads[ind];
-                    }
-                }
-            }
+        //                f1 += cmb[cse] * loads[ind];
+        //            }
+        //        }
+        //    }
 
-            #endregion
+        //    #endregion
 
-            #region From Loads on this node
+        //    #region From Loads on this node
 
-            foreach (var load in this.loads)
-            {
-                if (!cmb.ContainsKey(load.Case))
-                    continue;
+        //    foreach (var load in this.loads)
+        //    {
+        //        if (!cmb.ContainsKey(load.Case))
+        //            continue;
 
-                f1 += cmb[load.Case] * load.Force;
-            }
+        //        f1 += cmb[load.Case] * load.Force;
+        //    }
 
-            #endregion
-
-
-            foreach (var cse in cmb.Keys)//
-            {
-                f += cmb[cse] * Force.FromVector(parent.LastResult.Forces[cse], 6 * this.Index);
-            }
-
-            var buf = f + -f1;
+        //    #endregion
 
 
-            if (constraints.DX == DofConstraint.Released) buf.Fx = 0;
-            if (constraints.DY == DofConstraint.Released) buf.Fy = 0;
-            if (constraints.DZ == DofConstraint.Released) buf.Fz = 0;
+        //    foreach (var cse in cmb.Keys)//
+        //    {
+        //        f += cmb[cse] * Force.FromVector(parent.LastResult.Forces[cse], 6 * this.Index);
+        //    }
 
-            if (constraints.RX == DofConstraint.Released) buf.Mx = 0;
-            if (constraints.RY == DofConstraint.Released) buf.My = 0;
-            if (constraints.RZ == DofConstraint.Released) buf.Mz = 0;
+        //    var buf = f + -f1;
 
 
-            return buf;
-            throw new NotImplementedException();
-        }
+        //    if (constraints.DX == DofConstraint.Released) buf.Fx = 0;
+        //    if (constraints.DY == DofConstraint.Released) buf.Fy = 0;
+        //    if (constraints.DZ == DofConstraint.Released) buf.Fz = 0;
+
+        //    if (constraints.RX == DofConstraint.Released) buf.Mx = 0;
+        //    if (constraints.RY == DofConstraint.Released) buf.My = 0;
+        //    if (constraints.RZ == DofConstraint.Released) buf.Mz = 0;
+
+
+        //    return buf;
+        //    throw new NotImplementedException();
+        //}
 
 
         /// <summary>
@@ -329,26 +329,26 @@ namespace BriefFiniteElementNet
         /// </remarks>
         /// <returns></returns>
         [Obsolete]
-        public Force GetTotalExternalForce(LoadCombination combination)
-        {
-            var buf = new Force();
+        //public Force GetTotalExternalForce(LoadCombination combination)
+        //{
+        //    var buf = new Force();
 
-            foreach (var kv in combination)
-            {
-                var cse = kv.Key;
+        //    foreach (var kv in combination)
+        //    {
+        //        var cse = kv.Key;
 
-                if (!parent.LastResult.Forces.ContainsKey(cse))
-                    parent.LastResult.AddAnalysisResultIfNotExists(cse);
+        //        if (!parent.LastResult.Forces.ContainsKey(cse))
+        //            parent.LastResult.AddAnalysisResultIfNotExists(cse);
 
-                var totForceVector = parent.LastResult.Forces[cse];
+        //        var totForceVector = parent.LastResult.Forces[cse];
 
-                var fc = Force.FromVector(totForceVector, this.Index*6);
+        //        var fc = Force.FromVector(totForceVector, this.Index*6);
 
-                buf += fc*combination[cse];
-            }
+        //        buf += fc*combination[cse];
+        //    }
 
-            return buf;
-        }
+        //    return buf;
+        //}
 
         /// <summary>
         /// Gets the sum of external forces (including support reaction + exnternal nodal loads + Equivalent nodal loads of elemental loads)
@@ -389,37 +389,37 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="loadCombination">the load combintation</param>
         /// <returns></returns>
-        [Obsolete]
+        //[Obsolete]
 
-        public Force GetTotalApplyingForces(LoadCombination loadCombination)
-        {
-            var buf = new Force();
+        //public Force GetTotalApplyingForces(LoadCombination loadCombination)
+        //{
+        //    var buf = new Force();
 
-            foreach (var tuple in loadCombination)
-            {
-                buf += GetTotalApplyingForces(tuple.Key) * tuple.Value;
-            }
+        //    foreach (var tuple in loadCombination)
+        //    {
+        //        buf += GetTotalApplyingForces(tuple.Key) * tuple.Value;
+        //    }
 
-            return buf;
-        }
+        //    return buf;
+        //}
 
         /// <summary>
         /// Gets the sum of external forces (including support reaction and exnternal nodal loads)
         /// </summary>
         /// <param name="loadCombination">the load combintation</param>
         /// <returns></returns>
-        [Obsolete]
-        public Force GetTotalExternalForces(LoadCombination loadCombination)
-        {
-            var buf = new Force();
+        //[Obsolete]
+        //public Force GetTotalExternalForces(LoadCombination loadCombination)
+        //{
+        //    var buf = new Force();
 
-            foreach(var tuple in loadCombination)
-            {
-                buf += GetTotalExternalForces(tuple.Key) * tuple.Value;
-            }
+        //    foreach(var tuple in loadCombination)
+        //    {
+        //        buf += GetTotalExternalForces(tuple.Key) * tuple.Value;
+        //    }
 
-            return buf;
-        }
+        //    return buf;
+        //}
 
         /// <summary>
         /// Gets the total displacements with specified <see cref="loadCase"/>

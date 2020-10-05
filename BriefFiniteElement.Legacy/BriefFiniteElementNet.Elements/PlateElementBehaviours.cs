@@ -8,22 +8,22 @@ namespace BriefFiniteElementNet.Elements
     /// <summary>
     /// Utility class for PlateElementBehaviour 
     /// </summary>
-    [Obsolete("use PlaneElementBehaviours instead - are you sure about this? I don't think this is obsolete")]
+    [Obsolete("use PlaneElementBehaviours instead")]
     public static class PlateElementBehaviours
     {
         /// <summary>
         /// The full shell: bending + membrane + drilling dof
         /// </summary>
-        public static readonly PlateElementBehaviour Shell = PlateElementBehaviour.DrillingDof | PlateElementBehaviour.Membrane | PlateElementBehaviour.Bending;
+        public static readonly PlateElementBehaviours Shell = PlateElementBehaviour.DrillingDof | PlateElementBehaviour.Membrane | PlateElementBehaviour.Bending;
 
         /// <summary>
         /// Only Membrane behaviour
         /// </summary>
-        public static readonly PlateElementBehaviour Membrane = PlateElementBehaviour.Membrane;
+        public static readonly PlateElementBehaviours Membrane = PlateElementBehaviour.Membrane;
 
         /// <summary>
         /// Only Plate Bending behaviour
         /// </summary>
-        public static readonly PlateElementBehaviour PlateBending = PlateElementBehaviour.Bending;
+        public static readonly PlateElementBehaviours PlateBending = PlateElementBehaviour.Bending;
     }
 }

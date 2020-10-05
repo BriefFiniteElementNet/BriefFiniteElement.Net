@@ -68,9 +68,9 @@ namespace BriefFiniteElementNet
             //return buf;
         }
 
-        public Force[] GetGlobalEquivalentNodalLoads(DktElement element)
+        public Force[] GetGlobalEquivalentNodalLoads(TriangleElement element)
         {
-            var a = (element as DktElement).GetArea();
+            var a = (element as TriangleElement).GetArea();
 
             Vector local = Vector.Zero;
 
@@ -78,50 +78,24 @@ namespace BriefFiniteElementNet
             if (CoordinationSystem == CoordinationSystem.Global)
             {
                 var global = new Vector(_ux, _uy, _uz);
-
-                local = element.TranformGlobalToLocal(global);
+                var trans = element.GetTransformationManager();
+                local = trans.TransformGlobalToLocal(global);
             }
             else
             {
                 local = new Vector(_ux, _uy, _uz);
             }
 
-            local.X = local.Y = 0;//dkt only local Uz
-
-            var glob = element.TranformLocalToGlobal(local);
+            //local.X = local.Y = 0;//dkt only local Uz
+            var tr = element.GetTransformationManager();
+            var glob = tr.TransformLocalToGlobal(local);
 
             var buf = new Force[]
             {new Force(glob*a/3.0, Vector.Zero), new Force(glob*a/3.0, Vector.Zero), new Force(glob*a/3.0, Vector.Zero)};
 
             return buf;
         }
-
-
-        public Force[] GetGlobalEquivalentNodalLoads(CstElement element)
-        {
-            var a = (element as CstElement).GetArea();
-
-            Vector local = Vector.Zero;
-
-            if (CoordinationSystem == CoordinationSystem.Global)
-            {
-                var global = new Vector(_ux, _uy, _uz);
-
-                local = element.TranformGlobalToLocal(global);
-            }
-            else
-            {
-                local = new Vector(_ux, _uy, _uz);
-            }
-
-            local.Z = 0;//CST only local Ux and Uy
-
-            var glob = element.TranformLocalToGlobal(local);
-
-            var buf = new Force[] { new Force(glob * a / 3, Vector.Zero), new Force(glob * a / 3, Vector.Zero), new Force(glob * a / 3, Vector.Zero) };
-
-            return buf;
-        }
+   
         /// <summary>
         /// Gets or sets the uniform area load in X direction.
         /// </summary>

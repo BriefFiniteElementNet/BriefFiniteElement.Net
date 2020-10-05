@@ -37,8 +37,12 @@ namespace BriefFiniteElementNet.TestConsole
             Console.Title = "BFE tests & temporary codes";
 
             //TestTet();
-            TestTriangle();
+            //TestTriangle();
             //Validation.GithubIssues.Issue50.Run1();
+            var beamTester = new Validation.BarElementTester();
+            beamTester.DoPopularValidation();
+
+
             new Validation.Case_01.Validator().Validate();
             //TestGrid();
             return;
@@ -734,17 +738,18 @@ namespace BriefFiniteElementNet.TestConsole
 
         }
 
-        private void Test1()
-        {
-            var model = StructureGenerator.Generate3DFrameElementGrid(5, 5, 5);
-            //StructureGenerator.AddRandomiseLoading(model, LoadCase.DefaultLoadCase);
+        //Commented since the FrameElement2Node is not used anymore
+        //private void Test1()
+        //{
+        //    var model = StructureGenerator.Generate3DFrameElementGrid(5, 5, 5);
+        //    //StructureGenerator.AddRandomiseLoading(model, LoadCase.DefaultLoadCase);
 
-            StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
+        //    StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
 
 
-            new Frame3DDValidator(model).Validate();
+        //    new Frame3DDValidator(model).Validate();
 
-        }
+        //}
 
 
         public static void StiffnessCenterTest()
@@ -820,139 +825,143 @@ namespace BriefFiniteElementNet.TestConsole
             //BriefFiniteElementNet.XmlSerialization.Tester.Test();
         }
 
-        private static void Test2()
-        {
-            var model = StructureGenerator.Generate3DFrameElementGrid(5, 5, 5);
-            //StructureGenerator.AddRandomiseLoading(model, LoadCase.DefaultLoadCase);
+        //Commented since the FrameElement2Node is not used anymore
+        //private static void Test2()
+        //{
+        //    var model = StructureGenerator.Generate3DFrameElementGrid(5, 5, 5);
+        //    //StructureGenerator.AddRandomiseLoading(model, LoadCase.DefaultLoadCase);
 
-            //var wrapped = SerializationObsolete.ObjectWrapper.Wrap(model);
+        //    //var wrapped = SerializationObsolete.ObjectWrapper.Wrap(model);
 
-            var data = DataContractSerializerHelper.SerializeXml(model);
+        //    var data = DataContractSerializerHelper.SerializeXml(model);
 
-        }
+        //}
 
-        private static void TestBar()
-        {
-            var iy = 0.03;
-            var iz = 0.02;
-            var a = 0.01;
-            var j = iy + iz;
+        //Uses the frameElement2DNode which is obsolete
+        //private static void TestBar()
+        //{
+        //    var iy = 0.03;
+        //    var iz = 0.02;
+        //    var a = 0.01;
+        //    var j = iy + iz;
 
-            var e = 7;
-            var g = 11;
-            var rho = 13;
+        //    var e = 7;
+        //    var g = 11;
+        //    var rho = 13;
 
-            var model = new Model();
+        //    var model = new Model();
 
-            model.Nodes.Add(new Node(0, 0, 0));
-            model.Nodes.Add(new Node(1, 0, 0));
+        //    model.Nodes.Add(new Node(0, 0, 0));
+        //    model.Nodes.Add(new Node(1, 0, 0));
 
-            var barElement = new BarElement(model.Nodes[0], model.Nodes[1]);
+        //    var barElement = new BarElement(model.Nodes[0], model.Nodes[1]);
 
-            barElement.Behavior = BarElementBehaviours.FullFrame;
+        //    barElement.Behavior = BarElementBehaviours.FullFrame;
 
-            var frameElement = new FrameElement2Node(model.Nodes[0], model.Nodes[1])
-            {
-                Iy = iy,
-                Iz = iz,
-                A = a,
-                J = j,
-                E = e,
-                G = g,
-                MassDensity = rho
-            };
-
-
-            //barElement.Material = new UniformBarMaterial(e, g, rho);
-            barElement.Section = new UniformParametric1DSection() {Iy = iy, Iz = iz, A = a};
-
-            frameElement.MassFormulationType = MassFormulation.Consistent;
-
-            //barElement.EndConnection = BarElementEndConnection.TotallyHinged;
-            //barElement.StartConnection = BarElementEndConnection.TotallyHinged;
-
-            frameElement.HingedAtStart = true;
-            //frameElement.HingedAtEnd = true;
+        //    var frameElement = new FrameElement2Node(model.Nodes[0], model.Nodes[1])
+        //    {
+        //        Iy = iy,
+        //        Iz = iz,
+        //        A = a,
+        //        J = j,
+        //        E = e,
+        //        G = g,
+        //        MassDensity = rho
+        //    };
 
 
-            var frameM = frameElement.GetLocalStiffnessMatrix();
-            //MathUtil.FillLowerTriangleFromUpperTriangle(frameM);
+        //    //barElement.Material = new UniformBarMaterial(e, g, rho);
+        //    barElement.Section = new UniformParametric1DSection() {Iy = iy, Iz = iz, A = a};
 
-            var barM = barElement.GetLocalStifnessMatrix();
+        //    frameElement.MassFormulationType = MassFormulation.Consistent;
 
-            var t = 1;//- 1e-10;
+        //    //barElement.EndConnection = BarElementEndConnection.TotallyHinged;
+        //    //barElement.StartConnection = BarElementEndConnection.TotallyHinged;
 
-            var d = (frameM - t* barM);//
-            var dMax = d.Values.Max(i => Math.Abs(i));
-
-            model.Nodes[0].Constraints = Constraint.Fixed;
-
-            model.Solve();
-        }
-
-        private static void TestTriangle()
-        {
-            var t = 0.01;
-            var e = 210e9;
-            var nu = 0.2;
-
-            var n1 = new Node(new Point(0, 0, 0));
-            var n2 = new Node(new Point(3, 5, 7));
-            var n3 = new Node(new Point(1, -5, 4));
-
-            var dkt = new TriangleFlatShell()
-            {
-                Behavior = PlaneElementBehaviour.ThinPlate,
-                PoissonRatio = nu,
-                ElasticModulus = e,
-                Thickness=t
-            };
+        //    frameElement.HingedAtStart = true;
+        //    //frameElement.HingedAtEnd = true;
 
 
-            dkt.Nodes[0] = n1;
-            dkt.Nodes[1] = n2;
-            dkt.Nodes[2] = n3;
+        //    var frameM = frameElement.GetLocalStiffnessMatrix();
+        //    //MathUtil.FillLowerTriangleFromUpperTriangle(frameM);
 
-            var tri = new TriangleElement();
-            tri.Behavior = PlateElementBehaviours.Shell;
-            tri.Section = new UniformParametric2DSection() { T = t };
-            tri.Material = new UniformIsotropicMaterial(e, nu);// {E = e, Nu = nu};
+        //    var barM = barElement.GetLocalStifnessMatrix();
 
-            tri.Nodes[0] = n1;
-            tri.Nodes[1] = n2;
-            tri.Nodes[2] = n3;
+        //    var t = 1;//- 1e-10;
+
+        //    var d = (frameM - t* barM);//
+        //    var dMax = d.Values.Max(i => Math.Abs(i));
+
+        //    model.Nodes[0].Constraints = Constraint.Fixed;
+
+        //    model.Solve();
+        //}
+
+        //Commented since triangleflatshell is obsolete
+        //private static void TestTriangle()
+        //{
+        //    var t = 0.01;
+        //    var e = 210e9;
+        //    var nu = 0.2;
+
+        //    var n1 = new Node(new Point(0, 0, 0));
+        //    var n2 = new Node(new Point(3, 5, 7));
+        //    var n3 = new Node(new Point(1, -5, 4));
+
+        //    var dkt = new TriangleFlatShell()
+        //    {
+        //        Behavior = PlaneElementBehaviour.ThinPlate,
+        //        PoissonRatio = nu,
+        //        ElasticModulus = e,
+        //        Thickness=t
+        //    };
 
 
-            var kTri = tri.GetLocalStifnessMatrix();
-            var kDkt = dkt.GetLocalPlateBendingStiffnessMatrix();
+        //    dkt.Nodes[0] = n1;
+        //    dkt.Nodes[1] = n2;
+        //    dkt.Nodes[2] = n3;
 
-            var d = kTri - kDkt;
+        //    var tri = new TriangleElement();
+        //    tri.Behavior = PlateElementBehaviours.Shell;
+        //    tri.Section = new UniformParametric2DSection() { T = t };
+        //    tri.Material = new UniformIsotropicMaterial(e, nu);// {E = e, Nu = nu};
 
-            var xi = 0.162598494;
-            var eta = 0.284984989;
-
-            var b1 = new DktHelper().GetBMatrixAt(tri, xi, eta);
-            var lpts = dkt.GetLocalPoints();
-
-            var b2 = DktElement.GetBMatrix(xi, eta,
-                new[] {lpts[0].X, lpts[1].X, lpts[2].X},
-                new[] {lpts[0].Y, lpts[1].Y, lpts[2].Y});
-            // new DktHelper().GetBMatrixAt(tri, tri.GetTransformationMatrix(), xi, eta);
+        //    tri.Nodes[0] = n1;
+        //    tri.Nodes[1] = n2;
+        //    tri.Nodes[2] = n3;
 
 
-            tri.GetLocalStifnessMatrix();
-            //GC.Collect();
+        //    var kTri = tri.GetLocalStifnessMatrix();
+        //    var kDkt = dkt.GetLocalPlateBendingStiffnessMatrix();
+
+        //    var d = kTri - kDkt;
+
+        //    var xi = 0.162598494;
+        //    var eta = 0.284984989;
+
+        //    var b1 = new DktHelper().GetBMatrixAt(tri, xi, eta);
+        //    var lpts = dkt.GetLocalPoints();
+
+        //    var b2 = DktElement.GetBMatrix(xi, eta,
+        //        new[] {lpts[0].X, lpts[1].X, lpts[2].X},
+        //        new[] {lpts[0].Y, lpts[1].Y, lpts[2].Y});
+        //    // new DktHelper().GetBMatrixAt(tri, tri.GetTransformationMatrix(), xi, eta);
+
+
+        //    tri.GetLocalStifnessMatrix();
+        //    //GC.Collect();
             
-            var db = b1 - b2;
-        }
+        //    var db = b1 - b2;
+        //}
 
-        private static void TestVisualize()
-        {
-            var model = StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
-            StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
+        //Commented since the FrameElement2Node is not used anymore
+        //private static void TestVisualize()
+        //{
+        //    var model = StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
+        //    StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
 
-            ModelVisualizerControl.VisualizeInNewWindow(model);
-        }
+        //    ModelVisualizerControl.VisualizeInNewWindow(model);
+        //}
 
         private static void TestTransformation()
         {
@@ -1016,62 +1025,63 @@ namespace BriefFiniteElementNet.TestConsole
             
         }
 
-        
-
-        private static void Test_P_Delta_matrix()
-        {
-            var model = StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
 
 
-            var zs = model.Nodes
-                .Where(i => i.Constraints != Constraints.Fixed)
-                .Select(i => i.Location.Z).Distinct().ToList();
+        //Commented since the FrameElement2Node is not used anymore
+        //private static void Test_P_Delta_matrix()
+        //{
+        //    var model = StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
+
+
+        //    var zs = model.Nodes
+        //        .Where(i => i.Constraints != Constraints.Fixed)
+        //        .Select(i => i.Location.Z).Distinct().ToList();
 
             
-            foreach(var z in zs)
-            {
-                var relm = new RigidElement_MPC();
-                var relm2 = new RigidElement();
+        //    foreach(var z in zs)
+        //    {
+        //        var relm = new RigidElement_MPC();
+        //        var relm2 = new RigidElement();
 
-                relm.Nodes.AddRange(model.Nodes.Where(i => i.Location.Z == z));
-                relm2.Nodes.AddRange(model.Nodes.Where(i => i.Location.Z == z));
+        //        relm.Nodes.AddRange(model.Nodes.Where(i => i.Location.Z == z));
+        //        relm2.Nodes.AddRange(model.Nodes.Where(i => i.Location.Z == z));
 
-                model.MpcElements.Add(relm);
-                model.RigidElements.Add(relm2);
+        //        model.MpcElements.Add(relm);
+        //        model.RigidElements.Add(relm2);
 
-                relm.UseForAllLoads = true;
-                relm2.UseForAllLoads = true;
-            }
+        //        relm.UseForAllLoads = true;
+        //        relm2.UseForAllLoads = true;
+        //    }
 
-            //StructureGenerator.AddRandomDisplacements(model, 0.1);
+        //    //StructureGenerator.AddRandomDisplacements(model, 0.1);
 
-            /**/
-            foreach (var node in model.Nodes)
-            {
-                if (node.Constraints == Constraints.Fixed)
-                {
-                    node.Settlements.Add(new Settlement(new Displacement(1, 0, 0, 0, 0, 0)));
-                    node.Loads.Clear();
-                }
+        //    /**/
+        //    foreach (var node in model.Nodes)
+        //    {
+        //        if (node.Constraints == Constraints.Fixed)
+        //        {
+        //            node.Settlements.Add(new Settlement(new Displacement(1, 0, 0, 0, 0, 0)));
+        //            node.Loads.Clear();
+        //        }
                     
-            }
-            /**/
+        //    }
+        //    /**/
 
 
-            StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
+        //    StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
 
-            //model.Clone();
+        //    //model.Clone();
 
-            #region
+        //    #region
 
-            #endregion
+        //    #endregion
 
-            model.Solve();
-            //CalcUtil.GenerateP_Delta_Mpc(model, LoadCase.DefaultLoadCase,new GaussRrefFinder());
-            model.LastResult.AddAnalysisResult(LoadCase.DefaultLoadCase);
-            model.LastResult.AddAnalysisResult_MPC(LoadCase.DefaultLoadCase);
+        //    model.Solve();
+        //    //CalcUtil.GenerateP_Delta_Mpc(model, LoadCase.DefaultLoadCase,new GaussRrefFinder());
+        //    model.LastResult.AddAnalysisResult(LoadCase.DefaultLoadCase);
+        //    model.LastResult.AddAnalysisResult_MPC(LoadCase.DefaultLoadCase);
 
-        }
+        //}
 
         private static void TestBtDB()
         {
@@ -1155,31 +1165,32 @@ namespace BriefFiniteElementNet.TestConsole
 
         }
 
-        private static void TestCuda()
-        {
-            var model = StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
+        //Commented since the FrameElement2Node is not used anymore
+        //private static void TestCuda()
+        //{
+        //    var model = StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
 
 
-            //model.Nodes[4].Constraints = model.Nodes[5].Constraints = model.Nodes[6].Constraints = Constraints.Fixed;
+        //    //model.Nodes[4].Constraints = model.Nodes[5].Constraints = model.Nodes[6].Constraints = Constraints.Fixed;
 
-            //model.Nodes[7].Constraints = Constraint.FromString("011101");
+        //    //model.Nodes[7].Constraints = Constraint.FromString("011101");
 
-            var t = model.Nodes.Select(i => i.Constraints).ToArray();
+        //    var t = model.Nodes.Select(i => i.Constraints).ToArray();
 
-            StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
+        //    StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
 
-            var config = new SolverConfiguration();
-            //config.SolverFactory = new CudaSolver.CuSparseDirectSpdSolverFactory();
-            config.LoadCases.AddRange(new List<LoadCase>() { LoadCase.DefaultLoadCase });
+        //    var config = new SolverConfiguration();
+        //    //config.SolverFactory = new CudaSolver.CuSparseDirectSpdSolverFactory();
+        //    config.LoadCases.AddRange(new List<LoadCase>() { LoadCase.DefaultLoadCase });
 
-            model.Solve_MPC(config);
-            //model.Solve(config);
+        //    model.Solve_MPC(config);
+        //    //model.Solve(config);
 
-            //model.Solve();
+        //    //model.Solve();
 
-            var tmp = model.LastResult.Displacements.First().Value;
+        //    var tmp = model.LastResult.Displacements.First().Value;
 
-        }
+        //}
 
 
         private static void Tst()

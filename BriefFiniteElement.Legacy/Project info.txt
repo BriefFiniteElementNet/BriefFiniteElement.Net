@@ -1,0 +1,1 @@
+﻿The BriefFiniteElement.Legacy project only contains obsolete code which is normally not used in the project. This project merely exists as a backup.

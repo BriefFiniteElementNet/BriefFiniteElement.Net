@@ -429,7 +429,7 @@ namespace BriefFiniteElementNet
         /// <param name="elm">The elm.</param>
         /// <param name="force">The force.</param>
         /// <returns>transformed force</returns>
-        public static Force TransformLocalToGlobal(this FrameElement2Node elm,Force force)
+        public static Force TransformLocalToGlobal(this BarElement elm,Force force)
         {
             var f = elm.TransformLocalToGlobal(force.Forces);
             var m = elm.TransformLocalToGlobal(force.Moments);
@@ -437,7 +437,7 @@ namespace BriefFiniteElementNet
             return new Force(f,m);
         }
 
-        public static Vector TransformLocalToGlobal(this FrameElement2Node elm, Vector vec)
+        public static Vector TransformLocalToGlobal(this BarElement elm, Vector vec)
         {
             var buf = elm.TransformLocalToGlobal(vec);
 
@@ -450,7 +450,7 @@ namespace BriefFiniteElementNet
         /// <param name="elm">The elm.</param>
         /// <param name="force">The force.</param>
         /// <returns>transformed force</returns>
-        public static Force TransformGlobalToLocal(this FrameElement2Node elm, Force force)
+        public static Force TransformGlobalToLocal(this BarElement elm, Force force)
         {
             var f = elm.TransformGlobalToLocal(force.Forces);
             var m = elm.TransformGlobalToLocal(force.Moments);
@@ -458,7 +458,7 @@ namespace BriefFiniteElementNet
             return new Force(f, m);
         }
 
-        public static Vector TransformGlobalToLocal(this FrameElement2Node elm, Vector vec)
+        public static Vector TransformGlobalToLocal(this BarElement elm, Vector vec)
         {
             var f = elm.TransformGlobalToLocal(vec);
 
