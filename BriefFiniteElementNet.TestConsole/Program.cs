@@ -141,17 +141,17 @@ namespace BriefFiniteElementNet.TestConsole
         {
             //new Validation.Case_03.Validator().Validate();
 
-            var tet = new Tetrahedral();
+            var tet = 
+                new TetrahedronElement();
+                //new Tetrahedral();
 
             tet.Nodes[0] = new Node(-1, -1, 0);
             tet.Nodes[1] = new Node(1, -1, 0);
             tet.Nodes[2] = new Node(1, 1, 0);
             tet.Nodes[3] = new Node(0, 0, 5);
 
-            //tet.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
-
-            tet.E = 1000;
-            tet.Nu = 0.3;
+            tet.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
+            //tet.E = 1000;tet.Nu = 0.3;
 
             var stf = tet.GetGlobalStifnessMatrix();
 

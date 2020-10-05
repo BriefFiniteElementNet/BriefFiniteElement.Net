@@ -19,36 +19,42 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var tetra = targetElement as TetrahedronElement;
 
-            var ls = targetElement.AllocateFromPool(4, 4);
+            var liv = targetElement.AllocateFromPool(4, 4);
 
             {
                 var ps = tetra.Nodes.Select(i => i.Location).ToArray();
 
                 {//eq. 9.11
-                    ls.SetColumn(0, new double[] { 1, 1, 1, 1 });
-                    ls.SetColumn(1, new double[] { ps[0].X, ps[1].X, ps[2].X, ps[3].X });
-                    ls.SetColumn(2, new double[] { ps[0].Y, ps[1].Y, ps[2].Y, ps[3].Y });
-                    ls.SetColumn(3, new double[] { ps[0].Z, ps[1].Z, ps[2].Z, ps[3].Z });
+                    liv.SetColumn(0, new double[] { 1, 1, 1, 1 });
+                    liv.SetColumn(1, new double[] { ps[0].X, ps[1].X, ps[2].X, ps[3].X });
+                    liv.SetColumn(2, new double[] { ps[0].Y, ps[1].Y, ps[2].Y, ps[3].Y });
+                    liv.SetColumn(3, new double[] { ps[0].Z, ps[1].Z, ps[2].Z, ps[3].Z });
                 }
             }
+            
+            var ls = liv.Inverse();// tetra.IsoCoordsToLocalCoords(isoCoords);
 
-            var Q = ls.Inverse();// tetra.IsoCoordsToLocalCoords(isoCoords);
+            var v = ls.Determinant() * 1 / 6.0;
 
+            ls.Scale(6 * v);
 
-            double a1 = Q[0, 1]; double b1 = Q[0, 2]; double c1 = Q[0, 3];
-            double a2 = Q[1, 1]; double b2 = Q[1, 2]; double c2 = Q[1, 3];
-            double a3 = Q[2, 1]; double b3 = Q[2, 2]; double c3 = Q[2, 3];
-            double a4 = Q[3, 1]; double b4 = Q[3, 2]; double c4 = Q[3, 3];
+            var buf = targetElement.AllocateFromPool(6, 12);
 
-            var b = new Matrix(6, 12, new double[] {
-                a1, 0, 0, a2, 0, 0, a3, 0, 0, a4, 0, 0,
-                0, b1, 0, 0, b2, 0, 0, b3, 0, 0, b4, 0,
-                0, 0, c1, 0, 0, c2, 0, 0, c3, 0, 0, c4,
-                0, c1, b1, 0, c2, b2, 0, c3, b3, 0, c4, b4,
-                c1, 0, a1, c2, 0, a2, c3, 0, a3, c4, 0, a4,
-                b1, a1, 0, b2, a2, 0, b3, a3, 0, b4, a4, 0 });
+            {//eq. 9.18
+                double a1 = ls[0, 0]; double b1 = ls[0, 1]; double c1 = ls[0, 2]; double d1 = ls[0, 3];
+                double a2 = ls[1, 0]; double b2 = ls[1, 1]; double c2 = ls[1, 2]; double d2 = ls[1, 3];
+                double a3 = ls[2, 0]; double b3 = ls[2, 1]; double c3 = ls[2, 2]; double d3 = ls[2, 3];
+                double a4 = ls[3, 0]; double b4 = ls[3, 1]; double c4 = ls[3, 2]; double d4 = ls[3, 3];
 
-            return b;
+                buf.SetRow(0, new[] { b1, 0, 0, b2, 0, 0, b3, 0, 0, b4, 0, 0 });
+                buf.SetRow(1, new[] { 0, c1, 0, 0, c2, 0, 0, c3, 0, 0, c4, 0, });
+                buf.SetRow(2, new[] { 0, 0, d1, 0, 0, d2, 0, 0, d3, 0, 0, d4, });
+                buf.SetRow(3, new[] { c1, b1, 0, c2, b2, 0, c3, b3, 0, c4, b4, 0 });
+                buf.SetRow(4, new[] { 0, d1, c1, 0, d2, c2, 0, d3, c3, 0, d4, c4 });
+                buf.SetRow(5, new[] { d1, 0, b1, d2, 0, b2, d3, 0, b3, d4, 0, b4 });
+            }
+
+            return buf.AsMatrix();
         }
 
         
@@ -77,7 +83,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             D.Scale(e * (1 - miu) / ((1 + miu) * (1 - 2 * miu)));
 
             return D.AsMatrix();
-
         }
 
         public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
@@ -129,14 +134,14 @@ namespace BriefFiniteElementNet.ElementHelpers
             var n3 = tet.Nodes[2].Location;
             var n4 = tet.Nodes[3].Location;
 
-            var buf = new Matrix(3, 3);
+            var buf = targetElement.AllocateFromPool(3, 3);
 
             // TODO: MAT - set values directly
             buf.SetRow(0, new double[] { n2.X - n1.X, n3.X - n1.X, n4.X - n1.X });
             buf.SetRow(1, new double[] { n2.Y - n1.Y, n3.Y - n1.Y, n4.Y - n1.Y });
             buf.SetRow(2, new double[] { n2.Z - n1.Z, n3.Z - n1.Z, n4.Z - n1.Z });
 
-            return buf;
+            return buf.AsMatrix();
         }
 
         /// <inheritdoc/>

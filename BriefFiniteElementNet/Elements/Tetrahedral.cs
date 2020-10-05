@@ -323,7 +323,7 @@ namespace BriefFiniteElementNet.Elements
             double a4 = Q[3, 1]; double b4 = Q[3, 2]; double c4 = Q[3, 3];
 
             //transpose of b
-            var b = Matrix.OfRowMajor(6, 12, new double[] {
+            var b = Matrix.OfColumnMajor(6, 12, new double[] {
                 a1, 0, 0, a2, 0, 0, a3, 0, 0, a4, 0, 0,
                 0, b1, 0, 0, b2, 0, 0, b3, 0, 0, b4, 0,
                 0, 0, c1, 0, 0, c2, 0, 0, c3, 0, 0, c4,
