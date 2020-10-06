@@ -12,7 +12,8 @@ using System;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
-namespace BriefFiniteElementNet
+namespace BriefFiniteElementNet.Legacy
+//namespace BriefFiniteElementNet
 {
     /// <summary>
     /// Represents a Frame Element with 2 nodes (start and end)
@@ -289,7 +290,7 @@ namespace BriefFiniteElementNet
             var k = GetLocalStiffnessMatrix();
 
             
-            var kArr = k.Values;
+            var kArr = k.CoreArray;
 
             var r = GetTransformationParameters();
 
@@ -361,7 +362,7 @@ namespace BriefFiniteElementNet
 
 
             var baseArr = new double[144];
-            var buf = new Matrix(12, 12, baseArr);
+            var buf = Matrix.FromRowColCoreArray(12, 12, baseArr);
 
             if (!this._considerShearDeformation)
             {
@@ -484,7 +485,7 @@ namespace BriefFiniteElementNet
                 lEndDisp.RX, lEndDisp.RY, lEndDisp.RZ
             };
 
-            var lStartForces = GetLocalStiffnessMatrix().Multiply(displVector);
+            var lStartForces = Matrix.Multiply(GetLocalStiffnessMatrix(), displVector);
 
             var startForce = Force.FromVector(lStartForces, 0);
 
@@ -837,7 +838,7 @@ namespace BriefFiniteElementNet
                     //  z  w  z  z
                     //  z  y  I  y
                     //  z  z  z  w
-                    y.Scale(2.0/3.0);
+                    y.MultiplyByConstant(2.0 / 3.0);
                     buf.AssembleInside(-y, 0, 3);
                     buf.AssembleInside(w, 3, 3);
                     buf.AssembleInside(y, 6, 3);
@@ -891,7 +892,7 @@ namespace BriefFiniteElementNet
         public override Matrix GetGlobalMassMatrix()
         {
             var m = GetLocalMassMatrix();
-            var mArr = m.Values;
+            var mArr = m.CoreArray;
 
             var r = GetTransformationParameters();
 
@@ -978,8 +979,8 @@ namespace BriefFiniteElementNet
 
                 var c = ro * a * l / 420.0;
 
-                for (var i = 0; i < m.Values.Length; i++) //m=c*m
-                    m.Values[i] *= c;
+                for (var i = 0; i < m.CoreArray.Length; i++) //m=c*m
+                    m.CoreArray[i] *= c;
             }
             else
             {
@@ -997,8 +998,8 @@ namespace BriefFiniteElementNet
 
                 var c = ro * a * l / 2.0;
 
-                for (var i = 0; i < m.Values.Length; i++) //m=c*m
-                    m.Values[i] *= c;
+                for (var i = 0; i < m.CoreArray.Length; i++) //m=c*m
+                    m.CoreArray[i] *= c;
             }
 
 
@@ -1089,7 +1090,9 @@ namespace BriefFiniteElementNet
                 throw new ArgumentOutOfRangeException("location");
 
 
-            var buf = Matrix.OfRowMajor(4, 12, new double[] {
+            var buf = new Matrix(4, 12);
+
+            buf.FillMatrixRowise(
                 0, 0, (6 * xi) / L2, 0,
                 (3 * xi) / L - 1 / L, 0, 0, 0,
                 -(6 * xi) / L2, 0, (3 * xi) / L + 1 / L, 0,
@@ -1107,9 +1110,9 @@ namespace BriefFiniteElementNet
 
                 0, 0, 0, 1 / L,
                 0, 0, 0, 0,
-                0, -1 / L, 0, 0 });
+                0, -1 / L, 0, 0);
 
-            return buf.AsMatrix();
+            return buf;
         }
 
         ///<inheritdoc/>
@@ -1127,22 +1130,23 @@ namespace BriefFiniteElementNet
 
             if (xi < -1 || xi > 1)
                 throw new ArgumentOutOfRangeException("location");
+            var buf = new Matrix(1, 12);
 
-            var buf = Matrix.OfRowMajor(1, 12, new double[] {
-                xi/2 + 1.0/2,
-                ((xi - 1)*(xi - 1)*(xi + 2))/4,
-                ((xi - 1)*(xi - 1)*(xi + 2))/4,
-                xi/2 + 1.0/2,
-                (L*(xi - 1)*(xi - 1)*(xi + 1))/8,
-                (L*(xi - 1)*(xi - 1)*(xi + 1))/8,
-                1.0/2 - xi/2,
-                -((xi + 1)*(xi + 1)*(xi - 2))/4,
-                -((xi + 1)*(xi + 1)*(xi - 2))/4,
-                1.0/2 - xi/2,
-                (L*(xi - 1)*(xi + 1)*(xi + 1))/8,
-                (L*(xi - 1)*(xi + 1)*(xi + 1))/8 });
+            buf.FillMatrixRowise(
+                xi / 2 + 1.0 / 2,
+                ((xi - 1) * (xi - 1) * (xi + 2)) / 4,
+                ((xi - 1) * (xi - 1) * (xi + 2)) / 4,
+                xi / 2 + 1.0 / 2,
+                (L * (xi - 1) * (xi - 1) * (xi + 1)) / 8,
+                (L * (xi - 1) * (xi - 1) * (xi + 1)) / 8,
+                1.0 / 2 - xi / 2,
+                -((xi + 1) * (xi + 1) * (xi - 2)) / 4,
+                -((xi + 1) * (xi + 1) * (xi - 2)) / 4,
+                1.0 / 2 - xi / 2,
+                (L * (xi - 1) * (xi + 1) * (xi + 1)) / 8,
+                (L * (xi - 1) * (xi + 1) * (xi + 1)) / 8);
 
-            return buf.AsMatrix();
+            return buf;
         }
 
         ///<inheritdoc/>
@@ -1150,7 +1154,7 @@ namespace BriefFiniteElementNet
         {
             var v = (EndNode.Location - StartNode.Location).Length;
 
-            return Matrix.OfVector(new double[] {v/2});
+            return new Matrix(new double[] { v / 2 });
         }
         #endregion
 

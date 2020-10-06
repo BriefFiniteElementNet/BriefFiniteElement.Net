@@ -4,4 +4,16 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="BriefFiniteElementNet">
+      <HintPath>..\BriefFiniteElementNet\bin\Debug\BriefFiniteElementNet.dll</HintPath>
+    </Reference>
+    <Reference Include="BriefFiniteElementNet.Common">
+      <HintPath>..\BriefFiniteElementNet\bin\Debug\BriefFiniteElementNet.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="CSparse">
+      <HintPath>..\BriefFiniteElementNet\bin\Debug\CSparse.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

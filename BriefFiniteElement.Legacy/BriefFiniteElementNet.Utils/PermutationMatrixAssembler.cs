@@ -37,8 +37,9 @@ namespace BriefFiniteElementNet
         /// <returns>The permutation matrix</returns>
         public CompressedColumnStorage<double> GetPermutationMatrix(Model model, LoadCase loadCase)
         {
-            for (int i = 0; i < model.Nodes.Count; i++)
-                model.Nodes[i].Index = i;
+            throw new Exception("uncomment this line when using it in the original class");
+            //for (int i = 0; i < model.Nodes.Count; i++)
+            //    model.Nodes[i].Index = i;
 
 
             var n = model.Nodes.Count;
@@ -170,8 +171,9 @@ namespace BriefFiniteElementNet
 
         private List<List<int>> GetDistinctRigidElements(Model model, LoadCase loadCase)
         {
-            for (int i = 0; i < model.Nodes.Count; i++)
-                model.Nodes[i].Index = i;
+            throw new Exception("uncomment this line when using it in the original class");
+            //for (int i = 0; i < model.Nodes.Count; i++)
+            //    model.Nodes[i].Index = i;
 
             var n = model.Nodes.Count;
 

@@ -1,9 +1,11 @@
-﻿using System;
+﻿using BriefFiniteElementNet.Elements;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BriefFiniteElementNet.Elements
+namespace BriefFiniteElementNet.Legacy.Elements
+//namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
     /// Utility class for PlateElementBehaviour 
@@ -14,16 +16,16 @@ namespace BriefFiniteElementNet.Elements
         /// <summary>
         /// The full shell: bending + membrane + drilling dof
         /// </summary>
-        public static readonly PlateElementBehaviours Shell = PlateElementBehaviour.DrillingDof | PlateElementBehaviour.Membrane | PlateElementBehaviour.Bending;
+        public static readonly PlateElementBehaviour Shell = PlateElementBehaviour.DrillingDof | PlateElementBehaviour.Membrane | PlateElementBehaviour.Bending;
 
         /// <summary>
         /// Only Membrane behaviour
         /// </summary>
-        public static readonly PlateElementBehaviours Membrane = PlateElementBehaviour.Membrane;
+        public static readonly PlateElementBehaviour Membrane = PlateElementBehaviour.Membrane;
 
         /// <summary>
         /// Only Plate Bending behaviour
         /// </summary>
-        public static readonly PlateElementBehaviours PlateBending = PlateElementBehaviour.Bending;
+        public static readonly PlateElementBehaviour PlateBending = PlateElementBehaviour.Bending;
     }
 }
