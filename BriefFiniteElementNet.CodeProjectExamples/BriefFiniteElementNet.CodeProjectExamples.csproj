@@ -73,6 +73,10 @@
       <Project>{82c63c6b-651a-4308-8b89-b4c643f3a7c2}</Project>
       <Name>BriefFiniteElementNet.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BriefFiniteElementNet.Legacy\BriefFiniteElementNet.Legacy.csproj">
+      <Project>{dda94659-19d1-4540-a463-71468dbd633f}</Project>
+      <Name>BriefFiniteElementNet.Legacy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj">
       <Project>{7cda20d4-9bc8-4bc3-9f22-cb86cd4dc3e1}</Project>
       <Name>BriefFiniteElementNet</Name>

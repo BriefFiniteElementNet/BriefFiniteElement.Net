@@ -9,7 +9,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
     {
         public string GetBenchmarkInfo()
         {
-            return "3D Grid with frame element";
+            return "3D Grid with BarElement";
         }
 
         public int Dimension { get; set; }
@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
 
         public Model GetCaseModel()
         {
-            var st = StructureGenerator.Generate3DFrameElementGrid(Dimension, Dimension, Dimension);
+            var st = StructureGenerator.Generate3DBarElementGrid(Dimension, Dimension, Dimension);
 
             return st;
         }

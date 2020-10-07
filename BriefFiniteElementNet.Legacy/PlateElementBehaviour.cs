@@ -9,6 +9,7 @@ namespace BriefFiniteElementNet.Elements
     /// Represents the possible behaviors of 2d Plate Elements (like triangle)
     /// </summary>
     [Flags]
+    [Obsolete("use PlaneElementBehaviour instead")]
     public enum PlateElementBehaviour
     {
         /// <summary>

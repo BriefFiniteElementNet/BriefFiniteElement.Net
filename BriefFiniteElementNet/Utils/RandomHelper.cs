@@ -134,51 +134,6 @@ namespace BriefFiniteElementNet
         }
 
 
-        public static Model GetRandomFrameModel(int n = 50)
-        {
-            var buf = new Model();
-
-            var nodes = new Node[n];
-
-            for (var i = 0; i < n; i++)
-            {
-                nodes[i] = new Node(GetRandomNumber(0, 10), GetRandomNumber(0, 10), GetRandomNumber(0, 10));
-
-                nodes[i].Constraints = GetRandomConstraint();
-            }
-
-            buf.Nodes.Add(nodes);
-
-            for (var i = 0; i < n; i++)
-            {
-                for (var j = 0; j < n; j++)
-                {
-                    if (i == j)
-                        continue;
-
-                    var elm = new FrameElement2Node(nodes[i], nodes[j]);
-                    elm.A = GetRandomNumber();
-                    elm.Iy = GetRandomNumber();
-                    elm.Iz = GetRandomNumber();
-                    elm.J = GetRandomNumber();
-
-                    elm.E = GetRandomNumber();
-                    elm.G = GetRandomNumber();
-
-                    var ld = new UniformLoad1D(GetRandomNumber(100, 1000), LoadDirection.Z, CoordinationSystem.Global);
-
-                    elm.Loads.Add(ld);
-
-                    buf.Elements.Add(elm);
-                }
-            }
-
-            for (int i = 0; i < n; i++)
-            {
-                nodes[i].Loads.Add(new NodalLoad(GetRandomForce(1000, 10000)));
-            }
-
-            return buf;
-        }
+       
     }
 }

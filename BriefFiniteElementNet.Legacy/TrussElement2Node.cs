@@ -419,7 +419,7 @@ namespace BriefFiniteElementNet.Elements
         /// </summary>
         /// <param name="v">The v.</param>
         /// <returns></returns>
-        internal Vector TransformLocalToGlobal(Vector v)
+        public Vector TransformLocalToGlobal(Vector v)
         {
             var t = GetTransformationMatrix();
             var vm = Matrix.OfVector(new[] { v.X, v.Y, v.Z });

@@ -71,6 +71,10 @@
       <Project>{82C63C6B-651A-4308-8B89-B4C643F3A7C2}</Project>
       <Name>BriefFiniteElementNet.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BriefFiniteElementNet.Legacy\BriefFiniteElementNet.Legacy.csproj">
+      <Project>{dda94659-19d1-4540-a463-71468dbd633f}</Project>
+      <Name>BriefFiniteElementNet.Legacy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BriefFiniteElementNet.Validation\BriefFiniteElementNet.Validation.csproj">
       <Project>{7a20ce01-552e-457a-a9c3-18bed244d897}</Project>
       <Name>BriefFiniteElementNet.Validation</Name>

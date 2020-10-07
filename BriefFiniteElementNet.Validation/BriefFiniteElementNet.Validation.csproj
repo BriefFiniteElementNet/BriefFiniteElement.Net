@@ -135,6 +135,10 @@
       <Project>{aae8c9d8-3978-4bbd-a256-b67a1e4d5648}</Project>
       <Name>BriefFiniteElementNet.CustomElements</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BriefFiniteElementNet.Legacy\BriefFiniteElementNet.Legacy.csproj">
+      <Project>{dda94659-19d1-4540-a463-71468dbd633f}</Project>
+      <Name>BriefFiniteElementNet.Legacy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj">
       <Project>{7cda20d4-9bc8-4bc3-9f22-cb86cd4dc3e1}</Project>
       <Name>BriefFiniteElementNet</Name>

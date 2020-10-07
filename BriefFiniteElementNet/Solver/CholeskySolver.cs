@@ -59,6 +59,9 @@ namespace BriefFiniteElementNet.Solver
         public void Initialize()
         {
             var matrix = A;
+
+            //var ttt = A.ToDenseMatrix();
+
             var sp = new Stopwatch();
             sp.Start();
 

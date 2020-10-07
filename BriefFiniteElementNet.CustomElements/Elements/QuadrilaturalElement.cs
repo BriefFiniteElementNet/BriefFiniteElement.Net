@@ -26,6 +26,7 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using BriefFiniteElementNet.Elements.ElementHelpers;
 using BriefFiniteElementNet.Common;
+using PlateElementBehaviour= BriefFiniteElementNet.Elements.PlaneElementBehaviour;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -42,7 +43,7 @@ namespace BriefFiniteElementNet.Elements
 
         private Base2DSection _section;
 
-        private PlateElementBehaviour _behavior;
+        private PlaneElementBehaviour _behavior;
 
         private MembraneFormulation _formulation;
 
@@ -59,7 +60,7 @@ namespace BriefFiniteElementNet.Elements
             set { _section = value; }
         }
 
-        public PlateElementBehaviour Behavior
+        public PlaneElementBehaviour Behavior
         {
             get { return _behavior; }
             set { _behavior = value; }
@@ -166,7 +167,7 @@ namespace BriefFiniteElementNet.Elements
 
 
             return buf;
-
+            /*
             //this should be moved to helpers
             if (load is UniformLoadForPlanarElements)
             {
@@ -196,7 +197,7 @@ namespace BriefFiniteElementNet.Elements
                 var f = u * (area / 4.0);
                 var frc = new Force(f, Vector.Zero);
                 return new[] { frc, frc, frc, frc };
-            }
+            }*/
             throw new NotImplementedException();
         }
         #endregion
@@ -206,7 +207,7 @@ namespace BriefFiniteElementNet.Elements
         {
             var helpers = new List<IElementHelper>();
             {
-                if ((this._behavior & PlateElementBehaviour.Bending) != 0)
+                if ((this._behavior & PlaneElementBehaviour.ThinPlate) != 0)
                 {
                     helpers.Add(new DkqHelper());
                 }

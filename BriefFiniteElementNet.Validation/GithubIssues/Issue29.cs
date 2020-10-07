@@ -144,7 +144,7 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
                 if (triElm == null)
                     continue;
 
-                triElm.Behavior = PlateElementBehaviours.Shell;
+                triElm.Behavior = PlaneElementBehaviours.FullThinShell;
 
 
 

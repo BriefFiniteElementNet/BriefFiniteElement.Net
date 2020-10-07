@@ -149,6 +149,10 @@
     <ProjectReference Include="..\BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj">
       <Name>BriefFiniteElementNet.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BriefFiniteElementNet.Legacy\BriefFiniteElementNet.Legacy.csproj">
+      <Project>{dda94659-19d1-4540-a463-71468dbd633f}</Project>
+      <Name>BriefFiniteElementNet.Legacy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj">
       <Name>BriefFiniteElementNet</Name>
     </ProjectReference>

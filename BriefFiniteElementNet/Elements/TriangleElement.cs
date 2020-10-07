@@ -9,9 +9,25 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet.Loads;
+using PlateElementBehaviour = BriefFiniteElementNet.Elements.PlaneElementBehaviour;
 
 namespace BriefFiniteElementNet.Elements
 {
+
+
+    /// <summary>
+    /// Location where you want to probe the stress
+    /// </summary>
+    public enum SectionPoints
+    {
+        //max abs of both top/bottom
+        Envelope,
+        //top of the shell
+        Top,
+        //bottom of the shell
+        Bottom
+    }
+
     [Serializable]
     [Obsolete("not fully implemented yet")]
     public class TriangleElement : Element
@@ -27,7 +43,7 @@ namespace BriefFiniteElementNet.Elements
 
         private Base2DSection _section;
 
-        private PlateElementBehaviour _behavior = PlateElementBehaviours.Shell;
+        private PlateElementBehaviour _behavior = PlaneElementBehaviours.FullThinShell;
 
         private MembraneFormulation _formulation;
 
@@ -150,7 +166,7 @@ namespace BriefFiniteElementNet.Elements
             return buf;
 
 
-
+            /*
             if (load is UniformLoadForPlanarElements)
             {
                 //lumped approach is used as used in several references
@@ -180,7 +196,7 @@ namespace BriefFiniteElementNet.Elements
                 var f = u * (area / 3.0);
                 var frc = new Force(f, Vector.Zero);
                 return new[] { frc, frc, frc };
-            }
+            }*/
 
 
 
@@ -195,7 +211,7 @@ namespace BriefFiniteElementNet.Elements
             var helpers = new List<IElementHelper>();
 
             {
-                if ((this._behavior & PlateElementBehaviour.Bending) != 0)
+                if ((this._behavior & PlateElementBehaviour.ThinPlate) != 0)
                 {
                     helpers.Add(new DktHelper());
                 }
@@ -254,7 +270,7 @@ namespace BriefFiniteElementNet.Elements
         {
             var helpers = new List<IElementHelper>();
 
-            if ((this._behavior & PlateElementBehaviour.Bending) != 0)
+            if ((this._behavior & PlateElementBehaviour.ThinPlate) != 0)
             {
                 helpers.Add(new DktHelper());
             }
@@ -356,6 +372,7 @@ namespace BriefFiniteElementNet.Elements
         }
 
         #endregion
+
 
         #region stress
         /// <summary>

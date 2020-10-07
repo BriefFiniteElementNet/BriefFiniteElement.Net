@@ -38,7 +38,7 @@ namespace BriefFiniteElementNet.Validation
                 model.Nodes[1].Constraints =
                 Constraints.Fixed;
 
-            elm.Behavior = PlateElementBehaviours.Shell;
+            elm.Behavior = PlaneElementBehaviours.FullThinShell;
             elm.MembraneFormulation = MembraneFormulation.PlaneStress;
             elm.Material = new UniformIsotropicMaterial(2100, 0.3);
             elm.Section = new UniformParametric2DSection(0.2);

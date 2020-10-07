@@ -12,7 +12,7 @@ namespace BriefFiniteElementNet.Elements
     /// Represents a tetrahedron with isotropic material.
     /// </summary>
     [Serializable]
-    [Obsolete("use Tetrahedron instead")]
+    [Obsolete("use TetrahedronElement instead")]
     public class Tetrahedral : Element
     {
 

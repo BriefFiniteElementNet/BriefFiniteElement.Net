@@ -258,20 +258,22 @@ namespace BriefFiniteElementNet.Integration
                                 //new Matrix(val.RowCount, val.ColumnCount);
                                 MatrixPool.Allocate(val.RowCount, val.ColumnCount);
 
-                        val.Scale((g2(noj, gammaK) - g1(noj, gammaK)) / 2 * wi[i]);
-
+                        var valSc = (g2(noj, gammaK) - g1(noj, gammaK)) / 2 * wi[i];
                         //beta += val;
-                        beta.AddToThis(val);
+                        beta.AddToThis(val,valSc);
 
                         val.ReturnToPool();
                     }
 
-                    phi.AddToThis(beta, (f2(gammaK) - f1(gammaK)) / 2 * wj[j]);
+                    var phiSc = (f2(gammaK) - f1(gammaK)) / 2 * wj[j];
+                    phi.AddToThis(beta, phiSc);
 
                     beta.ReturnToPool();
                 }
 
-                I.AddToThis(phi, (a2 - a1) / 2 * wk[k]);
+                var iSc = (a2 - a1) / 2 * wk[k];
+
+                I.AddToThis(phi, iSc);
 
                 phi.ReturnToPool();
                 //I += (a2 - a1) / 2 * wk[k] * phi;

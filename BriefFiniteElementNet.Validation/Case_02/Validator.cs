@@ -140,7 +140,7 @@ namespace BriefFiniteElementNet.Validation.Case_02
 
                 triElm.Material = new UniformIsotropicMaterial(E, nu);
                 triElm.Section = new UniformParametric2DSection(t);
-                triElm.Behavior = PlateElementBehaviours.Shell;
+                triElm.Behavior = PlaneElementBehaviours.FullThinShell;
                 triElm.MembraneFormulation = MembraneFormulation.PlaneStress;
             }
 

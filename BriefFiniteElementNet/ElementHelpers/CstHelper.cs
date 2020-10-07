@@ -385,7 +385,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="targetElement">Element under consideration</param>
         /// <param name="combination">A load combination</param>
         /// <returns>The stress in the element due to the membrane action. Needs to be combined with the stress due to bending!</returns>
-        public MembraneStressTensor GetMembraneInternalStress(Element targetElement, LoadCombination combination)
+        public CauchyStressTensor GetMembraneInternalStress(Element targetElement, LoadCombination combination)
         {
             //code moved to GetLocalInternalStressAt()
 
@@ -423,11 +423,11 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var sCst = dbCst * bCst * uCst;
 
-            var buf = new MembraneStressTensor();
+            var buf = new CauchyStressTensor();
 
-            buf.Sx = sCst[0, 0];
-            buf.Sy = sCst[1, 0];
-            buf.Txy = sCst[2, 0];
+            buf.S11 = sCst[0, 0];
+            buf.S22 = sCst[1, 0];
+            buf.S12 = buf.S21 = sCst[2, 0];
 
             return buf;
         }
@@ -515,11 +515,11 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var sCst = dbCst * bCst * uCst;
 
-            var buf = new MembraneStressTensor();
+            var buf = new CauchyStressTensor();
 
-            buf.Sx = sCst[0, 0];
-            buf.Sy = sCst[1, 0];
-            buf.Txy = sCst[2, 0];
+            buf.S11 = sCst[0, 0];
+            buf.S22 = sCst[1, 0];
+            buf.S12 = buf.S21 = sCst[2, 0];
 
             return new GeneralStressTensor(buf);
         }

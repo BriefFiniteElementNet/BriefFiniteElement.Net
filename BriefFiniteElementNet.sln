@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet", "BriefFiniteElementNet\BriefFiniteElementNet.csproj", "{7CDA20D4-9BC8-4BC3-9F22-CB86CD4DC3E1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BriefFiniteElementNet", "BriefFiniteElementNet\BriefFiniteElementNet.csproj", "{7CDA20D4-9BC8-4BC3-9F22-CB86CD4DC3E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.BenchmarkApplication", "BriefFiniteElementNet.BenchmarkApplication\BriefFiniteElementNet.BenchmarkApplication.csproj", "{2387F8E3-9743-42F0-8BEF-F3863838F114}"
 EndProject
@@ -15,19 +15,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Valid
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.TestConsole", "BriefFiniteElementNet.TestConsole\BriefFiniteElementNet.TestConsole.csproj", "{1DD7D04E-0DFB-49BD-AAA2-30128005ACE7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Common", "BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj", "{82C63C6B-651A-4308-8B89-B4C643F3A7C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BriefFiniteElementNet.Common", "BriefFiniteElementNet.Common\BriefFiniteElementNet.Common.csproj", "{82C63C6B-651A-4308-8B89-B4C643F3A7C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Validation.Ui", "BriefFiniteElementNet.Validation.Ui\BriefFiniteElementNet.Validation.Ui.csproj", "{FC6E4877-B949-4522-BD35-116172A20925}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Tests", "BriefFiniteElementNet.Tests\BriefFiniteElementNet.Tests.csproj", "{BCD6C94B-19CC-4E03-80C9-8643727AB5C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BriefFiniteElementNet.Tests", "BriefFiniteElementNet.Tests\BriefFiniteElementNet.Tests.csproj", "{BCD6C94B-19CC-4E03-80C9-8643727AB5C6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.DebuggerVisualizers", "BriefFiniteElementNet.DebuggerVisualizers\BriefFiniteElementNet.DebuggerVisualizers.csproj", "{E12A7AD9-780B-4ADC-8C08-C7D5FD63C18B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Solvers", "BriefFiniteElementNet.Solvers\BriefFiniteElementNet.Solvers.csproj", "{F01B1FBD-A02F-4B0F-AEFF-5E48F9BEF815}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.CustomElements", "BriefFiniteElementNet.CustomElements\BriefFiniteElementNet.CustomElements.csproj", "{AAE8C9D8-3978-4BBD-A256-B67A1E4D5648}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BriefFiniteElementNet.CustomElements", "BriefFiniteElementNet.CustomElements\BriefFiniteElementNet.CustomElements.csproj", "{AAE8C9D8-3978-4BBD-A256-B67A1E4D5648}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.CustomElements.Test", "BriefFiniteElementNet.CustomElements.Test\BriefFiniteElementNet.CustomElements.Test.csproj", "{F4921DD6-AC8F-41F2-A7EF-C60BEFBBF271}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BriefFiniteElementNet.CustomElements.Test", "BriefFiniteElementNet.CustomElements.Test\BriefFiniteElementNet.CustomElements.Test.csproj", "{F4921DD6-AC8F-41F2-A7EF-C60BEFBBF271}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Legacy", "BriefFiniteElementNet.Legacy\BriefFiniteElementNet.Legacy.csproj", "{DDA94659-19D1-4540-A463-71468DBD633F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +89,10 @@ Global
 		{F4921DD6-AC8F-41F2-A7EF-C60BEFBBF271}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4921DD6-AC8F-41F2-A7EF-C60BEFBBF271}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F4921DD6-AC8F-41F2-A7EF-C60BEFBBF271}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDA94659-19D1-4540-A463-71468DBD633F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDA94659-19D1-4540-A463-71468DBD633F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDA94659-19D1-4540-A463-71468DBD633F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDA94659-19D1-4540-A463-71468DBD633F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -242,7 +242,7 @@ namespace BriefFiniteElementNet
                 localEndForces[0] = f1;
                 localEndForces[1] = f2;
 
-                localEndForces = CalcUtil.ApplyReleaseMatrixToEndForces(e, localEndForces);//applying release matrix to end forces
+                localEndForces = Extensions2.ApplyReleaseMatrixToEndForces(e, localEndForces);//applying release matrix to end forces
 
                 var vecs = new Vector[] { localEndForces[0].Forces, localEndForces[0].Moments, localEndForces[1].Forces, localEndForces[1].Moments };
                 var tvecs = e.TransformLocalToGlobal(vecs);

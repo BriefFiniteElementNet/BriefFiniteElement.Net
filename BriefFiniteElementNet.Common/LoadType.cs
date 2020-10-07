@@ -8,6 +8,7 @@ namespace BriefFiniteElementNet
     /// <summary>
     /// Represents a loadType.
     /// </summary>
+    //TODO: rename to LoadNature
     public enum LoadType
     {
         /// <summary>

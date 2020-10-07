@@ -9,12 +9,12 @@ namespace BriefFiniteElementNet.BenchmarkApplication
     {
         public Model GetCaseModel()
         {
-            return StructureGenerator.Generate3DTet4Grid(Dimension, Dimension, Dimension);
+            return StructureGenerator.Generate3DTetrahedralElementGrid(Dimension, Dimension, Dimension);
         }
 
         public string GetBenchmarkInfo()
         {
-            return "3D Grid with Tetrahedron Element";
+            return "3D Grid with TetrahedralElement";
         }
 
         public int Dimension { get; set; }

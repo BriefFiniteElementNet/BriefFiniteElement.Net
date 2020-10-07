@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.Legacy;
 using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
 using HtmlTags;
@@ -35,7 +36,7 @@ namespace BriefFiniteElementNet.Validation
             var nz = 3;
 
             #region model definition
-            var grd = StructureGenerator.Generate3DTet4Grid(nx, ny, nz);
+            var grd = BriefFiniteElementNet.Legacy.StructureGenerator.Generate3DTet4Grid(nx, ny, nz);
 
             //StructureGenerator.SetRandomiseConstraints(grd);
             StructureGenerator.SetRandomiseSections(grd);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BriefFiniteElementNet.Elements;
 
 namespace BriefFiniteElementNet
 {
@@ -149,16 +150,4 @@ namespace BriefFiniteElementNet
         }
     }
 
-    /// <summary>
-    /// Location where you want to probe the stress
-    /// </summary>
-    public enum SectionPoints
-    {
-        //max abs of both top/bottom
-        Envelope,
-        //top of the shell
-        Top,
-        //bottom of the shell
-        Bottom
-    }
 }

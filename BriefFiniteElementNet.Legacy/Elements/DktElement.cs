@@ -170,7 +170,7 @@ namespace BriefFiniteElementNet.Elements
         ///  LC: Local Coordinates [x;y;z] (3x1) (same as xyz in "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara available on the web).
         ///  T: Transformation Matrix (from this method) (3x3) (same as XYZ in "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara available on the web).
         /// </remarks>
-        private Matrix GetTransformationMatrix()
+        public Matrix GetTransformationMatrix()
         {
             return DktElement.GetTransformationMatrix(nodes[0].Location, nodes[1].Location, nodes[2].Location);
         }

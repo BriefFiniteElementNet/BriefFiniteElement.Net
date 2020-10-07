@@ -17,6 +17,7 @@ namespace BriefFiniteElementNet
     /// </summary>
     [DebuggerDisplay("Matrix {RowCount} x {ColumnCount}")]
     [Serializable]
+    [Obsolete("old matrix used in BFE")]
     public class MatrixOld : ISerializable, IEnumerable<double>
     {
         public MatrixPool Pool;

@@ -16,7 +16,7 @@ namespace BriefFiniteElementNet.Validation.Case_03
 
             /**/
             {
-                var model = StructureGenerator.Generate3DTetrahedralElementGrid(3, 3, 10);
+                var model = StructureGenerator.Generate3DTetrahedralElementGrid(2, 2, 2);
 
                 var l = model.Nodes.Max(i => i.Location.Z);
 
@@ -37,9 +37,12 @@ namespace BriefFiniteElementNet.Validation.Case_03
                 var delta = f * l * l * l / (3 * e * I);
 
                 var t = cnt.FirstOrDefault().GetNodalDisplacement();
+
+                var ratio = delta / t.DX;
             }
             /**/
 
+            throw new NotImplementedException();
             {
                 //code from here: https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues/13
 

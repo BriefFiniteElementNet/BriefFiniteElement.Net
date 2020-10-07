@@ -332,7 +332,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             intg.F1 = (gama => 0);
 
             intg.G2 = ((eta, gama) => 1 - eta - gama);
-            intg.G1 = ((eta, gama) => 0);               // formula 4.31 (Development of Membrane, Plate and Flat Shell Elements in Java)
+            intg.G1 = ((eta, gama) => 0);               
 
             intg.H = new FunctionMatrixFunction((xi, eta, gama) =>
             {

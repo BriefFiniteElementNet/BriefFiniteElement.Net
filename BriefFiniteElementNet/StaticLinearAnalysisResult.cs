@@ -857,6 +857,9 @@ namespace BriefFiniteElementNet
                 }
                 else
                 {
+
+                    //var tt = kr.ToDenseMatrix();
+
                     solver = SolverFactory.CreateSolver((CCS)kr);
 
                     Solvers_New[pd] = solver;

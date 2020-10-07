@@ -287,7 +287,7 @@ namespace BriefFiniteElementNet.Elements
         /// <param name="e">The elastic modulus.</param>
         /// <param name="nu">The Poisson ratio.</param>
         /// <returns></returns>
-        internal static Matrix GetStiffnessMatrix(double[] x, double[] y,double t, double e, double nu,MembraneFormulation f)
+        public static Matrix GetStiffnessMatrix(double[] x, double[] y,double t, double e, double nu,MembraneFormulation f)
         {
             double a;//area
 

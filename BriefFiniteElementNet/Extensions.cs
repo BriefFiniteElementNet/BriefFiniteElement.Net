@@ -423,47 +423,6 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        /// <summary>
-        /// Transforms the force in local coordination system into the global coordination system.
-        /// </summary>
-        /// <param name="elm">The elm.</param>
-        /// <param name="force">The force.</param>
-        /// <returns>transformed force</returns>
-        public static Force TransformLocalToGlobal(this FrameElement2Node elm,Force force)
-        {
-            var f = elm.TransformLocalToGlobal(force.Forces);
-            var m = elm.TransformLocalToGlobal(force.Moments);
-
-            return new Force(f,m);
-        }
-
-        public static Vector TransformLocalToGlobal(this FrameElement2Node elm, Vector vec)
-        {
-            var buf = elm.TransformLocalToGlobal(vec);
-
-            return buf;
-        }
-
-        /// <summary>
-        /// Transforms the force in global coordination system into the local coordination system.
-        /// </summary>
-        /// <param name="elm">The elm.</param>
-        /// <param name="force">The force.</param>
-        /// <returns>transformed force</returns>
-        public static Force TransformGlobalToLocal(this FrameElement2Node elm, Force force)
-        {
-            var f = elm.TransformGlobalToLocal(force.Forces);
-            var m = elm.TransformGlobalToLocal(force.Moments);
-
-            return new Force(f, m);
-        }
-
-        public static Vector TransformGlobalToLocal(this FrameElement2Node elm, Vector vec)
-        {
-            var f = elm.TransformGlobalToLocal(vec);
-
-            return f;
-        }
 
         /// <summary>
         /// Clones the specified model.

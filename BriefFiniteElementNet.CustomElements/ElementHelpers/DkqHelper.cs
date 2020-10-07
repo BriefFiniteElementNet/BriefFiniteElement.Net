@@ -642,12 +642,12 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             throw new NotImplementedException();
         }
 
-        public virtual FlatShellStressTensor GetLoadInternalForceAt(Element targetElement, ElementalLoad load, double[] isoLocation)
+        public virtual GeneralStressTensor GetLoadInternalForceAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
-        public FlatShellStressTensor GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation)
+        public GeneralStressTensor GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
@@ -691,7 +691,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
         {
             throw new NotImplementedException();
         }
-        public FlatShellStressTensor GetBendingInternalStress(Element targetElement, LoadCombination cmb, params double[] isoCoords)
+        public GeneralStressTensor GetBendingInternalStress(Element targetElement, LoadCombination cmb, params double[] isoCoords)
         {
             var lds = new Displacement[targetElement.Nodes.Length];
             var tr = targetElement.GetTransformationManager();
@@ -726,7 +726,7 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             bTensor.M22 = mDkt[1, 0];
             bTensor.M21 = bTensor.M12 = mDkt[2, 0];
 
-            var buf = new FlatShellStressTensor(bTensor);
+            var buf = new GeneralStressTensor(bTensor);
 
             return buf;
         }

@@ -736,7 +736,7 @@ namespace BriefFiniteElementNet.TestConsole
 
         private void Test1()
         {
-            var model = StructureGenerator.Generate3DFrameElementGrid(5, 5, 5);
+            var model = BriefFiniteElementNet.Legacy.StructureGenerator.Generate3DFrameElementGrid(5, 5, 5);
             //StructureGenerator.AddRandomiseLoading(model, LoadCase.DefaultLoadCase);
 
             StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
@@ -822,7 +822,7 @@ namespace BriefFiniteElementNet.TestConsole
 
         private static void Test2()
         {
-            var model = StructureGenerator.Generate3DFrameElementGrid(5, 5, 5);
+            var model = BriefFiniteElementNet.Legacy.StructureGenerator.Generate3DFrameElementGrid(5, 5, 5);
             //StructureGenerator.AddRandomiseLoading(model, LoadCase.DefaultLoadCase);
 
             //var wrapped = SerializationObsolete.ObjectWrapper.Wrap(model);
@@ -914,7 +914,7 @@ namespace BriefFiniteElementNet.TestConsole
             dkt.Nodes[2] = n3;
 
             var tri = new TriangleElement();
-            tri.Behavior = PlateElementBehaviours.Shell;
+            tri.Behavior = PlaneElementBehaviours.FullThinShell;
             tri.Section = new UniformParametric2DSection() { T = t };
             tri.Material = new UniformIsotropicMaterial(e, nu);// {E = e, Nu = nu};
 
@@ -948,7 +948,7 @@ namespace BriefFiniteElementNet.TestConsole
 
         private static void TestVisualize()
         {
-            var model = StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
+            var model = BriefFiniteElementNet.Legacy.StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
             StructureGenerator.AddRandomiseLoading(model, true, false, LoadCase.DefaultLoadCase);
 
             ModelVisualizerControl.VisualizeInNewWindow(model);
@@ -1020,7 +1020,7 @@ namespace BriefFiniteElementNet.TestConsole
 
         private static void Test_P_Delta_matrix()
         {
-            var model = StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
+            var model = BriefFiniteElementNet.Legacy.StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
 
 
             var zs = model.Nodes
@@ -1157,7 +1157,7 @@ namespace BriefFiniteElementNet.TestConsole
 
         private static void TestCuda()
         {
-            var model = StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
+            var model = BriefFiniteElementNet.Legacy.StructureGenerator.Generate3DFrameElementGrid(2, 2, 2);
 
 
             //model.Nodes[4].Constraints = model.Nodes[5].Constraints = model.Nodes[6].Constraints = Constraints.Fixed;

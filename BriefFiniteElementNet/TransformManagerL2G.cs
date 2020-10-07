@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet
 {
@@ -240,9 +241,9 @@ namespace BriefFiniteElementNet
         /// <returns>
         /// Transformed tensor (point in new coordination system : global)
         /// </returns>
-        public FlatShellStressTensor TransformLocalToGlobal(FlatShellStressTensor tensor)
+        public GeneralStressTensor TransformLocalToGlobal(GeneralStressTensor tensor)
         {
-            var buf = new FlatShellStressTensor(
+            var buf = new GeneralStressTensor(
                 TransformLocalToGlobal(tensor.MembraneTensor),
                 TransformLocalToGlobal(tensor.BendingTensor));
 
@@ -422,9 +423,9 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="tensor">The tensor.</param>
         /// <returns>tensor in local coordination system</returns>
-        public FlatShellStressTensor TransformGlobalToLocal(FlatShellStressTensor tensor)
+        public GeneralStressTensor TransformGlobalToLocal(GeneralStressTensor tensor)
         {
-            var buf = new FlatShellStressTensor(
+            var buf = new GeneralStressTensor(
                 TransformGlobalToLocal(tensor.MembraneTensor),
                 TransformGlobalToLocal(tensor.BendingTensor));
 

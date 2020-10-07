@@ -541,7 +541,7 @@ namespace BriefFiniteElementNet
 
             #endregion
 
-            #region TelepathyLink's nodes
+            #region mpcElements's nodes
 
 
             foreach (var relm in mpcElements)
@@ -551,6 +551,7 @@ namespace BriefFiniteElementNet
 
             #endregion
 
+            /*
             #region UniformSurfaceLoadFor3DElement's surface nodes
 
             foreach (var elm in elements)
@@ -574,7 +575,7 @@ namespace BriefFiniteElementNet
             }
 
             #endregion
-
+            */
             
 
         }
