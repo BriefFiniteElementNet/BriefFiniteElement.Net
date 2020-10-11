@@ -12,14 +12,6 @@ We are fixing bugs before release Nuget Package, please let us know any bugs you
 ## Introduction
 Brief Finite Element Dot NET (BFE.NET) is a .NET based software framework for static and linear Finite Element Analysis (FEA) of solids and structures. BFE.NET help you to simply take advantage of Object Oriented approach to analyze FE models. Advantage of such a framework is that user does have a very powerful control on what he is working with, and control is not limited to an UI with predefined controls.
 
-## Acknowledgement
-This project is using/used these projects/files:
-
-- [CSParse.NET](https://github.com/wo80/CSparse.NET) and some other codes from [Christian Woltering](https://github.com/wo80) for solving sparse linear system
-- [Helix 3D Toolkit](http://helixtoolkit.codeplex.com/) for 3D visualizations
-- Formulation of considering shear deformation or partial end release in frame elements are ported from [Matrix Structural Analysis (MSA)](http://www.mathworks.com/matlabcentral/fileexchange/27012-matrix-structural-analysis/content/MSA/MSA.m) by Dr. Hossein Rahami
-
-
 ## Features
 
 - Various Elements (variable node beam, column, truss, shaft, 3 node plate bending and membrane, 4 node tetrahedral)
