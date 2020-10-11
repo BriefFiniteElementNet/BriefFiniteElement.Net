@@ -47,7 +47,6 @@
     <None Include="Mathh\IPolynomial.md" />
     <None Include="Utils\CalcUtil.md" />
     <None Include="ClassDiagram1.cd" />
-    <None Include="Documents\SupportReactions.mkd" />
     <None Include="Elements\BarElement.md" />
     <None Include="ElementHelpers\IElementHelper.md" />
     <None Include="MpcElements\RigidElement.md" />

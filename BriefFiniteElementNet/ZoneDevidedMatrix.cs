@@ -18,6 +18,7 @@ namespace BriefFiniteElementNet
     ///     r: released
     ///     f: fixed
     /// </summary>
+    [Obsolete("not used with Solve_MPC() approach ")]
     public class ZoneDevidedMatrix
     {
         /// <summary>

@@ -6,3 +6,4 @@
 [assembly: InternalsVisibleTo("BriefFiniteElementNet.Validation")]
 [assembly: InternalsVisibleTo("BriefFiniteElementNet.CustomElements")]
 [assembly: InternalsVisibleTo("BriefFiniteElementNet.XmlSerialization")]
+[assembly: InternalsVisibleTo("BriefFiniteElementNet.Legacy")]

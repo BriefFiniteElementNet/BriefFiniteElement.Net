@@ -169,7 +169,7 @@ namespace BriefFiniteElementNet
         }
 
 
-
+        /*
         /// <summary>
         /// Gets or sets the solver generator.
         /// </summary>
@@ -178,7 +178,7 @@ namespace BriefFiniteElementNet
         /// </value>
         [Obsolete("use SolverFactory instead")]
         public Func<SparseMatrix, ISolver> SolverGenerator { get; set; }
-
+        */
         public ISolverFactory SolverFactory { get; set; }
 
         #endregion
@@ -772,6 +772,7 @@ namespace BriefFiniteElementNet
             var ut = pu.Multiply(ur);
 
             _forces[loadCase] = ft;
+
             _displacements[loadCase] = ut;
         }
 
@@ -974,7 +975,7 @@ namespace BriefFiniteElementNet
         /// <remarks>
         /// Only searches for zero elements on matrix diagonal
         /// </remarks>
-        private void AnalyseStiffnessMatrixForWarnings(ZoneDevidedMatrix mtx, DofMappingManager map,
+        public void AnalyseStiffnessMatrixForWarnings(ZoneDevidedMatrix mtx, DofMappingManager map,
             LoadCase currentCase)
         {
             var cs = mtx.ReleasedReleasedPart;
@@ -1124,7 +1125,7 @@ namespace BriefFiniteElementNet
         /// <param name="cse">The load case.</param>
         /// <param name="map">The map.</param>
         /// <returns></returns>
-        private double[] GetTotalConcentratedForceVector(LoadCase cse)
+        public double[] GetTotalConcentratedForceVector(LoadCase cse)
         {
             //force vector for both free and fixed dof
 
@@ -1176,7 +1177,7 @@ namespace BriefFiniteElementNet
         /// <param name="cse">The load case.</param>
         /// <param name="map">The map.</param>
         /// <returns></returns>
-        private double[] GetTotalElementsForceVector(LoadCase cse)
+        public double[] GetTotalElementsForceVector(LoadCase cse)
         {
             //force vector for both free and fixed dof
 
@@ -1242,7 +1243,7 @@ namespace BriefFiniteElementNet
         /// Just is used for known displacements (like settlements and only for settlement).
         /// </remarks>
         /// <returns></returns>
-        private double[] GetTotalDispVector(LoadCase cse, DofMappingManager map)
+        public double[] GetTotalDispVector(LoadCase cse, DofMappingManager map)
         {
             //displacement vector. free part can be assume zero however didn't touch that
 
@@ -1281,7 +1282,7 @@ namespace BriefFiniteElementNet
         }
 
 
-        private double[] GetFreePartOfReducedVector(double[] vr, DofMappingManager map)
+        public double[] GetFreePartOfReducedVector(double[] vr, DofMappingManager map)
         {
             var buf = new double[map.RMap2.Length];
 
@@ -1293,7 +1294,7 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        private double[] GetFixedPartOfReducedVector(double[] vr, DofMappingManager map)
+        public double[] GetFixedPartOfReducedVector(double[] vr, DofMappingManager map)
         {
             var buf = new double[map.RMap3.Length];
 

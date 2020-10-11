@@ -39,6 +39,7 @@ namespace BriefFiniteElementNet
     /// masters[9] = 10
     /// rMasters[9] = 11
     /// </remarks>
+    [Obsolete("Not used with Solve_MPC() approach")]
     public class DofMappingManager
     {
         private int _n;

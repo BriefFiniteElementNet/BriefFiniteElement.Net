@@ -58,9 +58,9 @@ namespace BriefFiniteElementNet
             get { return loadCases; }
             private set { loadCases = value; }
         }
-      
+      /**/
         [Obsolete("use SolverConfiguration.SolverFactory instead")]
-        private Func<SparseMatrix, ISolver> _solverGenerator;
+        //private Func<SparseMatrix, ISolver> _solverGenerator;
        
         private ISolverFactory solverFactory;
 
@@ -74,7 +74,7 @@ namespace BriefFiniteElementNet
             {
                 solverFactory = value;
             }
-        }
+        }/**/
 
         #endregion
     }
