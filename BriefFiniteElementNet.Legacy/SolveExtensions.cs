@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet;
 using CCS = CSparse.Double.SparseMatrix;
+using BriefFiniteElementNet.Solver;
 
 namespace BriefFiniteElementNet.Legacy
 {
@@ -17,7 +19,7 @@ namespace BriefFiniteElementNet.Legacy
         /// If system is not analyses against a specific load case, then this method will analyses structure against <see cref="LoadCase"/>.
         /// While this method is using pre computed Cholesky Decomposition , its have a high performance in solving the system.
         /// </remarks>
-        public void AddAnalysisResult(this StaticLinearAnalysisResult thiis, LoadCase loadCase)
+        public static void AddAnalysisResult(this StaticLinearAnalysisResult thiis, LoadCase loadCase)
         {
             ISolver solver;
 
