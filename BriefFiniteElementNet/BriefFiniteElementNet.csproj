@@ -205,7 +205,6 @@
     <None Include="ClassDiagram1.cd" />
     <None Include="Documents\SupportReactions.mkd" />
     <None Include="Elements\BarElement.md" />
-    <None Include="Elements\FrameElement2Node.md" />
     <None Include="ElementHelpers\IElementHelper.md" />
     <None Include="MpcElements\RigidElement.md" />
     <None Include="MpcElements\TelepathyLink.md" />
@@ -213,8 +212,6 @@
     <None Include="MpcElements\VirtualSupport.md" />
     <None Include="Mathh\IRrefFinder.md" />
     <None Include="TransformManagerL2G.md" />
-    <None Include="Elements\TriangleFlatShell.md" />
-    <None Include="Elements\TriangleFlatShellExtensions.md" />
     <None Include="MpcElements\HingeLink.md" />
     <None Include="Integration\GaussianIntegrator.md" />
     <None Include="RigidElement.md" />

@@ -5,9 +5,11 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
 using BriefFiniteElementNet.ElementHelpers;
+using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Geometry;
 
-namespace BriefFiniteElementNet.Elements
+namespace BriefFiniteElementNet.Legacy.Elements
+//namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
     /// Represents a triangle flat shell which internally consists of a membrane (CST) and plate bending (dkt) element.
@@ -24,7 +26,7 @@ namespace BriefFiniteElementNet.Elements
 
         private double _elasticModulus;
 
-        private PlaneElementBehaviour _behaviour = PlaneElementBehaviours.FullThinShell;
+        private PlaneElementBehaviour _behaviour = PlaneElementBehaviour.ThinPlate;
 
         private bool _addDrillingDof = true;
 
@@ -178,7 +180,7 @@ namespace BriefFiniteElementNet.Elements
 
             var lambda = GetTransformationMatrix();
 
-            var t = lambda.Transpose().RepeatDiagonally(6); // eq. 5-16 page 78 (87 of file)
+            var t = Matrix.DiagonallyRepeat(lambda.Transpose(), 6); // eq. 5-16 page 78 (87 of file)
 
             var buf = t.Transpose() * kl * t; //eq. 5-15 p77
 
@@ -323,15 +325,16 @@ namespace BriefFiniteElementNet.Elements
             var d2l = new Displacement(g2l(d2g.Displacements), g2l(d2g.Rotations));
             var d3l = new Displacement(g2l(d3g.Displacements), g2l(d3g.Rotations));
 
-            var uCst = Matrix.OfVector(new[]
-                   { d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY });
+            var uCst =
+               new Matrix(new[]
+               {d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY});
 
-            var dbCst = CstElement.GetDMatrix(_elasticModulus,_poissonRatio,_formulationType);
+            var dbCst = CstElement.GetDMatrix(_elasticModulus, _poissonRatio, _formulationType);
 
             var bCst = CstElement.GetBMatrix(lp.Select(i => i.X).ToArray(),
                 lp.Select(i => i.Y).ToArray());
 
-            var sCst = dbCst* bCst * uCst; 
+            var sCst = dbCst * bCst * uCst;
 
             var buf = new MembraneStressTensor();
 
@@ -368,11 +371,13 @@ namespace BriefFiniteElementNet.Elements
             var d2l = new Displacement(g2l(d2g.Displacements), g2l(d2g.Rotations));
             var d3l = new Displacement(g2l(d3g.Displacements), g2l(d3g.Rotations));
 
-            var uDkt = Matrix.OfVector(new[]
-                   { d1l.DZ, d1l.RX, d1l.RY, /**/ d2l.DZ, d2l.RX, d2l.RY, /**/ d3l.DZ, d3l.RX, d3l.RY });
+            var uDkt =
+                 new Matrix(new[]
+                 {d1l.DZ, d1l.RX, d1l.RY, /**/ d2l.DZ, d2l.RX, d2l.RY, /**/ d3l.DZ, d3l.RX, d3l.RY});
 
 
             var dbDkt = DktElement.GetDMatrix(this._thickness, this._elasticModulus, this._poissonRatio);
+
 
 
 
@@ -451,8 +456,9 @@ namespace BriefFiniteElementNet.Elements
             var d2l = new Displacement(g2l(d2g.Displacements), g2l(d2g.Rotations));
             var d3l = new Displacement(g2l(d3g.Displacements), g2l(d3g.Rotations));
 
-            var uCst = Matrix.OfVector(new[]
-                   { d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY });
+            var uCst =
+                  new Matrix(new[]
+                  {d1l.DX, d1l.DY, d2l.DX, d2l.DY, /**/d3l.DX, d3l.DY});
 
             var bCst = CstElement.GetBMatrix(lp.Select(i => i.X).ToArray(),
                 lp.Select(i => i.Y).ToArray());
@@ -493,9 +499,9 @@ namespace BriefFiniteElementNet.Elements
             var d2l = new Displacement(g2l(d2g.Displacements), g2l(d2g.Rotations));
             var d3l = new Displacement(g2l(d3g.Displacements), g2l(d3g.Rotations));
 
-            var uDkt = Matrix.OfVector(new[]
-                   { d1l.DZ, d1l.RX, d1l.RY, /**/ d2l.DZ, d2l.RX, d2l.RY, /**/ d3l.DZ, d3l.RX, d3l.RY });
-
+            var uDkt =
+                             new Matrix(new[]
+                             {d1l.DZ, d1l.RX, d1l.RY, /**/ d2l.DZ, d2l.RX, d2l.RY, /**/ d3l.DZ, d3l.RX, d3l.RY});
 
 
             var b = DktElement.GetBMatrix(localX, localY,

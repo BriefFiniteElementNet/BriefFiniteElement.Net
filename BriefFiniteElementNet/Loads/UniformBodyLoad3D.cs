@@ -102,13 +102,13 @@ namespace BriefFiniteElementNet
             return new[] {f, f, f, f};
         }
 
-        private Force[] GetGlobalEquivalentNodalLoads(DktElement elm)
+        private Force[] GetGlobalEquivalentNodalLoads(TriangleElement elm)
         {
             //using lumped method.
 
             var area = elm.GetArea();
 
-            var totv = area*elm.Thickness;
+            var totv = area * elm.Section.GetThicknessAt(new double[] {0.0, 0.0 });
 
             var totfx = _vx*totv;
             var totfy = _vy*totv;

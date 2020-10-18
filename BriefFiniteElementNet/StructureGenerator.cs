@@ -178,125 +178,127 @@ namespace BriefFiniteElementNet
             }
         }
 
-        public static Model GenerateRandomStructure(int nodeCount)
-        {
-            var rnd = new Random();
+        //Commented since the FrameElement2Node is not used anymore
+        //public static Model GenerateRandomStructure(int nodeCount)
+        //{
+        //    var rnd = new Random();
 
-            var buf = new Model();
+        //    var buf = new Model();
 
-            for (int i = 0; i < nodeCount; i++)
-            {
-                var nde = new Node() { Location = new Point(rnd.NextDouble() * 100, rnd.NextDouble() * 100, rnd.NextDouble() * 100) };
-                buf.Nodes.Add(nde);
-            }
-
-
-            for (var i = 0; i < nodeCount-1; i++)
-            {
-                var framElm = new FrameElement2Node() {StartNode = buf.Nodes[i], EndNode = buf.Nodes[i + 1]};
-                framElm.A = 0.01;
-                framElm.Iy = framElm.Iz = framElm.J = 0.1*0.1*0.1*0.1/12;
-                framElm.E = framElm.G = 210e9;
-
-                buf.Elements.Add(framElm);
-            }
-
-            return buf;
-        }
+        //    for (int i = 0; i < nodeCount; i++)
+        //    {
+        //        var nde = new Node() { Location = new Point(rnd.NextDouble() * 100, rnd.NextDouble() * 100, rnd.NextDouble() * 100) };
+        //        buf.Nodes.Add(nde);
+        //    }
 
 
-        public static Model Generate3DFrameElementGrid(int m, int n, int l)
-        {
-            var buf = new Model();
+        //    for (var i = 0; i < nodeCount-1; i++)
+        //    {
+        //        var framElm = new FrameElement2Node() {StartNode = buf.Nodes[i], EndNode = buf.Nodes[i + 1]};
+        //        framElm.A = 0.01;
+        //        framElm.Iy = framElm.Iz = framElm.J = 0.1*0.1*0.1*0.1/12;
+        //        framElm.E = framElm.G = 210e9;
 
-            var dx = 1.0;
-            var dy = 1.0;
-            var dz = 1.0;
+        //        buf.Elements.Add(framElm);
+        //    }
 
-            var nodes = new Node[m, n, l];
-
-            for (int k = 0; k < l; k++)
-            {
-                for (int i = 0; i < n; i++)
-                {
-                    for (int j = 0; j < m; j++)
-                    {
-
-                        var pos = new Point(i*dx, j*dy, k*dz);
-                        var nde = new Node() {Location = pos};
-                        buf.Nodes.Add(nde);
-                        nodes[j, i, k] = nde;
-                    }
-                }
-            }
-
-            for (int k = 0; k < l - 1; k++)
-            {
-                for (int i = 0; i < n; i++)
-                {
-                    for (int j = 0; j < m; j++)
-                    {
-                        var elm = new FrameElement2Node();
-                        elm.StartNode = nodes[j, i, k];
-                        elm.EndNode = nodes[j, i, k + 1];
-                        buf.Elements.Add(elm);
-                    }
-                }
-            }
+        //    return buf;
+        //}
 
 
-            for (int i = 0; i < n - 1; i++)
-            {
-                for (int k = 0; k < l; k++)
-                {
-                    for (int j = 0; j < m; j++)
-                    {
-                        var elm = new FrameElement2Node();
-                        elm.StartNode = nodes[j, i, k];
-                        elm.EndNode = nodes[j, i + 1, k];
-                        buf.Elements.Add(elm);
-                    }
-                }
-            }
+        //Commented since the FrameElement2Node is not used anymore
+        //public static Model Generate3DFrameElementGrid(int m, int n, int l)
+        //{
+        //    var buf = new Model();
 
-            for (int j = 0; j < m-1; j++)
-            {
-                for (int k = 0; k < l; k++)
-                {
-                    for (int i = 0; i < n; i++) 
-                        
-                    {
-                        var elm = new FrameElement2Node();
-                        elm.StartNode = nodes[j, i, k];
-                        elm.EndNode = nodes[j+1, i , k];
-                        buf.Elements.Add(elm);
-                        
-                    }
-                }
-            }
+        //    var dx = 1.0;
+        //    var dy = 1.0;
+        //    var dz = 1.0;
 
-            foreach (var elm in buf.Elements)
-            {
-                var framElm = elm as FrameElement2Node;
+        //    var nodes = new Node[m, n, l];
 
-                if (framElm == null)
-                    continue;
+        //    for (int k = 0; k < l; k++)
+        //    {
+        //        for (int i = 0; i < n; i++)
+        //        {
+        //            for (int j = 0; j < m; j++)
+        //            {
 
-                framElm.A = 7.64*1e-4;// 0.01;
-                framElm.Iy = framElm.Iz = framElm.J = 80*1e-8;// 0.1 * 0.1 * 0.1 * 0.1 / 12.0;
-                framElm.E = framElm.G = 210e9;
-                framElm.MassDensity = 7800;
-            }
+        //                var pos = new Point(i*dx, j*dy, k*dz);
+        //                var nde = new Node() {Location = pos};
+        //                buf.Nodes.Add(nde);
+        //                nodes[j, i, k] = nde;
+        //            }
+        //        }
+        //    }
+
+        //    for (int k = 0; k < l - 1; k++)
+        //    {
+        //        for (int i = 0; i < n; i++)
+        //        {
+        //            for (int j = 0; j < m; j++)
+        //            {
+        //                var elm = new FrameElement2Node();
+        //                elm.StartNode = nodes[j, i, k];
+        //                elm.EndNode = nodes[j, i, k + 1];
+        //                buf.Elements.Add(elm);
+        //            }
+        //        }
+        //    }
 
 
-            for (int i = 0; i < n*m; i++)
-            {
-                buf.Nodes[i].Constraints = Constraint.Fixed;
-            }
+        //    for (int i = 0; i < n - 1; i++)
+        //    {
+        //        for (int k = 0; k < l; k++)
+        //        {
+        //            for (int j = 0; j < m; j++)
+        //            {
+        //                var elm = new FrameElement2Node();
+        //                elm.StartNode = nodes[j, i, k];
+        //                elm.EndNode = nodes[j, i + 1, k];
+        //                buf.Elements.Add(elm);
+        //            }
+        //        }
+        //    }
+
+        //    for (int j = 0; j < m-1; j++)
+        //    {
+        //        for (int k = 0; k < l; k++)
+        //        {
+        //            for (int i = 0; i < n; i++) 
+
+        //            {
+        //                var elm = new FrameElement2Node();
+        //                elm.StartNode = nodes[j, i, k];
+        //                elm.EndNode = nodes[j+1, i , k];
+        //                buf.Elements.Add(elm);
+
+        //            }
+        //        }
+        //    }
+
+        //    foreach (var elm in buf.Elements)
+        //    {
+        //        var framElm = elm as FrameElement2Node;
+
+        //        if (framElm == null)
+        //            continue;
+
+        //        framElm.A = 7.64*1e-4;// 0.01;
+        //        framElm.Iy = framElm.Iz = framElm.J = 80*1e-8;// 0.1 * 0.1 * 0.1 * 0.1 / 12.0;
+        //        framElm.E = framElm.G = 210e9;
+        //        framElm.MassDensity = 7800;
+        //    }
 
 
-            return buf;
-        }
+        //    for (int i = 0; i < n*m; i++)
+        //    {
+        //        buf.Nodes[i].Constraints = Constraint.Fixed;
+        //    }
+
+
+        //    return buf;
+        //}
 
         public static Model Generate3DBarElementGrid(int m, int n, int l,Func<BarElement> factory)
         {
@@ -752,45 +754,46 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static Model GenerateSimpleBeam(int nodes)
-        {
-            var delta = 1.0;
+        //Commented since the FrameElement2Node is not used anymore
+        //public static Model GenerateSimpleBeam(int nodes)
+        //{
+        //    var delta = 1.0;
 
-            var buf = new Model();
+        //    var buf = new Model();
 
-            for (int i = 0; i < nodes; i++)
-            {
-                buf.Nodes.Add(new Node() {Location = new Point(i*delta, 0, 0)});
-            }
+        //    for (int i = 0; i < nodes; i++)
+        //    {
+        //        buf.Nodes.Add(new Node() {Location = new Point(i*delta, 0, 0)});
+        //    }
 
-            for (int i = 0; i < nodes-1; i++)
-            {
-                var start = buf.Nodes[i];
-                var end = buf.Nodes[i+1];
-                var elm = new FrameElement2Node() {StartNode = start, EndNode = end};
-                buf.Elements.Add(elm);
-            }
+        //    for (int i = 0; i < nodes-1; i++)
+        //    {
+        //        var start = buf.Nodes[i];
+        //        var end = buf.Nodes[i+1];
+        //        var elm = new FrameElement2Node() {StartNode = start, EndNode = end};
+        //        buf.Elements.Add(elm);
+        //    }
 
-            foreach (var elm in buf.Elements)
-            {
-                var framElm = elm as FrameElement2Node;
+        //    foreach (var elm in buf.Elements)
+        //    {
+        //        var framElm = elm as FrameElement2Node;
 
-                if (framElm == null)
-                    continue;
+        //        if (framElm == null)
+        //            continue;
 
-                framElm.A = 0.01;
-                framElm.Iy = framElm.Iz = 0.1 * 0.1 * 0.1 * 0.1 / 12;
-                framElm.J = 2*0.1*0.1*0.1*0.1/12;
-                framElm.E = 210e9;
-                var no = 0.3;
-                framElm.G = framElm.E/(2*(1 + no));
-            }
+        //        framElm.A = 0.01;
+        //        framElm.Iy = framElm.Iz = 0.1 * 0.1 * 0.1 * 0.1 / 12;
+        //        framElm.J = 2*0.1*0.1*0.1*0.1/12;
+        //        framElm.E = 210e9;
+        //        var no = 0.3;
+        //        framElm.G = framElm.E/(2*(1 + no));
+        //    }
 
-            buf.Nodes[0].Constraints = Constraint.Fixed;
+        //    buf.Nodes[0].Constraints = Constraint.Fixed;
 
-            TagModel(buf);
-            return buf;
-        }
+        //    TagModel(buf);
+        //    return buf;
+        //}
 
         public static void TagModel(Model mdl)
         {

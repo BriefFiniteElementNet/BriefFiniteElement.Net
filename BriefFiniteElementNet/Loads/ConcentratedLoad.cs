@@ -15,7 +15,7 @@ namespace BriefFiniteElementNet.Loads
     /// Represents an concentrated load which applies in the element's body.
     /// </summary>
     [Serializable]
-    [Obsolete("still in development, have bugs")]
+    [Obsolete("still in development, has bugs")]
 
     public class ConcentratedLoad : ElementalLoad
     {

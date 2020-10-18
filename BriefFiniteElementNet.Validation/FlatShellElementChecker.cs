@@ -5,6 +5,8 @@ using System.Text;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Geometry;
 using System.Globalization;
+using BriefFiniteElementNet.Sections;
+using BriefFiniteElementNet.Materials;
 
 namespace BriefFiniteElementNet.Validation
 {
@@ -69,13 +71,9 @@ namespace BriefFiniteElementNet.Validation
             {
                 for (var j = 0; j < m - 1; j++)
                 {
-                    var elm1 = new TriangleFlatShell()
+                    var elm1 = new TriangleElement()
                     {
-                        ElasticModulus = e,
-                        PoissonRatio = no,
-                        Thickness = t,
-                        Behavior = PlaneElementBehaviour.Membrane,
-                        MembraneFormulationType = tp
+                       
                     };
 
                     elm1.Nodes[2] = nodes[i][j + 1];
@@ -85,13 +83,9 @@ namespace BriefFiniteElementNet.Validation
                     model.Elements.Add(elm1);
 
 
-                    var elm2 = new TriangleFlatShell()
+                    var elm2 = new TriangleElement()
                     {
-                        ElasticModulus = e,
-                        PoissonRatio = no,
-                        Thickness = t,
-                        Behavior = PlaneElementBehaviour.Membrane,
-                        MembraneFormulationType = tp
+                       
                     };
 
                     elm2.Nodes[2] = nodes[i][j];
@@ -102,6 +96,19 @@ namespace BriefFiniteElementNet.Validation
                 }
             }
 
+            foreach (var elm in model.Elements)
+            {
+                var triElm = elm as TriangleElement;
+
+
+                if (triElm == null)
+                    continue;
+
+                triElm.Material = new UniformIsotropicMaterial(e, no);
+                triElm.Section = new UniformParametric2DSection(t);
+                triElm.Behavior = PlateElementBehaviour.Membrane;
+                triElm.MembraneFormulation = MembraneFormulation.PlaneStress;
+            }
             var pt = 177928.864; //40 kips
 
             nodes.Last()[0].Loads.Add(new NodalLoad(new Force(0, pt / 6, 0, 0, 00, 0)));
@@ -132,15 +139,15 @@ namespace BriefFiniteElementNet.Validation
 
                 var targetElement = model.Elements.FirstOrDefault(i => i.Nodes.Contains(targetNode));
 
-                var localS = (targetElement as TriangleFlatShell).GetInternalForce(0, 0,
-                    LoadCombination.DefaultLoadCombination);//tensor in local coordinate system
+                var localS = (targetElement as TriangleElement).GetInternalStress(new double [] { 0.166666666, 0.6666666, 1.0 },
+                    LoadCombination.DefaultLoadCombination, SectionPoints.Envelope);//tensor in local coordinate system
 
-                var globalS = (targetElement as TriangleFlatShell).RotateTensor(localS.MembraneTensor, Plane.XZPlane);//tensor in global coordinate system
+              //  var globalS = (targetElement as TriangleElement).RotateTensor(localS.MembraneTensor, Plane.XZPlane);//tensor in global coordinate system
 
-                var s6 = MembraneStressTensor.Multiply(globalS, UnitConverter.Pas2Psi(1)/1000);
-                var sap2000S6 = new MembraneStressTensor() { Sx = -41.493, Sy = -10.37, Txy = 11.84 };
+                //var s6 = MembraneStressTensor.Multiply(globalS, UnitConverter.Pas2Psi(1)/1000);
+                //var sap2000S6 = new MembraneStressTensor() { Sx = -41.493, Sy = -10.37, Txy = 11.84 };
 
-                Console.WriteLine("Err at node 6 against Sap2000 (stress): {0:0.0}%", GetError(s6, sap2000S6));
+                //Console.WriteLine("Err at node 6 against Sap2000 (stress): {0:0.0}%", GetError(s6, sap2000S6));
             }
 
         }
@@ -188,7 +195,7 @@ namespace BriefFiniteElementNet.Validation
                 for (var j = 0; j < n - 1; j++)
                 {
                     //first elements
-                    var elm1 = new DktElement() {ElasticModulus = e, PoissonRatio = no, Thickness = t};
+                    var elm1 = new TriangleElement() {};
 
                     elm1.Nodes[0] = nodes[i][j];
                     elm1.Nodes[1] = nodes[i][j + 1];
@@ -197,7 +204,7 @@ namespace BriefFiniteElementNet.Validation
                     model.Elements.Add(elm1);
 
                     //second elements
-                    var elm2 = new DktElement() { ElasticModulus = e, PoissonRatio = no, Thickness = t };
+                    var elm2 = new TriangleElement() { };
 
                     elm2.Nodes[0] = nodes[i + 1][j + 1];
                     elm2.Nodes[1] = nodes[i][j + 1];
@@ -206,7 +213,18 @@ namespace BriefFiniteElementNet.Validation
                     model.Elements.Add(elm2);
                 }
             }
+            foreach (var elm in model.Elements)
+            {
+                var triElm = elm as TriangleElement;
 
+
+                if (triElm == null)
+                    continue;
+
+                triElm.Material = new UniformIsotropicMaterial(e, no);
+                triElm.Section = new UniformParametric2DSection(t);
+                triElm.Behavior = PlateElementBehaviours.PlateBending;
+            }
             //loading, 0.1 kips/sq. in. on all elements
             foreach (var elm in model.Elements)
             {
@@ -285,7 +303,7 @@ namespace BriefFiniteElementNet.Validation
                 for (var j = 0; j < m ; j++)
                 {
                     //first elements
-                    var elm1 = new DktElement() { ElasticModulus = e, PoissonRatio = no, Thickness = t };
+                    var elm1 = new TriangleElement() {};
 
                     elm1.Nodes[0] = nodes[i][j];
                     elm1.Nodes[1] = nodes[i][j + 1];
@@ -294,7 +312,7 @@ namespace BriefFiniteElementNet.Validation
                     model.Elements.Add(elm1);
 
                     //second elements
-                    var elm2 = new DktElement() { ElasticModulus = e, PoissonRatio = no, Thickness = t };
+                    var elm2 = new TriangleElement() {  };
 
                     elm2.Nodes[0] = nodes[i + 1][j + 1];
                     elm2.Nodes[1] = nodes[i][j + 1];
@@ -302,6 +320,18 @@ namespace BriefFiniteElementNet.Validation
 
                     model.Elements.Add(elm2);
                 }
+            }
+            foreach (var elm in model.Elements)
+            {
+                var triElm = elm as TriangleElement;
+
+
+                if (triElm == null)
+                    continue;
+
+                triElm.Material = new UniformIsotropicMaterial(e, no);
+                triElm.Section = new UniformParametric2DSection(t);
+                triElm.Behavior = PlateElementBehaviours.PlateBending;
             }
 
             //loading, 0.1 kips/sq. in. on all elements
@@ -336,380 +366,394 @@ namespace BriefFiniteElementNet.Validation
             var d = nodes[n/2][m].GetNodalDisplacement();
         }
 
+        //Covered in validation case 1
         public static void Test6()
         {
-            Console.WriteLine("Example 13: I Beam With Flat Shell, BFE vs SAP2000");
+            //Console.WriteLine("Example 13: I Beam With Flat Shell, BFE vs SAP2000");
 
-            //var magic = 0;
+            ////var magic = 0;
 
-            //example #13 p175
+            ////example #13 p175
 
-            #region creating model
+            //#region creating model
 
-            var model = new Model();
+            //var model = new Model();
 
-            var l = UnitConverter.In2M(40);
-            var w = UnitConverter.In2M(10);
-            var h = UnitConverter.In2M(5);
-            var t = UnitConverter.In2M(0.25);
+            //var l = UnitConverter.In2M(40);
+            //var w = UnitConverter.In2M(10);
+            //var h = UnitConverter.In2M(5);
+            //var t = UnitConverter.In2M(0.25);
 
-            var e = UnitConverter.Ksi2Pas(10000); //10'000 ksi
-            var no = 0.3;
+            //var e = UnitConverter.Ksi2Pas(10000); //10'000 ksi
+            //var no = 0.3;
 
-            var n = 9;
+            //var n = 9;
 
-            var xSpan = l/(n - 1);
+            //var xSpan = l/(n - 1);
 
-            var nodes = new Node[n][];
+            //var nodes = new Node[n][];
 
-            for (var i = 0; i < n; i++)
-            {
-                var x = i*xSpan;
+            //for (var i = 0; i < n; i++)
+            //{
+            //    var x = i*xSpan;
 
-                nodes[i] = new Node[7];
+            //    nodes[i] = new Node[7];
 
-                nodes[i][0] = new Node(x, 0, 0);
-                nodes[i][1] = new Node(x, w/2, 0);
-                nodes[i][2] = new Node(x, w, 0);
+            //    nodes[i][0] = new Node(x, 0, 0);
+            //    nodes[i][1] = new Node(x, w/2, 0);
+            //    nodes[i][2] = new Node(x, w, 0);
 
-                nodes[i][3] = new Node(x, w/2, h/2);
+            //    nodes[i][3] = new Node(x, w/2, h/2);
 
-                nodes[i][4] = new Node(x, 0, h);
-                nodes[i][5] = new Node(x, w/2, h);
-                nodes[i][6] = new Node(x, w, h);
+            //    nodes[i][4] = new Node(x, 0, h);
+            //    nodes[i][5] = new Node(x, w/2, h);
+            //    nodes[i][6] = new Node(x, w, h);
 
-                model.Nodes.AddRange(nodes[i]);
-            }
+            //    model.Nodes.AddRange(nodes[i]);
+            //}
 
-            var pairs = new int[6][];
+            //var pairs = new int[6][];
 
-            pairs[0] = new int[] {0, 1};
-            pairs[1] = new int[] {1, 2};
-            pairs[2] = new int[] {1, 3};
-            pairs[3] = new int[] {3, 5};
-            pairs[4] = new int[] {4, 5};
-            pairs[5] = new int[] {5, 6};
+            //pairs[0] = new int[] {0, 1};
+            //pairs[1] = new int[] {1, 2};
+            //pairs[2] = new int[] {1, 3};
+            //pairs[3] = new int[] {3, 5};
+            //pairs[4] = new int[] {4, 5};
+            //pairs[5] = new int[] {5, 6};
 
-            for (var i = 0; i < n - 1; i++)
-            {
-                for (int j = 0; j < 6; j++)
-                {
-                    var n11 = nodes[i][pairs[j][0]];
-                    var n12 = nodes[i][pairs[j][1]];
+            //for (var i = 0; i < n - 1; i++)
+            //{
+            //    for (int j = 0; j < 6; j++)
+            //    {
+            //        var n11 = nodes[i][pairs[j][0]];
+            //        var n12 = nodes[i][pairs[j][1]];
 
-                    var n21 = nodes[i + 1][pairs[j][0]];
-                    var n22 = nodes[i + 1][pairs[j][1]];
+            //        var n21 = nodes[i + 1][pairs[j][0]];
+            //        var n22 = nodes[i + 1][pairs[j][1]];
 
-                    {
-                        var elm1 = new TriangleFlatShell() {Thickness = t, PoissonRatio = no, ElasticModulus = e};
+            //        {
+            //            var elm1 = new TriangleElement() {};
 
-                        elm1.Nodes[0] = n11;
-                        elm1.Nodes[1] = n12;
-                        elm1.Nodes[2] = n21;
+            //            elm1.Nodes[0] = n11;
+            //            elm1.Nodes[1] = n12;
+            //            elm1.Nodes[2] = n21;
 
-                        model.Elements.Add(elm1);
+            //            model.Elements.Add(elm1);
 
-                        var elm2 = new TriangleFlatShell() {Thickness = t, PoissonRatio = no, ElasticModulus = e};
+            //            var elm2 = new TriangleElement() {};
 
-                        elm2.Nodes[0] = n21;
-                        elm2.Nodes[1] = n22;
-                        elm2.Nodes[2] = n12;
+            //            elm2.Nodes[0] = n21;
+            //            elm2.Nodes[1] = n22;
+            //            elm2.Nodes[2] = n12;
 
-                        model.Elements.Add(elm2);
-                    }
-                }
-            }
-
-            //loading
-            nodes.Last()[0].Loads.Add(new NodalLoad(new Force(0, UnitConverter.Kip2N(1.6), 0, 0, 0, 0)));
-            nodes.Last()[6].Loads.Add(new NodalLoad(new Force(0, -UnitConverter.Kip2N(1.6), 0, 0, 0, 0)));
-
-            nodes[0].ToList().ForEach(i => i.Constraints = Constraints.Fixed);
-
-            #endregion
-
-            model.Trace.Listeners.Add(new BriefFiniteElementNet.Common.ConsoleTraceListener());
-            new ModelWarningChecker().CheckModel(model);
+            //            model.Elements.Add(elm2);
+            //        }
+            //    }
+            //}
+            //foreach (var elm in model.Elements)
+            //{
+            //    var triElm = elm as TriangleElement;
 
 
-            //ModelVisualizerControl.VisualizeInNewWindow(model);
+            //    if (triElm == null)
+            //        continue;
 
-            model.Solve();
+            //    triElm.Material = new UniformIsotropicMaterial(e, no);
+            //    triElm.Section = new UniformParametric2DSection(t);
+            //    triElm.Behavior = PlateElementBehaviours.PlateBending;
+            //}
 
-            var A = nodes.Last()[2];
-            var B = nodes.Last()[4];
-            var C = nodes.First()[1];
-            var D = nodes.First()[0];
-            var E = nodes.Last()[6];
+            ////loading
+            //nodes.Last()[0].Loads.Add(new NodalLoad(new Force(0, UnitConverter.Kip2N(1.6), 0, 0, 0, 0)));
+            //nodes.Last()[6].Loads.Add(new NodalLoad(new Force(0, -UnitConverter.Kip2N(1.6), 0, 0, 0, 0)));
 
-            /*
-            for (int i = 0; i < nodes.Last().Length; i++)
-            {
-                nodes.Last()[i].Label = i.ToString();
-            }
-            */
+            //nodes[0].ToList().ForEach(i => i.Constraints = Constraints.Fixed);
 
-            /**/
-            A.Label = "A";
-            B.Label = "B";
-            C.Label = "C";
-            D.Label = "D";
-            E.Label = "E";
-            /**/
+            //#endregion
 
-            var da = 1/0.0254*A.GetNodalDisplacement().Displacements; // [inch]
-            var db = 1/0.0254*B.GetNodalDisplacement().Displacements; // [inch]
-
-            var sap2000Da = new Vector(-0.014921, 0.085471, 0.146070); //tbl 7.14
-            var sap2000Db = new Vector(-0.014834, -0.085475, -0.144533); //tbl 7.14
-
-            Console.WriteLine("Err at A against Sap2000 (displacement): {0:0.0}%", GetError(da, sap2000Da));
-            Console.WriteLine("Err at B against Sap2000 (displacement): {0:0.0}%", GetError(db, sap2000Db));
-
-            {
-                //stresses
-                var cElms = model.Elements.Cast<TriangleFlatShell>().Where(i => i.Nodes.Contains(C)).ToArray();
-                var DElms = model.Elements.Cast<TriangleFlatShell>().Where(i => i.Nodes.Contains(D)).ToArray();
-                var EElms = model.Elements.Cast<TriangleFlatShell>().Where(i => i.Nodes.Contains(E)).ToArray();
-
-                var globTensor = new Func<TriangleFlatShell,MembraneStressTensor>(elm =>
-                {
-                    var tns = elm.GetInternalForce(0, 0, LoadCombination.DefaultLoadCombination);
-
-                    var rt = elm.RotateTensor(tns.MembraneTensor, Plane.YZPlane);
-
-                    return rt;
-                });
-
-                var cSy =
-                    cElms.Select(i => globTensor(i))
-                        .Select(i => MembraneStressTensor.Multiply(i, UnitConverter.Pas2Psi(1)/1000))
-                        .Max(i => Math.Abs(i.Sy));
-
-                var dSx =
-                    DElms.Select(i => globTensor(i))
-                        .Select(i => MembraneStressTensor.Multiply(i, UnitConverter.Pas2Psi(1)/1000))
-                        .Max(i => Math.Abs(i.Sx));
-
-                var eTxy =
-                    EElms.Select(i => globTensor(i))
-                        .Select(i => MembraneStressTensor.Multiply(i, UnitConverter.Pas2Psi(1)/1000))
-                        .Max(i => Math.Abs(i.Txy));
+            //model.Trace.Listeners.Add(new BriefFiniteElementNet.Common.ConsoleTraceListener());
+            //new ModelWarningChecker().CheckModel(model);
 
 
+            ////ModelVisualizerControl.VisualizeInNewWindow(model);
 
-                Console.WriteLine("S11 at C against Sap2000 (stress tensor): {0:0.0}%", GetError(cSy, 5.441));
-                Console.WriteLine("S22 at D against Sap2000 (stress tensor): {0:0.0}%", GetError(dSx, 2.009));
-                Console.WriteLine("S21 at E against Sap2000 (stress tensor): {0:0.0}%", GetError(eTxy, 1.450));
+            //model.Solve();
 
-            }
+            //var A = nodes.Last()[2];
+            //var B = nodes.Last()[4];
+            //var C = nodes.First()[1];
+            //var D = nodes.First()[0];
+            //var E = nodes.Last()[6];
+
+            ///*
+            //for (int i = 0; i < nodes.Last().Length; i++)
+            //{
+            //    nodes.Last()[i].Label = i.ToString();
+            //}
+            //*/
+
+            ///**/
+            //A.Label = "A";
+            //B.Label = "B";
+            //C.Label = "C";
+            //D.Label = "D";
+            //E.Label = "E";
+            ///**/
+
+            //var da = 1/0.0254*A.GetNodalDisplacement().Displacements; // [inch]
+            //var db = 1/0.0254*B.GetNodalDisplacement().Displacements; // [inch]
+
+            //var sap2000Da = new Vector(-0.014921, 0.085471, 0.146070); //tbl 7.14
+            //var sap2000Db = new Vector(-0.014834, -0.085475, -0.144533); //tbl 7.14
+
+            //Console.WriteLine("Err at A against Sap2000 (displacement): {0:0.0}%", GetError(da, sap2000Da));
+            //Console.WriteLine("Err at B against Sap2000 (displacement): {0:0.0}%", GetError(db, sap2000Db));
+
+            //{
+            //    //stresses
+            //    var cElms = model.Elements.Cast<TriangleElement>().Where(i => i.Nodes.Contains(C)).ToArray();
+            //    var DElms = model.Elements.Cast<TriangleElement>().Where(i => i.Nodes.Contains(D)).ToArray();
+            //    var EElms = model.Elements.Cast<TriangleElement>().Where(i => i.Nodes.Contains(E)).ToArray();
+
+            //    var globTensor = new Func<TriangleElement, MembraneStressTensor>(elm =>
+            //    {
+            //        var tns = elm.GetInternalForce(0, 0, LoadCombination.DefaultLoadCombination);
+
+            //        var rt = elm.RotateTensor(tns.MembraneTensor, Plane.YZPlane);
+
+            //        return rt;
+            //    });
+
+            //    var cSy =
+            //        cElms.Select(i => globTensor(i))
+            //            .Select(i => MembraneStressTensor.Multiply(i, UnitConverter.Pas2Psi(1)/1000))
+            //            .Max(i => Math.Abs(i.Sy));
+
+            //    var dSx =
+            //        DElms.Select(i => globTensor(i))
+            //            .Select(i => MembraneStressTensor.Multiply(i, UnitConverter.Pas2Psi(1)/1000))
+            //            .Max(i => Math.Abs(i.Sx));
+
+            //    var eTxy =
+            //        EElms.Select(i => globTensor(i))
+            //            .Select(i => MembraneStressTensor.Multiply(i, UnitConverter.Pas2Psi(1)/1000))
+            //            .Max(i => Math.Abs(i.Txy));
+
+
+
+            //    Console.WriteLine("S11 at C against Sap2000 (stress tensor): {0:0.0}%", GetError(cSy, 5.441));
+            //    Console.WriteLine("S22 at D against Sap2000 (stress tensor): {0:0.0}%", GetError(dSx, 2.009));
+            //    Console.WriteLine("S21 at E against Sap2000 (stress tensor): {0:0.0}%", GetError(eTxy, 1.450));
+
+            //}
         }
 
+        //Already covered in case 1
         public static void Test6_2()
         {
-            Console.WriteLine("Example 13: I Beam With Flat Shell, BFE vs ABAQUS");
+            //Console.WriteLine("Example 13: I Beam With Flat Shell, BFE vs ABAQUS");
 
-            //var magic = 0;
+            ////var magic = 0;
 
-            //example #13 p175
+            ////example #13 p175
 
-            #region creating model
+            //#region creating model
 
-            var model = new Model();
+            //var model = new Model();
 
-            var l = UnitConverter.In2M(40);
-            var w = UnitConverter.In2M(10);
-            var h = UnitConverter.In2M(5);
-            var t = UnitConverter.In2M(0.25);
+            //var l = UnitConverter.In2M(40);
+            //var w = UnitConverter.In2M(10);
+            //var h = UnitConverter.In2M(5);
+            //var t = UnitConverter.In2M(0.25);
 
-            var e = UnitConverter.Ksi2Pas(10000); //10'000 ksi
-            var no = 0.3;
+            //var e = UnitConverter.Ksi2Pas(10000); //10'000 ksi
+            //var no = 0.3;
 
-            var n = 9;
+            //var n = 9;
 
-            var xSpan = l / (n - 1);
+            //var xSpan = l / (n - 1);
 
-            var nodes = new Node[n][];
+            //var nodes = new Node[n][];
 
-            for (var i = 0; i < n; i++)
-            {
-                var x = i * xSpan;
+            //for (var i = 0; i < n; i++)
+            //{
+            //    var x = i * xSpan;
 
-                nodes[i] = new Node[7];
+            //    nodes[i] = new Node[7];
 
-                nodes[i][0] = new Node(x, 0, 0);
-                nodes[i][1] = new Node(x, w / 2, 0);
-                nodes[i][2] = new Node(x, w, 0);
+            //    nodes[i][0] = new Node(x, 0, 0);
+            //    nodes[i][1] = new Node(x, w / 2, 0);
+            //    nodes[i][2] = new Node(x, w, 0);
 
-                nodes[i][3] = new Node(x, w / 2, h / 2);
+            //    nodes[i][3] = new Node(x, w / 2, h / 2);
 
-                nodes[i][4] = new Node(x, 0, h);
-                nodes[i][5] = new Node(x, w / 2, h);
-                nodes[i][6] = new Node(x, w, h);
+            //    nodes[i][4] = new Node(x, 0, h);
+            //    nodes[i][5] = new Node(x, w / 2, h);
+            //    nodes[i][6] = new Node(x, w, h);
 
-                model.Nodes.AddRange(nodes[i]);
-            }
+            //    model.Nodes.AddRange(nodes[i]);
+            //}
 
-            var pairs = new int[6][];
+            //var pairs = new int[6][];
 
-            pairs[0] = new int[] { 0, 1 };
-            pairs[1] = new int[] { 1, 2 };
-            pairs[2] = new int[] { 1, 3 };
-            pairs[3] = new int[] { 3, 5 };
-            pairs[4] = new int[] { 4, 5 };
-            pairs[5] = new int[] { 5, 6 };
+            //pairs[0] = new int[] { 0, 1 };
+            //pairs[1] = new int[] { 1, 2 };
+            //pairs[2] = new int[] { 1, 3 };
+            //pairs[3] = new int[] { 3, 5 };
+            //pairs[4] = new int[] { 4, 5 };
+            //pairs[5] = new int[] { 5, 6 };
 
-            for (var i = 0; i < n - 1; i++)
-            {
-                for (int j = 0; j < 6; j++)
-                {
-                    var n11 = nodes[i][pairs[j][0]];
-                    var n12 = nodes[i][pairs[j][1]];
+            //for (var i = 0; i < n - 1; i++)
+            //{
+            //    for (int j = 0; j < 6; j++)
+            //    {
+            //        var n11 = nodes[i][pairs[j][0]];
+            //        var n12 = nodes[i][pairs[j][1]];
 
-                    var n21 = nodes[i + 1][pairs[j][0]];
-                    var n22 = nodes[i + 1][pairs[j][1]];
+            //        var n21 = nodes[i + 1][pairs[j][0]];
+            //        var n22 = nodes[i + 1][pairs[j][1]];
 
-                    {
-                        var elm1 = new TriangleFlatShell() { Thickness = t, PoissonRatio = no, ElasticModulus = e };
+            //        {
+            //            var elm1 = new TriangleFlatShell() { Thickness = t, PoissonRatio = no, ElasticModulus = e };
 
-                        elm1.Nodes[0] = n11;
-                        elm1.Nodes[1] = n12;
-                        elm1.Nodes[2] = n21;
+            //            elm1.Nodes[0] = n11;
+            //            elm1.Nodes[1] = n12;
+            //            elm1.Nodes[2] = n21;
 
-                        model.Elements.Add(elm1);
+            //            model.Elements.Add(elm1);
 
-                        var elm2 = new TriangleFlatShell() { Thickness = t, PoissonRatio = no, ElasticModulus = e };
+            //            var elm2 = new TriangleFlatShell() { Thickness = t, PoissonRatio = no, ElasticModulus = e };
 
-                        elm2.Nodes[0] = n21;
-                        elm2.Nodes[1] = n22;
-                        elm2.Nodes[2] = n12;
+            //            elm2.Nodes[0] = n21;
+            //            elm2.Nodes[1] = n22;
+            //            elm2.Nodes[2] = n12;
 
-                        model.Elements.Add(elm2);
-                    }
-                }
-            }
+            //            model.Elements.Add(elm2);
+            //        }
+            //    }
+            //}
 
-            //loading
-            nodes.Last()[0].Loads.Add(new NodalLoad(new Force(0, UnitConverter.Kip2N(1.6), 0, 0, 0, 0)));
-            nodes.Last()[6].Loads.Add(new NodalLoad(new Force(0, -UnitConverter.Kip2N(1.6), 0, 0, 0, 0)));
+            ////loading
+            //nodes.Last()[0].Loads.Add(new NodalLoad(new Force(0, UnitConverter.Kip2N(1.6), 0, 0, 0, 0)));
+            //nodes.Last()[6].Loads.Add(new NodalLoad(new Force(0, -UnitConverter.Kip2N(1.6), 0, 0, 0, 0)));
 
-            nodes[0].ToList().ForEach(i => i.Constraints = Constraints.Fixed);
+            //nodes[0].ToList().ForEach(i => i.Constraints = Constraints.Fixed);
 
-            #endregion
+            //#endregion
 
-            model.Trace.Listeners.Add(new BriefFiniteElementNet.Common.ConsoleTraceListener());
-            new ModelWarningChecker().CheckModel(model);
+            //model.Trace.Listeners.Add(new BriefFiniteElementNet.Common.ConsoleTraceListener());
+            //new ModelWarningChecker().CheckModel(model);
 
 
-            //ModelVisualizerControl.VisualizeInNewWindow(model);
+            ////ModelVisualizerControl.VisualizeInNewWindow(model);
 
-            model.Solve();
+            //model.Solve();
 
             
 
 
 
-            var A = nodes.Last()[2];
-            var B = nodes.Last()[4];
-            var C = nodes.First()[1];
-            var D = nodes.First()[0];
-            var E = nodes.Last()[6];
+            //var A = nodes.Last()[2];
+            //var B = nodes.Last()[4];
+            //var C = nodes.First()[1];
+            //var D = nodes.First()[0];
+            //var E = nodes.Last()[6];
 
-            /*
-            for (int i = 0; i < nodes.Last().Length; i++)
-            {
-                nodes.Last()[i].Label = i.ToString();
-            }
-            */
+            ///*
+            //for (int i = 0; i < nodes.Last().Length; i++)
+            //{
+            //    nodes.Last()[i].Label = i.ToString();
+            //}
+            //*/
 
-            /**/
-            A.Label = "A";
-            B.Label = "B";
-            C.Label = "C";
-            D.Label = "D";
-            E.Label = "E";
-            /**/
-
-
-            for (int i = 0; i < model.Elements.Count; i++)
-            {
-                model.Elements[i].Label = i.ToString(CultureInfo.CurrentCulture);
-            }
-
-            var da = 1 / 0.0254 * A.GetNodalDisplacement().Displacements; // [inch]
-            var db = 1 / 0.0254 * B.GetNodalDisplacement().Displacements; // [inch]
-
-            var abaqusDa = new Vector(-15.4207E-03, 88.2587E-03, 150.910E-03);
-            var abaqusDb = new Vector(-15.3246E-03, -88.2629E-03, -148.940E-03);
-
-            Console.WriteLine("Err at A against ABAQUS (displacement): {0:0.000}%", GetError(da, abaqusDa));
-            Console.WriteLine("Err at B against ABAQUS (displacement): {0:0.000}%", GetError(db, abaqusDb));
-
-            {
-                var abaqusElms = new int[] {96, 89, 57, 41};
-
-                var bfeElms = new[] {0, 37, 40, 42}.Select(i => model.Elements[i]).Cast<TriangleFlatShell>().ToArray();
-
-                var bfeTensors =
-                    bfeElms.Select(i => i.GetInternalForce(0, 0, LoadCombination.DefaultLoadCombination).MembraneTensor).ToArray();
-
-                var abaqusTensors = new MembraneStressTensor[]
-                {
-                    new MembraneStressTensor() //elm 96
-                    {
-                        Sx = Avg(7.36164, 6.88581, 7.48463 /**/, 8.14348, 8.61931, 8.02049 /**/),
-                        Sy = Avg(2.16196, 2.01921, 2.05925 /**/, 2.48958, 2.63233, 2.59229 /**/),
-                        Txy = Avg(2.27915, 2.33284, 2.49939 /**/, 2.01766, 1.96396, 1.79742 /**/)
-                    },
-
-                    new MembraneStressTensor() //elm 89
-                    {
-                        Sx = Avg(-230.883E-03, -268.773E-03, -226.600E-03, -157.940E-03, -120.050E-03, -162.222E-03),
-                        Sy = Avg(-646.591E-03, -591.701E-03, -523.641E-03, -278.264E-03, -333.154E-03, -401.214E-03),
-                        Txy = -Avg(676.247E-03, 663.707E-03, 701.730E-03, -1.09379, -1.08125, -1.11928)
-                    },
-
-                    new MembraneStressTensor()
-                    {
-                        Sx = Avg(-398.693E-03, -205.937E-03, -124.743E-03, 280.574E-03, 87.8183E-03, 6.62372E-03),
-                        Sy = Avg(-634.569E-03, -402.618E-03, -100.092E-03, 612.059E-03, 380.109E-03, 77.5826E-03),
-                        Txy = Avg(838.081E-03, 925.471E-03, 871.566E-03, -881.344E-03, -968.735E-03, -914.829E-03)
-                    },
-
-                    new MembraneStressTensor()
-                    {
-                        Sx = Avg(-18.7201E-03, 127.473E-03, 288.131E-03, 4.04619E-03, -142.147E-03, -302.805E-03),
-                        Sy = Avg(11.1952E-03, 174.315E-03, 540.586E-03, -37.4831E-03, -200.603E-03, -566.874E-03),
-                        Txy = Avg(842.951E-03, 956.823E-03, 865.886E-03, -882.801E-03, -996.674E-03, -905.736E-03)
-                    },
-                };
-
-                var globTensor = new Func<TriangleFlatShell, MembraneStressTensor>(elm =>
-                {
-                    var tns = elm.GetInternalForce(0, 0, LoadCombination.DefaultLoadCombination);
-
-                    var rt = elm.RotateTensor(tns.MembraneTensor, Plane.XZPlane);
-
-                    return rt;
-                });
+            ///**/
+            //A.Label = "A";
+            //B.Label = "B";
+            //C.Label = "C";
+            //D.Label = "D";
+            //E.Label = "E";
+            ///**/
 
 
-                for (int i = 0; i < bfeTensors.Length; i++)
-                {
+            //for (int i = 0; i < model.Elements.Count; i++)
+            //{
+            //    model.Elements[i].Label = i.ToString(CultureInfo.CurrentCulture);
+            //}
 
-                    var bfeTensor = bfeTensors[i];
+            //var da = 1 / 0.0254 * A.GetNodalDisplacement().Displacements; // [inch]
+            //var db = 1 / 0.0254 * B.GetNodalDisplacement().Displacements; // [inch]
 
-                    bfeTensor = globTensor(bfeElms[i]);
+            //var abaqusDa = new Vector(-15.4207E-03, 88.2587E-03, 150.910E-03);
+            //var abaqusDb = new Vector(-15.3246E-03, -88.2629E-03, -148.940E-03);
 
-                    bfeTensor = MembraneStressTensor.Multiply(bfeTensor, -UnitConverter.Pas2Psi(1)/1000);
+            //Console.WriteLine("Err at A against ABAQUS (displacement): {0:0.000}%", GetError(da, abaqusDa));
+            //Console.WriteLine("Err at B against ABAQUS (displacement): {0:0.000}%", GetError(db, abaqusDb));
 
-                    var abaqusTensor = abaqusTensors[i];
+            //{
+            //    var abaqusElms = new int[] {96, 89, 57, 41};
 
-                    Console.WriteLine("Err against ABAQUS (AVG stress tensor) @ elm {1}: {0:0.000}%",
-                        GetError(bfeTensor, abaqusTensor), abaqusElms[i]);
+            //    var bfeElms = new[] {0, 37, 40, 42}.Select(i => model.Elements[i]).Cast<TriangleElement>().ToArray();
 
-                }
-            }
+            //    var bfeTensors =
+            //        bfeElms.Select(i => i.GetInternalForce(0, 0, LoadCombination.DefaultLoadCombination).MembraneTensor).ToArray();
+
+            //    var abaqusTensors = new MembraneStressTensor[]
+            //    {
+            //        new MembraneStressTensor() //elm 96
+            //        {
+            //            Sx = Avg(7.36164, 6.88581, 7.48463 /**/, 8.14348, 8.61931, 8.02049 /**/),
+            //            Sy = Avg(2.16196, 2.01921, 2.05925 /**/, 2.48958, 2.63233, 2.59229 /**/),
+            //            Txy = Avg(2.27915, 2.33284, 2.49939 /**/, 2.01766, 1.96396, 1.79742 /**/)
+            //        },
+
+            //        new MembraneStressTensor() //elm 89
+            //        {
+            //            Sx = Avg(-230.883E-03, -268.773E-03, -226.600E-03, -157.940E-03, -120.050E-03, -162.222E-03),
+            //            Sy = Avg(-646.591E-03, -591.701E-03, -523.641E-03, -278.264E-03, -333.154E-03, -401.214E-03),
+            //            Txy = -Avg(676.247E-03, 663.707E-03, 701.730E-03, -1.09379, -1.08125, -1.11928)
+            //        },
+
+            //        new MembraneStressTensor()
+            //        {
+            //            Sx = Avg(-398.693E-03, -205.937E-03, -124.743E-03, 280.574E-03, 87.8183E-03, 6.62372E-03),
+            //            Sy = Avg(-634.569E-03, -402.618E-03, -100.092E-03, 612.059E-03, 380.109E-03, 77.5826E-03),
+            //            Txy = Avg(838.081E-03, 925.471E-03, 871.566E-03, -881.344E-03, -968.735E-03, -914.829E-03)
+            //        },
+
+            //        new MembraneStressTensor()
+            //        {
+            //            Sx = Avg(-18.7201E-03, 127.473E-03, 288.131E-03, 4.04619E-03, -142.147E-03, -302.805E-03),
+            //            Sy = Avg(11.1952E-03, 174.315E-03, 540.586E-03, -37.4831E-03, -200.603E-03, -566.874E-03),
+            //            Txy = Avg(842.951E-03, 956.823E-03, 865.886E-03, -882.801E-03, -996.674E-03, -905.736E-03)
+            //        },
+            //    };
+
+            //    //var globTensor = new Func<TriangleElement, MembraneStressTensor>(elm =>
+            //    //{
+            //    //    var tns = elm.GetInternalForce(0, 0, LoadCombination.DefaultLoadCombination);
+
+            //    //    var rt = elm.RotateTensor(tns.MembraneTensor, Plane.XZPlane);
+
+            //    //    return rt;
+            //    //});
+
+
+            //    //for (int i = 0; i < bfeTensors.Length; i++)
+            //    //{
+
+            //    //    var bfeTensor = bfeTensors[i];
+
+            //    //    bfeTensor = globTensor(bfeElms[i]);
+
+            //    //    bfeTensor = MembraneStressTensor.Multiply(bfeTensor, -UnitConverter.Pas2Psi(1)/1000);
+
+            //    //    var abaqusTensor = abaqusTensors[i];
+
+            //    //    Console.WriteLine("Err against ABAQUS (AVG stress tensor) @ elm {1}: {0:0.000}%",
+            //    //        GetError(bfeTensor, abaqusTensor), abaqusElms[i]);
+
+            //    //}
+            //}
         }
 
         public static double Avg(params double[] values)
@@ -776,12 +820,9 @@ namespace BriefFiniteElementNet.Validation
                     if (skipsX.Contains(i) && skipsY.Contains(j))
                         continue;
 
-                    var elm1 = new TriangleFlatShell()
+                    var elm1 = new TriangleElement()
                     {
-                        ElasticModulus = e,
-                        PoissonRatio = no,
-                        Thickness = t,
-                        Behavior = PlaneElementBehaviour.ThinPlate
+                     
                     };
 
                     elm1.Nodes[0] = nodes[i][j];
@@ -791,12 +832,9 @@ namespace BriefFiniteElementNet.Validation
                     model.Elements.Add(elm1);
 
                     //second elements
-                    var elm2 = new TriangleFlatShell()
+                    var elm2 = new TriangleElement()
                     {
-                        ElasticModulus = e,
-                        PoissonRatio = no,
-                        Thickness = t,
-                        Behavior = PlaneElementBehaviour.ThinPlate
+                        
                     };
 
                     elm2.Nodes[0] = nodes[i + 1][j + 1];
@@ -807,8 +845,21 @@ namespace BriefFiniteElementNet.Validation
 
                 }
             }
+            foreach (var elm in model.Elements)
+            {
+                var triElm = elm as TriangleElement;
 
-            //node conttraints
+
+                if (triElm == null)
+                    continue;
+
+                triElm.Material = new UniformIsotropicMaterial(e, no);
+                triElm.Section = new UniformParametric2DSection(t);
+                triElm.Behavior = PlateElementBehaviours.Shell;
+                triElm.MembraneFormulation = MembraneFormulation.PlaneStress;
+            }
+
+            //node constraints
             for (var i = 0; i < m; i++)
             {
                 for (var j = 0; j < n; j++)

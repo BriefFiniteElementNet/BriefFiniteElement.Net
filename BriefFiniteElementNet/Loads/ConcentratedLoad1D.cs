@@ -93,68 +93,68 @@ namespace BriefFiniteElementNet
 
         public override Force GetInternalForceAt(Element1D elm, double x)
         {
-            if (elm is FrameElement2Node)
-            {
-                var e = elm as FrameElement2Node;
+            //if (elm is FrameElement2Node)
+            //{
+            //    var e = elm as FrameElement2Node;
 
-                var localForce = this.force;
+            //    var localForce = this.force;
 
-                if (this.coordinationSystem == CoordinationSystem.Global)
-                {
-                    var tmp = e.TransformGlobalToLocal(localForce.Forces, localForce.Moments);
+            //    if (this.coordinationSystem == CoordinationSystem.Global)
+            //    {
+            //        var tmp = e.TransformGlobalToLocal(localForce.Forces, localForce.Moments);
 
-                    localForce.Forces = tmp[0];
-                    localForce.Moments = tmp[1];
-                }
+            //        localForce.Forces = tmp[0];
+            //        localForce.Moments = tmp[1];
+            //    }
 
-                var l = (e.EndNode.Location - e.StartNode.Location).Length;
+            //    var l = (e.EndNode.Location - e.StartNode.Location).Length;
 
-                var l1 = distanseFromStartNode;
-                var l2 = l - l1;
+            //    var l1 = distanseFromStartNode;
+            //    var l2 = l - l1;
 
-                var mymy1 = localForce.My*l2/(l*l)*(l2 - 2*l1);
-                var myfz1 = 6*localForce.My*l1*l2/(l*l*l);
+            //    var mymy1 = localForce.My*l2/(l*l)*(l2 - 2*l1);
+            //    var myfz1 = 6*localForce.My*l1*l2/(l*l*l);
 
-                var mzmz1 = localForce.Mz*l2/(l*l)*(l2 - 2*l1);
-                var mzfy1 = -6*localForce.Mz*l1*l2/(l*l*l);
+            //    var mzmz1 = localForce.Mz*l2/(l*l)*(l2 - 2*l1);
+            //    var mzfy1 = -6*localForce.Mz*l1*l2/(l*l*l);
 
-                var fzmy1 = -localForce.Fz*l1*l2*l2/(l*l);
-                var fzfz1 = localForce.Fz*l2*l2/(l*l*l)*(3*l1 + l2);
+            //    var fzmy1 = -localForce.Fz*l1*l2*l2/(l*l);
+            //    var fzfz1 = localForce.Fz*l2*l2/(l*l*l)*(3*l1 + l2);
 
-                var fymz1 = localForce.Fy*l1*l2*l2/(l*l);
-                var fyfy1 = localForce.Fy*l2*l2/(l*l*l)*(3*l1 + l2);
+            //    var fymz1 = localForce.Fy*l1*l2*l2/(l*l);
+            //    var fyfy1 = localForce.Fy*l2*l2/(l*l*l)*(3*l1 + l2);
 
 
-                var fxfx1 = localForce.Fx*l2/l;
-                var mxmx1 = localForce.Mx*l2/l;
+            //    var fxfx1 = localForce.Fx*l2/l;
+            //    var mxmx1 = localForce.Mx*l2/l;
 
-                var f1 = -new Force(
-                    fxfx1,
-                    mzfy1 + fyfy1,
-                    fzfz1 + myfz1,
-                    mxmx1,
-                    mymy1 + fzmy1,
-                    mzmz1 + fymz1
-                    );
+            //    var f1 = -new Force(
+            //        fxfx1,
+            //        mzfy1 + fyfy1,
+            //        fzfz1 + myfz1,
+            //        mxmx1,
+            //        mymy1 + fzmy1,
+            //        mzmz1 + fymz1
+            //        );
 
-                if (x < this.distanseFromStartNode)
-                {
-                    var v1 = new Vector(x, 0, 0);
-                    var buf = -f1.Move(v1);
+            //    if (x < this.distanseFromStartNode)
+            //    {
+            //        var v1 = new Vector(x, 0, 0);
+            //        var buf = -f1.Move(v1);
 
-                    return buf;
-                }
+            //        return buf;
+            //    }
 
-                else
-                {
-                    var v1 = new Vector(x, 0, 0);
-                    var v2 = new Vector(x - this.distanseFromStartNode, 0, 0);
+            //    else
+            //    {
+            //        var v1 = new Vector(x, 0, 0);
+            //        var v2 = new Vector(x - this.distanseFromStartNode, 0, 0);
 
-                    var buf = -f1.Move(v1) - this.force.Move(v2);
+            //        var buf = -f1.Move(v1) - this.force.Move(v2);
 
-                    return buf;
-                }
-            }
+            //        return buf;
+            //    }
+            //}
 
             throw new NotImplementedException();
         }
@@ -162,95 +162,95 @@ namespace BriefFiniteElementNet
 
         public Force[] GetGlobalEquivalentNodalLoads(Element element)
         {
-            if (element is FrameElement2Node)
-            {
-                var e = element as FrameElement2Node;
+            //if (element is FrameElement2Node)
+            //{
+            //    var e = element as FrameElement2Node;
 
-                var localForce = this.force;
+            //    var localForce = this.force;
 
-                if (this.coordinationSystem == CoordinationSystem.Global)
-                {
-                    var tmp = e.TransformGlobalToLocal(localForce.Forces, localForce.Moments);
+            //    if (this.coordinationSystem == CoordinationSystem.Global)
+            //    {
+            //        var tmp = e.TransformGlobalToLocal(localForce.Forces, localForce.Moments);
 
-                    localForce.Forces = tmp[0];
-                    localForce.Moments = tmp[1];
-                }
+            //        localForce.Forces = tmp[0];
+            //        localForce.Moments = tmp[1];
+            //    }
 
-                var buf = new Force[2];
+            //    var buf = new Force[2];
 
-                buf[0] = new Force();
+            //    buf[0] = new Force();
 
-                var l = (e.EndNode.Location - e.StartNode.Location).Length;
+            //    var l = (e.EndNode.Location - e.StartNode.Location).Length;
 
-                var a = distanseFromStartNode;
-                var b = l - a;
+            //    var a = distanseFromStartNode;
+            //    var b = l - a;
 
-                var mymy1 = localForce.My*b/(l*l)*(b - 2*a);
-                var mymy2 = localForce.My*a/(l*l)*(a - 2*b);
+            //    var mymy1 = localForce.My*b/(l*l)*(b - 2*a);
+            //    var mymy2 = localForce.My*a/(l*l)*(a - 2*b);
 
-                var myfz1 = 6*localForce.My*a*b/(l*l*l);
-                var myfz2 = -myfz1;
-
-
-                var mzmz1 = localForce.Mz*b/(l*l)*(b - 2*a);
-                var mzmz2 = localForce.Mz*a/(l*l)*(a - 2*b);
-
-                var mzfy1 = -6*localForce.Mz*a*b/(l*l*l);
-                var mzfy2 = -mzfy1;
+            //    var myfz1 = 6*localForce.My*a*b/(l*l*l);
+            //    var myfz2 = -myfz1;
 
 
-                var fzmy1 = -localForce.Fz*a*b*b/(l*l);
-                var fzmy2 = localForce.Fz*a*a*b/(l*l);
+            //    var mzmz1 = localForce.Mz*b/(l*l)*(b - 2*a);
+            //    var mzmz2 = localForce.Mz*a/(l*l)*(a - 2*b);
 
-                var fzfz1 = localForce.Fz*b*b/(l*l*l)*(3*a + b);
-                var fzfz2 = localForce.Fz*a*a/(l*l*l)*(3*b + a);
-
-
-                var fymz1 = localForce.Fy*a*b*b/(l*l);
-                var fymz2 = -localForce.Fy*a*a*b/(l*l);
-
-                var fyfy1 = localForce.Fy*b*b/(l*l*l)*(3*a + b);
-                var fyfy2 = localForce.Fy*a*a/(l*l*l)*(3*b + a);
+            //    var mzfy1 = -6*localForce.Mz*a*b/(l*l*l);
+            //    var mzfy2 = -mzfy1;
 
 
-                var fxfx1 = localForce.Fx*b/l;
-                var fxfx2 = localForce.Fx*a/l;
+            //    var fzmy1 = -localForce.Fz*a*b*b/(l*l);
+            //    var fzmy2 = localForce.Fz*a*a*b/(l*l);
 
-                var mxmx1 = localForce.Mx*b/l;
-                var mxmx2 = localForce.Mx*a/l;
+            //    var fzfz1 = localForce.Fz*b*b/(l*l*l)*(3*a + b);
+            //    var fzfz2 = localForce.Fz*a*a/(l*l*l)*(3*b + a);
 
-                var f1 = new Force(
-                    fxfx1,
-                    mzfy1 + fyfy1,
-                    fzfz1 + myfz1,
-                    mxmx1,
-                    mymy1 + fzmy1,
-                    mzmz1 + fymz1
-                    );
 
-                var f2 = new Force(
-                    fxfx2,
-                    mzfy2 + fyfy2,
-                    fzfz2 + myfz2,
-                    mxmx2,
-                    mymy2 + fzmy2,
-                    mzmz2 + fymz2
-                    );
+            //    var fymz1 = localForce.Fy*a*b*b/(l*l);
+            //    var fymz2 = -localForce.Fy*a*a*b/(l*l);
 
-                var localEndForces = new Force[2];
-                localEndForces[0] = f1;
-                localEndForces[1] = f2;
+            //    var fyfy1 = localForce.Fy*b*b/(l*l*l)*(3*a + b);
+            //    var fyfy2 = localForce.Fy*a*a/(l*l*l)*(3*b + a);
 
-                localEndForces = CalcUtil.ApplyReleaseMatrixToEndForces(e, localEndForces);//applying release matrix to end forces
 
-                var vecs = new Vector[] { localEndForces[0].Forces, localEndForces[0].Moments, localEndForces[1].Forces, localEndForces[1].Moments };
-                var tvecs = e.TransformLocalToGlobal(vecs);
+            //    var fxfx1 = localForce.Fx*b/l;
+            //    var fxfx2 = localForce.Fx*a/l;
 
-                buf[0] = new Force(tvecs[0], tvecs[1]);
-                buf[1] = new Force(tvecs[2], tvecs[3]);
+            //    var mxmx1 = localForce.Mx*b/l;
+            //    var mxmx2 = localForce.Mx*a/l;
 
-                return buf;
-            }
+            //    var f1 = new Force(
+            //        fxfx1,
+            //        mzfy1 + fyfy1,
+            //        fzfz1 + myfz1,
+            //        mxmx1,
+            //        mymy1 + fzmy1,
+            //        mzmz1 + fymz1
+            //        );
+
+            //    var f2 = new Force(
+            //        fxfx2,
+            //        mzfy2 + fyfy2,
+            //        fzfz2 + myfz2,
+            //        mxmx2,
+            //        mymy2 + fzmy2,
+            //        mzmz2 + fymz2
+            //        );
+
+            //    var localEndForces = new Force[2];
+            //    localEndForces[0] = f1;
+            //    localEndForces[1] = f2;
+
+            //    localEndForces = CalcUtil.ApplyReleaseMatrixToEndForces(e, localEndForces);//applying release matrix to end forces
+
+            //    var vecs = new Vector[] { localEndForces[0].Forces, localEndForces[0].Moments, localEndForces[1].Forces, localEndForces[1].Moments };
+            //    var tvecs = e.TransformLocalToGlobal(vecs);
+
+            //    buf[0] = new Force(tvecs[0], tvecs[1]);
+            //    buf[1] = new Force(tvecs[2], tvecs[3]);
+
+            //    return buf;
+            //}
 
             throw new NotImplementedException();
         }

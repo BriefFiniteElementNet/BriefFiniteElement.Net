@@ -17,8 +17,6 @@ namespace BriefFiniteElementNet
         {
         }
 
-
-
         #region Serialization Stuff
 
         /// <summary>

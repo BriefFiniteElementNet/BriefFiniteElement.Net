@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using CSparse;
 using CSparse.Double;
+using BriefFiniteElementNet;
 
-namespace BriefFiniteElementNet
+namespace BriefFiniteElementNet.Legacy
 {
     [Obsolete]
     public static class CheckingUtil
@@ -13,19 +14,18 @@ namespace BriefFiniteElementNet
         
         public static bool IsInStaticEquilibrium(StaticLinearAnalysisResult res, LoadCase cse)
         {
-            var allForces = new Force[res.Parent.Nodes.Count];
+            //var allForces = new Force[res.Parent.Nodes.Count];
 
 
-            var forceVec = res.Forces[cse];
+            //var forceVec = res.Forces[cse];
 
-            for (int i = 0; i < allForces.Length; i++)
-            {
-                var force = Force.FromVector(forceVec, 6*i);
-                allForces[i] = force;
-            }
+            //for (int i = 0; i < allForces.Length; i++)
+            //{
+            //    var force = Force.FromVector(forceVec, 6*i);
+            //    allForces[i] = force;
+            //}
 
-
-            var ft = allForces.Select((i, j) => i.Move(res.Parent.Nodes[j].Location, new Point())).Sum();
+            //var ft = allForces.Select((i, j) => i.Move(res.Parent.Nodes[j].Location, new Point())).Sum();
 
             throw new NotImplementedException();
         }

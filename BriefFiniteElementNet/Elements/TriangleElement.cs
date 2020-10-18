@@ -215,6 +215,10 @@ namespace BriefFiniteElementNet.Elements
         #endregion
 
         #region element methods
+        public double GetArea()
+        {
+            return CalcUtil.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
+        }
         public override IElementHelper[] GetHelpers()
         {
             var helpers = new List<IElementHelper>();

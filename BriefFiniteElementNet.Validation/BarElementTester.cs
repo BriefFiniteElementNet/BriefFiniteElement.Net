@@ -685,51 +685,52 @@ namespace BriefFiniteElementNet.Validation
             return buf.ToArray();
         }
 
-        public static void TestBarStiffness()
-        {
-            var iy = 0.02;
-            var iz = 0.02;
-            var a = 0.01;
+        //Reference to frameElement which is obsolete
+        //public static void TestBarStiffness()
+        //{
+        //    var iy = 0.02;
+        //    var iz = 0.02;
+        //    var a = 0.01;
 
-            var j = iy + iz;
+        //    var j = iy + iz;
 
-            var e = 210e9;
-            var g = 70e9;
-            //var rho = 13;
+        //    var e = 210e9;
+        //    var g = 70e9;
+        //    //var rho = 13;
 
-            var model = new Model();
+        //    var model = new Model();
 
-            model.Nodes.Add(new Node(0, 0, 0));
-            model.Nodes.Add(new Node(3, 5, 7));
+        //    model.Nodes.Add(new Node(0, 0, 0));
+        //    model.Nodes.Add(new Node(3, 5, 7));
 
-            var barElement = new BarElement(model.Nodes[0], model.Nodes[1]);
+        //    var barElement = new BarElement(model.Nodes[0], model.Nodes[1]);
 
-            barElement.Behavior = BarElementBehaviours.FullFrame;
-            barElement.Material = UniformIsotropicMaterial.CreateFromYoungShear(e, g);
+        //    barElement.Behavior = BarElementBehaviours.FullFrame;
+        //    barElement.Material = UniformIsotropicMaterial.CreateFromYoungShear(e, g);
 
-            var frameElement = new FrameElement2Node(model.Nodes[0], model.Nodes[1])
-            {
-                Iy = iy,
-                Iz = iz,
-                A = a,
-                J = j,
-                E = e,
-                G = g,
-                //MassDensity = rho
-            };
+        //    var frameElement = new FrameElement2Node(model.Nodes[0], model.Nodes[1])
+        //    {
+        //        Iy = iy,
+        //        Iz = iz,
+        //        A = a,
+        //        J = j,
+        //        E = e,
+        //        G = g,
+        //        //MassDensity = rho
+        //    };
 
-            frameElement.ConsiderShearDeformation = false;
+        //    frameElement.ConsiderShearDeformation = false;
 
-            //barElement.Material = new UniformBarMaterial(e, g, rho);
-            barElement.Section = new UniformParametric1DSection() { Iy = iy, Iz = iz, A = a };
+        //    //barElement.Material = new UniformBarMaterial(e, g, rho);
+        //    barElement.Section = new UniformParametric1DSection() { Iy = iy, Iz = iz, A = a };
 
-            var frK = frameElement.GetGlobalStifnessMatrix();
-            var barK = barElement.GetGlobalStifnessMatrix();
+        //    var frK = frameElement.GetGlobalStifnessMatrix();
+        //    var barK = barElement.GetGlobalStifnessMatrix();
 
-            var d = (frK - barK).Values.Max(i => Math.Abs(i));
+        //    var d = (frK - barK).Values.Max(i => Math.Abs(i));
 
 
-        }
+        //}
 
         public static ValidationResult Validation_1()
         {
@@ -1243,79 +1244,80 @@ namespace BriefFiniteElementNet.Validation
 
         }
 
-        public static void ValidateConsoleUniformLoad()
-        {
-            var model = new Model();
+        //Reference to FrameElement which is obsolete
+        //public static void ValidateConsoleUniformLoad()
+        //{
+        //    var model = new Model();
 
-            var ndes = new Node[] {
-                new Node(0, 0, 0),
-                new Node(3, 0, 0)};
+        //    var ndes = new Node[] {
+        //        new Node(0, 0, 0),
+        //        new Node(3, 0, 0)};
 
-            /**/
-            var h = 0.1;
-            var w = 0.05;
+        //    /**/
+        //    var h = 0.1;
+        //    var w = 0.05;
 
-            var a =  h * w;
-            var iy =  h * h * h * w / 12;
-            var iz = w * w * w * h / 12;
-            var j =  iy + iz;
-            var e = 210e9;
-            var nu = 0.3;
+        //    var a =  h * w;
+        //    var iy =  h * h * h * w / 12;
+        //    var iz = w * w * w * h / 12;
+        //    var j =  iy + iz;
+        //    var e = 210e9;
+        //    var nu = 0.3;
 
-            var g = e / (2 * 1 + nu);
-            /**/
+        //    var g = e / (2 * 1 + nu);
+        //    /**/
 
-            var sec = new Sections.UniformParametric1DSection(a, iy, iz, j);
-            var mat = UniformIsotropicMaterial.CreateFromYoungShear(e, g);
+        //    var sec = new Sections.UniformParametric1DSection(a, iy, iz, j);
+        //    var mat = UniformIsotropicMaterial.CreateFromYoungShear(e, g);
 
-            BarElement belm;
-            FrameElement2Node frmelm;
+        //    BarElement belm;
+        //    FrameElement2Node frmelm;
 
-            belm = new BarElement(ndes[0], ndes[1]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame };
-            frmelm = new FrameElement2Node(ndes[0], ndes[1]) { Iz = sec.Iz, Iy = sec.Iy, A = sec.A, J = sec.J, E = e, G = g };
+        //    belm = new BarElement(ndes[0], ndes[1]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame };
+        //    frmelm = new FrameElement2Node(ndes[0], ndes[1]) { Iz = sec.Iz, Iy = sec.Iy, A = sec.A, J = sec.J, E = e, G = g };
 
-            var bk = belm.GetGlobalStifnessMatrix();
-            var fk = frmelm.GetGlobalStifnessMatrix();
-            var diff = bk-fk;
+        //    var bk = belm.GetGlobalStifnessMatrix();
+        //    var fk = frmelm.GetGlobalStifnessMatrix();
+        //    var diff = bk-fk;
 
-            model.Elements.Add(belm);
+        //    model.Elements.Add(belm);
 
-            model.Nodes.Add(ndes);
+        //    model.Nodes.Add(ndes);
 
-            ndes[0].Constraints = Constraints.Fixed;
+        //    ndes[0].Constraints = Constraints.Fixed;
 
-            //ndes[1].Constraints = 
-            //    Constraints.FixedDX & Constraints.FixedRX 
-                //& Constraints.FixedDY & Constraints.FixedRZ//find beam.z dofs
+        //    //ndes[1].Constraints = 
+        //    //    Constraints.FixedDX & Constraints.FixedRX 
+        //        //& Constraints.FixedDY & Constraints.FixedRZ//find beam.z dofs
 
-            ;
-            var ul = new Loads.UniformLoad(LoadCase.DefaultLoadCase, Vector.K, 1000, CoordinationSystem.Global);
+        //    ;
+        //    var ul = new Loads.UniformLoad(LoadCase.DefaultLoadCase, Vector.K, 1000, CoordinationSystem.Global);
 
-            (model.Elements[0] as BarElement).Loads.Add(ul);
-
-
-            var eqv = (model.Elements[0] as BarElement).GetGlobalEquivalentNodalLoads(ul);
-            //ndes[1].Loads.Add(new NodalLoad(new Force(Vector.K, Vector.Zero)));
-            //ndes[1].Loads.Add(new NodalLoad(new Force(Vector.J*2, Vector.Zero)));
-
-            model.Solve_MPC();
+        //    (model.Elements[0] as BarElement).Loads.Add(ul);
 
 
-            var d = model.Nodes[1].GetNodalDisplacement();
+        //    var eqv = (model.Elements[0] as BarElement).GetGlobalEquivalentNodalLoads(ul);
+        //    //ndes[1].Loads.Add(new NodalLoad(new Force(Vector.K, Vector.Zero)));
+        //    //ndes[1].Loads.Add(new NodalLoad(new Force(Vector.J*2, Vector.Zero)));
 
-            var t = (model.Elements[0] as BarElement).GetInternalForceAt(-1);
-
-
-            var res = OpenseesValidator.OpenseesValidate(model, LoadCase.DefaultLoadCase, false);
-
-            var disp = res[0];
-
-            var idx = disp.Columns["Absolute Error"].Ordinal;
-
-            var max = disp.Rows.Cast<DataRow>().Select(i => (double)i[idx]).Max();
+        //    model.Solve_MPC();
 
 
-        }
+        //    var d = model.Nodes[1].GetNodalDisplacement();
+
+        //    var t = (model.Elements[0] as BarElement).GetInternalForceAt(-1);
+
+
+        //    var res = OpenseesValidator.OpenseesValidate(model, LoadCase.DefaultLoadCase, false);
+
+        //    var disp = res[0];
+
+        //    var idx = disp.Columns["Absolute Error"].Ordinal;
+
+        //    var max = disp.Rows.Cast<DataRow>().Select(i => (double)i[idx]).Max();
+
+
+        //}
 
         public static double epsilon = 1e-9;
 

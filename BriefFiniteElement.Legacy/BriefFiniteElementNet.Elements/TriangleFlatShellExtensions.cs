@@ -5,7 +5,8 @@ using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using BriefFiniteElementNet.Geometry;
 
-namespace BriefFiniteElementNet.Elements
+namespace BriefFiniteElementNet.Legacy.Elements
+//namespace BriefFiniteElementNet.Elements
 {
     [Obsolete]
     public static class TriangleFlatShellExtensions

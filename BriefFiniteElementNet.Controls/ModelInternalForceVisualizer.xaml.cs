@@ -375,12 +375,12 @@ namespace BriefFiniteElementNet.Controls
                     AddBarElement(elementsBuilder, elm as BarElement);
                     AddBarElementLoad(forcesBuilder, elm as BarElement, internalForces[i]);
                 }
-
-                if (elm is FrameElement2Node)
-                {
-                    AddFrameElement(elementsBuilder, elm as FrameElement2Node);
-                    AddFrameElementLoad(forcesBuilder, elm as FrameElement2Node, internalForces[i]);
-                }
+                //obsolete element
+                //if (elm is FrameElement2Node)
+                //{
+                //    AddFrameElement(elementsBuilder, elm as FrameElement2Node);
+                //    AddFrameElementLoad(forcesBuilder, elm as FrameElement2Node, internalForces[i]);
+                //}
 
                 /*
                 switch (elm.ElementType)
@@ -458,61 +458,62 @@ namespace BriefFiniteElementNet.Controls
 
             foreach (var element in ModelToVisualize.Elements)
             {
-                if (element is FrameElement2Node)
-                {
-                    var elm = element as FrameElement2Node;
+                //obsolete
+                //if (element is FrameElement2Node)
+                //{
+                //    var elm = element as FrameElement2Node;
 
-                    if (elm == null)
-                        continue;
+                //    if (elm == null)
+                //        continue;
 
-                    var diagramPoints = new Point[n];//Y=Fx or Fy or etc
-                                                     //var baseDiagramPoints = new Point[n];//Y=0
+                //    var diagramPoints = new Point[n];//Y=Fx or Fy or etc
+                //                                     //var baseDiagramPoints = new Point[n];//Y=0
 
-                    var delta = (elm.EndNode.Location - elm.StartNode.Location).Length / (SamplingCount - 1);
+                //    var delta = (elm.EndNode.Location - elm.StartNode.Location).Length / (SamplingCount - 1);
 
-                    //var st = elm.StartNode.Location;
+                //    //var st = elm.StartNode.Location;
 
-                    for (var i = 0; i < n; i++)
-                    {
-                        var x = delta * i;
-                        var force = elm.GetInternalForceAt(x, TargetCombination);
+                //    for (var i = 0; i < n; i++)
+                //    {
+                //        var x = delta * i;
+                //        var force = elm.GetInternalForceAt(x, TargetCombination);
 
-                        //force = elm.TransformLocalToGlobal(force);
+                //        //force = elm.TransformLocalToGlobal(force);
 
-                        var y = 0.0;
-                        var z = 0.0;
+                //        var y = 0.0;
+                //        var z = 0.0;
 
-                        switch (CurrentInternalForceType)
-                        {
-                            case InternalForceType.Fx:
-                                z = force.Fx;
-                                break;
-                            case InternalForceType.Fy:
-                                y = force.Fy;
-                                break;
-                            case InternalForceType.Fz:
-                                z = force.Fz;
-                                break;
-                            case InternalForceType.Mx:
-                                z = force.Mx;
-                                break;
-                            case InternalForceType.My:
-                                z = force.My;
-                                break;
-                            case InternalForceType.Mz:
-                                y = force.Mz;
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException("CurrentInternalForceType");
-                        }
+                //        switch (CurrentInternalForceType)
+                //        {
+                //            case InternalForceType.Fx:
+                //                z = force.Fx;
+                //                break;
+                //            case InternalForceType.Fy:
+                //                y = force.Fy;
+                //                break;
+                //            case InternalForceType.Fz:
+                //                z = force.Fz;
+                //                break;
+                //            case InternalForceType.Mx:
+                //                z = force.Mx;
+                //                break;
+                //            case InternalForceType.My:
+                //                z = force.My;
+                //                break;
+                //            case InternalForceType.Mz:
+                //                y = force.Mz;
+                //                break;
+                //            default:
+                //                throw new ArgumentOutOfRangeException("CurrentInternalForceType");
+                //        }
 
-                        var localPoint = new Vector(x, y, z);
+                //        var localPoint = new Vector(x, y, z);
 
-                        diagramPoints[i] = (Point)localPoint;
-                    }
+                //        diagramPoints[i] = (Point)localPoint;
+                //    }
 
-                    buf.Add(diagramPoints);
-                }
+                //    buf.Add(diagramPoints);
+                //}
 
 
                 if (element is BarElement)
@@ -615,52 +616,53 @@ namespace BriefFiniteElementNet.Controls
         }
 
 
-        private void AddFrameElement(MeshBuilder bldr, FrameElement2Node elm)
-        {
-            PolygonYz section = null;
+        //obsolete element
+        //private void AddFrameElement(MeshBuilder bldr, FrameElement2Node elm)
+        //{
+        //    PolygonYz section = null;
 
-            var r = ElementVisualThickness / 2;
-
-
-            if (elm.UseOverridedProperties)
-            {
-                section = new PolygonYz(
-                    new PointYZ(-r, -r),
-                    new PointYZ(-r, r),
-                    new PointYZ(r, r),
-                    new PointYZ(r, -r),
-                    new PointYZ(-r, -r));
-            }
-            else
-                section = elm.Geometry;
+        //    var r = ElementVisualThickness / 2;
 
 
-            for (var i = 0; i < section.Count - 1; i++)
-            {
-                var v1 = new Vector(0, section[i].Y, section[i].Z);
-                var v2 = new Vector(0, section[i + 1].Y, section[i + 1].Z);
+        //    if (elm.UseOverridedProperties)
+        //    {
+        //        section = new PolygonYz(
+        //            new PointYZ(-r, -r),
+        //            new PointYZ(-r, r),
+        //            new PointYZ(r, r),
+        //            new PointYZ(r, -r),
+        //            new PointYZ(-r, -r));
+        //    }
+        //    else
+        //        section = elm.Geometry;
 
-                var p1 = elm.StartNode.Location + elm.TransformLocalToGlobal(v1);
-                var p2 = elm.StartNode.Location + elm.TransformLocalToGlobal(v2);
 
-                var v = elm.EndNode.Location - elm.StartNode.Location;
+        //    for (var i = 0; i < section.Count - 1; i++)
+        //    {
+        //        var v1 = new Vector(0, section[i].Y, section[i].Z);
+        //        var v2 = new Vector(0, section[i + 1].Y, section[i + 1].Z);
 
-                if (Math.Abs(v.Z) < 0.01)
-                    Guid.NewGuid();
+        //        var p1 = elm.StartNode.Location + elm.TransformLocalToGlobal(v1);
+        //        var p2 = elm.StartNode.Location + elm.TransformLocalToGlobal(v2);
 
-                var p3 = p1 + v;
-                var p4 = p2 + v;
+        //        var v = elm.EndNode.Location - elm.StartNode.Location;
 
-                var p13d = new Point3D(p1.X, p1.Y, p1.Z);
-                var p23d = new Point3D(p2.X, p2.Y, p2.Z);
-                var p33d = new Point3D(p3.X, p3.Y, p3.Z);
-                var p43d = new Point3D(p4.X, p4.Y, p4.Z);
+        //        if (Math.Abs(v.Z) < 0.01)
+        //            Guid.NewGuid();
 
-                bldr.AddTriangle(p13d, p33d, p23d);
-                bldr.AddTriangle(p43d, p23d, p33d);
-            }
+        //        var p3 = p1 + v;
+        //        var p4 = p2 + v;
 
-        }
+        //        var p13d = new Point3D(p1.X, p1.Y, p1.Z);
+        //        var p23d = new Point3D(p2.X, p2.Y, p2.Z);
+        //        var p33d = new Point3D(p3.X, p3.Y, p3.Z);
+        //        var p43d = new Point3D(p4.X, p4.Y, p4.Z);
+
+        //        bldr.AddTriangle(p13d, p33d, p23d);
+        //        bldr.AddTriangle(p43d, p23d, p33d);
+        //    }
+
+        //}
 
         private void AddBarElement(MeshBuilder bldr, BarElement elm)
         {
@@ -757,56 +759,57 @@ namespace BriefFiniteElementNet.Controls
             }
         }
 
-        private void AddFrameElementLoad(MeshBuilder bldr, FrameElement2Node elm,Point[] localPoints)
-        {
-            var n = SamplingCount;
+        //obsolete element
+        //private void AddFrameElementLoad(MeshBuilder bldr, FrameElement2Node elm,Point[] localPoints)
+        //{
+        //    var n = SamplingCount;
 
-            var diagramPoints = new Point[n];//Y=Fx or Fy or etc
-            var baseDiagramPoints = new Point[n];//Y=0
+        //    var diagramPoints = new Point[n];//Y=Fx or Fy or etc
+        //    var baseDiagramPoints = new Point[n];//Y=0
 
             
 
-            #region calculating the graph nodes
+        //    #region calculating the graph nodes
 
-            var delta = (elm.EndNode.Location - elm.StartNode.Location).Length/(SamplingCount - 1);
+        //    var delta = (elm.EndNode.Location - elm.StartNode.Location).Length/(SamplingCount - 1);
 
-            var xs = Enumerable.Range(0, SamplingCount).Select(i=>i*delta).ToList();
+        //    var xs = Enumerable.Range(0, SamplingCount).Select(i=>i*delta).ToList();
 
-            var st = elm.StartNode.Location;
-
-
-            for (var i = 0; i < n; i++)
-            {
-                var x = delta * i;
-                var localPoint = localPoints[i];//new Vector(x, y*scale, z*scale);
-                var globalPoint = st + elm.TransformLocalToGlobal((Vector)localPoint);
-
-                var globalBase = st+elm.TransformLocalToGlobal(new Vector(x, 0, 0));
-
-                diagramPoints[i] = globalPoint;
-                baseDiagramPoints[i] = globalBase;
-            }
+        //    var st = elm.StartNode.Location;
 
 
-            #endregion
+        //    for (var i = 0; i < n; i++)
+        //    {
+        //        var x = delta * i;
+        //        var localPoint = localPoints[i];//new Vector(x, y*scale, z*scale);
+        //        var globalPoint = st + elm.TransformLocalToGlobal((Vector)localPoint);
 
-            for (var i = 0; i < n-1; i++)
-            {
-                var p1 = baseDiagramPoints[i];
-                var p2 = baseDiagramPoints[i + 1];
-                var p3 = diagramPoints[i];
-                var p4 = diagramPoints[i + 1];
+        //        var globalBase = st+elm.TransformLocalToGlobal(new Vector(x, 0, 0));
 
-                var p13d = new Point3D(p1.X, p1.Y, p1.Z);
-                var p23d = new Point3D(p2.X, p2.Y, p2.Z);
-                var p33d = new Point3D(p3.X, p3.Y, p3.Z);
-                var p43d = new Point3D(p4.X, p4.Y, p4.Z);
+        //        diagramPoints[i] = globalPoint;
+        //        baseDiagramPoints[i] = globalBase;
+        //    }
 
 
-                bldr.AddTriangle(p13d,p23d, p33d);
-                bldr.AddTriangle(p33d, p23d, p43d);
-            }
-        }
+        //    #endregion
+
+        //    for (var i = 0; i < n-1; i++)
+        //    {
+        //        var p1 = baseDiagramPoints[i];
+        //        var p2 = baseDiagramPoints[i + 1];
+        //        var p3 = diagramPoints[i];
+        //        var p4 = diagramPoints[i + 1];
+
+        //        var p13d = new Point3D(p1.X, p1.Y, p1.Z);
+        //        var p23d = new Point3D(p2.X, p2.Y, p2.Z);
+        //        var p33d = new Point3D(p3.X, p3.Y, p3.Z);
+        //        var p43d = new Point3D(p4.X, p4.Y, p4.Z);
+
+
+        //        bldr.AddTriangle(p13d,p23d, p33d);
+        //        bldr.AddTriangle(p33d, p23d, p43d);
+        //    }
+        //}
 
         private void AddBarElementLoad(MeshBuilder bldr, BarElement elm, Point[] localPoints)
         {

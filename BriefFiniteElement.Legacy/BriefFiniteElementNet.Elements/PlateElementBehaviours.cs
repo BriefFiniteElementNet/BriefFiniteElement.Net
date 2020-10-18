@@ -1,14 +1,16 @@
-﻿using System;
+﻿using BriefFiniteElementNet.Elements;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace BriefFiniteElementNet.Elements
+namespace BriefFiniteElementNet.Legacy.Elements
+//namespace BriefFiniteElementNet.Elements
 {
     /// <summary>
     /// Utility class for PlateElementBehaviour 
     /// </summary>
-    [Obsolete("use PlaneElementBehaviours instead - are you sure about this? I don't think this is obsolete")]
+    [Obsolete("use PlaneElementBehaviours instead")]
     public static class PlateElementBehaviours
     {
         /// <summary>
