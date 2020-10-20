@@ -16,23 +16,41 @@ namespace BriefFiniteElementNet.Validation.Case_03
 
             /**/
             {
-                var model = StructureGenerator.Generate3DTetrahedralElementGrid(2, 2, 2);
+                var model = StructureGenerator.Generate3DTetrahedralElementGrid(3, 3, 100);
 
-                var l = model.Nodes.Max(i => i.Location.Z);
+                var e = 210e9;
+                
+
+                foreach (var elm in model.Elements)
+                {
+                    if(elm is TetrahedronElement)
+                    {
+                        var tet = elm as TetrahedronElement;
+
+                        tet.Material = new Materials.UniformIsotropicMaterial(e, 0.25);
+                    }
+                }
+
+                var dx = model.Nodes.Max(i => i.Location.X) - model.Nodes.Min(i => i.Location.X);
+                var dy = model.Nodes.Max(i => i.Location.Y) - model.Nodes.Min(i => i.Location.Y);
+                var dz = model.Nodes.Max(i => i.Location.Z) - model.Nodes.Min(i => i.Location.Z);
+
+                var l = dz;// model.Nodes.Max(i => i.Location.Z);
 
                 var cnt = model.Nodes.Where(i => i.Location.Z == l);
 
                 var f = 1e7;
+                var I = dx * dy * dy * dy / 12;
+                var rigid = new MpcElements.RigidElement_MPC() { UseForAllLoads = true };
 
                 foreach (var node in cnt)
                 {
                     node.Loads.Add(new NodalLoad(new Force(f / cnt.Count(), 0, 0, 0, 0, 0)));
+                    rigid.Nodes.Add(node);
                 }
 
                 model.Solve_MPC();
 
-                var e = 210e9;
-                var I = 2 * 2 * 2 * 2 / 12;
 
                 var delta = f * l * l * l / (3 * e * I);
 
