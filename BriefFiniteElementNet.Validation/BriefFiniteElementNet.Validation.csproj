@@ -71,6 +71,7 @@
     <Compile Include="GithubIssues\Issue41.cs" />
     <Compile Include="GithubIssues\Issue48.cs" />
     <Compile Include="GithubIssues\Issue50.cs" />
+    <Compile Include="MPCValidation.cs" />
     <Compile Include="OpenseesTclGenerator\TetrahedralElementToTcl.cs" />
     <Compile Include="OpenseesTclGenerator\TetrahedronToTcl.cs" />
     <Compile Include="OpenseesTclGenerator\TriangleElementToTcl.cs" />
