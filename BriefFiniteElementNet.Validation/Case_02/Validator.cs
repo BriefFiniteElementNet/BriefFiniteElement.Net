@@ -308,7 +308,7 @@ namespace BriefFiniteElementNet.Validation.Case_02
                 
             }
 
-            writeDataTriangleElement(model, LoadCase.DefaultLoadCase);
+            //writeDataTriangleElement(model, LoadCase.DefaultLoadCase);
 
             return val;
             throw new NotImplementedException();

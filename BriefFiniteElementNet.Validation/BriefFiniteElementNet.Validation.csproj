@@ -80,7 +80,7 @@
     <Compile Include="tetrahedronElementTester.cs" />
     <Compile Include="ValidationCaseAttribute.cs" />
     <Compile Include="ValidationResult.cs" />
-    <Compile Include="ValidationUtil.cs" />
+    <Compile Include="Util.cs" />
     <None Include="app.config" />
     <Compile Include="BarElementTester.cs" />
     <Compile Include="CustomMeshBuilder.cs" />

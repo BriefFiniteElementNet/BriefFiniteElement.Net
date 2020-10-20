@@ -86,7 +86,12 @@ namespace BriefFiniteElementNet.Validation.Case_04
             var diff = n1 - n2;
             //linear beam with loads -> rigid elements introduces rigid body -> Y and Z (translations perpendicular to the beam) are non zero and scaled. Set to zero to avoid confusion with result.
             diff.DY = diff.DZ = 0.0;
-            span.Add("p").AddClass("bg-info").AppendHtml(string.Format(CultureInfo.CurrentCulture, "-Max ABSOLUTE Error: {0:e3}", diff));
+
+            //span.Add("p").AddClass("bg-info").Text(string.Format("-Max ABSOLUTE Error: {0:e3}", diff));//htmltags cannot encode the delta and teta chars so will use vector length
+            span.Add("p").AddClass("bg-info")
+                .Text(string.Format("-Max ABSOLUTE Error: Displacement:{0:e3} , Rotation:{1:e3}",
+                    diff.Displacements.Length, diff.Rotations.Length));
+
             var buf = new ValidationResult();
             buf.Span = span;
             buf.Title = "Rigid element Validation";

@@ -8,6 +8,25 @@ namespace BriefFiniteElementNet.Validation
 {
     public static class Util
     {
+
+        public static string HtmlEncode(this string text)
+        {
+            char[] chars = System.Web.HttpUtility.HtmlEncode(text).ToCharArray();
+
+            StringBuilder result = new StringBuilder(text.Length + (int)(text.Length * 0.1));
+
+            foreach (char c in chars)
+            {
+                int value = Convert.ToInt32(c);
+                if (value > 127)
+                    result.AppendFormat("&#{0};", value);
+                else
+                    result.Append(c);
+            }
+
+            return result.ToString();
+        }
+
         public static double GetErrorPercent(double test, double accurate)
         {
             var buf = Math.Abs(test - accurate) / Math.Abs(accurate);
