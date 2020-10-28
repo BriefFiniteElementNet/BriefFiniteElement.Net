@@ -4,11 +4,12 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet.Elements;
 
 namespace BriefFiniteElementNet.Validation.Case_03
 {
-    //[ValidationCase("Console beam with tetrahedron", typeof(TetrahedronElement))]
+    [ValidationCase("Console beam with tetrahedron", typeof(TetrahedronElement))]
     public class Validator : IValidationCase
     {
         public ValidationResult Validate()
@@ -16,7 +17,7 @@ namespace BriefFiniteElementNet.Validation.Case_03
 
             /**/
             {
-                var model = StructureGenerator.Generate3DTetrahedralElementGrid(3, 3, 100);
+                var model = StructureGenerator.Generate3DTetrahedralElementGrid(4, 4, 100);
 
                 var e = 210e9;
                 
@@ -40,7 +41,7 @@ namespace BriefFiniteElementNet.Validation.Case_03
                 var cnt = model.Nodes.Where(i => i.Location.Z == l);
 
                 var f = 1e7;
-                var I = dx * dy * dy * dy / 12;
+                var I = dy * dx * dx * dx / 12;
                 var rigid = new MpcElements.RigidElement_MPC() { UseForAllLoads = true };
 
                 foreach (var node in cnt)
@@ -49,8 +50,10 @@ namespace BriefFiniteElementNet.Validation.Case_03
                     rigid.Nodes.Add(node);
                 }
 
+                //model.MpcElements.Add(rigid);
+                model.Trace.Listeners.Add(new ConsoleTraceListener()); 
                 model.Solve_MPC();
-
+                
 
                 var delta = f * l * l * l / (3 * e * I);
 

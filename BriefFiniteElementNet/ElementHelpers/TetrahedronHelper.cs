@@ -104,7 +104,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 buf.SetRow(4, new[] { 0, d1, c1, 0, d2, c2, 0, d3, c3, 0, d4, c4 });
                 buf.SetRow(5, new[] { d1, 0, b1, d2, 0, b2, d3, 0, b3, d4, 0, b4 });
 
-                //buf.Scale(1 / (6.0 * v));
+                buf.Scale(1 / (6.0 * v));
             }
 
             return buf.AsMatrix();
