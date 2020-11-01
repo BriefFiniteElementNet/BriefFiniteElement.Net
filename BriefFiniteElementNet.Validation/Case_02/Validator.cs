@@ -155,6 +155,8 @@ namespace BriefFiniteElementNet.Validation.Case_02
             {
                 nodes[i, n - 1, 0].Loads.Add(new NodalLoad(new Force(0, 2500, 2500, 0, 0, 0), LoadCase.DefaultLoadCase));
             }
+
+            
             return buf;
         }
         #endregion

@@ -19,7 +19,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// Gets the B matrix at defined isometric coordinates (B is derivation of N regarding to local x or y or z, not regarding to ξ, η or γ -- it is ∂N/∂x or ..., it is not ∂N/∂ξ or ...).
         /// </summary>
         /// <param name="targetElement">The target element.</param>
-        /// <param name="isoCoords">The isometric coordinations.</param>
+        /// <param name="isoCoords">The isometric coordination.</param>
         /// 
         /// <returns></returns>
         Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords);

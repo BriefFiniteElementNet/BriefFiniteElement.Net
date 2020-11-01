@@ -71,7 +71,6 @@
     <Compile Include="GithubIssues\Issue41.cs" />
     <Compile Include="GithubIssues\Issue48.cs" />
     <Compile Include="GithubIssues\Issue50.cs" />
-    <Compile Include="MPCValidation.cs" />
     <Compile Include="OpenseesTclGenerator\TetrahedralElementToTcl.cs" />
     <Compile Include="OpenseesTclGenerator\TetrahedronToTcl.cs" />
     <Compile Include="OpenseesTclGenerator\TriangleElementToTcl.cs" />
@@ -81,7 +80,7 @@
     <Compile Include="tetrahedronElementTester.cs" />
     <Compile Include="ValidationCaseAttribute.cs" />
     <Compile Include="ValidationResult.cs" />
-    <Compile Include="ValidationUtil.cs" />
+    <Compile Include="Util.cs" />
     <None Include="app.config" />
     <Compile Include="BarElementTester.cs" />
     <Compile Include="CustomMeshBuilder.cs" />

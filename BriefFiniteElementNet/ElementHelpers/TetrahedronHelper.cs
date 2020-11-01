@@ -188,6 +188,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             // TODO: MAT - set values directly
             //https://www.iue.tuwien.ac.at/phd/hollauer/node29.html 5.23
+            //"J is the so - called Jacobian matrix which only depends on the global coordinates(x, y, z)"
 
             
             buf.SetRow(0, new double[] { n1.X - n0.X, n2.X - n0.X, n3.X - n0.X });
