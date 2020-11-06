@@ -685,7 +685,7 @@ namespace BriefFiniteElementNet
 
                 var minAbsDiag = double.MaxValue;
 
-                foreach(var tpl in krd.ReleasedReleasedPart.EnumerateIndexed2())
+                foreach(var tpl in krd.ReleasedReleasedPart.EnumerateIndexed())
                 {
                     if (tpl.Item1 == tpl.Item2)
                         minAbsDiag = Math.Min(minAbsDiag, Math.Abs(tpl.Item3));

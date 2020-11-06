@@ -100,7 +100,8 @@ namespace BriefFiniteElementNet.Mathh
 
                 var denseSubSytem = new Matrix(eqnPart.Count, connectedVariables.Count+1);////i'th independent system as dense
 
-                var dns = aTran.ToDenseMatrix();
+                // Convert sparse to dense.
+                //var dns = Matrix.OfMatrix(aTran);
 
                 for (var i = 0; i < eqnPart.Count; i++)
                 {

@@ -1606,7 +1606,7 @@ namespace BriefFiniteElementNet
                         if (extras.ColumnCount != totDofCount + 1)
                             throw new Exception();
 
-                        foreach (var tuple in extras.EnumerateIndexed2())
+                        foreach (var tuple in extras.EnumerateIndexed())
                         {
                             var row = tuple.Item1;
                             var col = tuple.Item2;
@@ -1625,7 +1625,7 @@ namespace BriefFiniteElementNet
                     throw new Exception();
 
 
-                foreach (var tuple in boundaryConditions.EnumerateIndexed2())
+                foreach (var tuple in boundaryConditions.EnumerateIndexed())
                 {
                     var row = tuple.Item1;
                     var col = tuple.Item2;
@@ -1803,7 +1803,7 @@ namespace BriefFiniteElementNet
 
             var p3Crd = new CoordinateStorage<double>(totDofCount, totDofCount - colsToRemove.Count(i => i), 1);
 
-            foreach(var tpl in p2.EnumerateIndexed2())
+            foreach(var tpl in p2.EnumerateIndexed())
             {
                 if (!colsToRemove[tpl.Item2])
                 {
@@ -1850,7 +1850,7 @@ namespace BriefFiniteElementNet
                         if (extras.ColumnCount != totDofCount + 1)
                             throw new Exception();
 
-                        foreach (var tuple in extras.EnumerateIndexed2())
+                        foreach (var tuple in extras.EnumerateIndexed())
                         {
                             var row = tuple.Item1;
                             var col = tuple.Item2;
@@ -1868,7 +1868,7 @@ namespace BriefFiniteElementNet
                 if (boundaryConditions.ColumnCount != totDofCount + 1)
                     throw new Exception();
 
-                foreach (var tuple in boundaryConditions.EnumerateIndexed2())
+                foreach (var tuple in boundaryConditions.EnumerateIndexed())
                 {
                     var row = tuple.Item1;
                     var col = tuple.Item2;
@@ -1890,7 +1890,7 @@ namespace BriefFiniteElementNet
             {
                 var rowNnzs = new int[allEqs.RowCount];//nnz count of each row disregard last column which is right side
 
-                foreach (var tpl in allEqs.EnumerateIndexed2())
+                foreach (var tpl in allEqs.EnumerateIndexed())
                 {
                     if (tpl.Item3 != 0)
                         if (tpl.Item2 != allEqs.ColumnCount - 1)
@@ -2050,7 +2050,7 @@ namespace BriefFiniteElementNet
 
             var lst = new List<int>();
 
-            foreach(var tuple in matrix.EnumerateIndexed2())
+            foreach(var tuple in matrix.EnumerateIndexed())
             {
                 var rw = tuple.Item1;
                 var col = tuple.Item2;
