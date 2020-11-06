@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BriefFiniteElementNet.Common;
 using CSparse.Double;
 using CSparse.Ordering;
 using CSparse.Storage;
@@ -23,19 +24,19 @@ namespace BriefFiniteElementNet.Mathh
                     singleMemberColumns++;
 
             if (singleMemberColumns == a.RowCount)
-                return a.Clonee();
+                return (CCS)a.Clone();
 
             var pat = new CoordinateStorage<double>(a.RowCount, a.ColumnCount - 1, 1);
             var bCrd = new CoordinateStorage<double>(a.RowCount, a.ColumnCount - 1, 1);//a matrix without last column
 
-            a.EnumerateMembers((row, col, val) =>
-            {
-                if (col != a.ColumnCount - 1)
-                {
-                    pat.At(row, col, 1);
-                    bCrd.At(row, col, val);
-                }
-            });
+            a.EnumerateIndexed((row, col, val) =>
+             {
+                 if (col != a.ColumnCount - 1)
+                 {
+                     pat.At(row, col, 1);
+                     bCrd.At(row, col, val);
+                 }
+             });
             //nonzero pattern of a, except last column
 
             var b = bCrd.ToCCs();
@@ -46,10 +47,10 @@ namespace BriefFiniteElementNet.Mathh
 
 
             var varGraph = pattTr.Multiply(patt);
-            varGraph.Values.SetAllMembers(1);
+            varGraph.Values.FillWith(1);
 
             var eqnGraph = patt.Multiply(pattTr);
-            eqnGraph.Values.SetAllMembers(1);
+            eqnGraph.Values.FillWith(1);
 
 
 

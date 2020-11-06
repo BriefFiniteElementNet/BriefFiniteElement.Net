@@ -32,13 +32,13 @@ namespace BriefFiniteElementNet
             return Math.Abs(x - y) < Math.Abs(tol);
         }
 
-        // TODO: only used in legacy code, move to corresponding assembly?
+        // TODO: LEGACY CODE - ToMatrix, move out of main assembly?
         public static Matrix ToMatrix(this Point pt)
         {
             return Matrix.OfVector(new[] { pt.X, pt.Y, pt.Z });
         }
 
-        // TODO: only used in legacy code, move to corresponding assembly?
+        // TODO: LEGACY CODE - ToPoint, move out of main assembly?
         public static Point ToPoint(this Matrix pt)
         {
             if (pt.RowCount != 3 || pt.ColumnCount != 1)
@@ -207,8 +207,11 @@ namespace BriefFiniteElementNet
 
         #region Double array extensions
 
-        public static double[] Minus(this double[] x, double[] y)
+        public static double[] Subtract(this double[] x, double[] y)
         {
+            if (x.Length != y.Length)
+                throw new InvalidOperationException();
+
             var buf = (double[])x.Clone();
 
             for (int i = 0; i < buf.Length; i++)
@@ -219,25 +222,16 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static double[] Plus(this double[] x, double[] y)
+        public static double[] Add(this double[] x, double[] y)
         {
+            if (x.Length != y.Length)
+                throw new InvalidOperationException();
+
             var buf = (double[])x.Clone();
 
             for (int i = 0; i < buf.Length; i++)
             {
                 buf[i] += y[i];
-            }
-
-            return buf;
-        }
-
-        public static double[] Plus(this double[] x, double[] y,double coef)
-        {
-            var buf = (double[])x.Clone();
-
-            for (int i = 0; i < buf.Length; i++)
-            {
-                buf[i] += coef*y[i];
             }
 
             return buf;
@@ -299,6 +293,18 @@ namespace BriefFiniteElementNet
         #endregion
 
         /* UNUSED
+
+        public static double[] Plus(this double[] x, double[] y, double coef)
+        {
+            var buf = (double[])x.Clone();
+
+            for (int i = 0; i < buf.Length; i++)
+            {
+                buf[i] += coef*y[i];
+            }
+
+            return buf;
+        }
 
         public static double[] Negate(this double[] arr)
         {

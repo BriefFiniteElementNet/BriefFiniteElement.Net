@@ -35,7 +35,7 @@ namespace BriefFiniteElementNet.Legacy
             var fc = thiis.ConcentratedForces[loadCase] = thiis.GetTotalConcentratedForceVector(loadCase);
 
 
-            var ft = fe.Plus(fc);
+            var ft = fe.Add(fc);
 
 
             var fr = pf.Multiply(ft);
@@ -107,7 +107,7 @@ namespace BriefFiniteElementNet.Legacy
             double[] ufr = new double[map.RMap2.Length];
             //string message;
 
-            var input = ffr.Minus(krd.ReleasedFixedPart.Multiply(usr));
+            var input = ffr.Subtract(krd.ReleasedFixedPart.Multiply(usr));
 
 
             solver.Solve(input, ufr);
@@ -115,9 +115,9 @@ namespace BriefFiniteElementNet.Legacy
             //if (res2 != SolverResult.Success)
             //    throw new BriefFiniteElementNetException(message);
 
-            var fpsr = krd.FixedReleasedPart.Multiply(ufr).Plus(krd.FixedFixedPart.Multiply(usr));
+            var fpsr = krd.FixedReleasedPart.Multiply(ufr).Add(krd.FixedFixedPart.Multiply(usr));
 
-            var fsrt = fpsr.Minus(fsr);// no needed
+            var fsrt = fpsr.Subtract(fsr);// no needed
 
             var fx = thiis.SupportReactions[loadCase] = new double[6 * n];
 

@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Mathh;
-using CSparse.Storage;
 using BriefFiniteElementNet.Solver;
-using CSparse;
-using CSparse.Factorization;
-using CSparse.Ordering;
-using CCS = CSparse.Double.SparseMatrix;
-using Coord = CSparse.Storage.CoordinateStorage<double>;
+using CSparse.Double;
+using CSparse.Storage;
 using System.Globalization;
 
 namespace BriefFiniteElementNet
@@ -21,6 +16,8 @@ namespace BriefFiniteElementNet
     /// </summary>
     public static class CalcUtil
     {
+        /* UNUSED
+
         /// <summary>
         /// linearly interpolates the value of <see cref="x"/> regard to other values
         /// </summary>
@@ -39,31 +36,7 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        /// <summary>
-        /// calculates the dot product of two same length vectors
-        /// </summary>
-        /// <param name="v1"></param>
-        /// <param name="v2"></param>
-        /// <returns></returns>
-        public static double DotProduct(double[] v1,double[] v2)
-        {
-            ThrowUtil.ThrowIf(v1.Length != v2.Length,"inconsistent sizes");
-
-            var buf = 0.0;
-
-            for (var i = 0; i < v1.Length; i++)
-                buf += v1[i] * v2[i];
-
-            return buf;
-        }
-
-        /// <summary>
-        /// calculates the bar transformation matrix (local to/from global)
-        /// </summary>
-        /// <param name="v">vector that connects strat to end</param>
-        /// <param name="_webRotation">rotation around local x axis</param>
-        /// <returns></returns>
-        public static Matrix GetBarTransformationMatrix(Vector v, double _webRotation = 0)
+        public static Matrix GetBarTransformationMatrixnew(Vector v, double _webRotation = 0, MatrixPool pool = null)
         {
             var cxx = 0.0;
             var cxy = 0.0;
@@ -79,10 +52,11 @@ namespace BriefFiniteElementNet
 
             var teta = _webRotation;
 
-            var s = Math.Sin(teta * Math.PI / 180.0);
-            var c = Math.Cos(teta * Math.PI / 180.0);
+            var s = _webRotation == 0 ? 0.0 : Math.Sin(teta * Math.PI / 180.0);
+            var c = _webRotation == 0 ? 1.0 : Math.Cos(teta * Math.PI / 180.0);
 
             //var v = this.EndNode.Location - this.StartNode.Location;
+            //copied from MATLAB Codes for Finite Element Analysis, Solids and Structures by A.J.M.Ferreira p 107
 
             if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
             {
@@ -113,27 +87,738 @@ namespace BriefFiniteElementNet
                 czz = d;
             }
 
-            var pars = new double[9];
+            //var pars = new double[9];
 
-            pars[0] = cxx;
-            pars[1] = cxy * c + cxz * s;
-            pars[2] = -cxy * s + cxz * c;
+            //pars[0] = cxx;
+            //pars[1] = cxy * c + cxz * s;
+            //pars[2] = -cxy * s + cxz * c;
 
-            pars[3] = cyx;
-            pars[4] = cyy * c + cyz * s;
-            pars[5] = -cyy * s + cyz * c;
+            //pars[3] = cyx;
+            //pars[4] = cyy * c + cyz * s;
+            //pars[5] = -cyy * s + cyz * c;
 
-            pars[6] = czx;
-            pars[7] = czy * c + czz * s;
-            pars[8] = -czy * s + czz * c;
+            //pars[6] = czx;
+            //pars[7] = czy * c + czz * s;
+            //pars[8] = -czy * s + czz * c;
 
-
-            var buf = new Matrix(3, 3);
+            var buf =
+                pool == null ?
+                new Matrix(3, 3) : pool.Allocate(3, 3);
 
             // TODO: MAT - set values directly
-            buf.SetColumn(0, new double[] { pars[0], pars[1], pars[2] });
-            buf.SetColumn(1, new double[] { pars[3], pars[4], pars[5] });
-            buf.SetColumn(2, new double[] { pars[6], pars[7], pars[8] });
+            //buf.FillColumn(0, pars[0], pars[1], pars[2]);
+            buf.SetColumn(0, new double[] { cxx, cxy * c + cxz * s, -cxy * s + cxz * c });
+            //buf.FillColumn(1, pars[3], pars[4], pars[5]);
+            buf.SetColumn(1, new double[] { cyx, cyy * c + cyz * s, -cyy * s + cyz * c });
+            //buf.FillColumn(2, pars[6], pars[7], pars[8]);
+            buf.SetColumn(2, new double[] { czx, czy * c + czz * s, -czy * s + czz * c });
+
+            if (buf.Values.Any(ii => ii < 0.9 && ii > 0.6))
+                Guid.NewGuid();
+
+
+            //var v2 = GetBarTransformationMatrixV2(v);
+
+            return buf;
+        }
+
+        public static Matrix GetBarTransformationMatrixV2(Vector v, double _webRotation = 0, MatrixPool pool = null)
+        {
+            //FROM https://searchcode.com/codesearch/view/11708439/
+            var r = v.Length;
+            var rho = Math.Atan2(v.Y, v.X);
+            var theta = Math.Acos(v.Z / r);
+
+            //from MSA by H.Rahami
+            var a = theta;
+            var b = rho;
+            var L = r;
+            var c = _webRotation * Math.PI / 180.0;
+
+            var ca = Math.Cos(a);
+            var sa = Math.Sin(a);
+            var cb = Math.Cos(b);
+            var sb = Math.Sin(b);
+            var cc = Math.Cos(c);
+            var sc = Math.Sin(c);
+
+            var r1 = new Matrix(3, 3);
+            var r2 = new Matrix(3, 3);
+            var r3 = new Matrix(3, 3);
+
+            // TODO: MAT - set values directly
+            r1.SetRow(0, new double[] { 1, 0, 0 });
+            r1.SetRow(1, new double[] { 0, cc, sc });
+            r1.SetRow(2, new double[] { 0, -sc, cc });
+
+            r2.SetRow(0, new double[] { cb, sb, 0 });
+            r2.SetRow(1, new double[] { -sb, cb, 0 });
+            r2.SetRow(2, new double[] { 0, 0, 1 });
+
+            r3.SetRow(0, new double[] { ca, 0, sa });
+            r3.SetRow(1, new double[] { 0, 1, 0 });
+            r3.SetRow(2, new double[] { -sa, 0, ca });
+
+            var buf = r1 * r2 * r3;
+
+            return buf;
+        }
+
+        public static void ApplyPermutation(Array arr, params int[] indexes)
+        {
+            if (arr.Length != indexes.Length)
+                throw new Exception();
+
+            if (indexes.Min() < 0 || indexes.Max() > indexes.Length)
+                throw new Exception();
+            
+            var clone = (Array)arr.Clone();
+
+            //Array.Clear(clone,0,clone.Length);
+
+            for (int i = 0; i < indexes.Length; i++)
+            {
+                arr.SetValue(clone.GetValue(indexes[i]), i);
+            }
+        }
+
+        public static SparseMatrix GetReducedFreeFreeStiffnessMatrix(this Model model)
+        {
+            return GetReducedFreeFreeStiffnessMatrix(model, LoadCase.DefaultLoadCase);
+        }
+
+        public static SparseMatrix GetReducedFreeFreeStiffnessMatrix(this Model model,
+            LoadCase lc)
+        {
+            var fullst = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(model);
+
+            var mgr = DofMappingManager.Create(model, lc);
+
+            var dvd = CalcUtil.GetReducedZoneDividedMatrix(fullst, mgr);
+
+            return dvd.ReleasedReleasedPart;
+        }
+
+        public static int[] GetMasterMapping(Model model, LoadCase cse,out bool[] hinged)
+        {
+            for (int i = 0; i < model.Nodes.Count; i++)
+                model.Nodes[i].Index = i;
+
+
+            var n = model.Nodes.Count;
+            var masters = new int[n];
+            hinged = new bool[n];
+
+
+            for (var i = 0; i < n; i++)
+            {
+                masters[i] = i;
+            }
+
+            //var masterCount = 0;
+
+            #region filling the masters
+
+            var distinctElements = GetDistinctRigidElements(model, cse);
+
+            var centralNodePrefreation = new bool[n];
+
+
+            foreach (var elm in model.RigidElements)
+            {
+                if (elm.CentralNode != null)
+                    centralNodePrefreation[elm.CentralNode.Index] = true;
+            }
+
+
+            foreach (var elm in distinctElements)
+            {
+                if (elm.Count == 0)
+                    continue;
+
+                var elmMasterIndex = GetMasterNodeIndex(model, elm, centralNodePrefreation);
+
+                for (var i = 0; i < elm.Count; i++)
+                {
+                    masters[elm[i]] = elmMasterIndex;
+                }
+            }
+
+            #endregion
+
+            return masters;
+        }
+
+        /// <summary>
+        /// Determines whether defined matrix is diagonal matrix or not.
+        /// Diagonal matrix is a matrix that only have nonzero elements on its main diagonal.
+        /// </summary>
+        /// <param name="mtx">The MTX.</param>
+        /// <returns></returns>
+        public static bool IsDiagonalMatrix(this SparseMatrix mtx)
+        {
+            var n = mtx.ColumnCount;
+
+            if (n != mtx.RowCount)
+                return false;
+
+            if (mtx.Values.Length > n)
+                return false;
+
+            for (int i = 0; i < n; i++)
+            {
+                var col = i;
+
+                var st = mtx.ColumnPointers[i];
+                var en = mtx.ColumnPointers[i+1];
+
+                for (int j = st; j < en; j++)
+                {
+                    var row = mtx.RowIndices[j];
+
+                    if (row != col)
+                        return false;
+                }
+            }
+
+
+            return true;
+        }
+
+        /// <summary>
+        /// Does the specified <see cref="action"/> on all members of <see cref="matrix"/>
+        /// </summary>
+        /// <param name="matrix"></param>
+        /// <param name="action"></param>
+        internal static void EnumerateMembers(this SparseMatrix matrix,Action<int,int,double> action)
+        {
+            var n = matrix.ColumnCount;
+
+            for (int i = 0; i < n; i++)
+            {
+                var col = i;
+
+                var st = matrix.ColumnPointers[i];
+                var en = matrix.ColumnPointers[i + 1];
+
+                for (int j = st; j < en; j++)
+                {
+                    var row = matrix.RowIndices[j];
+
+                    var val = matrix.Values[j];
+
+                    action(row, col, val);
+                }
+            }
+        }
+
+        internal static void EnumerateColumns(this SparseMatrix matrix, Action<int, Dictionary<int, double>> action)
+        {
+            var n = matrix.ColumnCount;
+
+            for (int i = 0; i < n; i++)
+            {
+                var col = i;
+
+                var st = matrix.ColumnPointers[i];
+                var en = matrix.ColumnPointers[i + 1];
+
+                var dic = new Dictionary<int, double>();
+
+                for (int j = st; j < en; j++)
+                {
+                    var row = matrix.RowIndices[j];
+
+                    var val = matrix.Values[j];
+                    dic[row] = val;
+                }
+
+
+                action(col, dic);
+            }
+        }
+
+        public static void MakeMatrixSymetric(this SparseMatrix mtx)
+        {
+            var n = mtx.ColumnCount;
+
+            if (n != mtx.RowCount)
+                throw new Exception();
+
+            for (int i = 0; i < n; i++)
+            {
+                var col = i;
+
+                var st = mtx.ColumnPointers[i];
+                var en = mtx.ColumnPointers[i + 1];
+
+                for (int j = st; j < en; j++)
+                {
+                    var row = mtx.RowIndices[j];
+
+                    var valRowCol = mtx.Values[j];
+
+                    var valColRow = mtx.At(col, row);
+
+                    if (valColRow == valRowCol)
+                        continue;
+
+
+                    var avg = (valRowCol + valColRow) / 2;
+
+                    SetMember(mtx, row, col, avg);
+                    SetMember(mtx, col, row, avg);
+                }
+            }
+        }
+
+        public static void SetMember(this SparseMatrix matrix, int row, int column, double value)
+        {
+            int index = matrix.ColumnPointers[column];
+            int length = matrix.ColumnPointers[column + 1] - index;
+            int pos = Array.BinarySearch(matrix.RowIndices, index, length, row);
+
+            if (pos < 0)
+                throw new Exception();
+
+            matrix.Values[pos] = value;
+        }
+
+        /// <summary>
+        /// Gets the area of a random convex polygon according to https://math.stackexchange.com/questions/3207981/caculate-area-of-polygon-in-3d
+        /// </summary>
+        /// <returns>The area</returns>
+        public static double GetConvexPolygonArea_(List<Point> Points)
+        {
+            double area = 0.0;
+            for (int i = 1; i < Points.Count - 1; i++)
+            {
+                var v1 = Points[i] - Points[0];
+                var v2 = Points[i + 1] - Points[0];
+                var n = Vector.Cross(v1, v2);
+                area += 0.5 * n.Length;
+            }
+            return area;
+        }
+
+        /// <summary>
+        /// Applies the lambda matrix to transform from local to global.
+        /// </summary>
+        /// <param name="matrix">The matrix.</param>
+        /// <param name="lambda">The lambda matrix.</param>
+        /// <remarks>
+        /// This is used for higher performance applyment of matrix. Does exactly Tt * K * T transforming 
+        /// but faster
+        /// </remarks>
+        [Obsolete("Use TransformManagerL2G instead")]
+        public static void ApplyTransformMatrix(Matrix matrix, Matrix lambda)
+        {
+            if (!lambda.IsSquare() || !matrix.IsSquare())
+                throw new Exception();
+
+            if (lambda.RowCount != 3 || matrix.RowCount % 3 != 0)
+                throw new Exception();
+
+            var count = matrix.RowCount / 3;
+
+            var t11 = lambda[0, 0];
+            var t12 = lambda[0, 1];
+            var t13 = lambda[0, 2];
+
+            var t21 = lambda[1, 0];
+            var t22 = lambda[1, 1];
+            var t23 = lambda[1, 2];
+
+            var t31 = lambda[2, 0];
+            var t32 = lambda[2, 1];
+            var t33 = lambda[2, 2];
+
+
+            for (var ic = 0; ic < count; ic++)
+            {
+                for (var jc = 0; jc < count; jc++)
+                {
+                    var iStart = ic * 3;
+                    var jStart = jc * 3;
+
+
+                }
+            }
+
+            throw new NotImplementedException();
+        }
+
+        public static double DegToRad(double degree)
+        {
+            return degree / 180 * Math.PI;
+        }
+
+        public static double RadToDeg(double rad)
+        {
+            return rad * 180.0 / Math.PI;
+        }
+
+        public static double[] GetAngleWithAxises(Vector vec)
+        {
+            var buf = new List<double>();
+
+            buf.Add(CalcUtil.RadToDeg(Math.Acos(vec.X / vec.Length)));
+            buf.Add(CalcUtil.RadToDeg(Math.Acos(vec.Y / vec.Length)));
+            buf.Add(CalcUtil.RadToDeg(Math.Acos(vec.Z / vec.Length)));
+
+
+            return buf.ToArray();
+        }
+
+        /// <summary>
+        /// Transforms the specified vector using transform matrix.
+        /// </summary>
+        /// <param name="vector">The vector.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <returns>transformed vector</returns>
+        public static Vector Transform(this Vector vector, Matrix transformMatrix)
+        {
+            var buf = new Vector();
+
+            buf.X =
+                transformMatrix[0, 0] * vector.X +
+                transformMatrix[0, 1] * vector.Y +
+                transformMatrix[0, 2] * vector.Z;
+
+            buf.Y =
+                transformMatrix[1, 0] * vector.X +
+                transformMatrix[1, 1] * vector.Y +
+                transformMatrix[1, 2] * vector.Z;
+
+            buf.Z =
+                transformMatrix[2, 0] * vector.X +
+                transformMatrix[2, 1] * vector.Y +
+                transformMatrix[2, 2] * vector.Z;
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Transforms the specified point using transform matrix.
+        /// </summary>
+        /// <param name="point">The vector.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <returns>transformed vector</returns>
+        public static Point Transform(this Point point, Matrix transformMatrix)
+        {
+            return (Point)((Vector)point).Transform(transformMatrix);
+        }
+
+        /// <summary>
+        /// Transforms back the specified vector using transform matrix.
+        /// </summary>
+        /// <param name="vector">The vector.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <returns>transformed vector</returns>
+        public static Vector TransformBack(this Vector vector, Matrix transformMatrix)
+        {
+            var buf = new Vector();
+
+            buf.X =
+                transformMatrix[0, 0] * vector.X +
+                transformMatrix[1, 0] * vector.Y +
+                transformMatrix[2, 0] * vector.Z;
+
+            buf.Y =
+                transformMatrix[0, 1] * vector.X +
+                transformMatrix[1, 1] * vector.Y +
+                transformMatrix[2, 1] * vector.Z;
+
+            buf.Z =
+                transformMatrix[0, 2] * vector.X +
+                transformMatrix[1, 2] * vector.Y +
+                transformMatrix[2, 2] * vector.Z;
+
+            return buf;
+        }
+
+        /// <summary>
+        /// Transforms back the specified point using transform matrix.
+        /// </summary>
+        /// <param name="point">The vector.</param>
+        /// <param name="transformMatrix">The transform matrix.</param>
+        /// <returns>transformed vector</returns>
+        public static Point TransformBack(this Point point, Matrix transformMatrix)
+        {
+            return (Point)((Vector)point).TransformBack(transformMatrix);
+        }
+
+
+        public static void MultiplyWithConstant(this SparseMatrix mtx, double coef)
+        {
+            MultiplyWithConstant(mtx.Values, coef);
+        }
+
+        public static void MultiplyWithConstant(this double[] vec, double coef)
+        {
+            for (var i = 0; i < vec.Length; i++)
+                vec[i] = vec[i] * coef;
+        }
+
+        private static void FillBi(Matrix B, int i, Matrix bi)
+        {
+            var c = bi.ColumnCount;
+            for (var ii = 0; ii < bi.RowCount; ii++)
+                for (var j = 0; j < bi.RowCount; j++)
+                    bi[ii, j] = B[c * i + ii, j];
+
+        }
+
+        public static void LabelNodesIncrementally(this Model model)
+        {
+            for (var i = 0; i < model.Nodes.Count; i++)
+            {
+                model.Nodes[i].Label = null;
+            }
+
+            for (var i = 0; i < model.Nodes.Count; i++)
+            {
+                model.Nodes[i].Label = "N" + i.ToString(CultureInfo.CurrentCulture);
+            }
+        }
+
+        public static void LabelElementsIncrementally(this Model model)
+        {
+            for (var i = 0; i < model.Elements.Count; i++)
+            {
+                model.Elements[i].Label = null;
+            }
+
+            for (var i = 0; i < model.Elements.Count; i++)
+            {
+                model.Elements[i].Label = "E" + i.ToString(CultureInfo.CurrentCulture);
+            }
+        }
+
+        /// <summary>
+        /// Generates the permutation for delta for specified model in specified loadCase.
+        /// Note that delta permutation = P_delta in reduction process
+        /// </summary>
+        /// <param name="target">The target.</param>
+        /// <param name="loadCase">The load case.</param>
+        /// <returns>delta permutation</returns>
+        public static SparseMatrix GenerateP_Delta(Model target, LoadCase loadCase)
+        {
+            throw new NotImplementedException();
+
+            target.ReIndexNodes();
+
+            var buf = new CoordinateStorage<double>(target.Nodes.Count * 6, target.Nodes.Count * 6, 1);
+
+
+            #region rigid elements
+            foreach (var elm in target.RigidElements)
+            {
+                var centralNode = elm.Nodes[0];
+                var masterIdx = centralNode.Index;
+
+                for (var i = 1; i < elm.Nodes.Count; i++)
+                {
+                    var slaveIdx = elm.Nodes[i].Index;
+
+                    var d = centralNode.Location - elm.Nodes[i].Location;
+
+                    //buf[0, 4] = -(buf[1, 3] = d.Z);
+                    //buf[2, 3] = -(buf[0, 5] = d.Y);
+                    //buf[1, 5] = -(buf[2, 4] = d.X);
+
+                    buf.At(6 * slaveIdx + 0, 6 * masterIdx + 0, 1);
+                    buf.At(6 * slaveIdx + 1, 6 * masterIdx + 1, 1);
+                    buf.At(6 * slaveIdx + 2, 6 * masterIdx + 2, 1);
+
+                    buf.At(6 * slaveIdx + 1, 6 * masterIdx + 3, d.Z);
+                    buf.At(6 * slaveIdx + 0, 6 * masterIdx + 4, -d.Z);
+
+                    buf.At(6 * slaveIdx + 0, 6 * masterIdx + 5, d.Y);
+                    buf.At(6 * slaveIdx + 2, 6 * masterIdx + 3, -d.Y);//
+
+                    buf.At(6 * slaveIdx + 2, 6 * masterIdx + 4, d.X);//
+                    buf.At(6 * slaveIdx + 1, 6 * masterIdx + 5, -d.X);
+                }
+                //add to buf
+            }
+            #endregion
+
+            throw new NotImplementedException();
+
+            return buf.ToCCs();
+        }
+
+        public static int[] EmptyRows(this SparseMatrix matrix)
+        {
+            var buf = new bool[matrix.RowCount];
+
+            var lst = new List<int>();
+
+            foreach (var tuple in matrix.EnumerateIndexed())
+            {
+                var rw = tuple.Item1;
+                var col = tuple.Item2;
+                var val = tuple.Item3;
+
+                if (val != 0)
+                    buf[rw] = true;
+            }
+
+            for (var i = 0; i < buf.Length; i++)
+                if (!buf[i])
+                    lst.Add(i);
+
+            return lst.ToArray();
+        }
+
+        public static int EmptyColumnCount(this SparseMatrix matrix)
+        {
+            var buf = new bool[matrix.RowCount];
+
+            matrix.EnumerateIndexed((row, col, val) =>
+             {
+                 buf[col] = true;
+             });
+
+            return buf.Count(ii => !ii);
+        }
+
+        public static SparseMatrix GenerateP_Force(Model target, LoadCase loadCase)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static SparseMatrix GenerateS_r(Model target, LoadCase loadCase)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static SparseMatrix GenerateS_f(Model target, LoadCase loadCase)
+        {
+            throw new NotImplementedException();
+        }
+
+        //*/
+
+        // TODO: LEGACY CODE - Get2NodeElementTransformationMatrix, move out of main assembly?
+
+        /// <summary>
+        /// Gets the transformation matrix for converting local coordinate to global coordinate for a two node straight element.
+        /// </summary>
+        /// <param name="v">The [ end - start ] vector.</param>
+        /// <param name="webR">The web rotation in radian.</param>
+        /// <returns>
+        /// transformation matrix
+        /// </returns>
+        public static Matrix Get2NodeElementTransformationMatrix(Vector v, double webR)
+        {
+            var cxx = 0.0;
+            var cxy = 0.0;
+            var cxz = 0.0;
+
+            var cyx = 0.0;
+            var cyy = 0.0;
+            var cyz = 0.0;
+
+            var czx = 0.0;
+            var czy = 0.0;
+            var czz = 0.0;
+
+
+            var teta = webR;
+
+            var s = webR.Equals(0.0) ? 0.0 : Math.Sin(teta);
+            var c = webR.Equals(0.0) ? 1.0 : Math.Cos(teta);
+
+            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
+            {
+                if (v.Z > 0)
+                {
+                    czx = 1;
+                    cyy = 1;
+                    cxz = -1;
+                }
+                else
+                {
+                    czx = -1;
+                    cyy = 1;
+                    cxz = 1;
+                }
+            }
+            else
+            {
+                var l = v.Length;
+                cxx = v.X / l;
+                cyx = v.Y / l;
+                czx = v.Z / l;
+                var d = Math.Sqrt(cxx * cxx + cyx * cyx);
+                cxy = -cyx / d;
+                cyy = cxx / d;
+                cxz = -cxx * czx / d;
+                cyz = -cyx * czx / d;
+                czz = d;
+            }
+
+            var t = new Matrix(3, 3);
+
+            t[0, 0] = cxx;
+            t[0, 1] = cxy * c + cxz * s;
+            t[0, 2] = -cxy * s + cxz * c;
+
+            t[1, 0] = cyx;
+            t[1, 1] = cyy * c + cyz * s;
+            t[1, 2] = -cyy * s + cyz * c;
+
+            t[2, 0] = czx;
+            t[2, 1] = czy * c + czz * s;
+            t[2, 2] = -czy * s + czz * c;
+
+            return t;
+        }
+
+
+        /// <summary>
+        /// Gets the transformation matrix for converting local coordinate to global coordinate for a two node straight element.
+        /// </summary>
+        /// <param name="v">The [ end - start ] vector.</param>
+        /// <returns>
+        /// transformation matrix
+        /// </returns>
+        public static Matrix Get2NodeElementTransformationMatrix(Vector v)
+        {
+            return Get2NodeElementTransformationMatrix(v, 0);
+        }
+
+        /// <summary>
+        /// calculates the dot product of two same length vectors
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <returns></returns>
+        public static double DotProduct(double[] v1, double[] v2)
+        {
+            ThrowUtil.ThrowIf(v1.Length != v2.Length, "inconsistent sizes");
+
+            var buf = 0.0;
+
+            for (var i = 0; i < v1.Length; i++)
+                buf += v1[i] * v2[i];
+
+            return buf;
+        }
+
+        /// <summary>
+        /// calculates the bar transformation matrix (local to/from global)
+        /// </summary>
+        /// <param name="v">vector that connects start to end</param>
+        /// <param name="_webRotation">rotation around local x axis</param>
+        /// <returns></returns>
+        public static Matrix GetBarTransformationMatrix(Vector v, double _webRotation = 0)
+        {
+            var buf = new Matrix(3, 3);
+
+            GetBarTransformationMatrix(v, _webRotation, buf);
 
             return buf;
         }
@@ -141,10 +826,10 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// calculates the bar transformation matrix (local to/from global) and fill to <see cref="output"/> parameter
         /// </summary>
-        /// <param name="v">vector that connects strat to end</param>
+        /// <param name="v">vector that connects start to end</param>
         /// <param name="_webRotation">rotation around local x axis</param>
         /// <returns></returns>
-        public static void GetBarTransformationMatrix(Vector v, double _webRotation ,Matrix output)
+        public static void GetBarTransformationMatrix(Vector v, double _webRotation, Matrix output)
         {
             var cxx = 0.0;
             var cxy = 0.0;
@@ -222,139 +907,7 @@ namespace BriefFiniteElementNet
             //return buf;
         }
 
-
-        public static Matrix GetBarTransformationMatrixnew(Vector v, double _webRotation = 0,MatrixPool pool=null)
-        {
-            var cxx = 0.0;
-            var cxy = 0.0;
-            var cxz = 0.0;
-
-            var cyx = 0.0;
-            var cyy = 0.0;
-            var cyz = 0.0;
-
-            var czx = 0.0;
-            var czy = 0.0;
-            var czz = 0.0;
-
-            var teta = _webRotation;
-
-            var s = _webRotation == 0 ? 0.0 : Math.Sin(teta * Math.PI / 180.0);
-            var c = _webRotation == 0 ? 1.0 : Math.Cos(teta * Math.PI / 180.0);
-
-            //var v = this.EndNode.Location - this.StartNode.Location;
-            //copied from MATLAB Codes for Finite Element Analysis, Solids and Structures by A.J.M.Ferreira p 107
-
-            
-
-            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
-            {
-                if (v.Z > 0)
-                {
-                    czx = 1;
-                    cyy = 1;
-                    cxz = -1;
-                }
-                else
-                {
-                    czx = -1;
-                    cyy = 1;
-                    cxz = 1;
-                }
-            }
-            else
-            {
-                var l = v.Length;
-                cxx = v.X / l;
-                cyx = v.Y / l;
-                czx = v.Z / l;
-                var d = Math.Sqrt(cxx * cxx + cyx * cyx);
-                cxy = -cyx / d;
-                cyy = cxx / d;
-                cxz = -cxx * czx / d;
-                cyz = -cyx * czx / d;
-                czz = d;
-            }
-
-            /*
-            var pars = new double[9];
-
-            pars[0] = cxx;
-            pars[1] = cxy * c + cxz * s;
-            pars[2] = -cxy * s + cxz * c;
-
-            pars[3] = cyx;
-            pars[4] = cyy * c + cyz * s;
-            pars[5] = -cyy * s + cyz * c;
-
-            pars[6] = czx;
-            pars[7] = czy * c + czz * s;
-            pars[8] = -czy * s + czz * c;
-            */
-
-            var buf =
-                pool == null ?
-                new Matrix(3, 3) : pool.Allocate(3, 3);
-
-            // TODO: MAT - set values directly
-            //buf.FillColumn(0, pars[0], pars[1], pars[2]);
-            buf.SetColumn(0, new double[] { cxx, cxy * c + cxz * s, -cxy * s + cxz * c });
-            //buf.FillColumn(1, pars[3], pars[4], pars[5]);
-            buf.SetColumn(1, new double[] { cyx, cyy * c + cyz * s, -cyy * s + cyz * c });
-            //buf.FillColumn(2, pars[6], pars[7], pars[8]);
-            buf.SetColumn(2, new double[] { czx, czy * c + czz * s, -czy * s + czz * c });
-
-            if (buf.Values.Any(ii => ii < 0.9 && ii > 0.6))
-                Guid.NewGuid();
-
-
-            //var v2 = GetBarTransformationMatrixV2(v);
-
-            return buf;
-        }
-
-        public static Matrix GetBarTransformationMatrixV2(Vector v, double _webRotation = 0, MatrixPool pool = null)
-        {
-            //FROM https://searchcode.com/codesearch/view/11708439/
-            var r = v.Length;
-            var rho = Math.Atan2(v.Y, v.X);
-            var theta = Math.Acos(v.Z / r);
-
-            //from MSA by H.Rahami
-            var a = theta;
-            var b = rho;
-            var L = r;
-            var c = _webRotation * Math.PI / 180.0;
-
-            var ca = Math.Cos(a);
-            var sa = Math.Sin(a);
-            var cb = Math.Cos(b);
-            var sb = Math.Sin(b);
-            var cc = Math.Cos(c);
-            var sc = Math.Sin(c);
-
-            var r1 = new Matrix(3, 3);
-            var r2 = new Matrix(3, 3);
-            var r3 = new Matrix(3, 3);
-
-            // TODO: MAT - set values directly
-            r1.SetRow(0, new double[] { 1, 0, 0 });
-            r1.SetRow(1, new double[] { 0, cc, sc });
-            r1.SetRow(2, new double[] { 0, -sc, cc });
-
-            r2.SetRow(0, new double[] { cb, sb, 0 });
-            r2.SetRow(1, new double[] { -sb, cb, 0 });
-            r2.SetRow(2, new double[] { 0, 0, 1 });
-
-            r3.SetRow(0, new double[] { ca, 0, sa });
-            r3.SetRow(1, new double[] { 0, 1, 0 });
-            r3.SetRow(2, new double[] { -sa, 0, ca });
-
-            var buf = r1 * r2 * r3;
-
-            return buf;
-        }
-
+        // TODO: Divide only used in tests and validation, move out of main assembly?
 
         /// <summary>
         /// divides the specified length into <see cref="pcs"/> parts.
@@ -373,7 +926,7 @@ namespace BriefFiniteElementNet
             var buf = new double[pcs + 1];
             var n = pcs + 1.0;
 
-            for (var i = 0; i < pcs+1; i++)
+            for (var i = 0; i < pcs + 1; i++)
             {
                 buf[i] = length * i / (pcs * 1.0);
             }
@@ -381,144 +934,19 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static void ApplyPermutation(Array arr, params int[] indexes)
-        {
-            if (arr.Length != indexes.Length)
-                throw new Exception();
-
-            if (indexes.Min() < 0 || indexes.Max() > indexes.Length)
-                throw new Exception();
-            
-            var clone = (Array)arr.Clone();
-
-            //Array.Clear(clone,0,clone.Length);
-
-            for (int i = 0; i < indexes.Length; i++)
-            {
-                arr.SetValue(clone.GetValue(indexes[i]), i);
-            }
-            
-        }
-
-        public static CCS GetReducedFreeFreeStiffnessMatrix(this Model model)
-        {
-            return GetReducedFreeFreeStiffnessMatrix(model, LoadCase.DefaultLoadCase);
-        }
-
-        public static CCS GetReducedFreeFreeStiffnessMatrix(this Model model,
-            LoadCase lc)
-        {
-            var fullst = MatrixAssemblerUtil.AssembleFullStiffnessMatrix(model);
-
-            var mgr = DofMappingManager.Create(model, lc);
-
-            var dvd = CalcUtil.GetReducedZoneDividedMatrix(fullst, mgr);
-
-            return dvd.ReleasedReleasedPart;
-        }
-
-        /// <summary>
-        /// Gets the transformation matrix for converting local coordinate to global coordinate for a two node straight element.
-        /// </summary>
-        /// <param name="v">The [ end - start ] vector.</param>
-        /// <param name="webR">The web rotation in radian.</param>
-        /// <returns>
-        /// transformation matrix
-        /// </returns>
-        public static Matrix Get2NodeElementTransformationMatrix(Vector v, double webR)
-        {
-            var cxx = 0.0;
-            var cxy = 0.0;
-            var cxz = 0.0;
-
-            var cyx = 0.0;
-            var cyy = 0.0;
-            var cyz = 0.0;
-
-            var czx = 0.0;
-            var czy = 0.0;
-            var czz = 0.0;
-
-
-            var teta = webR;
-
-            var s = webR.Equals(0.0) ? 0.0 : Math.Sin(teta);
-            var c = webR.Equals(0.0) ? 1.0 : Math.Cos(teta);
-
-            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
-            {
-                if (v.Z > 0)
-                {
-                    czx = 1;
-                    cyy = 1;
-                    cxz = -1;
-                }
-                else
-                {
-                    czx = -1;
-                    cyy = 1;
-                    cxz = 1;
-                }
-            }
-            else
-            {
-                var l = v.Length;
-                cxx = v.X/l;
-                cyx = v.Y/l;
-                czx = v.Z/l;
-                var d = Math.Sqrt(cxx*cxx + cyx*cyx);
-                cxy = -cyx/d;
-                cyy = cxx/d;
-                cxz = -cxx*czx/d;
-                cyz = -cyx*czx/d;
-                czz = d;
-            }
-
-            var t = new Matrix(3, 3);
-
-            t[0, 0] = cxx;
-            t[0, 1] = cxy*c + cxz*s;
-            t[0, 2] = -cxy*s + cxz*c;
-
-            t[1, 0] = cyx;
-            t[1, 1] = cyy*c + cyz*s;
-            t[1, 2] = -cyy*s + cyz*c;
-
-            t[2, 0] = czx;
-            t[2, 1] = czy*c + czz*s;
-            t[2, 2] = -czy*s + czz*c;
-
-            return t;
-        }
-
-
-        /// <summary>
-        /// Gets the transformation matrix for converting local coordinate to global coordinate for a two node straight element.
-        /// </summary>
-        /// <param name="v">The [ end - start ] vector.</param>
-        /// <returns>
-        /// transformation matrix
-        /// </returns>
-        public static Matrix Get2NodeElementTransformationMatrix(Vector v)
-        {
-            return Get2NodeElementTransformationMatrix(v, 0);
-        }
-
         /// <summary>
         /// Creates a built in solver appropriated with <see cref="tp"/>.
         /// </summary>
         /// <param name="type">The solver type.</param>
         /// <returns></returns>
-        public static ISolver CreateBuiltInSolver(BuiltInSolverType type,CCS A)
+        public static ISolver CreateBuiltInSolver(BuiltInSolverType type, SparseMatrix A)
         {
             switch (type)
             {
                 case BuiltInSolverType.CholeskyDecomposition:
                     return new CholeskySolverFactory().CreateSolver(A);
-                    break;
                 case BuiltInSolverType.ConjugateGradient:
                     return new ConjugateGradientFactory().CreateSolver(A);// PCG(new SSOR());
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException("type");
             }
@@ -531,19 +959,18 @@ namespace BriefFiniteElementNet
             {
                 case BuiltInSolverType.CholeskyDecomposition:
                     return new CholeskySolverFactory();
-                    break;
-                    /**/
+                /**/
                 case BuiltInSolverType.ConjugateGradient:
                     return new ConjugateGradientFactory();// PCG(new SSOR());
-                    break;
                 case BuiltInSolverType.Lu:
                     return new ConjugateGradientFactory();// PCG(new SSOR());
-                    break;
-                    /**/
+                /**/
                 default:
                     throw new ArgumentOutOfRangeException("type");
             }
         }
+
+        // TODO: LEGACY CODE - GetHashCode (Point), move out of main assembly?
 
         public static int GetHashCode(params Point[] objects)
         {
@@ -557,10 +984,10 @@ namespace BriefFiniteElementNet
 
             for (var i = 1; i < objects.Length; i++)
             {
-                buf = (buf*397) ^ GetPointHashCode(objects[i]);
+                buf = (buf * 397) ^ GetPointHashCode(objects[i]);
             }
 
-            buf = (buf*397) ^ objects.Length;
+            buf = (buf * 397) ^ objects.Length;
 
             return buf;
         }
@@ -649,7 +1076,7 @@ namespace BriefFiniteElementNet
                 var part = DepthFirstSearch(graph, visited, startPoint).Distinct().ToList();
 
                 buf.Add(part);
-                foreach(var nde in part)
+                foreach (var nde in part)
                 {
                     groups[nde] = cntr;
                 }
@@ -659,15 +1086,7 @@ namespace BriefFiniteElementNet
 
             return groups;
         }
-        public static void SetAllMembers(this Array arr, object value)
-        {
-            var n = arr.GetLength(0);
 
-            for (int i = 0; i < n; i++)
-            {
-                arr.SetValue(value, i);
-            }
-        }
         /// <summary>
         /// Does the Depth first search, return connected nodes to <see cref="startNode"/>.
         /// </summary>
@@ -762,56 +1181,6 @@ namespace BriefFiniteElementNet
             return masters;
         }
 
-        public static int[] GetMasterMapping(Model model, LoadCase cse,out bool[] hinged)
-        {
-            for (int i = 0; i < model.Nodes.Count; i++)
-                model.Nodes[i].Index = i;
-
-
-            var n = model.Nodes.Count;
-            var masters = new int[n];
-            hinged = new bool[n];
-
-
-            for (var i = 0; i < n; i++)
-            {
-                masters[i] = i;
-            }
-
-            //var masterCount = 0;
-
-            #region filling the masters
-
-            var distinctElements = GetDistinctRigidElements(model, cse);
-
-            var centralNodePrefreation = new bool[n];
-
-
-            foreach (var elm in model.RigidElements)
-            {
-                if (elm.CentralNode != null)
-                    centralNodePrefreation[elm.CentralNode.Index] = true;
-            }
-
-
-            foreach (var elm in distinctElements)
-            {
-                if (elm.Count == 0)
-                    continue;
-
-                var elmMasterIndex = GetMasterNodeIndex(model, elm, centralNodePrefreation);
-
-                for (var i = 0; i < elm.Count; i++)
-                {
-                    masters[elm[i]] = elmMasterIndex;
-                }
-            }
-
-            #endregion
-
-            return masters;
-        }
-
         private static List<List<int>> GetDistinctRigidElements(Model model, LoadCase loadCase)
         {
             for (int i = 0; i < model.Nodes.Count; i++)
@@ -841,7 +1210,7 @@ namespace BriefFiniteElementNet
                 }
             }
 
-            var graph = Converter.ToCompressedColumnStorage(ecrd);
+            var graph = SparseMatrix.OfIndexed(ecrd);
 
             var buf = CalcUtil.EnumerateGraphParts(graph);
 
@@ -894,58 +1263,25 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        /// <summary>
-        /// Fills the whole <see cref="array"/> with -1.
-        /// </summary>
-        /// <param name="array">The array.</param>
-        public static void FillWith_old<T>(this T[] array,T value)
-        {
-            for (var i = array.Length - 1; i >= 0; i--)
-            {
-                array[i] = value;
-            }
-        }
-
         public static int Sum(this Constraint ctx)
         {
-            return (int) ctx.DX + (int) ctx.DY + (int) ctx.DZ +
-                   (int) ctx.RX + (int) ctx.RY + (int) ctx.RZ;
+            return (int)ctx.DX + (int)ctx.DY + (int)ctx.DZ +
+                   (int)ctx.RX + (int)ctx.RY + (int)ctx.RZ;
         }
 
         public static DofConstraint[] ToArray(this Constraint ctx)
         {
-            return new DofConstraint[] {ctx.DX, ctx.DY, ctx.DZ, ctx.RX, ctx.RY, ctx.RZ};
+            return new DofConstraint[] { ctx.DX, ctx.DY, ctx.DZ, ctx.RX, ctx.RY, ctx.RZ };
         }
 
         public static double[] Add(double[] a, double[] b)
         {
-            if (a.Length != b.Length)
-                throw new InvalidOperationException();
-
-            var buf = new double[a.Length];
-
-            for (int i = 0; i < b.Length; i++)
-            {
-                buf[i] = a[i] + b[i];
-            }
-
-            return buf;
+            return a.Add(b);
         }
-
 
         public static double[] Subtract(double[] a, double[] b)
         {
-            if (a.Length != b.Length)
-                throw new InvalidOperationException();
-
-            var buf = new double[a.Length];
-
-            for (int i = 0; i < b.Length; i++)
-            {
-                buf[i] = a[i] - b[i];
-            }
-
-            return buf;
+            return a.Subtract(b);
         }
 
         /// <summary>
@@ -954,21 +1290,21 @@ namespace BriefFiniteElementNet
         /// <param name="reducedMatrix">The reduced matrix.</param>
         /// <param name="map">The map.</param>
         /// <returns></returns>
-        public static ZoneDevidedMatrix GetReducedZoneDividedMatrix(CCS reducedMatrix, DofMappingManager map)
+        public static ZoneDevidedMatrix GetReducedZoneDividedMatrix(SparseMatrix reducedMatrix, DofMappingManager map)
         {
             var m = map.M;
             var n = map.N;
             var r = reducedMatrix;
 
-            if (r.ColumnCount != r.RowCount || r.RowCount != 6*m)
+            if (r.ColumnCount != r.RowCount || r.RowCount != 6 * m)
                 throw new InvalidOperationException();
 
-            var ff = new Coord(map.RMap2.Length, map.RMap2.Length,1);
-            var fs = new Coord(map.RMap2.Length, map.RMap3.Length,1);
-            var sf = new Coord(map.RMap3.Length, map.RMap2.Length,1);
-            var ss = new Coord(map.RMap3.Length, map.RMap3.Length,1);
+            var ff = new CoordinateStorage<double>(map.RMap2.Length, map.RMap2.Length, 1);
+            var fs = new CoordinateStorage<double>(map.RMap2.Length, map.RMap3.Length, 1);
+            var sf = new CoordinateStorage<double>(map.RMap3.Length, map.RMap2.Length, 1);
+            var ss = new CoordinateStorage<double>(map.RMap3.Length, map.RMap3.Length, 1);
 
-            for (var i = 0; i < 6*m; i++)
+            for (var i = 0; i < 6 * m; i++)
             {
                 var st = r.ColumnPointers[i];
                 var en = r.ColumnPointers[i + 1];
@@ -1008,258 +1344,59 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static CCS ToCCs(this Coord crd)
+        // TODO: EXTENSION - ToCCs could be removed (CSparse should handle this case well)
+        public static SparseMatrix ToCCs(this CoordinateStorage<double> crd)
         {
-            //workitem #6:
             //https://brieffiniteelementnet.codeplex.com/workitem/6
             if (crd.RowCount == 0 || crd.ColumnCount == 0)
-                return new CCS(0, 0){ColumnPointers = new int[0], RowIndices = new int[0], Values = new double[0]};
+                return new SparseMatrix(0, 0) { ColumnPointers = new int[0], RowIndices = new int[0], Values = new double[0] };
 
-
-            return (CCS) Converter.ToCompressedColumnStorage(crd);
+            return (SparseMatrix)SparseMatrix.OfIndexed(crd);
         }
 
-        /// <summary>
-        /// Determines whether defined matrix is diagonal matrix or not.
-        /// Diagonal matrix is a matrix that only have nonzero elements on its main diagonal.
-        /// </summary>
-        /// <param name="mtx">The MTX.</param>
-        /// <returns></returns>
-        public static bool IsDiagonalMatrix(this CCS mtx)
+        // TODO: EXTENSION - move to Extensions class?
+        internal static IEnumerable<Tuple<int, double>> EnumerateColumnMembers(this CompressedColumnStorage<double> matrix, int columnNumber)
         {
-            var n = mtx.ColumnCount;
+            var i = columnNumber;
 
-            if (n != mtx.RowCount)
-                return false;
+            var ap = matrix.ColumnPointers;
+            var ai = matrix.RowIndices;
+            var ax = matrix.Values;
 
-            if (mtx.Values.Length > n)
-                return false;
+            var end = ap[i + 1];
 
-            for (int i = 0; i < n; i++)
+            for (int j = ap[i]; j < end; j++)
             {
-                var col = i;
-
-                var st = mtx.ColumnPointers[i];
-                var en = mtx.ColumnPointers[i+1];
-
-                for (int j = st; j < en; j++)
-                {
-                    var row = mtx.RowIndices[j];
-
-                    if (row != col)
-                        return false;
-                }
-            }
-
-
-            return true;
-        }
-
-
-        /// <summary>
-        /// Does the specified <see cref="action"/> on all members of <see cref="matrix"/>
-        /// </summary>
-        /// <param name="matrix"></param>
-        /// <param name="action"></param>
-        internal static void EnumerateMembers(this CCS matrix,Action<int,int,double> action)
-        {
-            var n = matrix.ColumnCount;
-
-            for (int i = 0; i < n; i++)
-            {
-                var col = i;
-
-                var st = matrix.ColumnPointers[i];
-                var en = matrix.ColumnPointers[i + 1];
-
-                for (int j = st; j < en; j++)
-                {
-                    var row = matrix.RowIndices[j];
-
-                    var val = matrix.Values[j];
-
-                    action(row, col, val);
-                }
+                yield return Tuple.Create(ai[j], ax[j]);
             }
         }
 
-        internal static IEnumerable<Tuple<int,double>> EnumerateColumnMembers(this CSparse.Storage.CompressedColumnStorage<double> matrix, int columnNumber)//,Action<int, int, double> action)
-        {
-            var n = matrix.ColumnCount;
-
-            var i = columnNumber;//for (int i = 0; i < n; i++)
-            {
-                var col = i;
-
-                var st = matrix.ColumnPointers[i];
-                var en = matrix.ColumnPointers[i + 1];
-
-                for (int j = st; j < en; j++)
-                {
-                    var row = matrix.RowIndices[j];
-
-                    var val = matrix.Values[j];
-
-                    yield return Tuple.Create(row, val);
-                    //action(row, col, val);
-                }
-            }
-        }
-
-
+        // TODO: EXTENSION - move to Extensions class?
         internal static void EnumerateColumnMembers(this CompressedColumnStorage<double> matrix, int columnNumber, Action<int, int, double> action)
         {
-            var n = matrix.ColumnCount;
+            var i = columnNumber;
 
-            var i = columnNumber;//for (int i = 0; i < n; i++)
+            var ap = matrix.ColumnPointers;
+            var ai = matrix.RowIndices;
+            var ax = matrix.Values;
+
+            var end = ap[i + 1];
+
+            for (int j = ap[i]; j < end; j++)
             {
-                var col = i;
-
-                var st = matrix.ColumnPointers[i];
-                var en = matrix.ColumnPointers[i + 1];
-
-                for (int j = st; j < en; j++)
-                {
-                    var row = matrix.RowIndices[j];
-
-                    var val = matrix.Values[j];
-
-                    action(row, col, val);
-                }
-            }
-        }
-        internal static void EnumerateMembers(this CompressedColumnStorage<double> matrix, Action<int, int, double> action)
-        {
-            var n = matrix.ColumnCount;
-
-            for (int i = 0; i < n; i++)
-            {
-                var col = i;
-
-                var st = matrix.ColumnPointers[i];
-                var en = matrix.ColumnPointers[i + 1];
-
-                for (int j = st; j < en; j++)
-                {
-                    var row = matrix.RowIndices[j];
-
-                    var val = matrix.Values[j];
-
-                    action(row, col, val);
-                }
+                action(ai[j], i, ax[j]);
             }
         }
 
-        public static  CompressedColumnStorage<double> Clonee(this CompressedColumnStorage<double>  matrix)
-        {
-            var buf = new CCS(matrix.RowCount, matrix.ColumnCount, matrix.Values.Length);
-
-            matrix.RowIndices.CopyTo(buf.RowIndices, 0);
-            matrix.ColumnPointers.CopyTo(buf.ColumnPointers, 0);
-            matrix.Values.CopyTo(buf.Values, 0);
-
-            return buf;
-        }
-
-        public static CSparse.Double.SparseMatrix Clonee(this CSparse.Double.SparseMatrix matrix)
-        {
-            var buf = new CSparse.Double.SparseMatrix(matrix.RowCount, matrix.ColumnCount, matrix.Values.Length);
-
-            matrix.RowIndices.CopyTo(buf.RowIndices, 0);
-            matrix.ColumnPointers.CopyTo(buf.ColumnPointers, 0);
-            matrix.Values.CopyTo(buf.Values, 0);
-
-            return buf;
-        }
-
-        internal static void EnumerateColumns(this CCS matrix, Action<int, Dictionary<int,double>> action)
-        {
-            var n = matrix.ColumnCount;
-
-            for (int i = 0; i < n; i++)
-            {
-                var col = i;
-
-                var st = matrix.ColumnPointers[i];
-                var en = matrix.ColumnPointers[i + 1];
-
-                var dic = new Dictionary<int, double>();
-
-                for (int j = st; j < en; j++)
-                {
-                    var row = matrix.RowIndices[j];
-
-                    var val = matrix.Values[j];
-                    dic[row] = val;
-                }
-
-
-                action(col, dic);
-            }
-
-        }
-
+        // TODO: EXTENSION - move to Extensions class?
         internal static int GetNnzcForColumn(this CompressedColumnStorage<double> matrix, int column)
         {
             var st = matrix.ColumnPointers[column];
-            var en = matrix.ColumnPointers[column+1];
+            var en = matrix.ColumnPointers[column + 1];
 
             return en - st;
         }
 
-        public static void MakeMatrixSymetric(this CCS mtx)
-        {
-            var n = mtx.ColumnCount;
-
-            if (n != mtx.RowCount)
-                throw new Exception();
-
-
-            for (int i = 0; i < n; i++)
-            {
-                var col = i;
-
-                var st = mtx.ColumnPointers[i];
-                var en = mtx.ColumnPointers[i + 1];
-
-                for (int j = st; j < en; j++)
-                {
-                    var row = mtx.RowIndices[j];
-
-
-
-                    var valRowCol = mtx.Values[j];
-
-                    var valColRow = mtx.At(col, row);
-
-                    if (valColRow == valRowCol)
-                        continue;
-
-
-                    var avg = (valRowCol + valColRow) / 2;
-
-                    SetMember(mtx, row, col, avg);
-                    SetMember(mtx, col, row, avg);
-                }
-            }
-
-
-        }
-
-
-        public static void SetMember(this CCS matrix, int row, int column, double value)
-        {
-            int index = matrix.ColumnPointers[column];
-            int length = matrix.ColumnPointers[column + 1] - index;
-            int pos = Array.BinarySearch(matrix.RowIndices, index, length, row);
-
-            if (pos < 0)
-                throw new Exception();
-
-            matrix.Values[pos] = value;
-        }
-
-       
 
         public static double GetTriangleArea(Point p0, Point p1, Point p2)
         {
@@ -1268,170 +1405,6 @@ namespace BriefFiniteElementNet
 
             var cross = Vector.Cross(v1, v2);
             return cross.Length / 2;
-        }
-
-        /// <summary>
-        /// Gets the area of a random convex polygon according to https://math.stackexchange.com/questions/3207981/caculate-area-of-polygon-in-3d
-        /// </summary>
-        /// <returns>The area</returns>
-        public static double GetConvexPolygonArea(List<Point> Points)
-        {
-            double area = 0.0;
-            for (int i = 1; i < Points.Count - 1; i++)
-            {
-                var v1 = Points[i] - Points[0];
-                var v2 = Points[i + 1] - Points[0];
-                var n = Vector.Cross(v1, v2);
-                area += 0.5 * n.Length;
-            }
-            return area;
-        }
-
-        /// <summary>
-        /// Applies the lambda matrix to transform from local to global.
-        /// </summary>
-        /// <param name="matrix">The matrix.</param>
-        /// <param name="lambda">The lambda matrix.</param>
-        /// <remarks>
-        /// This is used for higher performance applyment of matrix. Does exactly Tt * K * T transforming 
-        /// but faster
-        /// </remarks>
-        [Obsolete("Use TransformManagerL2G instead")]
-        public static void ApplyTransformMatrix(Matrix matrix, Matrix lambda)
-        {
-            if (!lambda.IsSquare() || !matrix.IsSquare())
-                throw new Exception();
-
-            if (lambda.RowCount != 3 || matrix.RowCount%3 != 0)
-                throw new Exception();
-
-            var count = matrix.RowCount/3;
-
-            var t11 = lambda[0, 0];
-            var t12 = lambda[0, 1];
-            var t13 = lambda[0, 2];
-
-            var t21 = lambda[1, 0];
-            var t22 = lambda[1, 1];
-            var t23 = lambda[1, 2];
-
-            var t31 = lambda[2, 0];
-            var t32 = lambda[2, 1];
-            var t33 = lambda[2, 2];
-
-
-            for (var ic = 0; ic < count; ic++)
-            {
-                for (var jc = 0; jc < count; jc++)
-                {
-                    var iStart = ic * 3;
-                    var jStart = jc * 3;
-
-
-                }
-            }
-
-            throw new NotImplementedException();
-        }
-
-        public static double DegToRad(double degree)
-        {
-            return degree/180*Math.PI;
-        }
-
-        public static double RadToDeg(double rad)
-        {
-            return rad*180.0/Math.PI;
-        }
-
-        public static double[] GetAngleWithAxises(Vector vec)
-        {
-            var buf = new List<double>();
-
-            buf.Add(CalcUtil.RadToDeg(Math.Acos(vec.X / vec.Length)));
-            buf.Add(CalcUtil.RadToDeg(Math.Acos(vec.Y / vec.Length)));
-            buf.Add(CalcUtil.RadToDeg(Math.Acos(vec.Z / vec.Length)));
-
-
-            return buf.ToArray();
-        }
-
-        /// <summary>
-        /// Transforms the specified vector using transform matrix.
-        /// </summary>
-        /// <param name="vector">The vector.</param>
-        /// <param name="transformMatrix">The transform matrix.</param>
-        /// <returns>transformed vector</returns>
-        public static Vector Transform(this Vector vector, Matrix transformMatrix)
-        {
-            var buf = new Vector();
-
-            buf.X =
-                transformMatrix[0, 0] * vector.X +
-                transformMatrix[0, 1] * vector.Y +
-                transformMatrix[0, 2] * vector.Z;
-
-            buf.Y =
-                transformMatrix[1, 0] * vector.X +
-                transformMatrix[1, 1] * vector.Y +
-                transformMatrix[1, 2] * vector.Z;
-
-            buf.Z =
-                transformMatrix[2, 0] * vector.X +
-                transformMatrix[2, 1] * vector.Y +
-                transformMatrix[2, 2] * vector.Z;
-
-            return buf;
-        }
-
-        /// <summary>
-        /// Transforms the specified point using transform matrix.
-        /// </summary>
-        /// <param name="point">The vector.</param>
-        /// <param name="transformMatrix">The transform matrix.</param>
-        /// <returns>transformed vector</returns>
-        public static Point Transform(this Point point, Matrix transformMatrix)
-        {
-            return (Point)((Vector) point).Transform(transformMatrix);
-        }
-
-        /// <summary>
-        /// Transforms back the specified vector using transform matrix.
-        /// </summary>
-        /// <param name="vector">The vector.</param>
-        /// <param name="transformMatrix">The transform matrix.</param>
-        /// <returns>transformed vector</returns>
-        public static Vector TransformBack(this Vector vector, Matrix transformMatrix)
-        {
-            var buf = new Vector();
-
-            buf.X =
-                transformMatrix[0, 0] * vector.X +
-                transformMatrix[1, 0] * vector.Y +
-                transformMatrix[2, 0] * vector.Z;
-
-            buf.Y =
-                transformMatrix[0, 1] * vector.X +
-                transformMatrix[1, 1] * vector.Y +
-                transformMatrix[2, 1] * vector.Z;
-
-            buf.Z =
-                transformMatrix[0, 2] * vector.X +
-                transformMatrix[1, 2] * vector.Y +
-                transformMatrix[2, 2] * vector.Z;
-
-            return buf;
-        }
-
-        /// <summary>
-        /// Transforms back the specified point using transform matrix.
-        /// </summary>
-        /// <param name="point">The vector.</param>
-        /// <param name="transformMatrix">The transform matrix.</param>
-        /// <returns>transformed vector</returns>
-        public static Point TransformBack(this Point point, Matrix transformMatrix)
-        {
-            return (Point)((Vector)point).TransformBack(transformMatrix);
         }
 
         /// <summary>
@@ -1461,115 +1434,14 @@ namespace BriefFiniteElementNet
 
             var buf1 =
                 new Matrix(D.ColumnCount, B.ColumnCount);
-                //MatrixPool.Allocate(D.ColumnCount, B.ColumnCount);
+            //MatrixPool.Allocate(D.ColumnCount, B.ColumnCount);
 
             D.TransposeMultiply(B, buf1);
 
             buf1.TransposeMultiply(B, buf);
         }
 
-
-        public static void MultiplyWithConstant(this CCS mtx,double coef)
-        {
-            MultiplyWithConstant(mtx.Values, coef);
-        }
-
-        public static void MultiplyWithConstant(this double[] vec, double coef)
-        {
-            for (var i = 0; i < vec.Length; i++)
-                vec[i] = vec[i] * coef;
-        }
-
-        private static void FillBi(Matrix B,int i,Matrix bi)
-        {
-            var c = bi.ColumnCount;
-            for (var ii = 0; ii < bi.RowCount; ii++)
-                for (var j = 0; j < bi.RowCount; j++)
-                    bi[ii, j] = B[c * i + ii, j];
-
-        }
-
-        public static void LabelNodesIncrementally(this Model model)
-        {
-            for (var i = 0; i < model.Nodes.Count; i++)
-            {
-                model.Nodes[i].Label = null;
-            }
-
-            for (var i = 0; i < model.Nodes.Count; i++)
-            {
-                model.Nodes[i].Label = "N" + i.ToString(CultureInfo.CurrentCulture);
-            }
-        }
-
-        public static void LabelElementsIncrementally(this Model model)
-        {
-            for (var i = 0; i < model.Elements.Count; i++)
-            {
-                model.Elements[i].Label = null;
-            }
-
-            for (var i = 0; i < model.Elements.Count; i++)
-            {
-                model.Elements[i].Label = "E" + i.ToString(CultureInfo.CurrentCulture);
-            }
-        }
-
-        /// <summary>
-        /// Generates the permutation for delta for specified model in specified loadCase.
-        /// Note that delta permutation = P_delta in reduction process
-        /// </summary>
-        /// <param name="target">The target.</param>
-        /// <param name="loadCase">The load case.</param>
-        /// <returns>delta permutation</returns>
-        public static CCS GenerateP_Delta(Model target, LoadCase loadCase)
-        {
-            throw new NotImplementedException();
-
-            target.ReIndexNodes();
-
-            var buf = new CoordinateStorage<double>(target.Nodes.Count * 6, target.Nodes.Count * 6, 1);
-            
-
-            #region rigid elements
-            foreach (var elm in target.RigidElements)
-            {
-                var centralNode = elm.Nodes[0];
-                var masterIdx = centralNode.Index;
-
-                for(var i = 1;i<elm.Nodes.Count;i++)
-                {
-                    var slaveIdx = elm.Nodes[i].Index;
-
-                    var d = centralNode.Location - elm.Nodes[i].Location;
-
-                    //buf[0, 4] = -(buf[1, 3] = d.Z);
-                    //buf[2, 3] = -(buf[0, 5] = d.Y);
-                    //buf[1, 5] = -(buf[2, 4] = d.X);
-
-                    buf.At(6 * slaveIdx + 0, 6 * masterIdx + 0, 1);
-                    buf.At(6 * slaveIdx + 1, 6 * masterIdx + 1, 1);
-                    buf.At(6 * slaveIdx + 2, 6 * masterIdx + 2, 1);
-
-                    buf.At(6 * slaveIdx + 1, 6 * masterIdx + 3, d.Z);
-                    buf.At(6 * slaveIdx + 0, 6 * masterIdx + 4, -d.Z);
-                    
-                    buf.At(6 * slaveIdx + 0, 6 * masterIdx + 5, d.Y);
-                    buf.At(6 * slaveIdx + 2, 6 * masterIdx + 3, -d.Y);//
-
-                    buf.At(6 * slaveIdx + 2, 6 * masterIdx + 4, d.X);//
-                    buf.At(6 * slaveIdx + 1, 6 * masterIdx + 5, -d.X);
-                }
-                //add to buf
-            }
-            #endregion
-
-            throw new NotImplementedException();
-
-            return buf.ToCCs();
-        }
-
-        public static Tuple<CCS, double[]> GenerateP_Delta_Mpc(Model target, LoadCase loadCase, IRrefFinder rrefFinder)
+        public static Tuple<SparseMatrix, double[]> GenerateP_Delta_Mpc(Model target, LoadCase loadCase, IRrefFinder rrefFinder)
         {
             var totDofCount = target.Nodes.Count * 6;
 
@@ -1733,7 +1605,7 @@ namespace BriefFiniteElementNet
 
             var rightSide = new double[totDofCount];
 
-            
+
 
 
 
@@ -1764,14 +1636,14 @@ namespace BriefFiniteElementNet
                 }
             }
 
-            
+
 
 
             cnt = 0;
 
-            foreach(var eq in rrefSys.Equations)
+            foreach (var eq in rrefSys.Equations)
             {
-                if(eq.IsZeroRow(1e-9))
+                if (eq.IsZeroRow(1e-9))
                 {
                     cnt++;
                 }
@@ -1799,11 +1671,11 @@ namespace BriefFiniteElementNet
                     else
                         colNumPerm[i] = tmp++;
                 }
-                
+
 
             var p3Crd = new CoordinateStorage<double>(totDofCount, totDofCount - colsToRemove.Count(i => i), 1);
 
-            foreach(var tpl in p2.EnumerateIndexed())
+            foreach (var tpl in p2.EnumerateIndexed())
             {
                 if (!colsToRemove[tpl.Item2])
                 {
@@ -1900,7 +1772,7 @@ namespace BriefFiniteElementNet
                 if (rowNnzs.Max() < 2)//each row maximum have 1 nonzero
                 {
                     //then no need to calculate rref by elimition etc. just a single permutation is needed
-                    
+
                     //var mults
                 }
             }
@@ -1911,7 +1783,7 @@ namespace BriefFiniteElementNet
             return res;
             var buf = new CoordinateStorage<double>(res.Item1.RowCount, res.Item1.ColumnCount - 1, 1);
 
-
+            // TODO: NOT IMPLEMENTED?
             throw new NotImplementedException();
             /*
             foreach (var tpl in res.EnumerateIndexed2())
@@ -1927,7 +1799,7 @@ namespace BriefFiniteElementNet
             */
         }
 
-        
+
 
         /// <summary>
         /// Gets the boundary conditions of model (support conditions) as a extra eq system for using in master slave model.
@@ -1935,7 +1807,7 @@ namespace BriefFiniteElementNet
         /// <param name="model"></param>
         /// <param name="loadCase"></param>
         /// <returns></returns>
-        public static CCS GetModelBoundaryConditions(Model model, LoadCase loadCase)
+        private static SparseMatrix GetModelBoundaryConditions(Model model, LoadCase loadCase)
         {
             var fixedDofsCount = model.Nodes.Sum(ii => FixedCount(ii.Constraints));
 
@@ -1960,8 +1832,8 @@ namespace BriefFiniteElementNet
 
                 if (node.Constraints.DX == DofConstraint.Fixed)
                 {
-                    crd.At(cnt , stDof + 0, 1);
-                    crd.At(cnt , n, stm.DX);
+                    crd.At(cnt, stDof + 0, 1);
+                    crd.At(cnt, n, stm.DX);
                     cnt++;
                 }
 
@@ -2003,11 +1875,11 @@ namespace BriefFiniteElementNet
 
                 #endregion
             }
-            
+
             return crd.ToCCs();
         }
 
-        public static int FixedCount(Constraint cns)
+        private static int FixedCount(Constraint cns)
         {
             var buf = 0;
 
@@ -2032,39 +1904,17 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-        public static int EmptyRowCount(this CCS matrix)
+        // TODO: EXTENSION - move to Extensions class?
+        public static int EmptyRowCount(this SparseMatrix matrix)
         {
             var buf = new bool[matrix.RowCount];
 
-            matrix.EnumerateMembers((row, col, val) =>
-            {
-                buf[row] = true;
-            });
+            matrix.EnumerateIndexed((row, col, val) =>
+             {
+                 buf[row] = true;
+             });
 
             return buf.Count(ii => !ii);
-        }
-
-        public static int[] EmptyRows(this CCS matrix)
-        {
-            var buf = new bool[matrix.RowCount];
-
-            var lst = new List<int>();
-
-            foreach(var tuple in matrix.EnumerateIndexed())
-            {
-                var rw = tuple.Item1;
-                var col = tuple.Item2;
-                var val = tuple.Item3;
-
-                if (val != 0)
-                    buf[rw] = true;
-            }
-
-            for (var i = 0; i < buf.Length; i++)
-                if (!buf[i])
-                    lst.Add(i);
-
-            return lst.ToArray();
         }
 
         public static bool IsIsotropicMaterial(AnisotropicMaterialInfo inf)
@@ -2080,39 +1930,13 @@ namespace BriefFiniteElementNet
             return arr1.Distinct().Count() == 1 && arr2.Distinct().Count() == 1;
         }
 
-        public static int EmptyColumnCount(this CCS matrix)
-        {
-            var buf = new bool[matrix.RowCount];
-
-            matrix.EnumerateMembers((row, col, val) =>
-            {
-                buf[col] = true;
-            });
-
-            return buf.Count(ii => !ii);
-        }
-
-        public static CCS GenerateP_Force(Model target, LoadCase loadCase)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static CCS GenerateS_r(Model target, LoadCase loadCase)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static CCS GenerateS_f(Model target, LoadCase loadCase)
-        {
-            throw new NotImplementedException();
-        }
-
-        public static void AddToSelf(this double[] vector,double[] addition,double coef=1)
+        // TODO: EXTENSION - move to Extensions class?
+        public static void AddToSelf(this double[] vector, double[] addition, double coef = 1)
         {
             if (vector.Length != addition.Length)
                 throw new Exception();
 
-            for(var i = 0;i<vector.Length;i++)
+            for (var i = 0; i < vector.Length; i++)
             {
                 vector[i] += addition[i] * coef;
             }

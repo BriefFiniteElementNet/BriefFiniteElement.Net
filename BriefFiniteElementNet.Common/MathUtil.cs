@@ -61,7 +61,7 @@ namespace BriefFiniteElementNet.Common
             return o1.Equals(o2);
         }
 
-        // TODO: only used in legacy code, move to corresponding assembly?
+        // TODO: LEGACY CODE - FillLowerTriangleFromUpperTriangle, move out of main assembly?
 
         /// <summary>
         /// Fills the lower triangle from upper triangle.
@@ -84,7 +84,7 @@ namespace BriefFiniteElementNet.Common
         }
 
         /* UNUSED
-         * 
+
         /// <summary>
         /// Determines val1 equals val2 or not.
         /// </summary>
