@@ -8,34 +8,32 @@ using CSparse.Double;
 using CSparse.Double.Factorization;
 using CSparse.Factorization;
 using CSparse.Storage;
-using CCS = CSparse.Double.SparseMatrix;
 using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet.Mathh
 {
     public class CsparsenetQrDisplacementPermutationCalculator : IDisplacementPermutationCalculator
     {
-        public Tuple<CCS, double[]> CalculateDisplacementPermutation(CCS a)
+        public Tuple<SparseMatrix, double[]> CalculateDisplacementPermutation(SparseMatrix a)
         {
 
-
-
-
-            
-
-            //based on this solution : https://github.com/wo80/CSparse.NET/issues/7#issuecomment-317268696
+            // See https://github.com/wo80/CSparse.NET/issues/7#issuecomment-317268696
 
             if (a.RowCount < a.ColumnCount)
             {
-                //For a matrix A with rows < columns, SparseQR does a factorization of the transpose A'
-                //so we add zero rows to A and make it rectangular!
+                // For a matrix A with rows < columns, SparseQR does a factorization of the
+                // transpose A' so we add zero rows to A and make it square!
 
-                var a2 = new CoordinateStorage<double>(a.ColumnCount , a.ColumnCount, a.NonZerosCount);
+                // Since the matrix entries are in column order, reshaping is just a matter of
+                // setting the correct row count and then reusing the existing storage arrays.
 
-                foreach (var t in a.EnumerateIndexed())
-                    a2.At(t.Item1, t.Item2, t.Item3);
+                var b = new SparseMatrix(a.ColumnCount, a.ColumnCount);
 
-                a = a2.ToCCs();
+                b.ColumnPointers = a.ColumnPointers;
+                b.RowIndices = a.RowIndices;
+                b.Values = a.Values;
+
+                a = b;
             }
 
             //var adense = a.ToDenseMatrix();
@@ -257,7 +255,7 @@ namespace BriefFiniteElementNet.Mathh
             //var d2 = rightSide.Plus(rightSideDense, -1);
 
 
-            var pdd = (CCS)p_d.ToCCs();
+            var pdd = p_d.ToCCs();
 
             return Tuple.Create(pdd, rightSide);
 
