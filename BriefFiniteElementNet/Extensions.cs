@@ -1,16 +1,11 @@
-﻿using System;
+﻿using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.Geometry;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Xml;
-using CSparse.Double;
-using BriefFiniteElementNet.Geometry;
-using CSparse.Storage;
-using BriefFiniteElementNet.ElementHelpers;
-using BriefFiniteElementNet.Elements;
-using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet
 {
@@ -37,13 +32,13 @@ namespace BriefFiniteElementNet
             return Math.Abs(x - y) < Math.Abs(tol);
         }
 
-        // TODO: only used in legacy code, move to correspoding assembly?
+        // TODO: only used in legacy code, move to corresponding assembly?
         public static Matrix ToMatrix(this Point pt)
         {
             return Matrix.OfVector(new[] { pt.X, pt.Y, pt.Z });
         }
 
-        // TODO: only used in legacy code, move to correspoding assembly?
+        // TODO: only used in legacy code, move to corresponding assembly?
         public static Point ToPoint(this Matrix pt)
         {
             if (pt.RowCount != 3 || pt.ColumnCount != 1)
