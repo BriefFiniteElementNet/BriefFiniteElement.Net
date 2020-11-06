@@ -1351,7 +1351,7 @@ namespace BriefFiniteElementNet
             if (crd.RowCount == 0 || crd.ColumnCount == 0)
                 return new SparseMatrix(0, 0) { ColumnPointers = new int[0], RowIndices = new int[0], Values = new double[0] };
 
-            return (SparseMatrix)SparseMatrix.OfIndexed(crd);
+            return (SparseMatrix)SparseMatrix.OfIndexed(crd, true);
         }
 
         // TODO: EXTENSION - move to Extensions class?
