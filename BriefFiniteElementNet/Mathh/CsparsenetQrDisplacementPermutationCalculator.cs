@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
+﻿using BriefFiniteElementNet.Common;
 using CSparse;
 using CSparse.Double;
 using CSparse.Double.Factorization;
 using CSparse.Factorization;
 using CSparse.Storage;
-using BriefFiniteElementNet.Common;
+using System;
+using System.Linq;
+using System.Reflection;
 
 namespace BriefFiniteElementNet.Mathh
 {
@@ -16,27 +14,18 @@ namespace BriefFiniteElementNet.Mathh
     {
         public Tuple<SparseMatrix, double[]> CalculateDisplacementPermutation(SparseMatrix a)
         {
-
-            // See https://github.com/wo80/CSparse.NET/issues/7#issuecomment-317268696
-
             if (a.RowCount < a.ColumnCount)
             {
+                // See https://github.com/wo80/CSparse.NET/issues/7#issuecomment-317268696
+                //
                 // For a matrix A with rows < columns, SparseQR does a factorization of the
                 // transpose A' so we add zero rows to A and make it square!
-
+                //
                 // Since the matrix entries are in column order, reshaping is just a matter of
                 // setting the correct row count and then reusing the existing storage arrays.
 
-                var b = new SparseMatrix(a.ColumnCount, a.ColumnCount);
-
-                b.ColumnPointers = a.ColumnPointers;
-                b.RowIndices = a.RowIndices;
-                b.Values = a.Values;
-
-                a = b;
+                a = new SparseMatrix(a.ColumnCount, a.ColumnCount, a.Values, a.RowIndices, a.ColumnPointers);
             }
-
-            //var adense = a.ToDenseMatrix();
 
             SparseMatrix buf;
 
