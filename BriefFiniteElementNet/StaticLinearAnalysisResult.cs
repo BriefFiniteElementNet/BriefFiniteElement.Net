@@ -649,7 +649,7 @@ namespace BriefFiniteElementNet
             var fc = concentratedForces[loadCase] = GetTotalConcentratedForceVector(loadCase);
             
 
-            var ft = fe.Plus(fc);
+            var ft = fe.Add(fc);
 
 
             var fr = pf.Multiply(ft);
@@ -685,7 +685,7 @@ namespace BriefFiniteElementNet
 
                 var minAbsDiag = double.MaxValue;
 
-                foreach(var tpl in krd.ReleasedReleasedPart.EnumerateIndexed2())
+                foreach(var tpl in krd.ReleasedReleasedPart.EnumerateIndexed())
                 {
                     if (tpl.Item1 == tpl.Item2)
                         minAbsDiag = Math.Min(minAbsDiag, Math.Abs(tpl.Item3));
@@ -721,7 +721,7 @@ namespace BriefFiniteElementNet
             double[] ufr = new double[map.RMap2.Length];
             //string message;
 
-            var input = ffr.Minus(krd.ReleasedFixedPart.Multiply(usr));
+            var input = ffr.Subtract(krd.ReleasedFixedPart.Multiply(usr));
 
 
             solver.Solve(input, ufr);
@@ -729,9 +729,9 @@ namespace BriefFiniteElementNet
             //if (res2 != SolverResult.Success)
             //    throw new BriefFiniteElementNetException(message);
 
-            var fpsr = krd.FixedReleasedPart.Multiply(ufr).Plus(krd.FixedFixedPart.Multiply(usr));
+            var fpsr = krd.FixedReleasedPart.Multiply(ufr).Add(krd.FixedFixedPart.Multiply(usr));
 
-            var fsrt = fpsr.Minus(fsr);// no needed
+            var fsrt = fpsr.Subtract(fsr);// no needed
 
             var fx = supportReactions[loadCase] = new double[6*n];
 
