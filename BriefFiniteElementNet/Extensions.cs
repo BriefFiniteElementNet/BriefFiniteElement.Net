@@ -1,16 +1,11 @@
-﻿using System;
+﻿using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.Geometry;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Xml;
-using CSparse.Double;
-using BriefFiniteElementNet.Geometry;
-using CSparse.Storage;
-using BriefFiniteElementNet.ElementHelpers;
-using BriefFiniteElementNet.Elements;
-using BriefFiniteElementNet.Common;
 
 namespace BriefFiniteElementNet
 {
@@ -32,16 +27,40 @@ namespace BriefFiniteElementNet
                 return new DisposableDenseMatrix(row, cols, element.MatrixPool.Pool);
         }
 
-        public static CSparse.Double.SparseMatrix CloneMatrix(this CSparse.Double.SparseMatrix matrix)
+        public static bool FEquals(this double x, double y, double tol)
         {
-            var buf = new CSparse.Double.SparseMatrix(matrix.RowCount, matrix.ColumnCount, matrix.NonZerosCount);
-
-            buf.RowIndices = (int[])matrix.RowIndices.Clone();
-            buf.ColumnPointers = (int[])matrix.ColumnPointers.Clone();
-            buf.Values = (double[])matrix.Values.Clone();
-
-            return buf;
+            return Math.Abs(x - y) < Math.Abs(tol);
         }
+
+        // TODO: LEGACY CODE - ToMatrix, move out of main assembly?
+        public static Matrix ToMatrix(this Point pt)
+        {
+            return Matrix.OfVector(new[] { pt.X, pt.Y, pt.Z });
+        }
+
+        // TODO: LEGACY CODE - ToPoint, move out of main assembly?
+        public static Point ToPoint(this Matrix pt)
+        {
+            if (pt.RowCount != 3 || pt.ColumnCount != 1)
+                throw new Exception();
+
+            return new Point(pt[0, 0], pt[1, 0], pt[2, 0]);
+        }
+
+        public static Matrix ToMatrix(this Vector pt)
+        {
+            return Matrix.OfVector(new[] { pt.X, pt.Y, pt.Z });
+        }
+
+        public static Vector ToVector(this Matrix pt)
+        {
+            if (pt.RowCount != 3 || pt.ColumnCount != 1)
+                throw new Exception();
+
+            return new Vector(pt[0, 0], pt[1, 0], pt[2, 0]);
+        }
+
+        #region Matrix extensions
 
         /// <summary>
         /// High performance 3x3 determinant
@@ -94,9 +113,197 @@ namespace BriefFiniteElementNet
 
             return res;
         }
-        public static  bool FEquals(this double x, double y, double tol)
+
+        #endregion
+
+        #region SerializationInfo extensions
+
+        /// <summary>
+        /// Simplify the accessing to <see cref="SerializationInfo.GetValue"/> and then casting the returned type.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="info">The information.</param>
+        /// <param name="name">The name of field.</param>
+        /// <returns></returns>
+        public static T GetValue<T>(this SerializationInfo info, string name)
         {
-            return Math.Abs(x - y) < Math.Abs(tol);
+            return (T) info.GetValue(name, typeof (T));
+        }
+
+        public static Type GetFieldType(this SerializationInfo info, string name)
+        {
+            foreach (SerializationEntry entry in info)
+                if (name == entry.Name)
+                    return entry.ObjectType;
+
+            return null;
+        }
+
+        #endregion
+
+        #region Force extensions
+
+        public static Force Sum(this IEnumerable<Force> forces)
+        {
+            var buf = new Force();
+
+            foreach (var force in forces)
+            {
+                buf += force;
+            }
+
+            return buf;
+        }
+
+        public static Force Move(this Force frc, Point location, Point destination)
+        {
+            var r = destination - location;
+            
+            var addMoment = Vector.Cross(r, frc.Forces);
+
+            frc.Moments -= addMoment;
+
+            return frc;
+        }
+
+        public static Force Move(this Force frc, Vector r)
+        {
+            var addMoment = Vector.Cross(r, frc.Forces);
+
+            frc.Moments -= addMoment;
+
+            return frc;
+        }
+
+        #endregion
+
+        #region XmlWriter extensions
+
+        public static void WriteValue<T>(this XmlWriter rwtr, string attributeName, T value)
+        {
+            if (typeof (T).IsValueType)
+                WriteStructValue(rwtr, attributeName, (ValueType) (object) value);
+            else
+                WriteClassValue(rwtr, attributeName, (object) value);
+        }
+
+        public static void WriteClassValue(this XmlWriter rwtr, string attributeName, object value) 
+        {
+            if (!value.IsNull())
+                rwtr.WriteAttributeString(attributeName, value.ToString());
+        }
+
+        public static void WriteStructValue(this XmlWriter rwtr, string attributeName, ValueType value) 
+        {
+            rwtr.WriteAttributeString(attributeName, value.ToString());
+        }
+
+        public static bool IsNull<T>(this T obj) where T : class
+        {
+            return ReferenceEquals(obj, null);
+        }
+
+        #endregion
+
+        #region Double array extensions
+
+        public static double[] Subtract(this double[] x, double[] y)
+        {
+            if (x.Length != y.Length)
+                throw new InvalidOperationException();
+
+            var buf = (double[])x.Clone();
+
+            for (int i = 0; i < buf.Length; i++)
+            {
+                buf[i] -= y[i];
+            }
+
+            return buf;
+        }
+
+        public static double[] Add(this double[] x, double[] y)
+        {
+            if (x.Length != y.Length)
+                throw new InvalidOperationException();
+
+            var buf = (double[])x.Clone();
+
+            for (int i = 0; i < buf.Length; i++)
+            {
+                buf[i] += y[i];
+            }
+
+            return buf;
+        }
+
+        #endregion
+
+        #region IEnumerable extensions
+
+        public static int IndexOfReference<T>(this IEnumerable<T> arr, T obj)
+        {
+            var cnt = arr.Count();
+
+            if (typeof(T).IsValueType)
+                throw new Exception();
+
+            var i = 0;
+
+            foreach (var arrMem in arr)
+            {
+                if (ReferenceEquals(arrMem, obj))
+                    return i;
+                i++;
+            }
+
+            return -1;
+        }
+
+        public static TSource MinBy<TSource, TKey>(this IEnumerable<TSource> source,
+            Func<TSource, TKey> selector, IComparer<TKey> comparer)
+        {
+            if (source == null) throw new ArgumentNullException("source");
+            if (selector == null) throw new ArgumentNullException("selector");
+            comparer = comparer ?? Comparer<TKey>.Default;
+
+            using (var sourceIterator = source.GetEnumerator())
+            {
+                if (!sourceIterator.MoveNext())
+                {
+                    throw new InvalidOperationException("Sequence contains no elements");
+                }
+                var min = sourceIterator.Current;
+                var minKey = selector(min);
+                while (sourceIterator.MoveNext())
+                {
+                    var candidate = sourceIterator.Current;
+                    var candidateProjected = selector(candidate);
+                    if (comparer.Compare(candidateProjected, minKey) < 0)
+                    {
+                        min = candidate;
+                        minKey = candidateProjected;
+                    }
+                }
+                return min;
+            }
+        }
+
+
+        #endregion
+
+        /* UNUSED
+
+        public static double[] Plus(this double[] x, double[] y, double coef)
+        {
+            var buf = (double[])x.Clone();
+
+            for (int i = 0; i < buf.Length; i++)
+            {
+                buf[i] += coef*y[i];
+            }
+
+            return buf;
         }
 
         public static double[] Negate(this double[] arr)
@@ -109,32 +316,6 @@ namespace BriefFiniteElementNet
             }
 
             return arr;
-        }
-
-        public static Matrix ToMatrix(this Point pt)
-        {
-            return Matrix.OfVector(new[] {pt.X, pt.Y, pt.Z});
-        }
-
-        public static Matrix ToMatrix(this Vector pt)
-        {
-            return Matrix.OfVector(new[] { pt.X, pt.Y, pt.Z });
-        }
-
-        public static Point ToPoint(this Matrix pt)
-        {
-            if (pt.RowCount != 3 || pt.ColumnCount != 1)
-                throw new Exception();
-
-            return new Point(pt[0, 0], pt[1, 0], pt[2, 0]);
-        }
-
-        public static Vector ToVector(this Matrix pt)
-        {
-            if (pt.RowCount != 3 || pt.ColumnCount != 1)
-                throw new Exception();
-
-            return new Vector(pt[0, 0], pt[1, 0], pt[2, 0]);
         }
 
         public delegate double FunctionDelegate(double d);
@@ -278,138 +459,6 @@ namespace BriefFiniteElementNet
             return max;
         }
 
-        /// <summary>
-        /// Simplify the accessing to <see cref="SerializationInfo.GetValue"/> and then casting the returned type.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="info">The information.</param>
-        /// <param name="name">The name of field.</param>
-        /// <returns></returns>
-        public static T GetValue<T>(this SerializationInfo info, string name)
-        {
-            return (T) info.GetValue(name, typeof (T));
-        }
-
-        public static Type GetFieldType(this SerializationInfo info, string name)
-        {
-            foreach (SerializationEntry entry in info)
-                if (name == entry.Name)
-                    return entry.ObjectType;
-
-            return null;
-        }
-
-        public static Force Sum(this IEnumerable<Force> forces)
-        {
-            var buf = new Force();
-
-            foreach (var force in forces)
-            {
-                buf += force;
-            }
-
-            return buf;
-        }
-
-        public static Force Move(this Force frc, Point location, Point destination)
-        {
-            var r = destination - location;
-            
-            var addMoment = Vector.Cross(r, frc.Forces);
-
-            frc.Moments -= addMoment;
-
-            return frc;
-        }
-
-        public static Force Move(this Force frc, Vector r)
-        {
-            var addMoment = Vector.Cross(r, frc.Forces);
-
-            frc.Moments -= addMoment;
-
-            return frc;
-        }
-        
-        public static int IndexOfReference<T>(this IEnumerable<T> arr, T obj)
-        {
-            var cnt = arr.Count();
-
-            if (typeof (T).IsValueType)
-                throw new Exception();
-
-            var i = 0;
-
-            foreach (var arrMem in arr)
-            {
-                if (ReferenceEquals(arrMem, obj))
-                    return i;
-                i++;
-            }
-
-            return -1;
-        }
-
-        public static void Restart(this System.Diagnostics.Stopwatch sp)
-        {
-            sp.Stop();
-            sp.Reset();
-            sp.Start();
-        }
-
-        public static Matrix ToDenseMatrix(this SparseMatrix csr)
-        {
-            var buf = new Matrix(csr.RowCount, csr.ColumnCount);
-
-            for (int i = 0; i < csr.ColumnPointers.Length - 1; i++)
-            {
-                var col = i;
-
-                var st = csr.ColumnPointers[i];
-                var en = csr.ColumnPointers[i + 1];
-
-                for (int j = st; j < en; j++)
-                {
-                    var row = csr.RowIndices[j];
-                    buf[row, col] = csr.Values[j];
-                }
-            }
-
-            return buf;
-        }
-
-        public static SparseMatrix ToSparseMatrix(this Matrix csr)
-        {
-            var buf = new CSparse.Storage.CoordinateStorage<double>(csr.RowCount, csr.ColumnCount, 1);
-
-            for (var i = 0; i < csr.RowCount; i++)
-                for (var j = 0; j < csr.ColumnCount; j++)
-                    buf.At(i, j, csr[i, j]);
-
-            return buf.ToCCs();
-        }
-
-        public static Matrix ToDenseMatrix(this CompressedColumnStorage<double> csr)
-        {
-            var buf = new Matrix(csr.RowCount, csr.ColumnCount);
-
-            for (int i = 0; i < csr.ColumnPointers.Length - 1; i++)
-            {
-                var col = i;
-
-                var st = csr.ColumnPointers[i];
-                var en = csr.ColumnPointers[i + 1];
-
-                for (int j = st; j < en; j++)
-                {
-                    var row = csr.RowIndices[j];
-                    buf[row, col] = csr.Values[j];
-                }
-            }
-
-            return buf;
-        }
-
         public static double GetLargestAbsoluteValue(this double[] vals)
         {
             var buf = 0.0;
@@ -465,29 +514,6 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
-        /// Assembles the <see cref="submatrix"/> inside the <see cref="main"/> matrix.
-        /// </summary>
-        /// <param name="main">The main matrix.</param>
-        /// <param name="submatrix">The sub matrix.</param>
-        /// <param name="i">The i</param>
-        /// <param name="j">The j</param>
-        public static void AssembleInside(this Matrix main, Matrix submatrix, int i, int j)
-        {
-            if (main.RowCount < i + submatrix.RowCount || main.ColumnCount < j + submatrix.ColumnCount)
-                throw new InvalidOperationException("dimension mismatch");
-
-            for (var _i = 0; _i < submatrix.RowCount; _i++)
-            {
-                for (var _j = 0; _j < submatrix.ColumnCount; _j++)
-                {
-                    main[i + _i, j + _j] = submatrix[_i, _j];
-                }
-            }
-
-        }
-
-
-        /// <summary>
         /// Gets the sum of external loads (both from external sources and supports) which are applying to the node.
         /// </summary>
         /// <param name="node">The node.</param>
@@ -500,66 +526,6 @@ namespace BriefFiniteElementNet
             var force = Force.FromVector(forces, 6*node.Index);
 
             return force;
-        }
-
-        public static void WriteValue<T>(this XmlWriter rwtr, string attributeName, T value)
-        {
-            if (typeof (T).IsValueType)
-                WriteStructValue(rwtr, attributeName, (ValueType) (object) value);
-            else
-                WriteClassValue(rwtr, attributeName, (object) value);
-        }
-
-        public static void WriteClassValue(this XmlWriter rwtr, string attributeName, object value) 
-        {
-            if (!value.IsNull())
-                rwtr.WriteAttributeString(attributeName, value.ToString());
-        }
-
-        public static void WriteStructValue(this XmlWriter rwtr, string attributeName, ValueType value) 
-        {
-            rwtr.WriteAttributeString(attributeName, value.ToString());
-        }
-
-        public static bool IsNull<T>(this T obj) where T : class
-        {
-            return ReferenceEquals(obj, null);
-        }
-
-        public static double[] Minus(this double[] x, double[] y)
-        {
-            var buf = (double[])x.Clone();
-
-            for (int i = 0; i < buf.Length; i++)
-            {
-                buf[i] -= y[i];
-            }
-
-            return buf;
-        }
-
-        public static double[] Plus(this double[] x, double[] y)
-        {
-            var buf = (double[])x.Clone();
-
-            for (int i = 0; i < buf.Length; i++)
-            {
-                buf[i] += y[i];
-            }
-
-            return buf;
-        }
-
-        public static double[] Plus(this double[] x, double[] y,double coef)
-        {
-            var buf = (double[])x.Clone();
-
-            for (int i = 0; i < buf.Length; i++)
-            {
-                buf[i] += coef*y[i];
-            }
-
-            return buf;
         }
 
         public static bool AreAllSame<T>(this IEnumerable<T> objs)
@@ -616,54 +582,6 @@ namespace BriefFiniteElementNet
             return true;
         }
 
-        public static TSource MinBy<TSource, TKey>(this IEnumerable<TSource> source,
-            Func<TSource, TKey> selector, IComparer<TKey> comparer)
-        {
-            if (source == null) throw new ArgumentNullException("source");
-            if (selector == null) throw new ArgumentNullException("selector");
-            comparer = comparer ?? Comparer<TKey>.Default;
-
-            using (var sourceIterator = source.GetEnumerator())
-            {
-                if (!sourceIterator.MoveNext())
-                {
-                    throw new InvalidOperationException("Sequence contains no elements");
-                }
-                var min = sourceIterator.Current;
-                var minKey = selector(min);
-                while (sourceIterator.MoveNext())
-                {
-                    var candidate = sourceIterator.Current;
-                    var candidateProjected = selector(candidate);
-                    if (comparer.Compare(candidateProjected, minKey) < 0)
-                    {
-                        min = candidate;
-                        minKey = candidateProjected;
-                    }
-                }
-                return min;
-            }
-        }
-
-        public static IEnumerable<Tuple<int, int, double>> EnumerateIndexed2(this SparseMatrix mtx)
-        {
-
-            int n = mtx.ColumnCount;
-
-            var ax = mtx.Values;
-            var ap = mtx.ColumnPointers;
-            var ai = mtx.RowIndices;
-
-            for (int i = 0; i < n; i++)
-            {
-                var end = ap[i + 1];
-                for (var j = ap[i]; j < end; j++)
-                {
-                    yield return new Tuple<int, int, double>(ai[j], i, ax[j]);
-                }
-            }
-        }
-
         public static T MinBy<T>(this IEnumerable<T> source, IComparer<T> comparer)
         {
             if (source == null) throw new ArgumentNullException("source");
@@ -694,5 +612,7 @@ namespace BriefFiniteElementNet
                 return min;
             }
         }
+
+        //*/
     }
 }
