@@ -123,6 +123,9 @@
     <None Include="Case_02\Intro.md" />
     <None Include="Case_02\Abaqus comparison\Model1_BFE_Abaqus.csv" />
     <None Include="Case_01\stress &amp; displacement.rpt" />
+    <None Include="Case_03\Abaqus output\Bottom_Center.rpt" />
+    <None Include="Case_03\Abaqus output\Side_Center.rpt" />
+    <None Include="Case_03\Abaqus output\Top_Center.rpt" />
     <None Include="Case_03\Job-10.inp" />
     <None Include="OpenseesTclGenerator\Readme.md" />
     <None Include="packages.config" />
@@ -152,6 +155,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Case_03\Abaqus output\Paths.png" />
+    <Content Include="Case_03\Abaqus output\U.png" />
+    <Content Include="Case_03\Abaqus output\U1.png" />
+    <Content Include="Case_03\Abaqus output\U2.png" />
+    <Content Include="Case_03\Abaqus output\U3.png" />
     <Content Include="Data\Brick8-1n\br1.jpg" />
     <Content Include="Data\Brick8-1n\br2.jpg" />
     <Content Include="Data\Brick8-1n\Elements-Nodes.txt" />

@@ -20,10 +20,12 @@ namespace BriefFiniteElementNet.Validation
         public static Model AbaqusInputToBFE(string pathToInputFile)
         {
             var buf = new Model();
-            //splittin char
+
+            //splitting char
             char delimiter = ',';
             Node node;
             TetrahedronElement element;
+
             //list for the node- and elementsets
             List<NodeSet> nodeSets = new List<NodeSet>();
             List<ElementSet> elementSets = new List<ElementSet>();
