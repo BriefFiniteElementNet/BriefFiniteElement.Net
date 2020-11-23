@@ -36,13 +36,15 @@ namespace BriefFiniteElementNet.TestConsole
         {
             Console.Title = "BFE tests & temporary codes";
 
+            Validation.GithubIssues.Issue96.Run1();
+
             TestTet();
             //TestTriangle();
             //Validation.GithubIssues.Issue50.Run1();
             new Validation.Case_01.Validator().Validate();
             //TestGrid();
             return;
-            Validation.GithubIssues.Issue41.Run3();
+            
 
             //TestHingedInternalForce();
             //TestBinModel();

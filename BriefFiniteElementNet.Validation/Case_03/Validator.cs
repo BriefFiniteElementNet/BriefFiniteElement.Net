@@ -22,10 +22,6 @@ namespace BriefFiniteElementNet.Validation.Case_03
             string RunningPath = AppDomain.CurrentDomain.BaseDirectory;
             string FileName = string.Format("{0}Resources\\Job-10.inp", Path.GetFullPath(Path.Combine(RunningPath, @"..\..\")));
             var abaqusModel = AbaqusInputFileReader.AbaqusInputToBFE(FileName);
-
-            //show to test
-            //abaqusModel.Show();
-
             //comparison
             var val = new ValidationResult();
             var span = val.Span = new HtmlTag("span");
@@ -40,12 +36,25 @@ namespace BriefFiniteElementNet.Validation.Case_03
                 span.Add("paragraph").Text("compare nodal displacement for a model consist of tetrahedron elements");
 
                 span.Add("h3").Text("Model Definition");
+                /*
+
+                model.MpcElements.Add(rigid);
+                model.Trace.Listeners.Add(new ConsoleTraceListener()); 
+                model.Solve_MPC();
+                
+
+                var delta = f * l * l * l / (3 * e * I);
+
+                var t = cnt.FirstOrDefault().GetNodalDisplacement();
+                 
+                var ratio = delta / t.DX;*/
 
                 span.Add("paragraph")
                     .Text("Look at `intro.md` file in this folder")
                     .AddClosedTag("br");
 
                 span.Add("h3").Text("Validation Result");
+//>>>>>>> 8f73e9cf4109d3eac9e87e27ab66e1661bd0a2fd
             }
 
             abaqusModel.Trace.Listeners.Add(new BriefFiniteElementNet.Common.ConsoleTraceListener());
