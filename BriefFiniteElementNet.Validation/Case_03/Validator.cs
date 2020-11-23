@@ -17,7 +17,7 @@ namespace BriefFiniteElementNet.Validation.Case_03
 
             /**/
             {
-                var model = StructureGenerator.Generate3DTetrahedralElementGrid(4, 4, 100);
+                var model = StructureGenerator.Generate3DTetrahedralElementGrid(3, 3, 70);
 
                 var e = 210e9;
                 
@@ -50,7 +50,7 @@ namespace BriefFiniteElementNet.Validation.Case_03
                     rigid.Nodes.Add(node);
                 }
 
-                //model.MpcElements.Add(rigid);
+                model.MpcElements.Add(rigid);
                 model.Trace.Listeners.Add(new ConsoleTraceListener()); 
                 model.Solve_MPC();
                 
@@ -58,7 +58,7 @@ namespace BriefFiniteElementNet.Validation.Case_03
                 var delta = f * l * l * l / (3 * e * I);
 
                 var t = cnt.FirstOrDefault().GetNodalDisplacement();
-
+                 
                 var ratio = delta / t.DX;
             }
             /**/

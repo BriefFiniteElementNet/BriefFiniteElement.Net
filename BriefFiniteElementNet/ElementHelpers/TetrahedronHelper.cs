@@ -13,7 +13,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         public Element TargetElement { get; set; }
 
         /// <inheritdoc/>
-        public Matrix GetBMatrixAt_new(Element targetElement, params double[] isoCoords)
+        public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
             //port from D3_TETRAH.m from fem_toolbox
 
@@ -34,13 +34,15 @@ namespace BriefFiniteElementNet.ElementHelpers
                 }
             }
 
+            //J.TransposeInPlace();
+
             var v = 1 / 6.0 * J.Determinant();
 
             var buf = targetElement.AllocateFromPool(6, 12);
 
             {
                 var Q = J.Inverse();//* J.Determinant();
-                Q.Scale(J.Determinant());
+                //Q.Scale(J.Determinant());
 
                 double a1 = Q[0, 1]; double b1 = Q[0, 2]; double c1 = Q[0, 3]; //double d1 = Q[0, 3];
                 double a2 = Q[1, 1]; double b2 = Q[1, 2]; double c2 = Q[1, 3]; //double d2 = Q[1, 3];
@@ -60,7 +62,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf.AsMatrix();
         }
 
-        public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
+        public Matrix GetBMatrixAt_old(Element targetElement, params double[] isoCoords)
         {
             //http://what-when-how.com/the-finite-element-method/fem-for-3d-solids-finite-element-method-part-1/
             //https://academic.csuohio.edu/duffy_s/CVE_512_12.pdf
@@ -201,6 +203,17 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix CalcLocalStiffnessMatrix(Element targetElement)
         {
+            //edit
+            var b = GetBMatrixAt(targetElement,0, 0, 0);
+            var d = GetDMatrixAt(targetElement, 0, 0, 0);
+
+            var k = b.Transpose() * d * b;
+
+            var v = GetJMatrixAt(targetElement, 0, 0, 0).Determinant() / 6.0;
+
+            k.Scale(v);
+
+            return k;
             return ElementHelperExtensions.CalcLocalKMatrix_Tetrahedron(this, targetElement);
         }
 
