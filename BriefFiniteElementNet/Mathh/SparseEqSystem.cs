@@ -72,7 +72,7 @@ namespace BriefFiniteElementNet.Mathh
             }
 
 
-            foreach(var tuple in eqSystem.EnumerateIndexed2())
+            foreach(var tuple in eqSystem.EnumerateIndexed())
             {
                 var rw = tuple.Item1;//tuple.Item1;
                 var col = tuple.Item2;//tuple.Item2;

@@ -407,8 +407,8 @@ namespace BriefFiniteElementNet.TestConsole
 
             var a = crd.ToCCs();
 
-            var t = rref.CalculateDisplacementPermutation(a).Item1.ToDenseMatrix();
-      
+            var t = Matrix.OfMatrix(rref.CalculateDisplacementPermutation(a).Item1); // sparse -> dense
+
         }
 
 
@@ -1238,7 +1238,7 @@ namespace BriefFiniteElementNet.TestConsole
             crd.At(4, 4, -5);
 
             var sp = crd.ToCCs().Transpose();
-            var dns = sp.ToDenseMatrix();
+            var dns = Matrix.OfMatrix(sp); // sparse -> dense
 
         }
 

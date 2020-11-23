@@ -224,7 +224,7 @@ namespace BriefFiniteElementNet.FemUtilies
 
         public CSR GetAdjacencyGraph(CSR P_delta)
         {
-            var p = P_delta.CloneMatrix();
+            var p = P_delta.Clone();
             
             for (var i = 0; i < p.NonZerosCount; i++)
                 p.Values[i] = 1;

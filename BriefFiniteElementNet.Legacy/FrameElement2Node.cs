@@ -838,14 +838,14 @@ namespace BriefFiniteElementNet
                     //  z  y  I  y
                     //  z  z  z  w
                     y.Scale(2.0/3.0);
-                    buf.AssembleInside(-y, 0, 3);
-                    buf.AssembleInside(w, 3, 3);
-                    buf.AssembleInside(y, 6, 3);
-                    //buf.AssembleInside(z, 9, 3); no need!
-                    buf.AssembleInside(-y, 0, 9);
-                    //buf.AssembleInside(z, 3, 9); no need!
-                    buf.AssembleInside(y, 6, 9);
-                    buf.AssembleInside(w, 9, 9);
+                    buf.SetSubMatrix(0, 3, -y);
+                    buf.SetSubMatrix(3, 3, w);
+                    buf.SetSubMatrix(6, 3, y);
+                    //buf.SetSubMatrix(9, 3, z); no need!
+                    buf.SetSubMatrix(0, 9, -y);
+                    //buf.SetSubMatrix(3, 9, z); no need!
+                    buf.SetSubMatrix(6, 9, y);
+                    buf.SetSubMatrix(9, 9, w);
 
                     break;
                 case 1:
@@ -855,10 +855,10 @@ namespace BriefFiniteElementNet
                     //  z  w  z  z
                     //  z  y  I  z
                     //  z  x  z  I
-                    buf.AssembleInside(-y, 0, 3);
-                    buf.AssembleInside(w, 3, 3);
-                    buf.AssembleInside(y, 6, 3);
-                    buf.AssembleInside(x, 9, 3);
+                    buf.SetSubMatrix(0, 3, -y);
+                    buf.SetSubMatrix(3, 3, w);
+                    buf.SetSubMatrix(6, 3, y);
+                    buf.SetSubMatrix(9, 3, x);
 
                     break;
                 case 2:
@@ -868,10 +868,10 @@ namespace BriefFiniteElementNet
                     //  z  I  z  x
                     //  z  z  I  y
                     //  z  z  z  w
-                    buf.AssembleInside(-y, 0, 9);
-                    buf.AssembleInside(x, 3, 9);
-                    buf.AssembleInside(y, 6, 9);
-                    buf.AssembleInside(w, 9, 9);
+                    buf.SetSubMatrix(0, 9, -y);
+                    buf.SetSubMatrix(3, 9, x);
+                    buf.SetSubMatrix(6, 9, y);
+                    buf.SetSubMatrix(9, 9, w);
 
                     break;
                 case 3:
