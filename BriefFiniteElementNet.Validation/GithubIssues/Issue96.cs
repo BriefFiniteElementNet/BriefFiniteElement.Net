@@ -29,7 +29,7 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
 
             (m1.Elements["r1"] as BarElement).Material = BriefFiniteElementNet.Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210 * Math.Pow(10, 9), 0.3);
 
-            m1.Solve();
+            m1.Solve_MPC();
 
             var r11 = m1.Nodes[0].GetSupportReaction();
 

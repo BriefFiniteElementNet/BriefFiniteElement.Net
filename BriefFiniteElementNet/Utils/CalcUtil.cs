@@ -850,7 +850,7 @@ namespace BriefFiniteElementNet
 
             //var v = this.EndNode.Location - this.StartNode.Location;
 
-            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
+            if (MathUtil.FEquals(0, v.X) && MathUtil.FEquals(0, v.Y))
             {
                 if (v.Z > 0)
                 {

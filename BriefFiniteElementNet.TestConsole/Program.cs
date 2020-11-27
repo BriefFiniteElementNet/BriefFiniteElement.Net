@@ -38,6 +38,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             Validation.GithubIssues.Issue96.Run1();
 
+            return;
             TestTet();
             //TestTriangle();
             //Validation.GithubIssues.Issue50.Run1();

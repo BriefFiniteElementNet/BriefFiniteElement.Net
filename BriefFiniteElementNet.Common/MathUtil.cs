@@ -9,8 +9,8 @@ namespace BriefFiniteElementNet.Common
         /// <summary>
         /// The epsilon, threshold using for determining whether two mumbers are equal or not
         /// </summary>
-        public static double Epsilon = 1e-8;
-
+        //public static double Epsilon = 1e-8;
+        /*
         /// <summary>
         /// Determines val1 equals val2 or not.
         /// </summary>
@@ -21,6 +21,20 @@ namespace BriefFiniteElementNet.Common
         /// true if val1 equals val2 else false
         /// </returns>
         public static bool Equals(double val1, double val2, double epsilon)
+        {
+            return FEquals(val1, val2, epsilon);
+        }*/
+
+        /// <summary>
+        /// Determines val1 equals val2 or not with fuzzy approach
+        /// </summary>
+        /// <param name="val1">The val1.</param>
+        /// <param name="val2">The val2.</param>
+        /// <param name="epsilon">The epsilon.</param>
+        /// <returns>
+        /// true if val1 equals val2 else false
+        /// </returns>
+        public static bool FEquals(double val1, double val2, double epsilon=0)
         {
             var diff = Math.Abs(val1 - val2);
 
