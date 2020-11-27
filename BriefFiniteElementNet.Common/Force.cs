@@ -383,9 +383,9 @@ namespace BriefFiniteElementNet
         {
             var buf = string.Format(CultureInfo.CurrentCulture, "F: {0}, M: {1}", Forces, Moments);
 
-            //MathUtil.Equals(X, 0) && X != 0 ? "~0" : (object)X,
-            //MathUtil.Equals(Y, 0) && Y != 0 ? "~0" : (object)Y,
-            //MathUtil.Equals(Z, 0) && Z != 0 ? "~0" : (object)Z);
+            //MathUtil.FEquals(X, 0) && X != 0 ? "~0" : (object)X,
+            //MathUtil.FEquals(Y, 0) && Y != 0 ? "~0" : (object)Y,
+            //MathUtil.FEquals(Z, 0) && Z != 0 ? "~0" : (object)Z);
             return buf;
         }
 

@@ -92,9 +92,9 @@ namespace BriefFiniteElementNet
         public override string ToString()
         {
             var buf = string.Format(CultureInfo.CurrentCulture, "{0}, {1}, {2}", X, Y, Z);
-                                    //MathUtil.Equals(X, 0) && X != 0 ? "~0" : (object)X,
-                                    //MathUtil.Equals(Y, 0) && Y != 0 ? "~0" : (object)Y,
-                                    //MathUtil.Equals(Z, 0) && Z != 0 ? "~0" : (object)Z);
+                                    //MathUtil.FEquals(X, 0) && X != 0 ? "~0" : (object)X,
+                                    //MathUtil.FEquals(Y, 0) && Y != 0 ? "~0" : (object)Y,
+                                    //MathUtil.FEquals(Z, 0) && Z != 0 ? "~0" : (object)Z);
             return buf;
         }
 
