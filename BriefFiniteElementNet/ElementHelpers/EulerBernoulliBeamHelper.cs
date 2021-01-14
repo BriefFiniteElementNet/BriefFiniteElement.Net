@@ -1450,7 +1450,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                         fi.Fz += localforce.Fz * ni;//concentrated force
                         fi.My += localforce.Fz * mi;//concentrated force
 
-                        fi.Fz += localforce.My * nip;//concentrated moment
+                        fi.Fz += localforce.My * -nip;//concentrated moment
                         fi.My += localforce.My * -mip;//concentrated moment
                     }
 
