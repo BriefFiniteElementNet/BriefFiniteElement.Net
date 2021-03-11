@@ -1308,7 +1308,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 {
                     var uld = (load as PartialNonUniformLoad);
 
-                    magnitude = (xi => uld.GetMagnitudeAt(targetElement, new IsoPoint(xi)));
+                    magnitude = (xi => uld.SeverityFunction.Evaluate(xi));
                     localDir = uld.Direction;
 
                     if (uld.CoordinationSystem == CoordinationSystem.Global)
