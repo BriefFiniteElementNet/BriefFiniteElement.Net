@@ -116,14 +116,14 @@ namespace BriefFiniteElementNet.Loads
         {
 
             var afterStart =
-                location.Xi <= _startLocation.Xi &&
-                location.Eta <= _startLocation.Eta &&
-                location.Lambda <= _startLocation.Lambda;
+                location.Xi >= _startLocation.Xi &&
+                location.Eta >= _startLocation.Eta &&
+                location.Lambda >= _startLocation.Lambda;
 
             var beforeEnd =
-                location.Xi >= _endLocation.Xi &&
-                location.Eta >= _endLocation.Eta &&
-                location.Lambda >= _endLocation.Lambda;
+                location.Xi <= _endLocation.Xi &&
+                location.Eta <= _endLocation.Eta &&
+                location.Lambda <= _endLocation.Lambda;
 
             if (afterStart && beforeEnd)
             {
