@@ -15,11 +15,13 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
 
         public static void Run1()
         {
+            ///https://user-images.githubusercontent.com/10573467/111787314-781d7d00-88c7-11eb-869d-d8d7d40db005.png
+            
             var model = new Model();
 
             //adding nodes
             model.Nodes.Add(new Node(0, 0, 0) { Label = "n0" });
-            model.Nodes.Add(new Node(5, 0, 0) { Label = "n1" });
+            model.Nodes.Add(new Node(5, 0, 5) { Label = "n1" });
 
             //adding elements
 
@@ -28,7 +30,7 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             model.Elements.Add(elm = new BarElement(model.Nodes["n0"], model.Nodes["n1"]) {Label = "e0"});
 
             //assign constraint to nodes
-            model.Nodes["n0"].Constraints = Constraints.MovementFixed & Constraints.FixedRX;
+            model.Nodes["n0"].Constraints = Constraints.MovementFixed ;
             model.Nodes["n1"].Constraints = Constraints.MovementFixed;
 
             //define sections and material
@@ -42,10 +44,10 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             (model.Elements["e0"] as BarElement).Section = secAA;
 
             //creating loads
-            var u1 = new Loads.PartialNonUniformLoad() { Direction = Vector.K, CoordinationSystem = CoordinationSystem.Global };
+            var u1 = new Loads.PartialNonUniformLoad() { Direction = Vector.K, CoordinationSystem = CoordinationSystem.Local };
             u1.SeverityFunction = Mathh.SingleVariablePolynomial.FromPoints(-1, -6, 1, -4);
-            u1.StartLocation = new IsoPoint(-0.5);      //set locations of trapezoidal load
-            u1.EndLocation = new IsoPoint(0.5);         //set locations of trapezoidal load
+            u1.StartLocation = new IsoPoint(-1);      //set locations of trapezoidal load
+            u1.EndLocation = new IsoPoint(1);         //set locations of trapezoidal load
 
             //assign loads
             model.Elements["e0"].Loads.Add(u1);
@@ -72,10 +74,20 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             var e4Force = (model.Elements["e0"] as BarElement).GetInternalForceAt(iso[0]);//find internal force
             Console.WriteLine("internal force at x={0} is {1}", x, e4Force);
 
-            
 
-            Debug.Assert(n0reaction == new Force(fx: -13.3333, fy: 0, fz: 13.3333, 0, 0, 0));
-            Debug.Assert(n1reaction == new Force(fx: -11.6666, fy: 0, fz: 11.6666, 0, 0, 0));
+            var r1 = new Force(fx: -13.33333333, fy: 0, fz: 13.333333333, 0, 0, 0);
+            var r2 = new Force(fx: -11.666666666, fy: 0, fz: 11.66666666, 0, 0, 0);
+
+            var d1 = n0reaction - r1;
+            var d2 = n1reaction - r2;
+
+            var epsilon = 1e-3;
+
+
+            Debug.Assert(d1.Forces.Length < epsilon && d1.Moments.Length < epsilon);
+            Debug.Assert(d2.Forces.Length < epsilon && d2.Moments.Length < epsilon);
         }
+
+
     }
 }
