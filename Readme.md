@@ -12,6 +12,18 @@ We are fixing bugs before release Nuget Package, please let us know any bugs you
 ## Introduction
 Brief Finite Element Dot NET (BFE.NET) is a .NET based software framework for static and linear Finite Element Analysis (FEA) of solids and structures. BFE.NET help you to simply take advantage of Object Oriented approach to analyze FE models. Advantage of such a framework is that user does have a very powerful control on what he is working with, and control is not limited to an UI with predefined controls.
 
+## Support and bug report
+
+You can use [issues section](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) for reporting bugs and requesting new features and asking help on something, there is also a paid support available via email:
+
+[bfenet@gmx.com](mailto:bfenet@gmx.com?subject=Paid%20Support&body=Please%20fill%20fail%20amount%20of%20description%20here)
+
+For a small payment (like a USD or two) you'll get premium support about using this library for your owm porpuse, if it is bug with library I'll fix it for free and return your payment.
+
+Please note that free support still exists and maintained by community in [Issues](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) and [Discussion](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/discussions) sections.
+
+We do accept many payment types, including PayPal and also Crypto-Currencies and maybe other types, just message and we'll talk about it!
+
 ## Features
 
 - Various Elements (variable node beam, column, truss, shaft, 3 node plate bending and membrane, 4 node tetrahedral)
@@ -52,6 +64,7 @@ Since it is not possible to validate all features with a single software,
 
 for more information on validation please have a look at [Validation.md](Validation.md) file.
 
+
 ## Known Issues
 
 for more information on known issues please have a look at [know-issues.md](know-issues.md) file and [issues](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) section.
@@ -59,6 +72,3 @@ for more information on known issues please have a look at [know-issues.md](know
 ## Donation
 
 
-## Pros
-
-### Cons
