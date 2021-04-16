@@ -18,11 +18,11 @@ You can use [issues section](https://github.com/BriefFiniteElementNet/BriefFinit
 
 [bfenet@gmx.com](mailto:bfenet@gmx.com?subject=Paid%20Support&body=Please%20fill%20fail%20amount%20of%20description%20here)
 
-For a small payment (like a USD or two) you'll get premium support about using this library for your owm porpuse, if it is bug with library I'll fix it for free and return your payment.
+For a small payment (like a USD or two) you'll get premium support about using this library for your specific purpose, if it is bug with library will fix it for free and return your payment.
 
 Please note that free support still exists and maintained by community in [Issues](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) and [Discussion](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/discussions) sections.
 
-We do accept many payment types, including PayPal and also Crypto-Currencies and maybe other types, just message and we'll talk about it!
+We do accept many payment types, including PayPal and Crypto-Currencies and maybe other types, just message and we'll talk about it!
 
 ## Features
 
