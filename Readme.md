@@ -16,9 +16,9 @@ Brief Finite Element Dot NET (BFE.NET) is a .NET based software framework for st
 
 You can use [issues section](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) for reporting bugs and requesting new features and asking help on something, there is also a paid support available via email:
 
-[bfenet@gmx.com](mailto:bfenet@gmx.com?subject=Paid%20Support&body=Please%20fill%20fail%20amount%20of%20description%20here)
+[BFEPaid@gmx.com](mailto:BFEPaid@gmx.com?subject=Paid%20Support&body=Please%20fill%20fair%20amount%20of%20description%20here)
 
-For a small payment (like a USD or two) you'll get premium support about using this library for your specific purpose, if it is bug with library will fix it for free and return your payment.
+For a small payment (like a USD or two) you'll get premium support about using this library for your specific purpose, if it is bug with library itself, then will fix it for free and return your payment.
 
 Please note that free support still exists and maintained by community in [Issues](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) and [Discussion](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/discussions) sections.
 
