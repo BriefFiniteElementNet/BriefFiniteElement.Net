@@ -140,13 +140,10 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             {
                 var triElm = elm as TriangleElement;
 
-
                 if (triElm == null)
                     continue;
 
                 triElm.Behavior = PlaneElementBehaviours.FullThinShell;
-
-
 
                 var h = 0.03;
                 var w = 0.003;

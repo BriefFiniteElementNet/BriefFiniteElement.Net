@@ -203,7 +203,7 @@ namespace BriefFiniteElementNet.Validation
         {
             TetrahedronElement elm = new TetrahedronElement();
             string[] split;
-            int elementNr, nodeNr1, nodeNr2, nodeNr3, nodeNr4;
+            int elementNr;//, nodeNr1, nodeNr2, nodeNr3, nodeNr4;
             try
             {
                 split = elementline.Split(delimiter);

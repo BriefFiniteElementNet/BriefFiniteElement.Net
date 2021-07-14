@@ -60,9 +60,10 @@ namespace BriefFiniteElementNet.Mathh
                 var colNum = r_item.Item2;
                 var val = r_item.Item3;
 
-
+                /*
                 if (Math.Abs(val) <= epsilon)
                     ;//then row at 
+                */
 
                 if (Math.Abs(val) > epsilon) //Then, if abs(R[i, i]) > tol, you found an independent row
                     //Make sure to take row permutations into account (again, you can get the SymbolicFactorization containing row and column permutations using reflection)

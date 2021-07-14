@@ -2,18 +2,18 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <PackageId>BriefFiniteElement.Net</PackageId>
     <Description>A Finite Element library for static and linear analysis of solids and structures.</Description>
     <Version>2.0.0-pre</Version>
     <PackageTags>finite elements static linear analysis</PackageTags>
     <Product>BriefFiniteElement.Net</Product>
-    <Company>Ehsan M.A.</Company>
-    <Copyright>Copyleft © 2020 Ehsan Mohammad Ali ehsan.ma@gmx.com</Copyright>
+    <Company>N.A.</Company>
+    <Copyright>Copyleft © 2021 Ehsan Mohammad Ali ehsan.ma@gmx.com</Copyright>
     <Authors>Ehsan M.A.</Authors>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
     <AssemblyName>BriefFiniteElementNet</AssemblyName>
     <RootNamespace>BriefFiniteElementNet</RootNamespace>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>

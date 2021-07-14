@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>BriefFiniteElement.NET</id>
+    <version>2.0.0</version>
+    <title>Brief Finite Element DOT Net library</title>
+    <authors>epsi1on</authors>
+    <owners></owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectUrl>https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net</projectUrl>
+    <description>BriefFiniteElementDotNET (BFE.NET) is a library for linear-static Finite Element Method (FEM) analysis of solids and structures in .NET</description>
+    <copyright>Copy Left</copyright>
+  </metadata>
+</package>

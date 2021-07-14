@@ -494,7 +494,7 @@ namespace BriefFiniteElementNet
             info.AddValue("settlementLoadCase", settlementLoadCase);
         }
 
-        protected Model(SerializationInfo info, StreamingContext context)
+        private Model(SerializationInfo info, StreamingContext context)
         {
             Elements = (ElementCollection)info.GetValue("elements",typeof(ElementCollection));
             MpcElements = (MpcElementCollection)info.GetValue("mpcElements",typeof(MpcElementCollection));

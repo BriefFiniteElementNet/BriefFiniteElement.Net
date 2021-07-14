@@ -1,7 +1,4 @@
-﻿# Use ElementHelper instead of element itself for calculations
-Use another class named ElementHelper for internal calculations of say B or D matrix for each type separately (like truss, beam, shaft, ...)
-
-# ComputeB() & GetD()
+﻿# ComputeB() & GetD()
 Implement Element.ComputeB() and Element.GetD() for frame, shell and other elements to help to implement mass and damp matrices.
 Create visualizer for showing deformed shape and coloring based on internal stress/force.
 XML or any other plane text serialization for ISerializable s
@@ -51,7 +48,10 @@ Remove TrussElement2Node
 
 # Elements
 Only these elements need to be:
-BarElement, TriangleElement, TetrahedronElement, Spring.
+BarElement, TriangleElement, TetrahedronElement.
+
+And some MPC ones:
+RigidElement, HingLink, ...
 
 # Change the FrameElement2Node architecture
 

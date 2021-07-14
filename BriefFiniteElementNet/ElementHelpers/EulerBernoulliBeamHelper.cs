@@ -35,8 +35,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             {//loading condistions list pool from element's cache
                 var listPoolKey = "26167C0A-1E58-4FA5-950D-5464ED6F264A";
 
-                object obj;
-
                 if (targetElement != null)
                     targetElement.TryGetCache(listPoolKey, out CondsListPool);
 

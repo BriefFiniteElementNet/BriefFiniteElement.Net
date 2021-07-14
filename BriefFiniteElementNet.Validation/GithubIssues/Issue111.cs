@@ -75,8 +75,8 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             Console.WriteLine("internal force at x={0} is {1}", x, e4Force);
 
 
-            var r1 = new Force(fx: -13.33333333, fy: 0, fz: 13.333333333, 0, 0, 0);
-            var r2 = new Force(fx: -11.666666666, fy: 0, fz: 11.66666666, 0, 0, 0);
+            var r1 = new Force(fx: -13.33333333, fy: 0, fz: 13.333333333, mx:0, my:0, mz:0);
+            var r2 = new Force(fx: -11.666666666, fy: 0, fz: 11.66666666, mx:0, my:0, mz:0);
 
             var d1 = n0reaction - r1;
             var d2 = n1reaction - r2;

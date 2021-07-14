@@ -9,7 +9,6 @@ using BriefFiniteElementNet.Elements.ElementHelpers;
 using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
 using HtmlTags;
-using BriefFiniteElementNet.Elements.ElementHelpers;
 using System.Diagnostics;
 
 namespace BriefFiniteElementNet.Validation
