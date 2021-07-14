@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <PackageId>BriefFiniteElement.Net</PackageId>
     <Description>A Finite Element library for static and linear analysis of solids and structures.</Description>
