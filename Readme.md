@@ -4,7 +4,10 @@
 
 A Finite Element library for Static and Linear analysis of solids and structures 100% in C#.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/var3sx7nxa309tmo?svg=true)](https://ci.appveyor.com/project/epsi1on/brieffiniteelement-net)     [![Join the chat at https://gitter.im/BFE-Net/Lobby](https://badges.gitter.im/BFE-Net/Lobby.svg)](https://gitter.im/BFE-NET/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build status](https://ci.appveyor.com/api/projects/status/var3sx7nxa309tmo?svg=true)](https://ci.appveyor.com/project/epsi1on/brieffiniteelement-net)    
+[![Join the chat at https://gitter.im/BFE-Net/Lobby](https://badges.gitter.im/BFE-Net/Lobby.svg)](https://gitter.im/BFE-NET/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Nuget Package](https://img.shields.io/nuget/v/2)](https://www.nuget.org/packages/BriefFiniteElement.NET)     
+
+
 
 ## Notice
 We are fixing bugs before release Nuget Package, please let us know any bugs you found in this library in order to let us fix it. To report bugs please use [issues section](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues).
