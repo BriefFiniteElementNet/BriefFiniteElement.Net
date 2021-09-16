@@ -15,6 +15,10 @@ We are fixing bugs before release Nuget Package, please let us know any bugs you
 ## Introduction
 Brief Finite Element Dot NET (BFE.NET) is a .NET based software framework for static and linear Finite Element Analysis (FEA) of solids and structures. BFE.NET help you to simply take advantage of Object Oriented approach to analyze FE models. Advantage of such a framework is that user does have a very powerful control on what he is working with, and control is not limited to an UI with predefined controls.
 
+## Documentation
+
+Some documentation available from [bfenet.readthedocs.io](https://bfenet.readthedocs.io/en/latest/) and Wiki section.
+
 ## Support and bug report
 
 You can use [issues section](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) for reporting bugs and requesting new features and asking for help on something, there is also a paid support for commercial developers available via email:
@@ -29,7 +33,7 @@ Many payment types are accepted, including PayPal and CryptoCurrencies and maybe
 
 ## Features
 
-- Various Elements (variable node beam, column, truss, shaft, 3 node plate bending and membrane, 4 node tetrahedral)
+- Various Elements (2 node beam, column, truss, shaft, 3 node plate bending and membrane, 4 node tetrahedral)
 
 _ Different loads types (Concentrated force or moment in `BarElement` body, uniform load on `BarElement`)
 
