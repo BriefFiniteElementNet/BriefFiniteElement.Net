@@ -21,12 +21,17 @@ namespace BriefFiniteElementNet.MpcElements
         {
         }
 
-        public HingeLink()
+        public HingeLink():base()
         {
         }
 
         public override SparseMatrix GetExtraEquations()
         {
+            var distLocation = Nodes.Select(i=>i.Location).Distinct();
+
+            if (distLocation.Count() != 1)
+                throw new BriefFiniteElementNetException("Nodes within a HingeLink must have exact same location in 3d space");
+            
             var distinctNodes = Nodes.Distinct().Where(ii => !ReferenceEquals(ii, null)).ToList();
             //Nodes.Select(i => i.Index).Distinct().ToList();
 
@@ -112,12 +117,6 @@ namespace BriefFiniteElementNet.MpcElements
             //except one node, all others are slaves.
             return (Nodes.Count - 1) * 3;
         }
-
-        #region ISerialization Implementation
-
-
-
-        #endregion
 
         #region ISerialization Implementation
 
