@@ -1941,5 +1941,10 @@ namespace BriefFiniteElementNet
                 vector[i] += addition[i] * coef;
             }
         }
+
+        public static double LinearInterpolate(double v1, double v2, double v3, double v4, double x)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

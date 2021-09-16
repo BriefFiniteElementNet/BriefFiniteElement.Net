@@ -143,16 +143,19 @@ namespace BriefFiniteElementNet
 
         #region IXmlSerializable
 
+        [Obsolete]
         public XmlSchema GetSchema()
         {
             return null;
         }
 
+        [Obsolete]
         public void ReadXml(XmlReader reader)
         {
             throw new NotImplementedException();
         }
 
+        [Obsolete]
         public void WriteXml(XmlWriter writer)
         {
             writer.WriteValue("idHashCode", idHashCode);

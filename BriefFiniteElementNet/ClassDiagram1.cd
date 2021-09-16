@@ -76,11 +76,11 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="BriefFiniteElementNet.BriefFiniteElementNetException" Collapsed="true">
+  <Class Name="BriefFiniteElementNet.MpcElementCollection" Collapsed="true">
     <Position X="5.5" Y="7.5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAEAAAAAAAAAA=</HashCode>
-      <FileName>BriefFiniteElementNetException.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MpcElementCollection.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.InvalidLabelException" Collapsed="true">
@@ -178,7 +178,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BriefFiniteElementNet.MpcElements.MpcElement" Collapsed="true">
-    <Position X="7.75" Y="1.75" Width="1.5" />
+    <Position X="7.75" Y="1.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAkABAAEAAAAAAAAAAACAAgEACAAAAABBEQiAAAAAQ=</HashCode>
       <FileName>MpcElements\MpcElement.cs</FileName>
