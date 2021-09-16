@@ -36,7 +36,9 @@ namespace BriefFiniteElementNet.TestConsole
         {
             Console.Title = "BFE tests & temporary codes";
 
-            Validation.GithubIssues.Issue100.Run();
+            new BriefFiniteElementNet.Validation.Case_03.Validator().Validate();
+
+            //Validation.GithubIssues.Issue100.Run();
 
             return;
             TestTet();
@@ -179,7 +181,7 @@ namespace BriefFiniteElementNet.TestConsole
             elm.Section = new UniformGeometric1DSection(sec);
             elm.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
 
-            n1.Settlements.Add(new Settlement(new Displacement(0, 0, 0.01)));
+            n1.Settlements.Add(new NodalSettlement(new Displacement(0, 0, 0.01)));
 
             model.Nodes.Add(n1);
             
@@ -211,7 +213,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             model.Nodes.AddRange(nodeList);
 
-            model.Nodes[10].Settlements.Add(new Settlement(LoadCase.DefaultLoadCase, new Displacement(0, 0, -0.0000000000010, 0, 0, 0)));  // This does not seem to be working correctly based on the reported displacement at Node 10
+            model.Nodes[10].Settlements.Add(new NodalSettlement(LoadCase.DefaultLoadCase, new Displacement(0, 0, -0.0000000000010, 0, 0, 0)));  // This does not seem to be working correctly based on the reported displacement at Node 10
 
             var load1 = new BriefFiniteElementNet.Loads.UniformLoad(LoadCase.DefaultLoadCase, new Vector(0, 0, 1), -6000, CoordinationSystem.Global);  // Load in N/m
 
@@ -1053,7 +1055,7 @@ namespace BriefFiniteElementNet.TestConsole
             {
                 if (node.Constraints == Constraints.Fixed)
                 {
-                    node.Settlements.Add(new Settlement(new Displacement(1, 0, 0, 0, 0, 0)));
+                    node.Settlements.Add(new NodalSettlement(new Displacement(1, 0, 0, 0, 0, 0)));
                     node.Loads.Clear();
                 }
                     

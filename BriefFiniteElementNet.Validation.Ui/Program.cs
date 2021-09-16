@@ -18,6 +18,7 @@ namespace BriefFiniteElementNet.Validation.Ui
         {
             RunAllValidations();
 
+
             Console.ReadKey();
         }
 
