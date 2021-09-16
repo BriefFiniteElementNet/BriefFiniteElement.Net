@@ -61,7 +61,7 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             nodeList[22].Constraints = Constraints.FixedDZ & Constraints.FixedDY & Constraints.FixedRX;  // z = vertical
             nodeList[23].Constraints = Constraints.FixedDZ & Constraints.FixedDY & Constraints.FixedRX;  // z = vertical
 
-            nodeList[22].Settlements.Add(new Settlement(loadCase1, new Displacement(0, 0, -0.010, 0, 0, 0)));     // -10mm settlement
+            nodeList[22].Settlements.Add(new NodalSettlement(loadCase1, new Displacement(0, 0, -0.010, 0, 0, 0)));     // -10mm settlement
 
             model.Elements.Add(elementList.ToArray());
             model.Nodes.AddRange(nodeList);
@@ -111,7 +111,7 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             n1.Constraints = Constraints.Fixed;
             n2.Constraints = Constraints.MovementFixed;
 
-            n1.Settlements.Add(new Settlement(new Displacement(0, 0, -0.01, 0, 0, 0)));
+            n1.Settlements.Add(new NodalSettlement(new Displacement(0, 0, -0.01, 0, 0, 0)));
 
             var a = 0.1;                            // m²
             var iy = 0.008333;                      // m4
@@ -200,8 +200,8 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
 
             model.Elements.Add(elementList.ToArray());
 
-            model.Nodes[20].Settlements.Add(new Settlement(loadCase3, new Displacement(0, 0, -0.010, 0, 0, 0)));  // -10mm settlement
-            model.Nodes[20].Settlements.Add(new Settlement(loadCase4, new Displacement(0, 0, -0.010, 0, 0, 0)));  // +10mm settlement
+            model.Nodes[20].Settlements.Add(new NodalSettlement(loadCase3, new Displacement(0, 0, -0.010, 0, 0, 0)));  // -10mm settlement
+            model.Nodes[20].Settlements.Add(new NodalSettlement(loadCase4, new Displacement(0, 0, -0.010, 0, 0, 0)));  // +10mm settlement
 
             foreach (LoadCase loadCase in loadCases) model.Solve_MPC(loadCase);
 

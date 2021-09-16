@@ -131,7 +131,9 @@
     <None Include="Case_03\Abaqus output\Bottom_Center.rpt" />
     <None Include="Case_03\Abaqus output\Side_Center.rpt" />
     <None Include="Case_03\Abaqus output\Top_Center.rpt" />
-    <None Include="Case_03\Job-10.inp" />
+    <None Include="Case_03\Job-10.inp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="OpenseesTclGenerator\Readme.md" />
     <None Include="packages.config" />
     <None Include="Readme.md" />

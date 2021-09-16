@@ -20,7 +20,7 @@ namespace BriefFiniteElementNet.Validation.Case_03
         {
             //build model from Abaqus input file
             string RunningPath = AppDomain.CurrentDomain.BaseDirectory;
-            string FileName = string.Format("{0}Resources\\Job-10.inp", Path.GetFullPath(Path.Combine(RunningPath, @"..\..\")));
+            string FileName = string.Format("Case_03\\Job-10.inp", Path.GetFullPath(Path.Combine(RunningPath, @"..\..\")));
             var abaqusModel = AbaqusInputFileReader.AbaqusInputToBFE(FileName);
             //comparison
             var val = new ValidationResult();
