@@ -22,7 +22,7 @@ namespace BriefFiniteElementNet
         public Node()
         {
             loads = new List<NodalLoad>();
-            settlements = new List<Settlement>();
+            settlements = new List<NodalSettlement>();
 
             //memberLoads = new List<NodalLoad>();
         }
@@ -60,7 +60,7 @@ namespace BriefFiniteElementNet
         [NonSerialized][Obsolete]
         internal List<Element> ConnectedElements = new List<Element>();
         private List<NodalLoad> loads;
-        private List<Settlement> settlements;
+        private List<NodalSettlement> settlements;
 
         private Point location;
         //private Displacement settlements_old;
@@ -82,7 +82,7 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// gets the settlements
         /// </summary>
-        public List<Settlement> Settlements
+        public List<NodalSettlement> Settlements
         {
             get { return settlements; }
         }
@@ -487,8 +487,8 @@ namespace BriefFiniteElementNet
             loads = (List<NodalLoad>) info.GetValue("loads", typeof (List<NodalLoad>));
             //settlements = info.GetValue<List<Settlement>>("settlements");
 
-            if (info.GetFieldType("settlements") == typeof(List<Settlement>))
-                settlements = info.GetValue<List<Settlement>>("settlements");
+            if (info.GetFieldType("settlements") == typeof(List<NodalSettlement>))
+                settlements = info.GetValue<List<NodalSettlement>>("settlements");
 
             constraints = (Constraint) info.GetValue("constraints", typeof (Constraint));
         }

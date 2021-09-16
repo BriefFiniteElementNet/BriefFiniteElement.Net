@@ -49,12 +49,8 @@
     <None Include="ClassDiagram1.cd" />
     <None Include="Elements\BarElement.md" />
     <None Include="ElementHelpers\IElementHelper.md" />
-    <None Include="MpcElements\RigidElement.md" />
-    <None Include="MpcElements\TelepathyLink.md" />
-    <None Include="MpcElements\VirtualSupport.md" />
     <None Include="Mathh\IRrefFinder.md" />
     <None Include="TransformManagerL2G.md" />
-    <None Include="MpcElements\HingeLink.md" />
     <None Include="Integration\GaussianIntegrator.md" />
     <None Include="RigidElement.md" />
     <None Include="Todo.md" />
@@ -69,6 +65,10 @@
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <IncludeAssets>BriefFiniteElementNet.Common.dll</IncludeAssets>
     </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ClassDiagrams\NewFolder\" />
   </ItemGroup>
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">

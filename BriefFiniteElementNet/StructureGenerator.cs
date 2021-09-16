@@ -174,7 +174,7 @@ namespace BriefFiniteElementNet
 
 
                 if (c != Constraints.Released)
-                    nde.Settlements.Add(new Settlement(disp));
+                    nde.Settlements.Add(new NodalSettlement(disp));
             }
         }
 
