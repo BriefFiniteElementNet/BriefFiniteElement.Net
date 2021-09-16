@@ -36,10 +36,12 @@ namespace BriefFiniteElementNet.Elements.Elements
         /// stiffness in global dof RX
         /// </summary>
         public double KRx { get; set; }
+
         /// <summary>
         /// stiffness in global dof RY
         /// </summary>
         public double KRy { get; set; }
+
         /// <summary>
         /// stiffness in global dof RZ
         /// </summary>
