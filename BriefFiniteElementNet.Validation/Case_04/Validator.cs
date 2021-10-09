@@ -81,6 +81,8 @@ namespace BriefFiniteElementNet.Validation.Case_04
             span.Add("h3").Text("Validation Result");
             span.Add("h4").Text("Nodal Displacements");
             span.Add("paragraph").Text(string.Format("Validation output for nodal displacements:"));
+
+
             var n1 = model.Nodes[1].GetNodalDisplacement();
             var n2 = model.Nodes[2].GetNodalDisplacement();
             var diff = n1 - n2;
