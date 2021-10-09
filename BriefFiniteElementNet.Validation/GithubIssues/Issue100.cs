@@ -12,18 +12,17 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
     {
         public static void Run()
         {
-            var model = StructureGenerator.Generate3DTetrahedralElementGrid(2, 2, 2);
+            var model = StructureGenerator.Generate3DTetrahedralElementGrid(10, 10, 201, 1, 1, 1);
 
             var e = 210e9;
-
+            var miu = 0.28;
 
             foreach (var elm in model.Elements)
             {
-                if (elm is TetrahedronElement)
+                if (elm is TetrahedronElement tet)
                 {
-                    var tet = elm as TetrahedronElement;
-
-                    tet.Material = new Materials.UniformIsotropicMaterial(e, 0.25);
+                    tet.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(e, miu);
+                    tet.FixNodeOrder();
                 }
             }
 
@@ -38,23 +37,25 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             var f = 1e7;
             var I = dy * dx * dx * dx / 12;
             var rigid = new MpcElements.RigidElement_MPC() { UseForAllLoads = true };
-
+            
             foreach (var node in cnt)
             {
                 node.Loads.Add(new NodalLoad(new Force(f / cnt.Count(), 0, 0, 0, 0, 0)));
                 rigid.Nodes.Add(node);
+                //node.Constraints = Constraints.Released;
             }
 
-            model.MpcElements.Add(rigid);
+            //model.MpcElements.Add(rigid);
             model.Trace.Listeners.Add(new ConsoleTraceListener());
             model.Solve_MPC();
 
+            //Controls.ModelVisualizerControl.VisualizeInNewWindow(model);
 
             var delta = f * l * l * l / (3 * e * I);
 
-            var t = cnt.FirstOrDefault().GetNodalDisplacement();
+            var t = cnt.Average(i => i.GetNodalDisplacement().DX);
 
-            var ratio = delta / t.DX;
+            var ratio = delta / t;
         }
     }
 }

@@ -40,6 +40,7 @@ namespace BriefFiniteElementNet.TestConsole
 
             //Validation.GithubIssues.Issue100.Run();
 
+            Console.ReadKey();
             return;
             TestTet();
             //TestTriangle();

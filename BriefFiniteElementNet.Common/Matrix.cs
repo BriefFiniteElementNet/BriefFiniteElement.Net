@@ -336,6 +336,27 @@ namespace BriefFiniteElementNet
             return mtx;
         }
 
+        public static Matrix RemoveRows(this Matrix mtx, params int[] rows)
+        {
+            var m2 = new Matrix(mtx.RowCount - rows.Length, mtx.ColumnCount);
+
+            var map = new int[mtx.RowCount - rows.Length];
+
+            var cnt = 0;
+
+            for (var i = 0; i < mtx.RowCount; i++)
+                if (!rows.Contains(i))
+                    map[cnt++] = i;
+
+            for (var i = 0; i < mtx.RowCount; i++)
+                for (var j = 0; j < mtx.ColumnCount; j++)
+                {
+                    m2[map[i], j] = mtx[i, j];
+                }
+
+            return m2;
+        }
+
         /// <summary>
         /// Retrieves column vector at specfifed index and deletes it from MatrixOld.
         /// </summary>

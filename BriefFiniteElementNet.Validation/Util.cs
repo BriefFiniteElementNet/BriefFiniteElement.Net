@@ -75,6 +75,13 @@ namespace BriefFiniteElementNet.Validation
             return 100 * buf;
         }
 
+        public static double GetAbsError(double test, double accurate)
+        {
+            var buf = Math.Abs(test - accurate);
+
+            return buf;
+        }
+
         public static double GetErrorPercent(Vector test, Vector accurate)
         {
             if (test == accurate)
@@ -82,6 +89,12 @@ namespace BriefFiniteElementNet.Validation
 
             return 100 * Math.Abs((test - accurate).Length) / Math.Max(test.Length, accurate.Length);
         }
+
+        public static double GetAbsError(Vector test, Vector accurate)
+        {
+            return (test - accurate).Length;
+        }
+
 
         public static double GetErrorPercent(Displacement test, Displacement accurate)
         {

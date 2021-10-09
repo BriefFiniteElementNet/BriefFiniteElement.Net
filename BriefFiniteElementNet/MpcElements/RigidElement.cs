@@ -21,27 +21,6 @@ namespace BriefFiniteElementNet.MpcElements
 
         }
 
-        /// <summary>
-        /// defined wheter rigid element connected to specific DoF of node (partial connection)
-        /// </summary>
-        /// <param name="node"></param>
-        /// <param name="dof"></param>
-        /// <returns></returns>
-        private bool IsConnected(int node, DoF dof)
-        {
-            if (this.NodalConnections == null)
-                return true;
-
-            if (this.NodalConnections.Length < node)
-                return true;
-
-            return NodalConnections[node].GetComponent(dof) == DofConstraint.Fixed;
-
-        }
-
-        private RigidElement_MPC(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
 
         public override SparseMatrix GetExtraEquations()
         {
@@ -177,13 +156,8 @@ namespace BriefFiniteElementNet.MpcElements
         {
             //count is equal to slave DoFs
             //except one node, all others are slaves.
-            return (Nodes.Count - 1) * 6;
+            return (Nodes.Count - 1) *  6;
         }
 
-
-        /// <summary>
-        /// represents connection of RigidElement into nodes, support partial node connection
-        /// </summary>
-        public Constraint[] NodalConnections { get; set; }//issue #94
     }
 }
