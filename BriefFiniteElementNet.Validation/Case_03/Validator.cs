@@ -51,7 +51,7 @@ namespace BriefFiniteElementNet.Validation.Case_03
                 }
 
                 //model.MpcElements.Add(rigid);
-                model.Trace.Listeners.Add(new ConsoleTraceListener()); 
+                model.Trace.Listeners.Add(new ConsoleTraceListener());            
                 model.Solve_MPC();
                 
 
