@@ -17,9 +17,9 @@ namespace BriefFiniteElementNet.Elements
     /// </summary>
     [Serializable]
     [Obsolete("not fully implemented yet")]
-    public class HexahedralElement : Element
+    public class HexahedralElementTest : Element
     {
-        public HexahedralElement() : base(8)
+        public HexahedralElementTest() : base(8)
         {
         }
 
@@ -224,7 +224,7 @@ namespace BriefFiniteElementNet.Elements
 
         #region Deserialization Constructor
 
-        protected HexahedralElement(SerializationInfo info, StreamingContext context)
+        protected HexahedralElementTest(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             _material = (BaseMaterial)info.GetValue("_material", typeof(int));
