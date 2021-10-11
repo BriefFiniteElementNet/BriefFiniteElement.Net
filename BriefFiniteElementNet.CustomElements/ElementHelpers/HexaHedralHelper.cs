@@ -523,9 +523,9 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
                         var shp2 = hex.MatrixPool.Allocate(3, shp.ColumnCount);
 
-                        shp2.AssembleInside(shp, 0, 0);
-                        shp2.AssembleInside(shp, 1, 0);
-                        shp2.AssembleInside(shp, 2, 0);
+                        shp2.SetSubMatrix(0, 0, shp);
+                        shp2.SetSubMatrix(1, 0, shp);
+                        shp2.SetSubMatrix(2, 0, shp);
 
 
                         var j = GetJMatrixAt(targetElement, xi, 0, 0);

@@ -32,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CSparse" Version="3.4.7" />
+    <PackageReference Include="CSparse" Version="3.4.9" />
   </ItemGroup>
 
   <ItemGroup>

@@ -173,7 +173,7 @@ namespace BriefFiniteElementNet.Mathh
 
             var p3Crd = new CoordinateStorage<double>(totDofCount, totDofCount - colsToRemove.Count(i => i), 1);
 
-            foreach (var tpl in p2.EnumerateIndexed2())
+            foreach (var tpl in p2.EnumerateIndexed())
             {
                 if (!colsToRemove[tpl.Item2])
                 {

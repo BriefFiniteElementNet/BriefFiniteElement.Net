@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.Controls;
 using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.Validation.Properties;
+using HtmlTags;
 
 namespace BriefFiniteElementNet.Validation.Case_03
 {
@@ -14,165 +18,96 @@ namespace BriefFiniteElementNet.Validation.Case_03
     {
         public ValidationResult Validate()
         {
+            //build model from Abaqus input file
+            string RunningPath = AppDomain.CurrentDomain.BaseDirectory;
+            string FileName = string.Format("{0}Resources\\Job-10.inp", Path.GetFullPath(Path.Combine(RunningPath, @"..\..\")));
+            var abaqusModel = AbaqusInputFileReader.AbaqusInputToBFE(FileName);
+            //comparison
+            var val = new ValidationResult();
+            var span = val.Span = new HtmlTag("span");
+            val.Title = "Clamped beam with tetrahedron elements";
 
-            /**/
-            {
-                var model = StructureGenerator.Generate3DTetrahedralElementGrid(4, 4, 100);
+            {//report
 
-                var e = 210e9;
-                
+                span.Add("p").Text("Validation of a simple clamped beam, loaded on the other side.");
+                span.Add("h3").Text("Validate with");
+                span.Add("paragraph").Text("ABAQUS from Abaqus inc. available from www.simulia.com");
+                span.Add("h3").Text("Validate objective");
+                span.Add("paragraph").Text("compare nodal displacement for a model consist of tetrahedron elements");
 
-                foreach (var elm in model.Elements)
-                {
-                    if(elm is TetrahedronElement)
-                    {
-                        var tet = elm as TetrahedronElement;
+                span.Add("h3").Text("Model Definition");
+                /*
 
-                        tet.Material = new Materials.UniformIsotropicMaterial(e, 0.25);
-                    }
-                }
-
-                var dx = model.Nodes.Max(i => i.Location.X) - model.Nodes.Min(i => i.Location.X);
-                var dy = model.Nodes.Max(i => i.Location.Y) - model.Nodes.Min(i => i.Location.Y);
-                var dz = model.Nodes.Max(i => i.Location.Z) - model.Nodes.Min(i => i.Location.Z);
-
-                var l = dz;// model.Nodes.Max(i => i.Location.Z);
-
-                var cnt = model.Nodes.Where(i => i.Location.Z == l);
-
-                var f = 1e7;
-                var I = dy * dx * dx * dx / 12;
-                var rigid = new MpcElements.RigidElement_MPC() { UseForAllLoads = true };
-
-                foreach (var node in cnt)
-                {
-                    node.Loads.Add(new NodalLoad(new Force(f / cnt.Count(), 0, 0, 0, 0, 0)));
-                    rigid.Nodes.Add(node);
-                }
-
-                //model.MpcElements.Add(rigid);
-                model.Trace.Listeners.Add(new ConsoleTraceListener());            
+                model.MpcElements.Add(rigid);
+                model.Trace.Listeners.Add(new ConsoleTraceListener()); 
                 model.Solve_MPC();
                 
 
                 var delta = f * l * l * l / (3 * e * I);
 
                 var t = cnt.FirstOrDefault().GetNodalDisplacement();
+                 
+                var ratio = delta / t.DX;*/
 
-                var ratio = delta / t.DX;
+                span.Add("paragraph")
+                    .Text("Look at `intro.md` file in this folder")
+                    .AddClosedTag("br");
+
+                span.Add("h3").Text("Validation Result");
+//>>>>>>> 8f73e9cf4109d3eac9e87e27ab66e1661bd0a2fd
             }
-            /**/
 
-            throw new NotImplementedException();
+            abaqusModel.Trace.Listeners.Add(new BriefFiniteElementNet.Common.ConsoleTraceListener());
+            new ModelWarningChecker().CheckModel(abaqusModel);
+
+
+            //Display
+            //ModelVisualizer.TestShowVisualizer(model);
+            abaqusModel.Solve_MPC();
+
+            //List of result displacements from Abaqus
+            Dictionary<int, Displacement> abaqusResults = new Dictionary<int, Displacement>();
+            abaqusResults.Add(67, new Displacement(-795.863E-09, -288.503E-06, 131.482E-09));
+            abaqusResults.Add(169, new Displacement(-434.254E-09, -246.688E-06, -431.229E-09));
+            abaqusResults.Add(172, new Displacement(-549.082E-09, -204.906E-06, -491.084E-09));
+            abaqusResults.Add(175, new Displacement(-622.334E-09, -164.843E-06, -380.641E-09));
+            abaqusResults.Add(178, new Displacement(-602.786E-09, -127.49E-06, -333.347E-09));
+            abaqusResults.Add(181, new Displacement(-655.981E-09, -93.343E-06, -441.491E-09));
+            abaqusResults.Add(184, new Displacement(-899.89E-09, -63.0811E-06, -65.9539E-09));
+            abaqusResults.Add(187, new Displacement(-244.578E-09, -37.7898E-06, -108.451E-09));
+            abaqusResults.Add(190, new Displacement(85.1779E-09, -17.7659E-06, -252.828E-09));
+            abaqusResults.Add(193, new Displacement(-518.751E-09, -4.53149E-06, -291.286E-09));
+            abaqusResults.Add(49, new Displacement(-12.2049E-33, 108.099E-33, 147.403E-33));
+
+            //BFE results
+            Dictionary<int, Displacement> bFEResults = new Dictionary<int, Displacement>();
+            bFEResults.Add(67, abaqusModel.Nodes[67].GetNodalDisplacement());
+            bFEResults.Add(169, abaqusModel.Nodes[169].GetNodalDisplacement());
+            bFEResults.Add(172, abaqusModel.Nodes[172].GetNodalDisplacement());
+            bFEResults.Add(175, abaqusModel.Nodes[175].GetNodalDisplacement());
+            bFEResults.Add(178, abaqusModel.Nodes[178].GetNodalDisplacement());
+            bFEResults.Add(181, abaqusModel.Nodes[181].GetNodalDisplacement());
+            bFEResults.Add(184, abaqusModel.Nodes[184].GetNodalDisplacement());
+            bFEResults.Add(187, abaqusModel.Nodes[187].GetNodalDisplacement());
+            bFEResults.Add(190, abaqusModel.Nodes[190].GetNodalDisplacement());
+            bFEResults.Add(193, abaqusModel.Nodes[193].GetNodalDisplacement());
+            bFEResults.Add(49, abaqusModel.Nodes[49].GetNodalDisplacement());
+
+            //Errors
+            List<double> errors = new List<double>();
+            foreach (var item in abaqusResults)
             {
-                //code from here: https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues/13
-
-                var model = new Model();
-
-                var p = new Point[20];
-                var ns = new Node[20];
-
-                p[0] = new Point(x: 0, y: 1, z: 0);
-                p[1] = new Point(x: 0, y: 0, z: 0);
-                p[2] = new Point(x: 0.20, y: 0, z: 0);
-                p[3] = new Point(x: 0.20, y: 0, z: 0.20);
-                p[4] = new Point(x: 0.20, y: 1, z: 0);
-                p[5] = new Point(x: 0.20, y: 1, z: 0.20);
-                p[6] = new Point(x: 0, y: 1, z: 0.20);
-                p[7] = new Point(x: 0, y: 0, z: 0.20);
-                p[8] = new Point(x: 0, y: 0.50, z: 0);
-                p[9] = new Point(x: 0.20, y: 0.50, z: 0);
-                p[10] = new Point(x: 0, y: 0.50, z: 0.20);
-                p[11] = new Point(x: 0.20, y: 0.50, z: 0.20);
-                p[12] = new Point(x: 0.20, y: 0.25, z: 0.20);
-                p[13] = new Point(x: 0, y: 0.25, z: 0.20);
-                p[14] = new Point(x: 0, y: 0.25, z: 0);
-                p[15] = new Point(x: 0.20, y: 0.25, z: 0);
-                p[16] = new Point(x: 0.20, y: 0.75, z: 0.20);
-                p[17] = new Point(x: 0.20, y: 0.75, z: 0);
-                p[18] = new Point(x: 0, y: 0.75, z: 0);
-                p[19] = new Point(x: 0, y: 0.75, z: 0.20);
-
-                for (var i = 0; i < 20; i++)
-                {
-                    model.Nodes.Add(ns[i] = new Node(p[i]));
-                    ns[i].Label = "n" + i.ToString(CultureInfo.CurrentCulture);
-                    ns[i].Constraints = Constraints.RotationFixed;
-                }
-                
-                var mesh = new int[24][];
-
-                mesh[0] = new int[] { 0, 4, 16, 17 };
-                mesh[1] = new int[] { 8, 15, 12, 14 };
-                mesh[2] = new int[] { 8, 16, 17, 18 };
-                mesh[3] = new int[] { 10, 8, 11, 12 };
-                //mesh[4] = new int[] { 5, 19, 0, 16 };
-                mesh[5] = new int[] { 1, 15, 14, 12 };
-                mesh[6] = new int[] { 8, 10, 11, 16 };
-                mesh[7] = new int[] { 3, 13, 1, 7 };
-                mesh[8] = new int[] { 3, 13, 12, 1 };
-                mesh[9] = new int[] { 8, 12, 13, 14 };
-                mesh[10] = new int[] { 1, 15, 12, 2 };
-                mesh[11] = new int[] { 9, 8, 11, 16 };
-                mesh[12] = new int[] { 10, 8, 12, 13 };
-                mesh[13] = new int[] { 5, 0, 4, 16 };
-                //mesh[14] = new int[] { 5, 19, 6, 0 };
-                mesh[15] = new int[] { 8, 19, 16, 18 };
-                mesh[16] = new int[] { 8, 19, 10, 16 };
-                mesh[17] = new int[] { 0, 19, 18, 16 };
-                mesh[18] = new int[] { 1, 3, 2, 12 };
-                mesh[19] = new int[] { 8, 15, 9, 12 };
-                mesh[20] = new int[] { 13, 12, 1, 14 };
-                mesh[21] = new int[] { 8, 9, 11, 12 };
-                mesh[22] = new int[] { 9, 8, 16, 17 };
-                mesh[23] = new int[] { 16, 0, 17, 18 };
-
-
-                var mat = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
-
-                foreach (var elm in mesh)
-                {
-                    if (elm == null)
-                        continue;
-
-                    var felm = new TetrahedronElement();
-
-                    felm.Nodes[0] = ns[elm[0]];
-                    felm.Nodes[1] = ns[elm[1]];
-                    felm.Nodes[2] = ns[elm[2]];
-                    felm.Nodes[3] = ns[elm[3]];
-
-                    felm.Material = mat;
-
-                    model.Elements.Add(felm);
-                }
-
-                ns[1].Constraints = ns[2].Constraints = ns[3].Constraints = ns[7].Constraints = Constraints.Fixed;
-
-
-
-                var load = new BriefFiniteElementNet.NodalLoad();
-                var frc = new Force();
-                frc.Fz = 1000;// 1kN force in Z direction
-                load.Force = frc;
-
-                ns[5].Loads.Add(load);
-                ns[6].Loads.Add(load);
-
-                model.Solve_MPC();
-
-                var d5 = ns[5].GetNodalDisplacement();
-                var d6 = ns[6].GetNodalDisplacement();
-
-                Console.WriteLine("Nodal displacement in Z direction is {0} meters (thus {1} mm)", d5.DZ, d5.DZ * 1000);
-                Console.WriteLine("Nodal displacement in Z direction is {0} meters (thus {1} mm)", d6.DZ, d6.DZ * 1000);
-
-                var tetra = model.Elements[0] as TetrahedronElement;
-
-                var res = OpenseesValidator.OpenseesValidate(model, LoadCase.DefaultLoadCase, false);
-
-                throw new NotImplementedException();
+                errors.Add(Util.GetErrorPercent(bFEResults[item.Key], item.Value));
             }
+            var max = errors.Max();
+            var avg = errors.Average();
+
+            span.Add("paragraph").Text(string.Format("Validation output for nodal displacements:(36 nodes)")).AddClosedTag("br");
+
+            span.Add("paragraph").Text(string.Format("Maximum Error: {0:g2}%", max)).AddClosedTag("br");
+            span.Add("paragraph").Text(string.Format("Average Error: {0:g2}%", avg)).AddClosedTag("br");
+           
+            return val;
         }
     }
 }

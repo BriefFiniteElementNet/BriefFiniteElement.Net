@@ -36,13 +36,15 @@ namespace BriefFiniteElementNet.TestConsole
         {
             Console.Title = "BFE tests & temporary codes";
 
+            Validation.GithubIssues.Issue96.Run1();
+
             TestTet();
             //TestTriangle();
             //Validation.GithubIssues.Issue50.Run1();
             new Validation.Case_01.Validator().Validate();
             //TestGrid();
             return;
-            Validation.GithubIssues.Issue41.Run3();
+            
 
             //TestHingedInternalForce();
             //TestBinModel();
@@ -405,8 +407,8 @@ namespace BriefFiniteElementNet.TestConsole
 
             var a = crd.ToCCs();
 
-            var t = rref.CalculateDisplacementPermutation(a).Item1.ToDenseMatrix();
-      
+            var t = Matrix.OfMatrix(rref.CalculateDisplacementPermutation(a).Item1); // sparse -> dense
+
         }
 
 
@@ -1236,7 +1238,7 @@ namespace BriefFiniteElementNet.TestConsole
             crd.At(4, 4, -5);
 
             var sp = crd.ToCCs().Transpose();
-            var dns = sp.ToDenseMatrix();
+            var dns = Matrix.OfMatrix(sp); // sparse -> dense
 
         }
 
