@@ -129,6 +129,8 @@
     <None Include="Case_03\Abaqus output\Side_Center.rpt" />
     <None Include="Case_03\Abaqus output\Top_Center.rpt" />
     <None Include="Case_03\Job-10.inp" />
+    <None Include="Case_06\Abaqus data\Displacements" />
+    <None Include="Case_06\Abaqus data\Job-11.inp" />
     <None Include="OpenseesTclGenerator\Readme.md" />
     <None Include="packages.config" />
     <None Include="Readme.md" />
@@ -162,6 +164,11 @@
     <Content Include="Case_03\Abaqus output\U1.png" />
     <Content Include="Case_03\Abaqus output\U2.png" />
     <Content Include="Case_03\Abaqus output\U3.png" />
+    <Content Include="Case_06\Abaqus data\S_Mises.png" />
+    <Content Include="Case_06\Abaqus data\U_1.png" />
+    <Content Include="Case_06\Abaqus data\U_2.png" />
+    <Content Include="Case_06\Abaqus data\U_3.png" />
+    <Content Include="Case_06\Abaqus data\U_Mag.png" />
     <Content Include="Data\Brick8-1n\br1.jpg" />
     <Content Include="Data\Brick8-1n\br2.jpg" />
     <Content Include="Data\Brick8-1n\Elements-Nodes.txt" />
@@ -195,6 +202,7 @@
     <None Include="Case_01\Intro.md" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Data\Brick\" />
     <Folder Include="Data\FlatShell - quadrilateral\" />
     <Folder Include="Data\FlatShell - triangle\FlatPlate\" />
   </ItemGroup>

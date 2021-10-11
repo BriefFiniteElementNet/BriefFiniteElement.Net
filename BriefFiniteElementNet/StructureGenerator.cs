@@ -548,7 +548,6 @@ namespace BriefFiniteElementNet
             return buf;
         }
 
-
         public static void TagModel(Model mdl)
         {
             for (int i = 0; i < mdl.Elements.Count; i++)
