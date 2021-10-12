@@ -50,6 +50,8 @@ namespace BriefFiniteElementNet.Validation.Case_05
                 {
                     node.Loads.Add(new NodalLoad(new Force(f / cnt.Count(), 0, 0, 0, 0, 0)));
                     rigid.Nodes.Add(node);
+
+                    node.Constraints = Constraints.Released;
                 }
 
                 model.MpcElements.Add(rigid);

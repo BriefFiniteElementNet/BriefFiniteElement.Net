@@ -12,17 +12,66 @@ namespace BriefFiniteElementNet.ElementHelpers
     {
         public Element TargetElement { get; set; }
 
-        /// <inheritdoc/>
         public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
+        {
+            //based on this: 
+            //http://what-when-how.com/the-finite-element-method/fem-for-3d-solids-finite-element-method-part-1/
+
+
+            var tetra = targetElement as TetrahedronElement;
+
+            var X = (Matrix)targetElement.AllocateFromPool(4, 4);
+
+            {
+                var ps = tetra.Nodes.Select(i => i.Location).ToArray();
+
+                {//9.11
+                    X.SetRow(0, new double[] { 1, 1, 1, 1 });
+                    X.SetRow(1, new double[] { ps[0].X, ps[1].X, ps[2].X, ps[3].X });
+                    X.SetRow(2, new double[] { ps[0].Y, ps[1].Y, ps[2].Y, ps[3].Y });
+                    X.SetRow(3, new double[] { ps[0].Z, ps[1].Z, ps[2].Z, ps[3].Z });
+
+                }
+            }
+
+            var v = X.Determinant() / 6.0  ;//9.14
+
+            var buf = targetElement.AllocateFromPool(6, 12);
+
+            {
+                var Q = X.Inverse();//* J.Determinant();
+                Q.Scale(6 * v);//X^-1=1/6v*A >> A = X^-1*6v
+
+                double a1 = Q[0, 0]; double b1 = Q[0, 1]; double c1 = Q[0, 2]; double d1 = Q[0, 3];
+                double a2 = Q[1, 0]; double b2 = Q[1, 1]; double c2 = Q[1, 2]; double d2 = Q[1, 3];
+                double a3 = Q[2, 0]; double b3 = Q[2, 1]; double c3 = Q[2, 2]; double d3 = Q[2, 3];
+                double a4 = Q[3, 0]; double b4 = Q[3, 1]; double c4 = Q[3, 2]; double d4 = Q[3, 3];
+
+                buf.SetRow(0, new[] { b1, 00, 00, b2, 00, 00, b3, 00, 00, b4, 00, 00 });
+                buf.SetRow(1, new[] { 00, c1, 00, 00, c2, 00, 00, c3, 00, 00, c4, 00 });
+                buf.SetRow(2, new[] { 00, 00, d1, 00, 00, d2, 00, 00, d3, 00, 00, d4 });
+
+                buf.SetRow(3, new[] { c1, b1, 00, c2, b2, 00, c3, b3, 00, c4, b4, 00 });
+                buf.SetRow(4, new[] { 00, d1, c1, 00, d2, c2, 00, d3, c3, 00, d4, c4 });
+                buf.SetRow(5, new[] { d1, 00, b1, d2, 00, b2, d3, 00, b3, d4, 00, b4 });
+
+                buf.Scale(1 / (6.0 * v));
+            }
+
+            return buf.AsMatrix();
+        }
+
+        /// <inheritdoc/>
+        public Matrix GetBMatrixAt_1(Element targetElement, params double[] isoCoords)
         {
             //port from D3_TETRAH.m from fem_toolbox
 
             var tetra = targetElement as TetrahedronElement;
 
-            var J = targetElement.AllocateFromPool(4, 4);
+            var J = (Matrix)targetElement.AllocateFromPool(4, 4);
 
             {
-                var ps = tetra.Nodes.Select(i => i.Location).ToArray();
+                var ps = tetra.Nodes.Select(i => i.Location-tetra.Nodes[0].Location).ToArray();
 
                 {//p6
                     J.SetRow(0, new double[] { 1, 1, 1, 1 });
@@ -35,6 +84,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
 
             //J.TransposeInPlace();
+
+            //J = GetJMatrixAt(targetElement, isoCoords).AsMatrix();
 
             var v = 1 / 6.0 * J.Determinant();
 
@@ -49,12 +100,12 @@ namespace BriefFiniteElementNet.ElementHelpers
                 double a3 = Q[2, 1]; double b3 = Q[2, 2]; double c3 = Q[2, 3]; //double d3 = Q[2, 3];
                 double a4 = Q[3, 1]; double b4 = Q[3, 2]; double c4 = Q[3, 3]; //double d4 = Q[3, 3];
 
-                buf.SetRow(0, new[] { a1, 0, 0, a2, 0, 0, a3, 0, 0, a4, 0, 0 });
-                buf.SetRow(1, new[] { 0, b1, 0, 0, b2, 0, 0, b3, 0, 0, b4, 0, });
-                buf.SetRow(2, new[] { 0, 0, c1, 0, 0, c2, 0, 0, c3, 0, 0, c4, });
-                buf.SetRow(3, new[] { 0,c1, b1, 0, c2, b2, 0, c3, b3, 0, c4, b4  });
-                buf.SetRow(4, new[] {c1, 0, a1, c2, 0, a2, c3, 0, a3, c4, 0, a4});
-                buf.SetRow(5, new[] {b1, a1, 0, b2, a2, 0, b3, a3, 0, b4, a4, 0});
+                buf.SetRow(0, new[] { a1, 00, 00, a2, 00, 00, a3, 00, 00, a4, 00, 00 });
+                buf.SetRow(1, new[] { 00, b1, 00, 00, b2, 00, 00, b3, 00, 00, b4, 00 });
+                buf.SetRow(2, new[] { 00, 00, c1, 00, 00, c2, 00, 00, c3, 00, 00, c4 });
+                buf.SetRow(3, new[] { 00, c1, b1, 00, c2, b2, 00, c3, b3, 00, c4, b4 });
+                buf.SetRow(4, new[] { c1, 00, a1, c2, 00, a2, c3, 00, a3, c4, 00, a4 });
+                buf.SetRow(5, new[] { b1, a1, 00, b2, a2, 00, b3, a3, 00, b4, a4, 00 });
 
                 buf.Scale(1 / (6.0 * v));
             }
@@ -115,27 +166,68 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
         {
+            //new: based on this document https://www.sciencedirect.com/topics/engineering/tetrahedron-element
+            //old: based on this document https://www.efunda.com/formulae/solid_mechanics/mat_mechanics/hooke_plane_strain.cfm
             var tetra = targetElement as TetrahedronElement;
+            //Gets the constitutive matrix. Only for isotropic materials!!!
+
+            if (tetra.Material is Materials.UniformAnisotropicMaterial)
+                throw new NotImplementedException("UniformAnisotropicMaterial for Tetrahedron not implemented yet");
 
             var buf = targetElement.AllocateFromPool(6, 6);
 
-            //Gets the consitutive matrix. Only for isotropic materials!!!If orthotropic is needed: check http://web.mit.edu/16.20/homepage/3_Constitutive/Constitutive_files/module_3_with_solutions.pdf
             var props = tetra.Material.GetMaterialPropertiesAt(isoCoords);
 
             //material considered to be isotropic
             var miu = props.NuXy;
             var e = props.Ex;
 
-            // var D = targetElement.MatrixPool.Allocate(6, 6);
+            var coeff = e / ((1 + miu) * (1 - 2 * miu));
 
-            var s = (1 - miu);
-            // TODO: MAT - use matrix pool
-            var D = Matrix.OfRowMajor(6, 6, new double[] { 1, miu / s, miu / s, 0, 0, 0, miu / s, 1, miu / s, 0, 0, 0, miu / s, miu / s, 1, 0, 0, 0, 0, 0, 0,
-                (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s), 0, 0, 0, 0, 0, 0, (1 - 2 * miu) / (2 * s) });
+            buf.SetRow(0, 1-miu, miu, miu, 0, 0, 0);
+            buf.SetRow(1, miu, 1-miu, miu, 0, 0, 0);
+            buf.SetRow(2, miu, miu, 1-miu, 0, 0, 0);
 
-            D.Scale(e * (1 - miu) / ((1 + miu) * (1 - 2 * miu)));
+            buf.SetRow(3, 0, 0, 0, (1 - 2 * miu)/2, 0, 0);
+            buf.SetRow(4, 0, 0, 0, 0, (1 - 2 * miu)/2, 0);
+            buf.SetRow(5, 0, 0, 0, 0, 0, (1 - 2 * miu)/2);
 
-            return D.AsMatrix();
+            buf.Scale(coeff);
+            return buf.AsMatrix();
+        }
+
+        /// <inheritdoc/>
+        public Matrix GetDMatrixAt_old2(Element targetElement, params double[] isoCoords)
+        {
+            //not works right
+            //based on this document http://web.mit.edu/16.20/homepage/3_Constitutive/Constitutive_files/module_3_with_solutions.pdf
+            var tetra = targetElement as TetrahedronElement;
+            //Gets the constitutive matrix. Only for isotropic materials!!!
+
+            if (tetra.Material is Materials.UniformAnisotropicMaterial)
+                throw new NotImplementedException("UniformAnisotropicMaterial for Tetrahedron not implemented yet");
+
+            var buf = targetElement.AllocateFromPool(6, 6);
+
+            var props = tetra.Material.GetMaterialPropertiesAt(isoCoords);
+
+            //material considered to be isotropic
+            var miu = props.NuXy;
+            var e = props.Ex;
+
+            var lambda = e / ((1.0 + miu) * (1.0 - 2.0 * miu));//eq. 3.52
+            var u = e / (2 + 2 * miu);//eq. 3.52
+
+            //eq. 3.51
+            buf.SetRow(0, lambda + 2 * u, lambda, lambda, 0, 0, 0);
+            buf.SetRow(1, lambda, lambda + 2 * u, lambda, 0, 0, 0);
+            buf.SetRow(2, lambda, lambda, lambda + 2 * u, 0, 0, 0);
+
+            buf.SetRow(3, 0, 0, 0, u, 0, 0);
+            buf.SetRow(4, 0, 0, 0, 0, u, 0);
+            buf.SetRow(5, 0, 0, 0, 0, 0, u);
+
+            return buf.AsMatrix();
         }
 
         public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
@@ -203,13 +295,35 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix CalcLocalStiffnessMatrix(Element targetElement)
         {
+            /**/
+            var tetra = targetElement as TetrahedronElement;
+
+            var X = (Matrix)targetElement.AllocateFromPool(4, 4);
+
+            {
+                var ps = tetra.Nodes.Select(i => i.Location).ToArray();
+
+                {//9.11
+                    X.SetRow(0, new double[] { 1, 1, 1, 1 });
+                    X.SetRow(1, new double[] { ps[0].X, ps[1].X, ps[2].X, ps[3].X });
+                    X.SetRow(2, new double[] { ps[0].Y, ps[1].Y, ps[2].Y, ps[3].Y });
+                    X.SetRow(3, new double[] { ps[0].Z, ps[1].Z, ps[2].Z, ps[3].Z });
+
+                }
+            }
+            /**/
             //edit
             var b = GetBMatrixAt(targetElement,0, 0, 0);
             var d = GetDMatrixAt(targetElement, 0, 0, 0);
 
-            var k = b.Transpose() * d * b;
+            var k = (b.Transpose() * d) * b;
 
-            var v = GetJMatrixAt(targetElement, 0, 0, 0).Determinant() / 6.0;
+            var v = X.Determinant() / 6.0;
+
+
+            if (v < 0)
+                throw new Exception();
+
 
             k.Scale(v);
 

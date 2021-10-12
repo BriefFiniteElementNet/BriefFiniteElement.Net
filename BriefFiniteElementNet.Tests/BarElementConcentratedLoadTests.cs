@@ -147,23 +147,29 @@ namespace BriefFiniteElementNet.Tests
             //https://www.amesweb.info/Beam/Fixed-Fixed-Beam-Bending-Moment.aspx
 
             //                               ^
-            //     ^m                     m0 ^
-            //     |  /z                     |
-            //     | /                       |
+            //     ^y                     m0 ^
+            //     |                         |
+            //     |                         |
             //      ====================================== --> x
-            //
+            //    /z
 
             var w = 2.0;
-            var a = 0.0001;
+            
+            var l = 4.0;
+            var a = l/3;
 
             var nodes = new Node[2];
 
             nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
-            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+            nodes[1] = (new Node(l, 0, 0) { Label = "n1" });
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
 
-            var u1 = new Loads.ConcentratedLoad(new Force(0, 0, 0, 0, w, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
+            var isoLoc = elm.LocalCoordsToIsoCoords(a);
+
+            var u1 = new Loads.ConcentratedLoad(new Force(0, 0, 0, 0, w, 0), 
+                new IsoPoint(isoLoc[0]), 
+                CoordinationSystem.Global);
 
             var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
 
@@ -176,8 +182,8 @@ namespace BriefFiniteElementNet.Tests
             var ma = w / (L * L) * (L * L - 4 * a * L + 3 * a * a);
             var mb = w / (L * L) * (3 * a * a - 2 * a * L);
 
-            var ra = -6 * w * a / (L * L * L) * (L - a);//R1
-            var rb = 6 * w * a / (L * L * L) * (L - a);//R1
+            var ra = 6 * w * a / (L * L * L) * (L - a);//R1
+            var rb = -6 * w * a / (L * L * L) * (L - a);//R1
 
             /*
             var m1 = -w * L * L / 12;
@@ -204,6 +210,8 @@ namespace BriefFiniteElementNet.Tests
         [Test]
         public void LoadEquivalentNodalLoads_ConcentratedLod_eulerbernoullybeam_dirY_My_Start()
         {
+            //equivalent nodal load of a concentrated load applied at start point is same as load itself!
+
             var w = 2.0;
             var a = 0;
 
@@ -245,14 +253,18 @@ namespace BriefFiniteElementNet.Tests
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
 
-            var u1 = new Loads.ConcentratedLoad(new Force(0, 0, 0, 0, w, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
+            var f = new Force(0, 0, 0, 0, w, 0);
+
+            var loc = new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]);
+
+            var u1 = new Loads.ConcentratedLoad(f, loc, CoordinationSystem.Global);
 
             var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
 
             var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
             var d0 = Force.Zero;
-            var d1 = loads[1] - u1.Force;
+            var d1 = loads[1] - f;
 
 
             Assert.IsTrue(Math.Abs(d0.Forces.Length) < 1e-5, "invalid value");
@@ -885,8 +897,8 @@ namespace BriefFiniteElementNet.Tests
                     var ma = w / (L * L) * (L * L - 4 * a * L + 3 * a * a);
                     var mb = w / (L * L) * (3 * a * a - 2 * a * L);
 
-                    var ra = -6 * w * a / (L * L * L) * (L - a);//R1
-                    var rb = 6 * w * a / (L * L * L) * (L - a);//R1
+                    var ra = 6 * w * a / (L * L * L) * (L - a);//R1
+                    var rb = -6 * w * a / (L * L * L) * (L - a);//R1
 
 
                     mi = ma + ra * x - ((x > forceLocation) ? w : 0.0);

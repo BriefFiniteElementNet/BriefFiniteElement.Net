@@ -4,6 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet.Controls;
@@ -20,12 +21,12 @@ namespace BriefFiniteElementNet.Validation.Case_03
         {
             //build model from Abaqus input file
             string RunningPath = AppDomain.CurrentDomain.BaseDirectory;
-            string FileName = string.Format("{0}Resources\\Job-10.inp", Path.GetFullPath(Path.Combine(RunningPath, @"..\..\")));
+            string FileName = string.Format("Case_03\\Job-10.inp", Path.GetFullPath(Path.Combine(RunningPath, @"..\..\")));
             var abaqusModel = AbaqusInputFileReader.AbaqusInputToBFE(FileName);
             //comparison
             var val = new ValidationResult();
             var span = val.Span = new HtmlTag("span");
-            val.Title = "Clamped beam with tetrahedron elements";
+            val.Title = "Console beam with tetrahedron elements";
 
             {//report
 
@@ -65,48 +66,79 @@ namespace BriefFiniteElementNet.Validation.Case_03
             //ModelVisualizer.TestShowVisualizer(model);
             abaqusModel.Solve_MPC();
 
-            //List of result displacements from Abaqus
-            Dictionary<int, Displacement> abaqusResults = new Dictionary<int, Displacement>();
-            abaqusResults.Add(67, new Displacement(-795.863E-09, -288.503E-06, 131.482E-09));
-            abaqusResults.Add(169, new Displacement(-434.254E-09, -246.688E-06, -431.229E-09));
-            abaqusResults.Add(172, new Displacement(-549.082E-09, -204.906E-06, -491.084E-09));
-            abaqusResults.Add(175, new Displacement(-622.334E-09, -164.843E-06, -380.641E-09));
-            abaqusResults.Add(178, new Displacement(-602.786E-09, -127.49E-06, -333.347E-09));
-            abaqusResults.Add(181, new Displacement(-655.981E-09, -93.343E-06, -441.491E-09));
-            abaqusResults.Add(184, new Displacement(-899.89E-09, -63.0811E-06, -65.9539E-09));
-            abaqusResults.Add(187, new Displacement(-244.578E-09, -37.7898E-06, -108.451E-09));
-            abaqusResults.Add(190, new Displacement(85.1779E-09, -17.7659E-06, -252.828E-09));
-            abaqusResults.Add(193, new Displacement(-518.751E-09, -4.53149E-06, -291.286E-09));
-            abaqusResults.Add(49, new Displacement(-12.2049E-33, 108.099E-33, 147.403E-33));
+            var abqlocDic = new Dictionary<int, Point>();
+            var abqdispDic = new Dictionary<int, Displacement>();
+
+            {
+                string FileName2 = string.Format("Case_03\\output\\NodalDisp.txt", Path.GetFullPath(Path.Combine(RunningPath, @"..\..\")));
+
+                var lines = System.IO.File.ReadAllLines(FileName2);
+
+                foreach (var ln in lines)
+                {
+                    var patt1 = @"^(\s+)(\S+)(\s+)(\d+)(\s+)(\S+)(\s+)(\S+)(\s+)(\S+)(\s+)(\S+)(\s+)(\S+)(\s+)(\S+)$";
+
+                    var patt2 = @"^(\s+)(\S+)(\s+)(\d+)(\s+)(\S+)(\s+)(\S+)(\s+)(\S+)(\s+)(\S+)$";
+
+                    var mtch1 = Regex.Match(ln, patt1);
+
+                    var mtch2 = Regex.Match(ln, patt2);
+
+                    if (mtch1.Success)
+                    {
+                        var id = int.Parse(mtch1.Groups[4].Value);
+                        var x = double.Parse(mtch1.Groups[6].Value);
+                        var y = double.Parse(mtch1.Groups[8].Value);
+                        var z = double.Parse(mtch1.Groups[10].Value);
+
+                        var loc = new Point(x, y, z);
+
+                        abqlocDic[id] = loc;
+                    }
+
+                    if (mtch2.Success)
+                    {
+                        var id = int.Parse(mtch2.Groups[4].Value);
+                        var dx = double.Parse(mtch2.Groups[8].Value);
+                        var dy = double.Parse(mtch2.Groups[10].Value);
+                        var dz = double.Parse(mtch2.Groups[12].Value);
+
+                        var vec = new Vector(dx, dy, dz);
+
+                        abqdispDic[id] = new Displacement(vec, Vector.Zero);
+                    }
+                }
+            }
 
             //BFE results
-            Dictionary<int, Displacement> bFEResults = new Dictionary<int, Displacement>();
-            bFEResults.Add(67, abaqusModel.Nodes[67].GetNodalDisplacement());
-            bFEResults.Add(169, abaqusModel.Nodes[169].GetNodalDisplacement());
-            bFEResults.Add(172, abaqusModel.Nodes[172].GetNodalDisplacement());
-            bFEResults.Add(175, abaqusModel.Nodes[175].GetNodalDisplacement());
-            bFEResults.Add(178, abaqusModel.Nodes[178].GetNodalDisplacement());
-            bFEResults.Add(181, abaqusModel.Nodes[181].GetNodalDisplacement());
-            bFEResults.Add(184, abaqusModel.Nodes[184].GetNodalDisplacement());
-            bFEResults.Add(187, abaqusModel.Nodes[187].GetNodalDisplacement());
-            bFEResults.Add(190, abaqusModel.Nodes[190].GetNodalDisplacement());
-            bFEResults.Add(193, abaqusModel.Nodes[193].GetNodalDisplacement());
-            bFEResults.Add(49, abaqusModel.Nodes[49].GetNodalDisplacement());
+            var bFEResults = new Dictionary<int, Displacement>();
+            var errors = new List<double>();
 
-            //Errors
-            List<double> errors = new List<double>();
-            foreach (var item in abaqusResults)
+            for (var i = 0; i < abaqusModel.Nodes.Count; i++)
             {
-                errors.Add(Util.GetErrorPercent(bFEResults[item.Key], item.Value));
+                //bFEResults.Add(i, abaqusModel.Nodes[i].GetNodalDisplacement());
+                var bfed = abaqusModel.Nodes[i].GetNodalDisplacement();
+                var abqd = abqdispDic[i + 1];// abaqusModel.Nodes[i].GetNodalDisplacement();
+
+                var err = Util.GetAbsError(abqd.Displacements, bfed.Displacements);
+                errors.Add(err);
             }
+                
             var max = errors.Max();
             var avg = errors.Average();
 
-            span.Add("paragraph").Text(string.Format("Validation output for nodal displacements:(36 nodes)")).AddClosedTag("br");
+            var maxDisp = abqdispDic.Max(i => i.Value.Displacements.Length);
+            var avgDisp = abqdispDic.Average(i => i.Value.Displacements.Length);
 
-            span.Add("paragraph").Text(string.Format("Maximum Error: {0:g2}%", max)).AddClosedTag("br");
-            span.Add("paragraph").Text(string.Format("Average Error: {0:g2}%", avg)).AddClosedTag("br");
-           
+
+            span.Add("paragraph").Text(string.Format("Validation output for nodal displacements:")).AddClosedTag("br");
+
+            span.Add("paragraph").Text(string.Format("Maximum ABS Error: {0:g2}", max)).AddClosedTag("br");
+            span.Add("paragraph").Text(string.Format("Average AVG Error: {0:g2}", avg)).AddClosedTag("br");
+
+            span.Add("paragraph").Text(string.Format("Maximum displacement: {0:g2} m", maxDisp)).AddClosedTag("br");
+            span.Add("paragraph").Text(string.Format("Average displacement: {0:g2} m", avgDisp)).AddClosedTag("br");
+
             return val;
         }
     }

@@ -194,7 +194,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             {//retrieve or generate shapefunctions
                 var nsKey = "{4EA77E8B-F44A-4524-9F1F-848A807106E6}";//a random unified key for store truss shape functions for bar element
 
-                object obj;
+                //object obj;
 
                 targetElement.TryGetCache(nsKey, out ns);
 

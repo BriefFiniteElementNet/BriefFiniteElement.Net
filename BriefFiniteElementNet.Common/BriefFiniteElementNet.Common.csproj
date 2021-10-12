@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <PackageId>BriefFiniteElementNet.Common</PackageId>
@@ -10,7 +10,7 @@
     <PackageTags>finite elements static linear analysis</PackageTags>
     <Product>BriefFiniteElementNet.Common</Product>
     <Company />
-    <Copyright>copyleft © 2020 Ehsan Mohammad Ali ehsan.ma@gmx.com</Copyright>
+    <Copyright>copyleft © 2021 Ehsan Mohammad Ali ehsan.ma@gmx.com</Copyright>
     <Authors>Ehsan Mohammad Ali</Authors>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <FileVersion>2.0.0.0</FileVersion>

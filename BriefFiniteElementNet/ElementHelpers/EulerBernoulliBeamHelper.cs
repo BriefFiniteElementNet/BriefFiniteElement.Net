@@ -35,8 +35,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             {//loading condistions list pool from element's cache
                 var listPoolKey = "26167C0A-1E58-4FA5-950D-5464ED6F264A";
 
-                object obj;
-
                 if (targetElement != null)
                     targetElement.TryGetCache(listPoolKey, out CondsListPool);
 
@@ -1308,7 +1306,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 {
                     var uld = (load as PartialNonUniformLoad);
 
-                    magnitude = (xi => uld.GetMagnitudeAt(targetElement, new IsoPoint(xi)));
+                    magnitude = (xi => uld.SeverityFunction.Evaluate(xi));
                     localDir = uld.Direction;
 
                     if (uld.CoordinationSystem == CoordinationSystem.Global)
@@ -1450,7 +1448,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                         fi.Fz += localforce.Fz * ni;//concentrated force
                         fi.My += localforce.Fz * mi;//concentrated force
 
-                        fi.Fz += localforce.My * nip;//concentrated moment
+                        fi.Fz += localforce.My * -nip;//concentrated moment
                         fi.My += localforce.My * -mip;//concentrated moment
                     }
 

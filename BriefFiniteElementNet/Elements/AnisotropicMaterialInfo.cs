@@ -47,9 +47,9 @@ namespace BriefFiniteElementNet.Elements
 
             var flags = new bool[]
             {
-                Common.MathUtil.Equals(nu_yz / ey, nu_zy / ez, tol),
-                Common.MathUtil.Equals(nu_zx / ez, nu_xz / ex, tol),
-                Common.MathUtil.Equals(nu_yx / ey, nu_xy / ex, tol),
+                Common.MathUtil.FEquals(nu_yz / ey, nu_zy / ez, tol),
+                Common.MathUtil.FEquals(nu_zx / ez, nu_xz / ex, tol),
+                Common.MathUtil.FEquals(nu_yx / ey, nu_xy / ex, tol),
             };
 
             return flags.All(i => i);

@@ -38,7 +38,7 @@ namespace BriefFiniteElementNet.MpcElements
         /// Gets or sets the constraint.
         /// </summary>
         /// <value>
-        /// The constraint of virtual support
+        /// The constraint of virtual support, applies to all nodes
         /// </value>
         public Constraint Constraint
         {

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
-using CCS = CSparse.Double.SparseMatrix;
+using CSparse.Double;
 
-
-namespace BriefFiniteElementNet.MpcElements
+namespace BriefFiniteElementNet
 {
     [Serializable]
     [CLSCompliant(true)]
@@ -164,7 +162,7 @@ namespace BriefFiniteElementNet.MpcElements
             base.ReAssignNodeReferences(parent);
         }
 
-        public abstract CCS GetExtraEquations();
+        public abstract SparseMatrix GetExtraEquations();
 
         /// <summary>
         /// Gets the count of equations returned by <see cref="MpcElement.GetExtraEquations()"/>. (number of rows of it)

@@ -11,7 +11,7 @@ namespace BriefFiniteElementNet
     /// Represents a settlement of a node which have settlement amount and load case
     /// </summary>
     [Serializable]
-    public struct Settlement : IEquatable<Settlement>, ISerializable
+    public class  NodalSettlement : IEquatable<NodalSettlement>, ISerializable
     {
         private LoadCase loadCase;
         private Displacement displacement;
@@ -37,7 +37,7 @@ namespace BriefFiniteElementNet
 
         #region Equality Compairer
 
-        public bool Equals(Settlement other)
+        public bool Equals(NodalSettlement other)
         {
             if (!this.displacement.Equals(other.displacement))
                 return false;
@@ -51,7 +51,7 @@ namespace BriefFiniteElementNet
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            return obj is Settlement && Equals((Settlement)obj);
+            return obj is NodalSettlement && Equals((NodalSettlement)obj);
         }
 
         public override int GetHashCode()
@@ -64,12 +64,12 @@ namespace BriefFiniteElementNet
             }
         }
 
-        public static bool operator ==(Settlement left, Settlement right)
+        public static bool operator ==(NodalSettlement left, NodalSettlement right)
         {
             return left.Equals(right);
         }
 
-        public static bool operator !=(Settlement left, Settlement right)
+        public static bool operator !=(NodalSettlement left, NodalSettlement right)
         {
             return !left.Equals(right);
         }
@@ -95,7 +95,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="info">The information.</param>
         /// <param name="context">The context.</param>
-        private Settlement(SerializationInfo info, StreamingContext context)
+        private NodalSettlement(SerializationInfo info, StreamingContext context)
         {
             loadCase = (LoadCase)info.GetValue("loadCase", typeof(LoadCase));
             displacement = (Displacement)info.GetValue("displacement", typeof(Displacement));
@@ -109,7 +109,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         /// <param name="loadCase">load case of settlement.</param>
         /// <param name="displacement">amount of settlement.</param>
-        public Settlement(LoadCase loadCase, Displacement displacement)
+        public NodalSettlement(LoadCase loadCase, Displacement displacement)
         {
             this.loadCase = loadCase;
             this.displacement = displacement;
@@ -119,7 +119,7 @@ namespace BriefFiniteElementNet
         /// Initializes a new instance of the <see cref="LoadCase"/> struct.
         /// </summary>
         /// <param name="displacement">amount of settlement.</param>
-        public Settlement(Displacement displacement) : this(LoadCase.DefaultLoadCase, displacement)
+        public NodalSettlement(Displacement displacement) : this(LoadCase.DefaultLoadCase, displacement)
         {
         }
 

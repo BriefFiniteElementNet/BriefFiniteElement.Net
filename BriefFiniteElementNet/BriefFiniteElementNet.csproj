@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40;net45;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0</TargetFrameworks>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <PackageId>BriefFiniteElement.Net</PackageId>
@@ -9,11 +9,11 @@
     <Version>2.0.0-pre</Version>
     <PackageTags>finite elements static linear analysis</PackageTags>
     <Product>BriefFiniteElement.Net</Product>
-    <Company>Ehsan M.A.</Company>
-    <Copyright>Copyleft © 2020 Ehsan Mohammad Ali ehsan.ma@gmx.com</Copyright>
+    <Company>N.A.</Company>
+    <Copyright>Copyleft © 2021 Ehsan Mohammad Ali ehsan.ma@gmx.com</Copyright>
     <Authors>Ehsan M.A.</Authors>
-    <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <FileVersion>2.0.0.0</FileVersion>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
     <AssemblyName>BriefFiniteElementNet</AssemblyName>
     <RootNamespace>BriefFiniteElementNet</RootNamespace>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
@@ -49,12 +49,8 @@
     <None Include="ClassDiagram1.cd" />
     <None Include="Elements\BarElement.md" />
     <None Include="ElementHelpers\IElementHelper.md" />
-    <None Include="MpcElements\RigidElement.md" />
-    <None Include="MpcElements\TelepathyLink.md" />
-    <None Include="MpcElements\VirtualSupport.md" />
     <None Include="Mathh\IRrefFinder.md" />
     <None Include="TransformManagerL2G.md" />
-    <None Include="MpcElements\HingeLink.md" />
     <None Include="Integration\GaussianIntegrator.md" />
     <None Include="RigidElement.md" />
     <None Include="Todo.md" />
@@ -69,6 +65,10 @@
       <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
       <IncludeAssets>BriefFiniteElementNet.Common.dll</IncludeAssets>
     </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ClassDiagrams\NewFolder\" />
   </ItemGroup>
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">

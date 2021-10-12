@@ -56,6 +56,14 @@ namespace BriefFiniteElementNet
             }
         }
 
+        public double[] CoreArray
+        {
+            get
+            {
+                return base.Values;
+            }
+        }
+
         #endregion
 
         #region Static Methods
@@ -211,7 +219,23 @@ namespace BriefFiniteElementNet
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Matrix"/> class. Vector
+        /// </summary>
+        /// <param name="rows">The rows.</param>
+        /// <param name="columns">The columns.</param>
+        /// <param name="values">The values array (not cloned, ownership is taken).</param>
+        public Matrix(double[] values)
+            : base(values.Length, 1, values)
+        {
+        }
+
         #endregion
+
+        public Matrix Clone()
+        {
+            return new Matrix(this.rows, this.columns, (double[]) this.Values.Clone());
+        }
 
         public override string ToString()
         {
@@ -250,10 +274,162 @@ namespace BriefFiniteElementNet
             base(info.GetInt32("rows"), info.GetInt32("columns"), (double[])info.GetValue("Values",typeof(double[])))
         {
         }
+
+
+
+        /// <summary>
+        /// Substitutes the defined row with defined values.
+        /// </summary>
+        /// <param name="i">The i.</param>
+        /// <param name="values">The values.</param>
+        public static void InplacePlus(Matrix matrix, Matrix toAdd)
+        {
+
+            if (matrix.RowCount != matrix.ColumnCount)
+                throw new ArgumentOutOfRangeException("invalid");
+
+            for (var i = 0; i < matrix.RowCount; i++)
+            for (var j = 0; j < matrix.ColumnCount; j++)
+            {
+                matrix[i, j] = matrix[i, j] + toAdd[i, j];
+            }
+        }
+
+        public static Matrix DotDivide(Matrix mat1, Matrix mat2)
+        {
+            MatrixException.ThrowIf(mat1.RowCount != mat2.RowCount || mat1.ColumnCount != mat2.ColumnCount,
+                "Inconsistent matrix sizes");
+
+            var result = new Matrix(mat1.RowCount, mat1.ColumnCount);
+
+            for (int i = 0; i < result.Values.Length; i++)
+            {
+                result.Values[i] = mat1.Values[i] / mat2.Values[i];
+            }
+
+            return result;
+        }
     }
 
     public static class DenseMatrixExtensions
     {
+        
+
+        /// <summary>
+        /// Retrieves row vector at specfifed index and deletes it from MatrixOld.
+        /// </summary>
+        /// <param name="i">One-based index at which to extract.</param>
+        /// <returns>Row vector.</returns>
+        public static Matrix ExtractRow(this Matrix matx,int i)
+        {
+            if (i >= matx.RowCount || i < 0)
+                throw new ArgumentOutOfRangeException("i");
+
+            var mtx = new Matrix(1, matx.ColumnCount);
+
+
+            for (int j = 0; j < mtx.ColumnCount; j++)
+            {
+                mtx.CoreArray[j] = matx.CoreArray[j * mtx.RowCount + i];
+            }
+
+            return mtx;
+        }
+
+        public static Matrix RemoveRows(this Matrix mtx, params int[] rows)
+        {
+            var m2 = new Matrix(mtx.RowCount - rows.Length, mtx.ColumnCount);
+
+            var map = new int[mtx.RowCount - rows.Length];
+
+            var cnt = 0;
+
+            for (var i = 0; i < mtx.RowCount; i++)
+                if (!rows.Contains(i))
+                    map[cnt++] = i;
+
+            for (var i = 0; i < mtx.RowCount; i++)
+                for (var j = 0; j < mtx.ColumnCount; j++)
+                {
+                    m2[map[i], j] = mtx[i, j];
+                }
+
+            return m2;
+        }
+
+        /// <summary>
+        /// Retrieves column vector at specfifed index and deletes it from MatrixOld.
+        /// </summary>
+        /// <param name="j">One-based index at which to extract.</param>
+        /// <returns>Row vector.</returns>
+        public static Matrix ExtractColumn(this Matrix matx, int j)
+        {
+            if (j >= matx.ColumnCount || j < 0)
+                throw new ArgumentOutOfRangeException("j");
+
+            var mtx = new Matrix(matx.RowCount, 1);
+
+
+            for (int i = 0; i < matx.RowCount; i++)
+            {
+                mtx.CoreArray[i] = matx.CoreArray[j * matx.RowCount + i];
+            }
+
+            return mtx;
+        }
+
+        /// <summary>
+        /// Retrieves column vector at specfifed index and deletes it from MatrixOld.
+        /// </summary>
+        /// <param name="j">One-based index at which to extract.</param>
+        /// <returns>Row vector.</returns>
+        public static void MultiplyByConstant(this DenseColumnMajorStorage<double> matx, double coef)
+        {
+
+            for (int i = 0; i < matx.RowCount; i++)
+            {
+                matx.Values[i] *= coef;
+            }
+        }
+
+
+
+       
+
+        /// <summary>
+        /// Substitutes the defined row with defined values.
+        /// </summary>
+        /// <param name="i">The i.</param>
+        /// <param name="values">The values.</param>
+        public static void SetRow(this Matrix matrix,int i, params double[] values)
+        {
+
+            if (values.Count() != matrix.ColumnCount)
+                throw new ArgumentOutOfRangeException("values");
+
+            for (int j = 0; j < matrix.ColumnCount; j++)
+            {
+                matrix.CoreArray[j * matrix.RowCount + i] = values[j];
+            }
+        }
+
+        /// <summary>
+        /// Substitutes the defined column with defined values.
+        /// </summary>
+        /// <param name="j">The j.</param>
+        /// <param name="values">The values.</param>
+        public static void SetColumn(this Matrix matrix, int j, params double[] values)
+        {
+            if (values.Count() != matrix.RowCount)
+                throw new ArgumentOutOfRangeException("values");
+
+
+            for (int i = 0; i < matrix.RowCount; i++)
+            {
+                matrix.CoreArray[j * matrix.RowCount + i] = values[i];
+            }
+        }
+
         /// <summary>
         /// Helper method to cast the storage to a <see cref="Matrix"/> instance.
         /// </summary>
@@ -460,6 +636,11 @@ namespace BriefFiniteElementNet
             }
         }
 
+
+        public static void InPlaceTranspose(this DenseColumnMajorStorage<double> matrix)
+        {
+            TransposeInPlace(matrix);
+        }
         /// <summary>
         /// Transposes the matrix in place (matrix must be square).
         /// </summary>

@@ -58,7 +58,7 @@ namespace BriefFiniteElementNet
             //var v = this.EndNode.Location - this.StartNode.Location;
             //copied from MATLAB Codes for Finite Element Analysis, Solids and Structures by A.J.M.Ferreira p 107
 
-            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
+            if (MathUtil.FEquals(0, v.X) && MathUtil.FEquals(0, v.Y))
             {
                 if (v.Z > 0)
                 {
@@ -731,7 +731,7 @@ namespace BriefFiniteElementNet
             var s = webR.Equals(0.0) ? 0.0 : Math.Sin(teta);
             var c = webR.Equals(0.0) ? 1.0 : Math.Cos(teta);
 
-            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
+            if (MathUtil.FEquals(0, v.X) && MathUtil.FEquals(0, v.Y))
             {
                 if (v.Z > 0)
                 {
@@ -850,7 +850,7 @@ namespace BriefFiniteElementNet
 
             //var v = this.EndNode.Location - this.StartNode.Location;
 
-            if (MathUtil.Equals(0, v.X) && MathUtil.Equals(0, v.Y))
+            if (MathUtil.FEquals(0, v.X) && MathUtil.FEquals(0, v.Y))
             {
                 if (v.Z > 0)
                 {
@@ -1940,6 +1940,11 @@ namespace BriefFiniteElementNet
             {
                 vector[i] += addition[i] * coef;
             }
+        }
+
+        public static double LinearInterpolate(double v1, double v2, double v3, double v4, double x)
+        {
+            throw new NotImplementedException();
         }
     }
 }

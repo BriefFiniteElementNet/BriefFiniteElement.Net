@@ -199,7 +199,7 @@ namespace BriefFiniteElementNet.BenchmarkApplication
                 buf[2] = (Mo["TotalVisibleMemorySize"]).ToString();
                 Mo.Dispose();
             }
-            catch (Exception ex)
+            catch 
             {
                 for (int i = 0; i < buf.Length; i++)
                 {

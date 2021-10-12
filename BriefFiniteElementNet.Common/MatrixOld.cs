@@ -826,7 +826,7 @@ namespace BriefFiniteElementNet
 
             for (int i = 0; i < other.CoreArray.Length; i++)
             {
-                if (!MathUtil.Equals(this.CoreArray[i], other.CoreArray[i]))
+                if (!MathUtil.FEquals(this.CoreArray[i], other.CoreArray[i]))
                     return false;
             }
 
@@ -874,7 +874,7 @@ namespace BriefFiniteElementNet
         {
             for (int j = 1; j <= columnCount; j++)
                 for (int i = j + 1; i <= rowCount; i++)
-                    if (!MathUtil.Equals(this.CoreArray[j * this.RowCount + i], 0))
+                    if (!MathUtil.FEquals(this.CoreArray[j * this.RowCount + i], 0))
                         return false;
 
             return true;
@@ -888,7 +888,7 @@ namespace BriefFiniteElementNet
         {
             for (int i = 1; i <= rowCount; i++)
                 for (int j = i + 1; j <= columnCount; j++)
-                    if (!MathUtil.Equals(this.CoreArray[j * this.RowCount + i], 0))
+                    if (!MathUtil.FEquals(this.CoreArray[j * this.RowCount + i], 0))
                         return false;
 
             return true;

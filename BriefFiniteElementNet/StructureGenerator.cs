@@ -174,7 +174,7 @@ namespace BriefFiniteElementNet
 
 
                 if (c != Constraints.Released)
-                    nde.Settlements.Add(new Settlement(disp));
+                    nde.Settlements.Add(new NodalSettlement(disp));
             }
         }
 
@@ -460,13 +460,9 @@ namespace BriefFiniteElementNet
         }
 
 
-        public static Model Generate3DTetrahedralElementGrid(int m, int n, int l)
+        public static Model Generate3DTetrahedralElementGrid(int m, int n, int l,double dx=1,double dy=1,double dz=1)
         {
             var buf = new Model();
-
-            var dx = 1.0;
-            var dy = 1.0;
-            var dz = 1.0;
 
             var nodes = new Node[m, n, l];
 
@@ -491,17 +487,17 @@ namespace BriefFiniteElementNet
 
             var elm = new Func<Node, Node, Node, Node, TetrahedronElement>((n1, n2, n3, n4) =>
             {
-                var buff = new TetrahedronElement();
+                var el = new TetrahedronElement();
 
-                buff.Nodes[0] = n1;
-                buff.Nodes[1] = n2;
-                buff.Nodes[2] = n3;
-                buff.Nodes[3] = n4;
+                el.Nodes[0] = n1;
+                el.Nodes[1] = n2;
+                el.Nodes[2] = n3;
+                el.Nodes[3] = n4;
 
-                buff.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
+                el.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
 
-                buff.FixNodeOrder();
-                return buff;
+                el.FixNodeOrder();
+                return el;
             });
 
             var elms = new List<Element>();

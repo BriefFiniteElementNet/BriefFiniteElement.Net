@@ -13,7 +13,7 @@ namespace BriefFiniteElementNet.Common
     /// <remarks>
     /// This is disposable, when disposed will return core array into the pool
     /// </remarks>
-    public class DisposableDenseMatrix : CSparse.Double.DenseMatrix, IDisposable
+    public class DisposableDenseMatrix : Matrix, IDisposable
     {
 
         ArrayPool<double> Pool;

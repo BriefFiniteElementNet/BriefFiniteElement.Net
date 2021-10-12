@@ -4,7 +4,10 @@
 
 A Finite Element library for Static and Linear analysis of solids and structures 100% in C#.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/var3sx7nxa309tmo?svg=true)](https://ci.appveyor.com/project/epsi1on/brieffiniteelement-net)     [![Join the chat at https://gitter.im/BFE-Net/Lobby](https://badges.gitter.im/BFE-Net/Lobby.svg)](https://gitter.im/BFE-NET/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build status](https://ci.appveyor.com/api/projects/status/var3sx7nxa309tmo?svg=true)](https://ci.appveyor.com/project/epsi1on/brieffiniteelement-net)    
+[![Join the chat at https://gitter.im/BFE-Net/Lobby](https://badges.gitter.im/BFE-Net/Lobby.svg)](https://gitter.im/BFE-NET/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Nuget Package](https://img.shields.io/nuget/v/2)](https://www.nuget.org/packages/BriefFiniteElement.NET)     
+
+
 
 ## Notice
 We are fixing bugs before release Nuget Package, please let us know any bugs you found in this library in order to let us fix it. To report bugs please use [issues section](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues).
@@ -12,9 +15,25 @@ We are fixing bugs before release Nuget Package, please let us know any bugs you
 ## Introduction
 Brief Finite Element Dot NET (BFE.NET) is a .NET based software framework for static and linear Finite Element Analysis (FEA) of solids and structures. BFE.NET help you to simply take advantage of Object Oriented approach to analyze FE models. Advantage of such a framework is that user does have a very powerful control on what he is working with, and control is not limited to an UI with predefined controls.
 
+## Documentation
+
+Some documentation available from [bfenet.readthedocs.io](https://bfenet.readthedocs.io/en/latest/) and Wiki section.
+
+## Support and bug report
+
+You can use [issues section](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) for reporting bugs and requesting new features and asking for help on something, there is also a paid support for commercial developers available via email:
+
+Paid support (Commercial) via email : [bfePaid@gmx.com](mailto:BFE%20Paid%20Support%20<BFEPaid@gmx.com>?Subject=Support%20Request&Body=Please%20fill%20fair%20amount%20of%20description%20here)
+
+For a small payment (like half an USD or one or two) you'll get premium support about using this library for your specific purpose. Also if it is a bug with the library itself, then will fix it for free and return your payment.
+
+Please note that free support still exists and is maintained by the community available from [Issues](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) and [Discussion](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/discussions) sections.
+
+Many payment types are accepted, including PayPal and CryptoCurrencies and maybe other types, just message and we'll talk about it!
+
 ## Features
 
-- Various Elements (variable node beam, column, truss, shaft, 3 node plate bending and membrane, 4 node tetrahedral)
+- Various Elements (2 node beam, column, truss, shaft, 3 node plate bending and membrane, 4 node tetrahedral)
 
 _ Different loads types (Concentrated force or moment in `BarElement` body, uniform load on `BarElement`)
 
@@ -52,6 +71,7 @@ Since it is not possible to validate all features with a single software,
 
 for more information on validation please have a look at [Validation.md](Validation.md) file.
 
+
 ## Known Issues
 
 for more information on known issues please have a look at [know-issues.md](know-issues.md) file and [issues](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) section.
@@ -59,6 +79,3 @@ for more information on known issues please have a look at [know-issues.md](know
 ## Donation
 
 
-## Pros
-
-### Cons

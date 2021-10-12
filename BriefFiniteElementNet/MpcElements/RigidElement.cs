@@ -21,9 +21,6 @@ namespace BriefFiniteElementNet.MpcElements
 
         }
 
-        private RigidElement_MPC(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
 
         public override SparseMatrix GetExtraEquations()
         {
@@ -159,7 +156,8 @@ namespace BriefFiniteElementNet.MpcElements
         {
             //count is equal to slave DoFs
             //except one node, all others are slaves.
-            return (Nodes.Count - 1) * 6;
+            return (Nodes.Count - 1) *  6;
         }
+
     }
 }

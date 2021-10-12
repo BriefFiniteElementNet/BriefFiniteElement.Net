@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BriefFiniteElementNet.Custo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BriefFiniteElementNet.CustomElements.Test", "BriefFiniteElementNet.CustomElements.Test\BriefFiniteElementNet.CustomElements.Test.csproj", "{F4921DD6-AC8F-41F2-A7EF-C60BEFBBF271}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Legacy", "BriefFiniteElementNet.Legacy\BriefFiniteElementNet.Legacy.csproj", "{DDA94659-19D1-4540-A463-71468DBD633F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BriefFiniteElementNet.Legacy", "BriefFiniteElementNet.Legacy\BriefFiniteElementNet.Legacy.csproj", "{DDA94659-19D1-4540-A463-71468DBD633F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

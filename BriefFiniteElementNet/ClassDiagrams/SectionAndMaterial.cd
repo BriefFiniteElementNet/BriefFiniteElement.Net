@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="BriefFiniteElementNet.Sections.Base1DSection" Collapsed="true">
+    <Position X="8" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAIAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Sections\Base1DSection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BriefFiniteElementNet.Sections.Base2DSection" Collapsed="true">
+    <Position X="2.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Sections\Base2DSection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BriefFiniteElementNet.Sections.NonUniformGeometric1DSection" Collapsed="true">
+    <Position X="3" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAABCAIAAEgAQAAAAgAAAAAAAAAAgAAAAIAAA=</HashCode>
+      <FileName>Sections\NonUniformGeometric1DSection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.Sections.NonUniformParametric1DSection" Collapsed="true">
+    <Position X="12.25" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAACAIAAEgAAAAAAgAAAAAAAAAAgAAAAIAAA=</HashCode>
+      <FileName>Sections\NonUniformParametric1DSection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.Sections.UniformGeometric1DSection" Collapsed="true">
+    <Position X="6.25" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAABAAIAAAAEQAAAAgAAAAAAAAAABCAAAAgAA=</HashCode>
+      <FileName>Sections\UniformGeometric1DSection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.Sections.UniformParametric1DSection" Collapsed="true">
+    <Position X="9.25" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAYQEAAABAAAAgAAAgAAAAAAAAoIABAAA=</HashCode>
+      <FileName>Sections\UniformParametric1DSection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.Sections.UniformParametric2DSection" Collapsed="true">
+    <Position X="2.5" Y="9.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAgAgAAAAAAAAAAAAAEAAg=</HashCode>
+      <FileName>Sections\UniformParametric2DSection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.Materials.BaseMaterial" Collapsed="true">
+    <Position X="4.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAIAAAgAAAAAAgAAAAAIAAAAAAAAAAAiA=</HashCode>
+      <FileName>Materials\BaseMaterial.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BriefFiniteElementNet.Materials.UniformAnisotropicMaterial" Collapsed="true">
+    <Position X="2.5" Y="6.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAGCgAQBAABQIJABAAAAAAAgAAAAAADhAAAACQAAAAA=</HashCode>
+      <FileName>Materials\UniformAnisotropicMaterial.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.Materials.UniformIsotropicMaterial" Collapsed="true">
+    <Position X="5.5" Y="6.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AACAIAAAAAAAIACAgAJAAAQgAAAAAIAAwAAAAAAAAiA=</HashCode>
+      <FileName>Materials\UniformIsotropicMaterial.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -3,11 +3,52 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.Loads;
 
 namespace BriefFiniteElementNet.Validation
 {
     public static class Util
     {
+        /// <summary>
+        /// Converts one area load applied on a BarElement with a series of equivalent ConcentratedLoads
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="load">The load.</param>
+        /// <param name="cse">The cse.</param>
+        public static void AreaLoad2ConcentratedLoads(BarElement element, PartialNonUniformLoad load, LoadCase cse)
+        {
+            var n = 1000;
+
+            var d = element.EndNode.Location - element.StartNode.Location;
+
+            var l = d.Length;
+
+            for (var i = 0; i < n; i++)
+            {
+                var dx = l / n;
+
+                var x = i * dx + 0.5 * dx;
+
+                var cn = new ConcentratedLoad();
+
+                var xi = (2 * x - l) / l;
+
+                cn.ForceIsoLocation = new IsoPoint(xi, 0, 0);
+
+                var mag = load.GetMagnitudeAt(element, cn.ForceIsoLocation);
+
+                var f = load.Direction * mag * dx;
+
+                cn.Force = new Force(f, Vector.Zero);
+                cn.Case = cse;
+
+                cn.CoordinationSystem = load.CoordinationSystem;
+
+                if (mag != 0.0)
+                    element.Loads.Add(cn);
+            }
+        }
 
         public static string HtmlEncode(this string text)
         {
@@ -34,6 +75,13 @@ namespace BriefFiniteElementNet.Validation
             return 100 * buf;
         }
 
+        public static double GetAbsError(double test, double accurate)
+        {
+            var buf = Math.Abs(test - accurate);
+
+            return buf;
+        }
+
         public static double GetErrorPercent(Vector test, Vector accurate)
         {
             if (test == accurate)
@@ -41,6 +89,12 @@ namespace BriefFiniteElementNet.Validation
 
             return 100 * Math.Abs((test - accurate).Length) / Math.Max(test.Length, accurate.Length);
         }
+
+        public static double GetAbsError(Vector test, Vector accurate)
+        {
+            return (test - accurate).Length;
+        }
+
 
         public static double GetErrorPercent(Displacement test, Displacement accurate)
         {

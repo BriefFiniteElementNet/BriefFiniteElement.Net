@@ -3,7 +3,7 @@
   <Class Name="BriefFiniteElementNet.StaticLinearAnalysisResult" Collapsed="true">
     <Position X="18.75" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AgAECgkCAIQAAAhgAAAAQCCIAAQwABABBBAAgiBIJUg=</HashCode>
+      <HashCode>AgAECgkAAIQAAAhgAAAAQCCIAAQwABABBBAAgiBIJUg=</HashCode>
       <FileName>StaticLinearAnalysisResult.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -27,7 +27,7 @@
     <Position X="3" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AACAAAAAAAAAAAAAAAAAAAAgAAAAgAAAAAAAAQAAAAA=</HashCode>
-      <FileName>Load.cs</FileName>
+      <FileName>ElementalLoad.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -63,7 +63,7 @@
   <Class Name="BriefFiniteElementNet.Model" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="18.75" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CCAgyIAAAEAAABAAAIgSAAAoAQCCBnEAAgMAAAAgIAA=</HashCode>
+      <HashCode>CCAgyIAAQEAAABAAAIgSAAAoAQCCBnEAAgMAAAAgIAA=</HashCode>
       <FileName>Model.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -71,16 +71,16 @@
   <Class Name="BriefFiniteElementNet.StructurePart" Collapsed="true">
     <Position X="7.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAACACAAEAAwABBAAAAAQAAiAADAAAAAAAAAgAAAAgA=</HashCode>
+      <HashCode>AAACICAAEAAwABBAAAAAQAAiAADAAAAAAAAAgAAAAiA=</HashCode>
       <FileName>StructurePart.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="BriefFiniteElementNet.BriefFiniteElementNetException" Collapsed="true">
+  <Class Name="BriefFiniteElementNet.MpcElementCollection" Collapsed="true">
     <Position X="5.5" Y="7.5" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAEAAAAAAAAAA=</HashCode>
-      <FileName>BriefFiniteElementNetException.cs</FileName>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>MpcElementCollection.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.InvalidLabelException" Collapsed="true">
@@ -94,7 +94,7 @@
     <Position X="18.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAEAAA=</HashCode>
-      <FileName>ExceptionHelper.cs</FileName>
+      <FileName>Utils\ExceptionHelper.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.PolygonYz" Collapsed="true" BaseTypeListCollapsed="true">
@@ -108,7 +108,7 @@
   <Class Name="BriefFiniteElementNet.SolverConfiguration" Collapsed="true">
     <Position X="17" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAABAAACAAAAAAAAAAAAAAAAAAIAAAAAQAAAAEAAAQA=</HashCode>
+      <HashCode>AAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAEAAAQA=</HashCode>
       <FileName>SolverConfiguration.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -122,7 +122,7 @@
   <Class Name="BriefFiniteElementNet.Loads.PartialNonUniformLoad" Collapsed="true">
     <Position X="2.75" Y="5.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>AQAAAQAAABAAAAAAACAAEAAoAAAAhAQAAAAIAAQBAgA=</HashCode>
+      <HashCode>ASIAAQAAgBAAAAAAACAAEAAgAAAAgAQAABAIAAQAAAA=</HashCode>
       <FileName>Loads\PartialNonUniformLoad.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -136,19 +136,19 @@
   <Class Name="BriefFiniteElementNet.Elements.BarElement" Collapsed="true">
     <Position X="10.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AUTEABIFkQAAECgECBIgAEghAAAEgIEACABCAIAJgAA=</HashCode>
+      <HashCode>AUTFABIFkQAAECgECBIgAEghAAAEgIEACABCAIAJgAA=</HashCode>
       <FileName>Elements\BarElement.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.Elements.TriangleElement" Collapsed="true">
     <Position X="12.25" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEAEAAAEEAAAECAECCAAAEAgAAAAAIAAGAACAIABgAA=</HashCode>
+      <HashCode>AEAFAAAGEAAAECAkCCAAAEAgAAAAAIAAGAACAIABgAA=</HashCode>
       <FileName>Elements\TriangleElement.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.Elements.Tetrahedral" Collapsed="true">
-    <Position X="14" Y="3.25" Width="1.5" />
+    <Position X="14" Y="3.25" Width="3.25" />
     <TypeIdentifier>
       <HashCode>IAAABAAEEABAECgCAAAAiEAgAAIAAACkKQACAgGAgAA=</HashCode>
       <FileName>Elements\Tetrahedral.cs</FileName>
@@ -178,7 +178,7 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BriefFiniteElementNet.MpcElements.MpcElement" Collapsed="true">
-    <Position X="7.75" Y="1.75" Width="1.5" />
+    <Position X="7.75" Y="1.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAkABAAEAAAAAAAAAAACAAgEACAAAAABBEQiAAAAAQ=</HashCode>
       <FileName>MpcElements\MpcElement.cs</FileName>
@@ -238,7 +238,7 @@
   <Class Name="BriefFiniteElementNet.Element" Collapsed="true">
     <Position X="10.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACBgBAAEEQQAECAAAAgAAEAgAQCCAEIAAAtCAAAAoAQ=</HashCode>
+      <HashCode>ACBgAAAEEQAAECAAAAgAAEAgAQCCAEIAAAtCAAABoAQ=</HashCode>
       <FileName>Element.cs</FileName>
     </TypeIdentifier>
   </Class>

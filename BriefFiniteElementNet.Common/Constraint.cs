@@ -410,6 +410,34 @@ namespace BriefFiniteElementNet
             return new string(buf);
         }
 
+
+        public DofConstraint GetComponent(DoF dof)
+        {
+            switch (dof)
+            {
+                case DoF.Dx:
+                    return DX;
+                    break;
+                case DoF.Dy:
+                    return DY;
+                    break;
+                case DoF.Dz:
+                    return DZ;
+                    break;
+                case DoF.Rx:
+                    return RX;
+                    break;
+                case DoF.Ry:
+                    return RX;
+                    break;
+                case DoF.Rz:
+                    return RX;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(dof), dof, null);
+            }
+        }
+
         public string ToString_01()
         {
             var arr = new DofConstraint[] { dx, dy, dz, rx, ry, rz };

@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="BriefFiniteElementNet.Node" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AKAAEAAAAAAAAEAACAIiAAgiAAAAAFAAAAFRAAAAAAA=</HashCode>
+      <FileName>Node.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.MpcElement" Collapsed="true">
+    <Position X="13" Y="2" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAkABAAEAAAAAAAAAAACAAgEACAAAAABBEQiAAAAAQ=</HashCode>
+      <FileName>MpcElement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.Element" Collapsed="true">
+    <Position X="5" Y="2" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>ACBgAAAEEQAAECAAAAgAAEAgAQCCAEIAAAtCAAABoAQ=</HashCode>
+      <FileName>Element.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.StructurePart" Collapsed="true">
+    <Position X="8.5" Y="0.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAACICAAEAAwABBAAAAAQAAiAADAAAAAAAAAgAAAAiA=</HashCode>
+      <FileName>StructurePart.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="BriefFiniteElementNet.Elements.BarElement" Collapsed="true">
+    <Position X="2.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AUTFABIFkQAAECgECBIgAEghAAAEgIEACABCAIAJgAA=</HashCode>
+      <FileName>Elements\BarElement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.Elements.TetrahedronElement" Collapsed="true">
+    <Position X="7.25" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AEAAAIAEEAAAECAEAAAAAEAgAAAAAAAACAACAAAEgAA=</HashCode>
+      <FileName>Elements\TetrahedronElement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.Elements.TriangleElement" Collapsed="true">
+    <Position X="5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAFAAAGEAAAECAkCCAAAEAgAAAAAIAAGAACAIABgAA=</HashCode>
+      <FileName>Elements\TriangleElement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.MpcElements.HingeLink" Collapsed="true">
+    <Position X="12" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAgAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>MpcElements\HingeLink.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.MpcElements.RigidElement_MPC" Collapsed="true">
+    <Position X="16.5" Y="3.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>MpcElements\RigidElement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.MpcElements.TelepathyLink" Collapsed="true">
+    <Position X="14.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAEAAAAAAAAAAADgAgAAAAAAAAABAIAAAAAAA=</HashCode>
+      <FileName>MpcElements\TelepathyLink.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="BriefFiniteElementNet.MpcElements.VirtualConstraint" Collapsed="true">
+    <Position X="9.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAEAAAAAAAAAAAAAAwAAAAAAAAADAAAAAAAAA=</HashCode>
+      <FileName>MpcElements\VirtualSupport.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
