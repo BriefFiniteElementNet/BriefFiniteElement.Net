@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
@@ -34,6 +35,8 @@ namespace BriefFiniteElementNet.Validation
             {
                 string[] split;
                 selectedInputVariable selectedVar = selectedInputVariable.Nodes;
+                string selectedVarInfo = "";//selectedVar + info
+
                 string input = sr.ReadLine();
                 while (input != null)
                 {
@@ -47,6 +50,7 @@ namespace BriefFiniteElementNet.Validation
                                 break;
                             case "*Element":
                                 selectedVar = selectedInputVariable.Elements;
+                                selectedVarInfo = input;
                                 break;
                             case "*Nset":
                                 selectedVar = selectedInputVariable.NodeSet;
@@ -84,12 +88,17 @@ namespace BriefFiniteElementNet.Validation
                                 }
                             case selectedInputVariable.Elements:
                                 {
-                                    element = ReadTetraElement(input, delimiter, buf.Nodes);
-                                    if (element != null)
+                                    var elm = ReadElement(input, delimiter, buf.Nodes, selectedVarInfo);
+
+                                    //if (elm is TetrahedronElement tet)
+                                    //    tet.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.25);
+
+                                    //element = ReadTetraElement(input, delimiter, buf.Nodes);
+                                        if (elm != null)
                                     {
-                                        element.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.25);
-                                        element.FixNodeOrder();
-                                        buf.Elements.Add(element);
+                                        //elm.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.25);
+                                        //element.FixNodeOrder();
+                                        buf.Elements.Add(elm);
                                     }
                                     break;
                                 }
@@ -192,6 +201,70 @@ namespace BriefFiniteElementNet.Validation
             }
             return node;
         }
+
+
+        /// <summary>
+        /// Reads an element from an Abaqus input file
+        /// </summary>
+        /// <param name="elementline">A line with the element props</param>
+        /// <param name="delimiter">The separator char</param>
+        /// <param name="nodes">A list of nodes - starts at 0 -> = node-1</param>
+        /// <returns>An element</returns>
+        private static HexahedralElement ReadHexaElement(string elementline, char delimiter, NodeCollection nodes)
+        {
+            var elm = new HexahedralElement();
+            string[] split;
+            int elementNr;//, nodeNr1, nodeNr2, nodeNr3, nodeNr4;
+            try
+            {
+                var spl = elementline.Split(delimiter).Select(int.Parse).ToArray();
+
+                var elmNum = spl[0];//element number
+
+                var nodeIdxs = spl.Skip(1).ToArray();//index of connected nodes
+
+
+                //subtract 1. The nodes are numbered from 1-> end and are stored as 0-> end-1
+
+                for (var i = 0; i < 8; i++)
+                {
+                    elm.Nodes[i] = nodes[nodeIdxs[i ] - 1];
+                }
+                
+                elm.label = elmNum.ToString();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong with reading the nodes! Error with line: " + elementline, ex);
+            }
+
+            return elm;
+        }
+
+
+        private static Element ReadElement(string elementline, char delimiter, NodeCollection nodes,string elementInfo)
+        {
+            var patt = @"^\*Element, type=(\S+)$";
+
+            var mtch = Regex.Match(elementInfo, patt);
+
+            if (!mtch.Success)
+                throw new Exception();
+
+            var elmType = mtch.Groups[1].Value;
+
+            switch(elmType)
+            {
+                case "C3D8":
+                    return ReadHexaElement(elementline, delimiter, nodes);
+                case "C3D4":
+                    return ReadTetraElement(elementline, delimiter, nodes);
+
+                default:
+                    throw new NotImplementedException("undefined ABAQUS element: " + elmType);
+            }
+        }
+
         /// <summary>
         /// Reads an element from an Abaqus input file
         /// </summary>
@@ -201,7 +274,7 @@ namespace BriefFiniteElementNet.Validation
         /// <returns>An element</returns>
         private static TetrahedronElement ReadTetraElement(string elementline, char delimiter, NodeCollection nodes)
         {
-            TetrahedronElement elm = new TetrahedronElement();
+            var elm = new TetrahedronElement();
             string[] split;
             int elementNr;//, nodeNr1, nodeNr2, nodeNr3, nodeNr4;
             try

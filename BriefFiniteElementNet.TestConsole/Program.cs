@@ -36,7 +36,7 @@ namespace BriefFiniteElementNet.TestConsole
         {
             Console.Title = "BFE tests & temporary codes";
 
-            new BriefFiniteElementNet.Validation.Case_03.Validator().Validate();
+            new BriefFiniteElementNet.Validation.Case_06.Validator().Validate();
 
             //Validation.GithubIssues.Issue100.Run();
 

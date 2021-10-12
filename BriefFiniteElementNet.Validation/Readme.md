@@ -15,3 +15,4 @@ Images are in same folder for each case
 Codes are in same folder for each case, 
 
 `ValidationResult` and `IValidationCase` is used for validation cases. ``ValidationResult` is a sort of report in HTML.
+

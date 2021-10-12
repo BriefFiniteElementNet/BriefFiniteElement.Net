@@ -65,6 +65,7 @@
     <Compile Include="Case_03\Validator.cs" />
     <Compile Include="Case_04\Validator.cs" />
     <Compile Include="Case_05\Validator.cs" />
+    <Compile Include="Case_06\Validator.cs" />
     <Compile Include="EqualDofValidator.cs" />
     <Compile Include="GithubIssues\Issue100.cs" />
     <Compile Include="GithubIssues\Issue101.cs" />
@@ -129,21 +130,19 @@
     <None Include="Case_02\Intro.md" />
     <None Include="Case_02\Abaqus comparison\Model1_BFE_Abaqus.csv" />
     <None Include="Case_01\stress &amp; displacement.rpt" />
-
-    <None Include="Case_03\Abaqus output\Bottom_Center.rpt" />
-    <None Include="Case_03\Abaqus output\Side_Center.rpt" />
-    <None Include="Case_03\Abaqus output\Top_Center.rpt" />
     <None Include="Case_03\Job-10.inp" />
-    <None Include="Case_06\Abaqus data\Displacements" />
-    <None Include="Case_06\Abaqus data\Job-11.inp" />
-
+    <Content Include="Case_06\Displacements">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Case_06\Job-11.inp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="Case_03\output\Bottom_Center.rpt" />
     <None Include="Case_03\output\Side_Center.rpt" />
     <None Include="Case_03\output\Top_Center.rpt" />
     <None Include="Case_03\Job-10.inp">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-
     <None Include="OpenseesTclGenerator\Readme.md" />
     <None Include="packages.config" />
     <None Include="Readme.md" />
@@ -172,18 +171,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-
-    <Content Include="Case_03\Abaqus output\Paths.png" />
-    <Content Include="Case_03\Abaqus output\U.png" />
-    <Content Include="Case_03\Abaqus output\U1.png" />
-    <Content Include="Case_03\Abaqus output\U2.png" />
-    <Content Include="Case_03\Abaqus output\U3.png" />
     <Content Include="Case_06\Abaqus data\S_Mises.png" />
     <Content Include="Case_06\Abaqus data\U_1.png" />
     <Content Include="Case_06\Abaqus data\U_2.png" />
     <Content Include="Case_06\Abaqus data\U_3.png" />
     <Content Include="Case_06\Abaqus data\U_Mag.png" />
-
     <Content Include="Case_03\output\NodalDisp.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -192,7 +184,6 @@
     <Content Include="Case_03\output\U1.png" />
     <Content Include="Case_03\output\U2.png" />
     <Content Include="Case_03\output\U3.png" />
-
     <Content Include="Data\Brick8-1n\br1.jpg" />
     <Content Include="Data\Brick8-1n\br2.jpg" />
     <Content Include="Data\Brick8-1n\Elements-Nodes.txt" />

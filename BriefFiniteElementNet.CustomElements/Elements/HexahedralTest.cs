@@ -13,7 +13,7 @@ namespace BriefFiniteElementNet.Elements
     /// Represents a hexahedral with isotropic material.
     /// </summary>
     [Serializable]
-    [Obsolete("not fully implemented yet")]
+    [Obsolete("really obsolete")]
     public class HexahedralElement : Element
     {
         public HexahedralElement() : base(8)
@@ -407,13 +407,13 @@ namespace BriefFiniteElementNet.Elements
 
             var buf = new Matrix(3, 3);
 
-            buf.FillRow(0, (J11 * x1 + J12 * x2 + J13 * x3 + J14 * x4 + J15 * x5 + J16 * x6 + J17 * x7 + J18 * x8),
+            buf.SetRow(0, (J11 * x1 + J12 * x2 + J13 * x3 + J14 * x4 + J15 * x5 + J16 * x6 + J17 * x7 + J18 * x8),
                            (J11 * y1 + J12 * y2 + J13 * y3 + J14 * y4 + J15 * y5 + J16 * y6 + J17 * y7 + J18 * y8),
                            (J11 * z1 + J12 * z2 + J13 * z3 + J14 * z4 + J15 * z5 + J16 * z6 + J17 * z7 + J18 * z8));
-            buf.FillRow(1, (J21 * x1 + J22 * x2 + J23 * x3 + J24 * x4 + J25 * x5 + J26 * x6 + J27 * x7 + J28 * x8),
+            buf.SetRow(1, (J21 * x1 + J22 * x2 + J23 * x3 + J24 * x4 + J25 * x5 + J26 * x6 + J27 * x7 + J28 * x8),
                            (J21 * y1 + J22 * y2 + J23 * y3 + J24 * y4 + J25 * y5 + J26 * y6 + J27 * y7 + J28 * y8),
                            (J21 * z1 + J22 * z2 + J23 * z3 + J24 * z4 + J25 * z5 + J26 * z6 + J27 * z7 + J28 * z8));
-            buf.FillRow(2, (J31 * x1 + J32 * x2 + J33 * x3 + J34 * x4 + J35 * x5 + J36 * x6 + J37 * x7 + J38 * x8),
+            buf.SetRow(2, (J31 * x1 + J32 * x2 + J33 * x3 + J34 * x4 + J35 * x5 + J36 * x6 + J37 * x7 + J38 * x8),
                            (J31 * y1 + J32 * y2 + J33 * y3 + J34 * y4 + J35 * y5 + J36 * y6 + J37 * y7 + J38 * y8),
                            (J31 * z1 + J32 * z2 + J33 * z3 + J34 * z4 + J35 * z5 + J36 * z6 + J37 * z7 + J38 * z8));
             //buf.FillRow(1, J21, J22, J23, J24, J25, J26, J27, J28);
@@ -566,6 +566,7 @@ namespace BriefFiniteElementNet.Elements
         }
         public Force[] GetGlobalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
         {
+            /*
             if (load is UniformBodyLoad3D)
             {
                 //p.263 of Structural Analysis with the Finite Element Method Linear Statics, ISBN: 978-1-4020-8733-2
@@ -584,7 +585,7 @@ namespace BriefFiniteElementNet.Elements
                 return new[] { f, f, f, f, f, f, f, f };
             }
 
-
+            */
             throw new NotImplementedException();
         }
 

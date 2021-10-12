@@ -1,4 +1,10 @@
-﻿using System;
+﻿using BriefFiniteElementNet.Elements;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -12,31 +18,35 @@ using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Validation.Properties;
 using HtmlTags;
 
-namespace BriefFiniteElementNet.Validation.Case_03
+namespace BriefFiniteElementNet.Validation.Case_06
 {
-    [ValidationCase("Console beam with tetrahedron", typeof(TetrahedronElement))]
+    //[ValidationCase("Console beam with hexahedral (Brick)", typeof(HexahedralElementTest))]
     public class Validator : IValidationCase
     {
         public ValidationResult Validate()
         {
             //build model from Abaqus input file
             string RunningPath = AppDomain.CurrentDomain.BaseDirectory;
-            string FileName = string.Format("Case_03\\Job-10.inp", Path.GetFullPath(Path.Combine(RunningPath, @"..\..\")));
+            string FileName = string.Format("Case_06\\Job-11.inp", Path.GetFullPath(Path.Combine(RunningPath, @"..\..\")));
             var abaqusModel = AbaqusInputFileReader.AbaqusInputToBFE(FileName);
 
-            foreach (var elm in abaqusModel.Elements)
+            foreach(var elm in abaqusModel.Elements)
             {
-                if (elm is TetrahedronElement hx)
+                if (elm is HexahedralElementTest hx)
                 {
                     hx.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.25);
                 }
 
+                if (elm is HexahedralElement hx2)
+                {
+                    hx2.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.25);
+                }
             }
 
             //comparison
             var val = new ValidationResult();
             var span = val.Span = new HtmlTag("span");
-            val.Title = "Console beam with tetrahedron elements";
+            val.Title = "Console beam with hexahedral (Brick) elements";
 
             {//report
 
@@ -44,7 +54,7 @@ namespace BriefFiniteElementNet.Validation.Case_03
                 span.Add("h3").Text("Validate with");
                 span.Add("paragraph").Text("ABAQUS from Abaqus inc. available from www.simulia.com");
                 span.Add("h3").Text("Validate objective");
-                span.Add("paragraph").Text("compare nodal displacement for a model consist of tetrahedron elements");
+                span.Add("paragraph").Text("compare nodal displacement for a model consist of hexahedral elements");
 
                 span.Add("h3").Text("Model Definition");
                 /*
@@ -65,7 +75,7 @@ namespace BriefFiniteElementNet.Validation.Case_03
                     .AddClosedTag("br");
 
                 span.Add("h3").Text("Validation Result");
-//>>>>>>> 8f73e9cf4109d3eac9e87e27ab66e1661bd0a2fd
+                //>>>>>>> 8f73e9cf4109d3eac9e87e27ab66e1661bd0a2fd
             }
 
             abaqusModel.Trace.Listeners.Add(new BriefFiniteElementNet.Common.ConsoleTraceListener());
@@ -80,7 +90,7 @@ namespace BriefFiniteElementNet.Validation.Case_03
             var abqdispDic = new Dictionary<int, Displacement>();
 
             {
-                string FileName2 = string.Format("Case_03\\output\\NodalDisp.txt", Path.GetFullPath(Path.Combine(RunningPath, @"..\..\")));
+                string FileName2 = string.Format("Case_06\\Displacement.txt", Path.GetFullPath(Path.Combine(RunningPath, @"..\..\")));
 
                 var lines = System.IO.File.ReadAllLines(FileName2);
 
@@ -133,7 +143,7 @@ namespace BriefFiniteElementNet.Validation.Case_03
                 var err = Util.GetAbsError(abqd.Displacements, bfed.Displacements);
                 errors.Add(err);
             }
-                
+
             var max = errors.Max();
             var avg = errors.Average();
 
@@ -152,4 +162,5 @@ namespace BriefFiniteElementNet.Validation.Case_03
             return val;
         }
     }
+
 }

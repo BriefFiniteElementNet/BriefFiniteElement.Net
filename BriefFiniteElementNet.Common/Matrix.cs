@@ -766,5 +766,16 @@ namespace BriefFiniteElementNet
                 values[j * rows + i] *= constant;
             }
         }
+
+        public static void FillMatrixRowise(this DenseColumnMajorStorage<double> matrix, params double[] values)
+        {
+            for (var i = 0; i < values.Length; i++)
+            {
+                var row = i / matrix.ColumnCount;
+                var col = i % matrix.ColumnCount;
+
+                matrix[row, col] = values[i];
+            }
+        }
     }
 }
