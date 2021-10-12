@@ -17,9 +17,9 @@ namespace BriefFiniteElementNet.Elements
     /// </summary>
     [Serializable]
     [Obsolete("not fully implemented yet")]
-    public class HexahedralElementTest : Element
+    public class HexahedralElement : Element
     {
-        public HexahedralElementTest() : base(8)
+        public HexahedralElement() : base(8)
         {
         }
 
@@ -66,7 +66,13 @@ namespace BriefFiniteElementNet.Elements
             throw new NotImplementedException();
         }
 
-      
+        /// <summary>
+        /// Checks the node order, throws exception if order is invalid
+        /// </summary>
+        private void CheckNodeOrder()
+        {
+            throw new NotImplementedException();
+        }
 
         public override Matrix GetLambdaMatrix()
         {
@@ -121,6 +127,7 @@ namespace BriefFiniteElementNet.Elements
         
         public override Matrix GetGlobalDampingMatrix()
         {
+            CheckNodeOrder();
             return GetLocalDampMatrix();
         }
 
@@ -155,6 +162,8 @@ namespace BriefFiniteElementNet.Elements
 
         public override Matrix GetGlobalMassMatrix()
         {
+            CheckNodeOrder();
+
             return GetLocalMassMatrix();
         }
 
@@ -190,6 +199,7 @@ namespace BriefFiniteElementNet.Elements
 
         public override Matrix GetGlobalStifnessMatrix()
         {
+            CheckNodeOrder();
             return GetLocalStifnessMatrix();//local coords is same as global coords in hexahedral
         }
 
@@ -214,17 +224,15 @@ namespace BriefFiniteElementNet.Elements
                 }
             }
 
-
             for (var i = 0; i < buf.Length; i++)
                 buf[i] = t.TransformLocalToGlobal(buf[i]);
-
 
             return buf;
         }
 
         #region Deserialization Constructor
 
-        protected HexahedralElementTest(SerializationInfo info, StreamingContext context)
+        protected HexahedralElement(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             _material = (BaseMaterial)info.GetValue("_material", typeof(int));

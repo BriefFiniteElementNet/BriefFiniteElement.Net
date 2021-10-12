@@ -44,7 +44,7 @@ namespace BriefFiniteElementNet.Elements
 
 
         /// <summary>
-        /// Checks the node order, for more info look inside method
+        /// Checks the node order, throws exception if order is invalid
         /// </summary>
         private void CheckNodeOrder()
         {

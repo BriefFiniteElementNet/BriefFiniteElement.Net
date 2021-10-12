@@ -32,12 +32,12 @@ namespace BriefFiniteElementNet.Validation.Case_06
 
             foreach(var elm in abaqusModel.Elements)
             {
-                if (elm is HexahedralElementTest hx)
+                if (elm is HexahedralElement hx)
                 {
                     hx.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.25);
                 }
 
-                if (elm is HexahedralElement hx2)
+                if (elm is HexahedralElement_old hx2)
                 {
                     hx2.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.25);
                 }

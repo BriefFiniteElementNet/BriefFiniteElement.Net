@@ -14,9 +14,9 @@ namespace BriefFiniteElementNet.Elements
     /// </summary>
     [Serializable]
     [Obsolete("really obsolete")]
-    public class HexahedralElement : Element
+    public class HexahedralElement_old : Element
     {
-        public HexahedralElement() : base(8)
+        public HexahedralElement_old() : base(8)
         {
         }
         #region mechanical props
@@ -591,7 +591,7 @@ namespace BriefFiniteElementNet.Elements
 
         #region Deserialization Constructor
 
-        protected HexahedralElement(SerializationInfo info, StreamingContext context)
+        protected HexahedralElement_old(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             _e = (double)info.GetValue("_e", typeof(double));
