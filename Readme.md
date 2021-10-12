@@ -25,11 +25,11 @@ You can use [issues section](https://github.com/BriefFiniteElementNet/BriefFinit
 
 Paid support (Commercial) via email : [bfePaid@gmx.com](mailto:BFE%20Paid%20Support%20<BFEPaid@gmx.com>?Subject=Support%20Request&Body=Please%20fill%20fair%20amount%20of%20description%20here)
 
-For a small payment (like half an USD or one or two) you'll get premium support about using this library for your specific purpose. Also if it is a bug with the library itself, then will fix it for free and return your payment.
-
-Please note that free support still exists and is maintained by the community available from [Issues](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) and [Discussion](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/discussions) sections.
+For a small payment (like a USD or two) you'll get premium support about using this library for your specific purpose by its developers. You can ask any question about FEM and its applications, we'll answer as much as we can...
 
 Many payment types are accepted, including PayPal and CryptoCurrencies and maybe other types, just message and we'll talk about it!
+
+Please note that free support still exists and is maintained by the community available from [Issues](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) and [Discussion](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/discussions) sections.
 
 ## Features
 
@@ -69,6 +69,7 @@ Since it is not possible to validate all features with a single software,
 
 	*  Validating the result with Frame3dd application available at [frame3dd.sourceforge.net](http://frame3dd.sourceforge.net)
 
+
 for more information on validation please have a look at [Validation.md](Validation.md) file.
 
 
@@ -76,6 +77,6 @@ for more information on validation please have a look at [Validation.md](Validat
 
 for more information on known issues please have a look at [know-issues.md](know-issues.md) file and [issues](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) section.
 
-## Donation
-
+## Hire Developers (Consultation)
+You can have developers for consult and/or coding, on hourly basis or project based. Just contact email : [bfePaid@gmx.com](mailto:BFE%20Paid%20Support%20<BFEPaid@gmx.com>?Subject=Ask%20About%20Hiring&Body=Please%20fill%20fair%20amount%20of%20description%20here)
 

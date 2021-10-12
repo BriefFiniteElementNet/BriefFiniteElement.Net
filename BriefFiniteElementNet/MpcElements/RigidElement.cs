@@ -21,7 +21,6 @@ namespace BriefFiniteElementNet.MpcElements
 
         }
 
-
         public override SparseMatrix GetExtraEquations()
         {
             var distinctNodes = Nodes.Distinct().Where(ii => !ReferenceEquals(ii, null)).ToList();
