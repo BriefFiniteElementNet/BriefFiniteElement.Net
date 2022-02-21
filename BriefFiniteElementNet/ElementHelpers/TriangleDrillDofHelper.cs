@@ -119,6 +119,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
         {
+            return new Force[3];
             throw new NotImplementedException();
         }
 
