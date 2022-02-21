@@ -213,8 +213,8 @@ namespace BriefFiniteElementNet.Elements
 
             {
                 var isPlate = (this._behavior & PlateElementBehaviour.ThinPlate) != 0;
-                var isMembrane = (this._behavior & PlateElementBehaviour.ThinPlate) != 0;
-                var isDrill = (this._behavior & PlateElementBehaviour.ThinPlate) != 0;
+                var isMembrane = (this._behavior & PlateElementBehaviour.Membrane) != 0;
+                var isDrill = (this._behavior & PlateElementBehaviour.DrillingDof) != 0;
 
                 /*
                 if (isMembrane && isDrill)

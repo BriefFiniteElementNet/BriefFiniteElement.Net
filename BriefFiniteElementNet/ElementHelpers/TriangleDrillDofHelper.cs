@@ -11,6 +11,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
     /// <summary>
     /// uses fictious stiffness for drilling dofs
+    /// uses values from membrane and plate bending stifness parameters
     /// </summary>
     public class TriangleDrillDofHelper: IElementHelper
     {
