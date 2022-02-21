@@ -245,7 +245,7 @@ namespace BriefFiniteElementNet
         /// <param name="vec">The vec.</param>
         /// <param name="startIndex">The start index of displacement vector.</param>
         /// <returns></returns>
-        public static Displacement FromVector(double[] vec, int startIndex)
+        public static Displacement FromVector(double[] vec, int startIndex = 0)
         {
             return new Displacement(
                 vec[startIndex + 0],

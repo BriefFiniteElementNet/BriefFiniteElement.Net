@@ -39,7 +39,7 @@
     <Reference Include="CSparse, Version=3.4.9.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CSparse.3.4.9\lib\net45\CSparse.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.DebuggerVisualizers, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.VisualStudio.DebuggerVisualizers, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -77,13 +77,13 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "BriefFiniteElementNet.DebuggerVisualizers.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
-xcopy "BriefFiniteElementNet.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
-xcopy "BriefFiniteElementNet.Common.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
-xcopy "BriefFiniteElementNet.Controls.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
-xcopy "OxyPlot.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
-xcopy "OxyPlot.Wpf.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
-xcopy "HelixToolkit.Wpf.dll" "%25UserProfile%25\Documents\Visual Studio 2019\Visualizers\" /y
+    <PostBuildEvent>xcopy "BriefFiniteElementNet.DebuggerVisualizers.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
+xcopy "BriefFiniteElementNet.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
+xcopy "BriefFiniteElementNet.Common.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
+xcopy "BriefFiniteElementNet.Controls.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
+xcopy "OxyPlot.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
+xcopy "OxyPlot.Wpf.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
+xcopy "HelixToolkit.Wpf.dll" "%25UserProfile%25\Documents\Visual Studio 2017\Visualizers\" /y
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

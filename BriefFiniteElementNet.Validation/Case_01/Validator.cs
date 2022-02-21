@@ -25,7 +25,7 @@ namespace BriefFiniteElementNet.Validation.Case_01
                 
                 span.Add("p").Text("Validate an I Beam nodal displacement and reactions and internal forces");
                 span.Add("h3").Text("Validate with");
-                span.Add("paragraph").Text("ABAQUS from Abaqus inc. available from www.simulia.com");
+                span.Add("paragraph").Text("SAP2000");
                 span.Add("h3").Text("Validate objective");
 
 
@@ -228,7 +228,6 @@ namespace BriefFiniteElementNet.Validation.Case_01
             {//element stress
                 {
                     var e81 = model.Elements[85] as TriangleElement;
-
 
                     var tr = e81.GetTransformationManager();
 

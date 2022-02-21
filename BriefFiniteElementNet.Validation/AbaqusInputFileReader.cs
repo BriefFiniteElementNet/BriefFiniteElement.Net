@@ -11,6 +11,221 @@ using System.Windows.Controls;
 
 namespace BriefFiniteElementNet.Validation
 {
+    public class AbaqusOutputFileReader
+    {
+        public static List<Tuple<string, Displacement>> ReadFullDisplacements(Stream str)
+        {
+            var buf = new List<Tuple<string, Displacement>>();
+
+            var rdr = new StreamReader(str);
+
+            string ln;
+
+            while ((ln = rdr.ReadLine()) != null)
+            {
+                var pat = "^\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)$";
+                var mtch = Regex.Match(ln, pat);
+
+                if (mtch.Success)
+                {
+                    int ttt;
+
+                    var lbl = mtch.Groups[1].Value;
+                    var intpt = mtch.Groups[2].Value;
+
+                    var t = mtch.Groups.Cast<Group>().Skip(2).Select(i => i.Value).ToList();
+
+                    double tmp;
+
+                    if (t.Any(i => !double.TryParse(i, out tmp)))
+                        continue;//check them all double
+
+                    var dbls = t.Select(i => double.Parse(i)).ToArray();
+
+                    var d = Vector.FromArray(dbls, 0);
+                    var r = Vector.FromArray(dbls, 3);
+
+                    var dd = new Displacement(d, r);
+
+                    var tpl = new Tuple<string, Displacement>(lbl, dd);
+
+                    buf.Add(tpl);
+                }
+            }
+
+            return buf;
+
+            throw new NotImplementedException();
+        }
+
+        public static List<Tuple<string,Displacement>> ReadDisplacements(Stream str)
+        {
+            var buf = new List<Tuple<string, Displacement>>();
+
+            var rdr = new StreamReader(str);
+
+            string ln;
+
+            while ((ln = rdr.ReadLine()) != null)
+            {
+                var pat = "^\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)$";
+                var mtch = Regex.Match(ln, pat);
+
+                if (mtch.Success)
+                {
+                    int ttt;
+
+                    var lbl = mtch.Groups[1].Value;
+                    var intpt = mtch.Groups[2].Value;
+
+                    var t = mtch.Groups.Cast<Group>().Skip(2).Select(i => i.Value).ToList();
+
+                    double tmp;
+
+                    if (t.Any(i => !double.TryParse(i, out tmp)))
+                        continue;//check them all double
+
+                    var dbls = t.Select(i => double.Parse(i)).ToArray();
+
+                    var d = Vector.FromArray(dbls);
+
+                    var dd = new Displacement(d, Vector.Zero);
+
+                    var tpl = new Tuple<string, Displacement>(lbl, dd);
+
+                    buf.Add(tpl);
+                }
+            }
+
+            return buf;
+
+            throw new NotImplementedException();
+        }
+
+        public static List<Tuple<string,int,double[]>> ReadElementStresses(Stream str)
+        {
+            var buf = new List<Tuple<string, int, double[]>>();
+
+            var rdr = new StreamReader(str);
+
+            string ln;
+
+            while ((ln = rdr.ReadLine()) != null)
+            {
+                var pat = "^\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)\\s+(\\S+)$";
+                var mtch = Regex.Match(ln, pat);
+
+                if (mtch.Success)
+                {
+                    int ttt;
+                    
+                    var lbl = mtch.Groups[1].Value;
+                    var intpt = mtch.Groups[2].Value;
+
+                    var t = mtch.Groups.Cast<Group>().Skip(3).Select(i => i.Value).ToList();
+
+                    double tmp;
+
+                    if (t.Any(i => !double.TryParse(i, out tmp)))
+                        continue;//check them all double
+
+                    var dbls = t.Select(i => double.Parse(i)).ToArray();
+
+                    var tpl = new Tuple<string, int, double[]>(mtch.Groups[1].Value, int.Parse(mtch.Groups[2].Value), dbls);
+
+                    buf.Add(tpl);
+                }
+            }
+
+            return buf;
+        }
+
+        private static bool TryParse(string str,ColType type,out object val )
+        {
+            switch (type)
+            {
+                case ColType.String:
+                    val = str;
+                    return true;
+                    break;
+
+                case ColType.Int:
+                    int tmp;
+                    if (int.TryParse(str, out tmp))
+                    {
+                        val = tmp;
+                        return true;
+                    }
+                    break;
+
+                case ColType.Real:
+                    double tmp2;
+                    if (double.TryParse(str, out tmp2))
+                    {
+                        val = tmp2;
+                        return true;
+                    }
+                    break;
+            }
+
+            val = null;
+            return false;
+        }
+
+
+        public static List<object[]> ReadTable(Stream file,params ColType[] colTypes)
+        {
+            var pattern = "^" + string.Join("", Enumerable.Repeat("\\s+(\\S+)", colTypes.Length)) + "$";
+
+            var buf = new List<object[]>();
+
+            var rdr = new StreamReader(file);
+
+            string ln;
+
+            while ((ln = rdr.ReadLine()) != null)
+            {
+                var mtch = Regex.Match(ln, pattern);
+
+                if (mtch.Success)
+                {
+                    var lst = new List<object>();
+
+                    var flag = false;
+
+                    for (var i = 0; i < colTypes.Length; i++)
+                    {
+                        var val = mtch.Groups[i + 1].Value;
+
+                        object v;
+
+                        if (!TryParse(val, colTypes[i], out v))
+                        {
+                            flag = true;
+                            break;
+                        }
+                            
+
+                        lst.Add(v);
+                    }
+
+                    if (!flag)
+                        buf.Add(lst.ToArray());
+                }
+            }
+
+            return buf;
+        }
+
+        public enum ColType
+        {
+            String,
+            Int,
+            Real
+
+        }
+    }
+
     public class AbaqusInputFileReader
     {
         /// <summary>
@@ -106,7 +321,10 @@ namespace BriefFiniteElementNet.Validation
                                 {
                                     for (int i = 0; i < split.Count(); i++)
                                     {
-                                        nodeSets[nodeSets.Count - 1].Nodes.Add(Convert.ToInt32(split[i]));
+                                        int tmp;
+
+                                        if (int.TryParse(split[i], out tmp))
+                                            nodeSets[nodeSets.Count - 1].Nodes.Add(Convert.ToInt32(split[i]));
                                     }
                                     break;
                                 }
@@ -144,7 +362,7 @@ namespace BriefFiniteElementNet.Validation
                                         //add the load to the nodes
                                         foreach (var nodeLabel in set.Nodes)
                                         {
-                                            buf.Nodes[nodeLabel - 1].Loads.Add(load);
+                                            buf.Nodes[nodeLabel - 1].Loads.Add(load.Clone());
                                         }
                                     }
                                     break;
@@ -259,10 +477,43 @@ namespace BriefFiniteElementNet.Validation
                     return ReadHexaElement(elementline, delimiter, nodes);
                 case "C3D4":
                     return ReadTetraElement(elementline, delimiter, nodes);
+                case "STRI3":
+                    return ReadTriangleElement(elementline, delimiter, nodes);
 
                 default:
                     throw new NotImplementedException("undefined ABAQUS element: " + elmType);
             }
+        }
+
+        /// <summary>
+        /// Reads an element from an Abaqus input file
+        /// </summary>
+        /// <param name="elementline">A line with the element props</param>
+        /// <param name="delimiter">The separator char</param>
+        /// <param name="nodes">A list of nodes - starts at 0 -> = node-1</param>
+        /// <returns>An element</returns>
+        private static TriangleElement ReadTriangleElement(string elementline, char delimiter, NodeCollection nodes)
+        {
+            var elm = new TriangleElement();
+            string[] split;
+            int elementNr;//, nodeNr1, nodeNr2, nodeNr3, nodeNr4;
+            try
+            {
+                split = elementline.Split(delimiter);
+
+                elementNr = Convert.ToInt32(split[0]);
+                //subtract 1. The nodes are numbered from 1-> end and are stored as 0-> end-1
+                elm.Nodes[0] = nodes[Convert.ToInt32(split[1]) - 1];
+                elm.Nodes[1] = nodes[Convert.ToInt32(split[2]) - 1];
+                elm.Nodes[2] = nodes[Convert.ToInt32(split[3]) - 1];
+                elm.label = elementNr.ToString();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Something went wrong with reading the nodes! Error with line: " + elementline);
+            }
+
+            return elm;
         }
 
         /// <summary>

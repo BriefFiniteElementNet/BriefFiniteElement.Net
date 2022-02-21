@@ -32,9 +32,29 @@ namespace BriefFiniteElementNet.Validation
             return value*0.0254;
         }
 
+        public static Vector In2M(Vector value)
+        {
+            return value * 0.0254;
+        }
+
+        public static Displacement In2M(Displacement value)
+        {
+            return new Displacement(In2M(value.Displacements), value.Rotations);
+        }
+
         public static double M2In(double value)
         {
             return value/0.0254;
+        }
+
+        public static Vector M2In(Vector value)
+        {
+            return value * (1 / 0.0254);
+        }
+
+        public static Displacement M2In(Displacement value)
+        {
+            return new Displacement(M2In(value.Displacements), value.Rotations);
         }
 
         public static double Kip2N(double value)

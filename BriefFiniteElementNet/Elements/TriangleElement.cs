@@ -97,7 +97,7 @@ namespace BriefFiniteElementNet.Elements
             var lamY = vy.GetUnit();//Lambda_Y
             var lamZ = vz.GetUnit();//Lambda_Z
 
-            var lambda = Matrix.OfJaggedArray(new[]
+            var lambda = Matrix.OfJaggedArray(new[]//eq. 5.13
             {
                 new[] {lamX.X, lamY.X, lamZ.X},
                 new[] {lamX.Y, lamY.Y, lamZ.Y},
@@ -106,6 +106,7 @@ namespace BriefFiniteElementNet.Elements
 
             return lambda.AsMatrix();
         }
+
         public override double[] IsoCoordsToLocalCoords(params double[] isoCoords)
         {
             //TODO: add reference for fomulation
@@ -211,21 +212,36 @@ namespace BriefFiniteElementNet.Elements
             var helpers = new List<IElementHelper>();
 
             {
-                if ((this._behavior & PlateElementBehaviour.ThinPlate) != 0)
-                {
-                    helpers.Add(new DktHelper());
-                }
+                var isPlate = (this._behavior & PlateElementBehaviour.ThinPlate) != 0;
+                var isMembrane = (this._behavior & PlateElementBehaviour.ThinPlate) != 0;
+                var isDrill = (this._behavior & PlateElementBehaviour.ThinPlate) != 0;
 
-                if ((this._behavior & PlateElementBehaviour.Membrane) != 0)
+                /*
+                if (isMembrane && isDrill)
                 {
+                    //helpers.Add(new Gt9Helper());
                     helpers.Add(new CstHelper());
+                    helpers.Add(new TriangleDrillDofHelper());
                 }
+                    
 
-                if ((this._behavior & PlateElementBehaviour.DrillingDof) != 0)
-                {
-                    helpers.Add(new TriangleBasicDrillingDofHelper());
-                }
+                if (isMembrane && !isDrill)
+                    helpers.Add(new CstHelper());
+
+                if (!isMembrane && isDrill)
+                    helpers.Add(new TriangleDrillDofHelper());
+                */
+                if (isPlate)
+                    helpers.Add(new DktHelper());
+
+                if (isMembrane)
+                    helpers.Add(new CstHelper());
+
+                if (isDrill)
+                    helpers.Add(new TriangleDrillDofHelper());
+
             }
+
             return helpers.ToArray();
         }
 
@@ -460,6 +476,107 @@ namespace BriefFiniteElementNet.Elements
         }
 
         /// <summary>
+        /// Gets the internal stress at defined location.
+        /// tensor is in local coordinate system. 
+        /// </summary>
+        /// <param name="isoLocation">The location for the stress probe in iso coordinates. Order: x,y,z. Maximum bending stress at the shell thickness (z=1.0). Must be withing 0 and 1.</param>
+        /// <param name="combination">The load combination.</param>
+        /// <param name="probeLocation">The probe location for the stress.</param>
+        /// <returns>Stress tensor of flat shell, in local coordination system</returns>
+        /// <remarks>
+        /// For more info about local coordinate of flat shell see page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara freely available on the web
+        /// </remarks>
+        public CauchyStressTensor GetInternalStress(double[] isoLocation, LoadCase cse, SectionPoints probeLocation)
+        {
+
+            //added by rubsy92
+            if (isoLocation[2] < 0 || isoLocation[2] > 1.0)
+            {
+                throw new Exception("z must be between 0 and 1. 0 is the centre of the plate and 1 is on the plate surface. Use the section points to get the top/bottom.") { };
+            }
+
+            var helpers = GetHelpers();
+
+            var gst = new GeneralStressTensor();
+            var tr = this.GetTransformationManager();
+
+            var ld = this.Nodes.Select(i => tr.TransformGlobalToLocal(i.GetNodalDisplacement(cse))).ToArray();
+
+            for (var i = 0; i < helpers.Count(); i++)
+            {
+                var st = helpers[i].GetLocalInternalStressAt(this, ld, isoLocation);
+                gst += st;
+            }
+
+            var buf = new CauchyStressTensor();
+
+            buf += gst.MembraneTensor;
+
+
+            {
+                var lambda = 0.0;
+                switch (probeLocation)
+                {
+                    case SectionPoints.Envelope:
+                        {
+                            var thickness = Section.GetThicknessAt(isoLocation);
+                            //top
+                            var bufTop = new CauchyStressTensor();
+                            bufTop += gst.MembraneTensor;
+                            bufTop += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, 1.0);
+
+                            //bottom
+                            var bufBottom = new CauchyStressTensor();
+                            bufBottom += gst.MembraneTensor;
+                            bufBottom += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, -1.0);
+
+                            if (Math.Abs(CauchyStressTensor.GetVonMisesStress(bufTop)) > Math.Abs(CauchyStressTensor.GetVonMisesStress(bufBottom)))
+                            {
+                                buf = bufTop;
+                            }
+                            else
+                            {
+                                buf = bufBottom;
+                            }
+                            break;
+                        }
+                    case SectionPoints.Top:
+                        {
+                            lambda = 1.0;
+                            var thickness = Section.GetThicknessAt(isoLocation);
+                            buf += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, lambda);
+                            break;
+                        }
+                    case SectionPoints.Bottom:
+                        {
+                            lambda = -1.0;
+                            var thickness = Section.GetThicknessAt(isoLocation);
+                            buf += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor, thickness, lambda);
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            }
+            return buf;
+        }
+
+        /// <summary>
+        /// Gets the internal stress at defined <see cref="isoLocation"/>.
+        /// tensor is in local coordinate system. 
+        /// </summary>
+        /// <param name="loadCase">the load case </param>
+        /// <param name="isoLocation"></param>
+        /// <returns>Stress tensor of flat shell, in local coordination system</returns>
+        /// <remarks>
+        /// for more info about local coordinate of flat shell see page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara freely available on the web
+        /// </remarks>
+        public CauchyStressTensor GetLocalInternalStress(params double[] isoLocation)
+        {
+            return GetLocalInternalStress(LoadCase.DefaultLoadCase, isoLocation);
+        }
+
+        /// <summary>
         /// Gets the internal stress at defined <see cref="isoLocation"/>.
         /// tensor is in local coordinate system. 
         /// </summary>
@@ -488,12 +605,9 @@ namespace BriefFiniteElementNet.Elements
 
             buf += gst.MembraneTensor;
 
-
-            if (isoLocation.Length == 3)// it means local Z and bending tensor does affect on cauchy tensor, only on center of plate where lambda=0 bending tensor have to effect on cauchy
+            if (isoLocation.Length == 3)// local Z and bending tensor does affect on cauchy tensor, only on center of plate where lambda=0 bending tensor have no effect on cauchy
             {
-                //step2: update Cauchy based on bending,
-                //bending tensor also affects the Cauchy tensor regarding how much distance between desired location and center of plate.
-
+                //step2: update Cauchy based on bending: bending tensor also affects the Cauchy tensor regarding how much distance between desired location and center of plate.
                 //old code: buf.UpdateTotalStress(_section.GetThicknessAt(new double[] { localX, localY }) * localZ, probeLocation);
 
                 var lambda = 0.0;
@@ -507,11 +621,8 @@ namespace BriefFiniteElementNet.Elements
                 var thickness = Section.GetThicknessAt(isoLocation);
 
                 var z = thickness * lambda;//distance from plate center, measure in [m]
-                
 
-                //var z = thickness * lambda;//distance from plate center, measure in [m]
-
-                buf += BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor,thickness, lambda);
+                buf -= BendingStressTensor.ConvertBendingStressToCauchyTensor(gst.BendingTensor,thickness, lambda);
 
                 /*epsi1on: no need to subtract, only need to add because negativeness of lambda taken into account in ConvertBendingStressToCauchyTensor
 

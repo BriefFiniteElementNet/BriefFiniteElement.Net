@@ -97,5 +97,9 @@ namespace BriefFiniteElementNet
 
         #endregion
 
+        public NodalLoad Clone()
+        {
+            return new NodalLoad() { Case = this.Case, Force = this.force };
+        }
     }
 }

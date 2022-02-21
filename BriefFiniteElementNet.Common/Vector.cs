@@ -113,6 +113,12 @@ namespace BriefFiniteElementNet
             return new Vector(x, y, z);
         }
 
+        
+        public static Vector FromArray(double[] x,int startIndex = 0)
+        {
+            return new Vector(x[startIndex], x[startIndex + 1], x[startIndex + 2]);
+        }
+
         /// <summary>
         /// Froms the point.
         /// </summary>

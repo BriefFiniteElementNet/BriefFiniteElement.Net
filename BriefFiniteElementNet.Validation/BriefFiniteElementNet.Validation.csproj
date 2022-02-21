@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbaqusInputFileReader.cs" />
+    <Compile Include="Case_01V2\Validator.cs" />
     <Compile Include="Case_02\Validator.cs" />
     <Compile Include="Case_01\Validator.cs" />
     <Compile Include="Case_03\Validator.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="Case_05\Validator.cs" />
     <Compile Include="Case_06\Validator.cs" />
     <Compile Include="EqualDofValidator.cs" />
+    <Compile Include="ErrorUtil.cs" />
     <Compile Include="GithubIssues\Issue100.cs" />
     <Compile Include="GithubIssues\Issue101.cs" />
     <Compile Include="GithubIssues\Issue111.cs" />
@@ -118,6 +120,30 @@
     <Compile Include="TransformValidator.cs" />
     <Compile Include="TriangleElementTester.cs" />
     <Compile Include="UnitConverter.cs" />
+    <Content Include="Case_01V2\data1\element-strain.rpt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Case_01V2\data1\element-stress.rpt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Case_01V2\data1\Job-1.dat" />
+    <Content Include="Case_01V2\data1\Job-1.inp">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Case_01V2\data1\Job-1.msg" />
+    <None Include="Case_01V2\data1\Job-1.odb" />
+    <Content Include="Case_01V2\data1\node-disp.rpt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Case_01V2\data1\project.cae" />
+    <Content Include="Case_01V2\data1\stress &amp; displacement.rpt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Case_01V2\data2\S11.rpt" />
+    <None Include="Case_01V2\data2\S12.rpt" />
+    <None Include="Case_01V2\data2\S22.rpt" />
+    <None Include="Case_01V2\data2\SVM.rpt" />
+    <None Include="Case_01V2\Intro.md" />
     <None Include="Case_02\Abaqus comparison\Bottom_S11.rpt" />
     <None Include="Case_02\Abaqus comparison\Bottom_S12.rpt" />
     <None Include="Case_02\Abaqus comparison\Bottom_S22.rpt" />
@@ -129,8 +155,14 @@
     <None Include="Case_02\Abaqus comparison\U.rpt" />
     <None Include="Case_02\Intro.md" />
     <None Include="Case_02\Abaqus comparison\Model1_BFE_Abaqus.csv" />
-    <None Include="Case_01\stress &amp; displacement.rpt" />
     <None Include="Case_03\Job-10.inp" />
+    <Content Include="Case_01V2\data1\mesh1.jpg" />
+    <Content Include="Case_01V2\data1\mesh2.jpg" />
+    <Content Include="Case_01V2\data1\mesh3.jpg" />
+    <Content Include="Case_01V2\data2\Elements.png" />
+    <Content Include="Case_01V2\data2\Elements_Abaqus1.png" />
+    <Content Include="Case_01V2\data2\Elements_Abaqus2.png" />
+    <Content Include="Case_01V2\example 13.png" />
     <Content Include="Case_06\Displacements">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

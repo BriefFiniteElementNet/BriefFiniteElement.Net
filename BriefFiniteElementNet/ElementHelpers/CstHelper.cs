@@ -72,31 +72,63 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var d = targetElement.MatrixPool.Allocate(3, 3);
 
-            var mat = tri.Material.GetMaterialPropertiesAt(isoCoords);
+            
 
 
             if (tri.MembraneFormulation == MembraneFormulation.PlaneStress)
             {
                 //http://help.solidworks.com/2013/english/SolidWorks/cworks/c_linear_elastic_orthotropic.htm
                 //orthotropic material
+
+                var mat = tri.Material.GetMaterialPropertiesAt(isoCoords);
+
+
                 d[0, 0] = mat.Ex / (1 - mat.NuXy * mat.NuYx);
                 d[1, 1] = mat.Ey / (1 - mat.NuXy * mat.NuYx);
                 d[1, 0] = d[0, 1] = mat.NuXy * mat.Ey / (1 - mat.NuXy * mat.NuYx);
 
                 d[2, 2] = mat.Ex*mat.Ey/(mat.Ex + mat.Ey + 2*mat.Ey*mat.NuXy);
+
+                return d;
             }
-            else
+
+            if (tri.MembraneFormulation == MembraneFormulation.PlaneStrain)
             {
-                var delta = 1 - mat.NuXy * mat.NuYx - mat.NuZy * mat.NuYz - mat.NuZx * mat.NuXz - 2 * mat.NuXy * mat.NuYz * mat.NuZx;
+                if (tri.Material is Materials.UniformIsotropicMaterial iso)
+                {
+                    //https://www.efunda.com/formulae/solid_mechanics/mat_mechanics/hooke_plane_strain.cfm
 
-                delta /= mat.Ex * mat.Ey * mat.Ez;
+                    var mat = tri.Material.GetMaterialPropertiesAt(isoCoords);
 
-                //http://www.efunda.com/formulae/solid_mechanics/mat_mechanics/hooke_orthotropic.cfm
+                    var E = mat.Ex;
+                    var nu = mat.NuXy;
 
-                d[0, 0] = (1 - mat.NuYz * mat.NuZy) / (mat.Ey * mat.Ez * delta);
-                d[0, 1] = (mat.NuYx + mat.NuZx * mat.NuYz) / (mat.Ey * mat.Ez * delta);
-                d[1, 0] = (mat.NuXy + mat.NuXz * mat.NuZy) / (mat.Ez * mat.Ex * delta);
-                d[1, 1] = (1 - mat.NuZx * mat.NuXz) / (mat.Ez * mat.Ex * delta);
+                    d[0, 0] = d[1, 1] = 1 - nu;
+                    d[1, 0] = d[0, 1] = nu;
+                    d[2, 2] = 1 - 2 * nu;
+
+                    d.Scale(E / ((1 + nu) * (1 - 2 * nu)));
+
+                    return d;
+                }
+
+                if (tri.Material is Materials.UniformAnisotropicMaterial aniso)
+                {
+                    var mat = tri.Material.GetMaterialPropertiesAt(isoCoords);
+
+                    var delta = 1 - mat.NuXy * mat.NuYx - mat.NuZy * mat.NuYz - mat.NuZx * mat.NuXz - 2 * mat.NuXy * mat.NuYz * mat.NuZx;
+
+                    delta /= mat.Ex * mat.Ey * mat.Ez;
+
+                    //http://www.efunda.com/formulae/solid_mechanics/mat_mechanics/hooke_orthotropic.cfm
+
+                    d[0, 0] = (1 - mat.NuYz * mat.NuZy) / (mat.Ey * mat.Ez * delta);
+                    d[0, 1] = (mat.NuYx + mat.NuZx * mat.NuYz) / (mat.Ey * mat.Ez * delta);
+                    d[1, 0] = (mat.NuXy + mat.NuXz * mat.NuZy) / (mat.Ez * mat.Ex * delta);
+                    d[1, 1] = (1 - mat.NuZx * mat.NuXz) / (mat.Ez * mat.Ex * delta);
+
+                    return d;
+                }
             }
 
             return d;

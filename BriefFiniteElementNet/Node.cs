@@ -169,6 +169,24 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
+        /// Gets the nodal displacement regarding defined load case
+        /// </summary>
+        /// <param name="cse">load case</param>
+        /// <returns></returns>
+        internal void SetNodalDisplacement(LoadCase cse,Displacement disp)
+        {
+            if (parent.LastResult == null)
+                throw new Exception();
+
+
+            var disps = parent.LastResult.Displacements[cse];
+
+            var vect = Displacement.ToVector(disp);
+
+            Array.Copy(vect, 0, disps, this.Index * 6, 6);
+        }
+
+        /// <summary>
         /// Gets the nodal displacement regarding Default load case (default load case means a load case where <see cref="LoadCase.LoadType" /> is equal to <see cref="LoadType.Default" /> and <see cref="LoadCase.CaseName" /> is equal to null)
         /// </summary>
         /// <returns></returns>

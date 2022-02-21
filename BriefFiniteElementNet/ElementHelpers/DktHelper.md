@@ -20,3 +20,41 @@ refs:
     [1] "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara available on the web
     [2] "A STUDY OF THREE-NODE TRIANGULAR PLATE BENDING ELEMENTS" by JEAN-LOUIS BATOZ,KLAUS-JORGEN BATHE and LEE-WING HO
     [3] "Membrane element" https://woodem.org/theory/membrane-element.html
+
+
+
+Hermite functions
+
+
+``` Octave
+
+syms a b c d e f g h i
+syms xi eta
+
+A = [a, b ,c ,d ,e ,f ,g ,h ,i]
+XI = transpose( [1 ,xi ,eta, xi^2, xi*eta, eta^2, xi^2*eta^2 ,xi*eta^2 ,xi^2*eta])
+f0= A * XI
+f0xi=diff(f0,xi)
+f0eta=diff(f0,eta)
+
+e1=1-subs(f0,[xi,eta],[0,0]);
+e2=subs(f0,[xi,eta],[0,0]);
+e3=subs(f0,[xi,eta],[0,0]);
+
+e4=subs(f0xi,[xi,eta],[0,0]);
+e5=subs(f0xi,[xi,eta],[1,0]);
+e6=subs(f0xi,[xi,eta],[0,1]);
+
+e7=subs(f0eta,[xi,eta],[0,0]);
+e8=subs(f0eta,[xi,eta],[1,0]);
+e9=subs(f0eta,[xi,eta],[0,1]);
+
+ee=[e1 e2 e3 e4 e5 e6 e7 e8 e9]
+
+Q = expand(transpose(ee)*(1./A))
+
+FIN=(zeros(9,9).+a .* 0) # define FIN as symbolic matrix!
+
+for cnt=1:9
+	FIN(:,cnt)=subs(expand(Q(:,cnt)),A(cnt),inf)
+endfor

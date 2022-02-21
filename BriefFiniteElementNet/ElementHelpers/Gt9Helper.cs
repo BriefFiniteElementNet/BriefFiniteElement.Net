@@ -22,9 +22,9 @@ namespace BriefFiniteElementNet.ElementHelpers
             var shp = shape2d(targetElement, isoCoords);
             var shpDrill = shpDrilll(targetElement, isoCoords);
 
-            var buf = new Matrix(3, 12);
+            var buf = new Matrix(3, 9);
 
-            for (int node = 0; node < 4; node++)
+            for (int node = 0; node < targetElement.Nodes.Length; node++)
             {
                 Matrix Bmembrane = new Matrix(3, 3);
 
@@ -56,7 +56,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var ss = isoCoords[0];
             var tt = isoCoords[1];
-            var qq = isoCoords[2];
+            var qq = isoCoords.Length==3?isoCoords[2]:0.0;
 
             var x = new Matrix(2, 3);
 
@@ -135,9 +135,9 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var ss = isoCoords[0];
             var tt = isoCoords[1];
-            var qq = isoCoords[2];
+            var qq = isoCoords.Length>2? isoCoords[2]:0.0;
 
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < locals.Length; i++)
             {
                 x[0, i] = locals[i].X;
                 x[1, i] = locals[i].Y;

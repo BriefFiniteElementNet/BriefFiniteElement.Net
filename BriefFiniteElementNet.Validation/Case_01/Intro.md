@@ -22,9 +22,4 @@ Boundary Conditions:
 
 Loading:
 - Two concentrated  load  of  1.6  kips  is  applied  at  the  top  and  bottom  of  the  flange  in  opposite directions as shown in Fig. 7.16.
-
-Abaqus model (node numbers are differently named)
-
-![mesh1](https://raw.githubusercontent.com/BriefFiniteElementNet/BriefFiniteElement.Net/master/BriefFiniteElementNet.Validation/Data/FlatShell%20-%20triangle/IBeamTorsion/mesh1.jpg)
-![mesh2](https://raw.githubusercontent.com/BriefFiniteElementNet/BriefFiniteElement.Net/master/BriefFiniteElementNet.Validation/Data/FlatShell%20-%20triangle/IBeamTorsion/mesh2.jpg)
-![mesh3](https://raw.githubusercontent.com/BriefFiniteElementNet/BriefFiniteElement.Net/master/BriefFiniteElementNet.Validation/Data/FlatShell%20-%20triangle/IBeamTorsion/mesh3.jpg)
+ercontent.com/BriefFiniteElementNet/BriefFiniteElement.Net/master/BriefFiniteElementNet.Validation/Data/FlatShell%20-%20triangle/IBeamTorsion/mesh3.jpg)

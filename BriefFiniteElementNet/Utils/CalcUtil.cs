@@ -16,6 +16,73 @@ namespace BriefFiniteElementNet
     /// </summary>
     public static class CalcUtil
     {
+
+        public static double Min(params double[] arr)
+        {
+            return arr.Min();
+        }
+
+        /// <summary>
+        /// gets the norm(2) of difference of two vectors
+        /// </summary>
+        /// <param name="a1"></param>
+        /// <param name="a2"></param>
+        /// <returns></returns>
+        public static double GetDiffNorm2(double[] a1,double[] a2)
+        {
+            var l = Math.Max(a1.Length, a2.Length);
+            var diff = new double[l];
+
+            for (var i = 0; i < l; i++)
+            {
+                if (i >= a1.Length || i >= a2.Length)
+                    break;
+
+                diff[i] = a1[i] - a2[i];
+            }
+
+            for (var i = 0; i < l; i++)
+            {
+                diff[i] *= diff[i];
+            }
+
+            return Norm2(diff);
+        }
+
+        public static double Norm2(params double[] array)
+        {
+            var t = array.Select(i => i * i).OrderBy(i => i).Sum();
+            return Math.Sqrt(t);
+        }
+
+        public static double NormInf(params double[] array)
+        {
+            var t = array.Max(i => Math.Abs(i));
+            return t;
+        }
+
+        /// <summary>
+        /// gets the norm(infinity) of difference of two vectors
+        /// </summary>
+        /// <param name="a1"></param>
+        /// <param name="a2"></param>
+        /// <returns></returns>
+        public static double GetDiffNormInf(double[] a1, double[] a2)
+        {
+            var l = Math.Max(a1.Length, a2.Length);
+            var diff = new double[l];
+
+            for (var i = 0; i < l; i++)
+            {
+                if (i >= a1.Length || i >= a2.Length)
+                    break;
+
+                diff[i] = a1[i] - a2[i];
+            }
+
+            return NormInf(diff);
+        }
+
         /* UNUSED
 
         /// <summary>
