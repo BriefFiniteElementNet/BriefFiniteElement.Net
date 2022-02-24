@@ -1361,7 +1361,12 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     var res = intg.Integrate();
 
-                    var localForces = new Force[2];
+                    if (n > 2)
+                        throw new Exception("beam with more than 2 node not supported!");
+
+                    var localForces = new Force[n];
+
+                    
 
                     if (this._direction == BeamDirection.Y)
                     {

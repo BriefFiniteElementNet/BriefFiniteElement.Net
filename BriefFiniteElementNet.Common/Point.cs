@@ -181,6 +181,26 @@ namespace BriefFiniteElementNet
 
         #endregion
 
+        /// <summary>
+        /// returns distance^2, higher performance
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <returns></returns>
+        public static double DistanceSquared(Point p1,Point p2)
+        {
+            var dx = p2.x - p1.x;
+            var dy = p2.y - p1.y;
+            var dz = p2.z - p1.z;
+
+            return dx * dx + dy * dy + dz * dz;
+        }
+
+        public static double Distance(Point p1, Point p2)
+        {
+            return Math.Sqrt(DistanceSquared(p1, p2));
+        }
+
         public bool Equals(Point other)
         {
             return x.Equals(other.x) && y.Equals(other.y) && z.Equals(other.z);

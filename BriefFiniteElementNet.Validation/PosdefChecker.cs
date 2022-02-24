@@ -126,7 +126,7 @@ namespace BriefFiniteElementNet.Validation
                             
 
                         if (t == 0)
-                            model.Trace.Write(Common.TraceLevel.Warning, "DoF {0} of Node with index {1} not properly constrained", dof, nodeNum);
+                            model.Trace.Write(Common.TraceLevel.Warning, "DoF {0} of Node with index {1} label {2} not properly constrained", dof, nodeNum, model.Nodes[nodeNum].label);
                         else//t < 0
                             model.Trace.Write(Common.TraceLevel.Warning, "DoF {0} of Node #{1} not member", dof, nodeNum);
                     }
