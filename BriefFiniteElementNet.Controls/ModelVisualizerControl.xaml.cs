@@ -34,7 +34,7 @@ namespace BriefFiniteElementNet.Controls
         {
             var wnd = new Window();
 
-            wnd.Content = new ModelVisualizerControl() {ModelToVisualize = model};
+            wnd.Content = new ModelVisualizerControl() { ModelToVisualize = model };
 
             wnd.ShowDialog();
         }
@@ -149,6 +149,55 @@ namespace BriefFiniteElementNet.Controls
                 (double) e.OldValue,
                 (double) e.NewValue);
             args.RoutedEvent = ModelVisualizerControl.ElementVisualThicknessChangedEvent;
+            obj.RaiseEvent(args);
+        }
+
+        #endregion
+
+        #region DisplacementMagnification Property and Property Change Routed event
+
+        public static readonly DependencyProperty DisplacementMagnificationProperty
+            = DependencyProperty.Register(
+                "DisplacementMagnification", typeof(double), typeof(ModelVisualizerControl),
+                new PropertyMetadata(1000.0, OnDisplacementMagnificationChanged, DisplacementMagnificationCoerceValue));
+
+        public double DisplacementMagnification
+        {
+            get { return (double)GetValue(DisplacementMagnificationProperty); }
+            set { SetValue(DisplacementMagnificationProperty, value); }
+        }
+
+        public static readonly RoutedEvent DisplacementMagnificationChangedEvent
+            = EventManager.RegisterRoutedEvent(
+                "DisplacementMagnificationChanged",
+                RoutingStrategy.Direct,
+                typeof(RoutedPropertyChangedEventHandler<double>),
+                typeof(ModelVisualizerControl));
+
+        private static object DisplacementMagnificationCoerceValue(DependencyObject d, object value)
+        {
+            var val = (double)value;
+            var obj = (ModelVisualizerControl)d;
+
+
+            return value;
+        }
+
+        public event RoutedPropertyChangedEventHandler<double> DisplacementMagnificationChanged
+        {
+            add { AddHandler(DisplacementMagnificationChangedEvent, value); }
+            remove { RemoveHandler(DisplacementMagnificationChangedEvent, value); }
+        }
+
+        private static void OnDisplacementMagnificationChanged(
+            DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
+        {
+            var obj = d as ModelVisualizerControl;
+            var args = new RoutedPropertyChangedEventArgs<double>(
+                (double)e.OldValue,
+                (double)e.NewValue);
+            args.RoutedEvent = ModelVisualizerControl.DisplacementMagnificationChangedEvent;
             obj.RaiseEvent(args);
         }
 
@@ -562,6 +611,116 @@ namespace BriefFiniteElementNet.Controls
 
         #endregion
 
+        #region ShowDisplacements Property and Property Change Routed event
+
+        public static readonly DependencyProperty ShowDisplacementsProperty
+            = DependencyProperty.Register(
+                "ShowDisplacements", typeof(bool), typeof(ModelVisualizerControl),
+                new PropertyMetadata(false, OnShowDisplacementsChanged, ShowDisplacementsCoerceValue));
+
+        public bool ShowDisplacements
+        {
+            get { return (bool)GetValue(ShowDisplacementsProperty); }
+            set { SetValue(ShowDisplacementsProperty, value); }
+        }
+
+        public static readonly RoutedEvent ShowDisplacementsChangedEvent
+            = EventManager.RegisterRoutedEvent(
+                "ShowDisplacementsChanged",
+                RoutingStrategy.Direct,
+                typeof(RoutedPropertyChangedEventHandler<bool>),
+                typeof(ModelVisualizerControl));
+
+        private static object ShowDisplacementsCoerceValue(DependencyObject d, object value)
+        {
+            var val = (bool)value;
+            var obj = (ModelVisualizerControl)d;
+
+
+            return value;
+        }
+
+        public event RoutedPropertyChangedEventHandler<bool> ShowDisplacementsChanged
+        {
+            add { AddHandler(ShowDisplacementsChangedEvent, value); }
+            remove { RemoveHandler(ShowDisplacementsChangedEvent, value); }
+        }
+
+        private static void OnShowDisplacementsChanged(
+            DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
+        {
+            var obj = d as ModelVisualizerControl;
+            var args = new RoutedPropertyChangedEventArgs<bool>(
+                (bool)e.OldValue,
+                (bool)e.NewValue);
+            args.RoutedEvent = ModelVisualizerControl.ShowDisplacementsChangedEvent;
+            obj.RaiseEvent(args);
+
+            obj.UpdateUi();
+        }
+
+
+        #endregion
+
+        #region CurrentLoadCase Property and Property Change Routed event
+
+        public static readonly DependencyProperty CurrentLoadCaseProperty
+            = DependencyProperty.Register(
+                "CurrentLoadCase", typeof(LoadCase), typeof(ModelVisualizerControl),
+                new PropertyMetadata(LoadCase.DefaultLoadCase, OnCurrentLoadCaseChanged, CurrentLoadCaseCoerceValue));
+
+        public LoadCase CurrentLoadCase
+        {
+            get { return (LoadCase)GetValue(CurrentLoadCaseProperty); }
+            set { SetValue(CurrentLoadCaseProperty, value); }
+        }
+
+        public static readonly RoutedEvent CurrentLoadCaseChangedEvent
+            = EventManager.RegisterRoutedEvent(
+                "CurrentLoadCaseChanged",
+                RoutingStrategy.Direct,
+                typeof(RoutedPropertyChangedEventHandler<LoadCase>),
+                typeof(ModelVisualizerControl));
+
+        private static object CurrentLoadCaseCoerceValue(DependencyObject d, object value)
+        {
+            var val = (LoadCase)value;
+            var obj = (ModelVisualizerControl)d;
+
+
+            return value;
+        }
+
+        public event RoutedPropertyChangedEventHandler<LoadCase> CurrentLoadCaseChanged
+        {
+            add { AddHandler(CurrentLoadCaseChangedEvent, value); }
+            remove { RemoveHandler(CurrentLoadCaseChangedEvent, value); }
+        }
+
+        private static void OnCurrentLoadCaseChanged(
+            DependencyObject d,
+            DependencyPropertyChangedEventArgs e)
+        {
+            var obj = d as ModelVisualizerControl;
+            var args = new RoutedPropertyChangedEventArgs<LoadCase>(
+                (LoadCase)e.OldValue,
+                (LoadCase)e.NewValue);
+            args.RoutedEvent = ModelVisualizerControl.CurrentLoadCaseChangedEvent;
+            obj.RaiseEvent(args);
+            obj.UpdateUi();
+        }
+
+        #endregion
+
+        private void SetDisplacementMagnification(LoadCase cse)
+        {
+            var t = GetSmartElementThichness();
+
+            var maxD = ModelToVisualize.Nodes.Select(i => i.GetNodalDisplacement(cse)).Average(i => i.Displacements.Length);
+
+            DisplacementMagnification = 10*t / maxD;
+        }
 
 
         /// <summary>
@@ -570,6 +729,9 @@ namespace BriefFiniteElementNet.Controls
         public void UpdateUi()
         {
             MainViewport.Children.Clear();
+
+            if (ShowDisplacements)
+                SetDisplacementMagnification(LoadCase.DefaultLoadCase);
 
             if (!this.IsLoaded)
                 return;
@@ -843,10 +1005,10 @@ namespace BriefFiniteElementNet.Controls
             var r = ElementVisualThickness / 2;
 
 
-            var p1 = elm.Nodes[0].Location;
-            var p2 = elm.Nodes[1].Location;
-            var p3 = elm.Nodes[2].Location;
-            var p4 = elm.Nodes[3].Location;
+            var p1 = GetNodePosition(elm.Nodes[0]);
+            var p2 = GetNodePosition(elm.Nodes[1]);
+            var p3 = GetNodePosition(elm.Nodes[2]);
+            var p4 = GetNodePosition(elm.Nodes[3]);
 
 
             bldr.AddTriangle(p1, p3, p4);
@@ -973,6 +1135,18 @@ namespace BriefFiniteElementNet.Controls
                 args.Handled = true;
             };
         }
+
+        
+        private Point GetNodePosition(Node nde)
+        {
+            if (!ShowDisplacements)
+                return nde.Location;
+
+            var d = nde.GetNodalDisplacement();
+
+            return nde.Location + d.Displacements * DisplacementMagnification;
+        }
+
 
         private void BindMouseEvents(ModelUIElement3D model, RigidElement elm)
         {
@@ -1410,11 +1584,11 @@ namespace BriefFiniteElementNet.Controls
 
             var r = ElementVisualThickness / 2;
 
-            if (elm.StartNode.Location.Equals(elm.EndNode.Location))
+            if (GetNodePosition(elm.StartNode).Equals(GetNodePosition(elm.EndNode)))
             {
-                bldr.AddSphere(new Point3D(elm.StartNode.Location.X, 
-                    elm.StartNode.Location.Y, 
-                    elm.StartNode.Location.Z), ElementVisualThickness * 3);
+                var lc = GetNodePosition(elm.StartNode);
+
+                bldr.AddSphere(new Point3D(lc.X, lc.Y, lc.Z), ElementVisualThickness * 3);
             }
             
         }
@@ -1498,10 +1672,10 @@ namespace BriefFiniteElementNet.Controls
                 var v1 = new Vector(0, section[i].Y, section[i].Z);
                 var v2 = new Vector(0, section[i + 1].Y, section[i + 1].Z);
 
-                var p1 = elm.StartNode.Location + trs.TransformLocalToGlobal(v1);
-                var p2 = elm.StartNode.Location + trs.TransformLocalToGlobal(v2);
+                var p1 = GetNodePosition(elm.StartNode) + trs.TransformLocalToGlobal(v1);
+                var p2 = GetNodePosition(elm.StartNode) + trs.TransformLocalToGlobal(v2);
 
-                var v = elm.EndNode.Location - elm.StartNode.Location;
+                var v = GetNodePosition(elm.EndNode) - GetNodePosition(elm.StartNode);
 
                 if (Math.Abs(v.Z) < 0.01)
                     Guid.NewGuid();
@@ -1618,9 +1792,9 @@ namespace BriefFiniteElementNet.Controls
             var r = ElementVisualThickness/2;
 
 
-            var p1 = elm.Nodes[0].Location;
-            var p2 = elm.Nodes[1].Location;
-            var p3 = elm.Nodes[2].Location;
+            var p1 = GetNodePosition(elm.Nodes[0]);
+            var p2 = GetNodePosition(elm.Nodes[1]);
+            var p3 = GetNodePosition(elm.Nodes[2]);
 
 
             bldr.AddTriangle(p1, p3, p2);
@@ -1636,9 +1810,9 @@ namespace BriefFiniteElementNet.Controls
             if (elm.Nodes.Any(i => i == null))
                 return;
 
-            var p1 = elm.Nodes[0].Location;
-            var p2 = elm.Nodes[1].Location;
-            var p3 = elm.Nodes[2].Location;
+            var p1 = GetNodePosition(elm.Nodes[0]);
+            var p2 = GetNodePosition(elm.Nodes[1]);
+            var p3 = GetNodePosition(elm.Nodes[2]);
 
 
             bldr.AddTriangle(p1, p3, p2);
@@ -1651,10 +1825,10 @@ namespace BriefFiniteElementNet.Controls
             var r = ElementVisualThickness / 2;
 
 
-            var p1 = elm.Nodes[0].Location;
-            var p2 = elm.Nodes[1].Location;
-            var p3 = elm.Nodes[2].Location;
-            var p4 = elm.Nodes[3].Location;
+            var p1 = GetNodePosition(elm.Nodes[0]);
+            var p2 = GetNodePosition(elm.Nodes[1]);
+            var p3 = GetNodePosition(elm.Nodes[2]);
+            var p4 = GetNodePosition(elm.Nodes[3]);
 
 
             bldr.AddTriangle(p1, p3, p4);
@@ -1687,10 +1861,10 @@ namespace BriefFiniteElementNet.Controls
             var r = ElementVisualThickness / 2;
 
 
-            var p1 = elm.Nodes[0].Location;
-            var p2 = elm.Nodes[1].Location;
-            var p3 = elm.Nodes[2].Location;
-            var p4 = elm.Nodes[3].Location;
+            var p1 = GetNodePosition(elm.Nodes[0]);
+            var p2 = GetNodePosition(elm.Nodes[1]);
+            var p3 = GetNodePosition(elm.Nodes[2]);
+            var p4 = GetNodePosition(elm.Nodes[3]);
 
 
             bldr.AddQuad(p1, p2, p3, p4);
@@ -1772,7 +1946,9 @@ namespace BriefFiniteElementNet.Controls
 
         private void AddNode(MeshBuilder bldr, Node nde)
         {
-            bldr.AddSphere(new Point3D(nde.Location.X, nde.Location.Y, nde.Location.Z),
+            var loc = GetNodePosition(nde);
+
+            bldr.AddSphere(new Point3D(loc.X, loc.Y, loc.Z),
                 ElementVisualThickness*2, 20, 20);
         }
 

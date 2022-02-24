@@ -42,6 +42,8 @@
                 <ToggleButton Content="NodalLoads (Moments)"
                               IsChecked="{Binding ShowNodalLoads_Moment, ElementName=userControl}" />
                 <ToggleButton Content="Constraints" IsChecked="{Binding ShowConstraints, ElementName=userControl}" />
+
+                <ToggleButton Content="Displacements" IsChecked="{Binding ShowDisplacements, ElementName=userControl}" />
             </StackPanel>
 
 
