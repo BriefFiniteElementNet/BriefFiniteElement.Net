@@ -1154,9 +1154,21 @@ namespace BriefFiniteElementNet.ElementHelpers
             var j = GetJMatrixAt(targetElement, isoCoords).Determinant();
 
             if (_direction == BeamDirection.Y)
-                u.SetColumn(0, new double[] { ld[0].DZ, ld[0].RY, ld[1].DZ, ld[1].RY });
+            {
+                for (int i = 0; i < nc; i++)
+                {
+                    u[2 * i + 0, 0] = ld[i].DZ;
+                    u[2 * i + 1, 0] = ld[i].RY;
+                }
+            }
             else
-                u.SetColumn(0, new double[] { ld[0].DY, ld[0].RZ, ld[1].DY, ld[1].RZ });
+            {
+                for (int i = 0; i < nc; i++)
+                {
+                    u[2 * i + 0, 0] = ld[i].DY;
+                    u[2 * i + 1, 0] = ld[i].RZ;
+                }
+            }
 
             var f = n * u;
 
