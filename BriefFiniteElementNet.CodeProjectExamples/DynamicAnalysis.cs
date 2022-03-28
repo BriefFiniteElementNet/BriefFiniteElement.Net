@@ -8,6 +8,9 @@ namespace BriefFiniteElementNet.CodeProjectExamples
 {
     public class DynamicAnalysis
     {
+        public void Run()
+        {
 
+        }
     }
 }

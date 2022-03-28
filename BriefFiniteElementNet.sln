@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28803.452
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BriefFiniteElementNet", "BriefFiniteElementNet\BriefFiniteElementNet.csproj", "{7CDA20D4-9BC8-4BC3-9F22-CB86CD4DC3E1}"
 EndProject
@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Bench
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.CodeProjectExamples", "BriefFiniteElementNet.CodeProjectExamples\BriefFiniteElementNet.CodeProjectExamples.csproj", "{24EBA191-F9E3-47CF-B0FE-865B6243A354}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Controls", "BriefFiniteElementNet.Controls\BriefFiniteElementNet.Controls.csproj", "{8DABDE62-8A8E-4153-B753-3A62015A9C16}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BriefFiniteElementNet.Controls", "BriefFiniteElementNet.Controls\BriefFiniteElementNet.Controls.csproj", "{8DABDE62-8A8E-4153-B753-3A62015A9C16}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Validation", "BriefFiniteElementNet.Validation\BriefFiniteElementNet.Validation.csproj", "{7A20CE01-552E-457A-A9C3-18BED244D897}"
 EndProject
@@ -20,8 +20,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Validation.Ui", "BriefFiniteElementNet.Validation.Ui\BriefFiniteElementNet.Validation.Ui.csproj", "{FC6E4877-B949-4522-BD35-116172A20925}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BriefFiniteElementNet.Tests", "BriefFiniteElementNet.Tests\BriefFiniteElementNet.Tests.csproj", "{BCD6C94B-19CC-4E03-80C9-8643727AB5C6}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.DebuggerVisualizers", "BriefFiniteElementNet.DebuggerVisualizers\BriefFiniteElementNet.DebuggerVisualizers.csproj", "{E12A7AD9-780B-4ADC-8C08-C7D5FD63C18B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Solvers", "BriefFiniteElementNet.Solvers\BriefFiniteElementNet.Solvers.csproj", "{F01B1FBD-A02F-4B0F-AEFF-5E48F9BEF815}"
 EndProject
@@ -73,10 +71,6 @@ Global
 		{BCD6C94B-19CC-4E03-80C9-8643727AB5C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCD6C94B-19CC-4E03-80C9-8643727AB5C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCD6C94B-19CC-4E03-80C9-8643727AB5C6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E12A7AD9-780B-4ADC-8C08-C7D5FD63C18B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E12A7AD9-780B-4ADC-8C08-C7D5FD63C18B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E12A7AD9-780B-4ADC-8C08-C7D5FD63C18B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E12A7AD9-780B-4ADC-8C08-C7D5FD63C18B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F01B1FBD-A02F-4B0F-AEFF-5E48F9BEF815}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F01B1FBD-A02F-4B0F-AEFF-5E48F9BEF815}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F01B1FBD-A02F-4B0F-AEFF-5E48F9BEF815}.Release|Any CPU.ActiveCfg = Release|Any CPU
