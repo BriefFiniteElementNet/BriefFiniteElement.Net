@@ -137,7 +137,7 @@ namespace BriefFiniteElementNet
             get { return loads; }
         }
 
-        public List<ElementalLoad> LoAds { get; set; }//test clscompliant
+        //public List<ElementalLoad> LoAds { get; set; }//test clscompliant
 
         /// <summary>
         /// Gets the nodes.
