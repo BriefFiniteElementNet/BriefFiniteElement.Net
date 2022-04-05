@@ -44,9 +44,9 @@ namespace BriefFiniteElementNet
         private Model parent;
 
         private Dictionary<LoadCase, double[]> _displacements = new Dictionary<LoadCase, double[]>();
-        private Dictionary<LoadCase, double[]> _forces = new Dictionary<LoadCase, double[]>();
-        private Dictionary<LoadCase, double[]> elementForces = new Dictionary<LoadCase, double[]>();
-        private Dictionary<LoadCase, double[]> concentratedForces = new Dictionary<LoadCase, double[]>();
+        private Dictionary<LoadCase, double[]> _forces = new Dictionary<LoadCase, double[]>();//external force
+        private Dictionary<LoadCase, double[]> elementForces = new Dictionary<LoadCase, double[]>();//element equaivalend nodal loads
+        private Dictionary<LoadCase, double[]> concentratedForces = new Dictionary<LoadCase, double[]>();//
         private Dictionary<LoadCase, double[]> supportReactions = new Dictionary<LoadCase, double[]>();
 
         private LoadCase settlementsLoadCase { get; set; }
@@ -837,8 +837,7 @@ namespace BriefFiniteElementNet
 
                 var a1 = new double[n];
 
-                kt.Multiply(rd,
-                    a1);
+                kt.Multiply(rd, a1);
 
                 a1.AddToSelf(ft);
 

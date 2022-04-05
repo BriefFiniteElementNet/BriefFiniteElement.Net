@@ -22,26 +22,7 @@ namespace BriefFiniteElementNet
         /// </summary>
         [NonSerialized]
         private int index;
-        /*
-        /// <summary>
-        /// Just obsoleted because of cannot add external element with new type
-        /// </summary>
-        [Obsolete]
-        protected ElementType elementType;
-
-        /// <summary>
-        /// Gets the type of the element. 
-        /// </summary>
-        /// <value>
-        /// The type of the element.
-        /// </value>
-        /// <remarks>Obsolete because logically prevent us to make an element outside this library</remarks>
-        [Obsolete]
-        public ElementType ElementType
-        {
-            get { return elementType; }
-            private set { elementType = value; }
-        }*/
+       
 
         #region pooling and caching
 
