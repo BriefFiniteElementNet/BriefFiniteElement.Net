@@ -14,6 +14,7 @@ namespace BriefFiniteElementNet
     [Serializable]
     //[CLSCompliant(true)]
     [DebuggerDisplay("{this.GetType().Name}, Label: {Label}")]
+    
     public abstract class Element : StructurePart
     {
         /// <summary>
@@ -126,7 +127,7 @@ namespace BriefFiniteElementNet
         protected List<ElementalLoad> loads = new List<ElementalLoad>();
 
         /// <summary>
-        /// Gets or sets the loads.
+        /// Gets the loads.
         /// </summary>
         /// <value>
         /// The loads.
@@ -135,6 +136,8 @@ namespace BriefFiniteElementNet
         {
             get { return loads; }
         }
+
+        public List<ElementalLoad> LoAds { get; set; }//test clscompliant
 
         /// <summary>
         /// Gets the nodes.

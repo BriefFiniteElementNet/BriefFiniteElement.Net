@@ -7,3 +7,6 @@
 [assembly: InternalsVisibleTo("BriefFiniteElementNet.CustomElements")]
 [assembly: InternalsVisibleTo("BriefFiniteElementNet.XmlSerialization")]
 [assembly: InternalsVisibleTo("BriefFiniteElementNet.Legacy")]
+
+[assembly: System.CLSCompliant(true)]
+
