@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;netstandard2.0</TargetFrameworks>
+	<AssemblyVersion>2.0.5</AssemblyVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <PackageId>BriefFiniteElementNet.Common</PackageId>
+    <Description>Common object for Brief Finite Element</Description>
+    <Version>2.0.5</Version>
+    <PackageTags>finite elements static linear analysis</PackageTags>
+    <Product>BriefFiniteElementNet.Common</Product>
+    <Company />
+    <Copyright>copyleft © 2022 </Copyright>
+    <Authors>epsi1on</Authors>
+    
+    <FileVersion></FileVersion>
+    <AssemblyName>BriefFiniteElementNet.Common</AssemblyName>
+    <RootNamespace>BriefFiniteElementNet</RootNamespace>
+    <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReleaseNotes></PackageReleaseNotes>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0|AnyCPU'">
+    <Deterministic>True</Deterministic>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0|AnyCPU'">
+    <Deterministic>True</Deterministic>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <Deterministic>True</Deterministic>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <Deterministic>True</Deterministic>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CSparse" Version="3.4.9" />
+  </ItemGroup>
+
+</Project>

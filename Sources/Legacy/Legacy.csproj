@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;netstandard2.0;</TargetFrameworks>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageId>BriefFiniteElement.Legacy</PackageId>
+	  <Version>2.0.5</Version>
+    <Authors>epsi1on</Authors>
+    <Company>N/A</Company>
+	<AssemblyVersion>2.0.5</AssemblyVersion>
+	<FileVersion>2.0.5</FileVersion>
+	<AssemblyName>CustomElements</AssemblyName>
+    <Product>BriefFiniteElement.$(AssemblyName)</Product>
+    <Description>Legacy codes and element from BriefFiniteElement.net for historical uses</Description>
+    <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="ElementHelpers\**" />
+    <EmbeddedResource Remove="ElementHelpers\**" />
+    <None Remove="ElementHelpers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+  </ItemGroup>
+
+</Project>
