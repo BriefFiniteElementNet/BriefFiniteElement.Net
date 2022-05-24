@@ -56,7 +56,7 @@
     <Compile Include="DynamicAnalysis.cs" />
     <Compile Include="InternalForce.cs" />
     <Compile Include="LoadCombExample.cs" />
-    <Compile Include="PartialTrapezoidalLoadExamples.cs" />
+    <Compile Include="PartiNonUniformLoadExamples.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShellExample.cs" />

@@ -14,7 +14,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
         [STAThread]
         static void Main(string[] args)
         {
-            PartialTrapezoidalLoadExamples.test1();
+            PartiNonUniformLoadExamples.test1();
             //InternalForceExample.Run();
             //new BarIncliendFrameExample().Run();
             //new UniformLoadCoordSystem().run();

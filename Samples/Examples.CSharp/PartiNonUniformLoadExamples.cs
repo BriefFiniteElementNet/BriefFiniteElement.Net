@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BriefFiniteElementNet.CodeProjectExamples
 {
-    public class PartialTrapezoidalLoadExamples
+    public class PartiNonUniformLoadExamples
     {
         public static void test1()
         {
