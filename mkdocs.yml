@@ -1,4 +1,0 @@
-site_name: Test
-pages:
-  - Home: Documents/sphinx/docs/index.rst
-  - Test: test.rst

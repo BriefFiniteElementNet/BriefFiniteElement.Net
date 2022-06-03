@@ -1,0 +1,7 @@
+base: Documents/sphinx/docs/index.rst
+type: sphinx
+formats:
+    html: true
+    pdf: true
+python:
+    setup_install: true
