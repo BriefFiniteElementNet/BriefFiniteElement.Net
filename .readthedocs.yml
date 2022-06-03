@@ -1,4 +1,4 @@
-base: Documents/sphinx/docs/index.rst
+base: Documents/sphinx/docs
 type: sphinx
 formats:
     html: true
