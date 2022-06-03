@@ -1,0 +1,86 @@
+Home
+Intro
+	- Intro
+	- BFE Basics
+	- BFE Features
+	- Download BFE.NET
+	- Run BFE.NET (Excluded)
+	
+Getting Started
+	
+	- Define A Finite Element (FE) Model
+		- Adding Nodes, Elements
+		- Adding Loads
+		- Setting Settlements & Constraints
+	- Analysing Model
+	- Getting back results
+		- Getting nodal displacements
+		- Getting internal forces of elements
+
+Creating a FE model (sections is same page)
+	- Nodes
+	- Elements
+	- Loads
+	- Setting Settlements & Constraints
+
+Analysing a FE Model
+	- Load Cases and their application
+	- Precheck for errors
+	- Solvers
+
+Elements inside BFE
+	- BarElement
+		DoFs
+		Properties
+	- TriangleElement
+		DoFs
+		Properties
+	- 3d tetrahedron element
+		DoFs
+		Properties
+	- Rigid Body
+		Master and Slave Nodes
+
+Getting Back Results from model
+
+
+How To
+	Run BFE
+	Add Nodes to model
+	Add Elements to model
+	Add Loads to model (Elements or Nodes)
+	Analyse Model
+	Get Nodal Displacements
+	Get Element Internal forces
+
+	
+Miscellaneous
+	- Features of BFE
+	- Adding Debugger Visualizers
+	- Error Message List
+	- Performance Evaluation of BFE
+
+
+interesting pages:
+http://www.agros2d.org/features/
+
+codeaster documentation
+http://code-aster.org/doc/default/en/index.php?man=commande
+
+Deal II help
+http://dealii.org/developer/doxygen/deal.II/index.html
+
+http://www.featool.com/doc/
+
+http://download.gna.org/getfem/html/homepage/project/index.html
+
+http://www.featflow.de/en/software/documentation.html
+
+http://opensees.berkeley.edu/OpenSees/manuals/usermanual/index.html
+
+Abaqus documentation:
+http://50.16.225.63/v6.14/books/gsa/default.htm?startat=ch03s01.html
+
+
+Ansys documentation
+http://ans2.vm.stuba.sk/html/elem_55/chapter1/ES1-1.htm
