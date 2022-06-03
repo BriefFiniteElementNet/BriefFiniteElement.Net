@@ -1,4 +1,4 @@
 site_name: Test
 pages:
-  - Home: docs/underconstruction.rst
+  - Home: Documents/sphinx/docs/index.rst
   - Test: test.rst
