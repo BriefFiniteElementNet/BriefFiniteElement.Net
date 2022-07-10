@@ -5,10 +5,10 @@ namespace CSparse.Interop.MKL.Pardiso
     using System.Runtime.InteropServices;
 
     // See https://software.intel.com/en-us/mkl-developer-reference-c-intel-mkl-pardiso-parallel-direct-sparse-solver-interface
-
+    // to download pardiso dlls, download and install intel oneapi, use web installer and only install math kernel library
     internal static class NativeMethods
     {
-        const string DLL = @"C:\Program Files (x86)\Intel\oneAPI\mkl\2022.1.0\redist\intel64\mkl_rt.2.dll";
+        const string DLL = @"mkl_rt.2.dll";
 
         [DllImport(DLL, EntryPoint = "pardisoinit", CallingConvention = CallingConvention.Cdecl)]
         public static extern void pardisoinit(IntPtr[] pt, /*const*/ ref int mtype, int[] iparm);
