@@ -21,7 +21,7 @@ namespace BriefFiniteElementNet.Solvers
 
             var ver = new CSparse.Interop.MKL.MKLVersion();
 
-            pardiso = new CSparse.Double.Factorization.MKL.Pardiso(A,);
+            pardiso = new CSparse.Double.Factorization.MKL.Pardiso(A);
             pardiso.Factorize();
             IsInitialized = true;
         }
@@ -30,8 +30,6 @@ namespace BriefFiniteElementNet.Solvers
         {
             if (!IsInitialized)
                 Initialize();
-
-            
 
             pardiso.Solve(b, x);
         }
