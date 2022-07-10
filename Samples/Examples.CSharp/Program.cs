@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BriefFiniteElementNet.Controls;
 //using BriefFiniteElementNet.Controls;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.MpcElements;
+using Examples.CSharp;
 
 
 namespace BriefFiniteElementNet.CodeProjectExamples
@@ -14,7 +16,8 @@ namespace BriefFiniteElementNet.CodeProjectExamples
         [STAThread]
         static void Main(string[] args)
         {
-            PartiNonUniformLoadExamples.test1();
+            MklExample.Run();
+            //PartiNonUniformLoadExamples.test1();
             //InternalForceExample.Run();
             //new BarIncliendFrameExample().Run();
             //new UniformLoadCoordSystem().run();
@@ -163,7 +166,7 @@ namespace BriefFiniteElementNet.CodeProjectExamples
 
             var sp = System.Diagnostics.Stopwatch.StartNew();
 
-            var m3 = m1.Multiply(m2);
+            //var m3 = m1.Multiply(m2);
 
             Console.WriteLine("{1}x{1}*{1}x{1} took {0} milisecs", sp.ElapsedMilliseconds, n);
         }

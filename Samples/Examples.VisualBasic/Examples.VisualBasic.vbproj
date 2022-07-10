@@ -11,8 +11,9 @@
     <AssemblyName>Examples.VisualBasic</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Console</MyType>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -47,15 +48,6 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BriefFiniteElementNet, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElement.Net.2.0.0-pre\lib\net45\BriefFiniteElementNet.dll</HintPath>
-    </Reference>
-    <Reference Include="BriefFiniteElementNet.Common, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElement.Net.2.0.0-pre\lib\net45\BriefFiniteElementNet.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="CSparse, Version=3.4.9.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\CSparse.3.4.9\lib\net45\CSparse.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -82,6 +74,7 @@
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -113,7 +106,24 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
-    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Sources\BriefFiniteElementNet\BriefFiniteElementNet.csproj">
+      <Project>{ba7cbe05-bff9-47e4-8dd3-df8ff143c430}</Project>
+      <Name>BriefFiniteElementNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Sources\Common\Common.csproj">
+      <Project>{2f5113ba-1945-4b1a-86a6-850becc6cc5a}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Sources\Legacy\Legacy.csproj">
+      <Project>{fa8e5582-de1b-4039-93d7-ea7b601bd437}</Project>
+      <Name>Legacy</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Sources\Solvers\SolversX64.csproj">
+      <Project>{a08cd429-21a0-417e-b55a-23a4b581b635}</Project>
+      <Name>SolversX64</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

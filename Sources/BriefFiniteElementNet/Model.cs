@@ -403,6 +403,7 @@ namespace BriefFiniteElementNet
 
             ReIndexNodes();
 
+            
             foreach (var loadCase in config.LoadCases)
             {
                 lastResult.AddAnalysisResultIfNotExists_MPC(loadCase);

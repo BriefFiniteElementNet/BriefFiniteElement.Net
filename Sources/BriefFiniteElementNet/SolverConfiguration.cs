@@ -41,11 +41,17 @@ namespace BriefFiniteElementNet
             SolverFactory = solverFactory;
         }
 
+        public SolverConfiguration(ISolverFactory solverFactory, params LoadCase[] loadCases)
+        {
+            SolverFactory = solverFactory;
+            this.loadCases.AddRange(loadCases);
+        }
+
         #endregion
 
         #region Fields and Properties
 
-        private List<LoadCase> loadCases;
+        private List<LoadCase> loadCases = new List<LoadCase>();
 
         /// <summary>
         /// Gets or sets the load cases.
