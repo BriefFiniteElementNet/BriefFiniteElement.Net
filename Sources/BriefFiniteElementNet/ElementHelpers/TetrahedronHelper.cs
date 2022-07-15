@@ -418,16 +418,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             throw new NotImplementedException();
         }
 
-        public void AddStiffnessComponents(CoordinateStorage<double> global)
-        {
-            throw new NotImplementedException();
-        }
-
-        public GeneralStressTensor GetLocalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
-        {
-            throw new NotImplementedException();
-        }
-
         public GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
@@ -435,7 +425,32 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var disps =
+                localDisplacements.Select(i => i.Displacements).//extract only displacement part (not include rotation)
+                SelectMany(i => new[] { i.X, i.Y, i.Z }).//convert to single double array
+                ToArray();
+
+            var b = GetBMatrixAt(targetElement);//b is constant over tetrahedron (4node 3d)
+            var u = Matrix.OfVector(disps);
+            var d = GetDMatrixAt(targetElement, isoCoords);
+
+            var res = d * b * u;
+
+            var cauchy = new CauchyStressTensor();
+
+            cauchy.S11 = res[0, 0];
+            cauchy.S12 = res[0, 1];
+            cauchy.S13 = res[0, 2];
+
+            cauchy.S21 = res[1, 0];
+            cauchy.S22 = res[1, 1];
+            cauchy.S23 = res[1, 2];
+
+            cauchy.S31 = res[2, 0];
+            cauchy.S32 = res[2, 1];
+            cauchy.S33 = res[2, 2];
+
+            return new GeneralStressTensor(cauchy);
         }
     }
 }

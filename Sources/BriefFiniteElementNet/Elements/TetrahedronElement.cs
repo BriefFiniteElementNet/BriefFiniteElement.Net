@@ -118,6 +118,47 @@ namespace BriefFiniteElementNet.Elements
             }
         }
 
+        #region stress
+        /// <summary>
+        /// Gets the internal stress at defined <see cref="isoLocation"/>.
+        /// tensor is in global coordinate system. 
+        /// </summary>
+        /// <param name="loadCase">the load case </param>
+        /// <param name="isoLocation"></param>
+        /// <returns>Stress tensor of flat shell, in local coordination system</returns>
+        /// <remarks>
+        /// for more info about local coordinate of flat shell see page [72 of 166] (page 81 of pdf) of "Development of Membrane, Plate and Flat Shell Elements in Java" thesis by Kaushalkumar Kansara freely available on the web
+        /// </remarks>
+        public CauchyStressTensor GetLocalInternalStress(LoadCase loadCase, params double[] isoLocation)
+        {
+            var helpers = GetHelpers();
+
+            var gds = new Displacement[this.Nodes.Length];//global displacements
+            var tr = this.GetTransformationManager();
+
+            for (var i = 0; i < Nodes.Length; i++)
+            {
+                var globalD = Nodes[i].GetNodalDisplacement(loadCase);
+                var local = tr.TransformGlobalToLocal(globalD);
+                gds[i] = local;
+            }
+
+            var trs = this.GetTransformationManager();
+
+            var lds = gds.Select(i => tr.TransformGlobalToLocal(gds)).ToArray();
+
+            var buf = new CauchyStressTensor();
+
+            foreach (var helper in helpers)
+            {
+                var tns = helper.GetLocalInternalStressAt(this, gds, isoLocation);
+
+                buf += tns.MembraneTensor;
+            }
+
+            return buf;
+        }
+        #endregion
 
         #region ISerialization Implementation
 
