@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Legacy", "..\Sources\Legacy
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Controls", "..\Sources\Controls\Controls.csproj", "{8DABDE62-8A8E-4153-B753-3A62015A9C16}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomElements", "..\Sources\CustomElements\CustomElements.csproj", "{C967A85D-109B-4CB0-9E94-795D80C86A13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{8DABDE62-8A8E-4153-B753-3A62015A9C16}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DABDE62-8A8E-4153-B753-3A62015A9C16}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DABDE62-8A8E-4153-B753-3A62015A9C16}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C967A85D-109B-4CB0-9E94-795D80C86A13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C967A85D-109B-4CB0-9E94-795D80C86A13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C967A85D-109B-4CB0-9E94-795D80C86A13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C967A85D-109B-4CB0-9E94-795D80C86A13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
