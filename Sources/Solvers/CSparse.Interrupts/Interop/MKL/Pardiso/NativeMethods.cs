@@ -8,12 +8,12 @@ namespace CSparse.Interop.MKL.Pardiso
     // to download pardiso dlls, download and install intel oneapi, use web installer and only install math kernel library
     internal static class NativeMethods
     {
-        const string DLL = @"mkl_rt.2.dll";
+        
 
-        [DllImport(DLL, EntryPoint = "pardisoinit", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Interrupts.Interop.NativeBinaryPathes.MKL_DLL, EntryPoint = "pardisoinit", CallingConvention = CallingConvention.Cdecl)]
         public static extern void pardisoinit(IntPtr[] pt, /*const*/ ref int mtype, int[] iparm);
 
-        [DllImport(DLL, EntryPoint = "pardiso", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport(Interrupts.Interop.NativeBinaryPathes.MKL_DLL, EntryPoint = "pardiso", CallingConvention = CallingConvention.Cdecl)]
         public static extern void pardiso(IntPtr[] pt, /*const*/ ref int maxfct, /*const*/ ref int mnum, /*const*/ ref int mtype,
             /*const*/ ref int phase, /*const*/ ref int n, /*const*/ IntPtr a, /*const*/ IntPtr ia, /*const*/ IntPtr ja, int[] perm,
             /*const*/ ref int nrhs, int[] iparm, /*const*/ ref int msglvl, IntPtr b, IntPtr x, out int error);

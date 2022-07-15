@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CustomElements", "CustomEle
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Legacy", "Legacy\Legacy.csproj", "{D272A774-6864-4504-B480-02BA57955B53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Solvers", "Solvers\Solvers.csproj", "{5DAFC8D1-A46A-468D-8931-B9A7B6053672}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolversX64", "Solvers\SolversX64.csproj", "{6B3E0DE1-C1F6-4CEC-84F6-FDAE230A410D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,10 +41,10 @@ Global
 		{D272A774-6864-4504-B480-02BA57955B53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D272A774-6864-4504-B480-02BA57955B53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D272A774-6864-4504-B480-02BA57955B53}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5DAFC8D1-A46A-468D-8931-B9A7B6053672}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5DAFC8D1-A46A-468D-8931-B9A7B6053672}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5DAFC8D1-A46A-468D-8931-B9A7B6053672}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5DAFC8D1-A46A-468D-8931-B9A7B6053672}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B3E0DE1-C1F6-4CEC-84F6-FDAE230A410D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B3E0DE1-C1F6-4CEC-84F6-FDAE230A410D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B3E0DE1-C1F6-4CEC-84F6-FDAE230A410D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B3E0DE1-C1F6-4CEC-84F6-FDAE230A410D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

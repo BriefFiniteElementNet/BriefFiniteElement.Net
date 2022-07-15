@@ -9,7 +9,7 @@ namespace CSparse.Interop.MKL
 {
     internal static class NativeMethods
     {
-        const string MKL_DLL = @"C:\Program Files (x86)\Intel\oneAPI\mkl\2022.1.0\redist\intel64\mkl_rt.2.dll";
+        public const string MKL_DLL = global::CSparse.Interrupts.Interop.NativeBinaryPathes.MKL_DLL;
 
         #region Info
 
