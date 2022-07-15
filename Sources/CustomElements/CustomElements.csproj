@@ -6,7 +6,7 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <PackageId>BriefFiniteElementNet.CustomElements</PackageId>
     <Description>Custom elements (like quadrilatural or hexahedral) for BFE</Description>
-	<Version>2.0.5</Version>
+	<Version>2.0.6</Version>
     <PackageTags>finite elements static linear analysis</PackageTags>
     <Product>BriefFiniteElementNet.CustomElements</Product>
     <Company>N.A.</Company>

@@ -9,7 +9,7 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <PackageId>BriefFiniteElement.Net</PackageId>
     <Description>A Finite Element library for static and linear analysis of solids and structures.</Description>
-    <Version>2.0.5</Version>
+    <Version>2.0.6</Version>
     <PackageTags>finite elements static linear analysis</PackageTags>
     <Product>BriefFiniteElement.Net</Product>
     <Company>N.A.</Company>
