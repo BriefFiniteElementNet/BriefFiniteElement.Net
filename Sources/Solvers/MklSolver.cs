@@ -16,11 +16,6 @@ namespace BriefFiniteElementNet.Solvers
 
         public void Initialize()
         {
-            var sb = new StringBuilder();
-            int l = 100;
-
-            var ver = new CSparse.Interop.MKL.MKLVersion();
-
             pardiso = new CSparse.Double.Factorization.MKL.Pardiso(A);
             pardiso.Factorize();
             IsInitialized = true;

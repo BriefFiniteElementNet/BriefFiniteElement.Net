@@ -10,7 +10,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="CSparse.Interrupts\**" />
+    <EmbeddedResource Remove="CSparse.Interrupts\**" />
+    <None Remove="CSparse.Interrupts\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\csparse-interrupt\CSparse.Interop\CSparse.Interop.csproj" />
   </ItemGroup>
 
 </Project>

@@ -230,6 +230,7 @@ namespace CSparse.Interop.MKL.Pardiso
         /// </summary>
         protected virtual int DoFactorize()
         {
+            /*
             using(var memstr=new System.IO.MemoryStream())
             {
                 var rwtr = new StreamWriter(memstr);
@@ -242,7 +243,9 @@ namespace CSparse.Interop.MKL.Pardiso
 
                 var mtx = rdr.ReadToEnd();
             }
-            
+            */
+
+
             int n = matrix.ColumnCount;
             int nrhs = 1;
 

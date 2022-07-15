@@ -8,6 +8,6 @@ namespace CSparse.Interrupts.Interop
 {
     public static class NativeBinaryPathes
     {
-        public const string MKL_DLL = @"C:\Program Files (x86)\Intel\oneAPI\mkl\2022.1.0\redist\intel64\mkl_rt.2.dll";
+        public const string MKL_DLL = @"C:\Users\Administrator\Downloads\intelmkl.redist.win-x64.2022.0.3.171.nupkg\runtimes\win-x64\native\mkl_rt.2.dll";
     }
 }
