@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Legacy", "Legacy\Legacy.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SolversX64", "Solvers\SolversX64.csproj", "{6B3E0DE1-C1F6-4CEC-84F6-FDAE230A410D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSparse.Interop", "csparse-interrupt\CSparse.Interop\CSparse.Interop.csproj", "{1D9A0397-F17A-4844-A333-A6F3C31E4998}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{6B3E0DE1-C1F6-4CEC-84F6-FDAE230A410D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B3E0DE1-C1F6-4CEC-84F6-FDAE230A410D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B3E0DE1-C1F6-4CEC-84F6-FDAE230A410D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D9A0397-F17A-4844-A333-A6F3C31E4998}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D9A0397-F17A-4844-A333-A6F3C31E4998}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D9A0397-F17A-4844-A333-A6F3C31E4998}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D9A0397-F17A-4844-A333-A6F3C31E4998}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
