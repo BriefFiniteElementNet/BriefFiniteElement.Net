@@ -85,7 +85,7 @@ If you are using this library for research or academic porpuses, note that there
 ```
 @online{BFE,
   author = {epsi1on},
-  title = {BriefFiniteElement.Net library: linear FEA analysis for solids},
+  title = {BriefFiniteElement.Net library: linear FEA for solids in .NET},
   year = 2014,
   url = {(https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net)},
   urldate = {2022-08-09}
