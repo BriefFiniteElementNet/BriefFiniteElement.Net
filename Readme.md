@@ -87,7 +87,7 @@ If you are using this library for research or academic porpuses, note that there
   author = {epsi1on},
   title = {BriefFiniteElement.Net library: linear FEA analysis for solids},
   year = 2014,
-  url = {[http://web.archive.org/web/20080207010024/http://www.808multimedia.com/winnt/kernel.htm](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net)},
+  url = {(https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net)},
   urldate = {2022-08-09}
 }
 ```
