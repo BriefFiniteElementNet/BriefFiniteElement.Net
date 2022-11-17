@@ -15,4 +15,4 @@ Examples
     bargeosection/index
     settlement/index
 
-This section contains example items.
+This section contains example items. select examples in the left panel.
