@@ -10,6 +10,32 @@ A Finite Element library for Static and Linear analysis of solids and structures
 
 V2.0.5 released: https://www.nuget.org/packages/BriefFiniteElement.Net/
 
+## How to build source
+
+For building the source, Visual Studio 2022 is needed. Since the target framework is set to `Net6.0`, and VS2019 and prior do not support NET6.
+If you want to build the source with say `Visual Studio 2019`, then simply edit this line on the `*.csproj` files with a text editor (like Notepad):
+
+```
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;netstandard2.0;net45;</TargetFrameworks>
+	<AssemblyVersion>2.0.5</AssemblyVersion>
+	<FileVersion>2.0.5</FileVersion>
+```
+
+remove `net6.0` on the 4th line:
+
+```
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net45;</TargetFrameworks>
+	<AssemblyVersion>2.0.5</AssemblyVersion>
+	<FileVersion>2.0.5</FileVersion>
+```
+and you can build it with VS2019.
+
 ## Introduction
 Brief Finite Element Dot NET (BFE.NET) is a .NET based software framework for static and linear Finite Element Analysis (FEA) of solids and structures. BFE.NET help you to simply take advantage of Object Oriented approach to analyze FE models. Advantage of such a framework is that user does have a very powerful control on what he is working with, and control is not limited to an UI with predefined controls.
 
