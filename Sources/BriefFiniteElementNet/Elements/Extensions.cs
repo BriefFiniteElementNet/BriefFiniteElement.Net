@@ -52,10 +52,10 @@ namespace BriefFiniteElementNet.Elements
         /// Regardless of the source of the loads, this must be converted into nodal forces.
         /// </summary>
         /// <param name="elm">target element</param>
-        /// <param name="normal"></param>
-        /// <param name="p"></param>
-        /// <returns></returns>
-        /// <exception ></exception>
+        /// <param name="normal">Normal vector of cutting plane</param>
+        /// <param name="p">A point on the cutting plane</param>
+        /// <param name="targePoint">An arbitrary point on the cut surface</param>
+        /// <returns>Crossing internal force</returns>
         public static Force GetCrossingForce(this Element elm, Vector normal, Point p, LoadCombination cmb, Point targePoint)
         {
             var n = elm.Nodes.Length;
@@ -124,11 +124,11 @@ namespace BriefFiniteElementNet.Elements
         /// returns the internal force of element if an infinite plane with defined normal and point cuts the element
         /// the force that is applied to positive side (same side and normal)
         /// </summary>
-        /// <param name="elm"></param>
-        /// <param name="normal"></param>
-        /// <param name="p"></param>
-        /// <returns></returns>
-        /// <exception cref="NotImplementedException"></exception>
+        /// <param name="elm">target element</param>
+        /// <param name="normal">Normal vector of cutting plane</param>
+        /// <param name="p">A point on the cutting plane</param>
+        /// <param name="targePoint">An arbitrary point on the cut surface</param>
+        /// <returns>Crossing internal force</returns>
         public static Force GetCrossingForce(this Element elm, int[] nods, LoadCombination cmb, Point targePoint)
         {
             var n = elm.Nodes.Length;
