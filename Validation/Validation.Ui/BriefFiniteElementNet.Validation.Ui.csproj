@@ -35,15 +35,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BriefFiniteElementNet, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElement.Net.2.0.5\lib\netstandard2.0\BriefFiniteElementNet.dll</HintPath>
-    </Reference>
-    <Reference Include="BriefFiniteElementNet.Common, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElement.Net.2.0.5\lib\netstandard2.0\BriefFiniteElementNet.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="BriefFiniteElementNet.CustomElements, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElementNet.CustomElements.2.0.5\lib\netstandard2.0\BriefFiniteElementNet.CustomElements.dll</HintPath>
-    </Reference>
     <Reference Include="CSparse, Version=3.4.9.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CSparse.3.4.9\lib\net45\CSparse.dll</HintPath>
     </Reference>
@@ -65,14 +56,30 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Sources\BriefFiniteElementNet\BriefFiniteElementNet.csproj">
+      <Project>{d8e82327-6463-4071-a2f5-04da549892b4}</Project>
+      <Name>BriefFiniteElementNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Sources\Common\Common.csproj">
+      <Project>{16fa6776-f029-4811-8a5b-23fe8a314cd9}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Sources\CustomElements\CustomElements.csproj">
+      <Project>{e37b105f-b1c9-4b8b-9fb2-14027b1932c9}</Project>
+      <Name>CustomElements</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Sources\Legacy\Legacy.csproj">
+      <Project>{7fbea1b4-75ea-4498-b63c-75e7813e11bc}</Project>
+      <Name>Legacy</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Validation\BriefFiniteElementNet.Validation.csproj">
       <Project>{7a20ce01-552e-457a-a9c3-18bed244d897}</Project>
       <Name>BriefFiniteElementNet.Validation</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="app.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

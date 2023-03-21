@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BriefFiniteElementNet.TestConsole</RootNamespace>
     <AssemblyName>BriefFiniteElementNet.TestConsole</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -35,23 +35,11 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BriefFiniteElementNet, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElement.Net.2.0.5\lib\netstandard2.0\BriefFiniteElementNet.dll</HintPath>
-    </Reference>
-    <Reference Include="BriefFiniteElementNet.Common, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElement.Net.2.0.5\lib\netstandard2.0\BriefFiniteElementNet.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="BriefFiniteElementNet.CustomElements, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElementNet.CustomElements.2.0.5\lib\netstandard2.0\BriefFiniteElementNet.CustomElements.dll</HintPath>
-    </Reference>
     <Reference Include="Controls, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElement.WpfControls.1.0.0\lib\net471\Controls.dll</HintPath>
+      <HintPath>..\..\Sources\Controls\bin\Debug\net45\Controls.dll</HintPath>
     </Reference>
     <Reference Include="CSparse, Version=3.4.9.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CSparse.3.4.9\lib\net45\CSparse.dll</HintPath>
-    </Reference>
-    <Reference Include="CustomElements, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElement.Legacy.2.0.5\lib\netstandard2.0\CustomElements.dll</HintPath>
     </Reference>
     <Reference Include="HelixToolkit, Version=2.12.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
       <HintPath>..\packages\HelixToolkit.2.12.0\lib\netstandard1.1\HelixToolkit.dll</HintPath>
@@ -97,6 +85,16 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Sources\BriefFiniteElementNet\BriefFiniteElementNet.csproj">
+      <Project>{87ca06bb-3a54-45e2-a091-f827e7095b4f}</Project>
+      <Name>BriefFiniteElementNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Sources\Common\Common.csproj">
+      <Project>{65df1278-db99-4cfe-a232-6ce6eedbe683}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

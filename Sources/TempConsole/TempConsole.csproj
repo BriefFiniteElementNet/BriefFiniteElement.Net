@@ -7,4 +7,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Validation\Validation\BriefFiniteElementNet.Validation.csproj" />
+    <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj" />
+    <ProjectReference Include="..\Common\Common.csproj" />
+    <ProjectReference Include="..\CustomElements\CustomElements.csproj" />
+    <ProjectReference Include="..\Legacy\Legacy.csproj" />
+    
+  </ItemGroup>
+
 </Project>

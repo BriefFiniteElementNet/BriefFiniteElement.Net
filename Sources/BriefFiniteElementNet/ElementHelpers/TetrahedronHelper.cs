@@ -436,19 +436,17 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var res = d * b * u;
 
+            //res = (Matrix) res.Transpose();
+
             var cauchy = new CauchyStressTensor();
 
             cauchy.S11 = res[0, 0];
-            cauchy.S12 = res[0, 1];
-            cauchy.S13 = res[0, 2];
+            cauchy.S22 = res[1, 0];
+            cauchy.S33 = res[2, 0];
 
-            cauchy.S21 = res[1, 0];
-            cauchy.S22 = res[1, 1];
-            cauchy.S23 = res[1, 2];
-
-            cauchy.S31 = res[2, 0];
-            cauchy.S32 = res[2, 1];
-            cauchy.S33 = res[2, 2];
+            cauchy.S23 = cauchy.S32 = res[3, 0];
+            cauchy.S13 = cauchy.S31 = res[4, 0];
+            cauchy.S12 = cauchy.S21 = res[5, 0];
 
             return new GeneralStressTensor(cauchy);
         }

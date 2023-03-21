@@ -9,11 +9,11 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <PackageId>BriefFiniteElement.Net</PackageId>
     <Description>A Finite Element library for static and linear analysis of solids and structures.</Description>
-    <Version>2.0.6</Version>
+    <Version>2.0.7</Version>
     <PackageTags>finite elements static linear analysis</PackageTags>
     <Product>BriefFiniteElement.Net</Product>
     <Company>N.A.</Company>
-    <Copyright>Copyleft © 2022</Copyright>
+    <Copyright>Copyleft © 2023</Copyright>
     <Authors>epsi1on</Authors>
     
     <AssemblyName>BriefFiniteElementNet</AssemblyName>

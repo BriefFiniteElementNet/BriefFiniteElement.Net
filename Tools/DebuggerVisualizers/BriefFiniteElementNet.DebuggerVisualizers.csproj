@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BriefFiniteElementNet.DebuggerVisualizers</RootNamespace>
     <AssemblyName>BriefFiniteElementNet.DebuggerVisualizers</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -36,23 +36,8 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BriefFiniteElementNet, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElement.Net.2.0.5\lib\netstandard2.0\BriefFiniteElementNet.dll</HintPath>
-    </Reference>
-    <Reference Include="BriefFiniteElementNet.Common, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElement.Net.2.0.5\lib\netstandard2.0\BriefFiniteElementNet.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="BriefFiniteElementNet.CustomElements, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElementNet.CustomElements.2.0.5\lib\netstandard2.0\BriefFiniteElementNet.CustomElements.dll</HintPath>
-    </Reference>
-    <Reference Include="Controls, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElement.WpfControls.1.0.0\lib\net471\Controls.dll</HintPath>
-    </Reference>
     <Reference Include="CSparse, Version=3.4.9.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CSparse.3.4.9\lib\net45\CSparse.dll</HintPath>
-    </Reference>
-    <Reference Include="CustomElements, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElement.Legacy.2.0.5\lib\netstandard2.0\CustomElements.dll</HintPath>
     </Reference>
     <Reference Include="HelixToolkit, Version=2.12.0.0, Culture=neutral, PublicKeyToken=52aa3500039caf0d, processorArchitecture=MSIL">
       <HintPath>..\packages\HelixToolkit.2.12.0\lib\netstandard1.1\HelixToolkit.dll</HintPath>
@@ -95,7 +80,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BriefFiniteElementNet.Controls\BriefFiniteElementNet.Controls.csproj">
+    <ProjectReference Include="..\..\Sources\BriefFiniteElementNet\BriefFiniteElementNet.csproj">
+      <Project>{87ca06bb-3a54-45e2-a091-f827e7095b4f}</Project>
+      <Name>BriefFiniteElementNet</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Sources\Controls\Controls.csproj">
       <Project>{8dabde62-8a8e-4153-b753-3a62015a9c16}</Project>
       <Name>BriefFiniteElementNet.Controls</Name>
     </ProjectReference>

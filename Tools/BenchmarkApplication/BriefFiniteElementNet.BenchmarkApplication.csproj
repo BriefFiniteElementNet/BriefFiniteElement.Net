@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BriefFiniteElementNet.BenchmarkApplication</RootNamespace>
     <AssemblyName>BriefFiniteElementNet.BenchmarkApplication</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -35,10 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BriefFiniteElementNet, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElement.Net.2.0.5\lib\netstandard2.0\BriefFiniteElementNet.dll</HintPath>
-    </Reference>
-    <Reference Include="BriefFiniteElementNet.Common, Version=2.0.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\BriefFiniteElement.Net.2.0.5\lib\netstandard2.0\BriefFiniteElementNet.Common.dll</HintPath>
+      <HintPath>..\..\Sources\BriefFiniteElementNet\bin\Debug\net6.0\BriefFiniteElementNet.dll</HintPath>
     </Reference>
     <Reference Include="CSparse, Version=3.4.9.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CSparse.3.4.9\lib\net45\CSparse.dll</HintPath>
@@ -66,6 +63,16 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Sources\Common\Common.csproj">
+      <Project>{65df1278-db99-4cfe-a232-6ce6eedbe683}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Sources\Controls\Controls.csproj">
+      <Project>{8dabde62-8a8e-4153-b753-3a62015a9c16}</Project>
+      <Name>Controls</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <ProjectGuid>{8DABDE62-8A8E-4153-B753-3A62015A9C16}</ProjectGuid>
-	<TargetFrameworks>net48</TargetFrameworks>
+	<TargetFrameworks>net45;</TargetFrameworks>
 	<AssemblyVersion>2.0.5</AssemblyVersion>
     <AssemblyTitle>BriefFiniteElement.Controls</AssemblyTitle>
     <Product>BriefFiniteElement.Controls</Product>

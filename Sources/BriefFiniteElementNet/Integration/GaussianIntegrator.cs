@@ -305,6 +305,27 @@ namespace BriefFiniteElementNet.Integration
             return buf;
         }
 
+        public static GaussianIntegrator CreateFor1DProblem(IMatrixFunction function, double x0, double x1,
+            int sampling)
+        {
+            var buf = new GaussianIntegrator();
+
+            buf.A1 = 0;
+            buf.A2 = 1;
+
+            buf.F1 = gama => 0;
+            buf.F2 = gama => 1;
+
+            buf.G1 = (eta, gama) => x0;
+            buf.G2 = (eta, gama) => x1;
+
+            buf.XiPointCount = sampling;
+            buf.GammaPointCount = buf.EtaPointCount = 1;
+
+            buf.H = function;
+
+            return buf;
+        }
 
         public static GaussianIntegrator CreateFor1DProblem(Func<double, Matrix> function, double x0, double x1,
             int sampling)
