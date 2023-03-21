@@ -59,9 +59,9 @@ Please note that free support still exists and is maintained by the community av
 
 - Various Elements (2 node beam, column, truss, shaft, 3 node plate bending and membrane, 4 node tetrahedral)
 
-_ Different loads types (Concentrated force or moment in `BarElement` body, uniform load on `BarElement`)
+- Different loads types (Concentrated force or moment in `BarElement` body, uniform load on `BarElement`)
 
-_ Calculate internal force of `BarElement` at any location of Element.
+- Calculate internal force of `BarElement` at any location of Element.
 
 - Static Linear analysis (dynamic analysis not fully implemented yet)
 
