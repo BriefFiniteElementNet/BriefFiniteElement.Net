@@ -1,14 +1,40 @@
+[![DOI](https://zenodo.org/badge/67097947.svg)](https://zenodo.org/badge/latestdoi/67097947)
 
+[![Nuget Package](https://img.shields.io/nuget/v/2)](https://www.nuget.org/packages/BriefFiniteElement.NET)   
 
 # BriefFiniteElement.NET
 
 A Finite Element library for Static and Linear analysis of solids and structures 100% in C#.
 
-[![Nuget Package](https://img.shields.io/nuget/v/2)](https://www.nuget.org/packages/BriefFiniteElement.NET)     
-
 ## Nuget Package
 
 V2.0.5 released: https://www.nuget.org/packages/BriefFiniteElement.Net/
+
+## How to build source
+
+For building the source, Visual Studio 2022 is needed. Since the target framework is set to `Net6.0`, and VS2019 and prior do not support NET6.
+If you want to build the source with say `Visual Studio 2019`, then simply edit this line on the `*.csproj` files with a text editor (like Notepad):
+
+```
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net6.0;netstandard2.0;net45;</TargetFrameworks>
+	<AssemblyVersion>2.0.5</AssemblyVersion>
+	<FileVersion>2.0.5</FileVersion>
+```
+
+remove `net6.0` on the 4th line:
+
+```
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;net45;</TargetFrameworks>
+	<AssemblyVersion>2.0.5</AssemblyVersion>
+	<FileVersion>2.0.5</FileVersion>
+```
+and you can build it with VS2019.
 
 ## Introduction
 Brief Finite Element Dot NET (BFE.NET) is a .NET based software framework for static and linear Finite Element Analysis (FEA) of solids and structures. BFE.NET help you to simply take advantage of Object Oriented approach to analyze FE models. Advantage of such a framework is that user does have a very powerful control on what he is working with, and control is not limited to an UI with predefined controls.
@@ -76,8 +102,9 @@ for more information on validation please have a look at [Validation.md](Validat
 
 for more information on known issues please have a look at [know-issues.md](know-issues.md) file and [issues](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) section.
 
-## Hire Developers (Consultation)
-You can have developers for consult and/or coding, on hourly basis or project based. Just contact email : [bfePaid@gmx.com](mailto:BFE%20Paid%20Support%20<BFEPaid@gmx.com>?Subject=Ask%20About%20Hiring&Body=Please%20fill%20fair%20amount%20of%20description%20here)
+## Hire Developers & Consultation service
+We have fair amount of experience in linear FEM coding, so
+You can have developers for consult and/or coding, on hourly basis or project based. Just contact email : [bfePaid@gmx.com](mailto:BFE%20Paid%20Support%20<BFEPaid@gmx.com>?Subject=Ask%20About%20Hiring&Body=Please%20fill%20fair%20amount%20of%20description%20and%20details%20here)
 
 ## Academic users
 If you are using this library for research or academic porpuses, note that there are no academic/journal articles pubished yet about this project, so you can cite this project just like this:
