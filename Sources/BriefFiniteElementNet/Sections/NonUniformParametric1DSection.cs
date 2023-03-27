@@ -53,6 +53,11 @@ namespace BriefFiniteElementNet.Sections
 
         public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi)
         {
+            return GetCrossSectionPropertiesAt(xi, null);
+        }
+
+        public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi,Element targetElement)
+        {
             var target = new _1DCrossSectionGeometricProperties();
 
             var s1 = sectionAtStart;

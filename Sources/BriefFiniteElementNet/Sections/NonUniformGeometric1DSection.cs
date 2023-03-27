@@ -71,6 +71,11 @@ namespace BriefFiniteElementNet.Sections
 
         public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi)
         {
+            return GetCrossSectionPropertiesAt(xi, null);
+        }
+
+        public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi, Element targetElement)
+        {
             if (sectionAtStart.Length != sectionAtEnd.Length)
                 throw new InvalidOperationException();
 
@@ -115,5 +120,6 @@ namespace BriefFiniteElementNet.Sections
         {
             return base.ToString();
         }
+
     }
 }

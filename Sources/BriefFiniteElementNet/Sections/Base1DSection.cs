@@ -16,12 +16,20 @@ namespace BriefFiniteElementNet.Sections
 
         }
 
+        [Obsolete("use other overload instead which passes the element reference")]
         /// <summary>
         /// Gets the cross section properties at defined location.
         /// </summary>
         /// <param name="x">The location, [-1,1] range.</param>
         /// <returns></returns>
         public abstract _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi);
+
+        /// <summary>
+        /// Gets the cross section properties at defined location (passing the reference of target element)
+        /// </summary>
+        /// <param name="x">The location, [-1,1] range.</param>
+        /// <returns></returns>
+        public abstract _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi, Element targetElement);
 
         /// <summary>
         /// Gets the maximum order (degree) of members of material regarding xi.

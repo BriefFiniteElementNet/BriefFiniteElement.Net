@@ -106,6 +106,11 @@ namespace BriefFiniteElementNet.Sections
 
         public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi)
         {
+            return GetCrossSectionPropertiesAt(xi, null);
+        }
+
+        public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi,Element targetElement)
+        {
             var buf = _1DCrossSectionGeometricProperties.Calculate(this.Geometry, this._resetCentroid);
 
             if (_jOverride > 0)
