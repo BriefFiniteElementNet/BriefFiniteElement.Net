@@ -90,7 +90,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var xi = isoCoords[0];
 
-            var geo = elm.Section.GetCrossSectionPropertiesAt(xi);
+            var geo = elm.Section.GetCrossSectionPropertiesAt(xi,targetElement);
             var mech = elm.Material.GetMaterialPropertiesAt(xi);
 
             var buf =
@@ -116,7 +116,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var xi = isoCoords[0];
 
-            var geo = elm.Section.GetCrossSectionPropertiesAt(xi);
+            var geo = elm.Section.GetCrossSectionPropertiesAt(xi, targetElement);
             var mech = elm.Material.GetMaterialPropertiesAt(xi);
 
             var buf = new Matrix(1, 1);
@@ -136,7 +136,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var xi = isoCoords[0];
 
-            var geo = elm.Section.GetCrossSectionPropertiesAt(xi);
+            var geo = elm.Section.GetCrossSectionPropertiesAt(xi, targetElement);
             var mech = elm.Material.GetMaterialPropertiesAt(xi);
 
             var buf = new Matrix(1, 1);
