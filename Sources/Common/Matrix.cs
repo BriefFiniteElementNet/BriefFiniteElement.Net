@@ -72,9 +72,17 @@ namespace BriefFiniteElementNet
         /// Initializes a new instance of the <see cref="Matrix"/> class as a column vector.
         /// </summary>
         /// <param name="vals">The vals.</param>
-        public static Matrix OfVector(double[] vals)
+        public static Matrix OfVector(params double[] vals)
         {
             return new Matrix(vals.Length, 1, (double[])vals.Clone());
+        }
+
+
+        public Matrix TransposeT()
+        {
+            Matrix result = new Matrix(columns, rows);
+            Transpose(result);
+            return result;
         }
 
         public static Matrix Random(int rows, int columns, int seed = 3165077)

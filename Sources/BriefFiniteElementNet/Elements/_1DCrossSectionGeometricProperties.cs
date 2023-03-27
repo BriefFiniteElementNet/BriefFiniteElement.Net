@@ -98,7 +98,7 @@ namespace BriefFiniteElementNet.Elements
                     buf.Qz = 0;
                 }
 
-                buf.J = buf.Iy + buf.Iz;//we assume torsion constant equal to polar area moment, but this is only right for 
+                buf.J = buf.Iy + buf.Iz;//we assume torsion constant equal to polar area moment, but this is only right for, TODO: correct
             }
 
             return buf;
