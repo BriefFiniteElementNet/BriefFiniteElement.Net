@@ -338,7 +338,7 @@ namespace BriefFiniteElementNet
 
             for (int j = 0; j < mtx.ColumnCount; j++)
             {
-                mtx.CoreArray[j] = matx.CoreArray[j * mtx.RowCount + i];
+                mtx[0,j] = matx[i,j];
             }
 
             return mtx;
@@ -380,7 +380,7 @@ namespace BriefFiniteElementNet
 
             for (int i = 0; i < matx.RowCount; i++)
             {
-                mtx.CoreArray[i] = matx.CoreArray[j * matx.RowCount + i];
+                mtx[i, 0] = matx[i, j];
             }
 
             return mtx;
@@ -772,6 +772,18 @@ namespace BriefFiniteElementNet
             for (int j = 0; j < columns; j++)
             {
                 values[j * rows + i] *= constant;
+            }
+        }
+
+        public static void ScaleColumn(this DenseColumnMajorStorage<double> matrix, int j, double constant)
+        {
+            int rows = matrix.RowCount;
+            int columns = matrix.ColumnCount;
+            var values = matrix.Values;
+
+            for (int i = 0; i < rows; i++)
+            {
+                matrix[i,j] *= constant;
             }
         }
 

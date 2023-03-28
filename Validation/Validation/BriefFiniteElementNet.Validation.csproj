@@ -69,6 +69,7 @@
     <Compile Include="Case_06\Validator.cs" />
     <Compile Include="EqualDofValidator.cs" />
     <Compile Include="ErrorUtil.cs" />
+    <Compile Include="EulerBernouly2nodeChecker.cs" />
     <Compile Include="GithubIssues\Issue100.cs" />
     <Compile Include="GithubIssues\Issue101.cs" />
     <Compile Include="GithubIssues\Issue111.cs" />

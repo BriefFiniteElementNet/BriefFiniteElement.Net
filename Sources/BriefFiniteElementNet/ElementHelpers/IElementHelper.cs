@@ -25,6 +25,28 @@ namespace BriefFiniteElementNet.ElementHelpers
         Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords);
 
         /// <summary>
+        /// Gets the N matrix at defined isometric coordinates.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
+        /// 
+        /// <returns></returns>
+        Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords);
+
+
+        /// <summary>
+        /// Gets the Jacobian matrix at defined isometric coordinates.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
+        /// 
+        /// <returns>
+        /// 1x1, 2x2 or 3x3 Jacobian matrix at defined location
+        /// </returns>
+        Matrix GetJMatrixAt(Element targetElement, params double[] isoCoords);
+
+
+        /// <summary>
         /// Gets the compliance D matrix at defined isometric coordinates in local coordination system.
         /// </summary>
         /// <remarks>
@@ -60,26 +82,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <returns>1x1, 2x2 or 3x3 matrix</returns>
         Matrix GetMuMatrixAt(Element targetElement, params double[] isoCoords);
 
-        /// <summary>
-        /// Gets the N matrix at defined isometric coordinates.
-        /// </summary>
-        /// <param name="targetElement">The target element.</param>
-        /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
-        /// 
-        /// <returns></returns>
-        Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords);
-
-        /// <summary>
-        /// Gets the Jacobian matrix at defined isometric coordinates.
-        /// </summary>
-        /// <param name="targetElement">The target element.</param>
-        /// <param name="isoCoords">The isometric coordinations (xi, eta, nu).</param>
-        /// 
-        /// <returns>
-        /// 1x1, 2x2 or 3x3 Jacobian matrix at defined location
-        /// </returns>
-        Matrix GetJMatrixAt(Element targetElement, params double[] isoCoords);
-
+    
         /// <summary>
         /// Gets the stiffness [K] matrix in local coordination system.
         /// </summary>

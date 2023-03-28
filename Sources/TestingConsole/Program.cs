@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BriefFiniteElementNet.Validation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,8 @@ namespace TestingConsole
     {
         static void Main(string[] args)
         {
-            BriefFiniteElementNet.Validation.GithubIssues.Issue152.Run();
+            //BriefFiniteElementNet.Validation.GithubIssues.Issue152.Run();
+            EulerBernouly2nodeChecker.Test5();
         }
     }
 }
