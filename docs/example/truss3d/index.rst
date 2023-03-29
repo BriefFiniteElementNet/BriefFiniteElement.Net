@@ -108,6 +108,8 @@ As elastic module for all members equals to 210 GPa and area of all members equa
 	e3.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
 	e4.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
 
+Note that for Truss behviour of BarElement, Poisson ratio is not used anywhere. That is only used to find shear modulus G of element which is used in shaft torsion behaviour only. but giving a value is mandatory and we simply use 0.3 as Poisson ratio here which would be good for any material as long as BarElement do not have Shaft behaviour.
+
 Step4: Assign Constraints to Nodes (fix the DoF s)
 **************************************************
 
