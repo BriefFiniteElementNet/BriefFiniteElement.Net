@@ -196,6 +196,8 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// </remarks>
         IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load, double[] isoLocation);
 
+
+        //[Obsolete("remove")]
         /// <summary>
         /// Gets the strain at defined location in local coordination system.
         /// </summary>
@@ -209,7 +211,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <remarks>
         /// This gives back internal force of element assuming no nodal displacements there are, and only the <see cref="load"/> is applied to it.
         /// </remarks>
-        GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation);
+        //GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation);
 
         /// <summary>
         /// Gets the displacement at specified location in local coordination system.
@@ -246,7 +248,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <returns>The equivaled nodal load in local coordination system</returns>
         Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load);
 
-
+        //[Obsolete("remove")]
         /// <summary>
         /// Adds the stiffness components into the coordinated storage regarding node numbers
         /// </summary>

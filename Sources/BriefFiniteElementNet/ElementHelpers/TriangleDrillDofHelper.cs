@@ -196,9 +196,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             throw new NotImplementedException();
         }
 
-        GeneralStressTensor IElementHelper.GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
-        {
-            throw new NotImplementedException();
-        }
+       
     }
 }

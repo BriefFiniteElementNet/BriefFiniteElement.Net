@@ -428,15 +428,17 @@ namespace BriefFiniteElementNet
                     return RX;
                     break;
                 case DoF.Ry:
-                    return RX;
+                    return RY;
                     break;
                 case DoF.Rz:
-                    return RX;
+                    return RZ;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(dof), dof, null);
             }
         }
+
+        
 
         public string ToString_01()
         {

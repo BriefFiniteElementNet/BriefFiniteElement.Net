@@ -12,7 +12,10 @@ namespace TestingConsole
         static void Main(string[] args)
         {
             //BriefFiniteElementNet.Validation.GithubIssues.Issue152.Run();
-            EulerBernouly2nodeChecker.Test5();
+            EulerBernouly2nodeChecker.Check2NodeShapeFunctionYDir();
+            EulerBernouly2nodeChecker.Check2NodeShapeFunctionZDir();
+
+            Console.Write("Done");
         }
     }
 }

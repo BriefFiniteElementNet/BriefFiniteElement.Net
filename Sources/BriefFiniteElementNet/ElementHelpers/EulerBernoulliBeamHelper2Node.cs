@@ -2,6 +2,7 @@
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
 using BriefFiniteElementNet.Loads;
+using BriefFiniteElementNet.Mathh;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,13 +12,45 @@ using ElementLocalDof = BriefFiniteElementNet.ElementPermuteHelper.ElementLocalD
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
-    public class EulerBernoulliBeamHelper_new : IElementHelper
+    public class EulerBernoulliBeamHelper2Node : IElementHelper
     {
+
+        public static Matrix GetNMatrixAt(double xi, double l, DofConstraint D0, DofConstraint R0, DofConstraint D1, DofConstraint R1,BeamDirection dir)
+        {
+            SingleVariablePolynomial[] nss, mss;
+
+            EulerBernouly2NodeShapeFunction.GetShapeFunctions(l, D0, R0, D1, R1, dir, out nss, out mss);
+
+            var buf = new Matrix(4, 4);
+
+            for (var i = 0; i < 2; i++)
+            {
+                if (nss[i] == null) nss[i] = new SingleVariablePolynomial();
+                if (mss[i] == null) mss[i] = new SingleVariablePolynomial();
+            }
+
+            for (var i = 0; i < 2; i++)
+            {
+                var ni = nss[i];
+                var mi = mss[i];
+
+                for (var ii = 0; ii < 4; ii++)
+                {
+                    buf[ii, 2 * i + 0] = ni.EvaluateDerivative(xi, ii);
+                    buf[ii, 2 * i + 1] = mi.EvaluateDerivative(xi, ii);
+                }
+            }
+
+
+            return buf;
+        }
+
+
         public Element TargetElement { get; set; }
 
         public BeamDirection _direction;
 
-        public EulerBernoulliBeamHelper_new(BeamDirection direction, Element targetElement)
+        public EulerBernoulliBeamHelper2Node(BeamDirection direction, Element targetElement)
         {
             _direction = direction;
             TargetElement = targetElement;
@@ -192,45 +225,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
-        public double[] Iso2Local(Element targetElement, params double[] isoCoords)
-        {
-            //throw new NotImplementedException();
-            var tg = targetElement as BarElement;
-
-
-            if (tg != null)
-            {
-                var xi = isoCoords[0];
-
-                if (tg.Nodes.Length == 2)
-                {
-                    var l = (tg.Nodes[1].Location - tg.Nodes[0].Location).Length;
-                    return new[] { l * (xi + 1) / 2 };
-                }
-            }
-
-            throw new NotImplementedException();
-        }
-
-        public double[] Local2Iso(Element targetElement, params double[] localCoords)
-        {
-            //throw new NotImplementedException();
-            var tg = targetElement as BarElement;
-
-
-            if (tg != null)
-            {
-                var x = localCoords[0];
-
-                if (tg.Nodes.Length == 2)
-                {
-                    var l = (tg.Nodes[1].Location - tg.Nodes[0].Location).Length;
-                    return new[] { 2 * x / l - 1 };
-                }
-            }
-
-            throw new NotImplementedException();
-        }
 
         /// <inheritdoc/>
         public Matrix CalcLocalStiffnessMatrix(Element targetElement)
@@ -259,31 +253,30 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             var buf = new List<ElementLocalDof>();
 
-            for (var i = 0; i < targetElement.Nodes.Length; i++)
-            {
-                buf.Add(new ElementLocalDof(i, _direction == BeamDirection.Y ? DoF.Dz : DoF.Dy));
-                buf.Add(new ElementLocalDof(i, _direction == BeamDirection.Y ? DoF.Ry : DoF.Rz));
-            }
+            buf.Add(new ElementLocalDof(0, _direction == BeamDirection.Y ? DoF.Dz : DoF.Dy));
+            buf.Add(new ElementLocalDof(0, _direction == BeamDirection.Y ? DoF.Ry : DoF.Rz));
+
+            buf.Add(new ElementLocalDof(1, _direction == BeamDirection.Y ? DoF.Dz : DoF.Dy));
+            buf.Add(new ElementLocalDof(1, _direction == BeamDirection.Y ? DoF.Ry : DoF.Rz));
 
             return buf.ToArray();
         }
 
-        /// <inheritdoc/>
-        public bool DoesOverrideKMatrixCalculation(Element targetElement, Matrix transformMatrix)
+        public double[] Iso2Local(Element targetElement, params double[] isoCoords)
         {
-            return false;
+            var buf = BaseBar2NodeHelper.Iso2Local(targetElement, isoCoords[0]);
+            return new double[] { buf };
         }
 
-
-
+        public double[] Local2Iso(Element targetElement, params double[] localCoords)
+        {
+            var buf = BaseBar2NodeHelper.Local2Iso(targetElement, localCoords[0]);
+            return new double[] { buf };
+        }
 
         public Matrix GetJMatrixAt(Element targetElement, params double[] isoCoords)
         {
-            //we need J = ∂X / ∂ξ
-            var bar = targetElement as BarElement;
-            var l = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
-
-            var j = GetJ(l);
+            var j = BaseBar2NodeHelper.GetJ(targetElement);
 
             var buf = new Matrix(1, 1);
             

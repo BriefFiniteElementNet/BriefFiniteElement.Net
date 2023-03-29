@@ -11,6 +11,18 @@ namespace BriefFiniteElementNet
 {
     public static class Extensions
     {
+
+        public static bool IsFixed(this DofConstraint cns)
+        {
+            return cns == DofConstraint.Fixed;
+        }
+
+
+        public static bool IsReleased(this DofConstraint cns)
+        {
+            return cns == DofConstraint.Released;
+        }
+
         /// <summary>
         /// Allocates new dense matrix from parent's pool
         /// </summary>

@@ -8,8 +8,6 @@ using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
 using BriefFiniteElementNet.Loads;
 using BriefFiniteElementNet.Mathh;
-using CSparse.Storage;
-using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet;
 using CSparse.Double;
 
@@ -17,8 +15,7 @@ using CSparse.Double;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
-    public class Truss
-        Helper2Node : IElementHelper
+    public class TrussHelper2Node : IElementHelper
     {
         public Element TargetElement { get; set; }
 
@@ -36,11 +33,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             }
 
             return buf;
-        }
-
-        public static double GetJ(double l)
-        {
-            return l / 2;
         }
 
         public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
@@ -71,30 +63,13 @@ namespace BriefFiniteElementNet.ElementHelpers
             //but B is dN/dx
             //so B will be arr * dξ/dx = arr * 1/ j.det
 
-            var detJ = GetJ(l);
+            var detJ = BaseBar2NodeHelper.GetJ(bar);
             buf.ScaleRow(0, 1 / (detJ));
 
             return buf;
 
 
         }
-
-
-        public Matrix GetJMatrixAt(Element targetElement, params double[] isoCoords)
-        {
-            //we need J = ∂X / ∂ξ
-            var bar = targetElement as BarElement;
-            var l = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
-
-            var j = GetJ(l);
-
-            var buf = new Matrix(1, 1);
-
-            buf[0, 0] = j;
-
-            return buf;
-        }
-
 
         /// <inheritdoc/>
         public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
@@ -233,11 +208,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
-        /// <inheritdoc/>
-        public bool DoesOverrideKMatrixCalculation(Element targetElement, Matrix transformMatrix)
-        {
-            return false;
-        }
 
         /// <inheritdoc/>
         public int[] GetNMaxOrder(Element targetElement)
@@ -255,43 +225,30 @@ namespace BriefFiniteElementNet.ElementHelpers
             return new int[] { targetElement.Nodes.Length - 2, 0, 0 };
         }
 
+
         public double[] Iso2Local(Element targetElement, params double[] isoCoords)
         {
-            var tg = targetElement as BarElement;
-
-
-            if (tg != null)
-            {
-                var xi = isoCoords[0];
-
-                if (tg.Nodes.Length == 2)
-                {
-                    var l = (tg.Nodes[1].Location - tg.Nodes[0].Location).Length;
-                    return new[] { l * (xi + 1) / 2 };
-                }
-            }
-
-            throw new NotImplementedException();
+            var buf = BaseBar2NodeHelper.Iso2Local(targetElement, isoCoords[0]);
+            return new double[] { buf };
         }
 
         public double[] Local2Iso(Element targetElement, params double[] localCoords)
         {
-            var tg = targetElement as BarElement;
-
-
-            if (tg != null)
-            {
-                var x = localCoords[0];
-
-                if (tg.Nodes.Length == 2)
-                {
-                    var l = (tg.Nodes[1].Location - tg.Nodes[0].Location).Length;
-                    return new[] { 2 * x / l - 1 };
-                }
-            }
-
-            throw new NotImplementedException();
+            var buf = BaseBar2NodeHelper.Local2Iso(targetElement, localCoords[0]);
+            return new double[] { buf };
         }
+
+        public Matrix GetJMatrixAt(Element targetElement, params double[] isoCoords)
+        {
+            var j = BaseBar2NodeHelper.GetJ(targetElement);
+
+            var buf = new Matrix(1, 1);
+
+            buf[0, 0] = j;
+
+            return buf;
+        }
+
 
         /// <inheritdoc/>
         public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load,

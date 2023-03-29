@@ -7,7 +7,7 @@ using System.Globalization;
 namespace BriefFiniteElementNet.Mathh
 {
     [Serializable]
-    public class SingleVariablePolynomial:IPolynomial
+    public class SingleVariablePolynomial : IPolynomial
     {
         public static SingleVariablePolynomial FromPoints(double x1, double y1)
         {
@@ -19,11 +19,11 @@ namespace BriefFiniteElementNet.Mathh
             return FromPoints(Tuple.Create(x1, y1), Tuple.Create(x2, y2));
         }
 
-        public static SingleVariablePolynomial FromPoints(params Tuple<double,double>[] points)
+        public static SingleVariablePolynomial FromPoints(params Tuple<double, double>[] points)
         {
             var n = points.Length;
 
-            var mtx = new Matrix(n , n);
+            var mtx = new Matrix(n, n);
 
             var b = new Matrix(n, 1);
 
@@ -97,10 +97,67 @@ namespace BriefFiniteElementNet.Mathh
             {
                 var origPow = Coefficients.Length - 1 - i;
 
-                buf += Coefficients[i] * Math.Pow(x, origPow);
+                //buf += Coefficients[i] * Math.Pow(x, origPow);
+                buf += Coefficients[i] * MyPow(x, origPow);
             }
 
             return buf;
+        }
+
+        static double MyPow(double num, int exp)
+        {
+            //https://stackoverflow.com/a/936909
+
+            double result = 1.0;
+            while (exp > 0)
+            {
+                if (exp % 2 == 1)
+                    result *= num;
+                exp >>= 1;
+                num *= num;
+            }
+
+            return result;
+        }
+
+        public Dictionary<int, double> GetCoefficientsAsDictionary()
+        {
+            var dic = new Dictionary<int, double>();
+
+            for (var i = 0; i < Coefficients.Length; i++)
+            {
+                var origPow = Coefficients.Length - 1 - i;
+
+                dic[origPow] = Coefficients[i]; 
+            }
+
+            return dic;
+        }
+
+        //compares the coefficiets, return false if any coef differ more than epsloin
+        public bool EqualsPolynomial(SingleVariablePolynomial that,double epsilon)
+        {
+            var thisDic = this.GetCoefficientsAsDictionary();
+            var thatDic = that.GetCoefficientsAsDictionary();
+
+            var allKeys = thisDic.Keys.Union(thatDic.Keys).Distinct().ToList();
+
+            foreach(var key in allKeys)
+            {
+                var thisValue = 0.0;
+                var thatValue = 0.0;
+
+                if (thisDic.ContainsKey(key))
+                    thisValue = thisDic[key];
+
+                if (thatDic.ContainsKey(key))
+                    thatValue = thatDic[key];
+
+                if (Math.Abs(thisValue - thatValue) > epsilon)
+                    return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -329,6 +386,39 @@ namespace BriefFiniteElementNet.Mathh
             }
 
             return string.Join(" + ", parts);
+        }
+
+        public string ToString(string doubleFormat)
+        {
+            var sb = new StringBuilder();
+
+            var parts = new List<String>();
+
+            for (var i = 0; i < Coefficients.Length; i++)
+            {
+                var origPow = Coefficients.Length - 1 - i;
+
+                parts.Add(string.Format(CultureInfo.CurrentCulture, "{0} * x^{1}", Coefficients[i].ToString(doubleFormat), origPow));
+            }
+
+            return string.Join(" + ", parts);
+        }
+
+        public string ToCodeString()
+        {
+            var sb = new StringBuilder();
+
+            var parts = new List<String>();
+
+            var vals = this.Coefficients.SkipWhile(i=>i == 0).ToArray();
+
+            var t = new StringBuilder();
+
+            var ttt = string.Join(",", Coefficients.Select(i => i.ToString()));
+
+            var buf = string.Format("new SingleVariablePolynomial({0});", ttt);
+
+            return buf;
         }
 
         protected bool Equals(SingleVariablePolynomial other)
