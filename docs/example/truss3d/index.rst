@@ -62,6 +62,7 @@ We should create nodes like this. In BriefFiniteElement.NET, every node and elem
 	var n3 = new Node(1, -1, 0) {Label = "n3"};
 	var n4 = new Node(-1, -1, 0) {Label = "n4"};
 	var n5 = new Node(0, 0, 1) {Label = "n5"};
+	
 
 Creating Elements
 =================
@@ -87,7 +88,7 @@ You can simply add the elements and nodes we created into the Model. Model has t
 	model.Nodes.Add(n1, n2, n3, n4, n5);
 	model.Elements.Add(e1, e2, e3, e4);
 
-Please note that if Node or Element’s Label property is something else than null, then it should be unique among all nodes and elements, else you will receive an error when adding member with duplicated label into model.
+Please note that if Node or Elementâ€™s Label property is something else than null, then it should be unique among all nodes and elements, else you will receive an error when adding member with duplicated label into model.
 
 
 Step3: Assign geometrical and mechanical properties to Elements
@@ -204,7 +205,7 @@ The LoadType.Default is a load type that is created for built in usage in librar
 		  get { return new LoadCase(); }
 	} 
 
-Which represents a LoadCase with LoadType of Default and CaseName of null. We will call such a LoadCase as DefaultLoadCase. For simplicity of usage in BriefFiniteElement.NET everywhere that you’ll prompt for a LoadCase, if you do not provide a LoadCase then the LoadCase is assumed DefualtLoadCase by the library. For example, when you want to assign a load to a node, you should provide a LoadCase for it, like this:
+Which represents a LoadCase with LoadType of Default and CaseName of null. We will call such a LoadCase as DefaultLoadCase. For simplicity of usage in BriefFiniteElement.NET everywhere that youâ€™ll prompt for a LoadCase, if you do not provide a LoadCase then the LoadCase is assumed DefualtLoadCase by the library. For example, when you want to assign a load to a node, you should provide a LoadCase for it, like this:
 
 .. code-block:: cs
 
@@ -231,9 +232,9 @@ And finally solve the model with model.Solve() method. Actually solving the mode
 
 - Second phase is analysing structure against each load case which takes much less time against first stage (say for example 13 sec for first stage and 0.5 sec for second stage).
 
-First stage is done in model.Solve() method and second stage will done if they’ll be need to.
+First stage is done in model.Solve() method and second stage will done if theyâ€™ll be need to.
 
-There are loads with different LoadCases that are applied to the Nodes and Elements. So the Node.GetSupportReaction() method have an overload which gets a LoadCombination and returns the support reactions based on the load combination. LoadCombination has a static property named LoadCombination.DefaultLoadCombination which has only one LoadCase in it (the DefaultLoadCase) with factor of 1.0. also everywhere that you should provide a LoadCombination, if you do not provide any, then DefaultLoadCombination will be considered by library. I’ve used DefaultLoadCase and DefaultLoadCombination in library to make working with library easier for people who are not familiar with load case and load combination stuff.
+There are loads with different LoadCases that are applied to the Nodes and Elements. So the Node.GetSupportReaction() method have an overload which gets a LoadCombination and returns the support reactions based on the load combination. LoadCombination has a static property named LoadCombination.DefaultLoadCombination which has only one LoadCase in it (the DefaultLoadCase) with factor of 1.0. also everywhere that you should provide a LoadCombination, if you do not provide any, then DefaultLoadCombination will be considered by library. Iâ€™ve used DefaultLoadCase and DefaultLoadCombination in library to make working with library easier for people who are not familiar with load case and load combination stuff.
 
 For getting the support reaction for the truss, we can simply call Node.GetSupportReaction() to get support reaction for every node:
 
@@ -258,7 +259,7 @@ All Codes Together
 This is all codes above for truss example.
 
 Please note that these codes are available in ``BriefFiniteElementNet.CodeProjectExamples`` project in library solution.
-
+NOTE: below code is outdated, TODO update
  
 .. code-block:: cs
 
