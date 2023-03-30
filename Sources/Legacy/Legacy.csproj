@@ -16,12 +16,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="ElementHelpers\**" />
-    <EmbeddedResource Remove="ElementHelpers\**" />
-    <None Remove="ElementHelpers\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj" />
     <ProjectReference Include="..\Common\Common.csproj" />
   </ItemGroup>

@@ -9,6 +9,7 @@ using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
 using System.Security.Permissions;
 using System.Globalization;
+using BriefFiniteElementNet.ElementHelpers.BarHelpers;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -36,6 +37,9 @@ namespace BriefFiniteElementNet.Elements
         /// <param name="nodeCount">The number of nodes.</param>
         public BarElement(int nodeCount) : base(nodeCount)
         {
+            if (nodeCount != 2)
+                throw new NotSupportedException("nodes of bar should be 2");
+
             _nodalReleaseConditions = Enumerable.Repeat(Constraints.Fixed, nodeCount).ToArray();
         }
 
@@ -785,7 +789,7 @@ namespace BriefFiniteElementNet.Elements
 
             if ((this._behavior & BarElementBehaviour.BeamYEulerBernoulli) != 0)
             {
-                helpers.Add(new EulerBernoulliBeamHelper(BeamDirection.Y,this));
+                helpers.Add(new EulerBernoulliBeamHelper2Node(BeamDirection.Y,this));
             }
 
             if ((this._behavior & BarElementBehaviour.BeamYTimoshenko) != 0)
@@ -795,7 +799,7 @@ namespace BriefFiniteElementNet.Elements
 
             if ((this._behavior & BarElementBehaviour.BeamZEulerBernoulli) != 0)
             {
-                helpers.Add(new EulerBernoulliBeamHelper(BeamDirection.Z, this));
+                helpers.Add(new EulerBernoulliBeamHelper2Node(BeamDirection.Z, this));
             }
 
             if ((this._behavior & BarElementBehaviour.BeamZTimoshenko) != 0)
@@ -805,12 +809,12 @@ namespace BriefFiniteElementNet.Elements
 
             if ((this._behavior & BarElementBehaviour.Truss) != 0)
             {
-                helpers.Add(new TrussHelper(this));
+                helpers.Add(new TrussHelper2Node(this));
             }
 
             if ((this._behavior & BarElementBehaviour.Shaft) != 0)
             {
-                helpers.Add(new ShaftHelper(this));
+                helpers.Add(new ShaftHelper2Node(this));
             }
 
             return helpers;

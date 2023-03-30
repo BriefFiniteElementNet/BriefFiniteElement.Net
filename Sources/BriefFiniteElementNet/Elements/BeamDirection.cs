@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Elements;
 
-namespace BriefFiniteElementNet.ElementHelpers
+namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 {
     /// <summary>
     /// Represents a direction for <see cref="BarElement"/>'s beam behavior in it's local coordination system.

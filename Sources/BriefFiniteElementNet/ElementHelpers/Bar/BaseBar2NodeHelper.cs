@@ -7,12 +7,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BriefFiniteElementNet.ElementHelpers
+namespace BriefFiniteElementNet.ElementHelpers.Bar
 {
     //bar element with two nodes, no partial connections
     public abstract class BaseBar2NodeHelper : IElementHelper
     {
-        public BaseBar2NodeHelper(Element targetElement) 
+        public BaseBar2NodeHelper(Element targetElement)
         {
             TargetElement = targetElement;
         }
@@ -80,7 +80,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         #endregion
 
 
-        public Element TargetElement { get; set ; }
+        public Element TargetElement { get; set; }
 
         /// <inheritdoc/>
         public Matrix CalcLocalStiffnessMatrix(Element targetElement)
@@ -104,26 +104,26 @@ namespace BriefFiniteElementNet.ElementHelpers
             return ElementHelperExtensions.CalcLocalCMatrix_Bar(this, targetElement);
         }
 
-        
+
 
         /// <inheritdoc/>
         public double[] Iso2Local(Element targetElement, params double[] isoCoords)
         {
-            var buf = BaseBar2NodeHelper.Iso2Local(targetElement, isoCoords[0]);
+            var buf = Iso2Local(targetElement, isoCoords[0]);
             return new double[] { buf };
         }
 
         /// <inheritdoc/>
         public double[] Local2Iso(Element targetElement, params double[] localCoords)
         {
-            var buf = BaseBar2NodeHelper.Local2Iso(targetElement, localCoords[0]);
+            var buf = Local2Iso(targetElement, localCoords[0]);
             return new double[] { buf };
         }
 
         /// <inheritdoc/>
         public Matrix GetJMatrixAt(Element targetElement, params double[] isoCoords)
         {
-            var j = BaseBar2NodeHelper.GetJ(targetElement);
+            var j = GetJ(targetElement);
 
             var buf = new Matrix(1, 1);
 
@@ -199,7 +199,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public abstract IEnumerable<Tuple<DoF, double>> GetLocalInternalForceAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords);
 
-        
+
 
         public Matrix GetMuMatrixAt(Element targetElement, params double[] isoCoords)
         {
@@ -232,7 +232,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             return buf;
         }
-        
+
         public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var elm = targetElement as BarElement;
@@ -250,16 +250,16 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
 
-        
+
         ///geometric (A,J,Iy or Iz)
         //public abstract double GetGeo(BarElement targetElement, double xi);
 
         //damp
         public abstract double GetMu(BarElement targetElement, double xi);
-        
+
         //mass
         public abstract double GetRho(BarElement targetElement, double xi);
-        
+
         //elastic modulus
         public abstract double GetD(BarElement targetElement, double xi);
 

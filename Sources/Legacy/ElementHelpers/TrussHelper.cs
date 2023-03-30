@@ -10,8 +10,11 @@ using CSparse.Storage;
 using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet;
 using CSparse.Double;
+using BriefFiniteElementNet.ElementHelpers;
+using BriefFiniteElementNet;
+using BarElement = Legacy.Elements.BarElementMultyNode;
 
-namespace BriefFiniteElementNet.ElementHelpers
+namespace Legacy.ElementHelpers
 {
     /// <summary>
     /// Represents an element helper for truss element.
@@ -591,7 +594,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             {
 
                 Func<double, double> magnitude;
-                Vector localDir;
+                BriefFiniteElementNet.Vector localDir;
 
                 double xi0;
                 int degree;//polynomial degree of magnitude function
@@ -777,7 +780,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             {
 
                 Func<double, double> magnitude;
-                Vector localDir;
+                BriefFiniteElementNet.Vector localDir;
 
                 double xi0, xi1;
                 int degree;//polynomial degree of magnitude function

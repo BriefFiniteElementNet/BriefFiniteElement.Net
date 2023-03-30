@@ -13,8 +13,11 @@ using BriefFiniteElementNet.Mathh;
 using CSparse.Storage;
 using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet;
+using BriefFiniteElementNet.ElementHelpers;
+using BarElement = Legacy.Elements.BarElementMultyNode;
+using BriefFiniteElementNet.ElementHelpers.BarHelpers;
 
-namespace BriefFiniteElementNet.ElementHelpers
+namespace Legacy.ElementHelpers
 {
     /// <summary>
     /// Represents a helper class for Euler - Bernoulli beam element

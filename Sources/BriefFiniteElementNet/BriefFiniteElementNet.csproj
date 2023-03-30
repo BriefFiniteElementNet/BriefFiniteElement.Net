@@ -46,7 +46,6 @@
 
   <ItemGroup>
     <None Include="CsparsenetQrDisplacementPermutationCalculator.md" />
-    <None Include="ElementHelpers\DktHelper.md" />
     <None Include="Elements\TriangleElement.md" />
     <None Include="Mathh\IPolynomial.md" />
     <None Include="Utils\CalcUtil.md" />

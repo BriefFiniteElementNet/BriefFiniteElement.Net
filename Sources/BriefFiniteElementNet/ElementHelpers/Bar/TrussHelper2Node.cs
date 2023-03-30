@@ -8,12 +8,10 @@ using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
 using BriefFiniteElementNet.Loads;
 using BriefFiniteElementNet.Mathh;
-using BriefFiniteElementNet;
 using CSparse.Double;
+using BriefFiniteElementNet.ElementHelpers.Bar;
 
-
-
-namespace BriefFiniteElementNet.ElementHelpers
+namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 {
     public class TrussHelper2Node : BaseBar2NodeHelper
     {
@@ -31,7 +29,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var num = (b1 ? 1 : 0) * 2 + (b2 ? 1 : 0);
 
 
-            switch(num)
+            switch (num)
             {
                 case 0://both released
                     n1 = n2 = n1p = n2p = 0;
@@ -96,8 +94,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             //but B is dN/dx
             //so B will be arr * dξ/dx = arr * 1/ j.det
 
-            var detJ = BaseBar2NodeHelper.GetJ(bar);
-            buf.ScaleRow(0, 1 / (detJ));
+            var detJ = GetJ(bar);
+            buf.ScaleRow(0, 1 / detJ);
 
             return buf;
 
@@ -211,9 +209,9 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 if (load is UniformLoad)
                 {
-                    var uld = (load as UniformLoad);
+                    var uld = load as UniformLoad;
 
-                    magnitude = (xi => uld.Magnitude);
+                    magnitude = xi => uld.Magnitude;
                     localDir = uld.Direction;
 
                     if (uld.CoordinationSystem == CoordinationSystem.Global)
@@ -227,9 +225,9 @@ namespace BriefFiniteElementNet.ElementHelpers
                 }
                 else if (load is PartialNonUniformLoad)
                 {
-                    var uld = (load as PartialNonUniformLoad);
+                    var uld = load as PartialNonUniformLoad;
 
-                    magnitude = (xi => uld.GetMagnitudeAt(targetElement, new IsoPoint(xi)));
+                    magnitude = xi => uld.GetMagnitudeAt(targetElement, new IsoPoint(xi));
                     localDir = uld.Direction;
 
                     if (uld.CoordinationSystem == CoordinationSystem.Global)
@@ -396,9 +394,9 @@ namespace BriefFiniteElementNet.ElementHelpers
                 #region inits
                 if (load is UniformLoad)
                 {
-                    var uld = (load as UniformLoad);
+                    var uld = load as UniformLoad;
 
-                    magnitude = (xi => uld.Magnitude);
+                    magnitude = xi => uld.Magnitude;
                     localDir = uld.Direction;
 
                     if (uld.CoordinationSystem == CoordinationSystem.Global)
@@ -412,9 +410,9 @@ namespace BriefFiniteElementNet.ElementHelpers
                 }
                 else if (load is PartialNonUniformLoad)
                 {
-                    var uld = (load as PartialNonUniformLoad);
+                    var uld = load as PartialNonUniformLoad;
 
-                    magnitude = (xi => uld.GetMagnitudeAt(targetElement, new IsoPoint(xi)));
+                    magnitude = xi => uld.GetMagnitudeAt(targetElement, new IsoPoint(xi));
                     localDir = uld.Direction;
 
                     if (uld.CoordinationSystem == CoordinationSystem.Global)
@@ -475,7 +473,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             {
                 var cns = load as ConcentratedLoad;
 
-                var shapes = this.GetNMatrixAt(targetElement, cns.ForceIsoLocation.Xi);
+                var shapes = GetNMatrixAt(targetElement, cns.ForceIsoLocation.Xi);
 
                 var localForce = cns.Force;
 

@@ -177,7 +177,7 @@ namespace BriefFiniteElementNet.Validation
 
             var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, -Vector.K, w, CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
+            var hlpr = new ElementHelpers.BarHelpers.EulerBernoulliBeamHelper2Node(ElementHelpers.BarHelpers.BeamDirection.Y, elm);
 
             var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
@@ -227,7 +227,7 @@ namespace BriefFiniteElementNet.Validation
 
             var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, -Vector.J, w, CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z,elm);
+            var hlpr = new ElementHelpers.BarHelpers.EulerBernoulliBeamHelper2Node(ElementHelpers.BarHelpers.BeamDirection.Z,elm);
 
             var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
@@ -476,7 +476,7 @@ namespace BriefFiniteElementNet.Validation
 
             var elm = new BarElement(new Node(0, 0, 0), new Node(2, 0, 0));
 
-            var hlpr = new BriefFiniteElementNet.ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y,elm);
+            var hlpr = new BriefFiniteElementNet.ElementHelpers.BarHelpers.EulerBernoulliBeamHelper2Node(ElementHelpers.BarHelpers.BeamDirection.Y,elm);
 
             var l = (elm.Nodes[0].Location - elm.Nodes[1].Location).Length;
 
@@ -647,7 +647,7 @@ namespace BriefFiniteElementNet.Validation
 
             var elm = new BarElement(new Node(0, 0, 0), new Node(2, 0, 0));
 
-            var hlpr = new BriefFiniteElementNet.ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z, elm);
+            var hlpr = new BriefFiniteElementNet.ElementHelpers.BarHelpers.EulerBernoulliBeamHelper2Node(ElementHelpers.BarHelpers.BeamDirection.Z, elm);
 
             var l = (elm.Nodes[0].Location - elm.Nodes[1].Location).Length;
 
@@ -775,7 +775,15 @@ namespace BriefFiniteElementNet.Validation
 
 
             var maxInternalDisplacementAbsErr = 0.0;
+            var maxInternalRotationAbsErr = 0.0;
+
             var maxInternalForceResidual = 0.0;
+
+            var AtMaxInternalDisplacementAbsErr = 0.0;
+            var AtMaxInternalRotationAbsErr = 0.0;
+
+            var AtMaxInternalForceResidual = 0.0;
+
 
             foreach (var elm in grd.Elements)
             {
@@ -794,14 +802,31 @@ namespace BriefFiniteElementNet.Validation
                 var dn1 = tr.TransformGlobalToLocal(bar.StartNode.GetNodalDisplacement(LoadCase.DefaultLoadCase));
                 var dn2 = tr.TransformGlobalToLocal(bar.EndNode.GetNodalDisplacement(LoadCase.DefaultLoadCase));
 
+                //d1.RY = -d1.RY;
+                //d2.RY = -d2.RY;
+
                 var diff1 = dn1 - d1;
                 var diff2 = dn2 - d2;
+
+                //diff2.RY = diff1.RY = 0;//either opensees or bfe bug. d2.Ry equals to negative dn2.Ry for end node
+                //diff2.RZ = 0;
 
                 var dd = Math.Max(diff1.Displacements.Length, diff2.Displacements.Length);
                 var dr = Math.Max(diff1.Rotations.Length, diff2.Rotations.Length);
 
-                maxInternalDisplacementAbsErr = Math.Max(maxInternalDisplacementAbsErr, dd);
-                maxInternalDisplacementAbsErr = Math.Max(maxInternalDisplacementAbsErr, dr);
+                if(dd> maxInternalDisplacementAbsErr)
+                {
+                    maxInternalDisplacementAbsErr = dd;
+                    AtMaxInternalDisplacementAbsErr = dn1.Displacements.Length;
+                }
+
+
+                if (dr > maxInternalRotationAbsErr)
+                {
+                    maxInternalRotationAbsErr = dr;
+                    AtMaxInternalRotationAbsErr = dn1.Rotations.Length;
+                }
+                
                 //yet internal force
 
                 var n = 10;
@@ -964,7 +989,8 @@ namespace BriefFiniteElementNet.Validation
                 span.Add("paragraph")
                     .Text(string.Format(CultureInfo.CurrentCulture, "Validation output for internal displacements (Displacement at each end node of bar elements should be equal to bar element's internal displacement of bar element at that node)"));
 
-                span.Add("p").AddClass("bg-info").AppendHtml(string.Format(CultureInfo.CurrentCulture, "-Max ABSOLUTE Error: {0:e3}", maxInternalDisplacementAbsErr));
+                span.Add("p").AddClass("bg-info").AppendHtml(string.Format(CultureInfo.CurrentCulture, "-Max ABSOLUTE Error (For displacement): {0:e3}", maxInternalDisplacementAbsErr));
+                span.Add("p").AddClass("bg-info").AppendHtml(string.Format(CultureInfo.CurrentCulture, "-Max ABSOLUTE Error (For rotation) {0:e3}", maxInternalRotationAbsErr));
             }
             #endregion
 

@@ -15,6 +15,8 @@ using Mathh = BriefFiniteElementNet.Mathh;
 using BriefFiniteElementNet;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Common;
+using Legacy.ElementHelpers;
+using BriefFiniteElementNet.ElementHelpers.BarHelpers;
 
 namespace Legacy.Elements
 {

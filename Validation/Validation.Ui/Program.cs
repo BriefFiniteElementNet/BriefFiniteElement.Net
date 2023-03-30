@@ -11,7 +11,7 @@ using BriefFiniteElementNet.Validation;
 
 namespace BriefFiniteElementNet.Validation.Ui
 {
-    internal static class Program
+    public static class Program
     {
         [STAThread]
         static void Main(string[] args)
@@ -89,6 +89,11 @@ namespace BriefFiniteElementNet.Validation.Ui
         }
 
         public static void ExportToHtmFile(string fileName, params IValidationCase[] validators)
+        {
+            ExportToHtmFile(fileName, validators.Select(i => i.Validate()).ToArray());
+        }
+
+        public static void ExportToHtmFile(string fileName, params ValidationResult[] results)
         {/*
             bool all = false;
 
@@ -110,21 +115,21 @@ namespace BriefFiniteElementNet.Validation.Ui
                     break;
                 }
             }*/
-            
+
 
             var doc = new HtmlTags.HtmlDocument();
-            
-            
+
+
             doc.Head
                 .Add("description").Attr("content", "Some validations of BriefFiniteEelement.NET library")
                 .Parent.Add("keywords").Attr("content",
                     "finite element, C#, FEA, FEM, BriefFiniteEelement.NET, BriefFiniteEelementDOTNET")
                 .Parent.Add("viewport").Attr("content", "width=device-width, initial-scale=1")
-                
-                .Parent.Add("link").Attr("rel", "stylesheet").Attr("crossorigin", "anonymous").Attr("href", "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css").Attr("integrity","sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm").Text(" ")
-                .Parent.Add("script").Attr("crossorigin", "anonymous").Attr("src", "https://code.jquery.com/jquery-3.2.1.slim.min.js").Attr("integrity","sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN").Text(" ")
-                .Parent.Add("script").Attr("crossorigin", "anonymous").Attr("src","https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js").Attr("integrity","sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q").Text(" ")
-                .Parent.Add("script").Attr("crossorigin", "anonymous").Attr("src", "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js").Attr("integrity","sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl").Text(" ")
+
+                .Parent.Add("link").Attr("rel", "stylesheet").Attr("crossorigin", "anonymous").Attr("href", "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css").Attr("integrity", "sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm").Text(" ")
+                .Parent.Add("script").Attr("crossorigin", "anonymous").Attr("src", "https://code.jquery.com/jquery-3.2.1.slim.min.js").Attr("integrity", "sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN").Text(" ")
+                .Parent.Add("script").Attr("crossorigin", "anonymous").Attr("src", "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js").Attr("integrity", "sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q").Text(" ")
+                .Parent.Add("script").Attr("crossorigin", "anonymous").Attr("src", "https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js").Attr("integrity", "sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl").Text(" ")
                 ;
 
             //doc.ReferenceJavaScriptFile("https://code.jquery.com/jquery-3.2.1.slim.min.js");
@@ -159,9 +164,9 @@ namespace BriefFiniteElementNet.Validation.Ui
 
             body = body.Add("div").AddClass("container");
 
-            foreach (var validator in validators)
+            foreach (var valRese in results)
             {
-                var valRese = validator.Validate();
+                //var valRese = validator.Validate();
 
                 //foreach (var valRese in valReses)
                 {
@@ -185,12 +190,12 @@ namespace BriefFiniteElementNet.Validation.Ui
                     {
                         var fail = valRese.ValidationFailed.Value;
 
-                        var sp2 = validationSpan.Add("div").AddClass("alert").AddClass(fail? "alert-danger" : "alert-success").Attr("role", "alert");
+                        var sp2 = validationSpan.Add("div").AddClass("alert").AddClass(fail ? "alert-danger" : "alert-success").Attr("role", "alert");
 
                         sp2.Text(fail ? "Validation Failed!!" : "Validation Success!!");
                         //body.Children.Add(sp2);
                     }
-                        
+
 
 
                     ctx.Add("a").Attr("href", "#" + id).Text(valRese.Title);

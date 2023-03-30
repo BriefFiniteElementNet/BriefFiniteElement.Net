@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BriefFiniteElementNet.ElementHelpers
+namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 {
     public static class EulerBernouly2NodeShapeFunction
     {
-        public static void GetShapeFunctions(double l, DofConstraint D0, DofConstraint R0, DofConstraint D1, DofConstraint R1,BeamDirection dir,
+        public static void GetShapeFunctions(double l, DofConstraint D0, DofConstraint R0, DofConstraint D1, DofConstraint R1, BeamDirection dir,
             out SingleVariablePolynomial[] nss, out SingleVariablePolynomial[] mss)
         {
             //unstable conditions:
@@ -176,23 +176,20 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             }
 
+            m1.MultiplyByConstant(l / 2);
+            m2.MultiplyByConstant(l / 2);
 
-            nss = new SingleVariablePolynomial[] { n1, n2 };
-            mss = new SingleVariablePolynomial[] { m1, m2 };
 
 
             if (dir == BeamDirection.Y)
             {
-                foreach (var m in mss)
-                {
-                    for (var i = 0; i < m.Coefficients.Length; i++)
-                    {
-                        m.Coefficients[i] *= -1;
-                    }
-                }
+                m1.MultiplyByConstant(-1);
+                m2.MultiplyByConstant(-1);
             }
 
-            
+
+            nss = new SingleVariablePolynomial[] { n1, n2 };
+            mss = new SingleVariablePolynomial[] { m1, m2 };
 
         }
 

@@ -7,9 +7,12 @@ using BriefFiniteElementNet.Integration;
 using BriefFiniteElementNet.Loads;
 using BriefFiniteElementNet.Mathh;
 using CSparse.Storage;
+using BriefFiniteElementNet;
 using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.ElementHelpers;
+using BarElement = Legacy.Elements.BarElementMultyNode;
 
-namespace BriefFiniteElementNet.ElementHelpers
+namespace Legacy.ElementHelpers
 {
     /// <summary>
     /// Represents a helper for shaft (torsion element).

@@ -15,7 +15,7 @@ namespace BriefFiniteElementNet.Validation
 {
     public static class OpenseesValidator
     {
-        private static readonly string openSeeslocation = @"C:\opensees\Opensees.exe";
+        private static readonly string openSeeslocation = @"C:\opensees\bin\Opensees.exe";
 
 
         public static DataTable[] OpenseesValidate(Model model, LoadCase loadcase, bool validateStiffness = false)

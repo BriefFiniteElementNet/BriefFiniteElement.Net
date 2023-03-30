@@ -471,5 +471,13 @@ namespace BriefFiniteElementNet.Mathh
         {
             throw new NotImplementedException();
         }
+
+        public void MultiplyByConstant(double constant)
+        {
+            for (int i = 0; i < Coefficients.Length; i++)
+            {
+                Coefficients[i] *= constant;
+            }
+        }
     }
 }

@@ -1,5 +1,4 @@
-﻿using BriefFiniteElementNet.ElementHelpers;
-using BriefFiniteElementNet.Elements;
+﻿using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Mathh;
 using System;
 using System.Collections;
@@ -8,6 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Legacy;
+using Legacy.Elements;
+using Legacy.ElementHelpers;
+using BriefFiniteElementNet.ElementHelpers.BarHelpers;
+using BriefFiniteElementNet.ElementHelpers;
 
 namespace BriefFiniteElementNet.Validation
 {
@@ -22,9 +26,9 @@ namespace BriefFiniteElementNet.Validation
             var node1 = new Node(0, 0, 0);
             var node2 = new Node(l, 0, 0);
 
-            var elm = new BarElement(node1, node2);
+            var elm = new BarElementMultyNode(node1, node2);
 
-            var h1 = new EulerBernoulliBeamHelper(dir, elm);
+            var h1 = new EulerBernoulliBeamHelper2Node(dir, elm);
 
             var epsilon = 1e-8;
 
@@ -61,9 +65,9 @@ namespace BriefFiniteElementNet.Validation
             var node1 = new Node(0, 0, 0);
             var node2 = new Node(l, 0, 0);
 
-            var elm = new BarElement(node1, node2);
+            var elm = new BarElementMultyNode(node1, node2);
 
-            var h1 = new EulerBernoulliBeamHelper(dir, elm);
+            var h1 = new EulerBernoulliBeamHelper2Node(dir, elm);
 
             var epsilon = 1e-8;
 
@@ -98,9 +102,9 @@ namespace BriefFiniteElementNet.Validation
             var node1 = new Node(0, 0, 0);
             var node2 = new Node(l, 0, 0);
 
-            var elm = new BarElement(node1, node2);
+            var elm = new BarElementMultyNode(node1, node2);
 
-            var h1 = new TrussHelper(elm);
+            var h1 = new TrussHelper2Node(elm);
 
             var epsilon = 1e-8;
 
@@ -129,9 +133,9 @@ namespace BriefFiniteElementNet.Validation
             var node1 = new Node(0, 0, 0);
             var node2 = new Node(l, 0, 0);
 
-            var elm = new BarElement(node1, node2);
+            var elm = new BarElementMultyNode(node1, node2);
 
-            var h1 = new ShaftHelper(elm);
+            var h1 = new ShaftHelper2Node(elm);
 
             var epsilon = 1e-8;
 
@@ -165,7 +169,7 @@ namespace BriefFiniteElementNet.Validation
             var dir = BeamDirection.Y;
 
             var h1 = new EulerBernoulliBeamHelper(dir, elm);
-            var h2 = new EulerBernoulliBeamHelper(dir, elm);
+            var h2 = new EulerBernoulliBeamHelper2Node(dir, elm);
 
             var epsilon = 1e-8;
 
@@ -301,7 +305,7 @@ namespace BriefFiniteElementNet.Validation
             var node1 = new Node(0, 0, 0);
             var node2 = new Node(l, 0, 0);
 
-            var elm = new BarElement(node1, node2);
+            var elm = new BarElementMultyNode(node1, node2);
 
             var dir = BeamDirection.Y;
 
@@ -376,7 +380,7 @@ namespace BriefFiniteElementNet.Validation
             var node1 = new Node(0, 0, 0);
             var node2 = new Node(l, 0, 0);
 
-            var elm = new BarElement(node1, node2);
+            var elm = new BarElementMultyNode(node1, node2);
 
             var dir = BeamDirection.Z;
 
@@ -443,5 +447,85 @@ namespace BriefFiniteElementNet.Validation
 
         }
 
+        public static void CheckTrussShapeFunction()
+        {
+            var l = 4;
+
+            var node1 = new Node(1, 2, 3);
+            var node2 = new Node(1+l, 2, 3);
+
+            var elm = new BarElementMultyNode(node1, node2);
+            var elm2 = new BarElement(node1, node2);
+
+            var pairs = new List<Tuple<IElementHelper, IElementHelper>>();
+
+
+
+            pairs.Add(Tuple.Create(
+                (IElementHelper)new EulerBernoulliBeamHelper(BeamDirection.Z, elm),
+                (IElementHelper)new EulerBernoulliBeamHelper2Node(BeamDirection.Z, elm2)));
+            pairs.Add(Tuple.Create(
+                (IElementHelper)new EulerBernoulliBeamHelper(BeamDirection.Y, elm),
+                (IElementHelper)new EulerBernoulliBeamHelper2Node(BeamDirection.Y, elm2)));
+
+            pairs.Add(Tuple.Create((IElementHelper)new TrussHelper(elm), (IElementHelper)new TrussHelper2Node(elm2)));
+            pairs.Add(Tuple.Create((IElementHelper)new ShaftHelper(elm), (IElementHelper)new ShaftHelper2Node(elm2)));
+
+            var sec = new Sections.UniformParametric1DSection(3, 5, 7, 11);
+            var mat = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(17, 0.25);
+
+            elm.Section = elm2.Section = sec;
+            elm.Material = elm2.Material = mat;
+
+            var epsilon = 1e-8;
+
+            foreach(var pair in pairs)
+            {
+                var h1 = pair.Item1;
+                var h2 = pair.Item2;
+
+                for (var xi = -1.0; xi <= 1; xi += 0.1)
+                {
+                    {
+                        var b1 = h1.GetNMatrixAt(elm, xi);
+                        var b2 = h2.GetNMatrixAt(elm2, xi);
+
+                        var diff = (b1- b2);
+
+                        var norm = diff.L1Norm();
+
+                        if (Math.Abs(norm) > epsilon)
+                            throw new Exception();
+                    }
+
+                    {
+                        var b1 = h1.GetBMatrixAt(elm, xi);
+                        var b2 = h2.GetBMatrixAt(elm2, xi);
+
+                        var diff = b1 - b2;
+
+                        var norm = diff.L1Norm();
+
+                        if (Math.Abs(norm) > epsilon)
+                            throw new Exception();
+                    }
+
+                    {
+                        var b1 = h1.GetDMatrixAt(elm, xi);
+                        var b2 = h2.GetDMatrixAt(elm2, xi);
+
+                        var diff = b1 - b2;
+
+                        var norm = diff.L1Norm();
+
+                        if (Math.Abs(norm) > epsilon)
+                            throw new Exception();
+                    }
+                }
+            }
+            
+
+            Console.WriteLine("Done");
+        }
     }
 }

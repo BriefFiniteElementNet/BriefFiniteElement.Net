@@ -1,4 +1,5 @@
 ﻿using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.ElementHelpers.Bar;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
 using BriefFiniteElementNet.Loads;
@@ -10,12 +11,12 @@ using System.Text;
 using System.Threading.Tasks;
 using ElementLocalDof = BriefFiniteElementNet.ElementPermuteHelper.ElementLocalDof;
 
-namespace BriefFiniteElementNet.ElementHelpers
+namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 {
     public class EulerBernoulliBeamHelper2Node : BaseBar2NodeHelper
     {
 
-        public static Matrix GetNMatrixAt(double xi, double l, DofConstraint D0, DofConstraint R0, DofConstraint D1, DofConstraint R1,BeamDirection dir)
+        public static Matrix GetNMatrixAt(double xi, double l, DofConstraint D0, DofConstraint R0, DofConstraint D1, DofConstraint R1, BeamDirection dir)
         {
             SingleVariablePolynomial[] nss, mss;
 
@@ -61,14 +62,14 @@ namespace BriefFiniteElementNet.ElementHelpers
 
 
         #region IElementHelper
-        
+
         public override Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var xi = isoCoords[0];
             var bar = targetElement as BarElement;
             var l = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
 
-            var buff = this.GetNMatrixAt(bar, xi);
+            var buff = GetNMatrixAt(bar, xi);
 
             //buff is d²N/dξ²
             //but B is d²N/dx²
@@ -93,15 +94,15 @@ namespace BriefFiniteElementNet.ElementHelpers
             var c0 = bar.NodalReleaseConditions[0];
             var c1 = bar.NodalReleaseConditions[1];
 
-            var order = this.GetDofOrder(targetElement);
+            var order = GetDofOrder(targetElement);
 
             var d0 = c0.GetComponent(order[0].Dof);
-            var r0 = c0.GetComponent(order[1].Dof); 
-            
+            var r0 = c0.GetComponent(order[1].Dof);
+
             var d1 = c1.GetComponent(order[2].Dof);
             var r1 = c1.GetComponent(order[3].Dof);
 
-            return GetNMatrixAt(xi, l, d0, r0, d1, r1, this.Direction);
+            return GetNMatrixAt(xi, l, d0, r0, d1, r1, Direction);
         }
 
 
@@ -178,9 +179,9 @@ namespace BriefFiniteElementNet.ElementHelpers
                 #region inits
                 if (load is UniformLoad)
                 {
-                    var uld = (load as UniformLoad);
+                    var uld = load as UniformLoad;
 
-                    magnitude = (xi => uld.Magnitude);
+                    magnitude = xi => uld.Magnitude;
                     localDir = uld.Direction;
 
                     if (uld.CoordinationSystem == CoordinationSystem.Global)
@@ -194,9 +195,9 @@ namespace BriefFiniteElementNet.ElementHelpers
                 }
                 else if (load is PartialNonUniformLoad)
                 {
-                    var uld = (load as PartialNonUniformLoad);
+                    var uld = load as PartialNonUniformLoad;
 
-                    magnitude = (xi => uld.GetMagnitudeAt(targetElement, new IsoPoint(xi)));
+                    magnitude = xi => uld.GetMagnitudeAt(targetElement, new IsoPoint(xi));
                     localDir = uld.Direction;
 
                     if (uld.CoordinationSystem == CoordinationSystem.Global)
@@ -272,7 +273,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                                 double df, dm;
 
-                                if (this.Direction == BeamDirection.Y)
+                                if (Direction == BeamDirection.Y)
                                 {
                                     df = q_.Z;
                                     dm = -q_.Z * xx;
@@ -302,7 +303,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                     var f = new Force();//total moment about start node, total shear 
 
 
-                    if (this.Direction == BeamDirection.Y)
+                    if (Direction == BeamDirection.Y)
                     {
                         f.Fz = v_i;
                         f.My = m_i;//negative is taken into account earlier
@@ -465,7 +466,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             if (Direction == BeamDirection.Y)
             {
                 buf.DZ = f[0, 0];
-                buf.RY = f[1, 0];
+                buf.RY = -f[1, 0];//TODO: Not sure why, but negative should be applied
             }
             else
             {
@@ -584,9 +585,9 @@ namespace BriefFiniteElementNet.ElementHelpers
                 #region inits
                 if (load is UniformLoad)
                 {
-                    var uld = (load as UniformLoad);
+                    var uld = load as UniformLoad;
 
-                    magnitude = (xi => uld.Magnitude);
+                    magnitude = xi => uld.Magnitude;
                     localDir = uld.Direction;
 
                     if (uld.CoordinationSystem == CoordinationSystem.Global)
@@ -600,9 +601,9 @@ namespace BriefFiniteElementNet.ElementHelpers
                 }
                 else if (load is PartialNonUniformLoad)
                 {
-                    var uld = (load as PartialNonUniformLoad);
+                    var uld = load as PartialNonUniformLoad;
 
-                    magnitude = (xi => uld.SeverityFunction.Evaluate(xi));
+                    magnitude = xi => uld.SeverityFunction.Evaluate(xi);
                     localDir = uld.Direction;
 
                     if (uld.CoordinationSystem == CoordinationSystem.Global)
@@ -647,7 +648,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                         var q_ = localDir * q__;
 
-                        if (this.Direction == BeamDirection.Y)
+                        if (Direction == BeamDirection.Y)
                             shp.Scale(q_.Z);
                         else
                             shp.Scale(q_.Y);
@@ -664,7 +665,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
 
 
-                    if (this.Direction == BeamDirection.Y)
+                    if (Direction == BeamDirection.Y)
                     {
                         var fz0 = res[0, 0];
                         var my0 = res[0, 1];
@@ -736,7 +737,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                     var nip = ns[1, 2 * i];
                     var mip = ns[1, 2 * i + 1];
 
-                    if (this.Direction == BeamDirection.Z)
+                    if (Direction == BeamDirection.Z)
                     {
                         fi.Fy += localforce.Fy * ni;//concentrated force
                         fi.Mz += localforce.Fy * mi;//concentrated force

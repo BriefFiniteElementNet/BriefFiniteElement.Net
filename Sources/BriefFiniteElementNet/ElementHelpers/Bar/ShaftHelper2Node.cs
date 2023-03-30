@@ -8,10 +8,11 @@ using BriefFiniteElementNet.Loads;
 using BriefFiniteElementNet.Mathh;
 using CSparse.Storage;
 using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.ElementHelpers.Bar;
 
-namespace BriefFiniteElementNet.ElementHelpers
+namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 {
-    public class ShaftHelper2Node:BaseBar2NodeHelper
+    public class ShaftHelper2Node : BaseBar2NodeHelper
     {
         public Element TargetElement { get; set; }
 
@@ -102,7 +103,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             var J = GetJMatrixAt(targetElement, isoCoords);
             var detJ = J.Determinant();
             J.ReturnToPool();
-            buf.ScaleRow(0, 1 / (detJ));
+            buf.ScaleRow(0, 1 / detJ);
 
             return buf;
 
@@ -271,7 +272,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             {
                 var cns = load as ConcentratedLoad;
 
-                var shapes = this.GetNMatrixAt(targetElement, cns.ForceIsoLocation.Xi);
+                var shapes = GetNMatrixAt(targetElement, cns.ForceIsoLocation.Xi);
 
                 var localForce = cns.Force;
 
