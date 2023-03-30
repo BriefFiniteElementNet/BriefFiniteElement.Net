@@ -7,7 +7,7 @@
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <PackageId>BriefFiniteElementNet.Common</PackageId>
     <Description>Common object for Brief Finite Element</Description>
-    <Version>2.0.7</Version>
+    <Version>2.1.0</Version>
     <PackageTags>finite elements static linear analysis</PackageTags>
     <Product>BriefFiniteElementNet.Common</Product>
     <Company />

@@ -365,92 +365,11 @@ namespace BriefFiniteElementNet.Elements
             var v = p1 - p0;
 
             var tr = CalcUtil.GetBarTransformationMatrix(v);//, 0, this.MatrixPool);
-
-            //tr = tr.Transpose();// 
+            
             tr.TransposeInPlace();
 
             return tr;
-            /*
-
-            var cxx = 0.0;
-            var cxy = 0.0;
-            var cxz = 0.0;
-
-            var cyx = 0.0;
-            var cyy = 0.0;
-            var cyz = 0.0;
-
-            var czx = 0.0;
-            var czy = 0.0;
-            var czz = 0.0;
-
-            var teta = _webRotation;
-
-            var s = Math.Sin(teta * Math.PI / 180.0);
-            var c = Math.Cos(teta * Math.PI / 180.0);
-
-            var v = this.EndNode.Location - this.StartNode.Location;
-
-            if (MathUtil.FEquals(0, v.X) && MathUtil.FEquals(0, v.Y))
-            {
-                if (v.Z > 0)
-                {
-                    czx = 1;
-                    cyy = 1;
-                    cxz = -1;
-                }
-                else
-                {
-                    czx = -1;
-                    cyy = 1;
-                    cxz = 1;
-                }
-            }
-            else
-            {
-                var l = v.Length;
-                cxx = v.X / l;
-                cyx = v.Y / l;
-                czx = v.Z / l;
-                var d = Math.Sqrt(cxx * cxx + cyx * cyx);
-                cxy = -cyx / d;
-                cyy = cxx / d;
-                cxz = -cxx * czx / d;
-                cyz = -cyx * czx / d;
-                czz = d;
-            }
-
-            //transformation for webrotation
             
-            var pars = new double[9];
-
-            pars[0] = cxx;
-            pars[1] = cxy * c + cxz * s;
-            pars[2] = -cxy * s + cxz * c;
-
-            pars[3] = cyx;
-            pars[4] = cyy * c + cyz * s;
-            pars[5] = -cyy * s + cyz * c;
-
-            pars[6] = czx;
-            pars[7] = czy * c + czz * s;
-            pars[8] = -czy * s + czz * c;
-            
-
-            var buf = 
-                //new Matrix(3, 3);
-                MatrixPool.Allocate(3, 3);
-
-            //buf.FillRow(0, pars[0], pars[1], pars[2]);
-            //buf.FillRow(1, pars[3], pars[4], pars[5]);
-            //buf.FillRow(2, pars[6], pars[7], pars[8]);
-
-            buf.FillRow(0, cxx, cxy * c + cxz * s, -cxy * s + cxz * c);
-            buf.FillRow(1, cyx, cyy * c + cyz * s, -cyy * s + cyz * c);
-            buf.FillRow(2, czx, czy * c + czz * s, -czy * s + czz * c);
-
-            return buf;
-            */
         }
 
         public override IElementHelper[] GetHelpers()
