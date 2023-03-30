@@ -27,6 +27,8 @@
     <TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
 
     <Nullable>disable</Nullable>
+
+    <Title>Brief Finite Element dot Net</Title>
     
   </PropertyGroup>
 

@@ -13,6 +13,8 @@
     <Product>BriefFiniteElement.$(AssemblyName)</Product>
     <Description>Legacy codes and element from BriefFiniteElement.net for historical uses</Description>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+    <Copyright>Copyleft © 2023</Copyright>
+    <Title>Legacy code for Brief Finite Element dot Net</Title>
   </PropertyGroup>
 
   <ItemGroup>

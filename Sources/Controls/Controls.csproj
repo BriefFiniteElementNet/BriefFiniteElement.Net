@@ -5,7 +5,7 @@
 	<AssemblyVersion>2.0.5</AssemblyVersion>
     <AssemblyTitle>BriefFiniteElement.Controls</AssemblyTitle>
     <Product>BriefFiniteElement.Controls</Product>
-    <Copyright>Copyleft © 2022</Copyright>
+    <Copyright>Copyleft © 2023</Copyright>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>BriefFiniteElement.WpfControls</PackageId>
@@ -14,6 +14,7 @@
     <PackageProjectUrl>https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net</PackageProjectUrl>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
     <Version>2.1.0</Version>
+    <Title>Controls for Brief Finite Element dot Net</Title>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>full</DebugType>
