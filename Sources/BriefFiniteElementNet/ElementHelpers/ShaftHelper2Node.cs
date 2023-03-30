@@ -16,33 +16,52 @@ namespace BriefFiniteElementNet.ElementHelpers
         public Element TargetElement { get; set; }
 
 
-        public static Matrix GetNMatrixAt(double xi, double l)
+        public static Matrix GetNMatrixAt(double xi, double l, DofConstraint r1, DofConstraint r2)
         {
-            //todo: add partial release
+            double n1, n2, n1p, n2p;
+
+            var b1 = r1 == DofConstraint.Fixed;
+            var b2 = r2 == DofConstraint.Fixed;
+
+            var num = (b1 ? 1 : 0) * 2 + (b2 ? 1 : 0);
+
+
+            switch (num)
+            {
+                case 0://both released
+                    n1 = n2 = n1p = n2p = 0;
+                    break;
+                case 1://b2: fix, b1: release
+                    n1 = n1p = n2p = 0;
+                    n2 = 1;
+                    break;
+                case 2://b2: release, b1: fix
+                    n2 = n1p = n2p = 0;
+                    n1 = 1;
+                    break;
+                case 3://both fixed
+                    n1 = -0.5 * xi + 0.5;
+                    n2 = 0.5 * xi + 0.5;
+                    n1p = -0.5;
+                    n2p = +0.5;
+                    break;
+                default:
+                    throw new NotImplementedException();
+
+            }
 
             var buf = new Matrix(2, 2);
 
-            {
-                var n1 = -0.5 * xi + 0.5;
-                var n2 = 0.5 * xi + 0.5;
-
-                buf.SetRow(0, n1, n2);
-
-                buf.SetRow(1, -0.5, 0.5);
-            }
+            buf.SetRow(0, n1, n2);
+            buf.SetRow(1, n1p, n2p);
 
             return buf;
         }
 
-        public static double GetJ(double l)
-        {
-            return l / 2;
-        }
 
-        
-        public ShaftHelper2Node(Element targetElement)
+        public ShaftHelper2Node(Element targetElement) :
+            base(targetElement)
         {
-            TargetElement = targetElement;
         }
 
         public override Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
@@ -51,7 +70,10 @@ namespace BriefFiniteElementNet.ElementHelpers
             var bar = targetElement as BarElement;
             var l = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
 
-            return GetNMatrixAt(xi, l);
+            var r0 = bar.StartReleaseCondition.RX;
+            var r1 = bar.EndReleaseCondition.RX;
+
+            return GetNMatrixAt(xi, l, r0, r1);
         }
 
         /// <inheritdoc/>
@@ -89,74 +111,6 @@ namespace BriefFiniteElementNet.ElementHelpers
 
 
 
-
-        /// <inheritdoc/>
-        public override Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
-        {
-            var elm = targetElement as BarElement;
-
-            if (elm == null)
-                throw new Exception();
-
-            var xi = isoCoords[0];
-
-            var geo = elm.Section.GetCrossSectionPropertiesAt(xi, targetElement);
-            var mech = elm.Material.GetMaterialPropertiesAt(xi);
-
-            var buf =
-            //new Matrix(1, 1);
-            targetElement.MatrixPool.Allocate(1, 1);
-
-            ThrowUtil.ThrowIf(!CalcUtil.IsIsotropicMaterial(mech), "anistropic material not impolemented yet");
-
-            var g = mech.Ex / (2 * (1 + mech.NuXy));
-
-            buf.At(0, 0, geo.J * g);
-
-            return buf;
-        }
-
-        /// <inheritdoc/>
-        public override Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
-        {
-            var elm = targetElement as BarElement;
-
-            if (elm == null)
-                throw new Exception();
-
-            var xi = isoCoords[0];
-
-            var geo = elm.Section.GetCrossSectionPropertiesAt(xi, targetElement);
-            var mech = elm.Material.GetMaterialPropertiesAt(xi);
-
-            var buf = new Matrix(1, 1);
-
-            buf[0, 0] = geo.J * mech.Rho;
-
-            return buf;
-        }
-
-        /// <inheritdoc/>
-        public override Matrix GetMuMatrixAt(Element targetElement, params double[] isoCoords)
-        {
-            var elm = targetElement as BarElement;
-
-            if (elm == null)
-                throw new Exception();
-
-            var xi = isoCoords[0];
-
-            var geo = elm.Section.GetCrossSectionPropertiesAt(xi, targetElement);
-            var mech = elm.Material.GetMaterialPropertiesAt(xi);
-
-            var buf = new Matrix(1, 1);
-
-            buf[0, 0] = geo.A * mech.Mu;
-
-            return buf;
-        }
-
-        
 
 
         /// <inheritdoc/>
@@ -306,16 +260,9 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public override Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
         {
-
             var tr = targetElement.GetTransformationManager();
 
-
-            if (load is UniformLoad)
-            {
-                return new Force[2];
-            }
-
-            if (load is PartialNonUniformLoad)
+            if (load is UniformLoad || load is PartialNonUniformLoad)
             {
                 return new Force[2];
             }
@@ -373,5 +320,33 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             return 1;
         }
+
+
+        public override double GetMu(BarElement targetElement, double xi)
+        {
+            var geo = targetElement.Section.GetCrossSectionPropertiesAt(xi, targetElement);
+            var mat = targetElement.Material.GetMaterialPropertiesAt(xi);
+
+            return mat.Mu * geo.A;
+        }
+
+        public override double GetRho(BarElement targetElement, double xi)
+        {
+            var geo = targetElement.Section.GetCrossSectionPropertiesAt(xi, targetElement);
+            var mat = targetElement.Material.GetMaterialPropertiesAt(xi);
+
+            return mat.Rho * geo.A;//TODO? not sure. this way mass is calculated 3 times same in truss, shaft, beam
+        }
+
+        public override double GetD(BarElement targetElement, double xi)
+        {
+            var geo = targetElement.Section.GetCrossSectionPropertiesAt(xi, targetElement);
+            var mech = targetElement.Material.GetMaterialPropertiesAt(xi);
+
+            var g = mech.Ex / (2 * (1 + mech.NuXy));
+
+            return g * geo.J;
+        }
+
     }
 }

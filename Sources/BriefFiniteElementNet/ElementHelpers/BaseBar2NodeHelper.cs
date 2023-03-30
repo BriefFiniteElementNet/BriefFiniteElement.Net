@@ -12,6 +12,12 @@ namespace BriefFiniteElementNet.ElementHelpers
     //bar element with two nodes, no partial connections
     public abstract class BaseBar2NodeHelper : IElementHelper
     {
+        public BaseBar2NodeHelper(Element targetElement) 
+        {
+            TargetElement = targetElement;
+        }
+
+
         #region statics
         private static void EnsureBarTwoNode(Element elm)
         {
@@ -162,7 +168,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
 
-        //what dofs for each node
+        //what dofs for each node, order matters, same as B or N matrix order
         public abstract DoF[] GetDofsPerNode();
 
         protected abstract int GetBOrder();
@@ -173,9 +179,9 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public abstract Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords);
 
-        public abstract Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords);
+        public abstract Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords);
 
-      
+
 
 
         public abstract Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation);
@@ -195,11 +201,68 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         
 
-        public abstract Matrix GetMuMatrixAt(Element targetElement, params double[] isoCoords);
+        public Matrix GetMuMatrixAt(Element targetElement, params double[] isoCoords)
+        {
+            var elm = targetElement as BarElement;
 
-        public abstract Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords);
+            if (elm == null)
+                throw new Exception();
 
-        public abstract Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords);
+            var xi = isoCoords[0];
+
+            var rho = GetRho(elm, xi);
+
+            var buf = Matrix.OfVector(rho);//1x1 matrix
+
+            return buf;
+        }
+
+        public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
+        {
+            var elm = targetElement as BarElement;
+
+            if (elm == null)
+                throw new Exception();
+
+            var xi = isoCoords[0];
+
+            var d = GetD(elm, xi);
+
+            var buf = Matrix.OfVector(d);//1x1 matrix
+
+            return buf;
+        }
+        
+        public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
+        {
+            var elm = targetElement as BarElement;
+
+            if (elm == null)
+                throw new Exception();
+
+            var xi = isoCoords[0];
+
+            var d = GetRho(elm, xi);
+
+            var buf = Matrix.OfVector(d);//1x1 matrix
+
+            return buf;
+        }
+
+
+        
+        ///geometric (A,J,Iy or Iz)
+        //public abstract double GetGeo(BarElement targetElement, double xi);
+
+        //damp
+        public abstract double GetMu(BarElement targetElement, double xi);
+        
+        //mass
+        public abstract double GetRho(BarElement targetElement, double xi);
+        
+        //elastic modulus
+        public abstract double GetD(BarElement targetElement, double xi);
+
 
     }
 }

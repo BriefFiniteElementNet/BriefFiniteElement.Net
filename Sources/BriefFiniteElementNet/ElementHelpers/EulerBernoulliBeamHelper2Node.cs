@@ -12,7 +12,7 @@ using ElementLocalDof = BriefFiniteElementNet.ElementPermuteHelper.ElementLocalD
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
-    public class EulerBernoulliBeamHelper2Node : IElementHelper
+    public class EulerBernoulliBeamHelper2Node : BaseBar2NodeHelper
     {
 
         public static Matrix GetNMatrixAt(double xi, double l, DofConstraint D0, DofConstraint R0, DofConstraint D1, DofConstraint R1,BeamDirection dir)
@@ -45,82 +45,37 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
-
-        public Element TargetElement { get; set; }
-
-        public BeamDirection _direction;
-
-        public EulerBernoulliBeamHelper2Node(BeamDirection direction, Element targetElement)
-        {
-            _direction = direction;
-            TargetElement = targetElement;
-        }
-
         public static Matrix GetNMatrixAt(double xi, double l, BeamDirection dir)
         {
-            var buf = new Matrix(4, 4);
-
-            var J = GetJ(l);
-
-            var xi0 = 1.0;
-            var xi2 = xi * xi;
-            var xi3 = xi * xi * xi;
-
-            {//first row
-
-                var n1 = 0.25 * (1 - xi) * (1 - xi) * (2 + xi);
-                var n2 = 0.25 * (1 - xi) * (1 - xi) * (1 + xi);
-                var n3 = 0.25 * (1 + xi) * (1 + xi) * (2 - xi);
-                var n4 = 0.25 * (1 + xi) * (1 + xi) * (xi - 1);
-
-                buf.SetRow(0, n1, n2 * J, n3, n4 * J);
-            }
-
-            {
-                var row = new double[] { 3 * xi2 / 4 - 3.0 / 4, 3 * J * xi2 / 4 - J * xi / 2 - J / 4, 3.0 / 4 - 3 * xi2 / 4, 3 * J * xi2 / 4 + J * xi / 2 - J / 4 };//see md file for details
-                buf.SetRow(1, row);
-            }
-
-            {
-                var row = new double[] { 3 * xi / 2, 3 * J * xi / 2 - J / 2, -3 * xi / 2, 3 * J * xi / 2 + J / 2 };//see md file for details
-                buf.SetRow(2, row);
-            }
-
-            {
-                var row = new double[] { 3.0 / 2, 3 * J / 2, -3.0 / 2, 3 * J / 2 };//see md file for details
-                buf.SetRow(3, row);
-            }
-
-            if (dir == BeamDirection.Y)
-            {
-                buf.ScaleColumn(1, -1);
-                buf.ScaleColumn(3, -1);
-            }
-
-            return buf;
+            return GetNMatrixAt(xi, l, DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Fixed, DofConstraint.Fixed, dir);
         }
 
-        public static double GetJ(double l)
+
+        public BeamDirection Direction;
+
+        public EulerBernoulliBeamHelper2Node(BeamDirection direction, Element targetElement)
+            : base(targetElement)
         {
-            return l/2;
+            Direction = direction;
         }
+
 
         #region IElementHelper
         
-        public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
+        public override Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var xi = isoCoords[0];
             var bar = targetElement as BarElement;
             var l = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
 
-            var buff = GetNMatrixAt(xi, l, this._direction);
+            var buff = this.GetNMatrixAt(bar, xi);
 
             //buff is d²N/dξ²
             //but B is d²N/dx²
             //so B will be arr * dξ²/dx² = arr * 1/ j.det ^2
             //based on http://www-g.eng.cam.ac.uk/csml/teaching/4d9/4D9_handout2.pdf
 
-            var j = GetJ(l);
+            var j = GetJ(bar);
 
             var b = buff.ExtractRow(2);
 
@@ -129,169 +84,36 @@ namespace BriefFiniteElementNet.ElementHelpers
             return b;
         }
 
-        public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
+        public override Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var xi = isoCoords[0];
             var bar = targetElement as BarElement;
             var l = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
 
-            return GetNMatrixAt(xi, l, this._direction);
-        }
+            var c0 = bar.NodalReleaseConditions[0];
+            var c1 = bar.NodalReleaseConditions[1];
 
-        public int[] GetBMaxOrder(Element targetElement)
-        {
-            return new int[] { 1, 0, 0 };
-        }
+            var order = this.GetDofOrder(targetElement);
 
-        public int[] GetNMaxOrder(Element targetElement)
-        {
-            return new int[] { 3, 0, 0 };
-        }
-
-        public int[] GetDetJOrder(Element targetElement)
-        {
-            return new int[] { 0, 0, 0 };
-        }
-
-       
-
-
-
-        public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
-        {
-            var elm = targetElement as BarElement;
-
-            if (elm == null)
-                throw new Exception();
-
-            var xi = isoCoords[0];
-
-            var geo = elm.Section.GetCrossSectionPropertiesAt(xi, targetElement);
-            var mech = elm.Material.GetMaterialPropertiesAt(xi);
-
-            var buf =
-                targetElement.MatrixPool.Allocate(1, 1);
-
-            var ei = 0.0;
-
-            if (_direction == BeamDirection.Y)
-                ei = geo.Iy * mech.Ex;
-            else
-                ei = geo.Iz * mech.Ex;
-
-            buf[0, 0] = ei;
-
-            return buf;
-        }
-
-
-        /// <inheritdoc/>
-        public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
-        {
-            var elm = targetElement as BarElement;
-
-            if (elm == null)
-                throw new Exception();
-
-            var xi = isoCoords[0];
-
-            var geo = elm.Section.GetCrossSectionPropertiesAt(xi, targetElement);
-            var mech = elm.Material.GetMaterialPropertiesAt(xi);
-
-            var buf = new Matrix(1, 1);
-
-            buf[0, 0] = geo.A * mech.Rho;
-
-            return buf;
-        }
-
-        /// <inheritdoc/>
-        public Matrix GetMuMatrixAt(Element targetElement, params double[] isoCoords)
-        {
-            var elm = targetElement as BarElement;
-
-            if (elm == null)
-                throw new Exception();
-
-            var xi = isoCoords[0];
-
-            var geo = elm.Section.GetCrossSectionPropertiesAt(xi, targetElement);
-            var mech = elm.Material.GetMaterialPropertiesAt(xi);
-
-            var buf = new Matrix(1, 1);
-
-            buf[0, 0] = geo.A * mech.Mu;
-
-            return buf;
-        }
-
-
-        /// <inheritdoc/>
-        public Matrix CalcLocalStiffnessMatrix(Element targetElement)
-        {
-            var buf = ElementHelperExtensions.CalcLocalKMatrix_Bar(this, targetElement);
-
-            return buf;
-        }
-
-        /// <inheritdoc/>
-        public Matrix CalcLocalMassMatrix(Element targetElement)
-        {
-            var buf = ElementHelperExtensions.CalcLocalMMatrix_Bar(this, targetElement);
-
-            return buf;
-        }
-
-        /// <inheritdoc/>
-        public Matrix CalcLocalDampMatrix(Element targetElement)
-        {
-            return ElementHelperExtensions.CalcLocalCMatrix_Bar(this, targetElement);
-        }
-
-        /// <inheritdoc/>
-        public ElementPermuteHelper.ElementLocalDof[] GetDofOrder(Element targetElement)
-        {
-            var buf = new List<ElementLocalDof>();
-
-            buf.Add(new ElementLocalDof(0, _direction == BeamDirection.Y ? DoF.Dz : DoF.Dy));
-            buf.Add(new ElementLocalDof(0, _direction == BeamDirection.Y ? DoF.Ry : DoF.Rz));
-
-            buf.Add(new ElementLocalDof(1, _direction == BeamDirection.Y ? DoF.Dz : DoF.Dy));
-            buf.Add(new ElementLocalDof(1, _direction == BeamDirection.Y ? DoF.Ry : DoF.Rz));
-
-            return buf.ToArray();
-        }
-
-        public double[] Iso2Local(Element targetElement, params double[] isoCoords)
-        {
-            var buf = BaseBar2NodeHelper.Iso2Local(targetElement, isoCoords[0]);
-            return new double[] { buf };
-        }
-
-        public double[] Local2Iso(Element targetElement, params double[] localCoords)
-        {
-            var buf = BaseBar2NodeHelper.Local2Iso(targetElement, localCoords[0]);
-            return new double[] { buf };
-        }
-
-        public Matrix GetJMatrixAt(Element targetElement, params double[] isoCoords)
-        {
-            var j = BaseBar2NodeHelper.GetJ(targetElement);
-
-            var buf = new Matrix(1, 1);
+            var d0 = c0.GetComponent(order[0].Dof);
+            var r0 = c0.GetComponent(order[1].Dof); 
             
-            buf[0, 0] = j;
+            var d1 = c1.GetComponent(order[2].Dof);
+            var r1 = c1.GetComponent(order[3].Dof);
 
-            return buf;
+            return GetNMatrixAt(xi, l, d0, r0, d1, r1, this.Direction);
         }
 
-        public Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation)
+
+
+
+        public override Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load,
+        public override IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load,
             double[] isoLocation)
         {
             var n = targetElement.Nodes.Length;
@@ -450,7 +272,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                                 double df, dm;
 
-                                if (this._direction == BeamDirection.Y)
+                                if (this.Direction == BeamDirection.Y)
                                 {
                                     df = q_.Z;
                                     dm = -q_.Z * xx;
@@ -480,7 +302,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                     var f = new Force();//total moment about start node, total shear 
 
 
-                    if (this._direction == BeamDirection.Y)
+                    if (this.Direction == BeamDirection.Y)
                     {
                         f.Fz = v_i;
                         f.My = m_i;//negative is taken into account earlier
@@ -518,7 +340,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                     f2 *= -1;
 
-                    if (_direction == BeamDirection.Y)
+                    if (Direction == BeamDirection.Y)
                     {
                         buff.Add(Tuple.Create(DoF.Ry, f2.My));
                         buff.Add(Tuple.Create(DoF.Dz, f2.Fz));
@@ -569,7 +391,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                 f2 *= -1;
 
 
-                if (_direction == BeamDirection.Y)
+                if (Direction == BeamDirection.Y)
                 {
                     buff.Add(Tuple.Create(DoF.Ry, f2.My));
                     buff.Add(Tuple.Create(DoF.Dz, f2.Fz));
@@ -589,7 +411,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        public override Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
             var nc = targetElement.Nodes.Length;
 
@@ -615,7 +437,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var j = GetJMatrixAt(targetElement, isoCoords).Determinant();
 
-            if (_direction == BeamDirection.Y)
+            if (Direction == BeamDirection.Y)
             {
                 for (int i = 0; i < nc; i++)
                 {
@@ -640,7 +462,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var buf = new Displacement();
 
-            if (_direction == BeamDirection.Y)
+            if (Direction == BeamDirection.Y)
             {
                 buf.DZ = f[0, 0];
                 buf.RY = f[1, 0];
@@ -655,7 +477,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
         /// <inheritdoc/>
-        public IEnumerable<Tuple<DoF, double>> GetLocalInternalForceAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        public override IEnumerable<Tuple<DoF, double>> GetLocalInternalForceAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
             var nc = targetElement.Nodes.Length;
 
@@ -670,7 +492,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var buf = new List<Tuple<DoF, double>>();
 
-            if (_direction == BeamDirection.Y)
+            if (Direction == BeamDirection.Y)
             {
                 if (localDisplacements.All(i => i.DZ == 0 && i.RY == 0))
                     return buf;
@@ -695,7 +517,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             var j = GetJMatrixAt(targetElement, isoCoords).Determinant();
 
-            if (_direction == BeamDirection.Y)
+            if (Direction == BeamDirection.Y)
             {
                 for (int i = 0; i < nc; i++)
                 {
@@ -720,10 +542,10 @@ namespace BriefFiniteElementNet.ElementHelpers
             f.ScaleRow(2, ei / (j * j));
             f.ScaleRow(3, ei / (j * j * j));
 
-            if (_direction == BeamDirection.Y)
+            if (Direction == BeamDirection.Y)
                 f.ScaleRow(2, -1);//m/ei = - n''*u , due to where? TODO
 
-            if (_direction == BeamDirection.Y)
+            if (Direction == BeamDirection.Y)
             {
                 buf.Add(Tuple.Create(DoF.Ry, f[2, 0]));
                 buf.Add(Tuple.Create(DoF.Dz, -f[3, 0]));
@@ -738,7 +560,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
 
-        public Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
+        public override Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
         {
             var bar = targetElement as BarElement;
             var n = bar.Nodes.Length;
@@ -825,7 +647,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                         var q_ = localDir * q__;
 
-                        if (this._direction == BeamDirection.Y)
+                        if (this.Direction == BeamDirection.Y)
                             shp.Scale(q_.Z);
                         else
                             shp.Scale(q_.Y);
@@ -842,7 +664,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
 
 
-                    if (this._direction == BeamDirection.Y)
+                    if (this.Direction == BeamDirection.Y)
                     {
                         var fz0 = res[0, 0];
                         var my0 = res[0, 1];
@@ -914,7 +736,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                     var nip = ns[1, 2 * i];
                     var mip = ns[1, 2 * i + 1];
 
-                    if (this._direction == BeamDirection.Z)
+                    if (this.Direction == BeamDirection.Z)
                     {
                         fi.Fy += localforce.Fy * ni;//concentrated force
                         fi.Mz += localforce.Fy * mi;//concentrated force
@@ -947,14 +769,62 @@ namespace BriefFiniteElementNet.ElementHelpers
             throw new NotImplementedException();
         }
 
-        public GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
+        public override GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
-        public GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        public override GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
             throw new NotImplementedException();
+        }
+
+
+
+        public override DoF[] GetDofsPerNode()
+        {
+            var d = Direction == BeamDirection.Y ? DoF.Dz : DoF.Dy;
+            var r = Direction == BeamDirection.Y ? DoF.Ry : DoF.Rz;
+
+            return new DoF[] { d, r };
+        }
+
+        protected override int GetBOrder()
+        {
+            return 1;
+        }
+
+        protected override int GetNOrder()
+        {
+            return 3;
+        }
+
+
+        public override double GetMu(BarElement targetElement, double xi)
+        {
+            var geo = targetElement.Section.GetCrossSectionPropertiesAt(xi, targetElement);
+            var mat = targetElement.Material.GetMaterialPropertiesAt(xi);
+
+            return mat.Mu * geo.A;
+        }
+
+        public override double GetRho(BarElement targetElement, double xi)
+        {
+            var geo = targetElement.Section.GetCrossSectionPropertiesAt(xi, targetElement);
+            var mat = targetElement.Material.GetMaterialPropertiesAt(xi);
+
+            return mat.Rho * geo.A;
+        }
+
+        public override double GetD(BarElement targetElement, double xi)
+        {
+            var geo = targetElement.Section.GetCrossSectionPropertiesAt(xi, targetElement);
+            var mech = targetElement.Material.GetMaterialPropertiesAt(xi);
+
+            if (Direction == BeamDirection.Y)
+                return geo.Iy * mech.Ex;
+            else
+                return geo.Iz * mech.Ex;
         }
 
 

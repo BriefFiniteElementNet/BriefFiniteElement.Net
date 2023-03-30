@@ -36,7 +36,7 @@ namespace BriefFiniteElementNet.Validation
                 var diff = n1 - n2;
 
                 var d1 = diff.ExtractRow(0);
-                var d2 = n2.ExtractRow(1);
+                var d2 = diff.ExtractRow(1);
                 var d3 = diff.ExtractRow(2);
                 var d4 = diff.ExtractRow(3);
 
@@ -107,7 +107,7 @@ namespace BriefFiniteElementNet.Validation
             for (var xi = -1.0; xi <= 1; xi += 0.1)
             {
                 var n1 = h1.GetNMatrixAt(elm, xi);
-                var n2 = TrussHelper2Node.GetNMatrixAt(xi, l);
+                var n2 = TrussHelper2Node.GetNMatrixAt(xi, l, DofConstraint.Fixed, DofConstraint.Fixed);
 
                 var diff = n1 - n2;
 
@@ -138,7 +138,7 @@ namespace BriefFiniteElementNet.Validation
             for (var xi = -1.0; xi <= 1; xi += 0.1)
             {
                 var n1 = h1.GetNMatrixAt(elm, xi);
-                var n2 = ShaftHelper2Node.GetNMatrixAt(xi, l);
+                var n2 = ShaftHelper2Node.GetNMatrixAt(xi, l, DofConstraint.Fixed, DofConstraint.Fixed);
 
                 var diff = n1 - n2;
 

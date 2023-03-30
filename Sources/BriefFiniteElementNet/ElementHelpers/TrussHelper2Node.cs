@@ -15,37 +15,70 @@ using CSparse.Double;
 
 namespace BriefFiniteElementNet.ElementHelpers
 {
-    public class TrussHelper2Node : IElementHelper
+    public class TrussHelper2Node : BaseBar2NodeHelper
     {
-        public Element TargetElement { get; set; }
-
-        public static Matrix GetNMatrixAt(double xi, double l)
+        public TrussHelper2Node(Element targetElement) : base(targetElement)
         {
+        }
+
+        public static Matrix GetNMatrixAt(double xi, double l, DofConstraint d1, DofConstraint d2)
+        {
+            double n1, n2, n1p, n2p;
+
+            var b1 = d1 == DofConstraint.Fixed;
+            var b2 = d2 == DofConstraint.Fixed;
+
+            var num = (b1 ? 1 : 0) * 2 + (b2 ? 1 : 0);
+
+
+            switch(num)
+            {
+                case 0://both released
+                    n1 = n2 = n1p = n2p = 0;
+                    break;
+                case 1://b2: fix, b1: release
+                    n1 = n1p = n2p = 0;
+                    n2 = 1;
+                    break;
+                case 2://b2: release, b1: fix
+                    n2 = n1p = n2p = 0;
+                    n1 = 1;
+                    break;
+                case 3://both fixed
+                    n1 = -0.5 * xi + 0.5;
+                    n2 = 0.5 * xi + 0.5;
+                    n1p = -0.5;
+                    n2p = +0.5;
+                    break;
+                default:
+                    throw new NotImplementedException();
+
+            }
+
             var buf = new Matrix(2, 2);
 
-            {
-                var n1 = -0.5 * xi + 0.5;
-                var n2 = 0.5 * xi + 0.5;
-
-                buf.SetRow(0, n1, n2);
-
-                buf.SetRow(1, -0.5, 0.5);
-            }
+            buf.SetRow(0, n1, n2);
+            buf.SetRow(1, n1p, n2p);
 
             return buf;
         }
 
-        public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
+        public override Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var xi = isoCoords[0];
             var bar = targetElement as BarElement;
             var l = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
 
-            return GetNMatrixAt(xi, l);
+
+            var d0 = bar.StartReleaseCondition.DX;
+            var d1 = bar.EndReleaseCondition.DX;
+
+            return GetNMatrixAt(xi, l, d0, d1);
+
         }
 
         /// <inheritdoc/>
-        public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
+        public override Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var bar = targetElement as BarElement;
             var l = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
@@ -71,111 +104,9 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         }
 
-        /// <inheritdoc/>
-        public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
-        {
-            var elm = targetElement as BarElement;
-
-            if (elm == null)
-                throw new Exception();
-
-            var xi = isoCoords[0];
-
-            var geo = elm.Section.GetCrossSectionPropertiesAt(xi, targetElement);
-            var mech = elm.Material.GetMaterialPropertiesAt(xi);
-
-            var buf =
-            //new Matrix(1, 1);
-            targetElement.MatrixPool.Allocate(1, 1);
-
-            buf.At(0, 0, geo.A * mech.Ex);
-
-            return buf;
-        }
 
         /// <inheritdoc/>
-        public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
-        {
-            var elm = targetElement as BarElement;
-
-            if (elm == null)
-                throw new Exception();
-
-            var xi = isoCoords[0];
-
-            var geo = elm.Section.GetCrossSectionPropertiesAt(xi, targetElement);
-            var mech = elm.Material.GetMaterialPropertiesAt(xi);
-
-            var buf = new Matrix(1, 1);
-
-            buf[0, 0] = geo.A * mech.Rho;
-
-            return buf;
-        }
-
-        /// <inheritdoc/>
-        public Matrix GetMuMatrixAt(Element targetElement, params double[] isoCoords)
-        {
-            var elm = targetElement as BarElement;
-
-            if (elm == null)
-                throw new Exception();
-
-            var xi = isoCoords[0];
-
-            var geo = elm.Section.GetCrossSectionPropertiesAt(xi, targetElement);
-            var mech = elm.Material.GetMaterialPropertiesAt(xi);
-
-            var buf = new Matrix(1, 1);
-
-            buf[0, 0] = geo.A * mech.Mu;
-
-            return buf;
-        }
-
-        
-
-
-
-        /// <inheritdoc/>
-        public Matrix CalcLocalStiffnessMatrix(Element targetElement)
-        {
-            var buf = ElementHelperExtensions.CalcLocalKMatrix_Bar(this, targetElement);
-
-            return buf;
-        }
-
-        /// <inheritdoc/>
-        public Matrix CalcLocalMassMatrix(Element targetElement)
-        {
-            var buf = ElementHelperExtensions.CalcLocalMMatrix_Bar(this, targetElement);
-
-            return buf;
-        }
-
-        /// <inheritdoc/>
-        public Matrix CalcLocalDampMatrix(Element targetElement)
-        {
-            return ElementHelperExtensions.CalcLocalCMatrix_Bar(this, targetElement);
-        }
-
-        /// <inheritdoc/>
-        public ElementPermuteHelper.ElementLocalDof[] GetDofOrder(Element targetElement)
-        {
-            var n = targetElement.Nodes.Length;
-
-            var buf = new ElementPermuteHelper.ElementLocalDof[n];
-
-            for (int i = 0; i < n; i++)
-            {
-                buf[i] = new ElementPermuteHelper.ElementLocalDof(i, DoF.Dx);
-            }
-
-            return buf;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<Tuple<DoF, double>> GetLocalInternalForceAt(Element targetElement,
+        public override IEnumerable<Tuple<DoF, double>> GetLocalInternalForceAt(Element targetElement,
             Displacement[] localDisplacements, params double[] isoCoords)
         {
             var ld = localDisplacements;
@@ -208,50 +139,8 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
-
         /// <inheritdoc/>
-        public int[] GetNMaxOrder(Element targetElement)
-        {
-            return new int[] { targetElement.Nodes.Length - 1, 0, 0 };
-        }
-
-        public int[] GetBMaxOrder(Element targetElement)
-        {
-            return new int[] { targetElement.Nodes.Length - 2, 0, 0 };
-        }
-
-        public int[] GetDetJOrder(Element targetElement)
-        {
-            return new int[] { targetElement.Nodes.Length - 2, 0, 0 };
-        }
-
-
-        public double[] Iso2Local(Element targetElement, params double[] isoCoords)
-        {
-            var buf = BaseBar2NodeHelper.Iso2Local(targetElement, isoCoords[0]);
-            return new double[] { buf };
-        }
-
-        public double[] Local2Iso(Element targetElement, params double[] localCoords)
-        {
-            var buf = BaseBar2NodeHelper.Local2Iso(targetElement, localCoords[0]);
-            return new double[] { buf };
-        }
-
-        public Matrix GetJMatrixAt(Element targetElement, params double[] isoCoords)
-        {
-            var j = BaseBar2NodeHelper.GetJ(targetElement);
-
-            var buf = new Matrix(1, 1);
-
-            buf[0, 0] = j;
-
-            return buf;
-        }
-
-
-        /// <inheritdoc/>
-        public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load,
+        public override IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load,
             double[] isoLocation)
         {
             var buff = new List<Tuple<DoF, double>>();
@@ -377,7 +266,7 @@ namespace BriefFiniteElementNet.ElementHelpers
                     {
                         var intgV = GaussianIntegrator.CreateFor1DProblem(x =>
                         {
-                            var xi = Local2Iso(targetElement, x)[0];
+                            var xi = Local2Iso(targetElement, x);
                             var q__ = magnitude(xi);
                             var q_ = localDir * q__;
 
@@ -471,13 +360,13 @@ namespace BriefFiniteElementNet.ElementHelpers
             throw new NotImplementedException();
         }
 
-        public Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation)
+        public override Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        public override Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
             var n = GetNMatrixAt(targetElement, isoCoords).Row(0);
 
@@ -489,7 +378,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             return new Displacement(CalcUtil.DotProduct(n, u), 0, 0, 0, 0, 0);
         }
 
-        public Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
+        public override Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
         {
             var tr = targetElement.GetTransformationManager();
 
@@ -623,14 +512,54 @@ namespace BriefFiniteElementNet.ElementHelpers
             throw new NotImplementedException();
         }
 
-        public GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
+        public override GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
-        public GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
+        public override GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
             throw new NotImplementedException();
+        }
+
+        public override DoF[] GetDofsPerNode()
+        {
+            return new DoF[] { DoF.Dx };
+        }
+
+        protected override int GetBOrder()
+        {
+            return 0;
+        }
+
+        protected override int GetNOrder()
+        {
+            return 1;
+        }
+
+
+        public override double GetMu(BarElement targetElement, double xi)
+        {
+            var geo = targetElement.Section.GetCrossSectionPropertiesAt(xi, targetElement);
+            var mat = targetElement.Material.GetMaterialPropertiesAt(xi);
+
+            return mat.Mu * geo.A;
+        }
+
+        public override double GetRho(BarElement targetElement, double xi)
+        {
+            var geo = targetElement.Section.GetCrossSectionPropertiesAt(xi, targetElement);
+            var mat = targetElement.Material.GetMaterialPropertiesAt(xi);
+
+            return mat.Rho * geo.A;
+        }
+
+        public override double GetD(BarElement targetElement, double xi)
+        {
+            var geo = targetElement.Section.GetCrossSectionPropertiesAt(xi, targetElement);
+            var mech = targetElement.Material.GetMaterialPropertiesAt(xi);
+
+            return mech.Ex * geo.A;
         }
     }
 }
