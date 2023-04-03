@@ -46,6 +46,11 @@ namespace BriefFiniteElementNet.Mathh
             return new SingleVariablePolynomial(coefs);
         }
 
+        /// <summary>
+        /// coefs= a4 a3 a2 a1
+        /// poly = a4 * x^4 + a3 * x^3 + a2 * x^2 + a1 * x^1 + a0 * x^0
+        /// </summary>
+        /// <param name="coefs"></param>
         public SingleVariablePolynomial(params double[] coefs)
         {
             Coefficients = (double[])coefs.Clone();

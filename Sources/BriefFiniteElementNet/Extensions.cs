@@ -11,6 +11,47 @@ namespace BriefFiniteElementNet
 {
     public static class Extensions
     {
+        //https://stackoverflow.com/a/48396258
+
+
+        public static bool TryGetValue<T>(this SerializationInfo serializationInfo, string name, out T value)
+        {
+            object val = null;
+            Type tp = null;
+            var flag = false;
+
+            foreach (SerializationEntry entry in serializationInfo)
+            {
+                if (entry.Name == name)
+                {
+                    val = entry.Value;
+                    tp = entry.ObjectType;
+                    flag = true;
+                    break;
+                }
+            }
+
+
+            if (!flag)
+            {
+                value = default(T);
+                return false;
+            }
+
+            value = (T)val;
+            return true;
+        }
+
+
+        public static double GetDoubleOrDefault(this SerializationInfo serializationInfo, string name)
+        {
+            double buf;
+
+            if(TryGetValue<double>(serializationInfo,name,out buf))
+                return buf;
+            
+            return 0.0;
+        }
 
         public static bool IsFixed(this DofConstraint cns)
         {

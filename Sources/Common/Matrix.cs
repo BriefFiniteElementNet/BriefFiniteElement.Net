@@ -271,6 +271,27 @@ namespace BriefFiniteElementNet
             return sb.ToString();
         }
 
+        public string ToString(string format)
+        {
+            var sb = new StringBuilder();
+
+            var mtx = this;
+
+            for (var i = 0; i < mtx.RowCount; i++)
+            {
+                for (var j = 0; j < mtx.ColumnCount; j++)
+                {
+                    var val = mtx[i, j].ToString(format);
+
+                    sb.Append(val);
+                    sb.Append("\t");
+                }
+                sb.AppendLine();
+            }
+
+            return sb.ToString();
+        }
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("rows", base.rows);
