@@ -363,7 +363,9 @@ namespace BriefFiniteElementNet.Validation
                     var nc = nssCurrent[j];
                     var ne = nssExpected[j];
 
-                    if(!nc.EqualsPolynomial(ne,1e-6))
+                    var diff = SingleVariablePolynomial.GetMaxDiff(nc, ne);
+
+                    if (diff > 1e-6)
                     {
                         throw new Exception();
                     }
@@ -438,10 +440,13 @@ namespace BriefFiniteElementNet.Validation
                     var nc = nssCurrent[j];
                     var ne = nssExpected[j];
 
-                    if (!nc.EqualsPolynomial(ne, 1e-6))
+                    var diff = SingleVariablePolynomial.GetMaxDiff(nc, ne);
+
+                    if (diff > 1e-6)
                     {
                         throw new Exception();
                     }
+
                 }
             }
 

@@ -713,7 +713,7 @@ namespace BriefFiniteElementNet.Elements
 
             if ((this._behavior & BarElementBehaviour.BeamYTimoshenko) != 0)
             {
-                helpers.Add(new TimoshenkoBeamHelper(BeamDirection.Y));
+                helpers.Add(new TimoshenkoBeamHelper(BeamDirection.Y,this));
             }
 
             if ((this._behavior & BarElementBehaviour.BeamZEulerBernoulli) != 0)
@@ -723,7 +723,7 @@ namespace BriefFiniteElementNet.Elements
 
             if ((this._behavior & BarElementBehaviour.BeamZTimoshenko) != 0)
             {
-                helpers.Add(new TimoshenkoBeamHelper(BeamDirection.Z));
+                helpers.Add(new TimoshenkoBeamHelper(BeamDirection.Z, this));
             }
 
             if ((this._behavior & BarElementBehaviour.Truss) != 0)

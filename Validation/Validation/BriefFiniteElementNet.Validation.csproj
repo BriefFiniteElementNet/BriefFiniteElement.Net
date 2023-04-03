@@ -95,6 +95,7 @@
     <Compile Include="QuadElementTester.cs" />
     <Compile Include="TestValidator.cs" />
     <Compile Include="tetrahedronElementTester.cs" />
+    <Compile Include="TimoshenkoBeamChecker.cs" />
     <Compile Include="ValidationCaseAttribute.cs" />
     <Compile Include="ValidationResult.cs" />
     <Compile Include="Util.cs" />

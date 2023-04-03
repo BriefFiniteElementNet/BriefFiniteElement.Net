@@ -798,7 +798,7 @@ namespace Legacy.Elements
 
             if ((_behavior & BarElementBehaviour.BeamYTimoshenko) != 0)
             {
-                helpers.Add(new TimoshenkoBeamHelper(BeamDirection.Y));
+                helpers.Add(new TimoshenkoBeamHelper(BeamDirection.Y, this));
             }
 
             if ((_behavior & BarElementBehaviour.BeamZEulerBernoulli) != 0)
@@ -808,7 +808,7 @@ namespace Legacy.Elements
 
             if ((_behavior & BarElementBehaviour.BeamZTimoshenko) != 0)
             {
-                helpers.Add(new TimoshenkoBeamHelper(BeamDirection.Z));
+                helpers.Add(new TimoshenkoBeamHelper(BeamDirection.Z, this));
             }
 
             if ((_behavior & BarElementBehaviour.Truss) != 0)

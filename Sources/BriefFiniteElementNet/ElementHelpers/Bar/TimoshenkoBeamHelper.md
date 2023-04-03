@@ -81,23 +81,22 @@ m1p_=subs(subs(m1p,xi,x/l),x,(xi+1)/2*l)
 m2p_=subs(subs(m2p,xi,x/l),x,(xi+1)/2*l)
 
 disp('N1');
-[c,t] = coeffs(n1_,xi,'all');
-disp(c(1,1));
+[c,t] = coeffs(n1_,xi,'all')
 disp('N2');
-[c,t] = coeffs(n2_,xi,'all');
+[c,t] = coeffs(n2_,xi,'all')
 disp('M1');
-[c,t] = coeffs(m1_,xi,'all');
+[c,t] = coeffs(m1_,xi,'all')
 disp('M2');
-[c,t] = coeffs(m2_,xi,'all');
+[c,t] = coeffs(m2_,xi,'all')
 
 disp('N1`');
-[c,t] = coeffs(n1p_,xi,'all');
+[c,t] = coeffs(n1p_,xi,'all')
 disp('N2`');
-[c,t] = coeffs(n2p_,xi,'all');
+[c,t] = coeffs(n2p_,xi,'all')
 disp('M1`');
-[c,t] = coeffs(m1p_,xi,'all');
+[c,t] = coeffs(m1p_,xi,'all')
 disp('M2`');
-[c,t] = coeffs(m2p_,xi,'all');
+[c,t] = coeffs(m2p_,xi,'all')
 ```
 
 

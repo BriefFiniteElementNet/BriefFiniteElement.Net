@@ -165,6 +165,36 @@ namespace BriefFiniteElementNet.Mathh
             return true;
         }
 
+        //get max difference between coeficients of two polynomials
+        public static double GetMaxDiff(SingleVariablePolynomial @this , SingleVariablePolynomial that)
+        {
+            var thisDic = @this.GetCoefficientsAsDictionary();
+            var thatDic = that.GetCoefficientsAsDictionary();
+
+            var allKeys = thisDic.Keys.Union(thatDic.Keys).Distinct().ToList();
+
+            var max = 0.0;
+
+            foreach (var key in allKeys)
+            {
+                var thisValue = 0.0;
+                var thatValue = 0.0;
+
+                if (thisDic.ContainsKey(key))
+                    thisValue = thisDic[key];
+
+                if (thatDic.ContainsKey(key))
+                    thatValue = thatDic[key];
+
+                var err = Math.Abs(thisValue - thatValue);
+                
+                if (err > max)
+                    max = err;
+            }
+
+            return max;
+        }
+
         /// <summary>
         /// Gets the derivative of polynomial as another polynomial
         /// </summary>

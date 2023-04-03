@@ -22,6 +22,13 @@ namespace BriefFiniteElementNet.Materials
         public abstract AnisotropicMaterialInfo GetMaterialPropertiesAt(params double[] isoCoords);
 
         /// <summary>
+        /// Gets the material properties at defined location.
+        /// </summary>
+        /// <param name="isoCoords">the isometric coordination, order: xi eta gama</param>
+        /// <returns>the material of element, in local element's coordination system</returns>
+        //public abstract AnisotropicMaterialInfo GetMaterialPropertiesAt(Element targetElement, params double[] isoCoords);
+
+        /// <summary>
         /// Gets the maximum order (degree) of members of material regarding xi - eta and gama.
         /// </summary>
         /// <remarks>
