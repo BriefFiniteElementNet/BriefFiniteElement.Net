@@ -26,6 +26,9 @@ namespace BriefFiniteElementNet.Sections
             info.AddValue("_az", _az);
             info.AddValue("_j", _j);
 
+            info.AddValue("_kz", _kz);
+            info.AddValue("_ky", _ky);
+
             base.GetObjectData(info, context);
     
         }
@@ -38,6 +41,9 @@ namespace BriefFiniteElementNet.Sections
             _ay = info.GetDouble("_ay");
             _az = info.GetDouble("_az");
             _j = info.GetDouble("_j");
+
+            _ky = info.GetDoubleOrDefault("_ky");
+            _kz = info.GetDoubleOrDefault("_kz");
         }
 
         public UniformParametric1DSection()
@@ -87,6 +93,9 @@ namespace BriefFiniteElementNet.Sections
         private double _iy;
         private double _iz;
         private double _j;
+
+        private double _ky;
+        private double _kz;
 
         /// <summary>
         /// Gets or sets a.
@@ -173,6 +182,32 @@ namespace BriefFiniteElementNet.Sections
             set { _j = value; }
         }
 
+
+        /// <summary>
+        /// Gets or sets the κy 
+        /// </summary>
+        /// <value>
+        /// Shear correction factor in Y direction (used in timoshenko beam with BeamDirection.Y, e.g. rotation about Y)
+        /// </value>
+        public double Ky
+        {
+            get { return _ky; }
+            set { _ky = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the κz 
+        /// </summary>
+        /// <value>
+        /// Shear correction factor in Z direction (used in timoshenko beam with BeamDirection.Z, e.g. rotation about Z)
+        /// </value>
+        public double Kz
+        {
+            get { return _kz; }
+            set { _kz = value; }
+        }
+
+
         public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi)
         {
             return GetCrossSectionPropertiesAt(xi, null);
@@ -189,6 +224,8 @@ namespace BriefFiniteElementNet.Sections
             buf.Iz = this._iz;
             buf.J = this.J;
 
+            buf.Ky= this._ky;
+            buf.Kz = this._kz;
 
             return buf;
         }

@@ -75,6 +75,9 @@ namespace BriefFiniteElementNet.Sections
                 target.Iyz = s1.Iyz * f1 + s2.Iyz * f2;
                 target.Iy = s1.Iy * f1 + s2.Iy * f2;
                 target.Iz = s1.Iz * f1 + s2.Iz * f2;
+                target.Ky = s1.Ky * f1 + s2.Ky * f2;
+                target.Kz = s1.Kz * f1 + s2.Kz * f2;
+
             }
 
             return target;

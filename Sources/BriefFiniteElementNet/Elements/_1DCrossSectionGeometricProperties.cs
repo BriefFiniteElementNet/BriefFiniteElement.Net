@@ -86,6 +86,9 @@ namespace BriefFiniteElementNet.Elements
                 buf.Ay = sign * a;//TODO: Ay is not equal to A, this is temporary fix
                 buf.Az = sign * a;//TODO: Az is not equal to A, this is temporary fix
 
+
+                //todo: calculate shear correction factor for timoshenko beams
+
                 if (resetCentroid)
                 {
                     //parallel axis theorem
@@ -113,6 +116,9 @@ namespace BriefFiniteElementNet.Elements
         private double _qy;
         private double _qz;
         private double _iyz;
+
+        private double _ky;
+        private double _kz;
 
         /// <summary>
         /// Gets or sets a.
@@ -219,15 +225,39 @@ namespace BriefFiniteElementNet.Elements
         }
 
         /// <summary>
+        /// Gets or sets the κy 
+        /// </summary>
+        /// <value>
+        /// Shear correction factor in Y direction (used in timoshenko beam with BeamDirection.Y, e.g. rotation about Y)
+        /// </value>
+        public double Ky
+        {
+            get { return _ky; }
+            set { _ky = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the κz 
+        /// </summary>
+        /// <value>
+        /// Shear correction factor in Z direction (used in timoshenko beam with BeamDirection.Z, e.g. rotation about Z)
+        /// </value>
+        public double Kz
+        {
+            get { return _kz; }
+            set { _kz = value; }
+        }
+
+        /// <summary>
         /// Gets the polar moment of inertia (J).
         /// </summary>
         /// <value>
         /// The polar moment of inertial.
         /// </value>
         /// <remarks>
-        ///     /          /
+        ///      /          /
         /// Jx = | ρ². dA = | (y²+z²).dA = <see cref="Iy"/> + <see cref="Iz"/> 
-        ///    /A         /A
+        ///      /A         /A
         /// </remarks>
         public double Jx
         {
