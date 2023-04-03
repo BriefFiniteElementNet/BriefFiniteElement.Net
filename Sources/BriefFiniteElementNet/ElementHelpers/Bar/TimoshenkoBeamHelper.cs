@@ -5,6 +5,7 @@ using System.Text;
 using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet.ElementHelpers.BarHelpers;
 using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.Mathh;
 using CSparse.Storage;
 
 namespace BriefFiniteElementNet.ElementHelpers
@@ -14,6 +15,100 @@ namespace BriefFiniteElementNet.ElementHelpers
     /// </summary>
     public class TimoshenkoBeamHelper : IElementHelper
     {
+        #region statics
+
+        /// <summary>
+        /// get the shape functions that defines the Y (shape of beam)
+        /// </summary>
+        /// <param name="xi"></param>
+        /// <param name="l"></param>
+        /// <param name="phi"></param>
+        /// <returns></returns>
+        public static void GetYShapeFunctions(double xi, double l, double phi, BeamDirection dir,out SingleVariablePolynomial[] nss,out SingleVariablePolynomial[] mss)
+        {
+            var phi_h = 1 / (1 + phi);
+
+            var n1 = new SingleVariablePolynomial(phi_h / 4, 0, -phi * phi_h / 2 - 3 * phi_h / 4, phi * phi_h / 2 + phi_h / 2);
+            var n2 = new SingleVariablePolynomial(-phi_h / 4, 0, phi * phi_h / 2 + 3 * phi_h / 4, phi * phi_h / 2 + phi_h / 2);
+
+            var m1 = new SingleVariablePolynomial(l * phi_h / 8, -l * phi * phi_h / 8 - l * phi_h / 8, -l * phi_h / 8, l * phi * phi_h / 8 + l * phi_h / 8);
+            var m2 = new SingleVariablePolynomial(l * phi_h / 8, l * phi * phi_h / 8 + l * phi_h / 8, -l * phi_h / 8, -l * phi * phi_h / 8 - l * phi_h / 8);
+
+            m1.MultiplyByConstant(l);
+            m2.MultiplyByConstant(l);
+
+            nss = new[] { n1, n2 };
+            mss = new[] { m1, m2 };
+        }
+
+        /// <summary>
+        /// get the shape functions that defines the Y' (rotation of beam)
+        /// </summary>
+        /// <param name="xi"></param>
+        /// <param name="l"></param>
+        /// <param name="phi"></param>
+        /// <returns></returns>
+        public static void GetThetaShapeFunctions(double xi, double l, double phi, BeamDirection dir, out SingleVariablePolynomial[] nss, out SingleVariablePolynomial[] mss)
+        {
+            var phi_h = 1 / (1 + phi);
+
+            var n1p = new SingleVariablePolynomial(3 * phi_h / (2 * l), 0, -3 * phi_h / (2 * l));
+            var n2p = new SingleVariablePolynomial(-3 * phi_h / (2 * l), 0, 3 * phi_h / (2 * l));
+
+            var m1p = new SingleVariablePolynomial(3 * phi_h / 4, -phi * phi_h / 2 - phi_h / 2, phi * phi_h / 2 - phi_h / 4);
+            var m2p = new SingleVariablePolynomial(3 * phi_h / 4, +phi * phi_h / 2 + phi_h / 2, phi * phi_h / 2 - phi_h / 4);
+
+            nss = new[] { n1p, n2p };
+            mss = new[] { m1p, m2p };
+        }
+
+        #endregion
+
+        private void EnsureNoPartialEndRelease(Element elm) 
+        {
+            var bar = elm as BarElement;
+
+            var cnss = bar.NodalReleaseConditions;
+
+            var dofs = cnss.SelectMany(i => new[] { i.DY, i.DZ, i.RY, i.RZ }).ToArray();
+
+            if (dofs.Any(i => i != DofConstraint.Fixed))
+                throw new Exception("TimoshenkoBeam not support partial end release yet");
+        }
+
+        public static Matrix GetNMatrixAt(double xi, double l,double phi, DofConstraint D0, DofConstraint R0, DofConstraint D1, DofConstraint R1, BeamDirection dir)
+        {
+            var n1 = new SingleVariablePolynomial();
+
+
+            SingleVariablePolynomial[] nss, mss;
+
+            EulerBernouly2NodeShapeFunction.GetShapeFunctions(l, D0, R0, D1, R1, dir, out nss, out mss);
+
+            var buf = new Matrix(4, 4);
+
+            for (var i = 0; i < 2; i++)
+            {
+                if (nss[i] == null) nss[i] = new SingleVariablePolynomial();
+                if (mss[i] == null) mss[i] = new SingleVariablePolynomial();
+            }
+
+            for (var i = 0; i < 2; i++)
+            {
+                var ni = nss[i];
+                var mi = mss[i];
+
+                for (var ii = 0; ii < 4; ii++)
+                {
+                    buf[ii, 2 * i + 0] = ni.EvaluateDerivative(xi, ii);
+                    buf[ii, 2 * i + 1] = mi.EvaluateDerivative(xi, ii);
+                }
+            }
+
+
+            return buf;
+        }
+
         private BeamDirection _direction;
 
         /// <summary>
@@ -25,11 +120,6 @@ namespace BriefFiniteElementNet.ElementHelpers
             _direction = direction;
         }
 
-        /// <inheritdoc/>
-        public Matrix GetB_iMatrixAt(Element targetElement, int i, params double[] isoCoords)
-        {
-            throw new NotImplementedException();
-        }
 
         public Element TargetElement { get; set; }
 
