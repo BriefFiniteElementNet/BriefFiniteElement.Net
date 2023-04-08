@@ -4,7 +4,7 @@
     <TargetFrameworks>net6.0;netstandard2.0;net45;</TargetFrameworks>
 	<AssemblyVersion>2.0.5</AssemblyVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageId>BriefFiniteElementNet.Common</PackageId>
     <Description>Common object for Brief Finite Element</Description>
     <Version>2.1.0</Version>
