@@ -6,7 +6,7 @@
 	<FileVersion>2.0.5</FileVersion>
 	  
 	<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageId>BriefFiniteElement.Net</PackageId>
     <Description>A Finite Element library for static and linear analysis of solids and structures.</Description>
     <Version>2.1.0</Version>
