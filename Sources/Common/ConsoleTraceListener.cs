@@ -39,6 +39,9 @@ namespace BriefFiniteElementNet.Common
                     throw new ArgumentOutOfRangeException();
             }
 
+            Console.Write(record.Level);
+            Console.Write(": ");
+
             if (string.IsNullOrEmpty(record.IssueId))
                 Console.WriteLine("{1}", record.IssueId, record.Message);
             else

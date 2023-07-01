@@ -79,6 +79,7 @@ namespace BriefFiniteElementNet.Validation
             {
                 var pf = pd.Transpose();
 
+                //var tmp = BriefFiniteElementNet.Mathh.Extensions.ToDense(pf).ToString();
 
                 var kr = pf.Multiply(kt).Multiply(pd);
 
@@ -96,6 +97,23 @@ namespace BriefFiniteElementNet.Validation
                     if (t > 0)
                         continue;
 
+                    //t <= 0 and that causes not pos def
+
+                    {
+                        var items = CalcUtil.EnumerateColumnMembers(pd, i).FirstOrDefault();
+
+                        if (items == null)
+                            throw new Exception();
+
+                        var globalDof = items.Item1;
+
+                        var nodeId = globalDof / 6;
+                        var dof = (DoF)(globalDof % 6);
+
+                        model.Trace.Write(Common.TraceLevel.Warning, "DoF {0} of Node with index {1} have nonpositive value on stiffness matrix (likely to be not properly constrained)", dof, nodeId);
+                    }
+
+                    /*
                     throw new NotImplementedException();
                     var nums = (IEnumerable<Tuple<int,double>>)null;// pd.EnumerateColumnMembers(i);
 
@@ -131,6 +149,8 @@ namespace BriefFiniteElementNet.Validation
                         else//t < 0
                             model.Trace.Write(Common.TraceLevel.Warning, "DoF {0} of Node #{1} not member", dof, nodeNum);
                     }
+
+                    */
 
                 }
 

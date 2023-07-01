@@ -1422,7 +1422,7 @@ namespace BriefFiniteElementNet
         }
 
         // TODO: EXTENSION - move to Extensions class?
-        internal static IEnumerable<Tuple<int, double>> EnumerateColumnMembers(this CompressedColumnStorage<double> matrix, int columnNumber)
+        public static IEnumerable<Tuple<int, double>> EnumerateColumnMembers(this CompressedColumnStorage<double> matrix, int columnNumber)
         {
             var i = columnNumber;
 

@@ -65,6 +65,7 @@ namespace BriefFiniteElementNet.Solver
             var sp = new Stopwatch();
             sp.Start();
 
+
             cholesky =
                 SparseCholesky.Create(matrix, ColumnOrdering.MinimumDegreeAtPlusA);
                 
