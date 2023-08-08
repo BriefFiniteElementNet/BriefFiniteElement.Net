@@ -368,7 +368,7 @@ namespace Legacy.Elements
 
             var v = p1 - p0;
 
-            var tr = CalcUtil.GetBarTransformationMatrix(v);//, 0, this.MatrixPool);
+            var tr = CalcUtil.GetBarTransformationMatrix(v,_webRotation);//, 0, this.MatrixPool);
 
             //tr = tr.Transpose();// 
             tr.TransposeInPlace();

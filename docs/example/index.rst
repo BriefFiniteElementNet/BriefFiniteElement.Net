@@ -14,5 +14,6 @@ Examples
     simple-cantilever/index
     bargeosection/index
     settlement/index
+    bar-internalForce/index
 
 This section contains example items. select examples in the left panel.

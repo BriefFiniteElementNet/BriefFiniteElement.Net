@@ -36,6 +36,12 @@ remove `net6.0` on the 4th line:
 ```
 and you can build it with VS2019.
 
+## Matrix Must Be Positive and Definite!
+
+Have a look at here:
+[Wiki:How to fix NotPosDef error](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/wiki/How-to-fix-NotPosDef-error)
+
+
 ## Introduction
 Brief Finite Element Dot NET (BFE.NET) is a .NET based software framework for static and linear Finite Element Analysis (FEA) of solids and structures. BFE.NET help you to simply take advantage of Object Oriented approach to analyze FE models. Advantage of such a framework is that user does have a very powerful control on what he is working with, and control is not limited to an UI with predefined controls.
 

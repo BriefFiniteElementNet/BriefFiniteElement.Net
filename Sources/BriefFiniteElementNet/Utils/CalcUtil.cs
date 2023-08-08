@@ -881,7 +881,7 @@ namespace BriefFiniteElementNet
         /// <param name="v">vector that connects start to end</param>
         /// <param name="_webRotation">rotation around local x axis</param>
         /// <returns></returns>
-        public static Matrix GetBarTransformationMatrix(Vector v, double _webRotation = 0)
+        public static Matrix GetBarTransformationMatrix(Vector v, double _webRotation )
         {
             var buf = new Matrix(3, 3);
 

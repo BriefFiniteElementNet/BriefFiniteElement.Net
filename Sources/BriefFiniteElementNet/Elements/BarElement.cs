@@ -364,7 +364,7 @@ namespace BriefFiniteElementNet.Elements
 
             var v = p1 - p0;
 
-            var tr = CalcUtil.GetBarTransformationMatrix(v);//, 0, this.MatrixPool);
+            var tr = CalcUtil.GetBarTransformationMatrix(v, _webRotation);//, 0, this.MatrixPool);
             
             tr.TransposeInPlace();
 
@@ -616,13 +616,15 @@ namespace BriefFiniteElementNet.Elements
                 ki.ReturnToPool();
             }
 
-
+            /*
             for(var i=0;i<6*NodeCount;i++)
             {
                 if (buf[i, i] < 0)
                     Guid.NewGuid();
 
             }
+            */
+
             return buf;
         }
 

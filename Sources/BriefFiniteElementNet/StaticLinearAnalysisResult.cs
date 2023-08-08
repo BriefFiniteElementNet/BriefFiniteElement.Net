@@ -1419,6 +1419,9 @@ namespace BriefFiniteElementNet
             ElementForces.Clear();
             ConcentratedForces.Clear();
             SupportReactions.Clear();
+
+            Solvers.Clear();
+            Solvers_New.Clear();
             
         }
 

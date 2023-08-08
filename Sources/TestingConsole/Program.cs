@@ -17,10 +17,13 @@ namespace TestingConsole
             //EulerBernouly2nodeChecker.CheckTrussShapeFunction();
 
             //TimoshenkoBeamChecker.Test2();
-            BriefFiniteElementNet.Validation.GithubIssues.Issue158.Run();
+            //BriefFiniteElementNet.Validation.GithubIssues.Issue158.Run();
+            BriefFiniteElementNet.Validation.GithubIssues.Issue160.Run();
             //EulerBernouly2nodeChecker.TestConsoleBeam();
 
             Console.Write("Done");
+
+            Console.ReadKey();
         }
     }
 }
