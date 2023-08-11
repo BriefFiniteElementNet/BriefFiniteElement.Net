@@ -58,6 +58,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShellExample.cs" />
     <Compile Include="SimpleCantilever.cs" />
+    <Compile Include="SimpleTruss3D.cs" />
     <Compile Include="TowerExample.cs" />
     <Compile Include="UniformLoadCoordSystem.cs" />
   </ItemGroup>
@@ -80,10 +81,6 @@
     <ProjectReference Include="..\..\Sources\Legacy\Legacy.csproj">
       <Project>{fa8e5582-de1b-4039-93d7-ea7b601bd437}</Project>
       <Name>Legacy</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Sources\Solvers\SolversX64.csproj">
-      <Project>{a08cd429-21a0-417e-b55a-23a4b581b635}</Project>
-      <Name>SolversX64</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

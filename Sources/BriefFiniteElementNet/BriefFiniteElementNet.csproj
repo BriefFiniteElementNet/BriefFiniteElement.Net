@@ -9,7 +9,7 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageId>BriefFiniteElement.Net</PackageId>
     <Description>A Finite Element library for static and linear analysis of solids and structures.</Description>
-    <Version>2.1.0</Version>
+    <Version>2.1.2</Version>
     <PackageTags>finite elements static linear analysis</PackageTags>
     <Product>BriefFiniteElement.Net</Product>
     <Company>N.A.</Company>
@@ -31,6 +31,8 @@
     <Title>Brief Finite Element dot Net</Title>
     
   </PropertyGroup>
+
+	
 
   <ItemGroup>
     <Compile Remove="Elements\SdofMass.cs" />

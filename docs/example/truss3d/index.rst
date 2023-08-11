@@ -1,3 +1,5 @@
+.. _BarElement-3dtruss-example:
+
 Small 3D Truss Example
 #########################
 
@@ -265,59 +267,66 @@ NOTE: below code is outdated, TODO update
  
 .. code-block:: cs
 
-	private static void Example1()
-	{
-		Console.WriteLine("Example 1: Simple 3D truss with four members");
+	public class SimpleTruss3D
+    {
+        public static void Run()
+        {
+            // Initiating Model, Nodes and Members
+            var model = new Model();
+
+            var n1 = new Node(1, 1, 0);
+            n1.Label = "n1";//Set a unique label for node
+            var n2 = new Node(-1, 1, 0) { Label = "n2" };//using object initializer for assigning Label
+            var n3 = new Node(1, -1, 0) { Label = "n3" };
+            var n4 = new Node(-1, -1, 0) { Label = "n4" };
+            var n5 = new Node(0, 0, 1) { Label = "n5" };
 
 
-		// Initiating Model, Nodes and Members
-		var model = new Model();
 
-		var n1 = new Node(1, 1, 0);
-		n1.Label = "n1";//Set a unique label for node
-		var n2 = new Node(-1, 1, 0) {Label = "n2"};//using object initializer for assigning Label
-		var n3 = new Node(1, -1, 0) {Label = "n3"};
-		var n4 = new Node(-1, -1, 0) {Label = "n4"};
-		var n5 = new Node(0, 0, 1) {Label = "n5"};
-
-		var e1 = new TrussElement2Node(n1, n5) {Label = "e1"};
-		var e2 = new TrussElement2Node(n2, n5) {Label = "e2"};
-		var e3 = new TrussElement2Node(n3, n5) {Label = "e3"};
-		var e4 = new TrussElement2Node(n4, n5) {Label = "e4"};
-		//Note: labels for all members should be unique, else you will receive InvalidLabelException when adding it to model
-
-		e1.A = e2.A = e3.A = e4.A = 9e-4;
-		e1.E = e2.E = e3.E = e4.E = 210e9;
-
-		model.Nodes.Add(n1, n2, n3, n4, n5);
-		model.Elements.Add(e1, e2, e3, e4);
-
-		//Applying restrains
+            var e1 = new BarElement(n1, n5) { Label = "e1", Behavior = BarElementBehaviours.Truss };
+            var e2 = new BarElement(n2, n5) { Label = "e2", Behavior = BarElementBehaviours.Truss };
+            var e3 = new BarElement(n3, n5) { Label = "e3", Behavior = BarElementBehaviours.Truss };
+            var e4 = new BarElement(n4, n5) { Label = "e4", Behavior = BarElementBehaviours.Truss };
 
 
-		n1.Constraints = n2.Constraints = n3.Constraints = n4.Constraints = Constraint.Fixed;
-		n5.Constraints = Constraint.RotationFixed;
+            model.Nodes.Add(n1, n2, n3, n4, n5);
+            model.Elements.Add(e1, e2, e3, e4);
+
+            var section = new BriefFiniteElementNet.Sections.UniformParametric1DSection() { A = 9e-4 };
+
+            e1.Section = e2.Section = e3.Section = e4.Section = section;
+
+            var material = BriefFiniteElementNet.Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.3);
+
+            e1.Material = e2.Material = e3.Material = e4.Material = material;
+
+            n1.Constraints = n2.Constraints = n3.Constraints = n4.Constraints = Constraints.Fixed;
+            n5.Constraints = Constraints.RotationFixed;
+
+            var force = new Force(0, 0, -1000, 0, 0, 0);
+            n5.Loads.Add(new NodalLoad(force));//adds a load with LoadCase of DefaultLoadCase to node loads
 
 
-		//Applying load
-		var force = new Force(0, 1000, -1000, 0, 0, 0);
-		n5.Loads.Add(new NodalLoad(force));//adds a load with LoadCase of DefaultLoadCase to node loads
-		
-		//Adds a NodalLoad with Default LoadCase
+            model.Solve_MPC();
 
-		model.Solve();
+            var r1 = n1.GetSupportReaction();
+            var r2 = n2.GetSupportReaction();
+            var r3 = n3.GetSupportReaction();
+            var r4 = n4.GetSupportReaction();
 
-		var r1 = n1.GetSupportReaction();
-		var r2 = n2.GetSupportReaction();
-		var r3 = n3.GetSupportReaction();
-		var r4 = n4.GetSupportReaction();
 
-		var rt = r1 + r2 + r3 + r4;//shows the Fz=1000 and Fx=Fy=Mx=My=Mz=0.0
+            var rt = r1 + r2 + r3 + r4;//shows the Fz=1000 and Fx=Fy=Mx=My=Mz=0.0
 
-		Console.WriteLine("Total reactions SUM :" + rt.ToString());
-	}
+            Console.WriteLine("Total reactions SUM :" + rt.ToString());
+        }
+
+    }
 
 console result after executing:
+
+.. figure:: ../images/3d-truss-output.png
+   :align: center
+
 
 .. topic:: Console Output
 

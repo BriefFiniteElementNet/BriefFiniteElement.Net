@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-    <ProjectReference Include="..\csparse-interrupt\CSparse.Interop\CSparse.Interop.csproj" />
   </ItemGroup>
 
 </Project>

@@ -13,7 +13,7 @@
     <Description>few controls for visualization of BriefFiniteELement.net object</Description>
     <PackageProjectUrl>https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net</PackageProjectUrl>
     <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
-    <Version>2.1.0</Version>
+    <Version>2.1.2</Version>
     <Title>Controls for Brief Finite Element dot Net</Title>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

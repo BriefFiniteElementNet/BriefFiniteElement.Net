@@ -17,3 +17,13 @@ Examples
     bar-internalForce/index
 
 This section contains example items. select examples in the left panel.
+
+
+:ref:`BarElement-3dtruss-example`
+:ref:`BarElement-CrossSection-example`
+:ref:`BarElement-InternalForce-example`
+:ref:`BarElement-InclienedFrame-example`
+:ref:`BarElement-Isoparam-example`
+:ref:`LoadCaseComb-example`
+:ref:`BarElement-SimpleCantilever-example`
+:ref:`element-load-coordination-system`

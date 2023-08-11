@@ -1,3 +1,5 @@
+.. _BarElement-SimpleCantilever-example:
+
 Cantilever Beam (Console Beam) Example
 ######################################
 

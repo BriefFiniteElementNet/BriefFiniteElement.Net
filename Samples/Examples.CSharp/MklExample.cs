@@ -11,6 +11,7 @@ namespace Examples.CSharp
     {
         public static void Run()
         {
+            /*
             var model = BriefFiniteElementNet.StructureGenerator.Generate3DTetrahedralElementGrid(2, 2, 2);
 
             var material = BriefFiniteElementNet.Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.2);
@@ -28,6 +29,7 @@ namespace Examples.CSharp
             var cfg = new BriefFiniteElementNet.SolverConfiguration(solverFactory, LoadCase.DefaultLoadCase);
 
             model.Solve_MPC(cfg);
+            */
         }
     }
 }

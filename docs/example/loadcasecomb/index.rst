@@ -1,3 +1,5 @@
+.. _LoadCaseComb-example:
+
 LoadCase and LoadCombination Example
 #######################################
 

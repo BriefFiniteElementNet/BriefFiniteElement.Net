@@ -36,6 +36,12 @@ remove `net6.0` on the 4th line:
 ```
 and you can build it with VS2019.
 
+## Examples
+There are examples:
+- located in `Samples\Examples.CSharp` in the git repo
+- located in wiki 'https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/wiki/Examples'
+- located in documentation `https://bfenet.readthedocs.io/en/latest/example/index.html`
+
 ## Matrix Must Be Positive and Definite!
 
 Have a look at here:
