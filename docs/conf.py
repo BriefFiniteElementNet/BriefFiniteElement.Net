@@ -12,6 +12,7 @@ release = '2.1.1'
 
 source_suffix = {'.rst': 'restructuredtext'}
 root_doc = 'index'
+master_doc = 'index'
 
 #extensions = ['rst2pdf.pdfbuilder']
 #df_documents = [('index', u'rst2pdf', u'BriefFiniteElement documentation', u'epsi1on'),]
