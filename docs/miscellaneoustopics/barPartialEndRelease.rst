@@ -1,12 +1,13 @@
 Partial End release of Bar Element
 ##################################
 
-## Beam Behaviour
+Beam Behaviour
+--------------
 
 For beam we have 4 shape functions, namely $N_1$, $N_2$, $M_1$, $M_2$
 Also we have 4 conditions for each of these functions:
 
-.. code-block::
+.. code-block::cs
 
     |#|condition| $N_1$ |$N_2$  |$M_1$ |$M_2$|
     |-|--|--|--|--|--|

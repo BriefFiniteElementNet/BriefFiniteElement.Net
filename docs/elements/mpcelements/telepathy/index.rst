@@ -18,6 +18,7 @@ Example 1 : partial end release of a 5 meter beam
 This example creates a ``TelepathyLink`` that connect three nodes in a way that ``Dx`` of all nodes will be equal after analysis, also ``Dy`` and ``Dz`` but not ``Rx``, ``Ry`` and ``Rz``.
 
 .. code-block:: cs
+
   var n1 = new Node(0,0,0);
   var n2 = new Node(0,0,0);
   var n3 = new Node(5,0,0);

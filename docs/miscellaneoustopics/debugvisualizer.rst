@@ -22,7 +22,8 @@ BriefFiniteElement.NET library also contains debugger visualizer for visualizing
 Usually installing a debugger visualizer in Visual Studio is as easy as copying a bunch of dll files in this address of your hard drive:
 C:\Users\{YOUR_USER_NAME}\Documents\Visual Studio 20XX\Visualizers
 where {YOUR_USER_NAME} is pointing to current user profile address and '20XX' is related to installed visual studio (2013 or 2012 or 2010 or ...). 
-	- note: if Visualizers folder not exists, it should be created.
+- note: if Visualizers folder not exists, it should be created.
+
 	
 Installing debugger visualizers inside Visual Studio
 ------------------------------------------------------------------------------

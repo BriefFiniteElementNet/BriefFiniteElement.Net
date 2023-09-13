@@ -92,6 +92,7 @@ We can use `BarElement.GetInternalForceAt()` method to simply get the internal f
 and that is the input of `BarElement.GetInternalForceAt()` method is not in meter dimension not any other standard units of measuring length. The input is in another coordination system named iso-parametric crs. The isoparametric crs is widely used in FEM. More details about  BarElement does have a method for converting 
 
 .. code-block:: cs
+
 	var x = 1.0;//need to find internal force at x = 1.0 m
 	var iso = (model.Elements["e3"] as BarElement).LocalCoordsToIsoCoords(x);
 	var e4Force = (model.Elements["e3"] as BarElement).GetInternalForceAt(iso[0]);

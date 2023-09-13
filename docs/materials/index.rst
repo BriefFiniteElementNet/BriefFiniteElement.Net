@@ -1,5 +1,5 @@
 Materials Available
-##################
+###################
 
 .. toctree::
     :titlesonly:
