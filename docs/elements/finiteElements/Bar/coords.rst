@@ -43,7 +43,7 @@ code for transforming local to global is in https://github.com/BriefFiniteElemen
 
 code is ported from MATLAB code. from book 'MATLAB Codes for Finite Element Analysis' by 'A. J. M. Ferreira' , section 8.3 (First 3D frame example) page 107 (111 of 236)
 
-.. code-block::
+.. code-block::matlab
     
     if x1 == x2 & y1 == y2
         if z2 > z1

@@ -199,11 +199,13 @@ Rows with all members zero and right side zero will be removed from result, and 
 Finally there will be a matrix :math:`P_3`\ with `o` rows and `n` columns, that `o<=m` (`m` is total extra equation count) due to removing useless rows. Also as this matrix is RREF form, then there are `o` columns with only one non-zero element. If a member be the only non-zero member in the column, we call that member "pioneer" or "leading" member. Finally we have :math:`P_3*U=R_3`\ where :math:`P_3`\ is in RREF form.
 
 Step 4: Make pioneer members equal to -1 by multiplying whole row with a coefficient
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 we shaould take output of last step, :math:`P_3`\ and :math:`R_3`\. Then multiply each row and corresponding right side member with a coefficient in a way that pioneer member turn into `-1.0`. result is :math:`P_4`\ and :math:`R_4`\.
 
 Step 5: Insert each row into appropriated row of a `nxn` matrix where n is total number of DoFs
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 Create and empty :math:`P_5`\ matrix with size `n` by `n`, also a vector :math:`R_5`\ with size `n` by `1`. Then for each i'th row of :math:`P_4`\ with pioneer member at column `j`, insert it into `i`'th row of :math:`P_5`\ and :math:`R_5`\. Next we should replace the zeros on main diagonal of :math:`P_5`\ with `1.0` and no change in :math:`R_5`\.
 
 
