@@ -6,6 +6,7 @@ Behaviours
 The possible behaviours for the TriangleElement is:
 
 - ``TriangleElementBehaviour.Membrane`` : Membrane behaviour for in-plane displacement. DoFs are shown in below image:
+
 .. figure:: ../images/tri-membrane.png
    :align: center
 
@@ -14,12 +15,14 @@ DoFs of ``TriangleElementBehaviour.PlateBending``
 The mathematic formulation of this behaviour is based on standard CST (Constant Stress/Strain Triangle) element.
 
 - ``TriangleElementBehaviour.PlateBending`` : PlateBending behaviour for in-plane rotations and out of plane displacements. DoFs are shown in below image:
+
 .. figure:: ../images/tri-bending.png
    :align: center
 
 DoFs of ``TriangleElementBehaviour.PlateBending``
 
 - ``TriangleElementBehaviour.DrillingDof`` : behaviour for out of plane rotations. DoFs are shown in below image:
+
 .. figure:: ../images/tri-drill.png
    :align: center
 
