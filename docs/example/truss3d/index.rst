@@ -121,6 +121,7 @@ In BriefFiniteElement.NET, every node has 6 degree of freedom: ``X``, ``Y``, and
 
 
 .. csv-table::
+
    :header: "Property Name", "Description"
    :widths: 15, 15
 
@@ -144,6 +145,7 @@ or:
 and should fix the rotational DoFs of node 5:
 
 .. code-block:: cs
+
   n5.Constraints = Constraints.RotationFixed
   
 Step5: Assign Load to Node
