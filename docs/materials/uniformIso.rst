@@ -15,7 +15,7 @@ YoungModulus
 
 PoissonRatio
 ------------
-``UniformIsotropicMaterial.PoissonRatio`` represents a value defining the `Poisson's ratio <https://en.wikipedia.org/wiki/Poisson%27s_ratio>`_. Poisson’s ratio is Dimensionless and has no SI unit.
+``UniformIsotropicMaterial.PoissonRatio`` represents a value defining the `Poisson's ratio <https://en.wikipedia.org/wiki/Poisson%27s_ratio>`_. Poisson's ratio is Dimensionless and has no SI unit.
 
 Mass Density
 ------------

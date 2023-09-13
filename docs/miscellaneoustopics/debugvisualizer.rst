@@ -30,11 +30,11 @@ Installing debugger visualizers inside Visual Studio
 
 You should first Download latest source code of project. There are several solution files, for example `BriefFiniteElementNet.VS2019.sln` corresponds to Visual Studio 2019. There is several solution files in the package. Based on version of your Visual Studio you should open one of these solution files:
 
-    BriefFiniteElementNet.VS2010.sln (for Visual Studio 2010)
-    BriefFiniteElementNet.VS2012.sln (for Visual Studio 2012)
-    BriefFiniteElementNet.VS2013.sln (for Visual Studio 2013)
-	BriefFiniteElementNet.VS2015.sln (for Visual Studio 2015)
-	BriefFiniteElementNet.VS2019.sln (for Visual Studio 2019)
+- BriefFiniteElementNet.VS2010.sln (for Visual Studio 2010)
+- BriefFiniteElementNet.VS2012.sln (for Visual Studio 2012)
+- BriefFiniteElementNet.VS2013.sln (for Visual Studio 2013)
+- BriefFiniteElementNet.VS2015.sln (for Visual Studio 2015)
+- BriefFiniteElementNet.VS2019.sln (for Visual Studio 2019)
 
 After opening the solution file, there is a project named 'BriefFiniteElementNet.DebuggerVisualizersVS20XX' where `VS20XX` matches the Visual Studio version number running on local computer, simply right click on it and click Build to build it like this image:
 

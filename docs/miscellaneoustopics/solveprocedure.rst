@@ -186,7 +186,7 @@ TODO
 
 Step 3: Create Reduced Row Echelon Form (RREF) of Step 1
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Next step is to compute RREF form of :math:`P_1`\ matrix calculated in step 1 with gauss elimination. We should start from column 0, choose a row with non-zero member at column 0, then eliminate members of all other rows that have a non-zero element at column 0. Do same thing for all columns from 1 to n, where n is total number of DoFs. The operation will stop when in every `i`th column of matrix. all members are zero or at most one non-zero element. In other words elimination will stop when in each column there is at most one non-zero member. After elimination done for each `i`th row there is three possible cases:
+Next step is to compute RREF form of :math:`P_1`\ matrix calculated in step 1 with gauss elimination. We should start from column 0, choose a row with non-zero member at column 0, then eliminate members of all other rows that have a non-zero element at column 0. Do same thing for all columns from 1 to n, where n is total number of DoFs. The operation will stop when in every `i`th column of matrix. all members are zero or at most one non-zero element. In other words elimination will stop when in each column there is at most one non-zero member. After elimination done for each `i` th row there is three possible cases:
 
 1. There are one or several non-zeros on row `i`.
 
@@ -259,4 +259,3 @@ step 6: result is 7 by 5
 
 :math:`P_U`\ is left side (this 7 by 5 matrix) and `R` is right side vector (1 by 7 matrix)
 :math:`U_t = P_U * U_r`\ where t is Total, r is Reduced.
- m

@@ -6,36 +6,42 @@ Behaviours
 The possible behaviours for the BarElement is:
 
 - ``BarElementBehaviour.EulerBernoulyBeamY`` : Beam in Y direction based on Euler-Bernouly theory. DoFs are shown in below image:
+
 .. figure:: ../images/bar-b1.png
    :align: center
 
 DoFs of ``BarElementBehaviour.EulerBernoulyBeamY``
 
 - ``BarElementBehaviour.EulerBernoulyBeamZ`` : Beam in Z direction based on Euler-Bernouly theory. DoFs are shown in below image:
+
 .. figure:: ../images/bar-b2.png
    :align: center
 
 DoFs of ``BarElementBehaviour.EulerBernoulyBeamZ``
 
 - ``BarElementBehaviour.TimoshenkoBeamY`` : Beam in Y direction based on Timoshenko's theory (shear deformation). DoFs are shown in below image:
+
 .. figure:: ../images/bar-b1.png
    :align: center
 
 DoFs of ``BarElementBehaviour.TimoshenkoBeamY``
 
 - ``BarElementBehaviour.TimoshenkoBeamZ`` : Beam in Z direction based on Timoshenko's theory (shear deformation). DoFs are shown in below image:
+
 .. figure:: ../images/bar-b2.png
    :align: center
 
 DoFs of ``BarElementBehaviour.TimoshenkoBeamZ``
 
 - ``BarElementBehaviour.Truss`` : Only axial load carrying. DoFs are shown in below image:
+
 .. figure:: ../images/bar-truss.png
    :align: center
 
 DoFs of ``BarElementBehaviour.Truss``
 
 - ``BarElementBehaviour.Shaft`` : Only torsional moment carrying. DoFs are shown in below image:
+
 .. figure:: ../images/bar-shaft.png
    :align: center
 
