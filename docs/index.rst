@@ -1,11 +1,10 @@
 Brief Finite Element .NET 
 =========================
 
-
 .. toctree::
     :titlesonly:
     :hidden:
-    :maxdepth: 2
+    :maxdepth: 5
 
     underconstruction
     elements/index

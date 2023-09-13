@@ -4,7 +4,7 @@ Elements Available
 .. toctree::
     :titlesonly:
     :hidden:
-    :maxdepth: 2
+    :maxdepth: 5
 
     finiteElements/index
     mpcelements/index
