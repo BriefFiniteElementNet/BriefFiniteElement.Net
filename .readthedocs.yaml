@@ -1,15 +1,5 @@
 version: 2
-
-base: docs
-type: sphinx
-
-formats:
-    html: true
-    pdf: true
-python:
-    setup_install: true
-    
-    
+   
 # .readthedocs.yaml
 # Read the Docs configuration file
 # See https://docs.readthedocs.io/en/stable/config-file/v2.html for details
