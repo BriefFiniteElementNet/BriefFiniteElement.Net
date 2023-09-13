@@ -2,6 +2,9 @@ Intro
 =====
 Triangle element is only area or surface element in BFE. It is consist of a CST (Constant Stress (and Strain) Triangle) element for in plane loads, and a DKT (Discrete Kirchhoff Triangle) element for carying out off plane loads and moments and also an additional stiffness for drilling DoF.
 
+# Deprecated
+This element is Deprecated, use TriangleElement instead
+
 # DoFs
 Triangle element in BFE does have three nodes, each one for a corner of triangle in 3D space. Each node have 6 DoFs in global coordination system.
 

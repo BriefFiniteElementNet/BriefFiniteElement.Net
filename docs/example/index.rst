@@ -15,6 +15,10 @@ Examples
     bargeosection/index
     settlement/index
     bar-internalForce/index
+    define-fullmodel/index
+    design-truss/index
+    influence-line/index
+    transmision-tower/index
 
 This section contains example items. select examples in the left panel.
 
@@ -34,3 +38,9 @@ This section contains example items. select examples in the left panel.
 :ref:`BarElement-SimpleCantilever-example`
 
 :ref:`element-load-coordination-system`
+
+:ref:`DefineFullModel`
+
+:ref:`example_design_truss`
+
+:ref:`example_influence_line`

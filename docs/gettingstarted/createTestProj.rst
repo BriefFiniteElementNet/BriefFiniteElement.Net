@@ -5,12 +5,12 @@ After downloading the source code you should reference the main projects of bfe 
 we will use Visual Studio 2015 in next. you can use any version of Visual Studio IDE including free express or community version. by the way it is downloadable from ``https://visualstudio.microsoft.com/``.
 In next we will use visual Studio 2015...
 
-Some users reported project does not build with Visual Studio 2017, there are some workarounds in (`issue #42 on project on github<https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues/42>`_).
+Some users reported project does not build with Visual Studio 2017, there are some workarounds in (`issue #42 on project on github <https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues/42>`_).
 
 Creating new project
 --------------------
 
-After installation, Create a new C# application with name ``BfeTestApplication`` and type ``Console Application`` (`More Info <https://docs.microsoft.com/en-us/visualstudio/ide/creating-solutions-and-projects?view=vs-2017>`_).
+After installation, Create a new C# application with name ``BfeTestApplication`` and type ``Console Application`` (`Create New Solution in Visual Studio <https://docs.microsoft.com/en-us/visualstudio/ide/creating-solutions-and-projects?view=vs-2017>`_).
 
 .. figure:: ../images/vs-new-proj.png
    :align: center
@@ -18,7 +18,7 @@ After installation, Create a new C# application with name ``BfeTestApplication``
 Add BFE codes (projects) into solution
 --------------------------------------
 
-You should add the actual BFE core codes into your solution. (`More Info <https://docs.microsoft.com/en-us/sql/ssms/solution/add-an-existing-project-to-a-solution?view=sql-server-2017>`_).
+You should add the actual BFE core codes into your solution. (`Adding existing project to Solution in Visual Studio <https://docs.microsoft.com/en-us/sql/ssms/solution/add-an-existing-project-to-a-solution?view=sql-server-2017>`_)
 
 To add BFE code to your solution, do the following:
 
@@ -42,7 +42,7 @@ adding two projects,
 .. figure:: ../images/add-proj-bfe.png
    :align: center
    
-.. figure:: ../images/add-proj-bfe-common
+.. figure:: ../images/add-proj-bfe-common.png
    :align: center
    
 after adding two projects, solution explorer tab in visual studio should looks like this:

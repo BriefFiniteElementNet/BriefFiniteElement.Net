@@ -12,3 +12,4 @@ Common Objects
     loadcombination
     point
     vector
+    cauchy-tensor

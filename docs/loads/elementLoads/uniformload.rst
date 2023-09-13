@@ -70,10 +70,3 @@ Direction
 
 Look at examples section and definition of local CoordinationSystem in BarElement, TriangleElement, etc. for more information on how to use.
 
-
-Examples
---------
-
-Related Examples:
-
-+ :ref:`_element-load-coordination-system`

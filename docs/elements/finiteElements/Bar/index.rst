@@ -39,3 +39,4 @@ A bar element is referred to an 1D element, which only have dimension in one dir
     coords
     internalforces
     endrelease
+    examples

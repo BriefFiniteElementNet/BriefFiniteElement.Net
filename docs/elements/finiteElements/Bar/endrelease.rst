@@ -1,7 +1,8 @@
 .. _BarElement-PartialEndRelease:
 
 Partial End Release
---------------
+-------------------
+
 By default connection of BarElement into end nodes are rigid, e.g. all DoFs of BarElement are connected to end node, but there are some situation that there is need for partial connections. 
 
 ``BarElement.NodalReleaseConditions`` defines the partial end release of ``BarElement`` on each of it's nodes. Also ``BarElement.StartReleaseCondition`` and ``BarElement.EndReleaseCondition`` uses this property to get/set release conditions for start and end nodes:

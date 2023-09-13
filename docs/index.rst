@@ -23,5 +23,4 @@ Brief Finite Element .NET (or BFE.NET or BFE) is an object oriented framework th
 
 If you like to learn by writing code,   we'd recommend one of our :doc:`index` guides to get you started with BFE.NET.
 
-
-
+Project is currently hosted on github.

@@ -38,7 +38,8 @@ For load shown in the image:
 .. figure:: images/bfe-example-pnl.png
    :align: center
    
-first need to calculate isoparametric coords of locations (see see :ref:`Example-Bar-isoparam` section for more info)
+
+first need to calculate isoparametric coords of locations (see see :ref:`BarElement-Isoparam-example` section for more info)
 
 
 .. figure:: images/pnl-bar-example-iso.png

@@ -1,4 +1,6 @@
-What BFE is able to do
+.. _DefineFullModel:
+
+Defining a full model
 ######################
 
 As (defined in wikipedia.org)[https://en.wikipedia.org/wiki/Finite_element_method]:
@@ -10,10 +12,12 @@ This library is meant to give user a tool to do FEM for structural analysis. Usu
 
 In area of FEA of solids and structures, there are several fundamental concepts or things:
 - Elements
+
 - Nodes
+
 - Loads
 
-We will use these things as ``Class``es in our object oriented architecture. So there will be 3 classes exactly named as above. For example take a look at this Model:
+We will use these things as ``Class`` es in our object oriented architecture. So there will be 3 classes exactly named as above. For example take a look at this Model:
 
 [TODO image]
 

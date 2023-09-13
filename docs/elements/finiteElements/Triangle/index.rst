@@ -27,6 +27,12 @@ A triangle element is referred to a 2D element, which only have dimension in two
 6. It Does have a local coordination system, apart from global coordination system - see :ref:`TriangleElement-CoordinationSystems` section.
 7. It is possible to find internal force of it - see :ref:`TriangleElement-InternalForce` section.
 
+
+ref[1] "Development of Membrane, Plate and Flat Shell Elements in Java" by Kaushalkumar Kansara available from https://theses.lib.vt.edu/theses/available/etd-05142004-234133/unrestricted/Thesis.pdf
+
+ref[2] "AN EXPLICIT FORMULATION FOR AN EFFICIENT TRIANGULAR PLATE-BENDING ELEMENT" by JEAN-LOUIS BATOZ
+
+
 .. toctree::
     :titlesonly:
     :hidden:
@@ -38,3 +44,4 @@ A triangle element is referred to a 2D element, which only have dimension in two
     loads
     coords
     internalforces
+    membraneFormula

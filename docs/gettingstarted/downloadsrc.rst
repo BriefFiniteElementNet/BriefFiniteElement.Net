@@ -11,7 +11,7 @@ First way (using git client) is suggested as you have more control over source c
 
 
 Using Git Client to Download the Source Code
--------------------------------------------
+--------------------------------------------
 
 We will use git for windows client over download the code. download and install client from [this link](https://gitforwindows.org/). After installation open the git-gui from either installed location or start menu:
 
