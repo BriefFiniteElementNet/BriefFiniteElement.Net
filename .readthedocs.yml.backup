@@ -1,7 +1,0 @@
-base: Documents/sphinx/docs
-type: sphinx
-formats:
-    html: true
-    pdf: true
-python:
-    setup_install: true

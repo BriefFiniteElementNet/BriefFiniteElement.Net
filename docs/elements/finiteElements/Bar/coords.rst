@@ -37,27 +37,27 @@ the result system is local system of bar element.
 
 code for transforming local to global is in https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/blob/e46bf72ca4c49f592b2762487ff1169704658164/Sources/BriefFiniteElementNet/Utils/CalcUtil.cs#L899
 
-code is ported from MATLAB code. from book, section 8.3 (First 3D frame example) page 107 (111 of pdf)
+code is ported from MATLAB code. from book 'MATLAB Codes for Finite Element Analysis' by 'A. J. M. Ferreira' , section 8.3 (First 3D frame example) page 107 (111 of 236)
 
 ```
 if x1 == x2 & y1 == y2
-if z2 > z1
-Lambda = [0 0 1 ; 0 1 0 ; -1 0 0];
+    if z2 > z1
+        Lambda = [0 0 1 ; 0 1 0 ; -1 0 0];
+    else
+        Lambda = [0 0 -1 ; 0 1 0 ; 1 0 0];
+    end
 else
-Lambda = [0 0 -1 ; 0 1 0 ; 1 0 0];
-end
-else
-CXx = (x2-x1)/L;
-CYx = (y2-y1)/L;
-CZx = (z2-z1)/L;
-D = sqrt(CXx*CXx + CYx*CYx);
-CXy = -CYx/D;
-CYy = CXx/D;
-CZy = 0;
-CXz = -CXx*CZx/D;
-CYz = -CYx*CZx/D;
-CZz = D;
-Lambda = [CXx CYx CZx ;CXy CYy CZy ;CXz CYz CZz];
+    CXx = (x2-x1)/L;
+    CYx = (y2-y1)/L;
+    CZx = (z2-z1)/L;
+    D = sqrt(CXx*CXx + CYx*CYx);
+    CXy = -CYx/D;
+    CYy = CXx/D;
+    CZy = 0;
+    CXz = -CXx*CZx/D;
+    CYz = -CYx*CZx/D;
+    CZz = D;
+    Lambda = [CXx CYx CZx ;CXy CYy CZy ;CXz CYz CZz];
 ```
 
 Iso Parametric Coordination System

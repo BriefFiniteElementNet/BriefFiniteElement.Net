@@ -18,7 +18,7 @@ namespace TestingConsole
 
             //TimoshenkoBeamChecker.Test2();
             //BriefFiniteElementNet.Validation.GithubIssues.Issue158.Run();
-            BriefFiniteElementNet.Validation.GithubIssues.Issue160.Run();
+            BriefFiniteElementNet.Validation.GithubIssues.Issue161.Run();
             //EulerBernouly2nodeChecker.TestConsoleBeam();
 
             Console.Write("Done");
