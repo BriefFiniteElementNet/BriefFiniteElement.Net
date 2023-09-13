@@ -1,5 +1,6 @@
 VirtualSupport
-============
+==============
+
 ``VirtualSupport`` is an ``MpcElement``, that can fix any free dofs of model. 
 Technically there is no difference between using `Node.Constraint` and `VirtualSupport` element in these two version of code, both will have exactly same result after solve:
 

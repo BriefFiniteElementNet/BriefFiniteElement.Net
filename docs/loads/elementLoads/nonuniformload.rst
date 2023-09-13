@@ -1,7 +1,8 @@
 .. _PartialNonUniformLoad:
 
 PartialNonUniformLoad
-======================
+=====================
+
 `BriefFiniteElementNet.Loads.PartialNonUniformLoad` class represents a nonuniform load on an element's body. Partial means not covering whole element's body, but only one region and nonuniform means load severity changes along any location. The partial part of element is defined in iso parametric coordination system.
 
 .. figure:: images/pnfload-body-bar.png
@@ -11,15 +12,18 @@ PartialNonUniformLoad
    
 
 StartIsoLocations
----------
+-----------------
+
 Isoparametric coordination of start location of load on the element in isoparametric coordination system.
 
 EndIsoLocations
----------
+---------------
+
 Isoparametric coordination of end location of load on the element in isoparametric coordination system.
 
 Coordination System
 -------------------
+
 Same as `UniformLoad.CoordinationSystem`, ``PartialNonUniformLoad.CoordinationSystem`` defines the coordination system of load. It can only have two different values of ``CoordinationSystem.Global`` or ``CoordinationSystem.Local``:
 
 	- ``CoordinationSystem.Global``: The load is assumed in global coordination system
@@ -28,7 +32,8 @@ Same as `UniformLoad.CoordinationSystem`, ``PartialNonUniformLoad.CoordinationSy
 Look at examples section for more information on how to use.
 
 Direction
--------------
+---------
+
 ``PartialNonUniformLoad.Direction`` which is a property with type of ``Vector``, defines the direction of trapezoidal load. An instance of ``Vector`` class defines a vector in 3d space with three components of ``X``, ``Y`` and ``Z``. Note that length of vector is not taken into account, only its direction is used.
 
 Look at examples section and definition of local CoordinationSystem in BarElement, TriangleElement, etc. for more information on how to use.

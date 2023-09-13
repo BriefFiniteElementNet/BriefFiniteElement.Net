@@ -31,6 +31,6 @@ This example creates a ``TelepathyLink`` that connect three nodes in a way that 
 
 
 Example 2: Cog (TODO add image and code)
-^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Imagine two nodes each one is connected to center of a cog, and two cogs are connected with another cog in between, then the two nodes will have same rotational displacemenet, and this connection can be modeled with `TelepathyLink`.

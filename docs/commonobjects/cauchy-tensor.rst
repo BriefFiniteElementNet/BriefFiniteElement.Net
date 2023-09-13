@@ -1,7 +1,7 @@
 .. _cauchy-tensor:
 
 CauchyStressTensor
-=====
+==================
 ``CauchyStressTensor`` object represents a general stress tensor in 3D. 
 
 .. figure:: images/force.png

@@ -18,18 +18,22 @@ Relation of global and local system
 Imagine a bar element with start node ``N1`` located at ``(x1, y1, z1)`` and end node ``N2`` located at ``(x2,y2,z2)``. Four steps are needed to find the directions of the local axis x'-y'-z':
 
 - Step 1:
+
 Move the element in a way that ``N1`` be placed at origins of global system.
 TODO: Image
 
 - Step 2:
+
 Rotate global system about global Y axis rotated X axis goes under element length (shown as β in image below). Note that if element is vertical (e.g. x1 = x2 and y1 = y2 and z1 ≠ z2) no need to do this step.
 TODO: Image
 
 - Step 3:
+
 Rotate the system from previous step about it's Z axis in a way that X axis go exactly through same direction of element's length (shown as γ in image below).
 TODO: Image
 
 - Step 4:
+
 If element have any custom web rotation α, do rotate system about it's X axis by α:
 TODO: Image
 
@@ -39,26 +43,27 @@ code for transforming local to global is in https://github.com/BriefFiniteElemen
 
 code is ported from MATLAB code. from book 'MATLAB Codes for Finite Element Analysis' by 'A. J. M. Ferreira' , section 8.3 (First 3D frame example) page 107 (111 of 236)
 
-```
-if x1 == x2 & y1 == y2
-    if z2 > z1
-        Lambda = [0 0 1 ; 0 1 0 ; -1 0 0];
+.. code-block::
+    
+    if x1 == x2 & y1 == y2
+        if z2 > z1
+            Lambda = [0 0 1 ; 0 1 0 ; -1 0 0];
+        else
+            Lambda = [0 0 -1 ; 0 1 0 ; 1 0 0];
+        end
     else
-        Lambda = [0 0 -1 ; 0 1 0 ; 1 0 0];
-    end
-else
-    CXx = (x2-x1)/L;
-    CYx = (y2-y1)/L;
-    CZx = (z2-z1)/L;
-    D = sqrt(CXx*CXx + CYx*CYx);
-    CXy = -CYx/D;
-    CYy = CXx/D;
-    CZy = 0;
-    CXz = -CXx*CZx/D;
-    CYz = -CYx*CZx/D;
-    CZz = D;
-    Lambda = [CXx CYx CZx ;CXy CYy CZy ;CXz CYz CZz];
-```
+        CXx = (x2-x1)/L;
+        CYx = (y2-y1)/L;
+        CZx = (z2-z1)/L;
+        D = sqrt(CXx*CXx + CYx*CYx);
+        CXy = -CYx/D;
+        CYy = CXx/D;
+        CZy = 0;
+        CXz = -CXx*CZx/D;
+        CYz = -CYx*CZx/D;
+        CZz = D;
+        Lambda = [CXx CYx CZx ;CXy CYy CZy ;CXz CYz CZz];
+
 
 Iso Parametric Coordination System
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -66,6 +71,7 @@ Apart from local and global coordination systems for elements, there is another 
 
 Iso Parametric Coordination system for BarElement with two nodes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 .. figure:: ../images/bar-iso-coord.png
    :align: center
    

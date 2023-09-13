@@ -1,5 +1,5 @@
 Miscellaneous Topics
-##################
+####################
 
 .. toctree::
     :titlesonly:
@@ -8,3 +8,4 @@ Miscellaneous Topics
 
     solveprocedure
     debugvisualizer
+    barPartialEndRelease

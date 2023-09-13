@@ -9,8 +9,9 @@ Elemental Loads
     concentratedload
     uniformload
     partialnonuniformload
-	
-ElementLoad is a base class that can only apply on the Element. There are several ``ElementLoad``s:
+    nonuniformload
+
+ElementLoad is a base class that can only apply on the Element. There are several ``ElementLoad`` s:
 
 - ``UniformLoad``: A uniform load that can apply on a ``Element`` or one of its faces or edges.
 - ``PartialNonuniformLoad``: A Partial varying load.

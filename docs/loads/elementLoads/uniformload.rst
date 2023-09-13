@@ -1,7 +1,8 @@
 .. _UniformLoad:
 
 UniformLoad
-============
+===========
+
 ``UniformLoad`` in namespace ``BriefFiniteElementNet.Loads``, is a constant distributed load which can apply on 1D (like ``BarElement``), 2D (like ``TriangleElement``) or 3D (like ``TetrahedronElement``) elements. Self weight loads are good examples that can be modeled with this type of load.
 
 Here are examples illustrated in image (note that many of these loads are not available in this library!)
@@ -56,7 +57,8 @@ Coordination System
 Look at :ref:`element-load-coordination-system` for more information on how to use.
 
 LoadDirection (Obsolete: see Direction)
--------------
+---------------------------------------
+
 ``UniformLoad.LoadDirection`` which is a enum typed property of ``UniformLoad``, defines the direction of uniform load. It can only have three different values of ``LoadDirection.X`` or ``LoadDirection.Y`` or ``LoadDirection.Z``.
 
 Look at examples section for more information on how to use.
@@ -65,7 +67,8 @@ TODO: obsolete the enum LoadDirection and use a vector for more enhanced usage.
 
 
 Direction
--------------
+---------
+
 ``UniformLoad.Direction`` which is a property of ``UniformLoad`` with type of ``Vector``, defines the direction of uniform load. An instance of ``Vector`` class defines a vector in 3d space with three components of ``X``, ``Y`` and ``Z``. Note that length of vector is not takken into account, only its direction is used.
 
 Look at examples section and definition of local CoordinationSystem in BarElement, TriangleElement, etc. for more information on how to use.

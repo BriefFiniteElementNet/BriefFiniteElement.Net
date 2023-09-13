@@ -7,13 +7,13 @@ A bar element is referred to an 1D element, which only have dimension in one dir
 
 1. It can act as frame, beam, truss or shaft - see :ref:`BarElement-Behaviour` section.
 
-.. |pic1| figure:: ../images/bar-fullframe.png
+.. figure:: ../images/bar-fullframe.png
    :align: center
    :width: 45%
    
    DoFs of ``BarElement`` acting as a Frame
 
-.. |pic2| figure:: ../images/bar-truss.png
+.. figure:: ../images/bar-truss.png
    :align: center
    :width: 45%
    
