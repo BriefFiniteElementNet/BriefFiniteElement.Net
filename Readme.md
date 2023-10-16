@@ -6,7 +6,7 @@ A Finite Element library for Static and Linear analysis of solids and structures
 
 ## Nuget Package
 
-V2.0.5 released: https://www.nuget.org/packages/BriefFiniteElement.Net/
+https://www.nuget.org/packages/BriefFiniteElement.Net/
 
 ## How to build source
 
