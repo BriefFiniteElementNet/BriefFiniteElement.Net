@@ -1,5 +1,3 @@
-[![DOI](https://zenodo.org/badge/67097947.svg)](https://zenodo.org/badge/latestdoi/67097947)
-
 [![Nuget Package](https://img.shields.io/nuget/v/2)](https://www.nuget.org/packages/BriefFiniteElement.NET)   
 
 # BriefFiniteElement.NET
