@@ -1,5 +1,3 @@
-[![DOI](https://zenodo.org/badge/67097947.svg)](https://zenodo.org/badge/latestdoi/67097947)
-
 [![Nuget Package](https://img.shields.io/nuget/v/2)](https://www.nuget.org/packages/BriefFiniteElement.NET)   
 
 # BriefFiniteElement.NET
@@ -8,7 +6,7 @@ A Finite Element library for Static and Linear analysis of solids and structures
 
 ## Nuget Package
 
-V2.0.5 released: https://www.nuget.org/packages/BriefFiniteElement.Net/
+https://www.nuget.org/packages/BriefFiniteElement.Net/
 
 ## How to build source
 
