@@ -10,6 +10,9 @@ author = u'epsi1on'
 version = '2.1'
 release = '2.1.1'
 
+#https://github.com/python/python-docs-theme/issues/45
+extensions = [ 'python_docs_theme', ]
+
 source_suffix = {'.rst': 'restructuredtext'}
 root_doc = 'index'
 master_doc = 'index'
