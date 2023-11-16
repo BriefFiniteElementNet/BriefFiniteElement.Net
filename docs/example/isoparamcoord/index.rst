@@ -27,6 +27,7 @@ At the end point of the element, where `x=L`, and L is length of elements, the i
 In bar element with two nodes the relation between isoparamtric `ξ` coordinate and local `x` coordinate is:
 
 ``x = (ξ + 1)*L/2``
+
 and subsequently
 
 ``ξ = (2*x-L)/L``
@@ -35,9 +36,9 @@ So regardless of length of a beam `L`, the points `xi=-1` `xi=0` and `xi=1` resp
 
 From code you can convert iso to local coords like this:
 
-``
-var x = 1.0 + 0.0000001;//need to find internal force at a little after x = 1.0 m
-var xi = e0.LocalCoordsToIsoCoords(x);
-``
+.. code-block:: cs
 
-and for iso coord to local coord one could use `e0.IsoCoordToLocalCoord`
+  var x = 1.0 + 0.0000001;//need to find internal force at a little after x = 1.0 m
+  var xi = e0.LocalCoordsToIsoCoords(x);
+
+and for iso coord to local coord one could use ``e0.IsoCoordToLocalCoord()``
