@@ -1,5 +1,5 @@
 before_build:
-  - nuget restore BriefFiniteElementNet.sln
+  - nuget restore Sources\BriefFiniteElementNet.sln
 build:
   project: 'Sources\BriefFiniteElementNet.sln'
  
