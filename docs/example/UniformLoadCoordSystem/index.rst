@@ -132,7 +132,7 @@ Based on `toturial in www.learnaboutstructures.com <http://www.learnaboutstructu
 
 So in this example we do not need theta value itself, but we need `Cos(θ)` or more precise absolute value of it `|Cos(θ)|`. Due to elementary trigonometry relations `Cos(θ)=Sin(90°-θ)`. So instead of `|Cos(θ)|` we can calculate `|Sin(α)|` where `α = 90°-θ` and `α` equals to angle between load direction and element direction. For finding `|Sin(α)|` we can use length of cross product of two unit vectors of element direction and load direction. This coefficient is always a non negative value and less than or equal to `1.0`. If element is horizontal then `|Cos(θ)| = 1.0` if element is vertical then `|Cos(θ)| = 0.0`.
 
-.. hint:: Note that actually two vectors have to angles between them, a bigger one and a smaller one, but absolute value of cosine of them both are same i.e `|Cos(θ)| = |Cos(180°-θ)|`
+.. hint:: Note that actually two vectors have tow angles between them, a bigger one and a smaller one, but absolute value of cosine of them both are same i.e `|Cos(θ)| = |Cos(180°-θ)|`
 
 
 
