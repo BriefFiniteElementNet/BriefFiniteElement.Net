@@ -202,7 +202,7 @@ namespace BriefFiniteElementNet.Mathh
         /// <param name="n">the degree</param>
         /// <param name="x">target point</param>
         /// <returns></returns>
-        public double EvaluateNthIntegral(int n, double x)
+        public double EvaluateNthIntegralAt(int n, double x)
         {
             //n'th integral of a*x^i is : a * x^(i+n)/((i+1)...(i+n)) : coef * x^(i+n)
 
@@ -217,9 +217,10 @@ namespace BriefFiniteElementNet.Mathh
 
                 {
                     var f1 = Factorial(i + n);// (i+n)!
-                    var f2 = Factorial(i + 1);// (i+1)!
+                    var f2 = Factorial(i);// (i+1)!
 
-                    coef = a * (f1 / f2);
+                    var t = f1 / f2;
+                    coef = a /t;
                 }
 
                 buf += coef * MyPow(x, i + n);
