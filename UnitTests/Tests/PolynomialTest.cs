@@ -48,5 +48,58 @@ namespace BriefFiniteElementNet.Tests
             
         }
 
+
+        [Test]
+        public void integration_test()
+        {
+            var p = new SingleVariablePolynomial(1, 0, 0, 0, 1);//x^4+1
+
+            var current = p.EvaluateNthIntegralAt(1, 1.0);
+
+            var expected = 1.2;
+
+            var diff = Math.Abs(current - expected);
+
+            var epsilon = 1e-10;
+
+            Assert.IsTrue(diff < epsilon);
+        }
+
+        [Test]
+        public void integration_test2()
+        {
+            var p = new SingleVariablePolynomial(1, 0);//y=x^1+0
+            //9th integral is x^9/(9!) 
+
+            var x = 1.23456;
+            var current = p.EvaluateNthIntegralAt(9, x);
+
+            var expected = Math.Pow(x, 9) / 362880;//9! is 362880
+
+            var diff = Math.Abs(current - expected);
+
+            var epsilon = 1e-10;
+
+            Assert.IsTrue(diff < epsilon);
+        }
+
+        [Test]
+        public void integration_test3()
+        {
+            var p = new SingleVariablePolynomial(1);//y=1
+            //9th integral is x^10/(10!) 
+
+            var x = 1.23456;
+            var current = p.EvaluateNthIntegralAt(10, x);
+
+            var expected = Math.Pow(x, 10) / 3628800;//9! is 362880
+
+            var diff = Math.Abs(current - expected);
+
+            var epsilon = 1e-10;
+
+            Assert.IsTrue(diff < epsilon);
+        }
+
     }
 }
