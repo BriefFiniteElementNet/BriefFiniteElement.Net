@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using BriefFiniteElementNet.ElementHelpers;
+using BriefFiniteElementNet.ElementHelpers.BarHelpers;
 using BriefFiniteElementNet.Elements;
 using NUnit.Framework;
 
@@ -26,7 +27,7 @@ namespace BriefFiniteElementNet.Tests
 
             var b = L - a;
 
-            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Z, elm);
+            var hlpr = new EulerBernoulliBeamHelper2Node(BeamDirection.Z, elm);
 
             for (var i = 0.0; i <= 1; i += 0.01)
             {
@@ -80,7 +81,7 @@ namespace BriefFiniteElementNet.Tests
 
             var b = L - a;
 
-            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Z, elm);
+            var hlpr = new EulerBernoulliBeamHelper2Node(BeamDirection.Z, elm);
 
 
             var n0 = hlpr.GetNMatrixAt(elm ,- 1 );
@@ -108,7 +109,7 @@ namespace BriefFiniteElementNet.Tests
 
             var b = L - a;
 
-            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y, elm);
+            var hlpr = new EulerBernoulliBeamHelper2Node(BeamDirection.Y, elm);
 
             for (var i = 0.0; i <= 1; i += 0.01)
             {
@@ -164,7 +165,7 @@ namespace BriefFiniteElementNet.Tests
 
             var b = L - a;
 
-            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y, elm);
+            var hlpr = new EulerBernoulliBeamHelper2Node(BeamDirection.Y, elm);
 
 
             var n1 = hlpr.GetNMatrixAt(elm, 1);

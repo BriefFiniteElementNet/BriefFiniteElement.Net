@@ -3,11 +3,12 @@ using System.Linq;
 using NUnit.Framework;
 using BriefFiniteElementNet;
 using BriefFiniteElementNet.ElementHelpers;
+using BriefFiniteElementNet.ElementHelpers.BarHelpers;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Loads;
 using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
-
+using EulerBernoulliBeamHelper = BriefFiniteElementNet.ElementHelpers.BarHelpers.EulerBernoulliBeamHelper2Node;
 
 namespace BriefFiniteElementNet.Tests
 {
@@ -44,7 +45,7 @@ namespace BriefFiniteElementNet.Tests
 
             var u1 = new Loads.ConcentratedLoad(new Force(0, 0, -w, 0, 0, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y, elm);
 
             var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
@@ -96,7 +97,7 @@ namespace BriefFiniteElementNet.Tests
 
             var u1 = new Loads.ConcentratedLoad(new Force(0, 0, -w, 0, 0, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y, elm);
 
             var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
@@ -126,7 +127,7 @@ namespace BriefFiniteElementNet.Tests
 
             var u1 = new Loads.ConcentratedLoad(new Force(0, 0, -w, 0, 0, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y, elm);
 
             var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
@@ -171,7 +172,7 @@ namespace BriefFiniteElementNet.Tests
                 new IsoPoint(isoLoc[0]), 
                 CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y, elm);
 
             var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
@@ -224,7 +225,7 @@ namespace BriefFiniteElementNet.Tests
 
             var u1 = new Loads.ConcentratedLoad(new Force(0, 0, 0, 0, w, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y, elm);
 
             var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
@@ -259,7 +260,7 @@ namespace BriefFiniteElementNet.Tests
 
             var u1 = new Loads.ConcentratedLoad(f, loc, CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y, elm);
 
             var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
@@ -299,7 +300,7 @@ namespace BriefFiniteElementNet.Tests
 
             var u1 = new Loads.ConcentratedLoad(new Force(0, 0, 0, 0, 0, w), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z, elm);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Z, elm);
 
             var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
@@ -352,7 +353,7 @@ namespace BriefFiniteElementNet.Tests
 
             var u1 = new Loads.ConcentratedLoad(new Force(0, 0, 0, 0, 0, w), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z, elm);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Z, elm);
 
             var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
@@ -383,7 +384,7 @@ namespace BriefFiniteElementNet.Tests
 
             var u1 = new Loads.ConcentratedLoad(new Force(0, 0, 0, 0, 0, w), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z, elm);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Z, elm);
 
             var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
@@ -422,7 +423,7 @@ namespace BriefFiniteElementNet.Tests
 
             var u1 = new Loads.ConcentratedLoad(new Force(0, -w, 0, 0, 0, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z,elm);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Z,elm);
 
             var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
@@ -473,7 +474,7 @@ namespace BriefFiniteElementNet.Tests
 
             var u1 = new Loads.ConcentratedLoad(new Force(0, -w, 0, 0, 0, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z, elm);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Z, elm);
 
             var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
@@ -505,7 +506,7 @@ namespace BriefFiniteElementNet.Tests
 
             var u1 = new Loads.ConcentratedLoad(new Force(0, -w, 0, 0, 0, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Z, elm);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Z, elm);
 
             var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
@@ -960,7 +961,7 @@ namespace BriefFiniteElementNet.Tests
 
             u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
 
-            var hlpr = new TrussHelper(elm);
+            var hlpr = new TrussHelper2Node(elm);
 
             var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
@@ -1038,7 +1039,7 @@ namespace BriefFiniteElementNet.Tests
 
             u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
 
-            var hlpr = new ShaftHelper(elm);
+            var hlpr = new ShaftHelper2Node(elm);
 
             var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 

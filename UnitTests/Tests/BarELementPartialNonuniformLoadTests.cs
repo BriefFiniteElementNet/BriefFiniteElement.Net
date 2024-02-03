@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BriefFiniteElementNet.ElementHelpers.BarHelpers;
+using EulerBernoulliBeamHelper = BriefFiniteElementNet.ElementHelpers.BarHelpers.EulerBernoulliBeamHelper2Node;
 
 namespace BriefFiniteElementNet.Tests
 {
@@ -40,7 +42,8 @@ namespace BriefFiniteElementNet.Tests
 
             //u1.StartMagnitude
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
+            
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y, elm);
 
             var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
@@ -88,7 +91,7 @@ namespace BriefFiniteElementNet.Tests
             u1.StartLocation = new IsoPoint(x1);
             u1.EndLocation = new IsoPoint(x2);
 
-            var hlpr = new ElementHelpers.EulerBernoulliBeamHelper(ElementHelpers.BeamDirection.Y, elm);
+            var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y, elm);
 
             var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
 
