@@ -195,6 +195,40 @@ namespace BriefFiniteElementNet.Mathh
             return max;
         }
 
+
+        /// <summary>
+        /// Evaluates the <see cref="n"/>'th integral of this polynomial at defined <see cref="x"/>. assumes the C's of integrals are all zeros.
+        /// </summary>
+        /// <param name="n">the degree</param>
+        /// <param name="x">target point</param>
+        /// <returns></returns>
+        public double EvaluateNthIntegral(int n, double x)
+        {
+            //n'th integral of a*x^i is : a * x^(i+n)/((i+1)...(i+n)) : coef * x^(i+n)
+
+            var buf = 0.0;
+
+            for (var j = 0; j < Coefficients.Length; j++)
+            {
+                var i = Coefficients.Length - 1 - j;
+                var a = Coefficients[i];
+
+                double coef;
+
+                {
+                    var f1 = Factorial(i + n);// (i+n)!
+                    var f2 = Factorial(i + 1);// (i+1)!
+
+                    coef = a * (f1 / f2);
+                }
+
+                buf += coef * MyPow(x, i + n);
+            }
+
+            return buf;
+        }
+
+
         /// <summary>
         /// Gets the derivative of polynomial as another polynomial
         /// </summary>

@@ -48,6 +48,18 @@
     <Compile Remove="SparseMatrixMultiplication.cs" />
   </ItemGroup>
 
+	
+
+  <ItemGroup>
+    <None Remove="Integration\StepFunctionIntegralCalculator.md" />
+  </ItemGroup>
+
+	
+
+  <ItemGroup>
+    <Compile Include="Integration\StepFunctionIntegralCalculator.md" />
+  </ItemGroup>
+
   <ItemGroup>
     <None Include="CsparsenetQrDisplacementPermutationCalculator.md" />
     <None Include="Elements\TriangleElement.md" />

@@ -115,18 +115,3 @@ for more information on known issues please have a look at [know-issues.md](know
 ## Hire Developers & Consultation service
 We have fair amount of experience in linear FEM coding, so
 You can have developers for consult and/or coding, on hourly basis or project based. Just contact email : [bfePaid@gmx.com](mailto:BFE%20Paid%20Support%20<BFEPaid@gmx.com>?Subject=Ask%20About%20Hiring&Body=Please%20fill%20fair%20amount%20of%20description%20and%20details%20here)
-
-## Academic users
-If you are using this library for research or academic porpuses, note that there are no academic/journal articles pubished yet about this project, so you can cite this project just like this:
-
-```
-@online{BFE,
-  author = {epsi1on},
-  title = {BriefFiniteElement.Net library: linear FEA for solids in .NET},
-  year = 2014,
-  url = {(https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net)},
-  urldate = {2022-08-09}
-}
-```
-
-
