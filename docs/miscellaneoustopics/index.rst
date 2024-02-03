@@ -1,4 +1,4 @@
-Miscellaneous Topics
+Miscellaneous and theorical Topics
 ####################
 
 .. toctree::
@@ -9,3 +9,4 @@ Miscellaneous Topics
     solveprocedure
     debugvisualizer
     barPartialEndRelease
+    exactInternalForceDisplacement
