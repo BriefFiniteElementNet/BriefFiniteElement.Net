@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BriefFiniteElementNet.Tests
 {
-    public class UnitStepIntegration
+    public class UnitStepIntegrationTests
     {
 
         #region a1

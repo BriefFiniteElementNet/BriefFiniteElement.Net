@@ -101,5 +101,23 @@ namespace BriefFiniteElementNet.Tests
             Assert.IsTrue(diff < epsilon);
         }
 
+        [Test]
+        public void integration_test4()
+        {
+            var p = new SingleVariablePolynomial(1.2);//y=1.2
+            //9th integral is x^10/(10!) 
+
+            var x = 1.7;
+            var current = p.EvaluateNthIntegralAt(10, x);
+
+            var expected = Math.Pow(x, 10) / 3628800;//9! is 362880
+
+            var diff = Math.Abs(current - expected);
+
+            var epsilon = 1e-10;
+
+            Assert.IsTrue(diff < epsilon);
+        }
+
     }
 }
