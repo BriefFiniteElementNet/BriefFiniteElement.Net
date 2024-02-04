@@ -206,6 +206,9 @@ namespace BriefFiniteElementNet.Mathh
         {
             //n'th integral of a*x^i is : a * x^(i+n)/((i+1)...(i+n)) : coef * x^(i+n)
 
+            if (n == 0)
+                throw new ArgumentException("n");
+
             var buf = 0.0;
 
             for (var j = 0; j < Coefficients.Length; j++)

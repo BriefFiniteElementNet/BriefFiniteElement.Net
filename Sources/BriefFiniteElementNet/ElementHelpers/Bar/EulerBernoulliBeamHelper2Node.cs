@@ -411,6 +411,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             throw new NotImplementedException();
         }
 
+
         /// <inheritdoc/>
         public override Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
