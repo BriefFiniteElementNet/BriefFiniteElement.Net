@@ -16,6 +16,27 @@ namespace BriefFiniteElementNet
     /// </summary>
     public static class CalcUtil
     {
+        public static long Factorial(int x)
+        {
+            if (x < 0)
+            {
+                return -1;
+            }
+            else if (x == 1 || x == 0)
+            {
+                return 1;
+            }
+            else
+            {
+                var buf = 1L;
+
+                for (var i = 1; i <= x; i++)
+                    buf = buf * i;
+
+                return buf;
+                //return x * Factorial(x - 1);
+            }
+        }
 
         public static double Min(params double[] arr)
         {
