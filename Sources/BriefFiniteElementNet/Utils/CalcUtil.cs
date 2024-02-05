@@ -16,6 +16,79 @@ namespace BriefFiniteElementNet
     /// </summary>
     public static class CalcUtil
     {
+
+        /// <summary>
+        /// computes Math.Pow(num,exp) in much faster way
+        /// </summary>
+        /// <param name="num"></param>
+        /// <param name="exp"></param>
+        /// <returns></returns>
+        /// <remarks>
+        /// based on this implementation: https://stackoverflow.com/a/101613/1106889
+        /// </remarks>
+        public static double Power(double num, int exp)
+        {
+            //exp can be negative, zero or positive
+            double result = 1.0;
+
+            var isNegative = exp < 0;
+
+            if (isNegative)
+                exp = -exp;
+
+            while (exp > 0)
+            {
+                if (exp % 2 == 1)
+                    result *= num;
+                exp >>= 1;
+                num *= num;
+            }
+
+            if (isNegative)
+                result = 1 / result;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Interpolates samples to calculate value at x
+        /// </summary>
+        /// <param name="samples"></param>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        public static double PolynomialInterpolate(Tuple<double, double>[] samples, double x)
+        {
+            //TODO: use Newton method to increase speed by removing inverse matrix calculation
+            //https://en.wikipedia.org/wiki/Polynomial_interpolation
+
+            var deg = samples.Length;
+
+            var a = new Matrix(deg, deg);
+
+            var b = new Matrix(deg, 1);
+
+            for (var i = 0; i < deg; i++)
+            {
+                for (var j = 0; j < deg; j++)
+                {
+                    a[i, j] = Power(samples[i].Item1, deg - j - 1);
+                }
+
+                b[i, 0] = samples[i].Item2;
+            }
+
+            var buf = 0.0;
+
+            var t = a.Solve(b.CoreArray);
+
+            for (var i = 0; i < deg; i++)
+                buf += t[i] * Math.Pow(x, deg - i-1);
+
+
+            return buf;
+        }
+
+
         public static long Factorial(int x)
         {
             if (x < 0)
