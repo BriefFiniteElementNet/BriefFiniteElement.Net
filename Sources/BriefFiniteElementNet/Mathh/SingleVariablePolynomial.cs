@@ -6,6 +6,9 @@ using System.Globalization;
 
 namespace BriefFiniteElementNet.Mathh
 {
+    /// <summary>
+    /// Represents a single variable polynomial (y=a_n*x^n+...+a_0*x^0)
+    /// </summary>
     [Serializable]
     public class SingleVariablePolynomial : IPolynomial
     {
@@ -309,7 +312,7 @@ namespace BriefFiniteElementNet.Mathh
                     var cff = Factorial(nn, nm);
 
                     var cf2 = Coefficients[i];
-                    var vari = Power(x, nm);
+                    var vari = CalcUtil.Power(x, nm);
                     retVal += vari * cff * cf2;
                 }
             }
@@ -319,28 +322,6 @@ namespace BriefFiniteElementNet.Mathh
 
 
 
-        /// <summary>
-        /// computes Math.Pow(num,exp) in much faster way
-        /// </summary>
-        /// <param name="num"></param>
-        /// <param name="exp"></param>
-        /// <returns></returns>
-        /// <remarks>
-        /// based on this implementation: https://stackoverflow.com/a/101613/1106889
-        /// </remarks>
-        static double Power(double num, int exp)
-        {
-            double result = 1.0;
-            while (exp > 0)
-            {
-                if (exp % 2 == 1)
-                    result *= num;
-                exp >>= 1;
-                num *= num;
-            }
-
-            return result;
-        }
 
         /*
         /// <summary>
@@ -552,5 +533,8 @@ namespace BriefFiniteElementNet.Mathh
                 Coefficients[i] *= constant;
             }
         }
+
+
+      
     }
 }
