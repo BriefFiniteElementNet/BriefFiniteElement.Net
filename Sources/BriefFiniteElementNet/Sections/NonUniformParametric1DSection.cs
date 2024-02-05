@@ -9,6 +9,7 @@ using BriefFiniteElementNet.Mathh;
 
 namespace BriefFiniteElementNet.Sections
 {
+    [Obsolete("use NonUniformSamplingParametric1DSection instead")]
     public class NonUniformParametric1DSection: Base1DSection
     {
         _1DCrossSectionGeometricProperties sectionAtStart;
