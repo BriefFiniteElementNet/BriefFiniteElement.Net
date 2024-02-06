@@ -11,7 +11,7 @@ namespace BriefFiniteElementNet.Sections
     public class NonUniformSamplingParametric1DSection : Base1DSection
     {
 
-        List<Tuple<double, _1DCrossSectionGeometricProperties>> samples = new List<Tuple<double, _1DCrossSectionGeometricProperties>>();
+        List<Tuple<IsoPoint, _1DCrossSectionGeometricProperties>> samples = new List<Tuple<IsoPoint, _1DCrossSectionGeometricProperties>>();
 
         /// <summary>
         /// 
@@ -22,13 +22,13 @@ namespace BriefFiniteElementNet.Sections
 
         public NonUniformSamplingParametric1DSection(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            samples = (List<Tuple<double, _1DCrossSectionGeometricProperties>>)info.GetValue("samples", typeof(List<Tuple<double, _1DCrossSectionGeometricProperties>>));
+            info.TryGetValue<List<Tuple<IsoPoint, _1DCrossSectionGeometricProperties>>>("samples", out samples);
         }
 
         /// <summary>
         /// Gets or sets the section geometry at start of element
         /// </summary>
-        public List<Tuple<double, _1DCrossSectionGeometricProperties>> Samples
+        public List<Tuple<IsoPoint, _1DCrossSectionGeometricProperties>> Samples
         {
             get { return samples; }
             set
@@ -44,57 +44,45 @@ namespace BriefFiniteElementNet.Sections
 
         public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi, Element targetElement)
         {
-            var target = new _1DCrossSectionGeometricProperties();
-
-            throw new NotImplementedException();
-            /*
             var sampleCount = samples.Count;
 
+            var a = samples.Select(i => Tuple.Create(i.Item1.Xi, i.Item2.A)).ToArray();
+            var ay = samples.Select(i => Tuple.Create(i.Item1.Xi, i.Item2.Ay)).ToArray();
+            var az = samples.Select(i => Tuple.Create(i.Item1.Xi, i.Item2.Az)).ToArray();
 
-            var a = samples.Select(i => Tuple.Create(i.Item1, i.Item2.A));
-            var ay = samples.Select(i => Tuple.Create(i.Item1, i.Item2.Ay));
-            var az = samples.Select(i => Tuple.Create(i.Item1, i.Item2.Az));
+            var iy = samples.Select(i => Tuple.Create(i.Item1.Xi, i.Item2.Iy)).ToArray();
+            var iz = samples.Select(i => Tuple.Create(i.Item1.Xi, i.Item2.Iz)).ToArray();
+            var iyz = samples.Select(i => Tuple.Create(i.Item1.Xi, i.Item2.Iyz)).ToArray();
+            var j = samples.Select(i => Tuple.Create(i.Item1.Xi, i.Item2.J)).ToArray();
 
-            var iy = samples.Select(i => Tuple.Create(i.Item1, i.Item2.Iy));
-            var iz = samples.Select(i => Tuple.Create(i.Item1, i.Item2.Iz));
-            var iyz = samples.Select(i => Tuple.Create(i.Item1, i.Item2.Iyz));
-            var j = samples.Select(i => Tuple.Create(i.Item1, i.Item2.J));
-
-            var jx = samples.Select(i => Tuple.Create(i.Item1, i.Item2.Jx));
-            var ky = samples.Select(i => Tuple.Create(i.Item1, i.Item2.Ky));
-            var kz = samples.Select(i => Tuple.Create(i.Item1, i.Item2.Kz));
-            var qy = samples.Select(i => Tuple.Create(i.Item1, i.Item2.Qy));
-            var qz = samples.Select(i => Tuple.Create(i.Item1, i.Item2.Qz));
-            
+            var jx = samples.Select(i => Tuple.Create(i.Item1.Xi, i.Item2.Jx)).ToArray();
+            var ky = samples.Select(i => Tuple.Create(i.Item1.Xi, i.Item2.Ky)).ToArray();
+            var kz = samples.Select(i => Tuple.Create(i.Item1.Xi, i.Item2.Kz)).ToArray();
+            var qy = samples.Select(i => Tuple.Create(i.Item1.Xi, i.Item2.Qy)).ToArray();
+            var qz = samples.Select(i => Tuple.Create(i.Item1.Xi, i.Item2.Qz)).ToArray();
 
 
-            var s1 = sectionAtStart;
-            var s2 = sectionAtStart;
+            var buf = new _1DCrossSectionGeometricProperties();
 
-            {
-                var f1 = (1.0 - xi) / 2.0;
-                var f2 = (1.0 + xi) / 2.0;
+            buf.A = CalcUtil.PolynomialInterpolate(a, xi);
+            buf.Ay = CalcUtil.PolynomialInterpolate(ay, xi);
+            buf.Az = CalcUtil.PolynomialInterpolate(az, xi);
+            buf.Iyz = CalcUtil.PolynomialInterpolate(iyz, xi);
+            buf.J = CalcUtil.PolynomialInterpolate(j, xi);
 
-                var pt = new PointYZ();
+            buf.Iy = CalcUtil.PolynomialInterpolate(iy, xi);
+            buf.Iz = CalcUtil.PolynomialInterpolate(iz, xi);
+            buf.Ky = CalcUtil.PolynomialInterpolate(ky, xi);
+            buf.Kz = CalcUtil.PolynomialInterpolate(kz, xi);
 
-                target.A = s1.A * f1 + s2.A * f2;
-                target.Ay = s1.Ay * f1 + s2.Ay * f2;
-                target.Az = s1.Az * f1 + s2.Az * f2;
-                target.Iyz = s1.Iyz * f1 + s2.Iyz * f2;
-                target.Iy = s1.Iy * f1 + s2.Iy * f2;
-                target.Iz = s1.Iz * f1 + s2.Iz * f2;
-                target.Ky = s1.Ky * f1 + s2.Ky * f2;
-                target.Kz = s1.Kz * f1 + s2.Kz * f2;
-
-            }
-
-            return target;
-            */
+            return buf;
         }
 
         public override int[] GetMaxFunctionOrder()
         {
-            return new int[] { 2, 0, 0 };
+            var n = samples.Count;
+
+            return new int[] { n - 1, 0, 0 };
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
