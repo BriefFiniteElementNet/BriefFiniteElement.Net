@@ -49,6 +49,36 @@ namespace BriefFiniteElementNet.Mathh
             return new SingleVariablePolynomial(coefs);
         }
 
+        public static SingleVariablePolynomial FromPoints(double[] xs, double[] ys)
+        {
+            if (xs.Length != ys.Length)
+                throw new Exception();
+
+            var n = xs.Length;
+
+            var mtx = new Matrix(n, n);
+
+            var b = new Matrix(n, 1);
+
+
+            for (var i = 0; i < n; i++)
+            {
+                for (var j = 0; j < n; j++)
+                {
+                    var xi = xs[i];
+                    var pow = n - j - 1;
+
+                    mtx[i, j] = pow == 0 ? 1.0 : Math.Pow(xi, pow);
+                }
+
+                b[i, 0] = ys[i];
+            }
+
+            var coefs = mtx.Solve(b.Values);
+
+            return new SingleVariablePolynomial(coefs);
+        }
+
         /// <summary>
         /// coefs= a4 a3 a2 a1
         /// poly = a4 * x^4 + a3 * x^3 + a2 * x^2 + a1 * x^1 + a0 * x^0
