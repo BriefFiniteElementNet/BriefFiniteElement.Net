@@ -201,6 +201,11 @@ namespace BriefFiniteElementNet.Materials
             base.GetObjectData(info, context);
         }
 
+        public override AnisotropicMaterialInfo GetMaterialPropertiesAt(double[] isoCoords, Element targetElement)
+        {
+            throw new NotImplementedException();
+        }
+
         public UniformAnisotropicMaterial()
         {
         }

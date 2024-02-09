@@ -157,14 +157,11 @@ namespace BriefFiniteElementNet.Materials
             }
         }
 
-        public static bool operator ==(UniformIsotropicMaterial left, UniformIsotropicMaterial right)
+        public override AnisotropicMaterialInfo GetMaterialPropertiesAt(double[] isoCoords, Element targetElement)
         {
-            return Equals(left, right);
+            throw new NotImplementedException();
         }
 
-        public static bool operator !=(UniformIsotropicMaterial left, UniformIsotropicMaterial right)
-        {
-            return !Equals(left, right);
-        }
+       
     }
 }

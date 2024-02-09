@@ -21,6 +21,11 @@ namespace BriefFiniteElementNet.Materials
         /// <returns>the material of element, in local element's coordination system</returns>
         public abstract AnisotropicMaterialInfo GetMaterialPropertiesAt(params double[] isoCoords);
 
+
+        public abstract AnisotropicMaterialInfo GetMaterialPropertiesAt(double[] isoCoords, Element targetElement);
+
+
+
         /// <summary>
         /// Gets the material properties at defined location.
         /// </summary>
