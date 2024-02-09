@@ -8,6 +8,9 @@ using BriefFiniteElementNet.Mathh;
 
 namespace BriefFiniteElementNet.Sections
 {
+    /// <summary>
+    /// Represents a non uniform parametric 1d section, which consist of several samplings along the length of element
+    /// </summary>
     public class NonUniformSamplingParametric1DSection : Base1DSection
     {
 
@@ -20,6 +23,11 @@ namespace BriefFiniteElementNet.Sections
         {
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
         public NonUniformSamplingParametric1DSection(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             info.TryGetValue<List<Tuple<IsoPoint, _1DCrossSectionGeometricProperties>>>("samples", out samples);
@@ -37,11 +45,23 @@ namespace BriefFiniteElementNet.Sections
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="xi"></param>
+        /// <returns></returns>
         public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi)
         {
             return GetCrossSectionPropertiesAt(xi, null);
         }
 
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="xi"></param>
+        /// <param name="targetElement"></param>
+        /// <returns></returns>
         public override _1DCrossSectionGeometricProperties GetCrossSectionPropertiesAt(double xi, Element targetElement)
         {
             var sampleCount = samples.Count;
@@ -78,6 +98,10 @@ namespace BriefFiniteElementNet.Sections
             return buf;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int[] GetMaxFunctionOrder()
         {
             var n = samples.Count;
@@ -85,6 +109,11 @@ namespace BriefFiniteElementNet.Sections
             return new int[] { n - 1, 0, 0 };
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="info"></param>
+        /// <param name="context"></param>
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("samples", samples);
@@ -92,6 +121,10 @@ namespace BriefFiniteElementNet.Sections
             base.GetObjectData(info, context);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return base.ToString();
