@@ -22,7 +22,7 @@ namespace BriefFiniteElementNet.Materials
         public abstract AnisotropicMaterialInfo GetMaterialPropertiesAt(params double[] isoCoords);
 
 
-        public abstract AnisotropicMaterialInfo GetMaterialPropertiesAt(double[] isoCoords, Element targetElement);
+        public abstract AnisotropicMaterialInfo GetMaterialPropertiesAt(IsoPoint loc, Element targetElement);
 
 
 

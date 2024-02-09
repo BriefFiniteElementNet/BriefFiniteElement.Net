@@ -157,7 +157,7 @@ namespace BriefFiniteElementNet.Materials
             }
         }
 
-        public override AnisotropicMaterialInfo GetMaterialPropertiesAt(double[] isoCoords, Element targetElement)
+        public override AnisotropicMaterialInfo GetMaterialPropertiesAt(IsoPoint loc, Element targetElement)
         {
             throw new NotImplementedException();
         }
