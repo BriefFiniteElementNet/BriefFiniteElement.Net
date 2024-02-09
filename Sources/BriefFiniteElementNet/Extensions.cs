@@ -11,9 +11,27 @@ namespace BriefFiniteElementNet
 {
     public static class Extensions
     {
+
+        public static int FirstIndexOf<T>(this T[] arr, Predicate<T> selector)
+        {
+            if (arr != null)
+                for (var i = 0; i < arr.Length; i++)
+                    if (selector(arr[i]))
+                        return i;
+
+            return -1;
+        }
+
+        public static int LastIndexOf<T>(this T[] arr, Predicate<T> selector)
+        {
+            for (var i = arr.Length - 1; i >= 0; i--)
+                if (selector(arr[i]))
+                    return i;
+
+            return -1;
+        }
+
         //https://stackoverflow.com/a/48396258
-
-
         public static bool TryGetValue<T>(this SerializationInfo serializationInfo, string name, out T value)
         {
             object val = null;

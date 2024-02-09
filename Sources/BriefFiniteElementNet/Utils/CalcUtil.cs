@@ -1096,6 +1096,34 @@ namespace BriefFiniteElementNet
         }
 
         /// <summary>
+        /// divides the specified span into <see cref="pcs"/> parts.
+        /// </summary>
+        /// <param name="x0"></param>
+        /// <param name="x1"></param>
+        /// <param name="pcs"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static double[] DivideSpan(double x0,double x1, int pcs)
+        {
+            if (pcs < 1)
+                throw new Exception();
+
+            var length = x1 - x0;
+
+            var delta = length / (pcs);
+
+            var buf = new double[pcs + 1];
+            var n = pcs + 1.0;
+
+            for (var i = 0; i < pcs + 1; i++)
+            {
+                buf[i] = length * i / (pcs * 1.0);
+            }
+
+            return buf;
+        }
+
+        /// <summary>
         /// Creates a built in solver appropriated with <see cref="tp"/>.
         /// </summary>
         /// <param name="type">The solver type.</param>
