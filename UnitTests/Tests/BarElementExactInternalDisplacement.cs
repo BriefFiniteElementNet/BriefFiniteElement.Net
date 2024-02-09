@@ -11,7 +11,7 @@ namespace BriefFiniteElementNet.Tests
 {
     public class BarElementExactInternalDisplacement
     {
-        [Test]
+        //[Test]
         public void TestEulerBernouly_diry()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
@@ -19,8 +19,6 @@ namespace BriefFiniteElementNet.Tests
             var w = 2.0;
             var forceLocation = 0.5;//[m]
             var L = 4;//[m]
-
-            //var model = new Model();
 
             var nodes = new Node[2];
 

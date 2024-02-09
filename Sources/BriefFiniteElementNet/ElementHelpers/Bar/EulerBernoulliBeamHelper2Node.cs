@@ -107,10 +107,134 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
 
 
-
+        /// <summary>
+        /// Get the internal defomation of element due to applied <see cref="load"/>
+        /// </summary>
+        /// <param name="targetElement"></param>
+        /// <param name="load"></param>
+        /// <param name="isoLocation"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        /// <exception cref="NotImplementedException"></exception>
         public override Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
-            throw new NotImplementedException();
+            var bar = targetElement as BarElement;
+
+            var n = targetElement.Nodes.Length;
+
+            if (n != 2)
+                throw new Exception("more than two nodes not supported");
+
+            var pts = load.GetInternalForceDiscretationPoints().Select(i => i.Xi).ToArray();
+
+            Array.Sort(pts);
+
+            var xi = isoLocation[0];
+
+            var m = pts.LastIndexOf(xii => xii < xi);
+
+
+            var severityDegree = 0;//degree of distributed load severity as polynomial
+
+            if (load is UniformLoad || load is ConcentratedLoad)
+                severityDegree = 0;
+
+            if (load is PartialNonUniformLoad pnl)
+                severityDegree = pnl.SeverityFunction.Degree[0];
+
+            int sampleCount;
+
+            {
+                var samplesNormalCount = severityDegree + 4;// Δ = int(int(int(int(W)))) where int is integral, Δ is deflection and W is distributed load
+
+                var samplesSfCount = 2;//2 extra samples, increase safety factor.
+
+                //M is polynomial, E is polynomial and I is polynomial, Δ = int(int(M/EI)) and M/EI is not polynomial so we estimate it with a polynomial with sampleCount= samplesCount+samplesSfCount
+
+                var eDeg = bar.Material.GetMaxFunctionOrder()[0];//degree of variable E
+                var iDeg = bar.Section.GetMaxFunctionOrder()[0];//degree of variable I
+
+                sampleCount = samplesNormalCount + samplesSfCount + eDeg + iDeg;
+            }
+
+            var parts = new List<Tuple<double, double, SingleVariablePolynomial>>();
+
+            
+            var mOverEi = new Func<double, double>(x =>//moment at defined point
+            {
+                var xii = bar.LocalCoordsToIsoCoords(x)[0];
+
+                var f = this.GetLoadInternalForceAt(targetElement, load, new double[] { xii });
+
+                Tuple<DoF, double> tpl;
+
+                DoF targetDof;
+
+                targetDof = this.Direction == BeamDirection.Y ? DoF.Ry : DoF.Rz;
+
+                tpl = f.FirstOrDefault(iii => iii.Item1 == targetDof);
+
+                if (tpl == null)
+                    return 0.0;
+
+                var buf = tpl == null ? 0.0 : tpl.Item2;
+
+                var mat = bar.Material.GetMaterialPropertiesAt(new IsoPoint(xii), bar);
+
+                var sec = bar.Section.GetCrossSectionPropertiesAt(xii, bar);
+
+                var targetI = this.Direction == BeamDirection.Y ? sec.Iy : sec.Iz;
+
+                return tpl == null ? 0.0 : tpl.Item2;
+
+            });
+
+
+            for (var i = 0; i < m; i++)
+            {
+                var xi0 = pts[i];
+                var xi1 = pts[i + 1];
+
+                var xis = CalcUtil.DivideSpan(xi0, xi1, sampleCount);
+
+                var meis = xis.Select(xii => mOverEi(xii)).ToArray();
+
+                var poly = SingleVariablePolynomial.FromPoints(xis, meis);
+
+                parts.Add(Tuple.Create(xi0, xi1, poly));
+            }
+
+            {
+                var buf = 0.0;
+
+                var x = bar.IsoCoordsToGlobalCoords(xi).X;
+
+                foreach (var item in parts)
+                {
+                    var st = bar.IsoCoordsToGlobalCoords(item.Item1).X;
+                    var en = bar.IsoCoordsToGlobalCoords(item.Item2).X; 
+                    var pl = item.Item3;
+
+                    {
+                        var intg = new StepFunctionIntegralCalculator();
+                        var v1 = intg.CalculateIntegralAt(st, x, n);
+                        var v2 = intg.CalculateIntegralAt(en, x, n);
+
+                        var v = v2 - v1;
+
+                        buf += v;
+                    }
+                }
+
+                var ret = new Displacement();
+
+                if (Direction == BeamDirection.Y)
+                    ret.DZ = buf;
+                else
+                    ret.DY = buf;
+
+                return ret;
+            }
         }
 
         /// <inheritdoc/>
@@ -411,7 +535,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             throw new NotImplementedException();
         }
 
-
+      
         /// <inheritdoc/>
         public override Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {

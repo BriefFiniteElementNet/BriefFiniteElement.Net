@@ -5,11 +5,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BriefFiniteElementNet;
+
 
 namespace BriefFiniteElementNet.Tests
 {
     public class MiscTests
     {
+
+        [Test]
+        public void DivideTest()
+        {
+            var x0 = 1;
+            var x1 = 3;
+
+            var res = CalcUtil.DivideSpan(x0, x1, 2);
+
+            var epsilon = 1e-9;
+
+            Assert.AreEqual(res.Length, 3);
+            Assert.True(res[0].FEquals(0, epsilon));
+            Assert.True(res[1].FEquals(1, epsilon));
+            Assert.True(res[2].FEquals(2, epsilon));
+        }
+
+
         [Test]
         public void PowTest()
         {
