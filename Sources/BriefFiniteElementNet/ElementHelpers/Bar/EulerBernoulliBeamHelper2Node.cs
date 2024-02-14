@@ -149,6 +149,8 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             {
                 var p0 = GetLocalEquivalentNodalLoads(bar, load)[0];
 
+                p0 = -p0;
+
                 var localDir = load.Direction;
 
                 var tr = bar.GetTransformationManager();
@@ -161,15 +163,15 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
                 switch (this.Direction)
                 {
                     case BeamDirection.Y:
-                        f0 = p0.Fz;//TODO: add possible negative sign
+                        f0 = p0.Fz;
                         m0 = p0.My;//TODO: add possible negative sign
-                        w0 = localDir.Z * load.Magnitude;//TODO: add possible negative sign
+                        w0 = localDir.Z * load.Magnitude;
                         break;
 
                     case BeamDirection.Z:
-                        f0 = p0.Fy;//TODO: add possible negative sign
-                        m0 = p0.Mz;//TODO: add possible negative sign
-                        w0 = localDir.Y * load.Magnitude;//TODO: add possible negative sign
+                        f0 = p0.Fy;
+                        m0 = -p0.Mz;//TODO: add possible negative sign
+                        w0 = localDir.Y * load.Magnitude;
                         break;
 
                     default:
@@ -186,7 +188,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
                 var m_ = bar.Material.GetMaxFunctionOrder()[0];
                 var sn_ = 3 + 2 * n_ + 2 * m_;
 
-                xs = CalcUtil.DivideSpan(0, L, sn_);
+                xs = CalcUtil.DivideSpan(0, L, sn_ - 1);
             }
             #endregion
 
@@ -214,11 +216,12 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             #endregion
 
 
-            SingleVariablePolynomial G;
+            Polynomial1D G;
 
             #region step5
             {
-                G = SingleVariablePolynomial.FromPoints(xs, mOverEis);
+                //MathNet.Numerics.LinearAlgebra.
+                G = Polynomial1D.FromPoints(xs, mOverEis);
             }
             #endregion
 
@@ -236,7 +239,8 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
                 buf = new Displacement();
 
                 var x = (xi + 1) * L / 2;
-                var delta = G.EvaluateNthIntegralAt(2, x);
+                //var intg=G.EvaluateNthIntegralAt
+                var delta = G.EvaluateNthIntegral(2, x)[0];
 
                 if (Direction == BeamDirection.Y)
                     buf.DZ = delta;

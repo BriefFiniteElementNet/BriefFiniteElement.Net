@@ -14,14 +14,15 @@ namespace BriefFiniteElementNet.Tests
     public class BarElementExactInternalDisplacement
     {
         [Test]
-        public void TestEulerBernouly_Distributed_diry()
+        public void TestEulerBernouly_Distributed_dirz()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
 
+            var dir = BeamDirection.Z;
             var w = 2.0;
             var L = 4;//[m]
-            var I = 1e-4;
-            var E = 210e9;
+            var I = 1;
+            var E = 1;
 
             var nodes = new Node[2];
 
@@ -29,68 +30,35 @@ namespace BriefFiniteElementNet.Tests
             nodes[1] = (new Node(L, 0, 0));
 
             var elm = new BarElement(nodes[0], nodes[1]);
-            elm.Section = new UniformParametric1DSection(I, I, I);
+            elm.Section = new UniformParametric1DSection(0, 0, I);
             elm.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(E, 0.25);
 
             var u1 = new Loads.UniformLoad();
 
             u1.Case = LoadCase.DefaultLoadCase;
             u1.Direction = Vector.J;
-            u1.CoordinationSystem = CoordinationSystem.Global;
+            u1.CoordinationSystem = CoordinationSystem.Local;
             u1.Magnitude = w;
 
             //u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
 
-            var hlpr = new EulerBernoulliBeamHelper2Node(BeamDirection.Z, elm);
+            var hlpr = new EulerBernoulliBeamHelper2Node(dir, elm);
+
+            var epsilon = 1e-6;
 
 
             foreach (var x in CalcUtil.Divide(L, 10))
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 
-                var current = hlpr.GetLoadDisplacementAt(elm, u1, xi);
+                var current = hlpr.GetLoadDisplacementAt(elm, u1, xi).DY;
 
+                //https://mechanicalc.com/reference/beam-deflection-tables
                 var expected = (w * x * x) / (24 * E * I) * (L - x) * (L - x);
 
-                var ratio = expected / current.DY;
-
-                Guid.NewGuid();
-                /**/
-
-                /*
-                var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
-
-                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) }).ToForce();
-
-                var exactFrc = new Force(fx: 0, fy: -vi, fz: 0, mx: 0, my: 0, mz: +mi);
-
-                var d = exactFrc - testFrc;
-
-                var dm = d.Mz;
-                var df = d.Fy;
-
-                Assert.IsTrue(Math.Abs(dm) < 1e-5, "invalid value");
-                Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
-                */
-
+                Assert.IsTrue(Math.Abs(current-expected) < epsilon, "invalid value");
             }
 
-
-            /*
-            {
-                var end1 = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
-
-                var f0 = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -1 + 1e-9 }).ToForce(); ;
-
-                var sum = end1[0] - f0;
-
-                Assert.IsTrue(Math.Abs(sum.Forces.Length) < 1e-5, "invalid value");
-                Assert.IsTrue(Math.Abs(sum.Moments.Length) < 1e-5, "invalid value");
-
-
-            }
-
-            */
         }
     }
 }
