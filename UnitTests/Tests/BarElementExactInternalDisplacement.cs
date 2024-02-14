@@ -1,5 +1,7 @@
 ﻿using BriefFiniteElementNet.ElementHelpers.BarHelpers;
 using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.Materials;
+using BriefFiniteElementNet.Sections;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -11,85 +13,49 @@ namespace BriefFiniteElementNet.Tests
 {
     public class BarElementExactInternalDisplacement
     {
-        //[Test]
-        public void TestEulerBernouly_diry()
+        [Test]
+        public void TestEulerBernouly_Distributed_diry()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
 
             var w = 2.0;
-            var forceLocation = 0.5;//[m]
             var L = 4;//[m]
+            var I = 1e-4;
+            var E = 210e9;
 
             var nodes = new Node[2];
 
-            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
-            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+            nodes[0] = (new Node(0, 0, 0));
+            nodes[1] = (new Node(L, 0, 0));
 
-            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+            var elm = new BarElement(nodes[0], nodes[1]);
+            elm.Section = new UniformParametric1DSection(I, I, I);
+            elm.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(E, 0.25);
 
-            var u1 = new Loads.ConcentratedLoad();
+            var u1 = new Loads.UniformLoad();
 
             u1.Case = LoadCase.DefaultLoadCase;
-            u1.Force = new Force(0, -w, 0, 0, 0, 0);
+            u1.Direction = Vector.J;
             u1.CoordinationSystem = CoordinationSystem.Global;
+            u1.Magnitude = w;
 
-            u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
+            //u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
 
             var hlpr = new EulerBernoulliBeamHelper2Node(BeamDirection.Z, elm);
 
-            var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
-
-            foreach (var x in CalcUtil.Divide(length, 10))
+            foreach (var x in CalcUtil.Divide(L, 10))
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 
+                var current = hlpr.GetLoadDisplacementAt(elm, u1, xi);
 
-                //https://www.engineeringtoolbox.com/beams-fixed-both-ends-support-loads-deflection-d_809.html
+                var expected = (w * x * x) / (24 * E * I) * (L - x) * (L - x);
 
-                var mi = 0.0;
-                var vi = 0.0;
+                var ratio = expected / current.DY;
 
-                {
-                    var a = forceLocation;
-                    var b = L - a;
-
-                    var ma = -w * a * b * b / (L * L);
-                    var mb = -w * a * a * b / (L * L);
-                    var mf = 2 * w * a * a * b * b / (L * L * L);
-
-                    double x0, x1, y0, y1;
-
-                    if (x < forceLocation)
-                    {
-                        x0 = 0;
-                        x1 = forceLocation;
-
-                        y0 = ma;
-                        y1 = mf;
-                    }
-                    else
-                    {
-                        x0 = forceLocation;
-                        x1 = L;
-
-                        y0 = mf;
-                        y1 = mb;
-                    }
-
-
-                    var m = (y1 - y0) / (x1 - x0);
-
-                    mi = m * (x - x0) + y0;
-
-                    var ra = w * (3 * a + b) * b * b / (L * L * L);//1f
-                    var rb = w * (a + 3 * b) * a * a / (L * L * L);//1g
-
-                    if (x < forceLocation)
-                        vi = ra;
-                    else
-                        vi = -rb;
-                }
+                Guid.NewGuid();
+                /**/
 
                 /*
                 var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);

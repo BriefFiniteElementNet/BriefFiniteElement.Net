@@ -125,116 +125,127 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             if (n != 2)
                 throw new Exception("more than two nodes not supported");
 
-            var pts = load.GetInternalForceDiscretationPoints().Select(i => i.Xi).ToArray();
 
-            Array.Sort(pts);
+            if (load is UniformLoad ul)
+                return GetLoadDisplacementAt_UniformLoad(bar, ul, isoLocation[0]);
 
-            var xi = isoLocation[0];
+            throw new NotImplementedException();
+        }
 
-            var m = pts.LastIndexOf(xii => xii < xi);
 
+        private Displacement GetLoadDisplacementAt_UniformLoad(BarElement bar, UniformLoad load, double xi)
+        {
+            double f0, m0, w0;
+            double L;
 
-            var severityDegree = 0;//degree of distributed load severity as polynomial
+            if (bar.NodeCount != 2)
+                throw new Exception();
 
-            if (load is UniformLoad || load is ConcentratedLoad)
-                severityDegree = 0;
-
-            if (load is PartialNonUniformLoad pnl)
-                severityDegree = pnl.SeverityFunction.Degree[0];
-
-            int sampleCount;
-
-            {
-                var samplesNormalCount = severityDegree + 4;// Δ = int(int(int(int(W)))) where int is integral, Δ is deflection and W is distributed load
-
-                var samplesSfCount = 2;//2 extra samples, increase safety factor.
-
-                //M is polynomial, E is polynomial and I is polynomial, Δ = int(int(M/EI)) and M/EI is not polynomial so we estimate it with a polynomial with sampleCount= samplesCount+samplesSfCount
-
-                var eDeg = bar.Material.GetMaxFunctionOrder()[0];//degree of variable E
-                var iDeg = bar.Section.GetMaxFunctionOrder()[0];//degree of variable I
-
-                sampleCount = samplesNormalCount + samplesSfCount + eDeg + iDeg;
+            {//step 0
+                L = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
             }
 
-            var parts = new List<Tuple<double, double, SingleVariablePolynomial>>();
-
-            
-            var mOverEi = new Func<double, double>(x =>//moment at defined point
+            #region step 1
             {
-                var xii = bar.LocalCoordsToIsoCoords(x)[0];
+                var p0 = GetLocalEquivalentNodalLoads(bar, load)[0];
 
-                var f = this.GetLoadInternalForceAt(targetElement, load, new double[] { xii });
+                var localDir = load.Direction;
 
-                Tuple<DoF, double> tpl;
+                var tr = bar.GetTransformationManager();
 
-                DoF targetDof;
+                if(load.CoordinationSystem == CoordinationSystem.Global)
+                    localDir = tr.TransformGlobalToLocal(localDir);
 
-                targetDof = this.Direction == BeamDirection.Y ? DoF.Ry : DoF.Rz;
+                localDir = localDir.GetUnit();
 
-                tpl = f.FirstOrDefault(iii => iii.Item1 == targetDof);
-
-                if (tpl == null)
-                    return 0.0;
-
-                var buf = tpl == null ? 0.0 : tpl.Item2;
-
-                var mat = bar.Material.GetMaterialPropertiesAt(new IsoPoint(xii), bar);
-
-                var sec = bar.Section.GetCrossSectionPropertiesAt(xii, bar);
-
-                var targetI = this.Direction == BeamDirection.Y ? sec.Iy : sec.Iz;
-
-                return tpl == null ? 0.0 : tpl.Item2;
-
-            });
-
-
-            for (var i = 0; i < m; i++)
-            {
-                var xi0 = pts[i];
-                var xi1 = pts[i + 1];
-
-                var xis = CalcUtil.DivideSpan(xi0, xi1, sampleCount);
-
-                var meis = xis.Select(xii => mOverEi(xii)).ToArray();
-
-                var poly = SingleVariablePolynomial.FromPoints(xis, meis);
-
-                parts.Add(Tuple.Create(xi0, xi1, poly));
-            }
-
-            {
-                var buf = 0.0;
-
-                var x = bar.IsoCoordsToGlobalCoords(xi).X;
-
-                foreach (var item in parts)
+                switch (this.Direction)
                 {
-                    var st = bar.IsoCoordsToGlobalCoords(item.Item1).X;
-                    var en = bar.IsoCoordsToGlobalCoords(item.Item2).X; 
-                    var pl = item.Item3;
+                    case BeamDirection.Y:
+                        f0 = p0.Fz;//TODO: add possible negative sign
+                        m0 = p0.My;//TODO: add possible negative sign
+                        w0 = localDir.Z * load.Magnitude;//TODO: add possible negative sign
+                        break;
 
-                    {
-                        var intg = new StepFunctionIntegralCalculator();
-                        var v1 = intg.CalculateIntegralAt(st, x, n);
-                        var v2 = intg.CalculateIntegralAt(en, x, n);
+                    case BeamDirection.Z:
+                        f0 = p0.Fy;//TODO: add possible negative sign
+                        m0 = p0.Mz;//TODO: add possible negative sign
+                        w0 = localDir.Y * load.Magnitude;//TODO: add possible negative sign
+                        break;
 
-                        var v = v2 - v1;
-
-                        buf += v;
-                    }
+                    default:
+                        throw new NotImplementedException();
                 }
+            }
+            #endregion
 
-                var ret = new Displacement();
+            #region step2
+            double[] xs;
+
+            {
+                var n_ = bar.Section.GetMaxFunctionOrder()[0];
+                var m_ = bar.Material.GetMaxFunctionOrder()[0];
+                var sn_ = 3 + 2 * n_ + 2 * m_;
+
+                xs = CalcUtil.DivideSpan(0, L, sn_);
+            }
+            #endregion
+
+            double[] mOverEis;
+
+            #region step3-4
+            {
+                var moverEi = new Func<double, double>(x =>
+                {
+                    var xi_ = (2 * x - L) / L;
+
+                    var mat_ = bar.Material.GetMaterialPropertiesAt(new IsoPoint(xi_, 0, 0), bar);
+                    var sec_ = bar.Section.GetCrossSectionPropertiesAt(xi_, bar);
+
+                    var m_x = w0 * x * x / 2 + f0 * x + m0;
+
+                    var e_x = mat_.Ex;
+                    var i_x = this.Direction == BeamDirection.Y ? sec_.Iy : sec_.Iz;
+
+                    return m_x / (e_x * i_x);
+                });
+
+                mOverEis = xs.Select(x_ => moverEi(x_)).ToArray();
+            }
+            #endregion
+
+
+            SingleVariablePolynomial G;
+
+            #region step5
+            {
+                G = SingleVariablePolynomial.FromPoints(xs, mOverEis);
+            }
+            #endregion
+
+            double delta0, theta0;
+
+            #region step6
+            {
+                delta0 = theta0 = 0;
+            }
+            #endregion
+
+            Displacement buf;
+
+            {
+                buf = new Displacement();
+
+                var x = (xi + 1) * L / 2;
+                var delta = G.EvaluateNthIntegralAt(2, x);
 
                 if (Direction == BeamDirection.Y)
-                    ret.DZ = buf;
-                else
-                    ret.DY = buf;
+                    buf.DZ = delta;
 
-                return ret;
+                if (Direction == BeamDirection.Z)
+                    buf.DY = delta;
             }
+
+            return buf;
         }
 
         /// <inheritdoc/>

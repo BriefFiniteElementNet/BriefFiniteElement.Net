@@ -24,9 +24,25 @@ namespace BriefFiniteElementNet.Tests
             var epsilon = 1e-9;
 
             Assert.AreEqual(res.Length, 3);
-            Assert.True(res[0].FEquals(0, epsilon));
-            Assert.True(res[1].FEquals(1, epsilon));
-            Assert.True(res[2].FEquals(2, epsilon));
+            Assert.True(res[0].FEquals(1, epsilon));
+            Assert.True(res[1].FEquals(2, epsilon));
+            Assert.True(res[2].FEquals(3, epsilon));
+        }
+
+        [Test]
+        public void DivideTest2()
+        {
+            var x0 = -1;
+            var x1 = 1;
+
+            var res = CalcUtil.DivideSpan(x0, x1, 2);
+
+            var epsilon = 1e-9;
+
+            Assert.AreEqual(res.Length, 3);
+            Assert.True(res[0].FEquals(x0, epsilon));
+            Assert.True(res[1].FEquals(0, epsilon));
+            Assert.True(res[2].FEquals(x1, epsilon));
         }
 
 
