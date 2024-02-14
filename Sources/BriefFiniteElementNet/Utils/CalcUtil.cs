@@ -1110,15 +1110,10 @@ namespace BriefFiniteElementNet
 
             var length = x1 - x0;
 
-            var delta = length / (pcs);
+            var buf = Divide(length, pcs);
 
-            var buf = new double[pcs + 1];
-            var n = pcs + 1.0;
-
-            for (var i = 0; i < pcs + 1; i++)
-            {
-                buf[i] = length * i / (pcs * 1.0);
-            }
+            for (int i = 0; i < buf.Length; i++)
+                buf[i] += x0;
 
             return buf;
         }
