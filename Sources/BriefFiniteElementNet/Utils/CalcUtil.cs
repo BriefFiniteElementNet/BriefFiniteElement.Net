@@ -111,6 +111,52 @@ namespace BriefFiniteElementNet
             }
         }
 
+
+        /// <summary>
+        /// return x!/y! where y < x, i.e. returns x*(x-1)*(x-2)*...*(y+2)*(y+1)
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public static long Factorial(int x, int y)
+        {
+            if (x < y)
+                throw new NotImplementedException();
+
+            if (x == y)
+                return 1;
+
+            if (y > 1)// also x > 0 and x > y
+            {
+                var buf = 1L;
+
+                for (var i = y + 1; i <= x; i++)
+                    buf *= i;
+
+                return buf;
+            }
+
+            if (y == 0 || y == 1)
+            {
+                var buf = 1L;
+
+                for (var i = x; i > 1; i--)
+                {
+                    buf *= i;
+                }
+
+                return buf;
+            }
+
+            if (y < 0)
+
+                throw new Exception();
+
+            throw new Exception();
+            return Factorial(x) / Factorial(y);
+        }
+
+
         public static double Min(params double[] arr)
         {
             return arr.Min();
