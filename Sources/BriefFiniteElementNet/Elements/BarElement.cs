@@ -1042,10 +1042,46 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
-        
+
         public Displacement GetExactInternalDisplacementAt(double xi, LoadCase loadCase)
         {
-            throw new NotImplementedException();
+            {
+                //check to see if xi is exactly on any discrete points, for example shear exactly under a a concentrated force point is not a single value so exception must thrown
+
+                var discretePoints = new List<IsoPoint>();
+
+                discretePoints.AddRange(this.GetInternalForceDiscretationPoints());
+
+
+                foreach (var load in Loads)
+                {
+                    if (load.Case == loadCase)
+                        discretePoints.AddRange(load.GetInternalForceDiscretationPoints());
+                }
+
+                foreach (var point in discretePoints)
+                {
+                    if (xi == point.Xi)
+                        throw new InvalidInternalForceLocationException(string.Format(CultureInfo.CurrentCulture, "Internal force diagram and value is descrete at xi = {0}, thus have no value in this location. try to find internal force a little bit after or before this point", xi));
+                }
+            }
+
+            var approx = GetInternalDisplacementAt(xi, loadCase);
+            
+            var helpers = GetHelpers();
+
+            var buf = approx;
+
+
+            foreach (var load in this.Loads)
+                if (load.Case == loadCase)
+                    foreach (var helper in helpers)
+                    {
+                        var d = helper.GetLoadDisplacementAt(this, load, new[] { xi });
+                        buf += d;
+                    }
+
+            return buf;
         }
 
         
@@ -1057,7 +1093,7 @@ namespace BriefFiniteElementNet.Elements
         
         public Displacement GetExactInternalDisplacementAt(double xi)
         {
-            throw new NotImplementedException();
+            return GetExactInternalDisplacementAt(xi, LoadCase.DefaultLoadCase);
         }
         #endregion
 
