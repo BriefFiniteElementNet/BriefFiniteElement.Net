@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace TestingConsole
 {
     internal class Program
@@ -19,8 +20,9 @@ namespace TestingConsole
             //TimoshenkoBeamChecker.Test2();
             //BriefFiniteElementNet.Validation.GithubIssues.Issue158.Run();
             //BriefFiniteElementNet.Validation.GithubIssues.Issue161.Run();
-            BriefFiniteElementNet.Validation.GithubIssues.Issue174.Run();
+            //BriefFiniteElementNet.Validation.GithubIssues.Issue174.Run();
             //EulerBernouly2nodeChecker.TestConsoleBeam();
+            //new BarElementExactInternalDisplacement().TestEulerBernouly_diry();
 
             Console.Write("Done");
 
