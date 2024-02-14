@@ -159,7 +159,16 @@ namespace BriefFiniteElementNet.Materials
 
         public override AnisotropicMaterialInfo GetMaterialPropertiesAt(IsoPoint loc, Element targetElement)
         {
-            throw new NotImplementedException();
+            var buf = new AnisotropicMaterialInfo();
+
+            buf.Ex = buf.Ey = buf.Ez = _youngModulus;
+
+            buf.NuXy = buf.NuYx =
+                buf.NuXz = buf.NuZx =
+                    buf.NuZy = buf.NuYz =
+                        this._poissonRatio;
+
+            return buf;
         }
 
        

@@ -14,14 +14,15 @@ namespace BriefFiniteElementNet.Materials
     [Serializable]
     public abstract class BaseMaterial : ISerializable, IEquatable<BaseMaterial>
     {
+
+        [Obsolete("use GetMaterialPropertiesAt(IsoPoint loc, Element targetElement)")]
+        public abstract AnisotropicMaterialInfo GetMaterialPropertiesAt(params double[] isoCoords);
+
         /// <summary>
         /// Gets the material properties at defined location.
         /// </summary>
         /// <param name="isoCoords">the isometric coordination, order: xi eta gama</param>
         /// <returns>the material of element, in local element's coordination system</returns>
-        public abstract AnisotropicMaterialInfo GetMaterialPropertiesAt(params double[] isoCoords);
-
-
         public abstract AnisotropicMaterialInfo GetMaterialPropertiesAt(IsoPoint loc, Element targetElement);
 
 
