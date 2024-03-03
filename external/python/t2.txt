@@ -1,0 +1,43 @@
+int2(u*f0(x)) = -u*x*F1(x0) + u*x0*F1(x0) + u*F2(x) - u*F2(x0)
+
+mult by Q
+
+ -u*q*x*F1(x0) + u*q*x0*F1(x0) + u*q*F2(x) - u*q*F2(x0)
+
+
+part1:
+-u*q*x*F1(x0)
+
+G0 = -q*x
+
+int2: -F1(x0)*u*x*G1(x0) + F1(x0)*u*x0*G1(x0) + F1(x0)*u*G2(x) - F1(x0)*u*G2(x0)
+
+part2:
+u*q*x0*F1(x0)
+
+H0 = q
+
+int2: -u*x0*F1(x0)*x*H1(x0) + u*x0*F1(x0)*x0*H1(x0) + u*x0*F1(x0)*H2(x) - u*x0*F1(x0)*H2(x0)
+
+part3:
+u*q*F2(x)
+
+I0 = q*F2(x)
+
+int2: -u*x*I1(x0) + u*x0*I1(x0) + u*I2(x) - u*I2(x0)
+
+part4:
+- u*q*F2(x0)
+
+J0 = q
+
+int2: u*F2(x0)*x*J1(x0) - u*F2(x0)*x0*J1(x0) - u*F2(x0)*J2(x) + u*F2(x0)*J2(x0)
+
+
+
+
+Delta = 
+F1(x0)*u*x*G1(x0) - F1(x0)*u*x0*G1(x0) - F1(x0)*u*G2(x) + F1(x0)*u*G2(x0)                           G: q(x)*x
+-u*x0*F1(x0)*x*H1(x0) + u*x0*F1(x0)*x0*H1(x0) + u*x0*F1(x0)*H2(x) - u*x0*F1(x0)*H2(x0)              H: q(x)
+-u*x*I1(x0) + u*x0*I1(x0) + u*I2(x) - u*I2(x0)                                                      I: q(x)*F2(x)
++u*F2(x0)*x*J1(x0) - u*F2(x0)*x0*J1(x0) - u*F2(x0)*J2(x) + u*F2(x0)*J2(x0)                          J: q(x)
