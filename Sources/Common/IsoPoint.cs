@@ -103,10 +103,10 @@ namespace BriefFiniteElementNet
         {
             Xi = array[0];
 
-            if (array.Length >= 1)
+            if (array.Length > 1)
                 Eta = array[1];
 
-            if (array.Length >= 2)
+            if (array.Length > 2)
                 Lambda = array[2];
         }
 

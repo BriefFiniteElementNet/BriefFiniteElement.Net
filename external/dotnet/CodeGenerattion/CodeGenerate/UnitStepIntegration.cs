@@ -24,7 +24,7 @@ namespace CodeGenerate
                 var q1 = new Product();
                 q1.Atoms.Add(new Function("f0", "x"));
                 q1.Atoms.Add(new Function("u1", "x"));
-                //q.Products.Add(q1);
+                q.Products.Add(q1);
             }
 
             {
@@ -32,34 +32,33 @@ namespace CodeGenerate
                 q1.Atoms.Add(new MinusOne());
                 q1.Atoms.Add(new Function("f0", "x"));
                 q1.Atoms.Add(new Function("u2", "x"));
-                //q.Products.Add(q1);
+                q.Products.Add(q1);
             }
 
 
             var v = Integrate(q);
 
 
-            var idxs = new int[] { 0, 1, 3 };
+            var idxs = new int[] { 0, 1, 2, 3 };
             
 
             foreach (var idx in idxs)
             {
-                var pr = new Product();
-                pr.Atoms.Add(new Identifier("v" + idx, 1));
-                pr.Atoms.Add(new Function("u" + idx, "x"));
-                v.Products.Add(pr);
+                var vi = new Product();
+                vi.Atoms.Add(new Identifier("v" + idx, 1));
+                vi.Atoms.Add(new Function("u" + idx, "x"));
+                v.Products.Add(vi);
             }
 
             var m = Integrate(v);
 
-            var ms = Sum.Simplify(m);
 
             foreach (var idx in idxs)
             {
-                var pr = new Product();
-                pr.Atoms.Add(new Identifier("m" + idx, 1));
-                pr.Atoms.Add(new Function("u" + idx, "x"));
-                m.Products.Add(pr);
+                var mi = new Product();
+                mi.Atoms.Add(new Identifier("m" + idx, 1));
+                mi.Atoms.Add(new Function("u" + idx, "x"));
+                m.Products.Add(mi);
             }
 
             var mei = ApplyQEI(m);
@@ -73,17 +72,30 @@ namespace CodeGenerate
             d = Sum.Simplify(d);
 
 
-            var dStart = EvaluateAtPositiveZero(d);
-            var tmp = Sum.Simplify(dStart).ToString();
+            var vs = Sum.Simplify(EvaluateAtPositiveZero(Sum.Simplify(v)));
+            var ve = Sum.Simplify(EvaluateAtNegativeEnd(Sum.Simplify(v)));
 
-            var dEnd = EvaluateAtNegativeEnd(d);
-            var tmpe = Sum.Simplify(dEnd);
-            var t3 = tmpe.ToString();
+            var ms = Sum.Simplify(EvaluateAtPositiveZero(Sum.Simplify(m)));
+            var me = Sum.Simplify(EvaluateAtNegativeEnd(Sum.Simplify(m)));
 
+            var ds = Sum.Simplify(EvaluateAtPositiveZero(d));
+            var de = Sum.Simplify(EvaluateAtNegativeEnd(d));
 
-            var t1 = dEnd.Products[1];
-            var t2 = Product.Symplify(t1);
+            var ts = Sum.Simplify(EvaluateAtPositiveZero(t));
+            var te = Sum.Simplify(EvaluateAtNegativeEnd(t));
 
+            var sb = new StringBuilder();
+
+            sb.AppendLine("Vs = " + vs.ToString());
+            sb.AppendLine("Ve = " + ve.ToString());
+            sb.AppendLine("Ms = " + ms.ToString());
+            sb.AppendLine("Me = " + me.ToString());
+            sb.AppendLine("Ts = " + ts.ToString());
+            sb.AppendLine("Te = " + te.ToString());
+            sb.AppendLine("Ds = " + ds.ToString());
+            sb.AppendLine("De = " + de.ToString());
+
+            var all = sb.ToString();
             //Console.WriteLine(Infix.Format(mei));
         }
 

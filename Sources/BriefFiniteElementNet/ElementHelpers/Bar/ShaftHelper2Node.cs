@@ -9,6 +9,7 @@ using BriefFiniteElementNet.Mathh;
 using CSparse.Storage;
 using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet.ElementHelpers.Bar;
+using BriefFiniteElementNet.Materials;
 
 namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 {
@@ -243,6 +244,31 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
         public override Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
+            var bar = targetElement as BarElement;
+
+            var n = targetElement.Nodes.Length;
+
+            if (n != 2)
+                throw new Exception("more than two nodes not supported");
+
+
+            var eIorder = bar.Section.GetMaxFunctionOrder()[0] + bar.Material.GetMaxFunctionOrder()[0];
+
+            if (eIorder == 0 && bar.StartReleaseCondition == Constraints.Fixed && bar.EndReleaseCondition == Constraints.Fixed)//constant/uniform section along the length of beam
+            {
+                //EI is constant through the length of beam
+                //end releases are fixed
+
+                if (load is UniformLoad ul)
+                    return Displacement.Zero;
+
+                if (load is ConcentratedLoad cl)
+                    return GetLoadDisplacementAt_ConcentratedLoad_uniformSection(bar, cl, isoLocation[0]);
+
+                //if (load is PartialNonUniformLoad pnl)
+                //    return GetLoadDisplacementAt_PartialNonUniformLoad_uniformSection(bar, pnl, isoLocation[0]);
+            }
+
             throw new NotImplementedException();
         }
 
@@ -258,6 +284,69 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
             return new Displacement(0, 0, 0, CalcUtil.DotProduct(n, u), 0, 0);
         }
+
+        private Displacement GetLoadDisplacementAt_ConcentratedLoad_uniformSection(BarElement bar, ConcentratedLoad load, double xi)
+        {
+            double L;
+            double tt;//tprsion concentrated
+            double f0;//inverse of eq nodal loads
+            double xt;//applied location
+
+            if (bar.NodeCount != 2)
+                throw new Exception();
+
+            {//step 0
+                L = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
+
+                xt = bar.IsoCoordsToLocalCoords(xi)[0];
+            }
+
+            #region step 1
+            {
+                var p0 = GetLocalEquivalentNodalLoads(bar, load)[0];
+
+                p0 = -p0;
+
+                var localForce = load.Force;
+
+                var tr = bar.GetTransformationManager();
+
+                if (load.CoordinationSystem == CoordinationSystem.Global)
+                    localForce = tr.TransformGlobalToLocal(localForce);
+
+                tt = load.Force.Fx;
+            }
+            #endregion
+
+            {
+                var eiOrder = bar.Section.GetMaxFunctionOrder()[0] + bar.Material.GetMaxFunctionOrder()[0];
+
+                if (eiOrder != 0) throw new BriefFiniteElementNetException("Nonuniform EI");
+            }
+
+            {
+                var sec = bar.Section.GetCrossSectionPropertiesAt(xi, bar);
+                var mat = bar.Material.GetMaterialPropertiesAt(new IsoPoint(xi), bar);
+
+                var g = mat.Ex / (2 * (1 + mat.NuYz));
+
+                var j = sec.J;
+                var x = bar.IsoCoordsToLocalCoords(xi)[0];
+                
+                var d = 0.0;//TODO
+
+                {
+                    d = x * tt / (g * j);
+                }
+
+                var buf = new Displacement();
+
+                buf.RX = d;
+
+                return buf;
+            }
+        }
+
 
         public override Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
         {

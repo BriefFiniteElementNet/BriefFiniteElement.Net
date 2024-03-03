@@ -360,7 +360,159 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
         public override Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
+            var bar = targetElement as BarElement;
+
+            var n = targetElement.Nodes.Length;
+
+            if (n != 2)
+                throw new Exception("more than two nodes not supported");
+
+
+            var eIorder = bar.Section.GetMaxFunctionOrder()[0] + bar.Material.GetMaxFunctionOrder()[0];
+
+            if (eIorder == 0 && bar.StartReleaseCondition == Constraints.Fixed && bar.EndReleaseCondition == Constraints.Fixed)//constant/uniform section along the length of beam
+            {
+                //EI is constant through the length of beam
+                //end releases are fixed
+
+                if (load is UniformLoad ul)
+                    return GetLoadDisplacementAt_UniformLoad_uniformSection(bar, ul, isoLocation[0]);
+
+                if (load is ConcentratedLoad cl)
+                    return GetLoadDisplacementAt_ConcentratedLoad_uniformSection(bar, cl, isoLocation[0]);
+
+                //if (load is PartialNonUniformLoad pnl)
+                //    return GetLoadDisplacementAt_PartialNonUniformLoad_uniformSection(bar, pnl, isoLocation[0]);
+            }
+
             throw new NotImplementedException();
+        }
+
+        private Displacement GetLoadDisplacementAt_UniformLoad_uniformSection(BarElement bar, UniformLoad load, double xi)
+        {
+            //https://byjusexamprep.com/gate-ce/fixed-beams
+            double w0;
+            double L;
+            double f0, m0;
+
+            if (bar.NodeCount != 2)
+                throw new Exception();
+
+            {//step 0
+                L = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
+            }
+
+            #region step 1
+            {
+                var p0 = GetLocalEquivalentNodalLoads(bar, load)[0];
+
+                p0 = -p0;
+
+                var localDir = load.Direction;
+
+                var tr = bar.GetTransformationManager();
+
+                if (load.CoordinationSystem == CoordinationSystem.Global)
+                    localDir = tr.TransformGlobalToLocal(localDir);
+
+                localDir = localDir.GetUnit();
+
+                w0 = localDir.X * load.Magnitude;
+            }
+            #endregion
+
+            {
+                var eiOrder = bar.Section.GetMaxFunctionOrder()[0] + bar.Material.GetMaxFunctionOrder()[0];
+
+                if (eiOrder != 0) throw new BriefFiniteElementNetException("Nonuniform EI");
+            }
+
+
+
+
+            {
+                var sec = bar.Section.GetCrossSectionPropertiesAt(xi, bar);
+                var mat = bar.Material.GetMaterialPropertiesAt(new IsoPoint(xi), bar);
+
+                var e = mat.Ex;
+                var A = sec.A;
+                var x = bar.IsoCoordsToLocalCoords(xi)[0];
+
+                
+                var d = w0 * x / (2 * e * A) * (-L + x);
+                //d = d / ;
+
+                var buf = new Displacement();
+
+                //if (this.Direction == BeamDirection.Y)
+                //    buf.DZ = d;
+                //else
+                //    buf.DY = d;
+
+                return buf;
+            }
+        }
+
+        private Displacement GetLoadDisplacementAt_ConcentratedLoad_uniformSection(BarElement bar, ConcentratedLoad load, double xi)
+        {
+            //https://www.engineersedge.com/beam_bending/beam_bending19.htm
+            double L;
+            double ft;//force concentrated
+            double f0;//inverse of eq nodal loads
+            double xt;//applied location
+
+            if (bar.NodeCount != 2)
+                throw new Exception();
+
+            {//step 0
+                L = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
+
+                xt = bar.IsoCoordsToLocalCoords(xi)[0];
+            }
+
+            #region step 1
+            {
+                var p0 = GetLocalEquivalentNodalLoads(bar, load)[0];
+
+                p0 = -p0;
+
+                var localForce = load.Force;
+
+                var tr = bar.GetTransformationManager();
+
+                if (load.CoordinationSystem == CoordinationSystem.Global)
+                    localForce = tr.TransformGlobalToLocal(localForce);
+
+                ft = load.Force.Fx;
+            }
+            #endregion
+
+            {
+                var eiOrder = bar.Section.GetMaxFunctionOrder()[0] + bar.Material.GetMaxFunctionOrder()[0];
+
+                if (eiOrder != 0) throw new BriefFiniteElementNetException("Nonuniform EI");
+            }
+
+            {
+                var sec = bar.Section.GetCrossSectionPropertiesAt(xi, bar);
+                var mat = bar.Material.GetMaterialPropertiesAt(new IsoPoint(xi), bar);
+
+                var e = mat.Ex;
+                var A = sec.A;
+                var x = bar.IsoCoordsToLocalCoords(xi)[0];
+
+                var d = 0.0;//TODO
+
+                {
+                    d = x * ft / (e * A);
+                }
+
+                var buf = new Displacement();
+
+                buf.DX = d;
+
+                return buf;
+            }
         }
 
         /// <inheritdoc/>

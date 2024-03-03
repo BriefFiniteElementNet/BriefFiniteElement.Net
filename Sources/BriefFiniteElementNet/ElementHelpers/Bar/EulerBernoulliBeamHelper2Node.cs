@@ -151,9 +151,10 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
         private Displacement GetLoadDisplacementAt_UniformLoad_uniformSection(BarElement bar, UniformLoad load, double xi)
         {
-            
+            //https://byjusexamprep.com/gate-ce/fixed-beams
             double w0;
             double L;
+            double f0, m0;
 
             if (bar.NodeCount != 2)
                 throw new Exception();
@@ -180,14 +181,14 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
                 switch (this.Direction)
                 {
                     case BeamDirection.Y:
-                        //f0 = p0.Fz;
-                        //m0 = p0.My;//TODO: add possible negative sign
+                        f0 = p0.Fz;
+                        m0 = p0.My;//TODO: add possible negative sign
                         w0 = localDir.Z * load.Magnitude;
                         break;
 
                     case BeamDirection.Z:
-                        //f0 = p0.Fy;
-                        //m0 = -p0.Mz;//TODO: add possible negative sign
+                        f0 = p0.Fy;
+                        m0 = -p0.Mz;//TODO: add possible negative sign
                         w0 = localDir.Y * load.Magnitude;
                         break;
 
@@ -197,97 +198,52 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             }
             #endregion
 
-            throw new Exception();
-
-            /*
-            #region step2
-            double[] xs;
-
             {
-                var n_ = bar.Section.GetMaxFunctionOrder()[0];
-                var m_ = bar.Material.GetMaxFunctionOrder()[0];
-                var sn_ = 3 + 2 * n_ + 2 * m_;
+                var eiOrder = bar.Section.GetMaxFunctionOrder()[0] + bar.Material.GetMaxFunctionOrder()[0];
 
-                xs = CalcUtil.DivideSpan(0, L, sn_ - 1);
-            }
-            #endregion
-
-            double[] mOverEis;
-
-            #region step3-4
-            {
-                var moverEi = new Func<double, double>(x =>
-                {
-                    var xi_ = (2 * x - L) / L;
-
-                    var mat_ = bar.Material.GetMaterialPropertiesAt(new IsoPoint(xi_, 0, 0), bar);
-                    var sec_ = bar.Section.GetCrossSectionPropertiesAt(xi_, bar);
-
-                    var m_x = w0 * x * x / 2 + f0 * x + m0;
-
-                    var e_x = mat_.Ex;
-                    var i_x = this.Direction == BeamDirection.Y ? sec_.Iy : sec_.Iz;
-
-                    return m_x / (e_x * i_x);
-                });
-
-                mOverEis = xs.Select(x_ => moverEi(x_)).ToArray();
-            }
-            #endregion
-
-
-            Polynomial1D G;
-
-            #region step5
-            {
-                //MathNet.Numerics.LinearAlgebra.
-                G = Polynomial1D.FromPoints(xs, mOverEis);
-            }
-            #endregion
-
-            double delta0, theta0;
-
-            #region step6
-            {
-                delta0 = theta0 = 0;
-            }
-            #endregion
-
-            Displacement buf;
-
-            {
-                buf = new Displacement();
-
-                var x = (xi + 1) * L / 2;
-                //var intg=G.EvaluateNthIntegralAt
-                var delta = G.EvaluateNthIntegral(2, x)[0];
-
-                if (Direction == BeamDirection.Y)
-                    buf.DZ = delta;
-
-                if (Direction == BeamDirection.Z)
-                    buf.DY = delta;
+                if (eiOrder != 0) throw new BriefFiniteElementNetException("Nonuniform EI");
             }
 
+            
 
-            return buf;
 
-            */
+            {
+                var sec = bar.Section.GetCrossSectionPropertiesAt(xi,bar);
+                var mat = bar.Material.GetMaterialPropertiesAt(new IsoPoint(xi), bar);
+
+                var e = mat.Ex;
+                var I = this.Direction == BeamDirection.Y ? sec.Iy : sec.Iz;
+                var x = bar.IsoCoordsToLocalCoords(xi)[0];
+
+                //https://gs-post-images.grdp.co/2022/8/fixed-beam-deflection-img1661861640198-75-rs.PNG?noResize=1
+                var d = w0 * x * x / (24.0 * e * I) * (L - x) * (L - x);
+
+                var buf = new Displacement();
+
+                if (this.Direction == BeamDirection.Y)
+                    buf.DZ = d;
+                else
+                    buf.DY = d;
+
+                return buf;
+            }
         }
 
         private Displacement GetLoadDisplacementAt_ConcentratedLoad_uniformSection(BarElement bar, ConcentratedLoad load, double xi)
         {
-            /**/
-            double ksi0;//point of load
-
-            double f0, m0;
+            //https://www.engineersedge.com/beam_bending/beam_bending19.htm
             double L;
+            double ft, mt;//force and moment concentrated
+            double f0, m0;//inverse of eq nodal loads
+            double xt;//applied location
 
             if (bar.NodeCount != 2)
                 throw new Exception();
 
             {//step 0
                 L = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
+
+                xt = bar.IsoCoordsToLocalCoords(xi)[0];
             }
 
             #region step 1
@@ -296,107 +252,81 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
                 p0 = -p0;
 
-                var force = load.Force;
+                var localForce = load.Force;
 
                 var tr = bar.GetTransformationManager();
 
                 if (load.CoordinationSystem == CoordinationSystem.Global)
-                    force = tr.TransformGlobalToLocal(force);
-
-                //force = force.GetUnit();
+                    localForce = tr.TransformGlobalToLocal(localForce);
 
                 switch (this.Direction)
                 {
                     case BeamDirection.Y:
+                        ft = localForce.Fz;
+                        mt = localForce.My;//TODO: add possible negative sign
                         f0 = p0.Fz;
                         m0 = p0.My;//TODO: add possible negative sign
                         break;
 
                     case BeamDirection.Z:
+                        ft = localForce.Fy;
+                        mt = -localForce.Mz;//TODO: add possible negative sign
+
                         f0 = p0.Fy;
                         m0 = -p0.Mz;//TODO: add possible negative sign
+
                         break;
 
                     default:
                         throw new NotImplementedException();
                 }
+
+
             }
             #endregion
 
-
-            /** /
-            #region step2
-            double[] xs;
-
             {
-                var n_ = bar.Section.GetMaxFunctionOrder()[0];
-                var m_ = bar.Material.GetMaxFunctionOrder()[0];
-                var sn_ = 3 + 2 * n_ + 2 * m_;
+                var eiOrder = bar.Section.GetMaxFunctionOrder()[0] + bar.Material.GetMaxFunctionOrder()[0];
 
-                xs = CalcUtil.DivideSpan(0, L, sn_ - 1);
+                if (eiOrder != 0) throw new BriefFiniteElementNetException("Nonuniform EI");
             }
-            #endregion
 
-            double[] mOverEis;
-
-            #region step3-4
             {
-                var moverEi = new Func<double, double>(x =>
+                var sec = bar.Section.GetCrossSectionPropertiesAt(xi, bar);
+                var mat = bar.Material.GetMaterialPropertiesAt(new IsoPoint(xi), bar);
+
+                var e = mat.Ex;
+                var I = this.Direction == BeamDirection.Y ? sec.Iy : sec.Iz;
+                var x = bar.IsoCoordsToLocalCoords(xi)[0];
+
+                var d = 0.0;//TODO
+
                 {
-                    var xi_ = (2 * x - L) / L;
+                    var x2 = x * x;
+                    var x3 = x2 * x;
+                    var xt2 = xt * xt;
+                    var xt3 = xt2 * xt;
 
-                    var mat_ = bar.Material.GetMaterialPropertiesAt(new IsoPoint(xi_, 0, 0), bar);
-                    var sec_ = bar.Section.GetCrossSectionPropertiesAt(xi_, bar);
+                    var v0 = f0;
+                    var vt = ft;
 
-                    var m_x = w0 * x * x / 2 + f0 * x + m0;
+                    if (x <= xt)
+                        d = m0 * x2 / 2 + v0 * x3 / 6;
+                    else
+                        d = m0 * xt2 / 2 + v0 * xt3 / 6 + x3 * (v0 / 6 + vt / 6) + x2 * (m0 / 2 + mt / 2 - vt * xt / 2) + x * (-mt * xt + vt * xt2 / 2) - xt3 * (v0 / 6 + vt / 6) - xt2 * (m0 / 2 + mt / 2 - vt * xt / 2) - xt * (-mt * xt + vt * xt2 / 2);
 
-                    var e_x = mat_.Ex;
-                    var i_x = this.Direction == BeamDirection.Y ? sec_.Iy : sec_.Iz;
+                    d = d / (e * I);
+                }
 
-                    return m_x / (e_x * i_x);
-                });
+                var buf = new Displacement();
 
-                mOverEis = xs.Select(x_ => moverEi(x_)).ToArray();
+                if (this.Direction == BeamDirection.Y)
+                    buf.DZ = d;
+                else
+                    buf.DY = d;
+
+                return buf;
             }
-            #endregion
-
-
-            Polynomial1D G;
-
-            #region step5
-            {
-                //MathNet.Numerics.LinearAlgebra.
-                G = Polynomial1D.FromPoints(xs, mOverEis);
-            }
-            #endregion
-
-            double delta0, theta0;
-
-            #region step6
-            {
-                delta0 = theta0 = 0;
-            }
-            #endregion
-
-            Displacement buf;
-
-            {
-                buf = new Displacement();
-
-                var x = (xi + 1) * L / 2;
-                //var intg=G.EvaluateNthIntegralAt
-                var delta = G.EvaluateNthIntegral(2, x)[0];
-
-                if (Direction == BeamDirection.Y)
-                    buf.DZ = delta;
-
-                if (Direction == BeamDirection.Z)
-                    buf.DY = delta;
-            }
-
-            return buf;
-
-            /**/
         }
 
         private Displacement GetLoadDisplacementAt_PartialNonUniformLoad_uniformSection(BarElement bar, PartialNonUniformLoad load, double xi)
