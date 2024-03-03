@@ -12,6 +12,32 @@ namespace BriefFiniteElementNet.Tests
 {
     public class MiscTests
     {
+        [Test]
+        public void Solve2x2()
+        {
+            var epsilon = 1e-9;
+
+            double a, b;
+
+            CalcUtil.Solve2x2(2, 4, 14, 4, -4, 4, out a, out b);
+
+            //2x+4y=14
+            //4x-4y=4
+
+
+            Assert.True(a.FEquals(3, epsilon));
+            Assert.True(b.FEquals(2, epsilon));
+        }
+
+        [Test]
+        public void InterpolateTest()
+        {
+            var epsilon = 1e-9;
+
+            var current = CalcUtil.LinearInterpolate(1, 2, 5, 1, 3);
+
+            Assert.True(current.FEquals(1.5, epsilon));
+        }
 
         [Test]
         public void DivideTest()

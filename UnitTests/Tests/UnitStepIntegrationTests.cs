@@ -20,7 +20,7 @@ namespace BriefFiniteElementNet.Tests
         {
             var clc = new StepFunctionIntegralCalculator();
 
-            var poly = clc.Polynomial = new SingleVariablePolynomial(1, 2, 3, 4, 5);
+            var poly = clc.Polynomial = new Polynomial1D(5,4,3,2,1);
 
 
             var x = 1.2345;
@@ -41,7 +41,7 @@ namespace BriefFiniteElementNet.Tests
         {
             var clc = new StepFunctionIntegralCalculator();
 
-            var poly = clc.Polynomial = new SingleVariablePolynomial(1, 2, 3, 4, 5);
+            var poly = clc.Polynomial = new Polynomial1D(5, 4, 3, 2, 1);
 
 
             var x = 1.2345;
@@ -63,7 +63,7 @@ namespace BriefFiniteElementNet.Tests
         {
             var clc = new StepFunctionIntegralCalculator();
 
-            var poly = clc.Polynomial = new SingleVariablePolynomial(1, 2, 3, 4, 5);
+            var poly = clc.Polynomial = new Polynomial1D(5, 4, 3, 2, 1);
 
 
             var x = 1.2345;
@@ -84,7 +84,7 @@ namespace BriefFiniteElementNet.Tests
         {
             var clc = new StepFunctionIntegralCalculator();
 
-            var poly = clc.Polynomial = new SingleVariablePolynomial(1, 2, 3, 4, 5);
+            var poly = clc.Polynomial = new Polynomial1D(5, 4, 3, 2, 1);
 
 
             var x = 1.2345;
@@ -105,7 +105,7 @@ namespace BriefFiniteElementNet.Tests
         {
             var clc = new StepFunctionIntegralCalculator();
 
-            var poly = clc.Polynomial = new SingleVariablePolynomial(1, 2, 3, 4, 5);
+            var poly = clc.Polynomial = new Polynomial1D(5, 4, 3, 2, 1);
 
 
             var x = 1.2345;

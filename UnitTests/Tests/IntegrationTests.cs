@@ -14,7 +14,7 @@ namespace BriefFiniteElementNet.Tests
         [Test]
         public void integration_test()
         {
-            var p = new SingleVariablePolynomial(1.2);//y=1.2
+            var p = new Polynomial1D(1.2);//y=1.2
 
             var x0 = 1.7;
 

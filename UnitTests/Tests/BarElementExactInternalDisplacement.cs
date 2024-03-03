@@ -68,6 +68,10 @@ namespace BriefFiniteElementNet.Tests
 
 
         [Test]
+        [Description("Euler Bernoully - Uniform Load - Uniform Section")]
+        [Category("BarElement")]
+        [TestOf(typeof(EulerBernoulliBeamHelper2Node))]
+
         public void TestEulerBernouly_Distributed_diry()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
