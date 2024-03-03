@@ -7,10 +7,34 @@ using System.Threading.Tasks;
 namespace BriefFiniteElementNet.Mathh
 {
     [Obsolete("work in progress")]
+    //difference with SingleVariablePolynomial is only the coefficient order
     public class Polynomial1D : IPolynomial
     {
+        
+
+        public static Polynomial1D FromIPolynomial(IPolynomial pl)
+        {
+            if(pl is SingleVariablePolynomial svp)
+            {
+                var t = (double[])svp.Coefficients.Clone();
+                Array.Reverse(t);
+                return new Polynomial1D(t);
+            }
+
+            throw new Exception();
+        }
+
+        public static Polynomial1D Zero
+        {
+            get
+            {
+                return new Polynomial1D(0);
+            }
+        }
 
         #region from points
+
+
         public static Polynomial1D FromPoints(double x1, double y1)
         {
             return FromPoints(Tuple.Create(x1, y1));

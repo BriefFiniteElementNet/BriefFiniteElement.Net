@@ -15,7 +15,8 @@ namespace BriefFiniteElementNet.Integration
     public class StepFunctionIntegralCalculator
     {
 
-        public SingleVariablePolynomial Polynomial;
+        //public SingleVariablePolynomial Polynomial;
+        public Polynomial1D Polynomial;
 
 
         /// <summary>
@@ -90,32 +91,32 @@ namespace BriefFiniteElementNet.Integration
 
         private double F0(double x)
         {
-            return Polynomial.EvaluateNthIntegralAt(0, x);
+            return Polynomial.EvaluateNthIntegral(0, x)[0];
         }
 
         private double F1(double x)
         {
-            return Polynomial.EvaluateNthIntegralAt(1, x);
+            return Polynomial.EvaluateNthIntegral(1, x)[0];
         }
 
         private double F2(double x)
         {
-            return Polynomial.EvaluateNthIntegralAt(2, x);
+            return Polynomial.EvaluateNthIntegral(2, x)[0];
         }
 
         private double F3(double x)
         {
-            return Polynomial.EvaluateNthIntegralAt(3, x);
+            return Polynomial.EvaluateNthIntegral(3, x)[0];
         }
 
         private double F4(double x)
         {
-            return Polynomial.EvaluateNthIntegralAt(4, x);
+            return Polynomial.EvaluateNthIntegral(4, x)[0];
         }
 
         private double F5(double x)
         {
-            return Polynomial.EvaluateNthIntegralAt(5, x);
+            return Polynomial.EvaluateNthIntegral(5, x)[0];
         }
 
     }

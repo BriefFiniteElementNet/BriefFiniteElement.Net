@@ -18,6 +18,41 @@ namespace BriefFiniteElementNet
     {
 
         /// <summary>
+        /// a*x+b*y=f
+        /// c*x+d*y=g
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <param name="c"></param>
+        /// <param name="d"></param>
+        /// <param name="f"></param>
+        /// <param name="g"></param>
+        /// <param name="h"></param>
+        /// <param name="i"></param>
+        public static void Solve2x2(double a,double b,double f,double c,double d,double g,out double h,out double i)
+        {
+            var det = a * d - b * c;
+            Swap(ref a, ref d);
+            b = -b;
+            c = -c;
+
+
+            h = a * f + b * g;
+            i = c * f + d * g;
+
+            h = h / det;
+            i = i / det;
+        }
+
+
+        static void Swap<T>(ref T a, ref T b) where T : struct
+        {
+            var t = a;
+            a = b;
+            b = t;
+        }
+
+        /// <summary>
         /// computes Math.Pow(num,exp) in much faster way
         /// </summary>
         /// <param name="num"></param>
@@ -2172,9 +2207,13 @@ namespace BriefFiniteElementNet
             }
         }
 
-        public static double LinearInterpolate(double v1, double v2, double v3, double v4, double x)
+        public static double LinearInterpolate(double x1, double y1, double x2, double y2, double x)
         {
-            throw new NotImplementedException();
+            var m = (y2 - y1) / (x2 - x1);
+
+            var y = y1 + m * (x - x1);
+
+            return y;
         }
     }
 }

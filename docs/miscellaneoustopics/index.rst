@@ -10,3 +10,4 @@ Miscellaneous and theorical Topics
     debugvisualizer
     barPartialEndRelease
     exactInternalForceDisplacement
+    EquivalentNodalLoads

@@ -33,6 +33,28 @@ namespace BriefFiniteElementNet.Elements
             return element.GetGlobalDisplacementAt(xi, LoadCase.DefaultLoadCase);
         }
 
+        /// <summary>
+        /// Gets the length of two noded beam
+        /// </summary>
+        /// <param name="elm"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        public static double GetLength(this BarElement elm)
+        {
+            if (elm.NodeCount != 2)
+                throw new Exception();
+
+            var n1 = elm.Nodes[0];
+            var n2 = elm.Nodes[1];
+
+            var dx = n1.Location.X - n2.Location.X;
+            var dy = n1.Location.Y - n2.Location.Y;
+            var dz = n1.Location.Z - n2.Location.Z;
+
+            var buf = Math.Sqrt(dx * dx + dy * dy + dz * dz);
+            return buf;
+        }
+
         #endregion
 
 

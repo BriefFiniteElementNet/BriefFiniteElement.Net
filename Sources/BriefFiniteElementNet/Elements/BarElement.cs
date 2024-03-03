@@ -200,6 +200,8 @@ namespace BriefFiniteElementNet.Elements
             get { return _nodalReleaseConditions; }
             set { _nodalReleaseConditions = value; }
         }
+
+        
         #endregion
 
 
@@ -537,11 +539,22 @@ namespace BriefFiniteElementNet.Elements
         /// <inheritdoc/>
         public override double[] IsoCoordsToLocalCoords(params double[] isoCoords)
         {
+            if (NodeCount == 2)
+                return new double[] { IsoCoordsToLocalCoords_2Node(isoCoords[0]) };//faster version than below
+
             var pl = GetIsoToLocalConverter().Evaluate(isoCoords[0]);
 
             return new double[] { pl };
         }
 
+        private double IsoCoordsToLocalCoords_2Node(double xi)
+        {
+            var L = this.GetLength();
+
+            var x = (xi + 1) * L / 2;
+
+            return x;
+        }
 
 
         /// <summary>
@@ -566,6 +579,10 @@ namespace BriefFiniteElementNet.Elements
 
         public double[] LocalCoordsToIsoCoords(params double[] localCoords)
         {
+            if (NodeCount == 2)
+                return new double[] { LocalCoordsToIsoCoords_2Node(localCoords[0]) };//faster version
+
+
             var pl = GetIsoToLocalConverter();
             var x = localCoords[0];
 
@@ -578,6 +595,16 @@ namespace BriefFiniteElementNet.Elements
 
             return new double[] { rt };
         }
+
+        private double LocalCoordsToIsoCoords_2Node(double x)
+        {
+            var L = this.GetLength();
+
+            var xi = (2 * x / L) - 1;
+
+            return xi;
+        }
+
 
         /// <summary>
         /// Gets the stifness matrix in local coordination system.

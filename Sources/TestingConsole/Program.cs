@@ -1,10 +1,16 @@
-﻿using BriefFiniteElementNet.Validation;
+﻿using BriefFiniteElementNet;
+using BriefFiniteElementNet.Elements;
+using BriefFiniteElementNet.ElementHelpers.Bar;
+using BriefFiniteElementNet.Loads;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using BriefFiniteElementNet.ElementHelpers.BarHelpers;
+using static System.Net.Mime.MediaTypeNames;
+using BriefFiniteElementNet.Materials;
+using BriefFiniteElementNet.Sections;
 
 namespace TestingConsole
 {
@@ -24,9 +30,43 @@ namespace TestingConsole
             //EulerBernouly2nodeChecker.TestConsoleBeam();
             //new BarElementExactInternalDisplacement().TestEulerBernouly_diry();
 
+            test();
             Console.Write("Done");
 
             Console.ReadKey();
+        }
+
+        static void test()
+        {
+
+            var w = 2.0;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var mat = new UniformIsotropicMaterial(210e9, 0.25);
+            var sec = new UniformParametric1DSection(1, 1, 1);
+
+            elm.Section = sec;
+            elm.Material = mat;
+            var u1 = new BriefFiniteElementNet.Loads.UniformLoad(LoadCase.DefaultLoadCase, -Vector.K, w, CoordinationSystem.Global);
+
+            var hlpr = new EulerBernoulliBeamHelper2Node(BeamDirection.Y, elm);
+
+            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+            var L = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
+
+            var m1 = w * L * L / 12;
+            var m2 = -w * L * L / 12;
+
+            var v1 = -w * L / 2;
+            var v2 = -w * L / 2;
+
         }
     }
 }
