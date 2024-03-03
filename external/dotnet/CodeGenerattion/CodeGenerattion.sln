@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenerate", "CodeGenerate\CodeGenerate.csproj", "{834F7BE3-0C39-42BB-94FA-95A5EF2346ED}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{834F7BE3-0C39-42BB-94FA-95A5EF2346ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{834F7BE3-0C39-42BB-94FA-95A5EF2346ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{834F7BE3-0C39-42BB-94FA-95A5EF2346ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{834F7BE3-0C39-42BB-94FA-95A5EF2346ED}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {418A93FC-6944-4806-9755-F67C7C99FFFD}
+	EndGlobalSection
+EndGlobal
