@@ -1020,14 +1020,19 @@ namespace BriefFiniteElementNet.Elements
             return GetExactInternalForceAt(xi, LoadCase.DefaultLoadCase);
         }
 
-        
-       
+
+
 
         #endregion
 
         #region GetInternalDisplacementAt, GetExactInternalDisplacementAt
 
-        
+
+        public Displacement GetInternalDisplacementAt(double xi)
+        {
+            return GetInternalDisplacementAt(xi, LoadCase.DefaultLoadCase);
+        }
+
         public Displacement GetInternalDisplacementAt(double xi, LoadCombination combination)
         {
             var buf = new Displacement();
@@ -1038,13 +1043,6 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
-        
-        public Displacement GetExactInternalDisplacementAt(double xi, LoadCombination combination)
-        {
-            throw new NotImplementedException();
-        }
-
-        
         public Displacement GetInternalDisplacementAt(double xi, LoadCase loadCase)
         {
             var buf = Displacement.Zero;
@@ -1069,6 +1067,16 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
+
+        public Displacement GetExactInternalDisplacementAt(double xi, LoadCombination combination)
+        {
+            var buf = Displacement.Zero;
+
+            foreach (var lc in combination.Keys)
+                buf += combination[lc] * this.GetExactInternalDisplacementAt(xi, lc);
+
+            return buf;
+        }
 
         public Displacement GetExactInternalDisplacementAt(double xi, LoadCase loadCase)
         {
@@ -1111,18 +1119,12 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
-        
-        public Displacement GetInternalDisplacementAt(double xi)
-        {
-            return GetInternalDisplacementAt(xi, LoadCase.DefaultLoadCase);
-        }
-
-        
         public Displacement GetExactInternalDisplacementAt(double xi)
         {
             return GetExactInternalDisplacementAt(xi, LoadCase.DefaultLoadCase);
         }
         #endregion
+
 
         /// <summary>
         /// get the polynomial that takes iso coord as input and return local coord as output
