@@ -36,6 +36,12 @@ namespace TestingConsole
             Console.ReadKey();
         }
 
+
+        static void TestExactDisp()
+        {
+
+        }
+
         static void test()
         {
 
@@ -43,8 +49,8 @@ namespace TestingConsole
 
             var nodes = new Node[2];
 
-            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
-            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0", Constraints = Constraints.Fixed });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1", Constraints = Constraints.Fixed });
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
 
@@ -55,17 +61,14 @@ namespace TestingConsole
             elm.Material = mat;
             var u1 = new BriefFiniteElementNet.Loads.UniformLoad(LoadCase.DefaultLoadCase, -Vector.K, w, CoordinationSystem.Global);
 
-            var hlpr = new EulerBernoulliBeamHelper2Node(BeamDirection.Y, elm);
+            elm.Loads.Add(u1);
+            var model = new Model();
+            model.Nodes.Add(nodes[0], nodes[1]);
+            model.Elements.Add(elm);
+            model.Solve_MPC();
 
-            var loads = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+            var d = elm.GetExactInternalDisplacementAt(0.0);
 
-            var L = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
-
-            var m1 = w * L * L / 12;
-            var m2 = -w * L * L / 12;
-
-            var v1 = -w * L / 2;
-            var v2 = -w * L / 2;
 
         }
     }
