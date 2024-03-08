@@ -455,7 +455,6 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
         private Displacement GetLoadDisplacementAt_ConcentratedLoad_uniformSection(BarElement bar, ConcentratedLoad load, double xi)
         {
-            //https://www.engineersedge.com/beam_bending/beam_bending19.htm
             double L;
             double ft;//force concentrated
             double f0;//inverse of eq nodal loads
@@ -467,15 +466,20 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             {//step 0
                 L = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
 
-                xt = bar.IsoCoordsToLocalCoords(xi)[0];
+                xt = bar.IsoCoordsToLocalCoords(load.ForceIsoLocation.Xi)[0];
             }
 
             #region step 1
+
             {
                 var p0 = GetLocalEquivalentNodalLoads(bar, load)[0];
 
                 p0 = -p0;
 
+                f0 = p0.Fx;
+            }
+
+            {
                 var localForce = load.Force;
 
                 var tr = bar.GetTransformationManager();
@@ -483,8 +487,9 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
                 if (load.CoordinationSystem == CoordinationSystem.Global)
                     localForce = tr.TransformGlobalToLocal(localForce);
 
-                ft = load.Force.Fx;
+                ft = localForce.Fx;
             }
+
             #endregion
 
             {
@@ -498,18 +503,21 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
                 var mat = bar.Material.GetMaterialPropertiesAt(new IsoPoint(xi), bar);
 
                 var e = mat.Ex;
-                var A = sec.A;
+
+                var a = sec.A;
+
                 var x = bar.IsoCoordsToLocalCoords(xi)[0];
 
-                var d = 0.0;//TODO
+                var d = 0.0;
 
-                {
-                    d = x * ft / (e * A);
-                }
+                if (x <= xt)
+                    d = f0 * x / (e * a);
+                else
+                    d = f0 * xt / (e * a) + (f0 + ft) * (x - xt) / (e * a);
 
                 var buf = new Displacement();
 
-                buf.DX = d;
+                buf.RX = d;
 
                 return buf;
             }
@@ -631,7 +639,6 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
                 if (cns.CoordinationSystem == CoordinationSystem.Global)
                     localForce = tr.TransformGlobalToLocal(localForce);
-
 
                 shapes.Scale(localForce.Fx);
 

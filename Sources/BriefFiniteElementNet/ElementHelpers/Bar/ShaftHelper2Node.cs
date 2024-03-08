@@ -254,7 +254,9 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
             var eIorder = bar.Section.GetMaxFunctionOrder()[0] + bar.Material.GetMaxFunctionOrder()[0];
 
-            if (eIorder == 0 && bar.StartReleaseCondition == Constraints.Fixed && bar.EndReleaseCondition == Constraints.Fixed)//constant/uniform section along the length of beam
+            var isuniformSection = eIorder == 0 && bar.StartReleaseCondition == Constraints.Fixed && bar.EndReleaseCondition == Constraints.Fixed;//uniform and both ends fixed
+
+            if (isuniformSection)//constant/uniform section along the length of beam
             {
                 //EI is constant through the length of beam
                 //end releases are fixed
@@ -289,7 +291,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
         {
             double L;
             double tt;//tprsion concentrated
-            double f0;//inverse of eq nodal loads
+            double t0;//inverse of eq nodal loads
             double xt;//applied location
 
             if (bar.NodeCount != 2)
@@ -298,15 +300,20 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             {//step 0
                 L = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
 
-                xt = bar.IsoCoordsToLocalCoords(xi)[0];
+                xt = bar.IsoCoordsToLocalCoords(load.ForceIsoLocation.Xi)[0];
             }
 
             #region step 1
+
             {
                 var p0 = GetLocalEquivalentNodalLoads(bar, load)[0];
 
                 p0 = -p0;
 
+                t0 = p0.Mx;
+            }
+
+            {
                 var localForce = load.Force;
 
                 var tr = bar.GetTransformationManager();
@@ -314,8 +321,9 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
                 if (load.CoordinationSystem == CoordinationSystem.Global)
                     localForce = tr.TransformGlobalToLocal(localForce);
 
-                tt = load.Force.Fx;
+                tt = localForce.Mx;
             }
+
             #endregion
 
             {
@@ -335,9 +343,10 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
                 
                 var d = 0.0;//TODO
 
-                {
-                    d = x * tt / (g * j);
-                }
+                if (x <= xt)
+                    d = t0 * x / (g * j);
+                else
+                    d = t0 * xt / (g * j) + (t0 + tt) * (x - xt) / (g * j);
 
                 var buf = new Displacement();
 

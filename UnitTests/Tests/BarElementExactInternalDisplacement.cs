@@ -11,10 +11,10 @@ using System.Threading.Tasks;
 
 namespace BriefFiniteElementNet.Tests
 {
-    public class BarElementExactInternalDisplacement
+    [TestFixture, Description("Bar Element - Uniform Section - exact internal displacement")]
+    public class BarElementExactInternalDisplacementUniformSection
     {
-        [Test]
-        [Description("Euler Bernoully - Uniform Load - Uniform Section - dir Z")]
+        [Test, Description("Euler Bernoully - Uniform Load - Uniform Section - dir Z")]
         [Category("BarElement")]
         [TestOf(typeof(EulerBernoulliBeamHelper2Node))]
         public void TestEulerBernouly_Distributed_dirz()
@@ -80,10 +80,11 @@ namespace BriefFiniteElementNet.Tests
             //internal force of 2 node beam beam with uniform load and both ends fixed
 
             var dir = BeamDirection.Y;
-            var w = 2.0;
-            var L = 4;//[m]
-            var I = 1;
-            var E = 1;
+            var w = 2;
+            var L = 3;//[m]
+            var I = 5;
+            var E = 7;
+
 
             var nodes = new Node[2];
 
@@ -266,8 +267,7 @@ namespace BriefFiniteElementNet.Tests
 
 
 
-        [Test]
-        [Description("Truss - Uniform Load - Uniform Section")]
+        [Test, Description("Truss - Uniform Load")]
         [Category("BarElement")]
         [TestOf(typeof(EulerBernoulliBeamHelper2Node))]
         public void TestTruss_Distributed()
@@ -319,20 +319,18 @@ namespace BriefFiniteElementNet.Tests
                     Assert.IsTrue(Math.Sign(current) == Math.Sign(w), "invalid sign");
                 }
             }
-
         }
 
-        [Test]
-        [Description("Shaft - Uniform Load - Uniform Section")]
+        [Test, Description("Truss - concentrate Load")]
         [Category("BarElement")]
-        [TestOf(typeof(EulerBernoulliBeamHelper2Node))]
-        public void TestShaft_Concentrated()
+        [TestOf(typeof(TrussHelper2Node))]
+        public void TestTruss_Concentrated()
         {
-
             var ft = 2.0;
             var L = 4;//[m]
             var I = 1;
             var E = 1;
+            var G = 1;
             var xt = 2;
 
             var nodes = new Node[2];
@@ -341,13 +339,13 @@ namespace BriefFiniteElementNet.Tests
             nodes[1] = (new Node(L, 0, 0));
 
             var elm = new BarElement(nodes[0], nodes[1]);
-            elm.Section = new UniformParametric1DSection(0, 0, I);
+            elm.Section = new UniformParametric1DSection(I, 0, 0);
             elm.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(E, 0.25);
 
             var u1 = new Loads.ConcentratedLoad();
 
             u1.Case = LoadCase.DefaultLoadCase;
-            u1.Force = new Force(0, 0, 0, ft, 0, 0);
+            u1.Force = new Force(ft, 0, 0, 0, 0, 0);
             u1.CoordinationSystem = CoordinationSystem.Local;
             u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(xt));
 
@@ -364,8 +362,78 @@ namespace BriefFiniteElementNet.Tests
 
                 var current = hlpr.GetLoadDisplacementAt(elm, u1, xi).DY;
 
+                var expected = double.NaN;//TODO: fix the formula
+
+                if (x < xt)
+                    expected = double.NaN;
+                else
+                    expected = double.NaN;
+
+
+                Assert.IsTrue(Math.Abs(current - expected) < epsilon, "invalid value");
+
+            }
+
+        }
+
+
+        [Test]
+        [Description("Shaft - Uniform Load - Uniform Section")]
+        [Category("BarElement")]
+        [TestOf(typeof(EulerBernoulliBeamHelper2Node))]
+        public void TestShaft_Concentrated()
+        {
+            var T = 2.0;
+            var L = 4;//[m]
+            var I = 1;
+            var J = 1;
+            var E = 1;
+            var G = 1;
+            var xt = 2;
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0));
+            nodes[1] = (new Node(L, 0, 0));
+
+            var elm = new BarElement(nodes[0], nodes[1]);
+            elm.Section = new UniformParametric1DSection(0, 0, 0, J);
+            elm.Material = UniformIsotropicMaterial.CreateFromShearPoisson(G, 0.25);
+
+            var u1 = new Loads.ConcentratedLoad();
+
+            u1.Case = LoadCase.DefaultLoadCase;
+            u1.Force = new Force(0, 0, 0, T, 0, 0);
+            u1.CoordinationSystem = CoordinationSystem.Local;
+            u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(xt));
+
+            //u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
+
+            var hlpr = new ShaftHelper2Node(elm);
+
+            var epsilon = 1e-6;
+
+            double t0, t1;
+
+            {
+                var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                t0 = -ends[0].Mx;
+                t1 = -ends[1].Mx;
+            }
+
+            foreach (var x in CalcUtil.Divide(L, 10))
+            {
+                var xi = elm.LocalCoordsToIsoCoords(x);
+
+                var current = hlpr.GetLoadDisplacementAt(elm, u1, xi).RX;
                 
                 var expected = double.NaN;//TODO: fix the formula
+
+                if (x <= xt)
+                    expected = double.NaN;//todo
+                else
+                    expected = double.NaN;//todo
 
                 Assert.IsTrue(Math.Abs(current - expected) < epsilon, "invalid value");
 
