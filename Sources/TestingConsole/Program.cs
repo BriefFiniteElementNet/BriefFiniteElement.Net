@@ -44,18 +44,20 @@ namespace TestingConsole
 
         static void test()
         {
-
             var w = 2.0;
+            var I = 1;
+            var E = 1;
+            var L = 4.0;
 
             var nodes = new Node[2];
 
-            nodes[0] = (new Node(0, 0, 0) { Label = "n0", Constraints = Constraints.Fixed });
-            nodes[1] = (new Node(4, 0, 0) { Label = "n1", Constraints = Constraints.Fixed });
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0", Constraints = Constraints.MovementFixed & Constraints.FixedRX });
+            nodes[1] = (new Node(L, 0, 0) { Label = "n1", Constraints = Constraints.MovementFixed & Constraints.FixedRX });
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
 
-            var mat = new UniformIsotropicMaterial(210e9, 0.25);
-            var sec = new UniformParametric1DSection(1, 1, 1);
+            var sec = new UniformParametric1DSection(0, I, I);
+            var mat = UniformIsotropicMaterial.CreateFromYoungPoisson(E, 0.25);
 
             elm.Section = sec;
             elm.Material = mat;
@@ -67,9 +69,29 @@ namespace TestingConsole
             model.Elements.Add(elm);
             model.Solve_MPC();
 
-            var d = elm.GetExactInternalDisplacementAt(0.0);
+            //https://mechanicalc.com/reference/beam-deflection-tables
+            var dx = new Func<double, double>(x => -w * x / (24 * E * I) * (L * L * L - 2 * L * x * x + x * x * x));
 
+            var xs = CalcUtil.DivideSpan(0, L, 10);
 
+            var epsilon = 1e-10;
+
+            foreach (var x in xs)
+            {
+                if (x == 0 || x == L) continue;
+
+                var ksi = elm.LocalCoordsToIsoCoords(x)[0];
+                var d1 = elm.GetExactInternalDisplacementAt(ksi).DZ;
+                var d2 = dx(x);
+
+                var diff = Math.Abs(d1 - d2);
+
+                if(diff > epsilon)
+                {
+                    throw new Exception();
+                }
+            }
+            
         }
     }
 }
