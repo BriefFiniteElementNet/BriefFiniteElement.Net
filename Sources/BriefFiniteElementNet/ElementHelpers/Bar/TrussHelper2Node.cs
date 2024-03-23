@@ -439,15 +439,11 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
                 var x = bar.IsoCoordsToLocalCoords(xi)[0];
 
                 
-                var d = w0 * x / (2 * e * A) * (-L + x);
-                //d = d / ;
+                var d = w0 * x / (2 * e * A) * (L - x);
 
                 var buf = new Displacement();
 
-                //if (this.Direction == BeamDirection.Y)
-                //    buf.DZ = d;
-                //else
-                //    buf.DY = d;
+                buf.DX = d;
 
                 return buf;
             }
@@ -511,13 +507,13 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
                 var d = 0.0;
 
                 if (x <= xt)
-                    d = f0 * x / (e * a);
+                    d = -f0 * x / (e * a);
                 else
-                    d = f0 * xt / (e * a) + (f0 + ft) * (x - xt) / (e * a);
+                    d = -f0 * xt / (e * a) + (f0 + ft) * (x - xt) / (e * a);
 
                 var buf = new Displacement();
 
-                buf.RX = d;
+                buf.DX = d;
 
                 return buf;
             }

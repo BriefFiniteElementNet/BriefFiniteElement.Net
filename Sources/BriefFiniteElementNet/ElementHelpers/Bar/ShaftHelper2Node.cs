@@ -344,9 +344,9 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
                 var d = 0.0;//TODO
 
                 if (x <= xt)
-                    d = t0 * x / (g * j);
+                    d = -t0 * x / (g * j);
                 else
-                    d = t0 * xt / (g * j) + (t0 + tt) * (x - xt) / (g * j);
+                    d = -t0 * xt / (g * j) + (t0 + tt) * (x - xt) / (g * j);
 
                 var buf = new Displacement();
 
