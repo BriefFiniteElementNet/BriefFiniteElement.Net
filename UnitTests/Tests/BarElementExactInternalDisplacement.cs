@@ -273,11 +273,9 @@ namespace BriefFiniteElementNet.Tests
         public void TestTruss_Distributed()
         {
             //internal force of 2 node beam beam with uniform load and both ends fixed
-
-            var dir = BeamDirection.Z;
             var w = 2.0;
             var L = 4;//[m]
-            var I = 1;
+            var A = 1;
             var E = 1;
 
             var nodes = new Node[2];
@@ -286,7 +284,7 @@ namespace BriefFiniteElementNet.Tests
             nodes[1] = (new Node(L, 0, 0));
 
             var elm = new BarElement(nodes[0], nodes[1]);
-            elm.Section = new UniformParametric1DSection(0, 0, I);
+            elm.Section = new UniformParametric1DSection(A, 0, 0);
             elm.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(E, 0.25);
 
             var u1 = new Loads.UniformLoad();
@@ -307,10 +305,9 @@ namespace BriefFiniteElementNet.Tests
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 
-                var current = hlpr.GetLoadDisplacementAt(elm, u1, xi).DY;
+                var current = hlpr.GetLoadDisplacementAt(elm, u1, xi).DX;
 
-                //https://www.engineeringtoolbox.com/weight-beam-stress-strain-d_1937.html
-                var expected = double.NaN;//TODO: fix the formula
+                var expected = w * x / (2 * E * A) * (L - x);
 
                 Assert.IsTrue(Math.Abs(current - expected) < epsilon, "invalid value");
 
@@ -326,12 +323,12 @@ namespace BriefFiniteElementNet.Tests
         [TestOf(typeof(TrussHelper2Node))]
         public void TestTruss_Concentrated()
         {
-            var ft = 2.0;
-            var L = 4;//[m]
-            var I = 1;
-            var E = 1;
+            double ft = 2.0;
+            double L = 4;//[m]
+            double A = 1;
+            double E = 1;
             var G = 1;
-            var xt = 2;
+            double xt = 2;
 
             var nodes = new Node[2];
 
@@ -339,7 +336,7 @@ namespace BriefFiniteElementNet.Tests
             nodes[1] = (new Node(L, 0, 0));
 
             var elm = new BarElement(nodes[0], nodes[1]);
-            elm.Section = new UniformParametric1DSection(I, 0, 0);
+            elm.Section = new UniformParametric1DSection(A, 0, 0);
             elm.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(E, 0.25);
 
             var u1 = new Loads.ConcentratedLoad();
@@ -351,26 +348,33 @@ namespace BriefFiniteElementNet.Tests
 
             //u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
 
-            var hlpr = new ShaftHelper2Node(elm);
+            var hlpr = new TrussHelper2Node(elm);
 
             var epsilon = 1e-6;
+
+
+            var f0 = -xt / L * ft;
 
 
             foreach (var x in CalcUtil.Divide(L, 10))
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 
-                var current = hlpr.GetLoadDisplacementAt(elm, u1, xi).DY;
+                var current = hlpr.GetLoadDisplacementAt(elm, u1, xi).DX;
 
                 var expected = double.NaN;//TODO: fix the formula
 
-                if (x < xt)
-                    expected = double.NaN;
+                if (x <= xt)
+                    expected = -f0 * x / (E * A);
                 else
-                    expected = double.NaN;
-
+                    expected = -f0 * xt / (E * A) + (f0 + ft) * (x - xt) / (E * A);
 
                 Assert.IsTrue(Math.Abs(current - expected) < epsilon, "invalid value");
+
+                if (x != 0 && x != L)
+                {
+                    Assert.IsTrue(Math.Sign(current) == Math.Sign(ft), "invalid sign");
+                }
 
             }
 
@@ -435,7 +439,17 @@ namespace BriefFiniteElementNet.Tests
                 else
                     expected = double.NaN;//todo
 
+                if (x <= xt)
+                    expected = -t0 * x / (G * J);
+                else
+                    expected = -t0 * xt / (G * J) + (t0 + T) * (x - xt) / (G * J);
+
                 Assert.IsTrue(Math.Abs(current - expected) < epsilon, "invalid value");
+
+                if (x != 0 && x != L)
+                {
+                    Assert.IsTrue(Math.Sign(current) == Math.Sign(T), "invalid sign");
+                }
 
             }
 
