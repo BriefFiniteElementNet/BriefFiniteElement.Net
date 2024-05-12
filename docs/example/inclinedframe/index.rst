@@ -7,8 +7,13 @@ Consider the inclined frame shown in fig below.
 
 .. figure:: ../images/incliend-frame.png
    :align: center
-   
-There are two loads on top elements. One has a 6 kn/m magitude and its direction is vertical, another one has 5kn/m magnitude and it is perpendicular to the `e2` element.
+
+There are two loads on top elements. One has a `6 kn/m` magitude and its direction is vertical, another one has `5kn/m` magnitude and it is perpendicular to the `e2` element.
+
+And there are two I shaped sections, `A-A` and `B-B` as defined in the image.
+
+.. figure:: ../images/incliend-frame-sections.png
+   :align: center
 
 
 **step 1:** create model, nodes and elements:
@@ -27,6 +32,7 @@ There are two loads on top elements. One has a 6 kn/m magitude and its direction
 	model.Elements.Add(new BarElement(model.Nodes["n1"], model.Nodes["n2"]) { Label = "e1"});
 	model.Elements.Add(new BarElement(model.Nodes["n2"], model.Nodes["n3"]) { Label = "e2" });
 	model.Elements.Add(new BarElement(model.Nodes["n3"], model.Nodes["n4"]) { Label = "e3" });
+
 
 **step 2:** define support nodes (nodal constraints)
 
@@ -52,7 +58,8 @@ There are two loads on top elements. One has a 6 kn/m magitude and its direction
 	(model.Elements["e1"] as BarElement).Section = secBB;
 	(model.Elements["e2"] as BarElement).Section = secBB;
 	(model.Elements["e3"] as BarElement).Section = secAA;
-	
+
+
 **step 4:** assign loads to elements
 
 .. code-block:: cs
@@ -70,6 +77,7 @@ There are two loads on top elements. One has a 6 kn/m magitude and its direction
 
 	model.Solve_MPC();
 
+
 **step 6:** get analysis results
 
 Usually aim of analysis is to find some quantities like internal force and nodal displacements.
@@ -81,7 +89,7 @@ for example the support reaction of node `N3` can be found and printed to applic
 
 	var n3Force = model.Nodes["N3"].GetSupportReaction();
 	Console.WriteLine("Support reaction of n4: {0}", n3Force);
-    
+
 This is the result of print on console:
 
 Support reaction of n4: F: -37514.9891729259, 0, 51261.532772234, M: 0, -97714.6039503916, 0
