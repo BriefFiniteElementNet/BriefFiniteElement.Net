@@ -926,7 +926,7 @@ namespace BriefFiniteElementNet.Elements
 
                 var discretePoints = new List<IsoPoint>();
 
-                discretePoints.AddRange(this.GetInternalForceDiscretationPoints());
+                discretePoints.AddRange(this.GetInternalForceDiscretationPoints(loadCase));
 
 
                 foreach (var load in Loads)
@@ -1085,7 +1085,7 @@ namespace BriefFiniteElementNet.Elements
 
                 var discretePoints = new List<IsoPoint>();
 
-                discretePoints.AddRange(this.GetInternalForceDiscretationPoints());
+                discretePoints.AddRange(this.GetInternalForceDiscretationPoints(loadCase));
 
 
                 foreach (var load in Loads)
@@ -1253,14 +1253,22 @@ namespace BriefFiniteElementNet.Elements
             return true;
         }
 
+
+
+        [Obsolete("use GetInternalForceDiscretationPoints(params LoadCase[] loadCases) instead")]
         /// <summary>
-        /// Gets the iso location of points that internal force in those points are discrete only due to element.
+        /// Gets the iso location of points that internal force in those points are discrete only due to node locations.
         /// </summary>
+        /// <remarks>
+        /// These points always contain start and end node, plus any node in between (in case of 3 node beam)
+        /// </remarks>
         /// <returns>list of iso locations</returns>
         public IsoPoint[] GetInternalForceDiscretationPoints()
         {
+            throw new Exception();
             var buf = new List<IsoPoint>();
 
+            /*
             foreach (var node in nodes)
             {
                 var x = (node.Location - nodes[0].Location).Length;
@@ -1269,22 +1277,9 @@ namespace BriefFiniteElementNet.Elements
 
                 buf.Add(new IsoPoint(xi));
             }
-
-            //Note: internal loads are not accounted
-            /*
-            foreach (var load in this.loads)
-            {
-                if (load.Case != loadCase)
-                    continue;
-
-                var pts = load.GetInternalForceDiscretationPoints();
-
-                buf.AddRange(pts);
-            }
-            */
+           
             var b2 = new List<IsoPoint>();
 
-           
             foreach (var point in buf.OrderBy(i=>i.Xi))
             {
                 var pt = new IsoPoint(point.Xi);
@@ -1294,13 +1289,21 @@ namespace BriefFiniteElementNet.Elements
             }
 
             return b2.ToArray();
+
+            */
         }
 
         /// <summary>
-        /// Gets the iso location of points that internal force in those points are discrete only due to element.
+        /// Gets the iso location of points that internal force in those points are discrete due to element.
         /// </summary>
         /// <returns>list of iso locations</returns>
-        public IsoPoint[] GetInternalForceDiscretationPoints(LoadCase loadCase)
+        /// <remarks>
+        /// returned iso points are generally grouped into two groups:
+        /// 1- those which are Nodes iso locations. in case of two node, ksi=-1 and ksi=+1 are in this group
+        /// 2- those which are locations that concentrated loads are applied.
+        /// this method return all of them grouped into an array
+        /// </remarks>
+        public IsoPoint[] GetInternalForceDiscretationPoints(params LoadCase[] loadCases)
         {
             var buf = new List<IsoPoint>();
 
@@ -1313,16 +1316,19 @@ namespace BriefFiniteElementNet.Elements
                 buf.Add(new IsoPoint(xi));
             }
 
-            //Note: internal loads are not accounted
-            foreach (var load in this.loads)
+            foreach (var loadCase in loadCases)
             {
-                if (load.Case != loadCase)
-                    continue;
+                foreach (var load in this.loads)
+                {
+                    if (load.Case != loadCase)
+                        continue;
 
-                var pts = load.GetInternalForceDiscretationPoints();
+                    var pts = load.GetInternalForceDiscretationPoints();
 
-                buf.AddRange(pts);
+                    buf.AddRange(pts);
+                }
             }
+            
             var b2 = new List<IsoPoint>();
 
 

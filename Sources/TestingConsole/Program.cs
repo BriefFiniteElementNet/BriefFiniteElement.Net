@@ -30,7 +30,10 @@ namespace TestingConsole
             //EulerBernouly2nodeChecker.TestConsoleBeam();
             //new BarElementExactInternalDisplacement().TestEulerBernouly_diry();
 
-            test();
+            //test();
+
+            BriefFiniteElementNet.Validation.GithubIssues.Issue183.Run();
+
             Console.Write("Done");
 
             Console.ReadKey();

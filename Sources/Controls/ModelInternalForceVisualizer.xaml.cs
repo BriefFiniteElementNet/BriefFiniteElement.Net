@@ -529,8 +529,7 @@ namespace BriefFiniteElementNet.Controls
 
                     //var st = elm.StartNode.Location;
 
-                    var disc = elm.GetInternalForceDiscretationPoints();
-
+                    var disc = elm.GetInternalForceDiscretationPoints(TargetCombination.Select(i => i.Key).ToArray());
 
                     for (var i = 0; i < n; i++)
                     {
