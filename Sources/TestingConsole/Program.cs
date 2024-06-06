@@ -32,7 +32,8 @@ namespace TestingConsole
 
             //test();
 
-            BriefFiniteElementNet.Validation.GithubIssues.Issue183.Run();
+            //BriefFiniteElementNet.Validation.GithubIssues.Issue183.Run();
+            BriefFiniteElementNet.Validation.GithubIssues.Issue181.Run();
 
             Console.Write("Done");
 
