@@ -17,7 +17,7 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
                 return false;
 
             var isUPara = elm.Section is Sections.UniformParametric1DSection;
-            var isUGeo = elm.Section is Sections.UniformGeometric1DSection;
+            var isUGeo = elm.Section is Sections.UniformGeometric1DSection || elm.Section is Sections.UniformParametric1DSection;
 
             if (!isUPara && !isUGeo)
                 return false;

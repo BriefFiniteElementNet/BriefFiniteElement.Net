@@ -270,12 +270,21 @@ namespace BriefFiniteElementNet
                 var e= RandomHelper.GetRandomNumber(100e9, 200e9);
                 var nu = RandomHelper.GetRandomNumber(0.2, 0.3);
 
-                var sec = (Sections.UniformParametric1DSection)(framElm.Section = new Sections.UniformParametric1DSection());
-                var mat = framElm.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(e, nu);
+                if (framElm.Section == null)
+                {
+                    var sec = (Sections.UniformParametric1DSection)(framElm.Section = new Sections.UniformParametric1DSection());
+                    sec.A = a;
+                    sec.Iy = iy;
+                    sec.Iz = iz;
+                }
 
-                sec.A = a;
-                sec.Iy = iy;
-                sec.Iz = iz;
+                if (framElm.Material == null)
+                {
+                    var mat = framElm.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(e, nu);
+                }
+                
+
+                
                 //sec.J = j;
 
             }
