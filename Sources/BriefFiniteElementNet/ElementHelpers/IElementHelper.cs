@@ -13,6 +13,16 @@ namespace BriefFiniteElementNet.ElementHelpers
     /// </summary>
     public interface IElementHelper
     {
+        /// <summary>
+        /// Gets the LoadHandler s related to this helper
+        /// </summary>
+        /// <returns></returns>
+        ILoadHandler[] GetLoadHandlers();
+
+        /// <summary>
+        /// The target element!
+        /// </summary>
+
         Element TargetElement { get; set; }
 
         /// <summary>
@@ -182,7 +192,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         */
 
         /// <summary>
-        /// Gets the strain at defined location in local coordination system.
+        /// Gets the stress at defined location in local coordination system.
         /// </summary>
         /// <param name="targetElement">The target element.</param>
         /// <param name="load">The load.</param>

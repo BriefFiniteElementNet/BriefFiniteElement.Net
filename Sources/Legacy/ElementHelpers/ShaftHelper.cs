@@ -583,5 +583,10 @@ namespace Legacy.ElementHelpers
         {
             throw new NotImplementedException();
         }
+
+        public ILoadHandler[] GetLoadHandlers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -146,5 +146,10 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             return new GeneralStressTensor();
         }
+
+        public ILoadHandler[] GetLoadHandlers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

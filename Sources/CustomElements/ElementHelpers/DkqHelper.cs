@@ -756,5 +756,10 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             return buf;
         }
+
+        public ILoadHandler[] GetLoadHandlers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

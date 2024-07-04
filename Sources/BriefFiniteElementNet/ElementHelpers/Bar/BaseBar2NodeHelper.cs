@@ -263,6 +263,9 @@ namespace BriefFiniteElementNet.ElementHelpers.Bar
         //elastic modulus
         public abstract double GetD(BarElement targetElement, double xi);
 
-
+        public ILoadHandler[] GetLoadHandlers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

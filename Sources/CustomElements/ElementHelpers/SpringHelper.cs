@@ -154,5 +154,10 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
         {
             throw new NotImplementedException();
         }
+
+        public ILoadHandler[] GetLoadHandlers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

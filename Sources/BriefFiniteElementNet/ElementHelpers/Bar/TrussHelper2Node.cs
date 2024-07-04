@@ -388,6 +388,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             throw new NotImplementedException();
         }
 
+        //copied to LoadHandler
         private Displacement GetLoadDisplacementAt_UniformLoad_uniformSection(BarElement bar, UniformLoad load, double xi)
         {
             //https://byjusexamprep.com/gate-ce/fixed-beams
@@ -449,8 +450,27 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             }
         }
 
+        //copied to load handler
+        public Force[] GetLocalEquivalentNodalLoads_imposedStrainLoad_UniformMatSection(BarElement bar, ImposedStrainLoad load)
+        {
+            var E = bar.Material.GetMaterialPropertiesAt(0).Ex;
+            var A = bar.Material.GetMaterialPropertiesAt(0).Ex;
+            var L = bar.GetLength();
+            var strain = load.ImposedStrainMagnitude;
+
+            //F = K . D, K = E.A/L, strain = D/L, F=strain*E*A
+
+            var f = strain * E * A;
+
+
+            throw new NotImplementedException();
+            
+        }
+
+        
         private Displacement GetLoadDisplacementAt_ConcentratedLoad_uniformSection(BarElement bar, ConcentratedLoad load, double xi)
         {
+            
             double L;
             double ft;//force concentrated
             double f0;//inverse of eq nodal loads

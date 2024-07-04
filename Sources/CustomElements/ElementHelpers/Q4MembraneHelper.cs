@@ -674,6 +674,11 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
 
             return new GeneralStressTensor(buf);
         }
+
+        public ILoadHandler[] GetLoadHandlers()
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

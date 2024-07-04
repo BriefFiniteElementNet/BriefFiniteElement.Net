@@ -229,6 +229,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             }
         }
 
+        //copied to ILoadHandler
         private Displacement GetLoadDisplacementAt_ConcentratedLoad_uniformSection(BarElement bar, ConcentratedLoad load, double xi)
         {
             //https://www.engineersedge.com/beam_bending/beam_bending19.htm
@@ -461,8 +462,6 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
         public override IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load,
             double[] isoLocation)
         {
-
-            
 
             var n = targetElement.Nodes.Length;
 
@@ -1169,6 +1168,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             return new Force[] { -re0, -re1 };
         }
 
+        
 
         /// <summary>
         /// load is uniform, but material or section is no uniform

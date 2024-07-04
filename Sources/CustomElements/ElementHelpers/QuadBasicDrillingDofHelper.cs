@@ -96,6 +96,11 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             throw new NotImplementedException();
         }
 
+        public ILoadHandler[] GetLoadHandlers()
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();

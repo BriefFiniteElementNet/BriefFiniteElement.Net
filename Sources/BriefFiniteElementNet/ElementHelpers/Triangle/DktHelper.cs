@@ -624,6 +624,11 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
+        public ILoadHandler[] GetLoadHandlers()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
     }

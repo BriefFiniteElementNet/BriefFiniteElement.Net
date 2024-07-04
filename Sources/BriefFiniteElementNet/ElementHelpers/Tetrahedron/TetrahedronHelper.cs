@@ -450,5 +450,10 @@ namespace BriefFiniteElementNet.ElementHelpers
 
             return new GeneralStressTensor(cauchy);
         }
+
+        public ILoadHandler[] GetLoadHandlers()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
