@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.ShaftHelper
 {
-    public class GeneralHandler:ZeroLoadHandler
+    public class GeneralHandler : ZeroLoadHandler
     {
         public override bool CanHandle(Element elm, IElementHelper hlpr, ElementalLoad load)
         {
@@ -20,7 +20,8 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.ShaftHelper
             if (!(elm is BarElement))
                 return false;
 
-            
+
+
             if ((load is ConcentratedLoad))
                 return false;
 

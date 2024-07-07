@@ -1,4 +1,5 @@
-﻿using BriefFiniteElementNet.ElementHelpers.BarHelpers;
+﻿using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.ElementHelpers.BarHelpers;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Loads;
 using CSparse;
@@ -64,17 +65,15 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.ShaftHelper
             for (var i = 0; i < n; i++)
                 buf[i] = new Force(0, 0, 0, fxs[i], 0, 0);
 
-            //return buf;
-            //TODO: convert to tensor
-            throw new NotImplementedException();
+            return buf;
 
         }
 
-        public StrainTensor GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad ld, IsoPoint loc)
+        public Displacement GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad ld, IsoPoint loc)
         {
             double L;
             double tt;//tprsion concentrated
-            double t0;//inverse of eq nodal loads
+            double t0;//inverse of eq nodal load, mx at start node
             double xt;//applied location
 
 
@@ -118,7 +117,8 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.ShaftHelper
             {
                 var eiOrder = bar.Section.GetMaxFunctionOrder()[0] + bar.Material.GetMaxFunctionOrder()[0];
 
-                if (eiOrder != 0) throw new BriefFiniteElementNetException("Nonuniform EI");
+                if (eiOrder != 0) 
+                    throw new BriefFiniteElementNetException("Nonuniform EI");
             }
 
             {
@@ -141,11 +141,10 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.ShaftHelper
 
                 buf.RX = d;
 
-                //return buf;
-                //TODO: Convert to tensor
-                throw new NotImplementedException();
+                return buf;
             }
         }
+
 
         public CauchyStressTensor GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
         {
@@ -229,6 +228,9 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.ShaftHelper
                 f2 *= -1;
 
                 buff.Add(Tuple.Create(DoF.Rx, f2.Mx));
+
+
+                var tns = new CauchyStressTensor();
 
                 //return buff;
                 //TODO: convert to tensor

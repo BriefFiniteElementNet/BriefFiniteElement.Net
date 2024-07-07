@@ -47,18 +47,79 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
             var mat = bar.Material;
             var sec = bar.Section;
 
-            throw new NotImplementedException();
+            var tr = bar.GetTransformationManager();
+
+
+            var thiss = hlpr as TrussHelper2Node;
+
+            {
+
+                Func<double, double> magnitude;
+                Vector localDir;
+
+                double xi0, xi1;
+                int degree;//polynomial degree of magnitude function
+
+                #region inits
+                //if (load is UniformLoad)
+                {
+                    var uld = load as UniformLoad;
+
+                    magnitude = xi => uld.Magnitude;
+                    localDir = uld.Direction;
+
+                    if (uld.CoordinationSystem == CoordinationSystem.Global)
+                        localDir = tr.TransformGlobalToLocal(localDir);
+
+                    localDir = localDir.GetUnit();
+
+                    xi0 = -1;
+                    xi1 = 1;
+                    degree = 0;
+                }
+                
+                localDir = localDir.GetUnit();
+                #endregion
+
+                {
+                    var nOrd = thiss.GetNMaxOrder(bar).Max();
+
+                    var gpt = (nOrd + degree) / 2 + 1;//gauss point count
+
+                    var intg = GaussianIntegrator.CreateFor1DProblem(xi =>
+                    {
+                        var shp = thiss.GetNMatrixAt(bar, xi, 0, 0);
+                        var q__ = magnitude(xi);
+                        var j = thiss.GetJMatrixAt(bar, xi, 0, 0);
+                        shp.Scale(j.Determinant());
+
+                        var q_ = localDir * q__;
+
+                        shp.Scale(q_.X);
+
+                        return shp;
+                    }, xi0, xi1, gpt);
+
+                    var res = intg.Integrate();
+
+                    var localForces = new Force[2];
+
+                    var fx0 = res[0, 0];
+                    var fx1 = res[0, 1];
+
+                    localForces[0] = new Force(fx0, 0, 0, 0, 0, 0);
+                    localForces[1] = new Force(fx1, 0, 0, 0, 0, 0);
+
+                    return localForces;
+                }
+            }
         }
 
-        public StrainTensor GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad ld, IsoPoint loc)
+        public Displacement GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad ld, IsoPoint loc)
         {
             var bar = elm as BarElement;
             var load = ld as UniformLoad;
             var xi = loc.Xi;
-
-            //var mat = bar.Material;
-            //var sec = bar.Section;
-
 
             //https://byjusexamprep.com/gate-ce/fixed-beams
             double w0;
@@ -97,9 +158,6 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
                 if (eiOrder != 0) throw new BriefFiniteElementNetException("Nonuniform EI");
             }
 
-
-
-
             {
                 var sec = bar.Section.GetCrossSectionPropertiesAt(xi, bar);
                 var mat = bar.Material.GetMaterialPropertiesAt(new IsoPoint(xi), bar);
@@ -108,19 +166,14 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
                 var A = sec.A;
                 var x = bar.IsoCoordsToLocalCoords(xi)[0];
 
-
                 var d = w0 * x / (2 * e * A) * (L - x);
 
                 var buf = new Displacement();
 
                 buf.DX = d;
 
-                //todo: convert buf to strain tensor
-                //return buf;
-                throw new NotImplementedException();
+                return buf;
             }
-
-            throw new NotImplementedException();
         }
 
         public CauchyStressTensor GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)

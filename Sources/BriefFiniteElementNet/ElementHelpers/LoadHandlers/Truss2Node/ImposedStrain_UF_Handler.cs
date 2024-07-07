@@ -46,7 +46,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
             var istLoad = load as ImposedStrainLoad;
 
             var E = bar.Material.GetMaterialPropertiesAt(0).Ex;
-            var A = bar.Material.GetMaterialPropertiesAt(0).Ex;
+            var A = bar.Section.GetCrossSectionPropertiesAt(0).A;
             var L = bar.GetLength();
             var strain = istLoad.ImposedStrainMagnitude;
 
@@ -61,13 +61,11 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
             f2.Fx = f;
 
             return new Force[] { f1, f2 };
-
-            return new Force[2];//zero
         }
 
-        public StrainTensor GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
+        public Displacement GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
         {
-            return new StrainTensor();//zero
+            return Displacement.Zero;//zero
         }
 
         public CauchyStressTensor GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
@@ -76,7 +74,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
             var istLoad = load as ImposedStrainLoad;
 
             var E = bar.Material.GetMaterialPropertiesAt(0).Ex;
-            var A = bar.Material.GetMaterialPropertiesAt(0).Ex;
+            var A = bar.Section.GetCrossSectionPropertiesAt(0).A;
             var L = bar.GetLength();
             var strain = istLoad.ImposedStrainMagnitude;
 
@@ -84,8 +82,11 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
 
             var f = strain * E * A;
 
-            throw new NotImplementedException();
-            return new CauchyStressTensor();//zero
+            var buf = new CauchyStressTensor();
+
+            buf.S11 = -f;
+
+            return buf;
         }
     }
 }

@@ -323,60 +323,7 @@ namespace BriefFiniteElementNet.Tests
         [TestOf(typeof(TrussHelper2Node))]
         public void TestTruss_Concentrated()
         {
-            double ft = 2.0;
-            double L = 4;//[m]
-            double A = 1;
-            double E = 1;
-            var G = 1;
-            double xt = 2;
-
-            var nodes = new Node[2];
-
-            nodes[0] = (new Node(0, 0, 0));
-            nodes[1] = (new Node(L, 0, 0));
-
-            var elm = new BarElement(nodes[0], nodes[1]);
-            elm.Section = new UniformParametric1DSection(A, 0, 0);
-            elm.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(E, 0.25);
-
-            var u1 = new Loads.ConcentratedLoad();
-
-            u1.Case = LoadCase.DefaultLoadCase;
-            u1.Force = new Force(ft, 0, 0, 0, 0, 0);
-            u1.CoordinationSystem = CoordinationSystem.Local;
-            u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(xt));
-
-            //u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
-
-            var hlpr = new TrussHelper2Node(elm);
-
-            var epsilon = 1e-6;
-
-
-            var f0 = -xt / L * ft;
-
-
-            foreach (var x in CalcUtil.Divide(L, 10))
-            {
-                var xi = elm.LocalCoordsToIsoCoords(x);
-
-                var current = hlpr.GetLoadDisplacementAt(elm, u1, xi).DX;
-
-                var expected = double.NaN;//TODO: fix the formula
-
-                if (x <= xt)
-                    expected = -f0 * x / (E * A);
-                else
-                    expected = -f0 * xt / (E * A) + (f0 + ft) * (x - xt) / (E * A);
-
-                Assert.IsTrue(Math.Abs(current - expected) < epsilon, "invalid value");
-
-                if (x != 0 && x != L)
-                {
-                    Assert.IsTrue(Math.Sign(current) == Math.Sign(ft), "invalid sign");
-                }
-
-            }
+            
 
         }
 

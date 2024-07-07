@@ -20,9 +20,9 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers
             return new Force[elm.Nodes.Length];
         }
 
-        public StrainTensor GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
+        public Displacement GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
         {
-            return new StrainTensor();//zero
+            return Displacement.Zero;
         }
 
         public CauchyStressTensor GetLocalLoadInternalForceAt(Element targetElement, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)

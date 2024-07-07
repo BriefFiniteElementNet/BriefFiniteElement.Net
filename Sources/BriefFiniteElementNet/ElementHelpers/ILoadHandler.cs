@@ -23,17 +23,13 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         /// <summary>
         /// Gets the displacement of element, only due to applying specified load. where all nodes are assumed as fixed
+        /// and inverse of eq nodal loads are applied to the element.
         /// </summary>
         /// <param name="elm">The target element.</param>
         /// <param name="hlpr"></param>
         /// <param name="load">The load.</param>
-        /// 
-        /// <returns></returns>
-        /// <remarks>
-        /// This gives back the displacement of element, if no nodal displacements there are, and only the <see cref="load"/> is applied to it.
-        /// </remarks>
         /// <param name="loc">The iso location.</param>
-        StrainTensor GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc);
+        Displacement GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc);
 
         /// <summary>
         /// Gets the stress at defined location in local coordination system.
@@ -47,6 +43,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// </summary>
         /// <remarks>
         /// This gives back internal force of element assuming no nodal displacements there are, and only the <see cref="load"/> is applied to it.
+        /// Element under inverse of eq nodal loads of load and under the specified load itself
         /// </remarks>
         CauchyStressTensor GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc);
 

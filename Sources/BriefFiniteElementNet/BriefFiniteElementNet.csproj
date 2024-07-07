@@ -86,10 +86,6 @@
 
   <ItemGroup>
     <Folder Include="ClassDiagrams\NewFolder\" />
-    <Folder Include="ElementHelpers\LoadHandlers\DktHelper\" />
-    <Folder Include="ElementHelpers\LoadHandlers\CstHelper\" />
-    <Folder Include="ElementHelpers\LoadHandlers\TetrahedronHelper\" />
-    <Folder Include="ElementHelpers\LoadHandlers\TriangleDrillingDofHelper\" />
   </ItemGroup>
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">

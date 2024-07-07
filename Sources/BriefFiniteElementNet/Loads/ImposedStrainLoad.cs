@@ -12,7 +12,7 @@ namespace BriefFiniteElementNet.Loads
     /// Represents an uniform imposed strain load applied to element
     /// </summary>
     /// <remarks>
-    /// Can be used for thermal expansion situation or ...
+    /// Can be used for thermal expansion situation.
     /// </remarks>
     [Serializable]
     public class ImposedStrainLoad: ElementalLoad

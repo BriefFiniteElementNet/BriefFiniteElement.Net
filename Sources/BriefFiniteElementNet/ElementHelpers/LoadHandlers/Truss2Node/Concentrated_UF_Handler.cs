@@ -43,13 +43,11 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
         {
             var bar = elm as BarElement;
 
-            var mat = bar.Material;
-            var sec = bar.Section;
+            //var mat = bar.Material;
+            //var sec = bar.Section;
 
             var tr = bar.GetTransformationManager();
 
-
-            if (load is ConcentratedLoad)
             {
                 var cns = load as ConcentratedLoad;
 
@@ -74,10 +72,9 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
                 return buf;
             }
 
-            throw new NotImplementedException();
         }
 
-        public StrainTensor GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad ld, IsoPoint loc)
+        public Displacement GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad ld, IsoPoint loc)
         {
             var bar = elm as BarElement;
 
@@ -151,12 +148,8 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
 
                 buf.DX = d;
 
-                //todo: convert buf to strain tensor
-                //return buf;
-                throw new NotImplementedException();
+                return buf;
             }
-
-            throw new NotImplementedException();
         }
 
         public CauchyStressTensor GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
@@ -215,7 +208,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
 
             var to = hp.Iso2Local(elm, isoLocation.Xi)[0];
 
-            if (load is ConcentratedLoad)
+            //if (load is ConcentratedLoad)
             {
                 var cns = load as ConcentratedLoad;
 
@@ -243,13 +236,10 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
 
                 buff.Add(Tuple.Create(DoF.Dx, f2.Fx));
 
-
-                //todo: convert buf to strain tensor
-                //return buff;
-                throw new NotImplementedException();
+                var buf = new CauchyStressTensor();
+                buf.S11 = f2.Fx;
+                return buf;
             }
-
-            throw new NotImplementedException();
         }
     }
 }

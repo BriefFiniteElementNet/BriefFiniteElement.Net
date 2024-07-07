@@ -111,7 +111,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.EulerBernoulliBeamHe
             }
         }
 
-        public StrainTensor GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad ld, IsoPoint loc)
+        public Displacement GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad ld, IsoPoint loc)
         {
             var bar = elm as BarElement;
             var thiss = hlpr as ElementHelpers.BarHelpers.EulerBernoulliBeamHelper2Node;
@@ -212,8 +212,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.EulerBernoulliBeamHe
                 else
                     buf.DY = d;
 
-                //todo: convert buf to tensor
-                throw new NotImplementedException();
+                return buf;
             }
         }
 

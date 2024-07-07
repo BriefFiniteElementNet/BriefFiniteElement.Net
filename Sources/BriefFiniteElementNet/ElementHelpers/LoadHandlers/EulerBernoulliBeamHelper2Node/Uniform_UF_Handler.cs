@@ -105,11 +105,9 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.EulerBernoulliBeamHe
             }
 
             return new Force[] { -re0, -re1 };
-
-            throw new NotImplementedException();
         }
 
-        public StrainTensor GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad ld, IsoPoint loc)
+        public Displacement GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad ld, IsoPoint loc)
         {
             //https://byjusexamprep.com/gate-ce/fixed-beams
             double w0;
@@ -191,8 +189,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.EulerBernoulliBeamHe
                 else
                     buf.DY = d;
 
-                //todo: convert to tensor
-                throw new NotImplementedException();
+                return buf;
             }
         }
 

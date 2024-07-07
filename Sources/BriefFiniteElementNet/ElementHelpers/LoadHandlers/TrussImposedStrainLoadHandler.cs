@@ -56,11 +56,9 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers
             throw new NotImplementedException();
         }
 
-        public StrainTensor GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
+        public Displacement GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
         {
-            var buf = new StrainTensor();
-            //load local displacement is zero
-            return buf;
+            return Displacement.Zero;
         }
 
         public CauchyStressTensor GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)

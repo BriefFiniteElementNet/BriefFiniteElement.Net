@@ -6,7 +6,10 @@ using System.Text;
 namespace BriefFiniteElementNet.Common
 {
     /// <summary>
-    /// represents a stress general stress tensor which consists of a bending part and cauchy part, the most general stress tensor.
+    /// represents a stress general stress tensor which consists of a bending part and cauchy part,
+    /// the most general stress tensor. bending part is only used to describe the internal force of 
+    /// 1D and 2D elements like Bar. 3d element will not have banding part, bending tensor for 3d element like
+    /// tetrahedron is meaningless.
     /// </summary>
     public struct GeneralStressTensor
     {
