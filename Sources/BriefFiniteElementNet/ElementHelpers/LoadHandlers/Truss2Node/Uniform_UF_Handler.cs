@@ -176,7 +176,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
             }
         }
 
-        public CauchyStressTensor GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
+        public object GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
         {
             var bar = elm as BarElement;
 

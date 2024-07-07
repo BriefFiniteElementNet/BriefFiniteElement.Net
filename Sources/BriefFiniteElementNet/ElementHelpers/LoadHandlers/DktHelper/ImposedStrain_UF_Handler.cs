@@ -23,7 +23,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.DktHelper
             throw new NotImplementedException();
         }
 
-        public CauchyStressTensor GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
+        public object GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
         {
             throw new NotImplementedException();
         }

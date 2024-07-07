@@ -63,7 +63,6 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.Truss
         [Test]
         public void InternalForce()
         {
-            //throw new NotImplementedException();
             //internal force of 2 node truss with concentrated load and both ends fixed
 
             double ft = 2.0;
@@ -98,20 +97,16 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.Truss
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 
-                var testTensor = handler.GetLocalLoadInternalForceAt(elm, hlpr, u1, new IsoPoint(xi[0] * (1 - 1e-9)));
+                var testTensor = (Force)handler.GetLocalLoadInternalForceAt(elm, hlpr, u1, new IsoPoint(xi[0] * (1 - 1e-9)));
                 
                 var exactFx = -f;
 
-                var testFx = testTensor.S11;
+                var testFx = testTensor.Fx;
 
                 var err = testFx - exactFx;
 
                 Assert.IsTrue(Math.Abs(err) < 1e-5, "invalid value");
             }
-
-            /*{
-                
-            }*/
         }
 
         [Test]

@@ -44,8 +44,13 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <remarks>
         /// This gives back internal force of element assuming no nodal displacements there are, and only the <see cref="load"/> is applied to it.
         /// Element under inverse of eq nodal loads of load and under the specified load itself
+        /// 
+        /// Return type is object. return type for bar element is instance of Force, for triangle is bending and cauchy
+        /// tensor combined and for tetrahedron it is cauchy tensor. return type is then casted from object datatype 
+        /// to appropriated type by caller of this method which is IElementHelper.GetExactInternalForce() method for
+        /// each type of helper
         /// </remarks>
-        CauchyStressTensor GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc);
+        object GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc);
 
         /// <summary>
         /// Determines wether this handler can handle the combination of load and element or not

@@ -122,10 +122,10 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.Shaft
                     mi = ra + ((x > forceLocation) ? -w : 0.0);
                 }
 
-                var testTensor = handler.GetLocalLoadInternalForceAt(elm, hlpr, u1, new IsoPoint(xi[0] * (1 - 1e-9)));
+                var testTensor = (Force)handler.GetLocalLoadInternalForceAt(elm, hlpr, u1, new IsoPoint(xi[0] * (1 - 1e-9)));
                 var exactFx = mi;
 
-                var testFx = testTensor.S11;
+                var testFx = testTensor.Mx;
 
                 var err = testFx - exactFx;
 
@@ -142,9 +142,8 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.Shaft
         {
             double ft = 2.0;
             double L = 4;//[m]
-            double A = 1;
-            double E = 1;
-            var G = 1;
+            double J = 1;
+            var G = 1.0;
             double xt = 2;
 
             var nodes = new Node[2];
@@ -153,8 +152,8 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.Shaft
             nodes[1] = (new Node(L, 0, 0));
 
             var elm = new BarElement(nodes[0], nodes[1]);
-            elm.Section = new UniformParametric1DSection(A, 0, 0);
-            elm.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(E, 0.25);
+            elm.Section = new UniformParametric1DSection(0, 0, 0, J);
+            elm.Material = UniformIsotropicMaterial.CreateFromShearPoisson(G, 0.25);
 
             var u1 = new Loads.ConcentratedLoad();
 
@@ -185,9 +184,9 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.Shaft
                 double expected;
 
                 if (x <= xt)
-                    expected = -f0 * x / (E * A);
+                    expected = -f0 * x / (G * J);
                 else
-                    expected = -f0 * xt / (E * A) + (f0 + ft) * (x - xt) / (E * A);
+                    expected = -f0 * xt / (G * J) + (f0 + ft) * (x - xt) / (G * J);
 
                 Assert.IsTrue(Math.Abs(currentDx - expected) < epsilon, "invalid value");
 

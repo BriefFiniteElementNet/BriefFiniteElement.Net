@@ -61,7 +61,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers
             return Displacement.Zero;
         }
 
-        public CauchyStressTensor GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
+        public object GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
         {
             var isLoad = load as ImposedStrainLoad;
 

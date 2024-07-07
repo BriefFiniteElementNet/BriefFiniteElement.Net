@@ -193,7 +193,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.EulerBernoulliBeamHe
             }
         }
 
-        public CauchyStressTensor GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad ld, IsoPoint loc)
+        public object GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad ld, IsoPoint loc)
         {
             double f0, m0, w0;
             double L;

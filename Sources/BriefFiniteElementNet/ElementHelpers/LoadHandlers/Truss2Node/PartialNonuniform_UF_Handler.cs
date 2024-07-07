@@ -121,7 +121,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
             throw new NotImplementedException();
         }
 
-        public CauchyStressTensor GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
+        public object GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
         {
             throw new NotImplementedException();
         }

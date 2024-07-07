@@ -114,10 +114,10 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.Truss
                     mi = ra + ((x > forceLocation) ? -w : 0.0);
                 }
 
-                var testTensor = handler.GetLocalLoadInternalForceAt(elm, hlpr, u1, new IsoPoint(xi[0] * (1 - 1e-9)));
+                var testTensor = (Force)handler.GetLocalLoadInternalForceAt(elm, hlpr, u1, new IsoPoint(xi[0] * (1 - 1e-9)));
                 var exactFx = mi;
 
-                var testFx = testTensor.S11;
+                var testFx = testTensor.Fx;
 
                 var err = testFx - exactFx;
 

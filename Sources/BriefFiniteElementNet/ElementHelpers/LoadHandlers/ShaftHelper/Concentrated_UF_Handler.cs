@@ -69,7 +69,9 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.ShaftHelper
 
         }
 
-        public Displacement GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad ld, IsoPoint loc)
+        public Displacement GetLocalLoadDisplacementAt(
+            Element elm, IElementHelper hlpr, 
+            ElementalLoad ld, IsoPoint loc)
         {
             double L;
             double tt;//tprsion concentrated
@@ -146,10 +148,10 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.ShaftHelper
         }
 
 
-        public CauchyStressTensor GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
+        public object GetLocalLoadInternalForceAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
         {
 
-            var buff = new List<Tuple<DoF, double>>();
+            //var buff = new List<Tuple<DoF, double>>();
 
             //var buf = new FlatShellStressTensor();
 
@@ -227,15 +229,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.ShaftHelper
                 var f2 = frc + movedEnds;
                 f2 *= -1;
 
-                buff.Add(Tuple.Create(DoF.Rx, f2.Mx));
-
-
-                var tns = new CauchyStressTensor();
-
-                //return buff;
-                //TODO: convert to tensor
-                throw new NotImplementedException();
-                
+                return f2;
             }
 
             #endregion
