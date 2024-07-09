@@ -35,7 +35,38 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.TetrahedronHelper
 
         public Force[] GetLocalEquivalentNodalLoads(Element elm, IElementHelper hlpr, ElementalLoad load)
         {
-            throw new NotImplementedException();
+            var tetr = elm as TetrahedronElement;
+            var cl = load as UniformLoad;
+            var thr = hlpr as ElementHelpers.TetrahedronHelper;
+
+            double volume;
+
+            {
+                //volume of tetrahedron
+                //https://math.stackexchange.com/a/3616774
+
+                var mtx = new Matrix(4, 4);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    mtx[i, 0] = tetr.Nodes[i].Location.X;
+                    mtx[i, 1] = tetr.Nodes[i].Location.Y;
+                    mtx[i, 2] = tetr.Nodes[i].Location.Z;
+                    mtx[i, 3] = 1;
+                }
+
+                volume = mtx.Determinant() / 6.0;
+            }
+            
+            var buf = new Force[4];
+
+            for (var i = 0; i < 4; i++)
+            {
+                var frc = volume / 4.0 * cl.Magnitude * cl.Direction;
+                buf[i] = new Force(frc, Vector.Zero);
+            }
+
+            return buf;
         }
 
         public Displacement GetLocalLoadDisplacementAt(Element elm, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)

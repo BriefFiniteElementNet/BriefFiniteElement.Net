@@ -272,11 +272,11 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.EulerBernoulliBeamHe
                     buf.Mz = m_x;
                     buf.Fy = v_x;
                 }
+
+                
             }
 
-            //todo: convert to tensor
-            throw new Exception();
-            //return buf;
+            return buf;
         }
     }
 }

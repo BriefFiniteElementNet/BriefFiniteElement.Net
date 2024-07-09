@@ -117,14 +117,27 @@ namespace BriefFiniteElementNet.Elements
                 Vector p = tr.TransformGlobalToLocal(new Vector() { X = this.Nodes[i].Location.X - this.Nodes[0].Location.X, Y = this.Nodes[i].Location.Y - this.Nodes[0].Location.Y, Z = this.Nodes[i].Location.Z - this.Nodes[0].Location.Z });
                 Nodes.Add(new Node() { Location = new Point() { X = p.X, Y = p.Y, Z = p.Z } });
             }
-            double N1 = isoCoords[0];
-            double N2 = isoCoords[1];
-            double N3 = 1.0 - isoCoords[0] - isoCoords[1];
+
+            var r = isoCoords[0];
+            var s = isoCoords[1];
+
+            double N1 = r;
+            double N2 = s;
+            double N3 = 1.0 - r - s;
+
+
             double x = Nodes[0].Location.X * N1 + Nodes[1].Location.X * N2 + Nodes[2].Location.X * N3;
             double y = Nodes[0].Location.Y * N1 + Nodes[1].Location.Y * N2 + Nodes[2].Location.Y * N3;
 
             return new double[] { x, y };
         }
+
+        public double[] LocalCoordsToIsoCoords(params double[] localCoords)
+        {
+            //TODO
+            throw new NotImplementedException();
+        }
+
         public Point IsoCoordsToGlobalCoords(params double[] isoCoords)
         {
             var tr = GetTransformationManager();

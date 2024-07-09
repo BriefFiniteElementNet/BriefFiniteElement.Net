@@ -23,8 +23,6 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.Shaft
             var forceLocation = 0.5;//[m]
             var L = 4;//[m]
 
-            //var model = new Model();
-
             var nodes = new Node[2];
 
             nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
@@ -136,6 +134,84 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.Shaft
                 
             }*/
         }
+
+
+
+        [Test]
+        public void LoadInternalForce_concentratedLLoad_Shaft_Mx()
+        {
+            //internal force of 2 node truss with concentrated load and both ends fixed
+
+            var w = 2.0;
+            var forceLocation = 0.5;//[m]
+            var L = 4;//[m]
+
+            //var model = new Model();
+
+            var nodes = new Node[2];
+
+            nodes[0] = (new Node(0, 0, 0) { Label = "n0" });
+            nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
+
+            var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var u1 = new Loads.ConcentratedLoad();
+
+            u1.Case = LoadCase.DefaultLoadCase;
+            u1.Force = new Force(0, 0, 0, w, 0, 0);
+            u1.CoordinationSystem = CoordinationSystem.Global;
+
+            u1.ForceIsoLocation = new IsoPoint(elm.LocalCoordsToIsoCoords(forceLocation)[0]);
+
+            var hlpr = new ShaftHelper2Node(elm);
+
+            var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
+
+
+            foreach (var x in CalcUtil.Divide(length, 10))
+            {
+                var xi = elm.LocalCoordsToIsoCoords(x);
+
+                var mi = 0.0;
+                var vi = 0.0;
+
+                {
+                    var a = forceLocation;
+                    var b = L - a;
+
+                    var ra = (1 - (a / L)) * w;
+
+                    var rb = (1 - (b / L)) * w;
+
+                    mi = ra + ((x > forceLocation) ? -w : 0.0);
+                }
+
+
+                var ends = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var testFrc = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { xi[0] * (1 - 1e-9) }).ToForce();
+
+                var exactFrc = new Force(fx: 0, fy: 0, fz: vi, mx: -mi, my: 0, mz: 0);
+
+                var df = Math.Abs(testFrc.Mx) - Math.Abs(exactFrc.Mx);
+
+
+                Assert.IsTrue(Math.Abs(df) < 1e-5, "invalid value");
+            }
+
+            {
+                var end1 = hlpr.GetLocalEquivalentNodalLoads(elm, u1);
+
+                var f0 = hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -1 + 1e-9 }).ToForce(); ;
+
+                var sum = end1[0] - f0;
+
+                Assert.IsTrue(Math.Abs(sum.Forces.Length) < 1e-5, "invalid value");
+                Assert.IsTrue(Math.Abs(sum.Moments.Length) < 1e-5, "invalid value");
+            }
+        }
+
+
 
         [Test]
         public void InternalDisplacement()

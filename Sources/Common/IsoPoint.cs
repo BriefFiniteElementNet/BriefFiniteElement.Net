@@ -110,6 +110,12 @@ namespace BriefFiniteElementNet
                 Lambda = array[2];
         }
 
+
+        public double[] ToArray()
+        {
+            return new double[] { Xi, Eta, Lambda };
+        }
+
         #region Operators
 
 

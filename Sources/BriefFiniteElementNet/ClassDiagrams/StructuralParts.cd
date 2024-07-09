@@ -6,7 +6,7 @@
       <Compartment Name="Fields" Collapsed="true" />
     </Compartments>
     <TypeIdentifier>
-      <HashCode>AKAAEAAAAAAAAEAACAIiAAgiAAAAAFAAAAFRAAAAAAA=</HashCode>
+      <HashCode>AKAAEAAAAAAAAEAACgIiAAgiAAAAAFAAAAFRAAAAAAA=</HashCode>
       <FileName>Node.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -44,14 +44,14 @@
   <Class Name="BriefFiniteElementNet.Elements.BarElement" Collapsed="true">
     <Position X="2.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AUTFABIFkQAAECgECBIgAEghAAAEgIEACABCAIAJgAA=</HashCode>
+      <HashCode>AUTFABIFkQAAMCgECBIgAEghAAAEgIEACABCAIAJgAA=</HashCode>
       <FileName>Elements\BarElement.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="BriefFiniteElementNet.Elements.TetrahedronElement" Collapsed="true">
     <Position X="7.25" Y="3.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>AEAAAIAEEAAAECAEAAAAAEAgAAAAAAAACAACAAAEgAA=</HashCode>
+      <HashCode>AEAAAIAGEAAAECAEAAAAAEAgAAAAAAAACAACAAAEgAA=</HashCode>
       <FileName>Elements\TetrahedronElement.cs</FileName>
     </TypeIdentifier>
   </Class>

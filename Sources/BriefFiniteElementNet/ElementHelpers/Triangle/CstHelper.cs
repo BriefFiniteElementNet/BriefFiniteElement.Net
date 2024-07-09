@@ -147,7 +147,21 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <inheritdoc/>
         public Matrix GetNMatrixAt(Element targetElement, params double[] isoCoords)
         {
-            throw new NotImplementedException();
+            var tri = targetElement as TriangleElement;
+
+            if (tri == null)
+                throw new Exception();
+
+            var xi = isoCoords[0];
+            var eta = isoCoords[1];
+
+            var N = new Matrix(3, 1);
+
+            N.SetRow(0, 1 - xi - eta);
+            N.SetRow(1, xi);
+            N.SetRow(2, eta);
+
+            return N;
         }
 
         /// <inheritdoc/>
@@ -167,9 +181,9 @@ namespace BriefFiniteElementNet.ElementHelpers
             var p2g = tri.Nodes[1].Location;
             var p3g = tri.Nodes[2].Location;
 
-            var p1l = tmgr.TransformGlobalToLocal(p1g);// p1g.TransformBack(transformMatrix);
-            var p2l = tmgr.TransformGlobalToLocal(p2g);// p2g.TransformBack(transformMatrix);
-            var p3l = tmgr.TransformGlobalToLocal(p3g);// p3g.TransformBack(transformMatrix);
+            var p1l = tmgr.TransformGlobalToLocal(p1g);
+            var p2l = tmgr.TransformGlobalToLocal(p2g);
+            var p3l = tmgr.TransformGlobalToLocal(p3g);
 
             var x1 = p1l.X;
             var x2 = p2l.X;

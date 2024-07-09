@@ -303,21 +303,24 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.EulerBernoulliBeamHe
                 f2 *= -1;
 
 
+                Force buf;
+
                 if (thiss.Direction == BeamDirection.Y)
                 {
-                    buff.Add(Tuple.Create(DoF.Ry, f2.My));
-                    buff.Add(Tuple.Create(DoF.Dz, f2.Fz));
+                    buf = new Force(0, 0, f2.Fz, 0, f2.My, 0);
+
+                    //buff.Add(Tuple.Create(DoF.Ry, f2.My));
+                    //buff.Add(Tuple.Create(DoF.Dz, f2.Fz));
                 }
                 else
                 {
-                    buff.Add(Tuple.Create(DoF.Rz, f2.Mz));
-                    buff.Add(Tuple.Create(DoF.Dy, f2.Fy));
+                    buf = new Force(0, f2.Fy, 0, 0, 0, f2.Mz);
+
+                    //buff.Add(Tuple.Create(DoF.Rz, f2.Mz));
+                    //buff.Add(Tuple.Create(DoF.Dy, f2.Fy));
                 }
 
-                //todo: convert to tensor
-                //return buff;
-
-                throw new NotImplementedException();
+                return buf;
             }
 
             #endregion

@@ -13,7 +13,6 @@ using NUnit.Framework;
 
 namespace BriefFiniteElementNet.Tests.LoadHandlerTests.Truss
 {
-
     internal class Concentrated_UF
     {
         [Test]
@@ -22,8 +21,6 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.Truss
             var w = 2.0;
             var forceLocation = 0.5;//[m]
             var L = 4;//[m]
-
-            //var model = new Model();
 
             var nodes = new Node[2];
 
@@ -44,10 +41,6 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.Truss
 
 
             var handler = new ElementHelpers.LoadHandlers.Truss2Node.Concentrated_UF_Handler();
-
-
-            var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
-
 
             var end1 = handler.GetLocalEquivalentNodalLoads(elm, hlpr, u1);
 

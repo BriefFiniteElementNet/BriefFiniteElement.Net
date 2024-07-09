@@ -3,16 +3,16 @@
   <Class Name="BriefFiniteElementNet.ElementHelpers.CstHelper" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="3.25" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>SACIAAAAmAAAAAAAACCgAAAAQwSFQIAIgAAAARhACoA=</HashCode>
-      <FileName>ElementHelpers\CstHelper.cs</FileName>
+      <HashCode>SASIAAAAmAAAAAAAACCgAAAAQwSFQIAIgAAAARhACoA=</HashCode>
+      <FileName>ElementHelpers\Triangle\CstHelper.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BriefFiniteElementNet.ElementHelpers.DktHelper" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="5" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>CACIAEAAmAAAAAAAACCgAAAAQwSFQIAIgCAAABhACoA=</HashCode>
-      <FileName>ElementHelpers\DktHelper.cs</FileName>
+      <HashCode>CASIAEAAmAAAAAAAACCgAAAAQwSFQIAIgCAAABhACoA=</HashCode>
+      <FileName>ElementHelpers\Triangle\DktHelper.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
@@ -32,35 +32,34 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="BriefFiniteElementNet.ElementHelpers.ShaftHelper" Collapsed="true" BaseTypeListCollapsed="true">
+  <Class Name="BriefFiniteElementNet.ElementHelpers.TriangleDrillDofHelper" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="5" Y="2" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>SACIAMAAmAAAAAAAACCAAAAAQQQFQIAIgAAAABhAC4A=</HashCode>
-      <FileName>ElementHelpers\ShaftHelper.cs</FileName>
+      <HashCode>CASIAEAAmBAAAQAAACKAAAAAQQQFQIAIgAAAABhACoA=</HashCode>
+      <FileName>ElementHelpers\Triangle\TriangleDrillDofHelper.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BriefFiniteElementNet.ElementHelpers.TetrahedronHelper" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="6.75" Y="2" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>SACIAEAAmAAAAAAAAACAAAAAQQQFQIAIgAAAABhQCoA=</HashCode>
-      <FileName>ElementHelpers\TetrahedronHelper.cs</FileName>
+      <HashCode>SAQIAAAAmAAAAAAAAACAAAAAQQQFQIAIgAAAAB1QCoA=</HashCode>
+      <FileName>ElementHelpers\Tetrahedron\TetrahedronHelper.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="BriefFiniteElementNet.ElementHelpers.TimoshenkoBeamHelper" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="3.25" Y="3" Width="2" />
     <TypeIdentifier>
-      <HashCode>SACIAEAAmAAAAAAAACCAAAAAQQQFQIAIgAAIABhACoA=</HashCode>
-      <FileName>ElementHelpers\TimoshenkoBeamHelper.cs</FileName>
+      <HashCode>CAAAAAAAGAICAAAAACCABAAAQAAkAAAJAAAABRgAUAA=</HashCode>
+      <FileName>ElementHelpers\Bar\TimoshenkoBeamHelper.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="BriefFiniteElementNet.ElementHelpers.TriangleBasicDrillingDofHelper" Collapsed="true" BaseTypeListCollapsed="true">
+  <Class Name="BriefFiniteElementNet.ElementHelpers.TriangleConstantDrillingDofHelper" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="5" Y="3" Width="2.5" />
     <TypeIdentifier>
-      <HashCode>CACIAEAAmAAAAAAAACCAAAAAQQQFQIAIgAAAABhACoA=</HashCode>
-      <FileName>ElementHelpers\TriangleBasicDrillingDofHelper.cs</FileName>
+      <HashCode>CASIAEAAmAAAAAAAACKAAAAAQQQFQIAIgAAAABhACoA=</HashCode>
+      <FileName>ElementHelpers\Triangle\TriangleConstantDrillingDofHelper.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
