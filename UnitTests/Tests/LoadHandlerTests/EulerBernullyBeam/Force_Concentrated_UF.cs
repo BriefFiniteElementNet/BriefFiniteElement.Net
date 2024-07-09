@@ -39,6 +39,10 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.EulerBernullyBeam
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
 
+            elm.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.2);
+            elm.Section = new Sections.UniformParametric1DSection(0.1, 0.1, 0.1);
+
+
             var u1 = new Loads.ConcentratedLoad();
 
             u1.Case = LoadCase.DefaultLoadCase;
@@ -150,6 +154,9 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.EulerBernullyBeam
             nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+            elm.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.2);
+            elm.Section = new Sections.UniformParametric1DSection(0.1, 0.1, 0.1);
+
 
             var u1 = new Loads.ConcentratedLoad();
 
@@ -261,6 +268,9 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.EulerBernullyBeam
             nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+            elm.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.2);
+            elm.Section = new Sections.UniformParametric1DSection(0.1, 0.1, 0.1);
+
 
             var u1 = new Loads.ConcentratedLoad();
 
@@ -353,6 +363,9 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.EulerBernullyBeam
             nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+            elm.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.2);
+            elm.Section = new Sections.UniformParametric1DSection(0.1, 0.1, 0.1);
+
 
             var u1 = new Loads.ConcentratedLoad();
 

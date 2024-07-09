@@ -17,6 +17,80 @@ namespace BriefFiniteElementNet.ElementHelpers.Bar
             TargetElement = targetElement;
         }
 
+        #region loadhandler
+        /// <inheritdoc/>
+        public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load,
+            double[] isoLocation)
+        {
+            var buff = new List<Tuple<DoF, double>>();
+
+            var handlers = this.GetLoadHandlers();
+
+            var buf = new Force();
+
+            var iso = new IsoPoint(isoLocation);
+
+            foreach (var handler in handlers)
+            {
+                if (handler.CanHandle(targetElement, this, load))
+                {
+                    var intFroce = (Force)handler.GetLocalLoadInternalForceAt(targetElement, this, load, iso);
+                    buf += intFroce;
+                }
+            }
+
+            var vec = Force.ToVector(buf);
+
+            for (int i = 0; i < 6; i++)
+                if (vec[i] != 0)
+                    buff.Add(Tuple.Create((DoF)i, vec[i]));
+
+            return buff;
+        }
+
+        public Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation)
+        {
+            var handlers = this.GetLoadHandlers();
+
+            var buf = new Displacement();
+
+            var iso = new IsoPoint(isoLocation);
+
+            foreach (var handler in handlers)
+            {
+                if (handler.CanHandle(targetElement, this, load))
+                {
+                    var intFroce = handler.GetLocalLoadDisplacementAt(targetElement, this, load, iso);
+                    buf += intFroce;
+                }
+            }
+
+            return buf;
+        }
+
+        /// <inheritdoc/>
+        public Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
+        {
+            var handlers = this.GetLoadHandlers();
+
+            var buf = new Force[targetElement.Nodes.Length];
+
+            foreach (var handler in handlers)
+            {
+                if (handler.CanHandle(targetElement, this, load))
+                {
+                    var eqNodalLoads = handler.GetLocalEquivalentNodalLoads(targetElement, this, load);
+
+                    for (int i = 0; i < buf.Length; i++)
+                    {
+                        buf[i] = buf[i] + eqNodalLoads[i];
+                    }
+                }
+            }
+
+            return buf;
+        }
+        #endregion
 
         #region statics
         private static void EnsureBarTwoNode(Element elm)
@@ -184,13 +258,13 @@ namespace BriefFiniteElementNet.ElementHelpers.Bar
 
 
 
-        public abstract Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation);
+        //public abstract Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation);
 
-        public abstract IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load, double[] isoLocation);
+        //public abstract IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load, double[] isoLocation);
 
         public abstract GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation);
 
-        public abstract Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load);
+        //public abstract Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load);
 
 
         public abstract Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords);
@@ -263,9 +337,6 @@ namespace BriefFiniteElementNet.ElementHelpers.Bar
         //elastic modulus
         public abstract double GetD(BarElement targetElement, double xi);
 
-        public ILoadHandler[] GetLoadHandlers()
-        {
-            throw new NotImplementedException();
-        }
+        public abstract ILoadHandler[] GetLoadHandlers();
     }
 }

@@ -86,6 +86,9 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.EulerBernullyBeam
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
 
+            elm.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.2);
+            elm.Section = new Sections.UniformParametric1DSection(0.1, 0.1, 0.1);
+
             var u1 = new Loads.ConcentratedLoad(new Force(0, 0, -w, 0, 0, 0), new IsoPoint(elm.LocalCoordsToIsoCoords(a)[0]), CoordinationSystem.Global);
 
             var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y, elm);

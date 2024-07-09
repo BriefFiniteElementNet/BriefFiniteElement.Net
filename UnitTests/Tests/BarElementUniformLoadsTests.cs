@@ -29,7 +29,9 @@ namespace BriefFiniteElementNet.Tests
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
 
-            
+            elm.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.25);
+            elm.Section = new Sections.UniformParametric1DSection(0.01, 1e-4, 1e-4);
+
             var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, -Vector.K, w, CoordinationSystem.Global);
 
             var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y, elm);
@@ -67,6 +69,8 @@ namespace BriefFiniteElementNet.Tests
             nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+            elm.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.25);
+            elm.Section = new Sections.UniformParametric1DSection(0.01, 1e-4, 1e-4);
 
 
             var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, -Vector.J, w, CoordinationSystem.Global);
@@ -105,6 +109,8 @@ namespace BriefFiniteElementNet.Tests
             nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+            elm.Material = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.25);
+            elm.Section = new Sections.UniformParametric1DSection(0.01, 1e-4, 1e-4);
 
 
             var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, -Vector.I, w, CoordinationSystem.Global);
@@ -341,6 +347,12 @@ namespace BriefFiniteElementNet.Tests
             nodes[1] = (new Node(4, 0, 0) { Label = "n1" });
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
+
+            var mat = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.25);
+            var sec = new Sections.UniformParametric1DSection(0.01);
+
+            elm.Material = mat;
+            elm.Section = sec;
 
 
             var u1 = new Loads.UniformLoad(LoadCase.DefaultLoadCase, Vector.I, w, CoordinationSystem.Global);

@@ -48,9 +48,9 @@ namespace BriefFiniteElementNet.Tests
                 var mi = w / 12 * (6 * length * x - 6 * x * x - length * length);
                 var vi = w * (length / 2 - x);
 
-                var testFrc = hlpr.GetLoadInternalForceAt_New(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
+                //var testFrc = hlpr.GetLoadInternalForceAt_New(elm, u1, new double[] { xi[0] * (1 - 1e-9) });
 
-                var exactFrc = new Force(fx: 0, fy: 0, fz: vi, mx: 0, my: mi, mz: 0);
+                //var exactFrc = new Force(fx: 0, fy: 0, fz: vi, mx: 0, my: mi, mz: 0);
 
                 //var d = testFrc.FirstOrDefault(i => i.Item1 == DoF.Ry).Item2 + exactFrc.My;
                 //Assert.IsTrue(d < 1e-5, "invalid value");

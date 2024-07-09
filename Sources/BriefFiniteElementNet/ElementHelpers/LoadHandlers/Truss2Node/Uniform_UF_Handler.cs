@@ -241,7 +241,6 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
 
             #region uniform & trapezoid
 
-            if (load is UniformLoad || load is PartialNonUniformLoad)
             {
 
                 Func<double, double> magnitude;
@@ -252,7 +251,6 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
 
                 #region inits
 
-                if (load is UniformLoad)
                 {
                     var uld = load as UniformLoad;
 
@@ -268,26 +266,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
                     //xi1 = to;
                     degree = 0;
                 }
-                else if (load is PartialNonUniformLoad)
-                {
-                    var uld = load as PartialNonUniformLoad;
-
-                    magnitude = xi => uld.GetMagnitudeAt(bar, new IsoPoint(xi));
-                    localDir = uld.Direction;
-
-                    if (uld.CoordinationSystem == CoordinationSystem.Global)
-                        localDir = tr.TransformGlobalToLocal(localDir);
-
-                    localDir = localDir.GetUnit();
-
-                    xi0 = uld.StartLocation.Xi;
-
-                    to = Math.Min(to, uld.EndLocation.Xi);
-
-                    degree = uld.SeverityFunction.Degree[0];
-                }
-                else
-                    throw new NotImplementedException();
+                
 
                 localDir = localDir.GetUnit();
                 #endregion
@@ -354,8 +333,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.Truss2Node
                     */
 
                     //ft *= -1;
-
-                    buff.Add(Tuple.Create(DoF.Dx, f2.Fx));
+                    return f2;
 
                 }
 

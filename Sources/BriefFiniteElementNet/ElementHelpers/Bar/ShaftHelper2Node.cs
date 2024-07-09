@@ -141,7 +141,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
         }
 
 
-        public override IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load,
+        public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt_old(Element targetElement, ElementalLoad load,
             double[] isoLocation)
         {
 
@@ -242,7 +242,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
         }
 
-        public override Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation)
+        public Displacement GetLoadDisplacementAt_old(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             var bar = targetElement as BarElement;
 
@@ -357,7 +357,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
         }
 
 
-        public override Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
+        public Force[] GetLocalEquivalentNodalLoads_old(Element targetElement, ElementalLoad load)
         {
             var tr = targetElement.GetTransformationManager();
 
@@ -447,5 +447,13 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             return g * geo.J;
         }
 
+        public override ILoadHandler[] GetLoadHandlers()
+        {
+            return new ILoadHandler[] {
+
+                new LoadHandlers.ShaftHelper.Concentrated_UF_Handler(),
+                new LoadHandlers.ShaftHelper.GeneralHandler(),
+            };
+        }
     }
 }

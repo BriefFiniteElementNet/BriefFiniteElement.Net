@@ -34,7 +34,9 @@ namespace BriefFiniteElementNet.Tests
 
             var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y, elm);
 
-            var loads = hlpr.GetLocalEquivalentNodalLoads_uniformLoad_UniformMatSection(elm, u1);
+            var hnd = new BriefFiniteElementNet.ElementHelpers.LoadHandlers.EulerBernoulliBeamHelper2Node.Uniform_UF_Handler();
+
+            var loads = hnd.GetLocalEquivalentNodalLoads(elm, hlpr, u1);
 
             var L = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
@@ -69,7 +71,9 @@ namespace BriefFiniteElementNet.Tests
 
             var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Z, elm);
 
-            var loads = hlpr.GetLocalEquivalentNodalLoads_uniformLoad_UniformMatSection(elm, u1);
+            var hnd = new ElementHelpers.LoadHandlers.EulerBernoulliBeamHelper2Node.Uniform_UF_Handler();
+
+            var loads = hnd.GetLocalEquivalentNodalLoads(elm, hlpr, u1);
 
             var L = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
@@ -112,7 +116,11 @@ namespace BriefFiniteElementNet.Tests
 
             var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y, elm);
 
-            var loads = hlpr.GetLocalEquivalentNodalLoads_uniformLoad_nonUniformMatSection(elm, u1);
+            var hnd = new ElementHelpers.LoadHandlers.EulerBernoulliBeamHelper2Node.Uniform_NUF_Handler();
+
+            var loads = hnd.GetLocalEquivalentNodalLoads(elm, hlpr, u1);
+
+            //var loads = hlpr.GetLocalEquivalentNodalLoads_uniformLoad_nonUniformMatSection(elm, u1);
 
             var L = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
@@ -155,7 +163,11 @@ namespace BriefFiniteElementNet.Tests
 
             var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Z, elm);
 
-            var loads = hlpr.GetLocalEquivalentNodalLoads_uniformLoad_nonUniformMatSection(elm, u1);
+            var hnd = new ElementHelpers.LoadHandlers.EulerBernoulliBeamHelper2Node.Uniform_NUF_Handler();
+
+            var loads = hnd.GetLocalEquivalentNodalLoads(elm, hlpr, u1);
+
+            //var loads = hlpr.GetLocalEquivalentNodalLoads_uniformLoad_nonUniformMatSection(elm, u1);
 
             var L = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
@@ -222,7 +234,10 @@ namespace BriefFiniteElementNet.Tests
 
             var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Y, elm);
 
-            var loads = hlpr.GetLocalEquivalentNodalLoads_uniformLoad_nonUniformMatSection(elm, u1);
+            //var loads = hlpr.GetLocalEquivalentNodalLoads_uniformLoad_nonUniformMatSection(elm, u1);
+            var hnd = new ElementHelpers.LoadHandlers.EulerBernoulliBeamHelper2Node.Uniform_NUF_Handler();
+
+            var loads = hnd.GetLocalEquivalentNodalLoads(elm, hlpr, u1);
 
             var v1 = 281344 * w / 123397.0;//from octave output
 
@@ -296,7 +311,11 @@ namespace BriefFiniteElementNet.Tests
 
             var hlpr = new EulerBernoulliBeamHelper(BeamDirection.Z, elm);
 
-            var loads = hlpr.GetLocalEquivalentNodalLoads_uniformLoad_nonUniformMatSection(elm, u1);
+            var hnd = new ElementHelpers.LoadHandlers.EulerBernoulliBeamHelper2Node.Uniform_NUF_Handler();
+
+            var loads = hnd.GetLocalEquivalentNodalLoads(elm, hlpr, u1);
+
+            //var loads = hlpr.GetLocalEquivalentNodalLoads_uniformLoad_nonUniformMatSection(elm, u1);
 
             var v1 = 281344 * w / 123397.0;//from octave output
 

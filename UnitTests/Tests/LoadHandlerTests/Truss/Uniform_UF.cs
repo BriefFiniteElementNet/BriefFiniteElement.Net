@@ -119,6 +119,14 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.Truss
 
             var elm = new BarElement(nodes[0], nodes[1]) { Label = "e0" };
 
+
+            var mat = Materials.UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.25);
+            var sec = new Sections.UniformParametric1DSection(0.01);
+
+            elm.Material = mat;
+            elm.Section = sec;
+
+
             var u1 = new Loads.ConcentratedLoad();
 
             u1.Case = LoadCase.DefaultLoadCase;

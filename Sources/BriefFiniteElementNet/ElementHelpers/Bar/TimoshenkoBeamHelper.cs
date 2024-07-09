@@ -184,13 +184,13 @@ namespace BriefFiniteElementNet.ElementHelpers
 
 
 
-        public override Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation)
+        public Displacement GetLoadDisplacementAt_old(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public override IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load,
+        public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt_old(Element targetElement, ElementalLoad load,
             double[] isoLocation)
         {
             var n = targetElement.Nodes.Length;
@@ -637,7 +637,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
 
-        public override Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
+        public Force[] GetLocalEquivalentNodalLoads_old(Element targetElement, ElementalLoad load)
         {
             var bar = targetElement as BarElement;
             var n = bar.Nodes.Length;
@@ -902,6 +902,11 @@ namespace BriefFiniteElementNet.ElementHelpers
                 return geo.Iy * mech.Ex;
             else
                 return geo.Iz * mech.Ex;
+        }
+
+        public override ILoadHandler[] GetLoadHandlers()
+        {
+            throw new NotImplementedException();
         }
 
 

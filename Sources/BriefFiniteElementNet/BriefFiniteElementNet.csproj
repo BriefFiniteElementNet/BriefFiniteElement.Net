@@ -32,6 +32,12 @@
     
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="ClassDiagrams\NewFolder\**" />
+    <EmbeddedResource Remove="ClassDiagrams\NewFolder\**" />
+    <None Remove="ClassDiagrams\NewFolder\**" />
+  </ItemGroup>
+
 	
 
   <ItemGroup>
@@ -82,10 +88,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ClassDiagrams\NewFolder\" />
   </ItemGroup>
 
   <Target DependsOnTargets="ResolveReferences" Name="CopyProjectReferencesToPackage">

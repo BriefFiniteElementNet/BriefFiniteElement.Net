@@ -107,7 +107,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
         }
 
 
-
+        [TodoDelete]
         /// <summary>
         /// Get the internal defomation of element due to applied <see cref="load"/>
         /// </summary>
@@ -117,7 +117,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
         /// <exception cref="NotImplementedException"></exception>
-        public override Displacement GetLoadDisplacementAt(Element targetElement, ElementalLoad load, double[] isoLocation)
+        private /*override*/ Displacement GetLoadDisplacementAt_old(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             var bar = targetElement as BarElement;
 
@@ -457,9 +457,9 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
         #endregion
 
 
-
+        [TodoDelete]
         /// <inheritdoc/>
-        public override IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load,
+        public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt_old(Element targetElement, ElementalLoad load,
             double[] isoLocation)
         {
 
@@ -758,8 +758,8 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
         }
 
         #region GetLoadForce
-
-        public Force GetLoadInternalForceAt_New(Element targetElement, ElementalLoad load, double[] isoLocation)
+        [TodoDelete]
+        private Force GetLoadInternalForceAt_New(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             var bar = targetElement as BarElement;
 
@@ -775,7 +775,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
             throw new NotImplementedException();
         }
-
+        [TodoDelete]
         private Force GetLoadForceAt_UniformLoad(BarElement bar, UniformLoad load, double xi)
         {
             double f0, m0, w0;
@@ -851,7 +851,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
             return buf;
         }
-
+        [TodoDelete]
         private Force GetLoadForceAt_PartialLinearLoad(BarElement bar, PartialLinearLoad load, double xi)
         {
             double f0, m0, w0, w1, x0, x1;
@@ -1092,7 +1092,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
         #region EQ nodal load
 
-
+        [TodoDelete]
         /// <summary>
         /// load is uniform, but material or section is no uniform
         /// </summary>
@@ -1101,7 +1101,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         /// <exception cref="Exception"></exception>
-        public Force[] GetLocalEquivalentNodalLoads_uniformLoad_UniformMatSection(BarElement bar, UniformLoad load)
+        private Force[] GetLocalEquivalentNodalLoads_uniformLoad_UniformMatSection(BarElement bar, UniformLoad load)
         {
             //where load is uniform and section or material is also uniform
 
@@ -1168,8 +1168,8 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             return new Force[] { -re0, -re1 };
         }
 
-        
 
+        [TodoDelete]
         /// <summary>
         /// load is uniform, but material or section is no uniform
         /// </summary>
@@ -1178,7 +1178,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
         /// <exception cref="Exception"></exception>
-        public Force[] GetLocalEquivalentNodalLoads_uniformLoad_nonUniformMatSection(BarElement bar, UniformLoad load)
+        private Force[] GetLocalEquivalentNodalLoads_uniformLoad_nonUniformMatSection(BarElement bar, UniformLoad load)
         {
             //where load is uniform and section or material is non uniform
 
@@ -1319,8 +1319,9 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
         #endregion
 
+        [TodoDelete]
         /// <inheritdoc/>
-        public override Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)
+        private Force[] GetLocalEquivalentNodalLoads_old(Element targetElement, ElementalLoad load)
         {
             var bar = targetElement as BarElement;
             var n = bar.Nodes.Length;
@@ -1619,6 +1620,16 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
                 return geo.Iy * mech.Ex;
             else
                 return geo.Iz * mech.Ex;
+        }
+
+        public override ILoadHandler[] GetLoadHandlers()
+        {
+            return new ILoadHandler[] {
+
+                new LoadHandlers.EulerBernoulliBeamHelper2Node.Concentrated_UF_Handler(),
+                new LoadHandlers.EulerBernoulliBeamHelper2Node.ImposedStrain_UF_NUF_Handler(),
+                new LoadHandlers.EulerBernoulliBeamHelper2Node.Uniform_UF_Handler(),
+            };
         }
 
 
