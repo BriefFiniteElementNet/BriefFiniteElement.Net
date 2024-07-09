@@ -1,5 +1,4 @@
-﻿using BriefFiniteElementNet.ElementHelpers;
-using BriefFiniteElementNet.ElementHelpers.Bar;
+﻿using BriefFiniteElementNet.ElementHelpers.Bar;
 using BriefFiniteElementNet.ElementHelpers.BarHelpers;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Mathh;

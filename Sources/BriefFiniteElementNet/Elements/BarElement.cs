@@ -10,6 +10,7 @@ using BriefFiniteElementNet.Sections;
 using System.Security.Permissions;
 using System.Globalization;
 using BriefFiniteElementNet.ElementHelpers.BarHelpers;
+using BriefFiniteElementNet.ElementHelpers.Bar;
 
 namespace BriefFiniteElementNet.Elements
 {

@@ -17,6 +17,7 @@ using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Common;
 using Legacy.ElementHelpers;
 using BriefFiniteElementNet.ElementHelpers.BarHelpers;
+using BriefFiniteElementNet.ElementHelpers.Bar;
 
 namespace Legacy.Elements
 {

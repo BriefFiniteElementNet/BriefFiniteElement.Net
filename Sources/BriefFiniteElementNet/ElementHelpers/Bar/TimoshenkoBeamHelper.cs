@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Common;
-using BriefFiniteElementNet.ElementHelpers.Bar;
 using BriefFiniteElementNet.ElementHelpers.BarHelpers;
 using BriefFiniteElementNet.Elements;
 using BriefFiniteElementNet.Integration;
@@ -11,7 +10,7 @@ using BriefFiniteElementNet.Loads;
 using BriefFiniteElementNet.Mathh;
 using CSparse.Storage;
 
-namespace BriefFiniteElementNet.ElementHelpers
+namespace BriefFiniteElementNet.ElementHelpers.Bar
 {
     /// <summary>
     /// Represents a helper class for Timoshenko beam element.
@@ -26,7 +25,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         /// <param name="l"></param>
         /// <param name="phi"></param>
         /// <returns></returns>
-        public static void GetYShapeFunctions(double l, double phi, BeamDirection dir,out SingleVariablePolynomial[] nss,out SingleVariablePolynomial[] mss)
+        public static void GetYShapeFunctions(double l, double phi, BeamDirection dir, out SingleVariablePolynomial[] nss, out SingleVariablePolynomial[] mss)
         {
             var phi_h = 1 / (1 + phi);
 
@@ -88,10 +87,6 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         #endregion
 
-
-      
-
-
         public BeamDirection Direction;
 
         public TimoshenkoBeamHelper(BeamDirection direction, Element targetElement)
@@ -102,6 +97,7 @@ namespace BriefFiniteElementNet.ElementHelpers
 
 
         #region IElementHelper
+
 
         public override Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
@@ -126,7 +122,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
 
-        private static double GetPhiAt(BarElement bar, double xi,BeamDirection dir)
+        private static double GetPhiAt(BarElement bar, double xi, BeamDirection dir)
         {
             var l = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
 
@@ -149,12 +145,12 @@ namespace BriefFiniteElementNet.ElementHelpers
             var bar = targetElement as BarElement;
             var l = (bar.Nodes[1].Location - bar.Nodes[0].Location).Length;
 
-            var phi = GetPhiAt(bar, xi, this.Direction);
+            var phi = GetPhiAt(bar, xi, Direction);
 
             SingleVariablePolynomial[] nss, mss, npss, mpss;
 
-            GetYShapeFunctions(l, phi, this.Direction, out nss, out mss);
-            GetThetaShapeFunctions(l, phi, this.Direction, out npss, out mpss);
+            GetYShapeFunctions(l, phi, Direction, out nss, out mss);
+            GetThetaShapeFunctions(l, phi, Direction, out npss, out mpss);
 
             var buf = new Matrix(4, 4);
 
@@ -182,13 +178,7 @@ namespace BriefFiniteElementNet.ElementHelpers
         }
 
 
-
-
-        public Displacement GetLoadDisplacementAt_old(Element targetElement, ElementalLoad load, double[] isoLocation)
-        {
-            throw new NotImplementedException();
-        }
-
+        [TodoDelete]
         /// <inheritdoc/>
         public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt_old(Element targetElement, ElementalLoad load,
             double[] isoLocation)
@@ -636,7 +626,7 @@ namespace BriefFiniteElementNet.ElementHelpers
             return buf;
         }
 
-
+        [TodoDelete]
         public Force[] GetLocalEquivalentNodalLoads_old(Element targetElement, ElementalLoad load)
         {
             var bar = targetElement as BarElement;
@@ -908,8 +898,6 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             throw new NotImplementedException();
         }
-
-
 
         #endregion
     }
