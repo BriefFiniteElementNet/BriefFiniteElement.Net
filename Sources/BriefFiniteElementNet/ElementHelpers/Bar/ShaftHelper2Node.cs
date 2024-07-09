@@ -140,8 +140,8 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             return buf;
         }
 
-
-        public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt_old(Element targetElement, ElementalLoad load,
+        [TodoDelete]
+        IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt_old(Element targetElement, ElementalLoad load,
             double[] isoLocation)
         {
 
@@ -242,7 +242,8 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
         }
 
-        public Displacement GetLoadDisplacementAt_old(Element targetElement, ElementalLoad load, double[] isoLocation)
+        [TodoDelete]
+        Displacement GetLoadDisplacementAt_old(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             var bar = targetElement as BarElement;
 
@@ -287,7 +288,8 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             return new Displacement(0, 0, 0, CalcUtil.DotProduct(n, u), 0, 0);
         }
 
-        private Displacement GetLoadDisplacementAt_ConcentratedLoad_uniformSection(BarElement bar, ConcentratedLoad load, double xi)
+        [TodoDelete]
+        Displacement GetLoadDisplacementAt_ConcentratedLoad_uniformSection(BarElement bar, ConcentratedLoad load, double xi)
         {
             double L;
             double tt;//tprsion concentrated
@@ -356,8 +358,8 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             }
         }
 
-
-        public Force[] GetLocalEquivalentNodalLoads_old(Element targetElement, ElementalLoad load)
+        [TodoDelete]
+        Force[] GetLocalEquivalentNodalLoads_old(Element targetElement, ElementalLoad load)
         {
             var tr = targetElement.GetTransformationManager();
 

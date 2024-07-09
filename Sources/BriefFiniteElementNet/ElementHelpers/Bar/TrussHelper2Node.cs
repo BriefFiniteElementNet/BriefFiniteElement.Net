@@ -138,9 +138,9 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
 
 
-        
 
-        [Obsolete("TODO: remove")]
+
+        [TodoDelete]
         public /*override*/ Force[] GetLocalEquivalentNodalLoads_Old(Element targetElement, ElementalLoad load)
         {
             var tr = targetElement.GetTransformationManager();
@@ -263,9 +263,9 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
         }
 
-        
 
-        [Obsolete("TODO: remove")]
+
+        [TodoDelete]
         /// <inheritdoc/>
         public /*override*/ IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt_old(Element targetElement, ElementalLoad load,
             double[] isoLocation)
@@ -489,7 +489,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
 
 
-        [Obsolete("TODO: remove")]
+        [TodoDelete]
         public /*override*/ Displacement GetLoadDisplacementAt_old(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             var bar = targetElement as BarElement;
@@ -520,7 +520,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             throw new NotImplementedException();
         }
 
-        [Obsolete("TODO: remove")]
+        [TodoDelete]
         //copied to LoadHandler
         private Displacement GetLoadDisplacementAt_UniformLoad_uniformSection(BarElement bar, UniformLoad load, double xi)
         {
@@ -583,7 +583,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             }
         }
 
-        [Obsolete("TODO: remove")]
+        [TodoDelete]
         //copied to load handler
         public Force[] GetLocalEquivalentNodalLoads_imposedStrainLoad_UniformMatSection(BarElement bar, ImposedStrainLoad load)
         {
@@ -601,7 +601,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             
         }
 
-        [Obsolete("TODO: remove")]
+        [TodoDelete]
         private Displacement GetLoadDisplacementAt_ConcentratedLoad_uniformSection(BarElement bar, ConcentratedLoad load, double xi)
         {
             
@@ -692,19 +692,19 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             throw new NotImplementedException();
         }
 
-        [Obsolete("TODO: remove")]
+        [TodoDelete]
         public GeneralStressTensor GetLocalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
             throw new NotImplementedException();
         }
 
-        [Obsolete("TODO: remove")]
+        [TodoDelete]
         public override GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
 
-        [Obsolete("TODO: remove")]
+        [TodoDelete]
         public override GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords)
         {
             throw new NotImplementedException();

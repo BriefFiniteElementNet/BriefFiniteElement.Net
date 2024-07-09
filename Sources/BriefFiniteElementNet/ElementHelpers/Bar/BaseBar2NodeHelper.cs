@@ -262,19 +262,22 @@ namespace BriefFiniteElementNet.ElementHelpers.Bar
 
         //public abstract IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt(Element targetElement, ElementalLoad load, double[] isoLocation);
 
+        /// <inheritdoc/>
         public abstract GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation);
 
         //public abstract Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load);
 
-
+        /// <inheritdoc/>
         public abstract Displacement GetLocalDisplacementAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords);
 
+        /// <inheritdoc/>
         public abstract GeneralStressTensor GetLocalInternalStressAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords);
 
+        /// <inheritdoc/>
         public abstract IEnumerable<Tuple<DoF, double>> GetLocalInternalForceAt(Element targetElement, Displacement[] localDisplacements, params double[] isoCoords);
 
 
-
+        /// <inheritdoc/>
         public Matrix GetMuMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var elm = targetElement as BarElement;
@@ -291,6 +294,7 @@ namespace BriefFiniteElementNet.ElementHelpers.Bar
             return buf;
         }
 
+        /// <inheritdoc/>
         public Matrix GetDMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var elm = targetElement as BarElement;
@@ -307,6 +311,7 @@ namespace BriefFiniteElementNet.ElementHelpers.Bar
             return buf;
         }
 
+        /// <inheritdoc/>
         public Matrix GetRhoMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var elm = targetElement as BarElement;
@@ -329,14 +334,18 @@ namespace BriefFiniteElementNet.ElementHelpers.Bar
         //public abstract double GetGeo(BarElement targetElement, double xi);
 
         //damp
+        /// <inheritdoc/>
         public abstract double GetMu(BarElement targetElement, double xi);
 
         //mass
+        /// <inheritdoc/>
         public abstract double GetRho(BarElement targetElement, double xi);
 
         //elastic modulus
+        /// <inheritdoc/>
         public abstract double GetD(BarElement targetElement, double xi);
 
+        /// <inheritdoc/>
         public abstract ILoadHandler[] GetLoadHandlers();
     }
 }

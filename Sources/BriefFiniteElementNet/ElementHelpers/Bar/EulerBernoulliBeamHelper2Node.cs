@@ -456,9 +456,8 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
         #endregion
 
-
-        [TodoDelete]
         /// <inheritdoc/>
+        [TodoDelete]
         public IEnumerable<Tuple<DoF, double>> GetLoadInternalForceAt_old(Element targetElement, ElementalLoad load,
             double[] isoLocation)
         {
