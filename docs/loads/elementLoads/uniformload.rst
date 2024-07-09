@@ -37,6 +37,7 @@ Here are examples illustrated in image (note that many of these loads are not av
    
    ``UnformLoad`` applying on one of a ``TetrahedronElement``'s edges
 
+Note: Uniform load on triangle edges, and tetrahedron side faces not supported yet
 Magnitude
 ---------
 ``UniformLoad.Magnitude`` which is a ``double`` property of ``UniformLoad``, defines the Magnitude of uniform load. Based on ``UniformLoad`` is applied on what element, the dimension is different:
