@@ -14,7 +14,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.EulerBernoulliBeamHe
     /// </summary>
     /// <remarks>
     /// Imposed strain do not affect euler bernauly, output always zero so inherit from ZeroLoadHandler</remarks>
-    public class ImposedStrain_UF_NUF_Handler : ZeroLoadHandler
+    public class ImposedStrain_UF_NUF_Handler : ZeroForceLoadHandler
     {
         public override bool CanHandle(Element elm, IElementHelper hlpr, ElementalLoad load)
         {

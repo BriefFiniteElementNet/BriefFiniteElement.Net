@@ -454,7 +454,6 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             return new ILoadHandler[] {
 
                 new LoadHandlers.ShaftHelper.Concentrated_UF_Handler(),
-                new LoadHandlers.ShaftHelper.GeneralHandler(),
             };
         }
     }

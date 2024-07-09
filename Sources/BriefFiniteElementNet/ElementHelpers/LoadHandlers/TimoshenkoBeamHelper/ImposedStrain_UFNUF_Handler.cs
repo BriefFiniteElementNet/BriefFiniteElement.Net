@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.TimoshenkoBeamHelper
 {
-    public class ImposedStrain_UFNUF_Handler : ZeroLoadHandler
+    public class ImposedStrain_UFNUF_Handler : ZeroForceLoadHandler
     {
         /// <inheritdoc/>
         public override bool CanHandle(Element elm, IElementHelper hlpr, ElementalLoad load)

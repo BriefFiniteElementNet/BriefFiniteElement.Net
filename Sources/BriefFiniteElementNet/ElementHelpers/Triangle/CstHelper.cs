@@ -572,7 +572,12 @@ namespace BriefFiniteElementNet.ElementHelpers
 
         public ILoadHandler[] GetLoadHandlers()
         {
-            throw new NotImplementedException();
+            return new ILoadHandler[] {
+
+                new LoadHandlers.CstHelper.Concentrated_UF_Handler(),
+                new LoadHandlers.CstHelper.ImposedStrain_UF_Handler(),
+                new LoadHandlers.CstHelper.Uniform_UF_Handler(),
+            };
         }
         #endregion
     }

@@ -50,6 +50,12 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
                 el.Material = mat;
                 //el.Loads.Add(load1);
                 elementList.Add(el);
+
+                {
+                    //var ld = new Loads.UniformLoad(loadCase1, Vector.K, 10, CoordinationSystem.Global);
+                    //el.Loads.Add(ld);
+                }
+
             }
 
 
@@ -57,6 +63,8 @@ namespace BriefFiniteElementNet.Validation.GithubIssues
             BarElement el3 = new BarElement(nodeList[10], nodeList[22]); el3.Section = secAA; el3.Material = mat; elementList.Add(el3);
             BarElement el4 = new BarElement(nodeList[20], nodeList[23]); el4.Section = secAA; el4.Material = mat; elementList.Add(el4);
 
+
+            
             nodeList[21].Constraints = Constraints.MovementFixed & Constraints.FixedRX; // Constraints.FixedDX & Constraints.FixedDY & Constraints.FixedDZ & Constraints.FixedRY & Constraints.FixedRZ;
             nodeList[22].Constraints = Constraints.FixedDZ & Constraints.FixedDY & Constraints.FixedRX;  // z = vertical
             nodeList[23].Constraints = Constraints.FixedDZ & Constraints.FixedDY & Constraints.FixedRX;  // z = vertical

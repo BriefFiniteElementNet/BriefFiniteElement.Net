@@ -33,9 +33,10 @@ namespace TestingConsole
             //new BarElementExactInternalDisplacement().TestEulerBernouly_diry();
 
             //test();
-            tmp();
+            //tmp();
             //BriefFiniteElementNet.Validation.GithubIssues.Issue183.Run();
             //BriefFiniteElementNet.Validation.GithubIssues.Issue181.Run();
+            BriefFiniteElementNet.Validation.GithubIssues.Issue41.Run();
 
             Console.Write("Done");
 

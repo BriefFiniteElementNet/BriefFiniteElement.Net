@@ -11,7 +11,8 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers
     /// represents a zero load handler which it's output is always zero
     /// for code reuse porpuse only
     /// </summary>
-    public abstract class ZeroLoadHandler : ILoadHandler
+    public abstract class ZeroForceLoadHandler
+        : ILoadHandler
     {
         public abstract bool CanHandle(Element elm, IElementHelper hlpr, ElementalLoad load);
 
@@ -27,7 +28,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers
 
         public object GetLocalLoadInternalForceAt(Element targetElement, IElementHelper hlpr, ElementalLoad load, IsoPoint loc)
         {
-            return new CauchyStressTensor();//zero
+            return new Force();//zero
         }
     }
 }

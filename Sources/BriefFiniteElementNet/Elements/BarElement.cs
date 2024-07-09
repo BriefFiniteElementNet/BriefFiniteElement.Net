@@ -947,11 +947,13 @@ namespace BriefFiniteElementNet.Elements
                 GetInternalForceAt(xi, loadCase);
             //Force.Zero;
 
-            var fcs = new Dictionary<DoF, double>();
+            //var fcs = new Dictionary<DoF, double>();
 
             //var buf = new FlatShellStressTensor();
 
             var helpers = GetHelpers();
+
+            var vec = new double[6];
 
             foreach (var load in this.Loads)
                 if (load.Case == loadCase)
@@ -961,17 +963,18 @@ namespace BriefFiniteElementNet.Elements
 
                         foreach (var fc in tns)
                         {
-                            double existing;
+                            vec[(int)fc.Item1] += fc.Item2;
 
-                            fcs.TryGetValue(fc.Item1, out existing);
-
-                            fcs[fc.Item1] = existing + fc.Item2;
+                            //double existing;
+                            //fcs.TryGetValue(fc.Item1, out existing);
+                            //fcs[fc.Item1] = existing + fc.Item2;
                         }
                     }
 
             var buff = new Force();
             buff += approx;//TODO: maybe += approx !
-
+            buff += Force.FromVector(vec, 0);
+            /*
             if (fcs.ContainsKey(DoF.Dx))
                 buff.Fx += fcs[DoF.Dx];
 
@@ -989,7 +992,7 @@ namespace BriefFiniteElementNet.Elements
 
             if (fcs.ContainsKey(DoF.Rz))
                 buff.Mz += fcs[DoF.Rz];
-
+            */
             return buff;
         }
 
