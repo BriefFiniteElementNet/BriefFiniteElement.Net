@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 {
-
+    [TodoDelete]
     //utility for getting internal force  and eq nodal load for non uniform section and material and/or nonuniform (like partial or concentrated) loads
     public class EulerBernoulliBeamHelper2NodeInternalXUtil
     {
