@@ -896,7 +896,13 @@ namespace BriefFiniteElementNet.ElementHelpers.Bar
 
         public override ILoadHandler[] GetLoadHandlers()
         {
-            throw new NotImplementedException();
+            return new ILoadHandler[] {
+
+                new LoadHandlers.TimoshenkoBeamHelper.Concentrated_UF_Handler(),
+                new LoadHandlers.TimoshenkoBeamHelper.ImposedStrain_UFNUF_Handler(),
+                new LoadHandlers.TimoshenkoBeamHelper.PartialNonUniform_UF_Handler(),
+                new LoadHandlers.TimoshenkoBeamHelper.Uniform_UF_Handler(),
+            };
         }
 
         #endregion

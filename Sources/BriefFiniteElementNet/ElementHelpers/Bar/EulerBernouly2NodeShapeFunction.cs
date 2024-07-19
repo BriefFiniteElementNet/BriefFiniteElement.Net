@@ -26,155 +26,162 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
             int num = d0 * 8 + r0 * 4 + d1 * 2 + r1;
 
+            double[] _n1, _n2, _m1, _m2;
+
             switch (num)//prior generated code! have alook at Validation.EulerBernouly2nodeChecker.GenerateShapefunctionCode()
             {
                 case 15:
                     {
-                        n1 = new SingleVariablePolynomial(0.25, 0, -0.75, 0.5); ;
-                        n2 = new SingleVariablePolynomial(-0.25, 0, 0.75, 0.5); ;
-                        m1 = new SingleVariablePolynomial(0.25, -0.25, -0.25, 0.25); ;
-                        m2 = new SingleVariablePolynomial(0.25, 0.25, -0.25, -0.25); ;
+                        _n1 = new double[] { 0.25, 0, -0.75, 0.5 }; ;
+                        _n2 = new double[] { -0.25, 0, 0.75, 0.5 }; ;
+                        _m1 = new double[] { 0.25, -0.25, -0.25, 0.25 }; ;
+                        _m2 = new double[] { 0.25, 0.25, -0.25, -0.25 }; ;
                         break;
                     }
 
                 case 7:
                     {
-                        n1 = new SingleVariablePolynomial();
-                        n2 = new SingleVariablePolynomial(0, 0, 0, 1);
-                        m1 = new SingleVariablePolynomial(0, -0.25, 0.5, -0.25);
-                        m2 = new SingleVariablePolynomial(0, 0.25, 0.5, -0.75);
+                        _n1 = new double[] { };
+                        _n2 = new double[] { 0, 0, 0, 1 };
+                        _m1 = new double[] { 0, -0.25, 0.5, -0.25 };
+                        _m2 = new double[] { 0, 0.25, 0.5, -0.75 };
                         break;
                     }
 
                 case 11:
                     {
-                        n1 = new SingleVariablePolynomial(0.0625, 0.1875, -0.5625, 0.3125); ;
-                        n2 = new SingleVariablePolynomial(-0.0625, -0.1875, 0.5625, 0.6875); ;
-                        m1 = new SingleVariablePolynomial(); ;
-                        m2 = new SingleVariablePolynomial(0.125, 0.375, -0.125, -0.375); ;
+                        _n1 = new double[] { 0.0625, 0.1875, -0.5625, 0.3125 }; ;
+                        _n2 = new double[] { -0.0625, -0.1875, 0.5625, 0.6875 }; ;
+                        _m1 = new double[] { }; ;
+                        _m2 = new double[] { 0.125, 0.375, -0.125, -0.375 }; ;
                         break;
                     }
 
                 case 3:
                     {
-                        n1 = new SingleVariablePolynomial();
-                        n2 = new SingleVariablePolynomial(0, 0, 0, 1);
-                        m1 = new SingleVariablePolynomial();
-                        m2 = new SingleVariablePolynomial(0, 0, 1, -1);
+                        _n1 = new double[] { };
+                        _n2 = new double[] { 0, 0, 0, 1 };
+                        _m1 = new double[] { };
+                        _m2 = new double[] { 0, 0, 1, -1 };
                         break;
                     }
 
                 case 13:
                     {
-                        n1 = new SingleVariablePolynomial(0, 0, 0, 1); ;
-                        n2 = new SingleVariablePolynomial(); ;
-                        m1 = new SingleVariablePolynomial(0, -0.25, 0.5, 0.75); ;
-                        m2 = new SingleVariablePolynomial(0, 0.25, 0.5, 0.25); ;
+                        _n1 = new double[] { 0, 0, 0, 1 }; ;
+                        _n2 = new double[] { }; ;
+                        _m1 = new double[] { 0, -0.25, 0.5, 0.75 }; ;
+                        _m2 = new double[] { 0, 0.25, 0.5, 0.25 }; ;
                         break;
                     }
 
                 case 5:
                     {
-                        n1 = new SingleVariablePolynomial(0, 0, 0, 1); ;
-                        n2 = new SingleVariablePolynomial(); ;
-                        m1 = new SingleVariablePolynomial(0, -0.25, 0.5, 0.75); ;
-                        m2 = new SingleVariablePolynomial(0, 0.25, 0.5, 0.25); ;
+                        _n1 = new double[] { 0, 0, 0, 1 }; ;
+                        _n2 = new double[] { }; ;
+                        _m1 = new double[] { 0, -0.25, 0.5, 0.75 }; ;
+                        _m2 = new double[] { 0, 0.25, 0.5, 0.25 }; ;
                         break;
                     }
 
                 case 9:
                     {
-                        n1 = new SingleVariablePolynomial(0, 0, 0, 1); ;
-                        n2 = new SingleVariablePolynomial(); ;
-                        m1 = new SingleVariablePolynomial(); ;
-                        m2 = new SingleVariablePolynomial(0, 0, 1, 1); ;
+                        _n1 = new double[] { 0, 0, 0, 1 }; ;
+                        _n2 = new double[] { }; ;
+                        _m1 = new double[] { }; ;
+                        _m2 = new double[] { 0, 0, 1, 1 }; ;
                         break;
                     }
 
                 case 1:
                     {
-                        n1 = new SingleVariablePolynomial(0, 0, 0, 1); ;
-                        n2 = new SingleVariablePolynomial(); ;
-                        m1 = new SingleVariablePolynomial(); ;
-                        m2 = new SingleVariablePolynomial(0, 0, 1, 1); ;
+                        _n1 = new double[] { 0, 0, 0, 1 }; ;
+                        _n2 = new double[] { }; ;
+                        _m1 = new double[] { }; ;
+                        _m2 = new double[] { 0, 0, 1, 1 }; ;
                         break;
                     }
 
                 case 14:
                     {
-                        n1 = new SingleVariablePolynomial(0.0625, -0.1875, -0.5625, 0.6875); ;
-                        n2 = new SingleVariablePolynomial(-0.0625, 0.1875, 0.5625, 0.3125); ;
-                        m1 = new SingleVariablePolynomial(0.125, -0.375, -0.125, 0.375); ;
-                        m2 = new SingleVariablePolynomial(); ;
+                        _n1 = new double[] { 0.0625, -0.1875, -0.5625, 0.6875 }; ;
+                        _n2 = new double[] { -0.0625, 0.1875, 0.5625, 0.3125 }; ;
+                        _m1 = new double[] { 0.125, -0.375, -0.125, 0.375 }; ;
+                        _m2 = new double[] { }; ;
                         break;
                     }
 
                 case 6:
                     {
-                        n1 = new SingleVariablePolynomial(); ;
-                        n2 = new SingleVariablePolynomial(0, 0, 0, 1); ;
-                        m1 = new SingleVariablePolynomial(0, 0, 1, -1); ;
-                        m2 = new SingleVariablePolynomial(); ;
+                        _n1 = new double[] { }; ;
+                        _n2 = new double[] { 0, 0, 0, 1 }; ;
+                        _m1 = new double[] { 0, 0, 1, -1 }; ;
+                        _m2 = new double[] { }; ;
                         break;
                     }
 
                 case 10:
                     {
-                        n1 = new SingleVariablePolynomial(0, 0, -0.5, 0.5); ;
-                        n2 = new SingleVariablePolynomial(0, 0, 0.5, 0.5); ;
-                        m1 = new SingleVariablePolynomial(); ;
-                        m2 = new SingleVariablePolynomial(); ;
+                        _n1 = new double[] { 0, 0, -0.5, 0.5 }; ;
+                        _n2 = new double[] { 0, 0, 0.5, 0.5 }; ;
+                        _m1 = new double[] { }; ;
+                        _m2 = new double[] { }; ;
                         break;
                     }
 
                 case 2:
                     {
-                        n1 = new SingleVariablePolynomial(0, 0, -0.5, 0.5); ;
-                        n2 = new SingleVariablePolynomial(0, 0, 0.5, 0.5); ;
-                        m1 = new SingleVariablePolynomial(); ;
-                        m2 = new SingleVariablePolynomial(); ;
+                        _n1 = new double[] { 0, 0, -0.5, 0.5 }; ;
+                        _n2 = new double[] { 0, 0, 0.5, 0.5 }; ;
+                        _m1 = new double[] { }; ;
+                        _m2 = new double[] { }; ;
                         break;
                     }
 
                 case 12:
                     {
-                        n1 = new SingleVariablePolynomial(0, 0, 0, 1); ;
-                        n2 = new SingleVariablePolynomial(); ;
-                        m1 = new SingleVariablePolynomial(0, 0, 1, 1); ;
-                        m2 = new SingleVariablePolynomial(); ;
+                        _n1 = new double[] { 0, 0, 0, 1 }; ;
+                        _n2 = new double[] { }; ;
+                        _m1 = new double[] { 0, 0, 1, 1 }; ;
+                        _m2 = new double[] { }; ;
                         break;
                     }
 
                 case 4:
                     {
-                        n1 = new SingleVariablePolynomial(0, 0, 0, 1); ;
-                        n2 = new SingleVariablePolynomial(); ;
-                        m1 = new SingleVariablePolynomial(0, 0, 1, 1); ;
-                        m2 = new SingleVariablePolynomial(); ;
+                        _n1 = new double[] { 0, 0, 0, 1 }; ;
+                        _n2 = new double[] { }; ;
+                        _m1 = new double[] { 0, 0, 1, 1 }; ;
+                        _m2 = new double[] { }; ;
                         break;
                     }
 
                 case 8:
                     {
-                        n1 = new SingleVariablePolynomial(0, 0, 0, 1);
-                        n2 = new SingleVariablePolynomial();
-                        m1 = new SingleVariablePolynomial(0, 0, 1, 1);
-                        m2 = new SingleVariablePolynomial();
+                        _n1 = new double[] { 0, 0, 0, 1 };
+                        _n2 = new double[] { };
+                        _m1 = new double[] { 0, 0, 1, 1 };
+                        _m2 = new double[] { };
                         break;
                     }
 
                 case 0:
                     {
-                        n1 = new SingleVariablePolynomial(0, 0, 0, 1);
-                        n2 = new SingleVariablePolynomial();
-                        m1 = new SingleVariablePolynomial(0, 0, 1, 1);
-                        m2 = new SingleVariablePolynomial();
+                        _n1 = new double[] { 0, 0, 0, 1 };
+                        _n2 = new double[] { };
+                        _m1 = new double[] { 0, 0, 1, 1 };
+                        _m2 = new double[] { };
                         break;
                     }
                 default:
                     throw new Exception();
-
             }
+
+
+            n1 = new SingleVariablePolynomial(_n1);
+            n2 = new SingleVariablePolynomial(_n2);
+            m1 = new SingleVariablePolynomial(_m1);
+            m2 = new SingleVariablePolynomial(_m2);
 
             m1.MultiplyByConstant(l / 2);
             m2.MultiplyByConstant(l / 2);

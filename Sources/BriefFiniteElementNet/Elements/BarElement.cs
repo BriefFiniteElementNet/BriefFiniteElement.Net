@@ -375,13 +375,14 @@ namespace BriefFiniteElementNet.Elements
             
         }
 
+        /// <inheritdoc/>
         public override IElementHelper[] GetHelpers()
         {
             return GetElementHelpers().ToArray();
         }
 
         
-
+        /// <inheritdoc/>
         public override Force[] GetGlobalEquivalentNodalLoads(ElementalLoad load)
         {
             var helpers = GetElementHelpers();
@@ -408,6 +409,7 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
+        /// <inheritdoc/>
         public override Matrix GetGlobalDampingMatrix()
         {
             var local = GetLocalDampMatrix();
@@ -422,6 +424,7 @@ namespace BriefFiniteElementNet.Elements
             return globalDamp;
         }
 
+        /// <inheritdoc/>
         public override Matrix GetGlobalMassMatrix()
         {
             var local = GetLocalMassMatrix();
@@ -440,6 +443,7 @@ namespace BriefFiniteElementNet.Elements
             return global;
         }
 
+        /// <inheritdoc/>
         public override Matrix GetGlobalStifnessMatrix()
         {
             var local = GetLocalStifnessMatrix();
@@ -459,6 +463,7 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
+        /// <inheritdoc/>
         public Matrix GetTransformationMatrix()
         {
             var cxx = 0.0;
