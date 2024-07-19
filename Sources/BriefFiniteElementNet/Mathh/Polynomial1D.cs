@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BriefFiniteElementNet.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -140,7 +141,7 @@ namespace BriefFiniteElementNet.Mathh
             {
                 var pow = i;
                 var a = Coefficients[i];
-                var y = CalcUtil.Power(x, pow);
+                var y = NumericUtils.Power(x, pow);
                 buf += a * y;//buf += a*x^i
             }
 
@@ -168,9 +169,9 @@ namespace BriefFiniteElementNet.Mathh
 
                 var coef = Coefficients[i];
 
-                var newCoef = coef * CalcUtil.Factorial(n, n - m);
+                var newCoef = coef * NumericUtils.Factorial(n, n - m);
 
-                var val = CalcUtil.Power(x, newPow);
+                var val = NumericUtils.Power(x, newPow);
                 buf += newCoef * val;
             }
 
@@ -193,9 +194,9 @@ namespace BriefFiniteElementNet.Mathh
 
                 var coef = Coefficients[i];
 
-                var newCoef = coef / CalcUtil.Factorial(n + m, n);
+                var newCoef = coef / NumericUtils.Factorial(n + m, n);
 
-                var val = CalcUtil.Power(x, newPow);
+                var val = NumericUtils.Power(x, newPow);
                 buf += newCoef * val;
             }
 

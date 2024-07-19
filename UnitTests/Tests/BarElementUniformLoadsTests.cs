@@ -153,7 +153,7 @@ namespace BriefFiniteElementNet.Tests
             var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
 
-            foreach (var x in CalcUtil.Divide(length, 10))
+            foreach (var x in Utils.NumericUtils.Divide(length, 10))
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 
@@ -214,7 +214,7 @@ namespace BriefFiniteElementNet.Tests
             var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
 
-            foreach (var x in CalcUtil.Divide(length, 10))
+            foreach (var x in Utils.NumericUtils.Divide(length, 10))
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 
@@ -310,7 +310,7 @@ namespace BriefFiniteElementNet.Tests
             elm.NodalReleaseConditions[0] = Constraints.MovementFixed;
             elm.NodalReleaseConditions[1] = Constraints.MovementFixed & Constraints.FixedRX;
 
-            foreach (var x in CalcUtil.Divide(length, 10))
+            foreach (var x in Utils.NumericUtils.Divide(length, 10))
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 

@@ -143,7 +143,7 @@ namespace TestingConsole
             //https://mechanicalc.com/reference/beam-deflection-tables
             var dx = new Func<double, double>(x => -w * x / (24 * E * I) * (L * L * L - 2 * L * x * x + x * x * x));
 
-            var xs = CalcUtil.DivideSpan(0, L, 10);
+            var xs = BriefFiniteElementNet.Utils.NumericUtils.DivideSpan(0, L, 10);
 
             var epsilon = 1e-10;
 

@@ -41,7 +41,7 @@ namespace BriefFiniteElementNet.Tests
 
             var length = L;
 
-            foreach (var x in CalcUtil.Divide(length, 10))
+            foreach (var x in Utils.NumericUtils.Divide(length, 10))
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 

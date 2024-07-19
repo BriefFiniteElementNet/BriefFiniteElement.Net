@@ -6,6 +6,7 @@ using System.Text;
 using CSparse.Double;
 using System.Security.Permissions;
 using CSparse.Storage;
+using BriefFiniteElementNet.Utils;
 
 namespace BriefFiniteElementNet.MpcElements
 {

@@ -701,7 +701,14 @@ namespace BriefFiniteElementNet.Elements
         /// <returns></returns>
         public double GetArea()
         {
+
+/* Unmerged change from project 'Legacy (netstandard2.0)'
+Before:
             return CalcUtil.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
+After:
+            return GeometryUtils.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
+*/
+            return BriefFiniteElementNet.GeometryUtils.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
         }
 
 

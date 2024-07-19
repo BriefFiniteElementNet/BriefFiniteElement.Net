@@ -142,7 +142,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
                     return e * i;
                 });
 
-                var ksis = CalcUtil.DivideSpan(-1, 1, c);
+                var ksis = Utils.NumericUtils.DivideSpan(-1, 1, c);
                 var xs = ksis.Select(xi => TargetElement.IsoCoordsToLocalCoords(xi)[0]).ToArray();
 
                 if (W1 != null)

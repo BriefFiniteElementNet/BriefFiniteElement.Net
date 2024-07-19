@@ -13,8 +13,8 @@ namespace BriefFiniteElementNet.Validation
             var exact = selector(refrence);
             var approx = selector(approximate);
 
-            var dn2 = CalcUtil.GetDiffNorm2(exact, approx);
-            var en2 = CalcUtil.Norm2(exact);
+            var dn2 = Utils.AlgebraUtils.GetDiffNorm2(exact, approx);
+            var en2 = Utils.AlgebraUtils.Norm2(exact);
 
             return dn2 / en2;
         }

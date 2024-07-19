@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.Utils;
+
 using CSparse.Double;
 using CSparse.Ordering;
 using CSparse.Storage;
@@ -57,9 +59,9 @@ namespace BriefFiniteElementNet.Mathh
             if (!varGraph.IsSymmetric() || !eqnGraph.IsSymmetric())
                 throw new Exception();
 
-            var eqnParts = CalcUtil.EnumerateGraphParts(eqnGraph);
+            var eqnParts = BriefFiniteElementNet.Utils.GraphUtils.EnumerateGraphParts(eqnGraph);
 
-            var varParts = CalcUtil.EnumerateGraphParts(varGraph);
+            var varParts = BriefFiniteElementNet.Utils.GraphUtils.EnumerateGraphParts(varGraph);
 
             var varVisited = new bool[varGraph.ColumnCount];
 
@@ -86,7 +88,7 @@ namespace BriefFiniteElementNet.Mathh
 
                 //var firstVar = patt.EnumerateColumnMembers()
 
-                var connectedVariables = CalcUtil.DepthFirstSearch(varGraph, varVisited, firstVarOfFirstEq);
+                var connectedVariables = BriefFiniteElementNet.Utils.GraphUtils.DepthFirstSearch(varGraph, varVisited, firstVarOfFirstEq);
 
                 connectedVariables.Sort();
 

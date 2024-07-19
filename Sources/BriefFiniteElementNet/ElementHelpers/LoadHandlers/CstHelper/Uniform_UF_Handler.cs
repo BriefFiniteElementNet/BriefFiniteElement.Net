@@ -49,7 +49,14 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.CstHelper
 
             var nodes = elm.Nodes;
 
+
+/* Unmerged change from project 'BriefFiniteElementNet (netstandard2.0)'
+Before:
             var area = CalcUtil.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
+After:
+            var area = GeometryUtils.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
+*/
+            var area = BriefFiniteElementNet.GeometryUtils.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
 
             var f = u * (area / 3.0);
 

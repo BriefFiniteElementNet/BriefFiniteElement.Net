@@ -57,7 +57,7 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.EulerBernullyBeam
             var a = xt;
             var b = L - a;
 
-            foreach (var x in CalcUtil.Divide(L, 10))
+            foreach (var x in Utils.NumericUtils.Divide(L, 10))
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 
@@ -124,7 +124,7 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.EulerBernullyBeam
             var a = xt;
             var b = L - a;
 
-            foreach (var x in CalcUtil.Divide(L, 10))
+            foreach (var x in Utils.NumericUtils.Divide(L, 10))
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 

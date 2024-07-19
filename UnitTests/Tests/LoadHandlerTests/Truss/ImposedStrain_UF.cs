@@ -93,7 +93,7 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.Truss
 
             var f = strain * E * A;
 
-            foreach (var x in CalcUtil.Divide(L, 10))
+            foreach (var x in Utils.NumericUtils.Divide(L, 10))
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 
@@ -137,7 +137,7 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.Truss
 
             var epsilon = 1e-6;
 
-            foreach (var x in CalcUtil.Divide(L, 10))
+            foreach (var x in Utils.NumericUtils.Divide(L, 10))
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 

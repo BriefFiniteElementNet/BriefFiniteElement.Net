@@ -89,7 +89,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.EulerBernoulliBeamHe
             double[] xs;
 
             {
-                xs = CalcUtil.DivideSpan(0, L, c);
+                xs = Utils.NumericUtils.DivideSpan(0, L, c);
 
                 var y1s = new double[xs.Length];
                 var y2s = new double[xs.Length];
@@ -139,7 +139,7 @@ namespace BriefFiniteElementNet.ElementHelpers.LoadHandlers.EulerBernoulliBeamHe
             double f0, m0;
 
             {
-                CalcUtil.Solve2x2(y1, y2, -w0 / 2 * y3,
+                Utils.AlgebraUtils.Solve2x2(y1, y2, -w0 / 2 * y3,
                     y11, y22, -w0 / 2 * y33, out m0, out f0);
             }
 

@@ -17,7 +17,7 @@ namespace BriefFiniteElementNet.Validation
 
             var mgr = DofMappingManager.Create(model, lc);
 
-            var dvd = CalcUtil.GetReducedZoneDividedMatrix(fullst, mgr);
+            var dvd = Utils.MatrixUtils.GetReducedZoneDividedMatrix(fullst, mgr);
 
             var stiffness = dvd.ReleasedReleasedPart;
 
@@ -64,7 +64,7 @@ namespace BriefFiniteElementNet.Validation
             model.ReIndexElements();
             //LoadCase.DefaultLoadCase
 
-            var perm = CalcUtil.GenerateP_Delta_Mpc(model, lc, new CsparsenetQrDisplacementPermutationCalculator());
+            var perm = Utils.SolverUtils.GenerateP_Delta_Mpc(model, lc, new CsparsenetQrDisplacementPermutationCalculator());
 
             var np = perm.Item1.ColumnCount;//master count
 
@@ -100,7 +100,7 @@ namespace BriefFiniteElementNet.Validation
                     //t <= 0 and that causes not pos def
 
                     {
-                        var items = CalcUtil.EnumerateColumnMembers(pd, i).FirstOrDefault();
+                        var items = Utils.MatrixUtils.EnumerateColumnMembers(pd, i).FirstOrDefault();
 
                         if (items == null)
                             throw new Exception();
@@ -167,7 +167,7 @@ namespace BriefFiniteElementNet.Validation
 
             var mgr = DofMappingManager.Create(model, lc);
 
-            var dvd = CalcUtil.GetReducedZoneDividedMatrix(fullst, mgr);
+            var dvd = Utils.MatrixUtils.GetReducedZoneDividedMatrix(fullst, mgr);
 
             var stiffness = dvd.ReleasedReleasedPart;
 

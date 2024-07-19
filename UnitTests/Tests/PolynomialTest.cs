@@ -28,7 +28,7 @@ namespace BriefFiniteElementNet.Tests
             var current = Polynomial1D.FromPoints(xs, ys);
             var expected = p;
 
-            var diff = CalcUtil.GetDiffNorm2(current.Coefficients, expected.Coefficients);
+            var diff = Utils.AlgebraUtils.GetDiffNorm2(current.Coefficients, expected.Coefficients);
 
             var epsilon = 1e-10;
 
@@ -45,7 +45,7 @@ namespace BriefFiniteElementNet.Tests
             var x = 2.3456;
 
             var current = p.EvaluateNthIntegral(1, x)[0];
-            var expected = 1.234 * CalcUtil.Power(x, 4) / 4;
+            var expected = 1.234 * Utils.NumericUtils.Power(x, 4) / 4;
 
             var diff = Math.Abs(current - expected);
 
@@ -63,7 +63,7 @@ namespace BriefFiniteElementNet.Tests
             var x = 2.3456;
 
             var current = p.EvaluateNthIntegral(4, x)[0];
-            var expected = 1.234 * CalcUtil.Power(x, 7) / (7 * 6 * 5 * 4);
+            var expected = 1.234 * Utils.NumericUtils.Power(x, 7) / (7 * 6 * 5 * 4);
 
             var diff = Math.Abs(current - expected);
 
@@ -150,12 +150,12 @@ namespace BriefFiniteElementNet.Tests
 
             var n = 5;
 
-            var fact = CalcUtil.Factorial(n);
+            var fact = Utils.NumericUtils.Factorial(n);
 
             var x = 1.789;
             var current = p.EvaluateNthIntegralAt(9, x);
 
-            var expected = 1.2*CalcUtil.Power(x, 9) / 362880;//9! is 362880
+            var expected = 1.2* Utils.NumericUtils.Power(x, 9) / 362880;//9! is 362880
 
             var diff = Math.Abs(current - expected);
 

@@ -433,7 +433,14 @@ namespace BriefFiniteElementNet.ElementHelpers
 
                 var nodes = targetElement.Nodes;
                 
+
+/* Unmerged change from project 'BriefFiniteElementNet (netstandard2.0)'
+Before:
                 var area = CalcUtil.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
+After:
+                var area = GeometryUtils.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
+*/
+                var area = BriefFiniteElementNet.GeometryUtils.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
 
                 var f = (ul.Magnitude * area / 3.0) * u;
                 f.X = f.Y = 0;//force component in X,Y directions, dkt is zero, cst will handle those

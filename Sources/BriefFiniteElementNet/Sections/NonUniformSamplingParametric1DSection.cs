@@ -84,16 +84,16 @@ namespace BriefFiniteElementNet.Sections
 
             var buf = new _1DCrossSectionGeometricProperties();
 
-            buf.A = CalcUtil.PolynomialInterpolate(a, xi);
-            buf.Ay = CalcUtil.PolynomialInterpolate(ay, xi);
-            buf.Az = CalcUtil.PolynomialInterpolate(az, xi);
-            buf.Iyz = CalcUtil.PolynomialInterpolate(iyz, xi);
-            buf.J = CalcUtil.PolynomialInterpolate(j, xi);
+            buf.A = Utils.NumericUtils.PolynomialInterpolate(a, xi);
+            buf.Ay = Utils.NumericUtils.PolynomialInterpolate(ay, xi);
+            buf.Az = Utils.NumericUtils.PolynomialInterpolate(az, xi);
+            buf.Iyz = Utils.NumericUtils.PolynomialInterpolate(iyz, xi);
+            buf.J = Utils.NumericUtils.PolynomialInterpolate(j, xi);
 
-            buf.Iy = CalcUtil.PolynomialInterpolate(iy, xi);
-            buf.Iz = CalcUtil.PolynomialInterpolate(iz, xi);
-            buf.Ky = CalcUtil.PolynomialInterpolate(ky, xi);
-            buf.Kz = CalcUtil.PolynomialInterpolate(kz, xi);
+            buf.Iy = Utils.NumericUtils.PolynomialInterpolate(iy, xi);
+            buf.Iz = Utils.NumericUtils.PolynomialInterpolate(iz, xi);
+            buf.Ky = Utils.NumericUtils.PolynomialInterpolate(ky, xi);
+            buf.Kz = Utils.NumericUtils.PolynomialInterpolate(kz, xi);
 
             return buf;
         }

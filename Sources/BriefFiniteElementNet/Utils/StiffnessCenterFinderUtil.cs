@@ -8,7 +8,7 @@ using BriefFiniteElementNet.Solver;
 using CSparse.Double;
 using CSR = CSparse.Double.SparseMatrix;
 
-namespace BriefFiniteElementNet.FemUtilies
+namespace BriefFiniteElementNet.Utils
 {
     [Obsolete("Under development")]
     public class StiffnessCenterFinder
@@ -20,15 +20,15 @@ namespace BriefFiniteElementNet.FemUtilies
         /// <param name="model"></param>
         /// <param name="element"></param>
         /// <returns>stiffness centers</returns>
-        public Point[] GetCenters(Model model, RigidElement_MPC element,LoadCase loadCase)
+        public Point[] GetCenters(Model model, RigidElement_MPC element, LoadCase loadCase)
         {
             //model = model.Clone();
 
-            var perm = CalcUtil.GenerateP_Delta_Mpc(model, loadCase, new Mathh.GaussRrefFinder());
+            var perm = SolverUtils.GenerateP_Delta_Mpc(model, loadCase, new Mathh.GaussRrefFinder());
 
             var adj = GetAdjacencyGraph(perm.Item1);
 
-            var dofGroups = CalcUtil.EnumerateGraphPartsAsGroups(adj);
+            var dofGroups = GraphUtils.EnumerateGraphPartsAsGroups(adj);
 
 
             //var parts=CalcUtil.
@@ -44,7 +44,7 @@ namespace BriefFiniteElementNet.FemUtilies
             stl.Constraint = Constraints.Fixed;
             stl.Settlement = Displacement.Zero;
 
-           
+
 
             model.MpcElements.Add(stl);
 
@@ -128,7 +128,7 @@ namespace BriefFiniteElementNet.FemUtilies
             throw new NotImplementedException();
         }
 
-        public Point[] GetCenters2(Model model, List<Tuple<Node,DoF>> dofs,LoadCase cse)
+        public Point[] GetCenters2(Model model, List<Tuple<Node, DoF>> dofs, LoadCase cse)
         {
             /*
             var rnd = Guid.NewGuid().ToString("N").Substring(0, 5) + "_";
@@ -225,10 +225,10 @@ namespace BriefFiniteElementNet.FemUtilies
         public CSR GetAdjacencyGraph(CSR P_delta)
         {
             var p = P_delta.Clone();
-            
+
             for (var i = 0; i < p.NonZerosCount; i++)
                 p.Values[i] = 1;
-            
+
             var buf = (CSR)p.Multiply(p.Transpose());
 
             return buf;

@@ -1,4 +1,5 @@
 ﻿using BriefFiniteElementNet.Mathh;
+using BriefFiniteElementNet.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -108,7 +109,7 @@ namespace BriefFiniteElementNet.Loads
                 location.Lambda <= _endLocation.Lambda;
 
             if (afterStart && beforeEnd)
-                return CalcUtil.LinearInterpolate(StartLocation.Xi, StartMagnitude, EndLocation.Xi, EndMagnitude, location.Xi);
+                return NumericUtils.LinearInterpolate(StartLocation.Xi, StartMagnitude, EndLocation.Xi, EndMagnitude, location.Xi);
 
             return 0;
         }

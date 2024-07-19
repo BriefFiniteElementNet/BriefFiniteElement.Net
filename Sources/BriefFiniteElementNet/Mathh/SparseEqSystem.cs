@@ -1,4 +1,5 @@
-﻿using CSparse.Double;
+﻿using BriefFiniteElementNet.Utils;
+using CSparse.Double;
 using CSparse.Storage;
 using System;
 using System.Collections.Generic;

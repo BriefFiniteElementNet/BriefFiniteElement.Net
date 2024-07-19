@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using BriefFiniteElementNet;
-
+using BriefFiniteElementNet.Utils;
 
 namespace BriefFiniteElementNet.Tests
 {
@@ -19,7 +19,7 @@ namespace BriefFiniteElementNet.Tests
 
             double a, b;
 
-            CalcUtil.Solve2x2(2, 4, 14, 4, -4, 4, out a, out b);
+            Utils.AlgebraUtils.Solve2x2(2, 4, 14, 4, -4, 4, out a, out b);
 
             //2x+4y=14
             //4x-4y=4
@@ -34,7 +34,7 @@ namespace BriefFiniteElementNet.Tests
         {
             var epsilon = 1e-9;
 
-            var current = CalcUtil.LinearInterpolate(1, 2, 5, 1, 3);
+            var current = NumericUtils.LinearInterpolate(1, 2, 5, 1, 3);
 
             Assert.True(current.FEquals(1.5, epsilon));
         }
@@ -45,7 +45,7 @@ namespace BriefFiniteElementNet.Tests
             var x0 = 1;
             var x1 = 3;
 
-            var res = CalcUtil.DivideSpan(x0, x1, 2);
+            var res = Utils.NumericUtils.DivideSpan(x0, x1, 2);
 
             var epsilon = 1e-9;
 
@@ -61,7 +61,7 @@ namespace BriefFiniteElementNet.Tests
             var x0 = -1;
             var x1 = 1;
 
-            var res = CalcUtil.DivideSpan(x0, x1, 2);
+            var res = Utils.NumericUtils.DivideSpan(x0, x1, 2);
 
             var epsilon = 1e-9;
 
@@ -83,7 +83,7 @@ namespace BriefFiniteElementNet.Tests
             {
                 var expected = Math.Pow(@base, pow);
 
-                var current = CalcUtil.Power(@base, pow);
+                var current = Utils.NumericUtils.Power(@base, pow);
 
                 var diff = Math.Abs(current - expected);
 
@@ -113,7 +113,7 @@ namespace BriefFiniteElementNet.Tests
             {
                 double x = tests[i];
 
-                var current = CalcUtil.PolynomialInterpolate(pts, x);
+                var current = Utils.NumericUtils.PolynomialInterpolate(pts, x);
 
                 var expected = vals[i];
 

@@ -1,4 +1,5 @@
 ﻿using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.Utils;
 using CSparse;
 using CSparse.Double;
 using CSparse.Double.Factorization;
@@ -113,7 +114,7 @@ namespace BriefFiniteElementNet.Mathh
                         cnt2++;
                     }
                 }
-
+                
                 var p1 = p1Crd.ToCCs();
                 var p2 = p2Crd.ToCCs();
                 var p2p = p2pCrd.ToCCs();

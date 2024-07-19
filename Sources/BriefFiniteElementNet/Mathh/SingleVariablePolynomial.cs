@@ -409,7 +409,7 @@ namespace BriefFiniteElementNet.Mathh
                     var cff = Factorial(nn, nm);
 
                     var cf2 = Coefficients[i];
-                    var vari = CalcUtil.Power(x, nm);
+                    var vari = Utils.NumericUtils.Power(x, nm);
                     retVal += vari * cff * cf2;
                 }
             }

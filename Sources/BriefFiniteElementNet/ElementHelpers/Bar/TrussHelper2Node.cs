@@ -124,7 +124,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
 
             //var frc = d * b * u;
-            var frc = d[0, 0] * CalcUtil.DotProduct(b.Values, u.Values);//performance tip, equals to d * b * u
+            var frc = d[0, 0] * Utils.AlgebraUtils.DotProduct(b.Values, u.Values);//performance tip, equals to d * b * u
             d.ReturnToPool();
             u.ReturnToPool();
             b.ReturnToPool();
@@ -683,7 +683,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             for (var i = 0; i < targetElement.Nodes.Length; i++)
                 u[i] = localDisplacements[i].DX;
 
-            return new Displacement(CalcUtil.DotProduct(n, u), 0, 0, 0, 0, 0);
+            return new Displacement(Utils.AlgebraUtils.DotProduct(n, u), 0, 0, 0, 0, 0);
         }
 
 

@@ -182,7 +182,7 @@ namespace BriefFiniteElementNet.Validation
             var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
 
-            foreach (var x in CalcUtil.Divide(length, 10))
+            foreach (var x in Utils.NumericUtils.Divide(length, 10))
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 
@@ -233,7 +233,7 @@ namespace BriefFiniteElementNet.Validation
 
             hlpr.GetLoadInternalForceAt(elm, u1, new double[] { -0.5774 });
 
-            foreach (var x in CalcUtil.Divide(length, 10))
+            foreach (var x in Utils.NumericUtils.Divide(length, 10))
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 

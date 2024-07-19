@@ -1,5 +1,6 @@
 ﻿using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet.Mathh;
+using BriefFiniteElementNet.Utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -26,7 +27,7 @@ namespace BriefFiniteElementNet.Elements
             var permCalculator = new CsparsenetQrDisplacementPermutationCalculator();
 
             var perm =
-                CalcUtil.GenerateP_Delta_Mpc(parent, loadCase, permCalculator);
+                SolverUtils.GenerateP_Delta_Mpc(parent, loadCase, permCalculator);
 
 
             parent.Trace.Write(Common.TraceLevel.Info, "Calculating Displacement Permutation Matrix took {0} ms", sp.ElapsedMilliseconds);

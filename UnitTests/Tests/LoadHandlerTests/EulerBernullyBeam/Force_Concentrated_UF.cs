@@ -59,7 +59,7 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.EulerBernullyBeam
             var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
 
-            foreach (var x in CalcUtil.Divide(length, 10))
+            foreach (var x in Utils.NumericUtils.Divide(length, 10))
             {
                 //var x = 0.1;
 
@@ -171,7 +171,7 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.EulerBernullyBeam
             var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
 
-            foreach (var x in CalcUtil.Divide(length, 10))
+            foreach (var x in Utils.NumericUtils.Divide(length, 10))
             {
                 var xi = elm.LocalCoordsToIsoCoords(x);
 
@@ -285,7 +285,7 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.EulerBernullyBeam
             var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
 
-            foreach (var x in CalcUtil.Divide(length, 10))
+            foreach (var x in Utils.NumericUtils.Divide(length, 10))
             {
                 if (x == 0 || x == forceLocation || x == length)
                     continue;
@@ -380,7 +380,7 @@ namespace BriefFiniteElementNet.Tests.LoadHandlerTests.EulerBernullyBeam
             var length = (elm.Nodes[1].Location - elm.Nodes[0].Location).Length;
 
 
-            foreach (var x in CalcUtil.Divide(length, 10))
+            foreach (var x in Utils.NumericUtils.Divide(length, 10))
             {
                 //var x = 2.4;
 

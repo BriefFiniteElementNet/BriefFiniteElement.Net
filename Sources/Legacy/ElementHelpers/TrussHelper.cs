@@ -459,7 +459,7 @@ namespace Legacy.ElementHelpers
 
 
             //var frc = d * b * u;
-            var frc = d[0, 0] * CalcUtil.DotProduct(b.Values, u.Values);//performance tip, equals to d * b * u
+            var frc = d[0, 0] * BriefFiniteElementNet.Utils.AlgebraUtils.DotProduct(b.Values, u.Values);//performance tip, equals to d * b * u
             d.ReturnToPool();
             u.ReturnToPool();
             b.ReturnToPool();
@@ -767,7 +767,7 @@ namespace Legacy.ElementHelpers
             for(var i=0;i< targetElement.Nodes.Length;i++)
                 u[i] = localDisplacements[i].DX;
 
-            return new Displacement(CalcUtil.DotProduct(n, u), 0, 0, 0, 0, 0);
+            return new Displacement(BriefFiniteElementNet. Utils.AlgebraUtils.DotProduct(n, u), 0, 0, 0, 0, 0);
         }
 
         public Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)

@@ -551,7 +551,14 @@ namespace BriefFiniteElementNet.Elements
                     u.Y = u.X = 0;//remove those for membrane
 
 
+
+/* Unmerged change from project 'Legacy (netstandard2.0)'
+Before:
                 var area = CalcUtil.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
+After:
+                var area = GeometryUtils.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
+*/
+                var area = BriefFiniteElementNet.GeometryUtils.GetTriangleArea(nodes[0].Location, nodes[1].Location, nodes[2].Location);
 
                 var f = u*(area/3);
                 var frc = new Force(f, Vector.Zero);

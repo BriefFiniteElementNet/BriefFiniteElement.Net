@@ -11,6 +11,7 @@ using BriefFiniteElementNet;
 using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet.ElementHelpers;
 using BarElement = Legacy.Elements.BarElementMultyNode;
+using BriefFiniteElementNet.Utils;
 
 namespace Legacy.ElementHelpers
 {
@@ -516,7 +517,7 @@ namespace Legacy.ElementHelpers
             for (var i = 0; i < targetElement.Nodes.Length; i++)
                 u[i] = localDisplacements[i].RX;
 
-            return new Displacement(0, 0, 0, CalcUtil.DotProduct(n, u), 0, 0);
+            return new Displacement(0, 0, 0, AlgebraUtils.DotProduct(n, u), 0, 0);
         }
 
         public Force[] GetLocalEquivalentNodalLoads(Element targetElement, ElementalLoad load)

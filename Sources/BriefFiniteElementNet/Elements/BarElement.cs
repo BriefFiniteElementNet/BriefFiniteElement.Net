@@ -11,6 +11,7 @@ using System.Security.Permissions;
 using System.Globalization;
 using BriefFiniteElementNet.ElementHelpers.BarHelpers;
 using BriefFiniteElementNet.ElementHelpers.Bar;
+using BriefFiniteElementNet.Utils;
 
 namespace BriefFiniteElementNet.Elements
 {
@@ -367,7 +368,7 @@ namespace BriefFiniteElementNet.Elements
 
             var v = p1 - p0;
 
-            var tr = CalcUtil.GetBarTransformationMatrix(v, _webRotation);//, 0, this.MatrixPool);
+            var tr = BarElementUtils.GetBarTransformationMatrix(v, _webRotation);//, 0, this.MatrixPool);
             
             tr.TransposeInPlace();
 

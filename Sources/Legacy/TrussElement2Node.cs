@@ -460,7 +460,7 @@ namespace BriefFiniteElementNet.Elements
 
             if (!v.Equals(_lastElementVector))
             {
-                _lastTransformationMatrix = CalcUtil.Get2NodeElementTransformationMatrix(v);
+                _lastTransformationMatrix = BriefFiniteElementNet.Utils.BarElementUtils.Get2NodeElementTransformationMatrix(v);
                 _lastElementVector = v;
             }
 

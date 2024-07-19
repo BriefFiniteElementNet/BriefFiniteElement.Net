@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using CCS = CSparse.Double.SparseMatrix;
 using BriefFiniteElementNet.Common;
+using BriefFiniteElementNet.Utils;
 
 namespace BriefFiniteElementNet.Mathh
 {

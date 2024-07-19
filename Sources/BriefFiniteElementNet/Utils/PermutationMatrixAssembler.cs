@@ -196,7 +196,7 @@ namespace BriefFiniteElementNet
 
             var graph = CSparse.Converter.ToCompressedColumnStorage(crd);
 
-            var buf = CalcUtil.EnumerateGraphParts(graph);
+            var buf = BriefFiniteElementNet.Utils.GraphUtils.EnumerateGraphParts(graph);
 
             return buf;
         }

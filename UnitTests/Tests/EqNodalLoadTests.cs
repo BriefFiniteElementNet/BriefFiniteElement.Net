@@ -213,14 +213,14 @@ namespace BriefFiniteElementNet.Tests
 
                 var pl = Polynomial1D.FromPoints(new double[] { -1, 0, 1 }, new double[] { h0, h1, h2 });
 
-                var sp = CalcUtil.DivideSpan(-1, 1, 7);
+                var sp = Utils.NumericUtils.DivideSpan(-1, 1, 7);
 
                 var B = 1.0;
 
                 foreach (var ksi in sp)
                 {
                     var h = pl.Evaluate(ksi);
-                    var i = B * CalcUtil.Power(h, 3) / 12.0;
+                    var i = B * Utils.NumericUtils.Power(h, 3) / 12.0;
                     
                     sec.Samples.Add(Tuple.Create(new IsoPoint(ksi), new _1DCrossSectionGeometricProperties() { Iy = i }));
                 }
@@ -290,14 +290,14 @@ namespace BriefFiniteElementNet.Tests
 
                 var pl = Polynomial1D.FromPoints(new double[] { -1, 0, 1 }, new double[] { h0, h1, h2 });
 
-                var sp = CalcUtil.DivideSpan(-1, 1, 7);
+                var sp = Utils.NumericUtils.DivideSpan(-1, 1, 7);
 
                 var B = 1.0;
 
                 foreach (var ksi in sp)
                 {
                     var h = pl.Evaluate(ksi);
-                    var i = B * CalcUtil.Power(h, 3) / 12.0;
+                    var i = B * Utils.NumericUtils.Power(h, 3) / 12.0;
 
                     sec.Samples.Add(Tuple.Create(new IsoPoint(ksi), new _1DCrossSectionGeometricProperties() { Iz = i }));
                 }

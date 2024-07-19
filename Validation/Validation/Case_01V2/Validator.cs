@@ -323,7 +323,7 @@ namespace BriefFiniteElementNet.Validation.Case_01V2
                     var e3b = ErrorUtil.GetRelativeError(as3.st, -s3b, fnc);
 
                     var eMax =
-                        CalcUtil.NormInf(e1t, e1b, e2t, e2b, e3t, e3b);
+                        Utils.AlgebraUtils.NormInf(e1t, e1b, e2t, e2b, e3t, e3b);
                         //CalcUtil.NormInf(e1m, e2m, e3m);//max abs value
 
                     if (tri.Label == "51")

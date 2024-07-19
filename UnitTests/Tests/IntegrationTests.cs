@@ -31,7 +31,7 @@ namespace BriefFiniteElementNet.Tests
 
                 var xp = x - x0;
                 
-                var expected = 1.2 * Math.Pow(xp, deg ) / CalcUtil.Factorial(i);
+                var expected = 1.2 * Math.Pow(xp, deg ) / Utils.NumericUtils.Factorial(i);
 
                 var diff = Math.Abs(current - expected);
 

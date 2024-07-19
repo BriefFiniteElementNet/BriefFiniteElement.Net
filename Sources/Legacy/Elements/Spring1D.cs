@@ -131,7 +131,7 @@ namespace BriefFiniteElementNet.Elements
                 kl[0, 0] = kl[6, 6] = _k;
                 kl[6, 0] = kl[0, 6] = -_k;
 
-                var t = CalcUtil.Get2NodeElementTransformationMatrix(EndNode.Location - StartNode.Location);
+                var t = BriefFiniteElementNet.Utils.BarElementUtils.Get2NodeElementTransformationMatrix(EndNode.Location - StartNode.Location);
 
 
                 return t.Transpose()*kl*t;
@@ -164,7 +164,7 @@ namespace BriefFiniteElementNet.Elements
         private Matrix GetTransformationMatrix()
         {
             var v = this.EndNode.Location - this.StartNode.Location;
-            return CalcUtil.Get2NodeElementTransformationMatrix(v);
+            return BriefFiniteElementNet.Utils.BarElementUtils.Get2NodeElementTransformationMatrix(v);
             
         }
 

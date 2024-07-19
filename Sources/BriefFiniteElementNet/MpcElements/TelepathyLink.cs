@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSparse.Double;
+using BriefFiniteElementNet.Utils;
 
 namespace BriefFiniteElementNet.MpcElements
 {

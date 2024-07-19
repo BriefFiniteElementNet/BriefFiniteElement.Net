@@ -64,7 +64,7 @@ namespace BriefFiniteElementNet.Legacy
 
             #endregion
 
-            var krd = CalcUtil.GetReducedZoneDividedMatrix(kr, map);
+            var krd = Utils.MatrixUtils.GetReducedZoneDividedMatrix(kr, map);
             thiis.AnalyseStiffnessMatrixForWarnings(krd, map, loadCase);
 
             {//TODO: remove

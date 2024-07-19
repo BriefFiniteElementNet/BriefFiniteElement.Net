@@ -14,6 +14,7 @@ using BriefFiniteElementNet.Solver;
 using CCS = CSparse.Double.SparseMatrix;
 using System.Globalization;
 using BriefFiniteElementNet.Mathh;
+using BriefFiniteElementNet.Utils;
 
 namespace BriefFiniteElementNet
 {
@@ -539,7 +540,7 @@ namespace BriefFiniteElementNet
                 ur[i] = ut[map.RMap1[i]];
             }
 
-            var krd = CalcUtil.GetReducedZoneDividedMatrix(kr, map);
+            var krd = MatrixUtils.GetReducedZoneDividedMatrix(kr, map);
 
             AnalyseStiffnessMatrixForWarnings(krd, map,loadCase);
 
@@ -587,7 +588,7 @@ namespace BriefFiniteElementNet
             //if (res != SolverResult.Success)
             //   throw new BriefFiniteElementNetException(msg);
 
-            var frs = CalcUtil.Add(krd.FixedReleasedPart.Multiply(urf), krd.FixedFixedPart.Multiply(us_r));
+            var frs = AlgebraUtils.Add(krd.FixedReleasedPart.Multiply(urf), krd.FixedFixedPart.Multiply(us_r));
 
             for (var i = 0; i < urf.Length; i++)
             {
@@ -678,7 +679,7 @@ namespace BriefFiniteElementNet
 
             #endregion
 
-            var krd = CalcUtil.GetReducedZoneDividedMatrix(kr, map);
+            var krd = MatrixUtils.GetReducedZoneDividedMatrix(kr, map);
             AnalyseStiffnessMatrixForWarnings(krd, map, loadCase);
 
             {//TODO: remove
@@ -798,7 +799,7 @@ namespace BriefFiniteElementNet
             var permCalculator = new CsparsenetQrDisplacementPermutationCalculator();
 
             var perm =
-                CalcUtil.GenerateP_Delta_Mpc(parent, loadCase, permCalculator);
+                SolverUtils.GenerateP_Delta_Mpc(parent, loadCase, permCalculator);
 
 
             parent.Trace.Write(Common.TraceLevel.Info, "Calculating Displacement Permutation Matrix took {0} ms", sp.ElapsedMilliseconds);

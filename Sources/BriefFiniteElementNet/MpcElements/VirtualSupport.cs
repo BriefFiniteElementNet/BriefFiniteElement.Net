@@ -5,6 +5,7 @@ using System.Text;
 using CSparse.Double;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
+using BriefFiniteElementNet.Utils;
 
 namespace BriefFiniteElementNet.MpcElements
 {
