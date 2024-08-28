@@ -214,290 +214,6 @@ namespace BriefFiniteElementNet
             AddAnalysisResult_MPC(cse);
         }
 
-        /*
-        /// <summary>
-        /// Adds the analysis result.
-        /// </summary>
-        /// <param name="cse">The load case.</param>
-        /// <remarks>if model is analyzed against specific load case, then displacements are available through <see cref="Displacements"/> property.
-        /// If system is not analyses against a specific load case, then this method will analyses structure against <see cref="LoadCase"/>.
-        /// While this method is using pre computed Cholesky Decomposition , its have a high performance in solving the system.
-        /// </remarks>
-        [Obsolete("Use AddAnalysisResultIfNotExists instead")]
-        public void AddAnalysisResult(LoadCase cse)
-        {
-            throw new NotImplementedException();
-
-            var sp = Stopwatch.StartNew();
-
-            var haveSettlement = false;
-
-            #region Determining force and displacement vectors
-
-            var fixCount = this.Kfs.ColumnCount;
-            var freeCount = this.Kfs.RowCount;
-
-            var nodes = parent.Nodes;
-
-            var uf = new double[freeCount];
-            var pf = new double[freeCount];
-
-            var us = new double[fixCount];
-            var ps = new double[fixCount];
-
-            var n = parent.Nodes.Count;
-
-            #region Initializing Node.MembersLoads
-
-            for (var i = 0; i < n; i++) parent.Nodes[i].MembersLoads.Clear();
-
-            foreach (var elm in parent.Elements)
-            {
-                var nc = elm.Nodes.Length;
-
-                foreach (var ld in elm.Loads)
-                {
-                    if (ld.Case != cse)
-                        continue;
-
-                    var frc = ld.GetGlobalEquivalentNodalLoads(elm);
-
-                    for (var i = 0; i < nc; i++)
-                    {
-                        elm.Nodes[i].MembersLoads.Add(new NodalLoad(frc[i], cse));
-                    }
-                }
-            }
-
-            #endregion
-
-            //TraceUtil.WritePerformanceTrace("Calculating end member forces took {0} ms", sp.ElapsedMilliseconds);
-
-            parent.Trace.Write(TraceRecord.Create(TraceLevel.Info,
-                    string.Format("Calculating end member forces took {0} ms",
-                        sp.ElapsedMilliseconds)));
-
-            sp.Restart();
-
-
-
-            var fmap = this.FixedMap;
-            var rmap = this.ReleasedMap;
-
-
-            for (int i = 0; i < n; i++)
-            {
-                var force = new Force();
-
-                foreach (var ld in nodes[i].MembersLoads)
-                    force += ld.Force;
-
-
-                foreach (var ld in nodes[i].Loads)
-                    if (ld.Case == cse)
-                        force += ld.Force;
-
-
-                var cns = nodes[i].Constraints;
-                var disp = new Displacement();
-
-                if (cse == this.parent.SettlementLoadCase) disp = nodes[i].Settlements;
-
-
-                #region DX
-
-                if (cns.DX == DofConstraint.Released)
-                {
-                    pf[rmap[6*i + 0]] = force.Fx;
-                    uf[rmap[6*i + 0]] = disp.DX;
-                }
-                else
-                {
-                    ps[fmap[6*i + 0]] = force.Fx;
-                    us[fmap[6*i + 0]] = disp.DX;
-                }
-
-                #endregion
-
-                #region DY
-
-                if (cns.DY == DofConstraint.Released)
-                {
-                    pf[rmap[6*i + 1]] = force.Fy;
-                    uf[rmap[6*i + 1]] = disp.DY;
-                }
-                else
-                {
-                    ps[fmap[6*i + 1]] = force.Fy;
-                    us[fmap[6*i + 1]] = disp.DY;
-                }
-
-                #endregion
-
-                #region DZ
-
-                if (cns.DZ == DofConstraint.Released)
-                {
-                    pf[rmap[6*i + 2]] = force.Fz;
-                    uf[rmap[6*i + 2]] = disp.DZ;
-                }
-                else
-                {
-                    ps[fmap[6*i + 2]] = force.Fz;
-                    us[fmap[6*i + 2]] = disp.DZ;
-                }
-
-                #endregion
-
-
-
-                #region RX
-
-                if (cns.RX == DofConstraint.Released)
-                {
-                    pf[rmap[6*i + 3]] = force.Mx;
-                    uf[rmap[6*i + 3]] = disp.RX;
-                }
-                else
-                {
-                    ps[fmap[6*i + 3]] = force.Mx;
-                    us[fmap[6*i + 3]] = disp.RX;
-                }
-
-                #endregion
-
-                #region RY
-
-                if (cns.RY == DofConstraint.Released)
-                {
-                    pf[rmap[6*i + 4]] = force.My;
-                    uf[rmap[6*i + 4]] = disp.RY;
-                }
-                else
-                {
-                    ps[fmap[6*i + 4]] = force.My;
-                    us[fmap[6*i + 4]] = disp.RY;
-                }
-
-                #endregion
-
-                #region RZ
-
-                if (cns.RZ == DofConstraint.Released)
-                {
-                    pf[rmap[6*i + 5]] = force.Mz;
-                    uf[rmap[6*i + 5]] = disp.RZ;
-                }
-                else
-                {
-                    ps[fmap[6*i + 5]] = force.Mz;
-                    us[fmap[6*i + 5]] = disp.RZ;
-                }
-
-                #endregion
-            }
-
-            #endregion
-
-            //TraceUtil.WritePerformanceTrace("forming Uf,Us,Ff,Fs took {0} ms", sp.ElapsedMilliseconds);
-
-            parent.Trace.Write(TraceRecord.Create(TraceLevel.Info,
-                   string.Format("forming Uf,Us,Ff,Fs took {0} ms",
-                       sp.ElapsedMilliseconds)));
-
-            sp.Restart();
-
-            #region Determining that have settlement or not
-
-            for (int i = 0; i < fixCount; i++)
-                if (us[i] != 0)
-                {
-                    haveSettlement = true;
-                    break;
-                }
-
-            #endregion
-
-            #region Solving equation system
-
-
-            ISolver solver;
-
-
-            if (Solver == null)
-                throw new NullReferenceException("Solver");
-
-            for (int i = 0; i < fixCount; i++)
-                ps[i] = 0; //no need existing values
-
-
-            string message;
-
-            if (!Solver.IsInitialized)
-                Solver.Initialize();
-
-            var b = haveSettlement ? MathUtil.ArrayMinus(pf, MathUtil.Muly(Kfs, us)) : pf;
-
-            if (Solver.Solve(b, uf, out message) !=
-                SolverResult.Success)
-                throw new SolverFailException(message); //uf = kff^-1(Pf-Kfs*us)
-
-            var residual = CheckingUtil.GetResidual(Solver.A, uf, b);
-
-            this.Kfs.TransposeMultiply(uf, ps); //ps += Kfs*Uf
-
-            if (haveSettlement)
-                this.Kss.Multiply(us, ps); //ps += Kss*Us
-
-            #endregion
-
-            //TraceUtil.WritePerformanceTrace(
-            //    "solver: {0}, duration: {1} ms, size: {2}x{3}, residual {4:g} ", Solver.SolverType,
-            //    sp.ElapsedMilliseconds, Solver.A.RowCount, Solver.A.ColumnCount, residual);
-
-            parent.Trace.Write(TraceRecord.Create(TraceLevel.Info,
-                  string.Format("solver: {0}, duration: {1} ms, size: {2}x{3}, residual {4:g} ", Solver.SolverType,
-                sp.ElapsedMilliseconds, Solver.A.RowCount, Solver.A.ColumnCount, residual)));
-
-            sp.Restart();
-
-            #region Adding result to Displacements and Forces members
-
-            var ut = new double[6*n];
-            var ft = new double[6*n];
-
-            var revFMap = this.ReversedFixedMap;
-            var revRMap = this.ReversedReleasedMap;
-
-
-            for (int i = 0; i < freeCount; i++)
-            {
-                ut[revRMap[i]] = uf[i];
-                ft[revRMap[i]] = pf[i];
-            }
-
-
-            for (int i = 0; i < fixCount; i++)
-            {
-                ut[revFMap[i]] = us[i];
-                ft[revFMap[i]] = ps[i];
-            }
-
-            //TraceUtil.WritePerformanceTrace("Assembling Ut, Pt from Uf,Ff,Us,Fs tooks {0} ms", sp.ElapsedMilliseconds);
-
-            parent.Trace.Write(TraceRecord.Create(TraceLevel.Info,
-                string.Format("Assembling Ut, Pt from Uf,Ff,Us,Fs tooks {0} ms", sp.ElapsedMilliseconds)));
-
-            sp.Restart();
-
-            displacements[cse] = ut;
-            forces[cse] = ft;
-
-            #endregion
-
-        }
-        */
-
         /// <summary>
         /// Adds the analysis result.
         /// </summary>
@@ -507,6 +223,7 @@ namespace BriefFiniteElementNet
         /// While this method is using pre computed Cholesky Decomposition , its have a high performance in solving the system.
         /// </remarks>
         [Obsolete("Use AddAnalysisResult instead")]
+        [TodoDelete]
         private void AddAnalysisResult2(LoadCase loadCase)
         {
             ISolver solver;
@@ -619,7 +336,7 @@ namespace BriefFiniteElementNet
             _displacements[loadCase] = ut2;
         }
 
-
+        [TodoDelete]
         public void AddLoadVectors(LoadCase loadCase)
         {
             elementForces[loadCase] = GetTotalElementsForceVector(loadCase);
@@ -1021,6 +738,8 @@ namespace BriefFiniteElementNet
             }
         }
 
+
+        [TodoDelete]
         private void CheckForSymmetricity(SparseMatrix cs)
         {
             var cr = cs.Transpose();
@@ -1047,6 +766,7 @@ namespace BriefFiniteElementNet
         /// </remarks>
         /// <returns></returns>
         [Obsolete("use GetTotalConcentratedForceVector and GetTotalElementsForceVector instead")]
+        [TodoDelete]
         private double[] GetTotalForceVector(LoadCase cse, DofMappingManager map)
         {
             //force vector for both free and fixed dof

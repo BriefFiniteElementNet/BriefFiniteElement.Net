@@ -429,7 +429,6 @@ After:
             throw new NotImplementedException();
         }
 
-        #region stress
       
 
         /// <summary>
@@ -484,12 +483,12 @@ After:
 
             return buf;
         }
-        #endregion
+      
         public GeneralStressTensor GetLoadStressAt(Element targetElement, ElementalLoad load, double[] isoLocation)
         {
             throw new NotImplementedException();
         }
-        #region strain
+        
         /// <summary>
         /// Determine the strain in the element for a given load case
         /// </summary>
@@ -586,6 +585,6 @@ After:
                 new LoadHandlers.CstHelper.Uniform_UF_Handler(),
             };
         }
-        #endregion
+
     }
 }

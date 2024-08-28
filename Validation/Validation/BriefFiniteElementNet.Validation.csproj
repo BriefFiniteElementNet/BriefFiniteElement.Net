@@ -99,6 +99,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="QuadElementTester.cs" />
+    <Compile Include="StructureGenerator.cs" />
     <Compile Include="TestValidator.cs" />
     <Compile Include="tetrahedronElementTester.cs" />
     <Compile Include="TimoshenkoBeamChecker.cs" />

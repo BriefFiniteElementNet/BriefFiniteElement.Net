@@ -5,7 +5,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using BriefFiniteElementNet.Elements;
-using rnd=BriefFiniteElementNet.RandomHelper;
+using rnd = BriefFiniteElementNet.RandomHelper;
 using System.Globalization;
 using BriefFiniteElementNet.Loads;
 using BriefFiniteElementNet.Materials;

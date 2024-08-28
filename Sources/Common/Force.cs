@@ -19,7 +19,7 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// A force with zero components
         /// </summary>
-        public static Force Zero = new Force(0, 0, 0, 0, 0, 0);
+        public static readonly Force Zero = new Force(0, 0, 0, 0, 0, 0);
 
         private double fx;
         private double fy;

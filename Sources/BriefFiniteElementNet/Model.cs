@@ -290,7 +290,7 @@ namespace BriefFiniteElementNet
         }
 
 
-        [Obsolete]
+        [TodoDelete]
         private void PrecheckForErrors()
         {
             new ModelWarningChecker().CheckModel(this);

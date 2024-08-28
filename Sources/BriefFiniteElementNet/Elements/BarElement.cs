@@ -59,11 +59,6 @@ namespace BriefFiniteElementNet.Elements
         internal Constraint[] _nodalReleaseConditions;
 
 
-        /*
-        public Constraint[] NodalReleaseConditions
-        {
-            get { return _nodalReleaseConditions; }
-        }*/
 
         /// <summary>
         /// Gets or sets the node count of bar element
@@ -203,12 +198,13 @@ namespace BriefFiniteElementNet.Elements
             set { _nodalReleaseConditions = value; }
         }
 
-        
+
         #endregion
 
 
         #region obsolete methods
 
+        [TodoDelete]
         public Matrix ComputeBMatrix(params double[] location)
         {
             var L = (EndNode.Location - StartNode.Location).Length;
@@ -328,6 +324,7 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
+        [TodoDelete]
         public Matrix ComputeDMatrixAt(params double[] location)
         {
             double e = 0.0;//, g = 0;//mechanical
@@ -343,7 +340,7 @@ namespace BriefFiniteElementNet.Elements
 
             return buf;
         }
-
+        [TodoDelete]
         public Matrix ComputeJMatrixAt(params double[] location)
         {
             // J =  ∂x / ∂ξ
@@ -353,7 +350,7 @@ namespace BriefFiniteElementNet.Elements
             buf[0, 0] = L/2;/// J =  ∂x / ∂ξ
             return buf;
         }
-
+        [TodoDelete]
         public Matrix ComputeNMatrixAt(params double[] location)
         {
             throw new NotImplementedException();
