@@ -1,3 +1,6 @@
 [submodule "csparse-interrupt"]
 	path = Sources/csparse-interrupt
 	url = https://github.com/wo80/csparse-interop.git
+[submodule "Sources/csparse-interop"]
+	path = Sources/csparse-interop
+	url = https://github.com/wo80/csparse-interop.git
