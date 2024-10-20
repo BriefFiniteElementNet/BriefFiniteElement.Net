@@ -11,3 +11,4 @@ Miscellaneous and theorical Topics
     barPartialEndRelease
     exactInternalForceDisplacement
     EquivalentNodalLoads
+    partial-connection
