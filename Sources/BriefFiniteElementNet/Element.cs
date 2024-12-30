@@ -153,12 +153,19 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// Gets the stiffness matrix of member in global coordination system.
         /// </summary>
-        /// <returns>The stiffness matrix</returns>
+        /// <param name="stiffness">the stiffness</param>
         /// <remarks>
         /// The number of DoFs is in element local regrading order in <see cref="Element.Nodes"/>!</remarks>
         public abstract void GetGlobalStifnessMatrix(Matrix stiffness);
 
+
+        /// <summary>
+        /// Gets the dimensions of the matrix
+        /// </summary>
+        /// <returns></returns>
         public abstract int GetGlobalStifnessMatrixDimensions();
+
+
 
         /// <summary>
         /// Gets the mass matrix of element in global coordination system.

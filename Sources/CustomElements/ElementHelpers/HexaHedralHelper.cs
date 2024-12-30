@@ -113,6 +113,16 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             return res;
         }
 
+        public Matrix CalcLocalStiffnessMatrix(Element targetElement, Matrix matrix)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int CalcLocalStiffnessMatrixSize(Element targetElement)
+        {
+            throw new NotImplementedException();
+        }
+
         public virtual Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
             var J = GetJMatrixAt(targetElement, isoCoords);

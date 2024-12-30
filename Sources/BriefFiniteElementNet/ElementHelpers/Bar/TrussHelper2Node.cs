@@ -760,5 +760,10 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
                 new LoadHandlers.Truss2Node.Uniform_UF_Handler(),
             };
         }
+
+        public override int CalcLocalStiffnessMatrixSize(Element targetElement)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

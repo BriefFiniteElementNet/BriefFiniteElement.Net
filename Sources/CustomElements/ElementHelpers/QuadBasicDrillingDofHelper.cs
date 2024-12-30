@@ -52,6 +52,16 @@ namespace BriefFiniteElementNet.Elements.ElementHelpers
             return buf;
         }
 
+        public Matrix CalcLocalStiffnessMatrix(Element targetElement, Matrix matrix)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int CalcLocalStiffnessMatrixSize(Element targetElement)
+        {
+            throw new NotImplementedException();
+        }
+
         public Matrix GetBMatrixAt(Element targetElement, params double[] isoCoords)
         {
             throw new NotImplementedException();

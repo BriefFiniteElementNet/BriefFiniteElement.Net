@@ -347,5 +347,12 @@ namespace BriefFiniteElementNet.ElementHelpers.Bar
 
         /// <inheritdoc/>
         public abstract ILoadHandler[] GetLoadHandlers();
+
+        public Matrix CalcLocalStiffnessMatrix(Element targetElement, Matrix matrix)
+        {
+            throw new NotImplementedException();
+        }
+
+        public abstract int CalcLocalStiffnessMatrixSize(Element targetElement);
     }
 }

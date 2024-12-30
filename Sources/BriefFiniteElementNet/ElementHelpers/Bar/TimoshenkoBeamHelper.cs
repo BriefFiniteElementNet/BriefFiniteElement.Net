@@ -905,6 +905,11 @@ namespace BriefFiniteElementNet.ElementHelpers.Bar
             };
         }
 
+        public override int CalcLocalStiffnessMatrixSize(Element targetElement)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

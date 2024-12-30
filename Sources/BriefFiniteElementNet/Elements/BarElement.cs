@@ -462,6 +462,18 @@ namespace BriefFiniteElementNet.Elements
         }
 
         /// <inheritdoc/>
+        public override void GetGlobalStifnessMatrix(Matrix stiffness)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public override int GetGlobalStifnessMatrixDimensions()
+        {
+            return 12;
+        }
+
+        /// <inheritdoc/>
         public Matrix GetTransformationMatrix()
         {
             var cxx = 0.0;
@@ -631,6 +643,40 @@ namespace BriefFiniteElementNet.Elements
 
                 var dofs = helper.GetDofOrder(this);
 
+                for (var ii = 0; ii < dofs.Length; ii++)
+                {
+                    var bi = dofs[ii].NodeIndex * 6 + (int)dofs[ii].Dof;
+
+                    for (var jj = 0; jj < dofs.Length; jj++)
+                    {
+                        var bj = dofs[jj].NodeIndex * 6 + (int)dofs[jj].Dof;
+
+                        buf[bi, bj] += ki[ii, jj];
+                    }
+                }
+
+                ki.ReturnToPool();
+            }
+
+            return buf;
+        }
+
+        public void GetLocalStifnessMatrix(Matrix local)
+        {
+            var helpers = GetElementHelpers();
+
+            var buf =
+                MatrixPool.Allocate(6 * nodes.Length, 6 * nodes.Length);
+
+            //var transMatrix = GetTransformationMatrix();
+
+            for (var i = 0; i < helpers.Count; i++)
+            {
+                var helper = helpers[i];
+
+                var ki = helper.CalcLocalStiffnessMatrix(this);// ComputeK(helper, transMatrix);
+
+                var dofs = helper.GetDofOrder(this);
 
                 for (var ii = 0; ii < dofs.Length; ii++)
                 {
@@ -647,16 +693,7 @@ namespace BriefFiniteElementNet.Elements
                 ki.ReturnToPool();
             }
 
-            /*
-            for(var i=0;i<6*NodeCount;i++)
-            {
-                if (buf[i, i] < 0)
-                    Guid.NewGuid();
-
-            }
-            */
-
-            return buf;
+            //return buf;
         }
 
         /// <summary>
@@ -1350,14 +1387,5 @@ namespace BriefFiniteElementNet.Elements
             return b2.ToArray();
         }
 
-        public override void GetGlobalStifnessMatrix(Matrix stiffness)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override int GetGlobalStifnessMatrixDimensions()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

@@ -102,6 +102,17 @@ namespace BriefFiniteElementNet.ElementHelpers
         Matrix CalcLocalStiffnessMatrix(Element targetElement);
 
         /// <summary>
+        /// Gets the stiffness [K] matrix in local coordination system.
+        /// </summary>
+        /// <param name="targetElement">The target element.</param>
+        /// 
+        /// <returns>Stiffness matrix</returns>
+        Matrix CalcLocalStiffnessMatrix(Element targetElement, Matrix matrix);
+
+
+        int CalcLocalStiffnessMatrixSize(Element targetElement);
+
+        /// <summary>
         /// Gets the mass [M] matrix in local coordination system.
         /// </summary>
         /// <param name="targetElement">The target element.</param>

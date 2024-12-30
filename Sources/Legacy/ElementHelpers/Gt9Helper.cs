@@ -447,5 +447,15 @@ namespace BriefFiniteElementNet.ElementHelpers
         {
             throw new NotImplementedException();
         }
+
+        public Matrix CalcLocalStiffnessMatrix(Element targetElement, Matrix matrix)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int CalcLocalStiffnessMatrixSize(Element targetElement)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

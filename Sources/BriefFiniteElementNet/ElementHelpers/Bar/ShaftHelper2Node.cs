@@ -456,5 +456,10 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
                 new LoadHandlers.ShaftHelper.Concentrated_UF_Handler(),
             };
         }
+
+        public override int CalcLocalStiffnessMatrixSize(Element targetElement)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
