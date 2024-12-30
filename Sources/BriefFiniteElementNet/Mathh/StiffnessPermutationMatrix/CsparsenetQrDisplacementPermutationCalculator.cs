@@ -9,7 +9,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace BriefFiniteElementNet.Mathh
+namespace BriefFiniteElementNet.Mathh.StiffnessPermutationMatrix
 {
     public class CsparsenetQrDisplacementPermutationCalculator : IDisplacementPermutationCalculator
     {
@@ -33,9 +33,10 @@ namespace BriefFiniteElementNet.Mathh
             var n = a.RowCount;
             var m = a.ColumnCount;
 
-            var order = ColumnOrdering.Natural;
+            
 
             var sp = System.Diagnostics.Stopwatch.StartNew();
+            var order = ColumnOrdering.MinimumDegreeAtA;//TODO: is natural ordering any good?
 
             var qr = SparseQR.Create(a, order);
 
@@ -54,7 +55,7 @@ namespace BriefFiniteElementNet.Mathh
 
             var epsilon = 1e-8;
 
-            
+
             foreach (var r_item in r.EnumerateIndexed())
             {
                 var rowNum = r_item.Item1;
@@ -67,7 +68,7 @@ namespace BriefFiniteElementNet.Mathh
                 */
 
                 if (Math.Abs(val) > epsilon) //Then, if abs(R[i, i]) > tol, you found an independent row
-                    //Make sure to take row permutations into account (again, you can get the SymbolicFactorization containing row and column permutations using reflection)
+                                             //Make sure to take row permutations into account (again, you can get the SymbolicFactorization containing row and column permutations using reflection)
                 {
                     if (leads[rowNum] == -1)
                         leads[rowNum] = colNum;
@@ -75,15 +76,19 @@ namespace BriefFiniteElementNet.Mathh
                         leads[rowNum] = Math.Min(leads[rowNum], colNum);
                 }
             }
-            
-            
-           
+
+
+
             //throw new NotImplementedException("above section not right");
+
+            t2 = sp.ElapsedMilliseconds;
 
             var leadCount = leads.Count(i => i != -1);
 
+            t2 = sp.ElapsedMilliseconds;
+
             {
-                
+
 
                 var nnzApprox = leadCount;
                 var p1Crd = new CoordinateStorage<double>(leadCount, r.RowCount, nnzApprox);
@@ -114,7 +119,7 @@ namespace BriefFiniteElementNet.Mathh
                         cnt2++;
                     }
                 }
-                
+
                 var p1 = p1Crd.ToCCs();
                 var p2 = p2Crd.ToCCs();
                 var p2p = p2pCrd.ToCCs();
@@ -132,12 +137,12 @@ namespace BriefFiniteElementNet.Mathh
                 var right = new double[rinDep.RowCount];
                 var sol = new double[rinDep.RowCount];
 
-                var bufCrd = new CoordinateStorage<double>(leadCount, a.ColumnCount-leadCount, leadCount);
+                var bufCrd = new CoordinateStorage<double>(leadCount, a.ColumnCount - leadCount, leadCount);
 
                 for (var j = 0; j < rinDep.ColumnCount; j++)
                 {
                     //put the j'th column of r into the rightSide
-                    
+
                     right.FillWith(0);
 
                     {
@@ -156,13 +161,21 @@ namespace BriefFiniteElementNet.Mathh
                         }
                     }
 
+                    
+
                     qr2.Solve(right, sol);
+
+                    var t3 = sp.ElapsedMilliseconds;
 
                     for (var i = 0; i < rdep.RowCount; i++) bufCrd.At(i, j, sol[i]);
                 }
 
+                t2 = sp.ElapsedMilliseconds;
+
                 buf = bufCrd.ToCCs();
             }
+
+            
 
             //var top = buf.ToDenseMatrix();
 
@@ -176,10 +189,12 @@ namespace BriefFiniteElementNet.Mathh
             var p_d = new CoordinateStorage<double>(a.ColumnCount - 1, masterCount, 1);
 
             var rightSideDense = new double[a.ColumnCount - 1];
-            var rightSide= new double[a.ColumnCount - 1];
+            var rightSide = new double[a.ColumnCount - 1];
 
             var cnt = 0;
             var cnt3 = 0;
+
+            t2 = sp.ElapsedMilliseconds;
 
             for (var i = 0; i < a.ColumnCount - 1; i++)
             {
@@ -210,12 +225,12 @@ namespace BriefFiniteElementNet.Mathh
                             var rowNum = i;
                             var colNum = t.Item1;
 
-                            
+
                             //var colNum = s.q[t.Item1];
 
                             var value = t.Item2;
 
-                            if (t.Item1 != p_d.ColumnCount )
+                            if (t.Item1 != p_d.ColumnCount)
                                 p_d.At(rowNum, colNum, -value);
                             else
                                 right = value;
@@ -225,7 +240,7 @@ namespace BriefFiniteElementNet.Mathh
                         rightSide[i] = -right;
                     }
 
-                   
+
                     cnt++;
                 }
                 else
@@ -248,6 +263,8 @@ namespace BriefFiniteElementNet.Mathh
 
             var pdd = p_d.ToCCs();
 
+            
+
             return Tuple.Create(pdd, rightSide);
 
             var tol = 1e-6;
@@ -255,25 +272,25 @@ namespace BriefFiniteElementNet.Mathh
             throw new NotImplementedException();
         }
 
+
+        static FieldInfo R = typeof(SparseQR).GetField("R", BindingFlags.Instance | BindingFlags.NonPublic);
+        static FieldInfo Q = typeof(SparseQR).GetField("Q", BindingFlags.Instance | BindingFlags.NonPublic);
+        static FieldInfo S = typeof(SparseQR).GetField("S", BindingFlags.Instance | BindingFlags.NonPublic);
+
+
         CompressedColumnStorage<double> GetFactorR(SparseQR qr)
         {
-            var info = typeof(SparseQR).GetField("R", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            return info.GetValue(qr) as CompressedColumnStorage<double>;
+            return R.GetValue(qr) as CompressedColumnStorage<double>;
         }
 
         CompressedColumnStorage<double> GetFactorQ(SparseQR qr)
         {
-            var info = typeof(SparseQR).GetField("Q", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            return info.GetValue(qr) as CompressedColumnStorage<double>;
+            return Q.GetValue(qr) as CompressedColumnStorage<double>;
         }
 
         SymbolicFactorization GetSymbolicFactorization(SparseQR qr)
         {
-            var info = typeof(SparseQR).GetField("S", BindingFlags.Instance | BindingFlags.NonPublic);
-
-            return info.GetValue(qr) as SymbolicFactorization;
+            return S.GetValue(qr) as SymbolicFactorization;
         }
     }
 }

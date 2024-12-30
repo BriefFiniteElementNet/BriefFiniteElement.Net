@@ -119,6 +119,12 @@ namespace BriefFiniteElementNet
             return new Vector(x[startIndex], x[startIndex + 1], x[startIndex + 2]);
         }
 
+        public static double[] ToArray(Vector vec)
+        {
+            return new double[] { vec.X, vec.Y, vec.Z };
+        }
+
+
         /// <summary>
         /// Froms the point.
         /// </summary>

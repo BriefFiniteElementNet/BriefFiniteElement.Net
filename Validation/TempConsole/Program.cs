@@ -13,9 +13,12 @@ namespace TempConsole
         {
             //Class1.T();
 
-            var buf = new BarElementTester().DoPopularValidation();
-            BriefFiniteElementNet.Validation.Ui.Program.ExportToHtmFile("c:\\temp\\fil.html", buf);
+            //var buf = new BarElementTester().DoPopularValidation();
+            //BriefFiniteElementNet.Validation.Ui.Program.ExportToHtmFile("c:\\temp\\fil.html", buf);
 
+
+
+            SupportReactionCalculator.Run();
         }
     }
 }

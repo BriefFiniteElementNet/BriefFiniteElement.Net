@@ -19,7 +19,7 @@ namespace BriefFiniteElementNet
         /// <summary>
         /// A force with zero components
         /// </summary>
-        public static readonly Force Zero = new Force(0, 0, 0, 0, 0, 0);
+        public static Force Zero = new Force(0, 0, 0, 0, 0, 0);
 
         private double fx;
         private double fy;
@@ -231,7 +231,7 @@ namespace BriefFiniteElementNet
         /// <param name="vec">The vec.</param>
         /// <param name="startIndex">The start index of forces vector.</param>
         /// <returns></returns>
-        public static Force FromVector(double[] vec, int startIndex)
+        public static Force FromVector(double[] vec, int startIndex=0)
         {
             return new Force(
                 vec[startIndex + 0],

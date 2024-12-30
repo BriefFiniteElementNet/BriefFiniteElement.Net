@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using CSparse.Double;
+using CSparse.Storage;
 
 namespace BriefFiniteElementNet
 {
@@ -163,6 +164,15 @@ namespace BriefFiniteElementNet
         }
 
         public abstract SparseMatrix GetExtraEquations();
+
+        /// <summary>
+        /// Fills the extra equations into <see cref="crd"/> starting at line <see cref="line"/>
+        /// </summary>
+        /// <param name="crd">the coordinated storage</param>
+        /// <param name="startLine">the starting line</param>
+        /// <returns>number of rows added</returns>
+        public abstract int GetExtraEquations(CoordinateStorage<double> crd,int startLine);
+
 
         /// <summary>
         /// Gets the count of equations returned by <see cref="MpcElement.GetExtraEquations()"/>. (number of rows of it)

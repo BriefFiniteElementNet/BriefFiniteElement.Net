@@ -6,6 +6,7 @@ using CSparse.Double;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using BriefFiniteElementNet.Utils;
+using CSparse.Storage;
 
 namespace BriefFiniteElementNet.MpcElements
 {
@@ -47,6 +48,68 @@ namespace BriefFiniteElementNet.MpcElements
             set { _constraint = value; }
         }
 
+        public override int GetExtraEquations(CoordinateStorage<double> crd, int startLine)
+        {
+            var n = parent.Nodes.Count;
+
+
+            var buf = crd;// new CSparse.Storage.CoordinateStorage<double>(GetExtraEquationsCount(), parent.Nodes.Count * 6 + 1, 1);
+
+            var cnt = 0;
+
+            for (var i = 0; i < Nodes.Count; i++)
+            {
+                var nde = Nodes[i];
+
+                var stIdx = nde.Index * 6;
+
+
+                if (_constraint.DX == DofConstraint.Fixed)
+                {
+                    buf.At(cnt+ startLine, stIdx + 0, 1);
+                    buf.At(cnt+ startLine, 6 * n, _settlement.DX);
+                    cnt++;
+                }
+
+                if (_constraint.DY == DofConstraint.Fixed)
+                {
+                    buf.At(cnt + startLine, stIdx + 1, 1);
+                    buf.At(cnt + startLine, 6 * n, _settlement.DY);
+                    cnt++;
+                }
+
+                if (_constraint.DZ == DofConstraint.Fixed)
+                {
+                    buf.At(cnt + startLine, stIdx + 2, 1);
+                    buf.At(cnt + startLine, 6 * n, _settlement.DZ);
+                    cnt++;
+                }
+
+
+                if (_constraint.RX == DofConstraint.Fixed)
+                {
+                    buf.At(cnt + startLine, stIdx + 3, 1);
+                    buf.At(cnt + startLine, 6 * n, _settlement.DX);
+                    cnt++;
+                }
+
+                if (_constraint.RY == DofConstraint.Fixed)
+                {
+                    buf.At(cnt + startLine, stIdx + 4, 1);
+                    buf.At(cnt + startLine, 6 * n, _settlement.DX);
+                    cnt++;
+                }
+
+                if (_constraint.RZ == DofConstraint.Fixed)
+                {
+                    buf.At(cnt + startLine, stIdx + 5, 1);
+                    buf.At(cnt + startLine, 6 * n, _settlement.DX);
+                    cnt++;
+                }
+            }
+
+            return cnt;
+        }
 
         public override SparseMatrix GetExtraEquations()
         {

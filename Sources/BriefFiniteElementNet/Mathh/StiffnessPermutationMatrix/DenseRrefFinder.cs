@@ -11,7 +11,7 @@ using CSparse.Storage;
 using CCS = CSparse.Double.SparseMatrix;//<double>;
 namespace BriefFiniteElementNet.Mathh
 {
-    public class DenseIrrefFinder:IRrefFinder
+    public class DenseRrefFinder:IRrefFinder
     {
         public CCS CalculateRref(CCS a)
         {
@@ -129,7 +129,6 @@ namespace BriefFiniteElementNet.Mathh
 
                     }
                 }
-
             }
 
             throw new NotImplementedException();

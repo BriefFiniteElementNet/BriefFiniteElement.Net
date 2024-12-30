@@ -20,6 +20,36 @@ namespace BriefFiniteElementNet.Utils
     public static class MatrixUtils
     {
 
+        public static double[] GetColumnAsDense(this CompressedColumnStorage<double> matrix, int columnNumber)
+        {
+            var buf = new double[matrix.RowCount];
+
+            foreach (var item in EnumerateColumnMembers(matrix, columnNumber))
+            {
+                buf[item.Item1] = item.Item2;
+            }
+
+            return buf;
+        }
+
+        //sets the defined column to zero (all members to zero individually)
+        public static void SetColumnToZero(this CompressedColumnStorage<double> matrix, int columnNumber)
+        {
+            var i = columnNumber;
+
+            var ap = matrix.ColumnPointers;
+            var ai = matrix.RowIndices;
+            var ax = matrix.Values;
+
+            var end = ap[i + 1];
+
+            for (int j = ap[i]; j < end; j++)
+            {
+                ax[j] = 0.0;
+            }
+        }
+
+
         // TODO: EXTENSION - move to Extensions class?
         public static int EmptyRowCount(this SparseMatrix matrix)
         {

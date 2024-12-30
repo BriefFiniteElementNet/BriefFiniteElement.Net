@@ -20,6 +20,8 @@ namespace TestingConsole
     {
         static void Main(string[] args)
         {
+            //Etc.SampleTest();
+            //return;
             //BriefFiniteElementNet.Validation.GithubIssues.Issue152.Run();
             //EulerBernouly2nodeChecker.Check2NodeShapeFunctionYDir();
             //EulerBernouly2nodeChecker.Check2NodeShapeFunctionZDir();
@@ -41,6 +43,23 @@ namespace TestingConsole
             Console.Write("Done");
 
             Console.ReadKey();
+        }
+
+        static void tmp2()
+        {
+            var n1 = new Node(0, 0, 0);
+            var n2 = new Node(1, 0, 0);
+
+            var elm = new BarElement(n1, n2);
+
+            elm.Section = new UniformGeometric1DSection(SectionGenerator.GetISetion(1, 1, 0.01, 0.01));
+            elm.Material = UniformIsotropicMaterial.CreateFromYoungPoisson(210e9, 0.25);
+
+            var model = new Model();
+            model.Nodes.Add(n1, n2);
+            model.Elements.Add(elm);
+
+            model.Solve_MPC();
         }
 
         static void tmp()

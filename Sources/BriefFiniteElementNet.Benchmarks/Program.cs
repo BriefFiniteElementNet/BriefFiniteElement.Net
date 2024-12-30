@@ -12,6 +12,9 @@ namespace BriefFiniteElementNet.Benchmarks
         {
             var g = new BarGrid();
 
+            g.Run(16);
+
+            return;
 
             for (int i = 2;i < 20; i++)
             {

@@ -100,6 +100,7 @@
     </Compile>
     <Compile Include="QuadElementTester.cs" />
     <Compile Include="StructureGenerator.cs" />
+    <Compile Include="SupportReactionCalculator.cs" />
     <Compile Include="TestValidator.cs" />
     <Compile Include="tetrahedronElementTester.cs" />
     <Compile Include="TimoshenkoBeamChecker.cs" />

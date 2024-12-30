@@ -59,6 +59,10 @@
       <Project>{7a20ce01-552e-457a-a9c3-18bed244d897}</Project>
       <Name>BriefFiniteElementNet.Validation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\BriefFiniteElementNet.Solvers\BriefFiniteElementNet.Solvers.csproj">
+      <Project>{3732500f-6c7b-498a-87e3-eba1667e2d33}</Project>
+      <Name>BriefFiniteElementNet.Solvers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\BriefFiniteElementNet\BriefFiniteElementNet.csproj">
       <Project>{7cda20d4-9bc8-4bc3-9f22-cb86cd4dc3e1}</Project>
       <Name>BriefFiniteElementNet</Name>

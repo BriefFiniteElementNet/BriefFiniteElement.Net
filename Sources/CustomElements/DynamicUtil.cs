@@ -1,5 +1,6 @@
 ﻿using BriefFiniteElementNet.Common;
 using BriefFiniteElementNet.Mathh;
+using BriefFiniteElementNet.Mathh.StiffnessPermutationMatrix;
 using BriefFiniteElementNet.Utils;
 using System;
 using System.Collections.Generic;

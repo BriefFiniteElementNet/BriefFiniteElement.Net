@@ -15,6 +15,7 @@ using CCS = CSparse.Double.SparseMatrix;
 using System.Globalization;
 using BriefFiniteElementNet.Mathh;
 using BriefFiniteElementNet.Utils;
+using BriefFiniteElementNet.Mathh.StiffnessPermutationMatrix;
 
 namespace BriefFiniteElementNet
 {

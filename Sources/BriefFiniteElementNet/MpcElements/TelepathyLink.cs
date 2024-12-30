@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using CSparse.Double;
 using BriefFiniteElementNet.Utils;
+using CSparse.Storage;
 
 namespace BriefFiniteElementNet.MpcElements
 {
@@ -94,6 +95,74 @@ namespace BriefFiniteElementNet.MpcElements
             info.AddValue("_connectRz", _connectRz);
 
             base.GetObjectData(info, context);
+        }
+
+        public override int GetExtraEquations(CoordinateStorage<double> crd, int startLine)
+        {
+            var n = parent.Nodes.Count;
+
+            var buf = crd;// new CSparse.Storage.CoordinateStorage<double>(GetExtraEquationsCount(), parent.Nodes.Count * 6 + 1, 10);
+
+            var cnt = 0;
+
+            //for (var i = 0; i < Nodes.Count; i++)
+            {
+                var ndei = Nodes[0];
+                var stiIdx = ndei.Index * 6;
+
+                for (var j = 1; j < Nodes.Count; j++)
+                {
+                    var ndej = Nodes[j];
+                    var stjIdx = ndej.Index * 6;
+
+
+                    if (_connectDx)
+                    {
+                        buf.At(cnt + startLine, stiIdx, 1);
+                        buf.At(cnt + startLine, stjIdx, -1);
+                        cnt++;
+                    }
+
+                    if (_connectDy)
+                    {
+                        buf.At(cnt + startLine, stiIdx + 1, 1);
+                        buf.At(cnt + startLine, stjIdx + 1, -1);
+                        cnt++;
+                    }
+
+                    if (_connectDz)
+                    {
+                        buf.At(cnt + startLine, stiIdx + 2, 1);
+                        buf.At(cnt + startLine, stjIdx + 2, -1);
+                        cnt++;
+                    }
+
+
+                    if (_connectRx)
+                    {
+                        buf.At(cnt + startLine, stiIdx + 3, 1);
+                        buf.At(cnt + startLine, stjIdx + 3, -1);
+                        cnt++;
+                    }
+
+                    if (_connectRy)
+                    {
+                        buf.At(cnt + startLine, stiIdx + 4, 1);
+                        buf.At(cnt + startLine, stjIdx + 4, -1);
+                        cnt++;
+                    }
+
+                    if (_connectRz)
+                    {
+                        buf.At(cnt + startLine, stiIdx + 5, 1);
+                        buf.At(cnt + startLine, stjIdx + 5, -1);
+                        cnt++;
+                    }
+
+                }
+            }
+
+            return cnt;
         }
 
         public override SparseMatrix GetExtraEquations()

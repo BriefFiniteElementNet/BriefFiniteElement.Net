@@ -22,6 +22,130 @@ namespace BriefFiniteElementNet.MpcElements
 
         }
 
+        public override int GetExtraEquations(CoordinateStorage<double> crd, int startLine)
+        {
+            var distinctNodes = Nodes.Distinct().Where(ii => !ReferenceEquals(ii, null)).ToList();
+
+            var modelDofCount = parent.Nodes.Count * 6;
+
+            var coord = crd;// new CoordinateStorage<double>((distinctNodes.Count - 1) * 6, modelDofCount + 1, 1);
+
+            var centralNode = distinctNodes.FirstOrDefault();
+
+            if (centralNode == null)
+                throw new Exception();
+
+            {
+                var cnt = 0;
+
+                var cDx = centralNode.Index * 6 + 0;
+                var cDy = centralNode.Index * 6 + 1;
+                var cDz = centralNode.Index * 6 + 2;
+                var cRx = centralNode.Index * 6 + 3;
+                var cRy = centralNode.Index * 6 + 4;
+                var cRz = centralNode.Index * 6 + 5;
+
+                foreach (var nde in distinctNodes)
+                {
+
+                    if (ReferenceEquals(nde, centralNode))
+                    {
+
+                    }
+                    else
+                    {
+                        var iDx = nde.Index * 6 + 0;
+                        var iDy = nde.Index * 6 + 1;
+                        var iDz = nde.Index * 6 + 2;
+                        var iRx = nde.Index * 6 + 3;
+                        var iRy = nde.Index * 6 + 4;
+                        var iRz = nde.Index * 6 + 5;
+
+
+                        var d = nde.Location - centralNode.Location;
+
+                        #region i'th Dx
+
+                        //7.15 p 16, ref[1] sais i'th node's:
+                        //nde.Dx = Central.Dx + d.Z * Central.Ry - d.Y * Central.Rz
+                        // So
+                        //-nde.Dx + Central.Dx + d.Z * Central.Ry - d.Y * Central.Rz
+                        coord.At(cnt, cDx, 1);//Central.Dx
+                        coord.At(cnt, cRy, d.Z);//d.Z * Central.Ry
+                        coord.At(cnt, cRz, -d.Y);//- d.Y * Central.Rz
+
+                        coord.At(cnt, iDx, -1);//Nde.Dx
+
+                        #endregion
+
+                        cnt++;
+
+                        #region i'th Dy
+
+                        //nde.Dy = Central.Dy - d.Z * Central.Rx + d.X * Central.Rz
+                        //so
+                        //-nde.Dy + Central.Dy - d.Z * Central.Rx + d.X * Central.Rz
+                        coord.At(cnt, cDy, 1);//Central.Dy
+                        coord.At(cnt, cRx, -d.Z);//-d.Z * Central.Rx
+                        coord.At(cnt, cRz, d.X);//d.X * Central.Rz
+
+                        coord.At(cnt, iDy, -1);//Nde.Dy
+
+                        #endregion
+
+                        cnt++;
+
+                        #region i'th Dz
+
+                        //nde.Dz = Central.Dz + d.Y * Central.Rx - d.X * Central.Ry
+                        //so
+                        //-nde.Dz + Central.Dz + d.Y * Central.Rx - d.X * Central.Ry
+                        coord.At(cnt, cDz, 1);//Central.Dz 
+                        coord.At(cnt, cRx, d.Y);//d.Y * Central.Rx
+                        coord.At(cnt, cRy, -d.X);//- d.X * Central.Ry
+
+                        coord.At(cnt, iDz, -1);//Nde.Dz
+
+                        #endregion
+
+                        cnt++;
+
+                        #region i'th Rx
+                        //nde.Rx = Central.Rx
+                        coord.At(cnt, cRx, 1);
+
+                        coord.At(cnt, iRx, -1);
+                        #endregion
+
+                        cnt++;
+
+                        #region i'th Ry
+                        //nde.Ry = Central.Ry
+                        coord.At(cnt, cRy, 1);
+
+                        coord.At(cnt, iRy, -1);
+                        #endregion
+
+                        cnt++;
+
+                        #region i'th Rz
+                        //nde.Rz = Central.Rz
+                        coord.At(cnt, cRz, 1);
+
+                        coord.At(cnt, iRz, -1);
+                        #endregion
+
+                        cnt++;
+                    }
+                }
+
+
+                return cnt;
+            }
+
+        }
+
+
         public override SparseMatrix GetExtraEquations()
         {
             var distinctNodes = Nodes.Distinct().Where(ii => !ReferenceEquals(ii, null)).ToList();

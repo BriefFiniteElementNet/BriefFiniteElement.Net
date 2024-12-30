@@ -387,7 +387,7 @@ namespace BriefFiniteElementNet.Utils
         /// <param name="model"></param>
         /// <param name="loadCase"></param>
         /// <returns></returns>
-        internal static SparseMatrix GetModelBoundaryConditions(Model model, LoadCase loadCase)
+        public static SparseMatrix GetModelBoundaryConditions(Model model, LoadCase loadCase)
         {
             var fixedDofsCount = model.Nodes.Sum(ii => CalcUtil.FixedCount(ii.Constraints));
 

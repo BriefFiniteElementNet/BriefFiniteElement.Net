@@ -74,7 +74,6 @@
     <None Include="ClassDiagram1.cd" />
     <None Include="Elements\BarElement.md" />
     <None Include="ElementHelpers\IElementHelper.md" />
-    <None Include="Mathh\IRrefFinder.md" />
     <None Include="TransformManagerL2G.md" />
     <None Include="Integration\GaussianIntegrator.md" />
     <None Include="RigidElement.md" />
