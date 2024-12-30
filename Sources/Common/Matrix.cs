@@ -245,6 +245,11 @@ namespace BriefFiniteElementNet
             return new Matrix(this.rows, this.columns, (double[]) this.Values.Clone());
         }
 
+        public void CopyTo(Matrix other)
+        {
+            Array.Copy(this.CoreArray, other.CoreArray, this.CoreArray.Length);
+        }
+
         public override string ToString()
         {
             var sb = new StringBuilder();

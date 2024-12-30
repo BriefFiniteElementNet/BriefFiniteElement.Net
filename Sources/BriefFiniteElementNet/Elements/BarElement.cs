@@ -462,13 +462,25 @@ namespace BriefFiniteElementNet.Elements
         }
 
         /// <inheritdoc/>
-        public override void GetGlobalStifnessMatrix(Matrix stiffness)
+        public override void GetGlobalStiffnessMatrix(Matrix stiffness)
         {
-            throw new NotImplementedException();
+            GetLocalStifnessMatrix(stiffness);
+
+            var mgr = this.GetTransformationManager();
+
+            var buf = MatrixPool.Allocate(stiffness.RowCount, stiffness.ColumnCount);
+
+            mgr.TransformLocalToGlobal(stiffness, buf);
+
+            buf.CopyTo(stiffness);
+
+            MatrixPool.Free(buf);
+
+            mgr.ReturnMatrixesToPool();
         }
 
         /// <inheritdoc/>
-        public override int GetGlobalStifnessMatrixDimensions()
+        public override int GetGlobalStiffnessMatrixDimensions()
         {
             return 12;
         }

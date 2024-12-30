@@ -1356,12 +1356,12 @@ namespace Legacy.Elements
             return b2.ToArray();
         }
 
-        public override void GetGlobalStifnessMatrix(Matrix stiffness)
+        public override void GetGlobalStiffnessMatrix(Matrix stiffness)
         {
             throw new NotImplementedException();
         }
 
-        public override int GetGlobalStifnessMatrixDimensions()
+        public override int GetGlobalStiffnessMatrixDimensions()
         {
             throw new NotImplementedException();
         }

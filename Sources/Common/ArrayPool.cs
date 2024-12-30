@@ -15,6 +15,8 @@ namespace BriefFiniteElementNet.Common
 
         public readonly T[] Empty = new T[0];
 
+        private readonly object _lock = new object();
+
         public virtual void Clear()
         {
             _pool.Clear();
@@ -28,13 +30,14 @@ namespace BriefFiniteElementNet.Common
 
             Stack<T[]> candidates;
 
-            if (_pool.TryGetValue(size, out candidates))
-                if (candidates.Count > 0)
-                    return candidates.Pop();
+            lock (_lock)
+            {
+                if (_pool.TryGetValue(size, out candidates))
+                    if (candidates.Count > 0)
+                        return candidates.Pop();
+            }
 
             return new T[size];
-
-            return _pool.TryGetValue(size, out candidates) && candidates.Count > 0 ? candidates.Pop() : new T[size];
         }
 
         internal virtual void Free(T[] array)

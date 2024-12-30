@@ -614,12 +614,12 @@ namespace BriefFiniteElementNet.Elements
             info.AddValue("_material", _material);
         }
 
-        public override void GetGlobalStifnessMatrix(Matrix stiffness)
+        public override void GetGlobalStiffnessMatrix(Matrix stiffness)
         {
             throw new NotImplementedException();
         }
 
-        public override int GetGlobalStifnessMatrixDimensions()
+        public override int GetGlobalStiffnessMatrixDimensions()
         {
             throw new NotImplementedException();
         }

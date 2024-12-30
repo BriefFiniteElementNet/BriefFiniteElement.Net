@@ -189,6 +189,23 @@ namespace BriefFiniteElementNet
             throw new NotImplementedException();
         }
 
+
+        /// <summary>
+        /// Transforms the defined square matrix from local system to global system.
+        /// </summary>
+        /// <param name="matrix">The matrix.</param>
+        /// <remarks><see cref="matrix"/> should be square, and its dimension should be a multiply of 3</remarks>
+        /// <returns>Transformed matrix (matrix in new coordination system : global)</returns>
+        public void TransformLocalToGlobal(Matrix local,Matrix Global)
+        {
+            if (VeryMagicNumber == 1)
+                A_B_At(LambdaMatrix, local, Global);
+
+            if (VeryMagicNumber == 2)
+                At_B_A(TransformMatrix, local, Global);
+
+            throw new NotImplementedException();
+        }
         /// <summary>
         /// Transforms the defined stress tensor from local system to global system.
         /// </summary>
@@ -444,6 +461,23 @@ namespace BriefFiniteElementNet
         {
             var matrix = B;
 
+            var buf = MatrixPool.Allocate(matrix.RowCount, matrix.ColumnCount);
+
+            At_B_A(A, B, buf);
+
+            return buf;
+        }
+
+        /// <summary>
+        /// calculated the C = A' * B  * A where B is 3nX3n matrix and A is 3x3 matrix (read the docs for more info)
+        /// </summary>
+        /// <param name="A">the A</param>
+        /// <param name="B">The B</param>
+        /// <returns>C</returns>
+        internal Matrix At_B_A(Matrix A, Matrix B, Matrix C)
+        {
+            var matrix = B;
+
             if (!A.IsSquare() || !matrix.IsSquare())
                 throw new ArgumentException();
 
@@ -464,9 +498,9 @@ namespace BriefFiniteElementNet
             var a32 = A[2, 1];
             var a33 = A[2, 2];
 
-            var buf =
+            var buf = C;
                 //new Matrix(matrix.RowCount, matrix.ColumnCount);
-                MatrixPool.Allocate(matrix.RowCount, matrix.ColumnCount);
+                //MatrixPool.Allocate(matrix.RowCount, matrix.ColumnCount);
 
             double b_i_j, b_i_j1, b_i_j2, b_i1_j, b_i1_j1, b_i1_j2, b_i2_j, b_i2_j1, b_i2_j2;
 
@@ -515,6 +549,28 @@ namespace BriefFiniteElementNet
         /// <returns>C</returns>
         internal Matrix A_B_At(Matrix A, Matrix B)
         {
+
+            var matrix = B;
+
+            var buf =
+                //new Matrix(matrix.RowCount, matrix.ColumnCount);
+                MatrixPool.Allocate(matrix.RowCount, matrix.ColumnCount);
+
+            A_B_At(A, B, buf);
+
+            return buf;
+        }
+
+
+        /// <summary>
+        /// calculated the C = A * B  * A' where B is 3nX3n matrix and A is 3x3 matrix (read the docs for more info)
+        /// </summary>
+        /// <param name="A">the A</param>
+        /// <param name="B">The B</param>
+        /// <param name="C">The C</param>
+        /// <returns>C</returns>
+        internal void A_B_At(Matrix A, Matrix B, Matrix C)
+        {
             var matrix = B;
 
             if (!A.IsSquare() || !matrix.IsSquare())
@@ -537,9 +593,9 @@ namespace BriefFiniteElementNet
             var a23 = A[1, 2];
             var a33 = A[2, 2];
 
-            var buf = 
+            var buf = C;
                 //new Matrix(matrix.RowCount, matrix.ColumnCount);
-                MatrixPool.Allocate(matrix.RowCount, matrix.ColumnCount);
+                //MatrixPool.Allocate(matrix.RowCount, matrix.ColumnCount);
 
             double b_i_j, b_i_j1, b_i_j2, b_i1_j, b_i1_j1, b_i1_j2, b_i2_j, b_i2_j1, b_i2_j2;
 
@@ -577,9 +633,8 @@ namespace BriefFiniteElementNet
                 }
             }
 
-            return buf;
+            //return buf;
         }
-
         /// <summary>
         /// calculated the C = A * B, where A is 3x3 matrix and B is 3x1 vector.
         /// </summary>

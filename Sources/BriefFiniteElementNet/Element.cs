@@ -156,14 +156,14 @@ namespace BriefFiniteElementNet
         /// <param name="stiffness">the stiffness</param>
         /// <remarks>
         /// The number of DoFs is in element local regrading order in <see cref="Element.Nodes"/>!</remarks>
-        public abstract void GetGlobalStifnessMatrix(Matrix stiffness);
+        public abstract void GetGlobalStiffnessMatrix(Matrix stiffness);
 
 
         /// <summary>
         /// Gets the dimensions of the matrix
         /// </summary>
         /// <returns></returns>
-        public abstract int GetGlobalStifnessMatrixDimensions();
+        public abstract int GetGlobalStiffnessMatrixDimensions();
 
 
 

@@ -136,10 +136,6 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             return buf;
         }
 
-
-
-
-
         [TodoDelete]
         public /*override*/ Force[] GetLocalEquivalentNodalLoads_Old(Element targetElement, ElementalLoad load)
         {
@@ -262,8 +258,6 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
             throw new NotImplementedException();
 
         }
-
-
 
         [TodoDelete]
         /// <inheritdoc/>
@@ -486,8 +480,6 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
             throw new NotImplementedException();
         }
-
-
 
         [TodoDelete]
         public /*override*/ Displacement GetLoadDisplacementAt_old(Element targetElement, ElementalLoad load, double[] isoLocation)
@@ -763,7 +755,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
         public override int CalcLocalStiffnessMatrixSize(Element targetElement)
         {
-            throw new NotImplementedException();
+            return 2;
         }
     }
 }

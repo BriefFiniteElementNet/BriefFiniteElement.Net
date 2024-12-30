@@ -1634,7 +1634,7 @@ namespace BriefFiniteElementNet.ElementHelpers.BarHelpers
 
         public override int CalcLocalStiffnessMatrixSize(Element targetElement)
         {
-            throw new NotImplementedException();
+            return 4;
         }
 
 
