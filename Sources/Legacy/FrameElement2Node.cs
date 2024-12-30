@@ -1152,6 +1152,16 @@ namespace BriefFiniteElementNet
 
             return Matrix.OfVector(new double[] {v/2});
         }
+
+        public override void GetGlobalStifnessMatrix(Matrix stiffness)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetGlobalStifnessMatrixDimensions()
+        {
+            throw new NotImplementedException();
+        }
         #endregion
 
     }

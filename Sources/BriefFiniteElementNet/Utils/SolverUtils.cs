@@ -21,6 +21,7 @@ namespace BriefFiniteElementNet.Utils
     public static class SolverUtils
     {
 
+
         public static Tuple<SparseMatrix, double[]> GenerateP_Delta_Mpc(Model target, LoadCase loadCase, IRrefFinder rrefFinder)
         {
             var totDofCount = target.Nodes.Count * 6;
@@ -380,6 +381,61 @@ namespace BriefFiniteElementNet.Utils
         }
 
 
+        public static SparseMatrix GetModelMpcEquations(Model target, LoadCase loadCase)
+        {
+            var totDofCount = target.Nodes.Count * 6;
+
+
+            target.ReIndexNodes();
+
+            var n = target.Nodes.Count;
+
+            var lastRow = 0;
+
+
+            #region mpc elements
+            var extraEqCount = 0;
+
+            foreach (var mpcElm in target.MpcElements)
+                if (mpcElm.AppliesForLoadCase(loadCase))
+                    extraEqCount += mpcElm.GetExtraEquationsCount();
+
+            var totalEqCount = extraEqCount;// + boundaryConditions.RowCount;
+
+            var allEqsCrd = new CoordinateStorage<double>(totalEqCount, n * 6 + 1, 1);//rows: extra eqs, cols: 6*n+1 (+1 is for right hand side)
+
+            foreach (var mpcElm in target.MpcElements)
+            {
+                if (mpcElm.AppliesForLoadCase(loadCase))
+                    if (mpcElm.GetExtraEquationsCount() != 0)
+                    {
+                        var extras = mpcElm.GetExtraEquations();
+
+                        if (extras.ColumnCount != totDofCount + 1)
+                            throw new Exception();
+
+                        foreach (var tuple in extras.EnumerateIndexed())
+                        {
+                            var row = tuple.Item1;
+                            var col = tuple.Item2;
+                            var val = tuple.Item3;
+
+
+                            allEqsCrd.At(row + lastRow, col, val);
+                        }
+
+                        lastRow += extras.RowCount;
+                    }
+            }
+
+            var allEqs = allEqsCrd.ToCCs();
+
+            //var dns = allEqs.ToDenseMatrix();
+
+            #endregion
+
+            return allEqs;
+        }
 
         /// <summary>
         /// Gets the boundary conditions of model (support conditions) as a extra eq system for using in master slave model.

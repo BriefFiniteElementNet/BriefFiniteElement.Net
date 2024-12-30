@@ -149,6 +149,17 @@ namespace BriefFiniteElementNet
         /// The number of DoFs is in element local regrading order in <see cref="Element.Nodes"/>!</remarks>
         public abstract Matrix GetGlobalStifnessMatrix();
 
+
+        /// <summary>
+        /// Gets the stiffness matrix of member in global coordination system.
+        /// </summary>
+        /// <returns>The stiffness matrix</returns>
+        /// <remarks>
+        /// The number of DoFs is in element local regrading order in <see cref="Element.Nodes"/>!</remarks>
+        public abstract void GetGlobalStifnessMatrix(Matrix stiffness);
+
+        public abstract int GetGlobalStifnessMatrixDimensions();
+
         /// <summary>
         /// Gets the mass matrix of element in global coordination system.
         /// </summary>

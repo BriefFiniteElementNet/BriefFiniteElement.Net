@@ -36,7 +36,7 @@ namespace BriefFiniteElementNet.Common
         /// </returns>
         public static bool FEquals(double val1, double val2, double epsilon=0)
         {
-            var diff = Math.Abs(val1 - val2);
+            var diff = System.Math.Abs(val1 - val2);
 
             return diff <= epsilon;
         }

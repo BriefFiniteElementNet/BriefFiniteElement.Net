@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>TestingConsole</RootNamespace>
     <AssemblyName>TestingConsole</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
@@ -37,6 +37,9 @@
     <Reference Include="CSparse, Version=3.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CSparse.3.5.0\lib\net45\CSparse.dll</HintPath>
     </Reference>
+    <Reference Include="MathNet.Numerics, Version=5.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.5.0.0\lib\net48\MathNet.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -47,8 +50,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NewSolver.cs" />
+    <Compile Include="NewSolverEfforts.cs" />
+    <Compile Include="HollowPermutationTests.cs" />
+    <Compile Include="SymbolicColumnStorage.cs" />
+    <Compile Include="GraphHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RrefEfforts.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

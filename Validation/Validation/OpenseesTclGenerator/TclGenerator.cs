@@ -12,7 +12,10 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
         public bool ExportTotalStiffness;
         public bool ExportNodalReactions;
 
-        public string nodesOut, elementsOut, stiffnessOut,reactionsOut;
+        public string nodesOut, elementsOut, stiffnessOut, reactionsOut;
+
+        public string CustomNumberer;//if want to use any custom numberer
+        public string CustomSystem;//if want to use any custom system
 
         public List<ElementToTclTranslator> ElementTranslators = new List<ElementToTclTranslator>();
         public List<ElementalLoadToTclTranslator> ElementLoadTranslators = new List<ElementalLoadToTclTranslator>();
@@ -137,12 +140,31 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             var n = model.Nodes.Count;
 
 
-            if (ExportTotalStiffness)
-                Commands.Add(new TclCommand("system", "FullGeneral"));
+            if (!string.IsNullOrEmpty(CustomNumberer))
+            {
+                Commands.Add(new TclCommand("numberer", CustomNumberer));
+            }
             else
-                Commands.Add(new TclCommand("system", "BandSPD"));
+            {
+                Commands.Add(new TclCommand("numberer", "Plain"));
+            }
 
-            Commands.Add(new TclCommand("numberer", "Plain"));
+
+
+            if (!string.IsNullOrEmpty(CustomSystem))
+            {
+                Commands.Add(new TclCommand("system", CustomSystem));
+            }
+            else
+            {
+                if (ExportTotalStiffness)
+                    Commands.Add(new TclCommand("system", "FullGeneral"));
+                else
+                    Commands.Add(new TclCommand("system", "BandSPD"));
+            }
+
+
+            //
             Commands.Add(new TclCommand("constraints", "Plain"));
             Commands.Add(new TclCommand("integrator", "LoadControl", "1.0"));
             Commands.Add(new TclCommand("algorithm", "Linear"));
@@ -159,6 +181,8 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
                 Commands.Add(new TclCommand("recorder", "Element", "-xml", '"' + elementsOut.Replace("\\", "\\\\") + '"', "-closeOnWrite", "localForce ", "material", "1"));
 
             var anzCmd = (new TclCommand("analyze", "1"));
+
+
 
             if (ExportTotalStiffness)
                 Commands.Add(new TclCommand("printA", "-file", '"' + stiffnessOut.Replace("\\", "\\\\") + '"'));
@@ -178,6 +202,8 @@ namespace BriefFiniteElementNet.Validation.OpenseesTclGenerator
             }
             sb.AppendLine("}");
 
+
+           
 
             sb.AppendLine(anzCmd.CommandName + " " + string.Join(" ", anzCmd.CommandArgs));
 

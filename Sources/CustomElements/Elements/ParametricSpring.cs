@@ -189,6 +189,16 @@ namespace BriefFiniteElementNet.Elements.Elements
 
             return helpers.ToArray();
         }
+
+        public override void GetGlobalStifnessMatrix(Matrix stiffness)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetGlobalStifnessMatrixDimensions()
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

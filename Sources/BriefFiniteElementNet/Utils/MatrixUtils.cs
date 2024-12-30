@@ -20,6 +20,23 @@ namespace BriefFiniteElementNet.Utils
     public static class MatrixUtils
     {
 
+        public static void InplaceNegate(this CompressedColumnStorage<double> matrix)
+        {
+            for (int j = 0; j < matrix.Values.Length; j++)
+            {
+                matrix.Values[j] = -matrix.Values[j];
+            }
+        }
+
+
+        public static void InplaceNegate(this double[] arr)
+        {
+            for (int j = 0; j < arr.Length; j++)
+            {
+                arr[j] = -arr[j];
+            }
+        }
+
         public static double[] GetColumnAsDense(this CompressedColumnStorage<double> matrix, int columnNumber)
         {
             var buf = new double[matrix.RowCount];
@@ -127,11 +144,8 @@ namespace BriefFiniteElementNet.Utils
         // TODO: EXTENSION - ToCCs could be removed (CSparse should handle this case well)
         public static SparseMatrix ToCCs(this CoordinateStorage<double> crd)
         {
-            //https://brieffiniteelementnet.codeplex.com/workitem/6
-            if (crd.RowCount == 0 || crd.ColumnCount == 0)
-                return new SparseMatrix(0, 0) { ColumnPointers = new int[0], RowIndices = new int[0], Values = new double[0] };
-
-            return (SparseMatrix)SparseMatrix.OfIndexed(crd, true);
+            return BriefFiniteElementNet.Common.Utils.MatrixUtil.ToCCs(crd);
+            return null;
         }
 
         // TODO: EXTENSION - move to Extensions class?

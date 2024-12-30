@@ -59,8 +59,7 @@ You can use [issues section](https://github.com/BriefFiniteElementNet/BriefFinit
 
 Paid support (Commercial) via email : [bfePaid@gmx.com](mailto:BFE%20Paid%20Support%20<BFEPaid@gmx.com>?Subject=Support%20Request&Body=Please%20fill%20fair%20amount%20of%20description%20here)
 
-For a small payment (like a USD or two) you'll get premium support about using this library for your specific purpose by its developers. You can ask any question about FEM and its applications, we'll answer as much as we can...
-
+For a small payment you'll get premium support about using this library for your specific purpose by its developers. 
 Many payment types are accepted, including PayPal and CryptoCurrencies and maybe other types, just message and we'll talk about it!
 
 Please note that free support still exists and is maintained by the community available from [Issues](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/issues) and [Discussion](https://github.com/BriefFiniteElementNet/BriefFiniteElement.Net/discussions) sections.

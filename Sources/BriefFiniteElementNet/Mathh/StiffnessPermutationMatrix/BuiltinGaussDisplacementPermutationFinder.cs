@@ -11,6 +11,7 @@ namespace BriefFiniteElementNet.Mathh
 {
     public class BuiltinGaussDisplacementPermutationFinder : IDisplacementPermutationCalculator
     {
+
         public Tuple<CCS, double[]> CalculateDisplacementPermutation(CCS a)
         {
             var totDofCount = a.ColumnCount - 1;

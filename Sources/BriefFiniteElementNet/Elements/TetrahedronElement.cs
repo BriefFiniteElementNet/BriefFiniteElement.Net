@@ -246,6 +246,16 @@ namespace BriefFiniteElementNet.Elements
             return new IElementHelper[] {new TetrahedronHelper()};
         }
 
+        public override void GetGlobalStifnessMatrix(Matrix stiffness)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override int GetGlobalStifnessMatrixDimensions()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

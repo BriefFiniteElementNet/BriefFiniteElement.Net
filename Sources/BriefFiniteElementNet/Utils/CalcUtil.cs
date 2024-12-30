@@ -276,7 +276,7 @@ namespace BriefFiniteElementNet
        
 
 
-        internal static int FixedCount(Constraint cns)
+        public static int FixedCount(Constraint cns)
         {
             var buf = 0;
 

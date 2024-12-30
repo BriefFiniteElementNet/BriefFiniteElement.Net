@@ -13,6 +13,7 @@ using BriefFiniteElementNet.Materials;
 using BriefFiniteElementNet.Sections;
 using BriefFiniteElementNet.Validation.OpenseesTclGenerator;
 using System.Reflection;
+using CSparse;
 
 namespace TestingConsole
 {
@@ -38,11 +39,36 @@ namespace TestingConsole
             //tmp();
             //BriefFiniteElementNet.Validation.GithubIssues.Issue183.Run();
             //BriefFiniteElementNet.Validation.GithubIssues.Issue181.Run();
-            BriefFiniteElementNet.Validation.GithubIssues.Issue41.Run();
+            //BriefFiniteElementNet.Validation.GithubIssues.Issue41.Run();
 
+            //new RrefEfforts().Effort(null);
+            //TestPerm();
+            NewSolverEfforts.Do();
+            //HollowPermutationTests.TestPaQ();
+
+            //HollowPermutationTests.TestTranspose();
+            //HollowPermutationTests.TestArrMtx();
+            //HollowPermutationTests.TestMultArr();
+            //HollowPermutationTests.TestMultArr_Transpose();
+            //HollowPermutationTests.TestMultMtx();
+            //HollowPermutationTests.TestMult2Mtx();
+            //HollowPermutationTests.TestMultMtx2();
+
+            
             Console.Write("Done");
 
-            Console.ReadKey();
+            //Console.ReadKey();
+        }
+
+
+        static void TestPerm()
+        {
+            var a = new int[] { 1, 5, 9, 7, 5, 3 };
+            var p = new int[] { 0, 2, 3, 1, 4, 5 };
+
+            var ap = new int[a.Length];
+
+            Permutation.ApplyInverse(p, a, ap, 6);
         }
 
         static void tmp2()
