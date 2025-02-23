@@ -4,6 +4,9 @@
 
 A Finite Element library for Static and Linear analysis of solids and structures 100% in C#.
 
+## Migration from GitHub
+Due to U.S. trade controls law restrictions, GitHub did ban all of it's users which where citizen of Iran back in 2019 ([link](https://financialtribune.com/articles/sci-tech/99111/github-bans-iran-based-users) to proof). the main maintainer of this project is currently [epsi1on](https://github.com/epsi1on) which is citizen of Iran. So just in case which he is banned and lose access to his github account, the development will continue in `git.bfe-framework.net`. Will try to keep BFE and it's successor opensource.
+
 ## Nuget Package
 
 https://www.nuget.org/packages/BriefFiniteElement.Net/
