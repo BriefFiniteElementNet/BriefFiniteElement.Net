@@ -6,6 +6,7 @@ A Finite Element library for Static and Linear analysis of solids and structures
 
 ## Migration from GitHub
 Due to U.S. trade controls law restrictions, GitHub did ban all of it's users which where citizen of Iran back in 2019 ([link](https://financialtribune.com/articles/sci-tech/99111/github-bans-iran-based-users) to proof). the main maintainer of this project is currently [epsi1on](https://github.com/epsi1on) which is citizen of Iran. So just in case which he is banned and lose access to his github account again, the development will continue in `git.bfe-framework.net`. Will try to keep BFE and it's successor opensource.
+Thank you GitHob for providing the grow environment for this project for ~10 years.
 
 ## Nuget Package
 
