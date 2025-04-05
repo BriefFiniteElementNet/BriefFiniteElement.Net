@@ -47,10 +47,9 @@ namespace BriefFiniteElementNet
         {
             var arr = Pool.Allocate(rows * columns);
 
-            for (var i = 0; i < arr.Length; i++)
-                arr[i] = 0.0;
-
             var buf = new Matrix(rows, columns, arr);
+
+            buf.Clear();
 
             buf.UsePool = true;
             buf.Pool = this;

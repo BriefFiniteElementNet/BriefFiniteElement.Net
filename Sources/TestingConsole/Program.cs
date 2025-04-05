@@ -41,9 +41,7 @@ namespace TestingConsole
             //BriefFiniteElementNet.Validation.GithubIssues.Issue181.Run();
             //BriefFiniteElementNet.Validation.GithubIssues.Issue41.Run();
 
-            //new RrefEfforts().Effort(null);
             //TestPerm();
-            NewSolverEfforts.Do();
             //HollowPermutationTests.TestPaQ();
 
             //HollowPermutationTests.TestTranspose();

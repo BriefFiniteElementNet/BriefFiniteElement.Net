@@ -197,7 +197,7 @@ namespace BriefFiniteElementNet.Elements
             return buf;
         }
 
-        public override Matrix GetGlobalStifnessMatrix()
+        public Matrix GetGlobalStifnessMatrix()
         {
             CheckNodeOrder();
             return GetLocalStifnessMatrix();//local coords is same as global coords in hexahedral
@@ -251,12 +251,11 @@ namespace BriefFiniteElementNet.Elements
 
         public override void GetGlobalStiffnessMatrix(Matrix stiffness)
         {
-            throw new NotImplementedException();
-        }
+            var buf = this.GetGlobalMassMatrix();
 
-        public override int GetGlobalStiffnessMatrixDimensions()
-        {
-            throw new NotImplementedException();
+            buf.CopyTo(stiffness);
+
+            buf.ReturnToPool();
         }
 
         #endregion

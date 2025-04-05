@@ -169,7 +169,7 @@ namespace BriefFiniteElementNet.Elements
             info.AddValue("_material", _material);
         }
 
-        public override Matrix GetGlobalStifnessMatrix()
+        public Matrix GetGlobalStifnessMatrix()
         {
             CheckNodeOrder();
             var local = GetLocalStifnessMatrix();
@@ -177,6 +177,15 @@ namespace BriefFiniteElementNet.Elements
             var buf = local;
 
             return buf;
+        }
+
+        public override void GetGlobalStiffnessMatrix(Matrix stiffness)
+        {
+            var buf = this.GetGlobalMassMatrix();
+
+            buf.CopyTo(stiffness);
+
+            buf.ReturnToPool();
         }
 
 
@@ -246,16 +255,7 @@ namespace BriefFiniteElementNet.Elements
             return new IElementHelper[] {new TetrahedronHelper()};
         }
 
-        public override void GetGlobalStiffnessMatrix(Matrix stiffness)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override int GetGlobalStiffnessMatrixDimensions()
-        {
-            throw new NotImplementedException();
-        }
-
+  
         #endregion
     }
 }

@@ -21,8 +21,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BriefFiniteElementNet.Tests
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Benchmarks", "BriefFiniteElementNet.Benchmarks\BriefFiniteElementNet.Benchmarks.csproj", "{A7BF0F41-82C1-4133-8AA9-02385036279E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSparse.Interop", "csparse-interop\CSparse.Interop\CSparse.Interop.csproj", "{553BE332-69F3-4529-B62B-63E5225A154A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BriefFiniteElementNet.Solvers", "BriefFiniteElementNet.Solvers\BriefFiniteElementNet.Solvers.csproj", "{3732500F-6C7B-498A-87E3-EBA1667E2D33}"
 EndProject
 Global
@@ -67,10 +65,6 @@ Global
 		{A7BF0F41-82C1-4133-8AA9-02385036279E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7BF0F41-82C1-4133-8AA9-02385036279E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7BF0F41-82C1-4133-8AA9-02385036279E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{553BE332-69F3-4529-B62B-63E5225A154A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{553BE332-69F3-4529-B62B-63E5225A154A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{553BE332-69F3-4529-B62B-63E5225A154A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{553BE332-69F3-4529-B62B-63E5225A154A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3732500F-6C7B-498A-87E3-EBA1667E2D33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3732500F-6C7B-498A-87E3-EBA1667E2D33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3732500F-6C7B-498A-87E3-EBA1667E2D33}.Release|Any CPU.ActiveCfg = Release|Any CPU

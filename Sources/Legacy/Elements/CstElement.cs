@@ -204,7 +204,7 @@ namespace BriefFiniteElementNet.Elements
         }
 
         /// <inheritdoc />
-        public override Matrix GetGlobalStifnessMatrix()
+        public Matrix GetGlobalStifnessMatrix()
         {
             //step 1 : get points in local system
             //step 2 : get local stiffness matrix
@@ -464,12 +464,12 @@ namespace BriefFiniteElementNet.Elements
 
         public override void GetGlobalStiffnessMatrix(Matrix stiffness)
         {
-            throw new NotImplementedException();
+            var buf = this.GetGlobalMassMatrix();
+
+            buf.CopyTo(stiffness);
+
+            buf.ReturnToPool();
         }
 
-        public override int GetGlobalStiffnessMatrixDimensions()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

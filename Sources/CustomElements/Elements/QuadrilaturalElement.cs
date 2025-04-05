@@ -330,7 +330,7 @@ namespace BriefFiniteElementNet.Elements
 
             return buf;
         }
-        public override Matrix GetGlobalStifnessMatrix()
+        public Matrix GetGlobalStifnessMatrix()
         {
             var local = GetLocalStifnessMatrix();
             var tr = GetTransformationManager();
@@ -513,13 +513,13 @@ namespace BriefFiniteElementNet.Elements
 
         public override void GetGlobalStiffnessMatrix(Matrix stiffness)
         {
-            throw new NotImplementedException();
+            var buf = this.GetGlobalMassMatrix();
+
+            buf.CopyTo(stiffness);
+
+            buf.ReturnToPool();
         }
 
-        public override int GetGlobalStiffnessMatrixDimensions()
-        {
-            throw new NotImplementedException();
-        }
         #endregion
     }
 }

@@ -201,10 +201,11 @@ namespace BriefFiniteElementNet
             if (VeryMagicNumber == 1)
                 A_B_At(LambdaMatrix, local, Global);
 
-            if (VeryMagicNumber == 2)
+            else if (VeryMagicNumber == 2)
                 At_B_A(TransformMatrix, local, Global);
 
-            throw new NotImplementedException();
+            else
+                throw new NotImplementedException();
         }
         /// <summary>
         /// Transforms the defined stress tensor from local system to global system.

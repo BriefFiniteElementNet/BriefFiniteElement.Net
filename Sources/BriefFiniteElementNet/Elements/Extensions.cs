@@ -86,7 +86,11 @@ namespace BriefFiniteElementNet.Elements
 
             //calculate forces
             {
-                var K = elm.GetGlobalStifnessMatrix();
+                var dim = elm.GetGlobalStiffnessMatrixDimensions();
+
+                var K = new Matrix(dim);
+
+                elm.GetGlobalStiffnessMatrix(K);
 
                 var d = new Matrix(6 * n, 1);
 
@@ -159,7 +163,11 @@ namespace BriefFiniteElementNet.Elements
 
             //calculate forces
             {
-                var K = elm.GetGlobalStifnessMatrix();
+                var dim = elm.GetGlobalStiffnessMatrixDimensions();
+
+                var K = new Matrix(dim);
+
+                elm.GetGlobalStiffnessMatrix(K);
 
                 var d = new Matrix(6 * n, 1);
 

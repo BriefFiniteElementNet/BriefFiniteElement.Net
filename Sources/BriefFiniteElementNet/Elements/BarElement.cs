@@ -442,7 +442,7 @@ namespace BriefFiniteElementNet.Elements
         }
 
         /// <inheritdoc/>
-        public override Matrix GetGlobalStifnessMatrix()
+        public Matrix GetGlobalStifnessMatrix()
         {
             var local = GetLocalStifnessMatrix();
 
@@ -479,11 +479,7 @@ namespace BriefFiniteElementNet.Elements
             mgr.ReturnMatrixesToPool();
         }
 
-        /// <inheritdoc/>
-        public override int GetGlobalStiffnessMatrixDimensions()
-        {
-            return 12;
-        }
+    
 
         /// <inheritdoc/>
         public Matrix GetTransformationMatrix()
@@ -677,8 +673,8 @@ namespace BriefFiniteElementNet.Elements
         {
             var helpers = GetElementHelpers();
 
-            var buf =
-                MatrixPool.Allocate(6 * nodes.Length, 6 * nodes.Length);
+            var buf = local;
+                //MatrixPool.Allocate(6 * nodes.Length, 6 * nodes.Length);
 
             //var transMatrix = GetTransformationMatrix();
 

@@ -112,7 +112,7 @@ namespace BriefFiniteElementNet.Elements.Elements
         }
 
         #region Element methods
-        public override Matrix GetGlobalStifnessMatrix()
+        public Matrix GetGlobalStifnessMatrix()
         {
             var helpers = GetHelpers();
 
@@ -192,13 +192,13 @@ namespace BriefFiniteElementNet.Elements.Elements
 
         public override void GetGlobalStiffnessMatrix(Matrix stiffness)
         {
-            throw new NotImplementedException();
+            var buf = this.GetGlobalMassMatrix();
+
+            buf.CopyTo(stiffness);
+
+            buf.ReturnToPool();
         }
 
-        public override int GetGlobalStiffnessMatrixDimensions()
-        {
-            throw new NotImplementedException();
-        }
         #endregion
     }
 }

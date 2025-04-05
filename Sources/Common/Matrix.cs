@@ -240,6 +240,17 @@ namespace BriefFiniteElementNet
 
         #endregion
 
+
+        public void Clear()
+        {
+            var c = this.CoreArray;
+
+            for (int i = this.CoreArray.Length -1; i >= 0; i--)
+            {
+                c[i] = 0.0;
+            }
+        }
+
         public Matrix Clone()
         {
             return new Matrix(this.rows, this.columns, (double[]) this.Values.Clone());

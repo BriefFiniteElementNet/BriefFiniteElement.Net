@@ -13,6 +13,7 @@ namespace BriefFiniteElementNet
     //copy from csparse Permutation class
     //just allow hollow permutations
     //p[i]=j means p[i,j]=1
+    [TodoDelete]
     public static class BfePermutation
     {
 

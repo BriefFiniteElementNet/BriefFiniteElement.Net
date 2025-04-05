@@ -26,13 +26,23 @@ namespace BriefFiniteElementNet
             var elements = model.Elements;
 
             var maxNodePerElement = model.Elements.Any() ? model.Elements.Select(i => i.Nodes.Length).Max() : 1;
-            var rElmMap = new int[maxNodePerElement*6];
 
-            var c = model.Nodes.Count*6;
+            var rElmMap = new int[maxNodePerElement * 6];
 
-            var kt = new CoordinateStorage<double>(c, c, c);
+            var c = model.Nodes.Count * 6;
 
-            foreach (var elm in elements)
+            var es = model.Elements.Sum(i => i.Nodes.Length * i.Nodes.Length) / 1; ;//estimate of nonzeros
+
+            es = c;
+
+
+            var kt = new CoordinateStorage<double>(c, c, es);
+
+            Matrix mtx = new Matrix(1);//temporary
+
+            var elmsSorted = elements.OrderBy(i => i.Nodes.Length);//performance tip, sorting could be removed without damaging result.
+
+            foreach (var elm in elmsSorted)
             {
                 var c2 = elm.Nodes.Length;
 
@@ -47,7 +57,18 @@ namespace BriefFiniteElementNet
                     rElmMap[6*i + 5] = elm.Nodes[i].Index*6 + 5;
                 }
 
-                var mtx = elm.GetGlobalStifnessMatrix();
+                var dim = elm.GetGlobalStiffnessMatrixDimensions();
+
+                if (mtx.RowCount != dim)
+                {
+                    model.MatrixPool.Free(mtx);
+                    mtx = model.MatrixPool.Allocate(dim, dim);
+                }
+
+                mtx.Clear();
+
+                elm.GetGlobalStiffnessMatrix(mtx);
+
                 var d = c2 * 6;
 
                 for (var i = 0; i < d; i++)
@@ -58,7 +79,7 @@ namespace BriefFiniteElementNet
                     }
                 }
 
-                mtx.ReturnToPool();
+                //mtx.ReturnToPool();
             }
 
             var stiffness = (CCS)Converter.ToCompressedColumnStorage(kt, true);

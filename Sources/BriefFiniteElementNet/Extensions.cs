@@ -12,6 +12,15 @@ namespace BriefFiniteElementNet
     public static class Extensions
     {
 
+        public static Matrix GetGlobalStifnessMatrix(this Element elm)
+        {
+            var dim = elm.GetGlobalStiffnessMatrixDimensions();
+            var mtx = new Matrix(dim);
+
+            elm.GetGlobalStiffnessMatrix(mtx);
+            return mtx;
+        }
+
         public static int FirstIndexOf<T>(this T[] arr, Predicate<T> selector)
         {
             if (arr != null)

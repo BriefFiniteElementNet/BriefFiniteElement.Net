@@ -1,12 +1,11 @@
 ﻿A `LoadHandler` handles calculation of a load on an specific `ElementHelper`. becuase each element helper have it's own calculations for each load.
-For example euler bernauly beam under concentrated load. because this documentation is not compatible with GPT, you may see some discrepancies!
-try to abandon GPT and do some real digg by paying the cost with your time...
+For example euler bernauly beam under concentrated load.
 
 A `LoadHandler` typically do:
 
 - Calculate EquivalentNodalLoads
-- Calculate LoadDisplacementAt (used for GetExactDisplacement)
-- Calculate LoadInternalForceAt (used for GetExactDisplacement)
+- Calculate LoadDisplacementAt (used for GetExactDisplacementAt)
+- Calculate LoadInternalForceAt (used for GetExactForceAt)
 - Tells wether it can handle a specific combination of ElementHelper-Load-Element or not
 
 These are public methods for interface `ILoadHandler`:

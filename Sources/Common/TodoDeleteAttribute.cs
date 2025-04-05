@@ -8,6 +8,5 @@ namespace BriefFiniteElementNet
 {
     public class TodoDeleteAttribute : Attribute
     {
-
     }
 }

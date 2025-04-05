@@ -723,8 +723,13 @@ namespace BriefFiniteElementNet.Validation
             //barElement.Material = new UniformBarMaterial(e, g, rho);
             barElement.Section = new UniformParametric1DSection() { Iy = iy, Iz = iz, A = a };
 
-            var frK = frameElement.GetGlobalStifnessMatrix();
-            var barK = barElement.GetGlobalStifnessMatrix();
+            var dim = frameElement.GetGlobalStiffnessMatrixDimensions();
+
+            var frK = new Matrix(dim, dim);
+            var barK = new Matrix(dim, dim);
+
+            frameElement.GetGlobalStiffnessMatrix(frK);
+            barElement.GetGlobalStiffnessMatrix(barK);
 
             var d = (frK - barK).Values.Max(i => Math.Abs(i));
 
@@ -1299,6 +1304,12 @@ namespace BriefFiniteElementNet.Validation
 
             belm = new BarElement(ndes[0], ndes[1]) { Material = mat, Section = sec, Behavior = BarElementBehaviours.FullFrame };
             frmelm = new FrameElement2Node(ndes[0], ndes[1]) { Iz = sec.Iz, Iy = sec.Iy, A = sec.A, J = sec.J, E = e, G = g };
+
+
+            //var dim = elm.GetGlobalStiffnessMatrixDimensions();
+            //var mtx = new Matrix(dim);
+            //elm.GetGlobalStiffnessMatrix(mtx);
+
 
             var bk = belm.GetGlobalStifnessMatrix();
             var fk = frmelm.GetGlobalStifnessMatrix();
