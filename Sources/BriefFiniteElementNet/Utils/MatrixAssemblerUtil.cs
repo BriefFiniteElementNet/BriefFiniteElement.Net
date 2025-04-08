@@ -82,7 +82,10 @@ namespace BriefFiniteElementNet
                 //mtx.ReturnToPool();
             }
 
-            var stiffness = (CCS)Converter.ToCompressedColumnStorage(kt, true);
+            var stiffness = (CCS)CCS.OfIndexed(kt, false);
+            //(CCS)Converter.ToCompressedColumnStorage(kt, true);
+
+
 
             return stiffness;
         }
@@ -129,7 +132,10 @@ namespace BriefFiniteElementNet
                 }
             }
 
-            var mass = (CCS)Converter.ToCompressedColumnStorage(mt, true);
+            var mass =
+                //(CCS)Converter.ToCompressedColumnStorage(mt, true);
+
+                (CCS)CCS.OfIndexed(mt, false);
 
             return mass;
         }
@@ -176,7 +182,9 @@ namespace BriefFiniteElementNet
                 }
             }
 
-            var damp = (CCS)Converter.ToCompressedColumnStorage(ct, true);
+            var damp =
+                //(CCS)Converter.ToCompressedColumnStorage(ct, true);
+            (CCS)CCS.OfIndexed(ct, false);
 
             return damp;
         }

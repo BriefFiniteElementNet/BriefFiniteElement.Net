@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using CSparse.Storage;
+using CCS = CSparse.Double.SparseMatrix;
 
 namespace BriefFiniteElementNet
 {
@@ -108,7 +109,9 @@ namespace BriefFiniteElementNet
             }
 
 
-            return CSparse.Converter.ToCompressedColumnStorage(buf);
+            return 
+                //CSparse.Converter.ToCompressedColumnStorage(buf);
+            (CCS)CCS.OfIndexed(buf, false);
         }
 
         /// <summary>
@@ -194,7 +197,10 @@ namespace BriefFiniteElementNet
                 }
             }
 
-            var graph = CSparse.Converter.ToCompressedColumnStorage(crd);
+            var graph =
+                //CSparse.Converter.ToCompressedColumnStorage(crd);
+            (CCS)CCS.OfIndexed(crd, false);
+
 
             var buf = BriefFiniteElementNet.Utils.GraphUtils.EnumerateGraphParts(graph);
 
@@ -267,7 +273,9 @@ namespace BriefFiniteElementNet
             }
 
 
-            return CSparse.Converter.ToCompressedColumnStorage(buf).Transpose();
+            return 
+                //CSparse.Converter.ToCompressedColumnStorage(buf).Transpose();
+            (CCS)CCS.OfIndexed(buf, false);
         }
 
         /// <summary>

@@ -42,7 +42,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CSparse" Version="3.5.0" />
+    <PackageReference Include="CSparse" Version="4.2.0" />
   </ItemGroup>
 
 </Project>

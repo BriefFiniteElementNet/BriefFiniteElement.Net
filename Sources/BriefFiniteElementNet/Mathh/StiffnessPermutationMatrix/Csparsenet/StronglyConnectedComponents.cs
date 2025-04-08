@@ -49,9 +49,11 @@
         public static StronglyConnectedComponents Generate<T>(CompressedColumnStorage<T> matrix)
              where T : struct, IEquatable<T>, IFormattable
         {
-            return Generate(SymbolicColumnStorage.Create(matrix, false), matrix.ColumnCount);
+            throw new NotImplementedException();
+            //return Generate(SymbolicColumnStorage.Create(matrix, false), matrix.ColumnCount);
         }
 
+        /*
         /// <summary>
         /// Find strongly connected components of A.
         /// </summary>
@@ -121,6 +123,8 @@
             Array.Resize(ref D.r, nb + 1);
 
             return D;
+            
         }
+        */
     }
 }

@@ -74,7 +74,10 @@ namespace BriefFiniteElementNet
                 InsertSubmatrix(pd, i, j, buf);
             }
 
-            var buff = (CCS) Converter.ToCompressedColumnStorage(buf);
+            var buff =
+                //(CCS) Converter.ToCompressedColumnStorage(buf);
+
+            (CCS)CCS.OfIndexed(buf, false);
 
             return buff;
         }
@@ -129,7 +132,9 @@ namespace BriefFiniteElementNet
                 }
             }
 
-            var graph = Converter.ToCompressedColumnStorage(crd);
+            var graph = 
+                //Converter.ToCompressedColumnStorage(crd);
+            (CCS)CCS.OfIndexed(crd, false);
 
             var buf = BriefFiniteElementNet.Utils.GraphUtils.EnumerateGraphParts(graph);
 

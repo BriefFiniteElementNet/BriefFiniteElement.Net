@@ -338,5 +338,10 @@
                 }
             }
         }
+
+        public void Solve(ReadOnlySpan<double> input, Span<double> result)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

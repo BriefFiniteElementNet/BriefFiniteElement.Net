@@ -138,6 +138,7 @@
             return post; // success; free w, return post
         }
 
+        /*
         /// <summary>
         /// Column counts for Cholesky (LL'=A or LL'=A'A) and QR, given parent and post ordering.
         /// </summary>
@@ -231,6 +232,8 @@
             }
             return colcount; // success: free workspace
         }
+
+        */
 
         /// <summary>
         /// Determines if j is a leaf of the skeleton matrix and find lowest common
@@ -327,6 +330,8 @@
             return (top);
         }
 
+
+        /*
         /// <summary>
         /// Find nonzero pattern of Cholesky L(k,1:k-1) using etree and triu(A(:,k))
         /// </summary>
@@ -371,5 +376,7 @@
 
             return top; // s [top..n-1] contains pattern of L(k,:)
         }
+
+        */
     }
 }

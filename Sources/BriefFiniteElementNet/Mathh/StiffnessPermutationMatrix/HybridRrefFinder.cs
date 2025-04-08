@@ -24,6 +24,9 @@ namespace BriefFiniteElementNet.Mathh.StiffnessPermutationMatrix
         
         public SparseMatrix CalculateRref(SparseMatrix mtx)
         {
+
+            throw new Exception();
+            /*
             var a = mtx.Clone();
 
             //need to remove last column of 'a'
@@ -33,7 +36,6 @@ namespace BriefFiniteElementNet.Mathh.StiffnessPermutationMatrix
             a.DropZeros();
 
             {
-                /*
                 var n2 = new CoordinateStorage<double>(mtx.RowCount, mtx.ColumnCount, 10);
 
                 for (var i = 0; i < 5; i+=2)
@@ -45,7 +47,6 @@ namespace BriefFiniteElementNet.Mathh.StiffnessPermutationMatrix
                 var a2 = n2.ToCCs();
 
                 a = a.Add(a2);
-                */
             }
 
             
@@ -59,7 +60,6 @@ namespace BriefFiniteElementNet.Mathh.StiffnessPermutationMatrix
 
                 var S = A.Transpose().Multiply(A);
 
-                /*
                 {
                     var vals = Enumerable.Repeat(1.0, S.NonZerosCount).ToArray();
 
@@ -67,9 +67,7 @@ namespace BriefFiniteElementNet.Mathh.StiffnessPermutationMatrix
 
                     var m3 = Extensions.ToDense(mtx2).ToString();
                 }
-                */
 
-                /*
                 var groups = GroupNodes(S);
 
                 {
@@ -95,7 +93,6 @@ namespace BriefFiniteElementNet.Mathh.StiffnessPermutationMatrix
 
                 }
 
-                */
 
                 var ssr = StronglyConnectedComponents.Generate(S, S.ColumnCount);
 
@@ -130,7 +127,7 @@ namespace BriefFiniteElementNet.Mathh.StiffnessPermutationMatrix
                 }
             }
 
-
+            */
             throw new NotImplementedException();
         }
 
@@ -160,6 +157,7 @@ namespace BriefFiniteElementNet.Mathh.StiffnessPermutationMatrix
             throw new NotImplementedException();
         }
 
+        /*
         static int[] GroupNodes(SymbolicColumnStorage S)
         {
             var buf = new int[S.ColumnCount];
@@ -188,7 +186,7 @@ namespace BriefFiniteElementNet.Mathh.StiffnessPermutationMatrix
             return buf;
         }
 
-
+        */
 
 
     }
