@@ -33,13 +33,17 @@ namespace BriefFiniteElementNet.Validation.Ui
 
                 foreach (var type in types)
                 {
-
                     if (!ImplementsInterface(type, typeof(IValidationCase)))
                         continue;
 
                     var attribs = type.GetCustomAttributes(typeof(ValidationCaseAttribute));
 
                     if (!attribs.Any())
+                        continue;
+
+                    var atr = (ValidationCaseAttribute)attribs.FirstOrDefault();
+
+                    if (!atr.Enabled)
                         continue;
 
                     var cse = (IValidationCase)Activator.CreateInstance(type);
@@ -90,7 +94,15 @@ namespace BriefFiniteElementNet.Validation.Ui
 
         public static void ExportToHtmFile(string fileName, params IValidationCase[] validators)
         {
-            ExportToHtmFile(fileName, validators.Select(i => i.Validate()).ToArray());
+            var ress = new ValidationResult[validators.Length];
+
+
+            for (int i = 0; i < validators.Length; i++)
+            {
+                ress[i] = validators[i].Validate();
+            }
+
+            ExportToHtmFile(fileName, ress);
         }
 
         public static void ExportToHtmFile(string fileName, params ValidationResult[] results)

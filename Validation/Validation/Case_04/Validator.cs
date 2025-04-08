@@ -12,7 +12,7 @@ using System.Globalization;
 
 namespace BriefFiniteElementNet.Validation.Case_04
 {
-    [ValidationCase("RigidElement (MPC)", typeof(MpcElements.RigidElement_MPC))]
+    [ValidationCase("RigidElement (MPC)", false, typeof(MpcElements.RigidElement_MPC))]
     public class Validator : IValidationCase
     {
         public ValidationResult Validate()

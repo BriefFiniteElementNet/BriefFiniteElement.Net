@@ -11,7 +11,7 @@ using HtmlTags;
 
 namespace BriefFiniteElementNet.Validation.Case_02
 {
-    [ValidationCase("Clamped plate with triangle",typeof(TriangleElement))]
+    [ValidationCase("Clamped plate with triangle",false, typeof(TriangleElement))]
     public class Validator: IValidationCase
     {
         #region meshing

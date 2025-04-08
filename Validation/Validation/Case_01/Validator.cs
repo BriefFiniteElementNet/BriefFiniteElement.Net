@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace BriefFiniteElementNet.Validation.Case_01
 {
-    [ValidationCase("I Beam Torsion with TriangleElement", typeof(TriangleElement))]
+    [ValidationCase("I Beam Torsion with TriangleElement", false, typeof(TriangleElement))]
     public class Validator : IValidationCase
     {
         public ValidationResult Validate()

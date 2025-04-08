@@ -11,7 +11,7 @@ using HtmlTags;
 
 namespace BriefFiniteElementNet.Validation.Case_05
 {
-    [ValidationCase("Console beam with tetrahedron", typeof(RigidElement_MPC))]
+    [ValidationCase("Console beam with tetrahedron", false, typeof(RigidElement_MPC))]
     public class Validator : IValidationCase
     {
         public ValidationResult Validate()

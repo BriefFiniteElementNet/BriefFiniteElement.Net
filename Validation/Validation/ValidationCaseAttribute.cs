@@ -13,10 +13,19 @@ namespace BriefFiniteElementNet.Validation
 
         public Type[] Elements; //elements that are validated
 
+        public bool Enabled=true;
+
         public ValidationCaseAttribute(string title, params Type[] elements)
         {
             Title = title;
             Elements = elements;
+        }
+
+        public ValidationCaseAttribute(string title, bool enb, params Type[] elements)
+        {
+            Title = title;
+            Elements = elements;
+            Enabled = enb;
         }
     }
 
